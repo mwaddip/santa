@@ -1,95 +1,105 @@
-# Phase 2 — Eval tier scaled
+# Phase 2 — Eval tier scaled (JVM-native vectors)
 
-Grow *the nice list* from one op to the whole `fixture-gen` eval corpus: bless the
-remaining **99 ops** (100 fixtures; `decode-point` already done) through the JVM
-reference, widening the value vocabulary and honoring per-entry context inputs.
-Umbrella: [SPEC.md](../../SPEC.md). Builds on
-[phase-1-eval-loop.md](phase-1-eval-loop.md) — schema + runner contract, unchanged.
+Scale *the nice list* from one op to a broad eval corpus drawn from the **canonical JVM
+reference's own test suite** — `sigma-state`'s `LanguageSpecificationV6` — rather than
+re-blessing fork-authored fixtures. Umbrella: [SPEC.md](../../SPEC.md). This supersedes
+the subspec's first draft (which sourced `fixture-gen` fixtures and used the fork's
+expecteds as a test oracle — see *Why the pivot*).
 
-**The blesser stays a pure truth-emitter.** No JVM-vs-fork diff here: the sigma-rust
-fork is validated against the JVM *by construction* (the Rust node syncs genesis→tip
-in consensus with the JVM), so a diff over these vectors finds nothing by design. The
-divergence target that *isn't* already covered is **ergots** (the TS port) — and that
-belongs to the runner tier (thread B), not the blesser. The fixtures' own
-`expected_value_json` / `expected_cost` are read for `tree_bytes_hex` + `name` only;
-their expected fields are ignored — the JVM re-blesses.
+## Why the pivot
+
+The first draft blessed the fork-authored `fixture-gen` fixtures and asserted JVM output
+`== fixture.expected_*`. But those expecteds are **sigma-rust-computed** (`fixture-gen`
+runs the fork as its generation oracle), and per BOOTSTRAP decision 2 the fork is a
+*differential target, never the oracle*. That assertion inverted the oracle relationship
+and surfaced 5 genuine JVM-vs-fork divergences
+([findings](../findings/eval-jvm-vs-sigma-rust.md)) as test failures. The fix: source
+vectors from the JVM's *own* spec, where the expecteds are canonical by construction.
+
+## The canonical source
+
+`sigma/LanguageSpecificationV6.scala` (sigma-state's executable v6.0 language spec):
+**279 `verifyCases`**, version-aware. Each is a `Feature[A, B]` — a *function* `A => B`
+(`newF.compiledTree` is the function ErgoTree) — exercised over deterministic
+`cases: Seq[(input: A, Expected[B])]`, where `Expected` carries the output value and its
+eval `CostDetails`. Reachable via the published **tests-classifier jar**
+(`sigma-state…-tests.jar`, on Maven Central, HTTP 200), so extraction runs entirely in
+SANTA — no cross-repo edits.
+
+## The eval-tier vector — `santa-eval/v2` (input-carrying)
+
+The reference models eval as **a function applied to an input**, so the vector does too —
+**cost fidelity is the reason** (baking inputs into closed trees would drift the JIT cost
+away from the canonical function-apply cost):
+
+```json
+{
+  "schema": "santa-eval/v2",
+  "op": "<feature>",
+  "blessed_by": "jvm:sigma-state-6.0.3",
+  "source": "sigma-state:LanguageSpecificationV6",
+  "entries": [
+    {
+      "name": "<case>",
+      "tree_bytes_hex": "<serialized function ErgoTree (A => B)>",
+      "input": { "kind": "…", "…": "…" },
+      "version": { "activated": 3, "ergoTree": 0 },
+      "expected": { "value": { "kind": "…" }, "cost": 0, "error": null }
+    }
+  ]
+}
+```
+
+- `input` uses the **same SValue encoding** as `expected.value` — the value vocabulary
+  serves both. `input: null` is the closed-tree case (Phase-1 `v1` is this special form;
+  `decode-point` re-emits trivially under v2).
+- `expected.cost` is the **raw JIT eval cost** of applying the function to the input.
+  SANTA re-blesses via its own eval, reproducing V6's `CostDetails` — a built-in
+  cross-check, since SANTA *is* sigma-state 6.0.3.
+- `expected.error` — coarse `null | "errored"` (unchanged).
 
 ## Deliverables
 
-1. **Value vocabulary** — `EvalCore.valueToJson` extended from GroupElement+Opaque to
-   the full `SValue` union, reading JVM runtime types. Canonical schema = the TS
-   `SValue` union (`ergots/packages/ergoscript/src/mir/types.ts`); the fork's
-   `fixture-gen/.../eval/common.rs::value_to_json` mirrors it but **lags** — e.g. it
-   punts `Option` to `Opaque`; the TS union is the source of truth.
-2. **op-name from filename** — derive `op` from the fixture filename stem
-   (`sigma-or.json` → `sigma_or`); 9/100 fixtures lack the `corpus` field the blesser
-   keys on today.
-3. **Batch blessing** — drive the blesser over the whole fixture dir → one vector per
-   op under `vectors/eval/`, so the nice list grows in one pass.
-4. **Context from `opts_json`** — build the eval `ErgoLikeContext` from each entry's
-   declared inputs (Stage 2; the blesser ignores `opts_json` entirely today).
-5. **The grown nice list** — ~99 new committed `vectors/eval/<op>.json`.
+1. **Tests-jar dependency** — `sigma-state % Test classifier "tests"` (+ transitive test
+   deps); confirm it bundles the `sc`-module specs incl. `LanguageSpecificationV6`.
+2. **V6 extractor** — a SANTA test-scope harness subclassing `LanguageSpecificationV6`,
+   tapping `verifyCases` to capture, per deterministic case: the serialized function
+   tree, the input (as SValue), and the expected value + JIT cost. Skips the
+   property-generated samples (committed vectors must be deterministic). Emits `v2`.
+3. **SValue codec** — `valueToJson` (encode — carried over) **plus a decoder** (SValue
+   JSON → JVM value) so the runner can reconstruct inputs.
+4. **Apply-eval** — `EvalCore` gains "apply a function tree to an input value → (value,
+   JIT cost)" alongside the current closed-tree eval.
+5. **Runner (v2)** — consumes a v2 vector: reconstruct input, apply, normalize result.
+6. **The committed corpus** — the extracted canonical `vectors/eval/*.json` (v2).
 
-The schema envelope is unchanged: still `santa-eval/v1`; Phase 2 only widens the
-`expected.value.kind` vocabulary and feeds the context. `decode-point.json` stays valid.
+## What carries over / what changes
+
+- **Carries over:** the value/`SType` encoders in `EvalCore.valueToJson` / `stypeToJson`
+  (primitives, BigInt, SigmaProp, Coll, Tuple) — now also encode *inputs*; the version
+  handling + `CostAccumulator` JIT-cost mechanics.
+- **Changes:** source (V6, not fork fixtures); schema (`v2`, input-carrying); the test
+  oracle (V6's own expected, canonical — no fork); eval mechanics (apply, not just closed
+  eval). The fork-oracle harness from the first draft is dropped.
 
 ## Two stages
 
-Split by whether a fixture has **any** context-bearing entry (`opts_json`) — Stage 1
-fixtures bless correct-by-construction (no context to honor):
+`SigmaDslTesting` special-cases `input: CContext`, which splits the features cleanly:
 
-- **Stage 1 — 58 fully-context-free fixtures** (every entry `opts_json: {}`;
-  `decode-point` among them, done → 57 new): need only the value vocabulary (1–3) +
-  the existing dummy context. Breadth-first; exercises every Stage-1 value kind.
-- **Stage 2 — 42 fixtures with ≥1 context-bearing entry**: add (4) — context-extension
-  vars, registers, headers, constants, `jitCostLimit` → bless the rest, plus the
-  cost-limit error arm.
-
-(Many of the 42 are *mostly* context-free with a single `jitCostLimit` entry; Stage 2
-honors `opts_json` per entry. A few entries may still surface needing richer context
-than the dummy provides — handled as they appear.)
-
-## Value-kind vocabulary
-
-`expected.value` is `{ "kind": <Variant>, … }`; schema = the TS `SValue` union.
-
-**Stage 1** — the kinds context-free ops actually produce (empirically confirmed by
-running the blesser's `Opaque` branch over representative fixtures):
-
-- **Primitives** — `Boolean`/`Byte`/`Short`/`Int` → `{ value: <number> }`;
-  `Long`/`BigInt` → `{ value: "<decimal-string>" }` (JSON has no exact bigint).
-- **GroupElement** → `{ bytes_hex }` — 33-byte SEC1 (done in Phase 1).
-- **SigmaProp** → `{ raw_hex }` — bare `SigmaBoolean` wire bytes (no ErgoTree header).
-- **Coll** → `{ elem: <SType>, items: [<SValue>…] }`; byte-colls unpack to `Byte` items.
-- **Tuple** → `{ items: [<SValue>…] }` (JVM represents pairs as `scala.Tuple2`).
-
-`SType` (for `elem` fields) → `{ "tag": "S…" }`; recursive `elem` for `SColl`/`SOption`,
-`items` for `STuple` (per `common.rs::stype_to_json`), derived from the runtime element
-type via `sigma.Evaluation.rtypeToSType`.
-
-**Stage 2** — arrive with their (context-bearing) ops:
-
-- **Option** → `{ elem: <SType>, value: <SValue> | null }` (None → `null`).
-- **Box / Header / PreHeader** → `{ value: <structured-json> }` per the TS interfaces
-  (mirrored by `common.rs::{ergo_box,header,preheader}_to_json`).
-- **AvlTree** — no settled encoding (the fork punts to `Opaque`); settle it when
-  blessing the `savltree-*` ops.
-- **Unit / Context / Global** — sentinels, no payload.
-
-## Error class
-
-Unchanged from `v1`: coarse `null | "errored"`. The fork carries a 41-code error
-taxonomy, but the JVM throws JVM exceptions, not those codes — a fork code-string and
-a JVM exception class aren't comparable, so the only cross-impl-meaningful axis is
-*did it error?*. A finer enum stays a later (v2) refinement.
+- **Stage 1 — value-input features**: inputs are plain SValues (Boolean / numeric / Coll
+  / Tuple / …). The bulk of arithmetic, logic, collection, crypto ops. Needs
+  deliverables 1–6 with a plain-value input codec.
+- **Stage 2 — context-input features**: inputs that *are* a `Context` / `Box` / `Header`
+  (the analog of the old context-bearing split). Adds context reconstruction.
 
 ## Out of scope
 
-- **JVM-vs-fork differential** — see intro; not this phase, and empty by construction.
 - The first independent runner (ergots) — thread B, routed to the ergots repo.
 - Wire / block tiers; reject arm; CI.
+- Filing the recorded JVM-vs-fork [findings](../findings/eval-jvm-vs-sigma-rust.md) as
+  sigma-rust PRs — revisit once the eval tier stabilizes.
 
 ## Status
 
-**Drafted** — Stage 1 next (value vocabulary + op-name + batch). Stage 2 (context
-construction) firmed once Stage 1 delivers.
+**Drafted (rev 2 — JVM-native).** Next: ground the extractor + apply-eval APIs, then the
+Stage-1 plan. (`SPEC.md`'s eval-tier contract sketch gets a v2 touch when Stage 1 lands.)
