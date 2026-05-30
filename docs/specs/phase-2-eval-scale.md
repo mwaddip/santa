@@ -40,7 +40,8 @@ away from the canonical function-apply cost):
   "source": "sigma-state:LanguageSpecificationV6",
   "entries": [
     {
-      "name": "<case>",
+      "name": "<input.toString>#<index>",
+      "script": "<Feature.script — the ErgoScript source string for this entry>",
       "tree_bytes_hex": "<serialized function ErgoTree (A => B)>",
       "input": { "kind": "…", "…": "…" },
       "version": { "activated": 3, "ergoTree": 0 },
@@ -49,6 +50,16 @@ away from the canonical function-apply cost):
   ]
 }
 ```
+
+Entry fields:
+
+- `name` — `"<input.toString>#<index>"` where `index` is the 0-based position within this op's emitted entries. The `#index` suffix guarantees uniqueness: multi-feature properties fan one case-set across several features, so the raw `input.toString` repeats; a consumer keying by `name` within an op's entry list must not collide.
+- `script` — the `Feature.script` string from `LanguageSpecificationV6`: the ErgoScript source expression for this feature variant (provenance). Additive — carries no semantic weight for conformance checking, but lets a reader trace each entry back to the V6 spec line that sourced it.
+- `tree_bytes_hex` — the serialized function `ErgoTree (A => B)`, hex-encoded. One distinct value per distinct `Feature` (different `script` → different tree).
+- `input` — SValue JSON; same encoding as `expected.value`.
+- `version` — `{"activated": 3, "ergoTree": 3}` for all Stage-1 v2 vectors (pinned to V6 soft-fork).
+- `expected.cost` — raw JIT eval cost of applying the function to the input (`CErgoTreeEvaluator`).
+- `expected.error` — `null` for success cases (Stage-1 skips error-expected cases).
 
 - `input` uses the **same SValue encoding** as `expected.value` — the value vocabulary
   serves both. `input: null` is the closed-tree case (Phase-1 `v1` is this special form;

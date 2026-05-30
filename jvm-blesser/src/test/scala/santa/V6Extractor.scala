@@ -223,13 +223,19 @@ object V6Extractor {
 
   /** Encode one capture into a v2 entry, deriving/validating its cost via the eval.
     *
+    * `entryIndex` is the 0-based position within this property's emitted entries;
+    * it is appended to `name` to guarantee uniqueness within a vector — multi-
+    * feature properties share an `input` (and therefore `input.toString`), so a
+    * bare `c.input.toString` repeats across entries. A consumer keying by `name`
+    * must never collide within a single op's entry list.
+    *
     * Returns `Left(reason)` ONLY for an unsupported-kind input/value — valueToJson
     * emits {kind:"Opaque"} for a kind it doesn't model; we must never bake a guessed
     * encoding into a vector, so such a case is skipped-and-reported (not emitted).
     * Genuine bad-vector conditions (eval failure on an encodable input, or a
     * value/cost MISMATCH between the spec and the eval) are fail-loud `sys.error`s —
     * the whole point of the suite is that a silent wrong value can never ship. */
-  private def toEntry(c: Capture): Either[String, (Json, Option[String])] = {
+  private def toEntry(c: Capture, entryIndex: Int): Either[String, (Json, Option[String])] = {
     val inputJson = EvalCore.valueToJson(c.input)
     val valueJson = EvalCore.valueToJson(c.expectedValue)
 
@@ -269,7 +275,7 @@ object V6Extractor {
     }
 
     Right((Json.obj(
-      "name"           -> Json.fromString(c.input.toString),
+      "name"           -> Json.fromString(s"${c.input.toString}#$entryIndex"),
       "script"         -> Json.fromString(c.script),
       "tree_bytes_hex" -> Json.fromString(c.treeBytesHex),
       "input"          -> inputJson,
@@ -307,19 +313,29 @@ object V6Extractor {
     val vectors = mutable.Map.empty[String, Json]
 
     byOp.foreach { case (op, cs) =>
-      val entries = cs.flatMap { c =>
-        toEntry(c) match {
-          case Right((entry, diag)) =>
-            diag.foreach(costDiagnostics += _)
-            Some(entry)
-          case Left(reason) =>
-            skippedUnsupportedKind += 1
-            unsupportedKindReasons += reason
-            None
+      // Quarantine: if the property's body threw mid-capture, its Capture list
+      // may be truncated (recording stopped partway through the case-set).  A
+      // truncated op must NEVER reach the output dir, so skip it entirely here —
+      // the matching assert in V6ExtractorTest will make the failure loud.
+      if (propertyFailures.exists(_.startsWith(op))) {
+        System.err.println(s"[V6Extractor] QUARANTINED op '$op' — its property threw; skipping all ${cs.size} captured entries")
+      } else {
+        var entryIndex = 0
+        val entries = cs.flatMap { c =>
+          toEntry(c, entryIndex) match {
+            case Right((entry, diag)) =>
+              diag.foreach(costDiagnostics += _)
+              entryIndex += 1
+              Some(entry)
+            case Left(reason) =>
+              skippedUnsupportedKind += 1
+              unsupportedKindReasons += reason
+              None
+          }
         }
+        // Only emit an envelope if the property yielded at least one Stage-1 entry.
+        if (entries.nonEmpty) vectors += (op -> envelope(op, entries))
       }
-      // Only emit an envelope if the property yielded at least one Stage-1 entry.
-      if (entries.nonEmpty) vectors += (op -> envelope(op, entries))
     }
 
     ExtractResult(

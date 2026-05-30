@@ -62,6 +62,13 @@ class V6ExtractorTest extends munit.FunSuite {
          |=======================================================================
          |""".stripMargin)
 
+    // Gate: any mid-body throw means that property's Capture list is truncated —
+    // a truncated op must never ship silently.  The quarantine in V6Extractor
+    // prevents the truncated entries from reaching the output dir, but this assert
+    // makes the condition loud so it cannot be ignored.
+    assert(result.propertyFailures.isEmpty,
+      s"property bodies threw — corpus would be truncated: ${result.propertyFailures.mkString("; ")}")
+
     assert(result.captured > 0, "no Stage-1 cases captured at all")
     assert(result.vectors.contains("Global.serialize[Byte]"))
 
