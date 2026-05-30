@@ -3,9 +3,9 @@
 **S**igma-**A**nchored **N**ode **T**est **A**pparatus — a cross-implementation
 conformance test suite for Ergo consensus.
 
-> **Early, in-the-open development.** The design is taking shape from a working
-> first slice rather than a big up-front spec — see **[BOOTSTRAP.md](BOOTSTRAP.md)**
-> for the rationale and the decisions so far.
+> **Early, in-the-open development.** The design takes shape from working slices
+> rather than a big up-front spec — see **[SPEC.md](SPEC.md)** for the current
+> architecture + roadmap, and **[BOOTSTRAP.md](BOOTSTRAP.md)** for the rationale.
 
 ## What this is
 
@@ -25,38 +25,43 @@ single implementation:
 - **fine-grained eval outputs (cost, reduced sigma-tree) → the JVM reference node**
   (ergo-core / `sigma-state`), the de-facto spec.
 
-Two tiers, mirroring EEST's `state_test` vs `blockchain_test`:
+Three tiers:
 
+- **Wire tier** — serialization: bytes ⇄ structure (constants, boxes, trees, txs,
+  headers). The broadest — every wallet/SDK serializes (ergots, sigma-rust, scorex,
+  Fleet, …); and a `boxId` *is* the hash of serialized bytes, so it's squarely consensus.
 - **Eval / transition tier** — operation-level (e.g. `decodePoint(bytes) → point`,
   with cost). Run by the consensus *libraries*, no full node required.
 - **Block tier** — `block H → valid? / state-root`. Run by full *nodes*.
 
 ## Status — early / scaffolding
 
-This is **greenfield**, and things will move and reshape. What works today:
+This is **greenfield**, and things will move and reshape. What works today — **Phase 1**,
+the minimal loop closed end-to-end on `decode-point`:
 
-- ✅ A standalone **JVM blesser** (`jvm-blesser/`) — a Scala harness linking the
-  canonical `sigma-state` interpreter that produces blessed `(value, cost)` for
-  eval-tier vectors. It reproduces the `decode-point` eval corpus **exactly**
-  (value + JIT cost + accept/reject) against the reference interpreter, validating
-  the "anchor fine values to the JVM" approach end-to-end.
-- ✅ The **eval-tier vector format** is emerging from contact with the real
-  interpreter: typed values, raw JIT cost, a recorded `(activatedVersion,
-  ergoTreeVersion)`, and a coarse error-class.
+- ✅ **Blesser** — links the canonical `sigma-state` interpreter and emits a committed
+  `santa-eval/v1` vector (`vectors/eval/decode-point.json`): typed value, raw JIT cost,
+  a recorded `(activatedVersion, ergoTreeVersion)`, and a coarse error-class.
+- ✅ **Runner I/O contract + harness + JVM reference runner (Rudolph)** — the runner
+  consumes a vector and emits actuals; the harness diffs them against the blessed
+  expected and prints a **nice/naughty** verdict (`nice ✓ 6/6` on `decode-point`).
+- The loop currently has the JVM consuming its *own* blessing, so it proves the
+  mechanics + the contract — *real* conformance begins with the first independent runner.
 
 Not built yet (and where help is most wanted — see below):
 
-- the full eval-tier corpus (only `decode-point` is wired end-to-end so far);
-- the per-language **runner contract** and runners for each conformer;
-- the **block tier**;
-- authored **negative / mutation** vectors (the reject arm);
-- CI, repo-layout conventions, a published vector schema.
+- the full eval-tier corpus (only `decode-point` so far) and the **wire tier**;
+- **independent runners** — ergots, sigma-rust, the nodes;
+- the **block tier**; authored **negative / mutation** vectors (the reject arm); CI.
 
 ## Layout
 
 ```
-jvm-blesser/    standalone sbt project — the JVM eval-tier blesser (the first working slice)
-BOOTSTRAP.md    design rationale, decisions reached, open questions
+SPEC.md         umbrella spec — architecture, tiers, contracts, roadmap, glossary
+BOOTSTRAP.md    design rationale + decision log (the *why*)
+docs/specs/     per-phase subspecs
+vectors/        the canonical vectors — the "nice list" (e.g. vectors/eval/decode-point.json)
+jvm-blesser/    Scala: the blesser, the JVM reference runner (Rudolph), and the harness
 README.md       this file
 ```
 
@@ -67,14 +72,15 @@ Ergo implementations run the same vectors, the more the vectors are worth. Help 
 genuinely wanted — especially:
 
 - **Implementations under test** — wire a runner for your Ergo implementation
-  (TypeScript, Rust, Scala, or anything that parses the wire format).
-- **Vectors** — more eval-tier operations; captured-block vectors for the block
-  tier; authored mutation / reject vectors.
+  (TypeScript, Rust, Scala, or anything that parses the wire format) against the
+  runner I/O contract.
+- **Vectors** — more eval-tier operations; wire-tier serialization vectors;
+  captured-block vectors for the block tier; authored mutation / reject vectors.
 - **Design** — the vector schema, the runner I/O contract, CI topology.
 
 At this stage the contracts aren't frozen, so **a conversation beats a big PR** —
-read [BOOTSTRAP.md](BOOTSTRAP.md), look at `jvm-blesser/`, and open an issue to talk
-through where you'd like to plug in.
+read [SPEC.md](SPEC.md) + [BOOTSTRAP.md](BOOTSTRAP.md), look at `jvm-blesser/`, and
+open an issue to talk through where you'd like to plug in.
 
 ## Related
 
