@@ -95,10 +95,14 @@ object EvalCore {
       case SBox        => tag("SBox")
       case SHeader     => tag("SHeader")
       case SPreHeader  => tag("SPreHeader")
-      case c: SCollection[_] => Json.obj("tag" -> Json.fromString("SColl"),   "elem" -> stypeToJson(c.elemType))
-      case o: SOption[_]     => Json.obj("tag" -> Json.fromString("SOption"), "elem" -> stypeToJson(o.elemType))
+      // STuple MUST precede SCollection: STuple <: SCollection, so a `SCollection`
+      // case placed first would shadow it (STuple unreachable → tuples mis-encode as
+      // {tag:"SColl"}). The cross-check can't catch this (both sides share the
+      // encoder); it's guarded by a unit test in EvalCoreTest.
       case tup: STuple       => Json.obj("tag" -> Json.fromString("STuple"),
                                          "items" -> Json.arr(tup.items.map(stypeToJson): _*))
+      case c: SCollection[_] => Json.obj("tag" -> Json.fromString("SColl"),   "elem" -> stypeToJson(c.elemType))
+      case o: SOption[_]     => Json.obj("tag" -> Json.fromString("SOption"), "elem" -> stypeToJson(o.elemType))
       case _ => Json.obj("tag" -> Json.fromString("SUnknown"), "repr" -> Json.fromString(t.toString))
     }
   }
