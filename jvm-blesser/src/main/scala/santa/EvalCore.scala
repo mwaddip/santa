@@ -13,7 +13,7 @@ import sigma.data.{CBigInt, CSigmaProp, SigmaBoolean}
 import sigma.ast.{
   BigIntConstant, BooleanConstant, ByteConstant, CollectionConstant, Constant, ErgoTree,
   EvaluatedValue, GroupElementConstant, IntConstant, JitCost, LongConstant, SBigInt, SBoolean,
-  SByte, SCollection, SGroupElement, SInt, SLong, SShort, SType, ShortConstant, STuple, Tuple
+  SByte, SCollection, SGroupElement, SInt, SLong, SShort, SType, ShortConstant, STuple
 }
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
@@ -186,11 +186,23 @@ object EvalCore {
     }
   }
 
+  /** Build a `Constant[S]` from a runtime value typed as `Any` and an SType.
+    *
+    * Why a generic helper instead of `Constant[STuple](pair.asInstanceOf[STuple#WrappedType], …)`
+    * at the call site: on Scala 2.12, casting to a *concrete* `S#WrappedType` (e.g.
+    * `STuple#WrappedType` == `Coll[Any]`) emits a checkcast to `sigma.Coll`, which throws
+    * `ClassCastException` when the value is a Scala `Tuple2`. Here `S` stays a type
+    * parameter, so `S#WrappedType` erases to `java.lang.Object` and the cast is a no-op.
+    * `ConstantNode` validates only via the surface `isCorrectType`, which accepts a
+    * `Tuple2` for an `STuple` and any `Coll` for an `SCollection`. */
+  private def mkConstant[S <: SType](value: Any, tpe: S): Constant[S] =
+    Constant(value.asInstanceOf[S#WrappedType], tpe)
+
   /** Decode a `{"kind":"…", …}` SValue JSON (as emitted by valueToJson) back to an
     * EvaluatedValue so it can be used as a context-var binding in evalApplied.
     *
     * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, GroupElement,
-    * Coll (with `elem` SType tag), Tuple (pair).
+    * Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair).
     * Unsupported kinds surface an immediate sys.error (not a silent wrong value). */
   def decodeInputConstant(j: Json): EvaluatedValue[_ <: SType] = {
     val cur  = j.hcursor
@@ -203,13 +215,20 @@ object EvalCore {
         BooleanConstant.fromBoolean(v)
 
       case "Byte" =>
+        // Read as Int then range-check: `.toByte` would silently wrap out-of-range
+        // input (e.g. 200 -> -56), reintroducing a silent wrong value. Error instead.
         val v = cur.downField("value").as[Int]
           .fold(e => sys.error(s"decodeInputConstant Byte: $e"), identity)
+        if (v < Byte.MinValue || v > Byte.MaxValue)
+          sys.error(s"decodeInputConstant Byte: value $v out of Byte range")
         ByteConstant(v.toByte)
 
       case "Short" =>
+        // Range-check for the same reason as Byte (`.toShort` would silently wrap).
         val v = cur.downField("value").as[Int]
           .fold(e => sys.error(s"decodeInputConstant Short: $e"), identity)
+        if (v < Short.MinValue || v > Short.MaxValue)
+          sys.error(s"decodeInputConstant Short: value $v out of Short range")
         ShortConstant(v.toShort)
 
       case "Int" =>
@@ -250,11 +269,19 @@ object EvalCore {
           .fold(e => sys.error(s"decodeInputConstant Tuple: missing items: $e"), identity)
         if (itemsJson.size != 2)
           sys.error(s"decodeInputConstant Tuple: expected pair, got ${itemsJson.size} items")
-        val decodedItems = itemsJson.map(decodeInputConstant)
-        Tuple(decodedItems.toIndexedSeq)
+        // The runtime value of a pair MUST be a Scala Tuple2, not a Coll[Any].
+        // valueToJson emits pairs via `case (a, b)` (a Scala Tuple2), so the decode
+        // inverse must produce a Tuple2 too. Building `Tuple(items)` here is WRONG:
+        // sigma.ast.Tuple's `.value` (read when this is bound as a context-var) is a
+        // Coll[Object], so getVar[(A,B)] would surface a Coll — a silent wrong value.
+        // Instead wrap the Scala pair directly as a Constant[STuple].
+        val a = decodeInputConstant(itemsJson(0))
+        val b = decodeInputConstant(itemsJson(1))
+        val pair: Any = (a.value, b.value)
+        mkConstant[STuple](pair, STuple(a.tpe, b.tpe))
 
       case other =>
-        sys.error(s"decode: '$other' not yet supported")
+        sys.error(s"decodeInputConstant: '$other' not yet supported")
     }
   }
 
@@ -302,17 +329,16 @@ object EvalCore {
         CollectionConstant[SGroupElement.type](coll, SGroupElement)
 
       case inner: SCollection[_] =>
-        // Nested Coll: use unchecked cast; the SType tag is authoritative for eval/serialization.
-        // We go through Constant.apply directly to avoid CollectionConstant's type check.
-        val values: List[Any] = itemsJson.map(j => (decodeInputConstant(j): Any) match {
-          case ev: EvaluatedValue[_] => ev.value
-          case other                 => other
-        })
-        val arr     = values.toArray.asInstanceOf[Array[Any]]
-        val outerRT = Evaluation.stypeToRType(inner).asInstanceOf[sigma.data.RType[Any]]
-        val coll    = Colls.fromArray(arr)(outerRT)
-        val scolTyped = inner.asInstanceOf[SCollection[SType]]
-        Constant[SCollection[SType]](coll.asInstanceOf[SCollection[SType]#WrappedType], scolTyped)
+        // Nested Coll (elem type is itself a Coll). The element runtime values are the
+        // decoded inner Colls; the OUTER coll's element RType is `stypeToRType(inner)`.
+        // Crucially, the Constant's tpe must be the FULL collection type
+        // `SCollection(inner)` (e.g. Coll[Coll[Int]]) — NOT `inner` (Coll[Int]). With
+        // the wrong (element-only) tpe, toSigmaContext derives the wrong RType and
+        // getVar[Coll[Coll[_]]] fails with InvalidType. (Recursion handles any depth.)
+        val values  = itemsJson.map(j => decodeInputConstant(j).value: Any).toArray
+        val elemRT  = Evaluation.stypeToRType(inner).asInstanceOf[sigma.data.RType[Any]]
+        val coll    = Colls.fromArray(values)(elemRT)
+        mkConstant[SCollection[SType]](coll, SCollection(inner.asInstanceOf[SType]))
 
       case other =>
         sys.error(s"decodeColl: elem type '$other' not yet supported")
