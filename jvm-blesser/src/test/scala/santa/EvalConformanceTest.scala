@@ -29,4 +29,21 @@ class EvalConformanceTest extends munit.FunSuite {
   // Baseline: GroupElement is already supported (Phase 1). Proves the harness
   // runs and decode-point still blesses correctly. Not a RED test.
   test("decode-point") { checkFixture("decode-point.json") }
+
+  // (a) Primitives
+  test("and (Boolean)")           { checkFixture("and.json") }
+  test("bin-op-arith (numerics)") { checkFixture("bin-op-arith.json") }
+
+  // (b) BigInt
+  test("byte-array-to-bigint (BigInt)") { checkFixture("byte-array-to-bigint.json") }
+
+  // (c) SigmaProp
+  test("sigma-or (SigmaProp)") { checkFixture("sigma-or.json") }
+
+  // (d) Coll
+  test("collection (Coll)")            { checkFixture("collection.json") }
+  test("calc-blake2b256 (Coll[Byte])") { checkFixture("calc-blake2b256.json") }
+
+  // (e) Tuple
+  test("tuple (pair)") { checkFixture("tuple.json") }
 }

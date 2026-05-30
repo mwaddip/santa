@@ -8,7 +8,8 @@ import io.circe.Json
 import org.ergoplatform.{ErgoBox, ErgoLikeContext, ErgoLikeTransaction}
 import org.ergoplatform.validation.ValidationRules
 
-import sigma.{Colls, GroupElement, Header, PreHeader, VersionContext}
+import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
+import sigma.data.{CBigInt, CSigmaProp, SigmaBoolean}
 import sigma.ast.{ErgoTree, JitCost}
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
@@ -71,12 +72,56 @@ object EvalCore {
   def errClass(t: Throwable): String =
     s"${t.getClass.getSimpleName}: ${Option(t.getMessage).getOrElse("")}"
 
+  private def tag(s: String): Json = Json.obj("tag" -> Json.fromString(s))
+
+  /** Encode an SType as the TS `SType` union JSON (mirrors the canonical `{tag:"S…"}` schema). */
+  def stypeToJson(t: sigma.ast.SType): Json = {
+    import sigma.ast._
+    t match {
+      case SBoolean    => tag("SBoolean")
+      case SByte       => tag("SByte")
+      case SShort      => tag("SShort")
+      case SInt        => tag("SInt")
+      case SLong       => tag("SLong")
+      case SBigInt     => tag("SBigInt")
+      case SUnit       => tag("SUnit")
+      case SAny        => tag("SAny")
+      case SGroupElement => tag("SGroupElement")
+      case SSigmaProp    => tag("SSigmaProp")
+      case SBox        => tag("SBox")
+      case SHeader     => tag("SHeader")
+      case SPreHeader  => tag("SPreHeader")
+      case c: SCollection[_] => Json.obj("tag" -> Json.fromString("SColl"),   "elem" -> stypeToJson(c.elemType))
+      case o: SOption[_]     => Json.obj("tag" -> Json.fromString("SOption"), "elem" -> stypeToJson(o.elemType))
+      case tup: STuple       => Json.obj("tag" -> Json.fromString("STuple"),
+                                         "items" -> Json.arr(tup.items.map(stypeToJson): _*))
+      case _ => Json.obj("tag" -> Json.fromString("SUnknown"), "repr" -> Json.fromString(t.toString))
+    }
+  }
+
   /** Encode an evaluated value as the typed `{ kind, … }` form (mirrors the fork's
     * SValue JSON). GroupElement → 33-byte SEC1 hex; richer kinds added as scaled. */
   def valueToJson(v: Any): Json = v match {
     case g: GroupElement =>
       Json.obj("kind" -> Json.fromString("GroupElement"),
                "bytes_hex" -> Json.fromString(Base16.encode(g.getEncoded.toArray)))
+    case b: Boolean => Json.obj("kind" -> Json.fromString("Boolean"), "value" -> Json.fromBoolean(b))
+    case n: Byte    => Json.obj("kind" -> Json.fromString("Byte"),    "value" -> Json.fromInt(n.toInt))
+    case n: Short   => Json.obj("kind" -> Json.fromString("Short"),   "value" -> Json.fromInt(n.toInt))
+    case n: Int     => Json.obj("kind" -> Json.fromString("Int"),     "value" -> Json.fromInt(n))
+    case n: Long    => Json.obj("kind" -> Json.fromString("Long"),    "value" -> Json.fromString(n.toString))
+    case b: CBigInt => Json.obj("kind" -> Json.fromString("BigInt"),
+                                "value" -> Json.fromString(b.wrappedValue.toString))
+    case sp: CSigmaProp =>
+      Json.obj("kind"    -> Json.fromString("SigmaProp"),
+               "raw_hex" -> Json.fromString(Base16.encode(SigmaBoolean.serializer.toBytes(sp.sigmaTree))))
+    case c: Coll[_] =>
+      Json.obj("kind"  -> Json.fromString("Coll"),
+               "elem"  -> stypeToJson(Evaluation.rtypeToSType(c.tItem)),
+               "items" -> Json.arr(c.toArray.toIndexedSeq.map(valueToJson): _*))
+    case (a, b) =>
+      Json.obj("kind"  -> Json.fromString("Tuple"),
+               "items" -> Json.arr(valueToJson(a), valueToJson(b)))
     case other =>
       Json.obj("kind" -> Json.fromString("Opaque"),
                "repr" -> Json.fromString(s"${other.getClass.getSimpleName}:$other"))
