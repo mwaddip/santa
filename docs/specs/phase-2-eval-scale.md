@@ -44,7 +44,7 @@ away from the canonical function-apply cost):
       "script": "<Feature.script — the ErgoScript source string for this entry>",
       "tree_bytes_hex": "<serialized function ErgoTree (A => B)>",
       "input": { "kind": "…", "…": "…" },
-      "version": { "activated": 3, "ergoTree": 0 },
+      "version": { "activated": 3, "ergoTree": 3 },
       "expected": { "value": { "kind": "…" }, "cost": 0, "error": null }
     }
   ]
@@ -112,5 +112,6 @@ Entry fields:
 
 ## Status
 
-**Drafted (rev 2 — JVM-native).** Next: ground the extractor + apply-eval APIs, then the
-Stage-1 plan. (`SPEC.md`'s eval-tier contract sketch gets a v2 touch when Stage 1 lands.)
+**Stage 1 delivered — 192 `santa-eval/v2` vectors across 22 ops, cross-check green.**
+`SPEC.md`'s eval-tier contract updated to v2 reality. Stage 2 (context-input features) and
+the first independent runner (ergots) remain open.

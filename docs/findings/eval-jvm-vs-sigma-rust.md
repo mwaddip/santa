@@ -13,19 +13,19 @@ JVM column is the blessed truth and each row is a candidate **sigma-rust PR**.
 Reproduce: bless the `tree` bytes with `santa.blesser.Main`, or
 `EvalCore.evalEntry(tree, activated = 3)`.
 
-## Cost divergences (value agrees; JIT cost differs)
+## Cost divergences (value agrees; JIT cost differs) — RESOLVED
 
-| op / entry | tree (hex) | JVM (canonical) | sigma-rust | Δ |
-|---|---|---|---|---|
-| `and` / `and_empty` | `00960d00` | **20** | 15 | +5 |
-| `collection` / `coll_bool_constants_3` | `00850305` | **35** | 20 | +15 |
-| `calc-blake2b256` / `calc_blake2b256_empty` | `00cb0e00` | **32** | 25 | +7 |
+| op / entry | tree (hex) | JVM (canonical) | sigma-rust (before fix) | Δ | Resolution |
+|---|---|---|---|---|---|
+| `and` / `and_empty` | `00960d00` | **20** | 15 | +5 | Fixed in sigma-rust oracle fork 2026-05-31 |
+| `collection` / `coll_bool_constants_3` | `00850305` | **35** | 20 | +15 | Fixed in sigma-rust oracle fork 2026-05-31 |
+| `calc-blake2b256` / `calc_blake2b256_empty` | `00cb0e00` | **32** | 25 | +7 | Fixed in sigma-rust oracle fork 2026-05-31 |
 
-All three are aggregate/collection-shaped ops; sigma-rust appears to undercount a
-per-item or envelope cost relative to sigma-state 6.0.3. It is **op-specific, not a blanket
-offset** — the 2-tuple cost agrees at 25 (`tuple_pair_int_long` passed). *Lower confidence
-these are fork bugs vs a deliberate cost-model lag — trace the sigma-state cost of each op
-before filing.*
+**RESOLVED.** All three cost undercharges were independently surfaced via an ergots cost
+failure and **fixed in the sigma-rust oracle fork (2026-05-31)** — SANTA caught a real
+undercharge that is now patched. The fix confirms these were genuine fork bugs (not a
+deliberate cost-model lag): aggregate/collection ops were undercounting a per-item or
+envelope cost relative to sigma-state 6.0.3. Recorded here as a success story.
 
 ## Behavioral divergences (accept vs reject)
 
@@ -45,6 +45,7 @@ before filing.*
   the JVM rejection is explicit.)
 
 ## Status
-Recorded, not yet filed. Revisit for sigma-rust PRs once the eval tier stabilizes.
-These surfaced as a side effect of the (now-abandoned) fork-as-oracle test approach; the
-suite is pivoting to JVM-native vectors from sigma-state's own test specs.
+- **Cost divergences** (`and_empty`, `coll_bool_constants_3`, `calc_blake2b256_empty`):
+  **RESOLVED** — fixed in sigma-rust oracle fork 2026-05-31. Kept as record.
+- **Behavioral divergences** (`plus_kind_mismatch_int_long`, `tuple_triple_bool_byte_short`):
+  **OPEN** — not yet filed as sigma-rust PRs. Revisit once the eval tier stabilizes further.

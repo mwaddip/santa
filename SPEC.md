@@ -57,11 +57,16 @@ no shared structured form; "parse → assert structure" is the richer variant.
 
 ## Contracts (sketch — each firms as its phase delivers)
 
-**Eval-tier vector** (from the Phase-0 spike; Phase 1 finalizes the on-disk schema):
-- `tree_bytes_hex` — serialized ErgoTree; root may be **any type**, not only SigmaProp;
+**Eval-tier vector** (`santa-eval/v2`, Phase-2 Stage-1; `santa-eval/v1` for the Phase-1
+closed-tree `decode-point` special case):
+- `tree_bytes_hex` — serialized **function** ErgoTree `A → B` (v2); or a closed tree (v1);
+- `input` — the input SValue JSON, bound to context var 1 at eval time (v2 only; absent in v1);
 - **version** it's blessed under — `(activatedVersion, ergoTreeVersion)`;
 - expected: typed value `{ kind, … }` + **raw JIT cost** + coarse **error-class**
   (success ⇒ null).
+- Source: `sigma-state LanguageSpecificationV6` (JVM-native `verifyCases`, v2) — the oracle's
+  own expected values, not fork-computed. Input-carrying form preserves cost fidelity
+  (cost of applying a function to an input, not of a baked closed tree).
 
 **Runner I/O contract** — *pinned in Phase 1*: vector in → normalized result out, so
 the harness can compare any conformer's output to the blessed expected. A runner
@@ -76,7 +81,7 @@ or round-trip-ok for wire.
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner (ergots) routed next | ✅ done |
-| **2 — eval scaled** | bless all ~110 `fixture-gen` ops through the JVM; composite value encodings | |
+| **2 — eval scaled** | 192 `santa-eval/v2` vectors across 22 ops (Stage 1 — value-input features), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 1 done |
 | **3 — conformers + CI** | sigma-rust / ergo-node-rust runners; CI gate on committed vectors | |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
@@ -121,6 +126,7 @@ consensus implementations.
 
 ## Status
 
-Phase 1 delivered — the eval loop runs green end-to-end on `decode-point`
-(`nice ✓ 6/6`): blesser → committed vector → runner (Rudolph) → harness.
-**Next: the first independent runner (ergots), and/or scaling the eval tier (Phase 2).**
+Phase 1 delivered — the eval loop runs green end-to-end on `decode-point` (`nice ✓ 6/6`).
+Phase 2 Stage 1 delivered — 192 `santa-eval/v2` vectors across 22 ops, cross-check green
+(198/198 entries re-blessed including the 6 Phase-1 v1 entries).
+**Next: the first independent runner (ergots) and/or Phase 2 Stage 2 (context-input features).**
