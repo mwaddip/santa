@@ -4,8 +4,7 @@ package santa
 // V6 vector extractor (Phase 2, Stage 1).
 //
 // Emits canonical `santa-eval/v2` vectors from sigma-state's executable language
-// spec `LanguageSpecificationV6` (productionized from the proven extraction
-// spike). For each
+// spec `LanguageSpecificationV6`. For each
 // deterministic (input, Expected) case the spec declares, it captures the
 // feature's function ErgoTree, the input as SValue JSON, and V6's expected value
 // + JIT cost, grouped by property → one vectors/eval/<op>.json per property.

@@ -8,15 +8,44 @@ import santa.EvalCore
   *
   * Consumes a `santa-eval` vector and emits, per entry, its ACTUAL
   * `{ value, cost, error }` — JSON keyed by entry `name`. Each entry is evaluated
-  * under the version the vector records. (This is the blesser in consume-mode, so
-  * it matches by construction — it proves the harness mechanics and is the Scala
-  * runner scaffold, not yet an independent conformance check.)
+  * under the version the vector records.
+  *
+  * Dispatches by the vector's top-level `schema` field:
+  *   - `santa-eval/v2` → EvalCore.evalApplied (reads the entry's `input` binding)
+  *   - `santa-eval/v1` → EvalCore.evalEntry   (closed tree, no input)
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
   * With an output path it writes the actuals; without, it prints them to stdout.
   */
 object Runner {
+
+  /** Evaluate one vector entry and return the actuals JSON. */
+  def evalEntry(schema: String, e: Json): (String, Json) = {
+    val c    = e.hcursor
+    val name = c.get[String]("name").toOption.getOrElse("?")
+    val hex  = c.get[String]("tree_bytes_hex").toOption.getOrElse("")
+    val activated = c.downField("version").get[Int]("activated").toOption
+      .map(_.toByte).getOrElse(sigma.VersionContext.MaxSupportedScriptVersion)
+
+    val (_, outcome) = schema match {
+      case "santa-eval/v2" =>
+        val inputJson = c.downField("input").focus
+          .getOrElse(sys.error(s"missing input field in v2 entry '${name}'"))
+        EvalCore.evalApplied(hex, inputJson, activated)
+      case _ =>
+        EvalCore.evalEntry(hex, activated)
+    }
+
+    val actual = outcome match {
+      case Right((value, cost)) =>
+        Json.obj("value" -> value, "cost" -> Json.fromLong(cost), "error" -> Json.Null)
+      case Left(_) =>
+        Json.obj("value" -> Json.Null, "cost" -> Json.Null, "error" -> Json.fromString("errored"))
+    }
+    name -> actual
+  }
+
   def main(args: Array[String]): Unit = {
     val vecPath = args.headOption.getOrElse {
       System.err.println("usage: runner <vector.json> [<actuals-out.json>]")
@@ -26,24 +55,10 @@ object Runner {
 
     val doc     = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
+    val schema  = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
     val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
 
-    val results: Vector[(String, Json)] = entries.toVector.map { e =>
-      val c    = e.hcursor
-      val name = c.get[String]("name").toOption.getOrElse("?")
-      val hex  = c.get[String]("tree_bytes_hex").toOption.getOrElse("")
-      val activated = c.downField("version").get[Int]("activated").toOption
-        .map(_.toByte).getOrElse(sigma.VersionContext.MaxSupportedScriptVersion)
-
-      val (_, outcome) = EvalCore.evalEntry(hex, activated)
-      val actual = outcome match {
-        case Right((value, cost)) =>
-          Json.obj("value" -> value, "cost" -> Json.fromLong(cost), "error" -> Json.Null)
-        case Left(_) =>
-          Json.obj("value" -> Json.Null, "cost" -> Json.Null, "error" -> Json.fromString("errored"))
-      }
-      name -> actual
-    }
+    val results: Vector[(String, Json)] = entries.toVector.map(evalEntry(schema, _))
 
     val out = Json.obj(results: _*).spaces2
     outPath match {

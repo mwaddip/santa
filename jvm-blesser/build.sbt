@@ -1,4 +1,4 @@
-// SANTA — JVM blesser (spike)
+// SANTA — JVM blesser
 // Standalone sbt project that links the canonical reference interpreter
 // (org.scorexfoundation:sigma-state, the version the JVM reference node pins)
 // and evaluates eval-tier ErgoTree byte-vectors to (value, cost) — the
@@ -22,11 +22,11 @@ lazy val jvmBlesser = (project in file("."))
       "io.circe" %% "circe-parser" % "0.13.0",
       // Test framework (munit auto-registers via its service descriptor).
       "org.scalameta" %% "munit" % "0.7.29" % Test,
-      // --- SPIKE: V6 extractor (Phase 2) ---
-      // The sigma-state tests-classifier jar bundles every sub-module's Test
-      // classes (root project aggregates Test/packageBin across core/data/
-      // interpreter/parsers/sdk/sc), incl. `sigma.LanguageSpecificationV6` and
-      // the SigmaDslTesting / CompilerTestingCommons framework.
+      // V6 extractor (Phase 2): drives the executable language spec to generate
+      // santa-eval/v2 vectors. The sigma-state tests-classifier jar bundles every
+      // sub-module's Test classes (root project aggregates Test/packageBin across
+      // core/data/interpreter/parsers/sdk/sc), incl. `sigma.LanguageSpecificationV6`
+      // and the SigmaDslTesting / CompilerTestingCommons framework.
       "org.scorexfoundation" %% "sigma-state" % "6.0.3" % Test classifier "tests",
       // Test deps the V6 spec + framework transitively use (versions matched to
       // sigma-state 6.0.3's own build.sbt to avoid eviction).

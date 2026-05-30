@@ -4,7 +4,7 @@ import io.circe.Json
 import santa.EvalCore
 
 /** Shared bless logic: a fixture file → one `santa-eval/v1` vector Json.
-  * CLI front-ends (`Main`, `Batch`) are thin wrappers over this. */
+  * The CLI front-end (`Main`) is a thin wrapper over this. */
 object Blesser {
 
   /** Canonical op name = filename stem with hyphens normalized to underscores
