@@ -12,7 +12,8 @@ conformance test suite for Ergo consensus.
 Language-agnostic conformance **test vectors** + thin per-implementation
 **runners** + CI, so multiple independent Ergo implementations can be checked
 against the same canonical inputs and expected outputs — the way Ethereum's
-[`execution-spec-tests`](https://github.com/ethereum/execution-spec-tests) lets
+[`execution-specs`](https://github.com/ethereum/execution-specs) (the executable
+spec + test framework, formerly `execution-spec-tests` / EEST) lets
 geth / besu / nethermind / reth prove consensus-equivalence.
 
 The guiding principle is **"the wire is the spec"**: a vector is *raw serialized
@@ -80,8 +81,9 @@ through where you'd like to plug in.
 - [Ergo](https://ergoplatform.org/) — the protocol under test.
 - [`sigma-rust`](https://github.com/ergoplatform/sigma-rust) — Rust consensus
   library; a convenience differential target.
-- [`execution-spec-tests`](https://github.com/ethereum/execution-spec-tests) — the
-  Ethereum project SANTA's structure is modeled on.
+- [`execution-specs`](https://github.com/ethereum/execution-specs) — Ethereum's
+  executable spec + test framework (the former `execution-spec-tests` / EEST,
+  consolidated here in 2025); the project SANTA's structure is modeled on.
 
 ## License
 

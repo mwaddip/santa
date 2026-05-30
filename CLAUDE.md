@@ -19,8 +19,8 @@ across all projects.
 A set of **language-agnostic conformance test vectors** + thin per-implementation
 **runners** + CI, so multiple independent Ergo implementations can be checked against
 the same canonical inputs and expected outputs — the way Ethereum's
-`execution-spec-tests` lets geth / besu / nethermind / reth prove
-consensus-equivalence.
+`execution-specs` (formerly `execution-spec-tests` / EEST) lets geth / besu /
+nethermind / reth prove consensus-equivalence.
 
 Implementations under test ("conformers"):
 

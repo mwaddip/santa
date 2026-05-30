@@ -24,7 +24,7 @@ The realization: those divergences **are** a conformance test corpus, and the
 differential walk **is** differential/conformance testing — but today it lives only
 inside ergots, checked against a moving fork. SANTA lifts it into a language-agnostic
 vector suite every Ergo implementation can run, the way Ethereum's
-`execution-spec-tests` works.
+`execution-specs` (formerly `execution-spec-tests` / EEST) works.
 
 ## The shape
 
@@ -127,7 +127,8 @@ Still open:
 
 ## Reference
 
-- Ethereum execution-spec-tests: <https://github.com/ethereum/execution-spec-tests> ·
+- Ethereum execution-specs (executable spec + tests; absorbed the former
+  `execution-spec-tests` / EEST in 2025): <https://github.com/ethereum/execution-specs> ·
   docs <https://eest.ethereum.org/>
 - Classic common tests: <https://github.com/ethereum/tests>
 - Concepts: conformance testing; differential/oracle testing.
