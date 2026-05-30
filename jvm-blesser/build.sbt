@@ -33,7 +33,13 @@ lazy val jvmBlesser = (project in file("."))
       "org.scalatest"     %% "scalatest"               % "3.2.14"  % Test,
       "org.scalactic"     %% "scalactic"               % "3.2.14"  % Test,
       "org.scalacheck"    %% "scalacheck"              % "1.15.2"  % Test,
-      "org.scalatestplus" %% "scalacheck-1-15"         % "3.2.3.0" % Test
+      "org.scalatestplus" %% "scalacheck-1-15"         % "3.2.3.0" % Test,
+      // The V6 spec's framework pretty-prints expected expressions / suggestions via
+      // `SigmaPPrint` (com.lihaoyi:pprint). Without it, the property bodies that print
+      // (decodeNbits/encodeNbits/some/none/AvlTree equivalence) throw
+      // NoClassDefFoundError mid-body and their verifyCases never fire — silently
+      // shrinking the captured corpus. Pinned to sigma-state 6.0.3's own pprint.
+      "com.lihaoyi"       %% "pprint"                  % "0.6.3"   % Test
     ),
     // JDK 17 + Scala 2.12: pre-open java.base in case sigma's crypto path
     // reflects into it. Harmless if unused.
