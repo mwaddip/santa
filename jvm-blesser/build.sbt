@@ -19,7 +19,9 @@ lazy val jvmBlesser = (project in file("."))
       // JSON in/out for reading the eval vectors.
       // Pinned to 0.13.0 to match the circe version sigma-state 6.0.3 brings
       // transitively (avoids an eviction conflict; 0.13.0 has all we use).
-      "io.circe" %% "circe-parser" % "0.13.0"
+      "io.circe" %% "circe-parser" % "0.13.0",
+      // Test framework (munit auto-registers via its service descriptor).
+      "org.scalameta" %% "munit" % "0.7.29" % Test
     ),
     // JDK 17 + Scala 2.12: pre-open java.base in case sigma's crypto path
     // reflects into it. Harmless if unused.
