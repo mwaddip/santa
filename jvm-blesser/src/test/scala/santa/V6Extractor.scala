@@ -53,7 +53,7 @@ import io.circe.Json
 import org.scalatest.{Args, Reporter, Tracker}
 import org.scalatest.events.{Event, TestFailed}
 
-import sigma.{Box, Context, Header, VersionContext}
+import sigma.{Context, VersionContext}
 import sigma.ast.ErgoTree
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.eval.CostDetails
@@ -66,10 +66,10 @@ final case class ExtractResult(
     captured: Int,                       // entries emitted
     skippedUnsupported: Int,             // feature not supported at V3
     skippedError: Int,                   // expected value is a Failure
-    skippedContext: Int,                 // input is Context/Box/Header (Stage 2)
+    skippedContext: Int,                 // input is a Context (Stage 2b; Box/Header now captured)
     skippedUnsupportedKind: Int,         // input/value of a kind valueToJson can't encode
     unsupportedKindReasons: Seq[String], // distinct "op: kind not encodable" detail lines
-    skippedContextReasons: Seq[String],  // distinct "op: input=<class> | <script>" for context/box/header skips
+    skippedContextReasons: Seq[String],  // distinct "op: input=<class> | <script>" for Context skips
     costDiagnostics: Seq[String],        // DIAGNOSTIC: cases where eval cost != a spec cost field
     propertyFailures: Seq[String])       // properties whose body threw at V3 (logged, not fatal)
 
@@ -125,8 +125,8 @@ object V6Extractor {
     /** The property currently running (set by the driver before runTest). */
     var currentOp: String = "?"
 
-    private def isContextInput(input: Any): Boolean =
-      input.isInstanceOf[Context] || input.isInstanceOf[Box] || input.isInstanceOf[Header]
+    private def isContextOnly(input: Any): Boolean =
+      input.isInstanceOf[Context]
 
     // Signature MUST match SigmaDslTesting.verifyCases exactly (context-bound
     // Ordering : Arbitrary : ClassTag); defaults must NOT be re-declared here.
@@ -159,7 +159,7 @@ object V6Extractor {
         val (expRes, expDetails): (ExpectedResult[B], Option[CostDetails]) =
           expected.newResults(ergoTreeVersionInTests)
 
-        if (isContextInput(input)) {
+        if (isContextOnly(input)) {
           skippedContext += 1                       // Stage-2 (snag 5)
           val cls = input.getClass.getSimpleName
           skippedContextReasons += s"$currentOp: input=$cls | ${f.script}"
