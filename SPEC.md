@@ -81,7 +81,7 @@ or round-trip-ok for wire.
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner (ergots) routed next | ✅ done |
-| **2 — eval scaled** | 192 `santa-eval/v2` vectors across 22 ops (Stage 1 — value-input features), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 1 done |
+| **2 — eval scaled** | 235 `santa-eval/v2` vectors across 28 ops (Stage 1 + 1.5 — value-input features incl. UnsignedBigInt + Option), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 1.5 done |
 | **3 — conformers + CI** | sigma-rust / ergo-node-rust runners; CI gate on committed vectors | |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
@@ -127,6 +127,7 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end on `decode-point` (`nice ✓ 6/6`).
-Phase 2 Stage 1 delivered — 192 `santa-eval/v2` vectors across 22 ops, cross-check green
-(198/198 entries re-blessed including the 6 Phase-1 v1 entries).
+Phase 2 Stage 1.5 delivered — 235 `santa-eval/v2` vectors across 28 ops (Stage 1's 192 +
+43 UnsignedBigInt/Option cases recovered; unsupported-kind skips now 0), cross-check green
+(241/241 entries re-blessed across 30 files, including the 6 Phase-1 v1 entries).
 **Next: the first independent runner (ergots) and/or Phase 2 Stage 2 (context-input features).**
