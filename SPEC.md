@@ -81,7 +81,7 @@ or round-trip-ok for wire.
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner (ergots) routed next | ✅ done |
-| **2 — eval scaled** | 235 `santa-eval/v2` vectors across 28 ops (Stage 1 + 1.5 — value-input features incl. UnsignedBigInt + Option), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 1.5 done |
+| **2 — eval scaled** | 239 `santa-eval/v2` vectors across 32 ops (Stage 1 + 1.5 + 2a — value-input features incl. UnsignedBigInt, Option, Box, Header), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 2a done |
 | **3 — conformers + CI** | sigma-rust / ergo-node-rust runners; CI gate on committed vectors | |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
@@ -127,7 +127,8 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end on `decode-point` (`nice ✓ 6/6`).
-Phase 2 Stage 1.5 delivered — 235 `santa-eval/v2` vectors across 28 ops (Stage 1's 192 +
-43 UnsignedBigInt/Option cases recovered; unsupported-kind skips now 0), cross-check green
-(241/241 entries re-blessed across 30 files, including the 6 Phase-1 v1 entries).
-**Next: the first independent runner (ergots) and/or Phase 2 Stage 2 (context-input features).**
+Phase 2 Stage 2a delivered — 239 `santa-eval/v2` vectors across 32 ops (Stage 1's 192 +
+43 UnsignedBigInt/Option + 4 Box/Header cases recovered; unsupported-kind skips 0), cross-check
+green (245/245 entries re-blessed across 33 files, including the 6 Phase-1 v1 entries). The
+context-input skip is now 4 — all `getVarFromInput` (a `Context` input), deferred to Stage 2b.
+**Next: the first independent runner (ergots) and/or Phase 2 Stage 2b (Context-input features).**

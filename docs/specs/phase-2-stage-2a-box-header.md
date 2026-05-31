@@ -154,6 +154,18 @@ file's `sigma.ast.{…}` import (they aren't imported yet).
 
 ## Status
 
-**Not started.** Spec written 2026-05-31 after the Stage-2 scoping investigation
-(three converging methods: instrumented extractor, sigma test-framework read,
-V6-spec enumeration). To build subagent-driven + TDD + two-stage review per the method.
+**Delivered 2026-05-31.** Spec written after the Stage-2 scoping investigation (three
+converging methods: instrumented extractor, sigma test-framework read, V6-spec
+enumeration); built subagent-driven + TDD + two-stage review per the method.
+
+Box + Header value codec landed (`303cb50`; review follow-ups `0253973`), extractor skip
+narrowed to Context-only (`976a75c`), 3 recovered vectors committed (`c68e11c`). Final
+corpus: **239 `santa-eval/v2` vectors across 32 ops** (+4 cases vs Stage 1.5's 235/29),
+cross-check **245/245 re-blessed across 33 files**; extractor reproduces the corpus
+byte-identically. The **load-bearing risk is retired**: a `BoxConstant` survives
+ContextExtension var-1 binding + `toSigmaContext()` (proven by the Box eval-back test and
+by all 3 ops passing the extractor's VALUE-MATCH guard on real spec inputs) — so 2a needed
+no eval-path change, only the codec. Box.getReg → `Long 10`; Header.checkPow → `true` (v2
+header); deserializeTo-header → `true` for both a v2 and a v1 header.
+
+Context skip now **4** (all `getVarFromInput`) → **Stage 2b** (mechanism spike pending).
