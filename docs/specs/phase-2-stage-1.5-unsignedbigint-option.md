@@ -100,7 +100,7 @@ input to var 1, eval, assert `valueToJson(result).noSpaces == inputJson.noSpaces
 
 **Delivered 2026-05-31.** UnsignedBigInt (commit `7eafea2`) + Option (`2574508`) codec
 landed; recovered vectors committed (`6489baf`). Final corpus: **235 `santa-eval/v2`
-vectors across 28 ops** (+43 vs Stage 1's 192), `skippedUnsupportedKind` **0** (was 36),
+vectors across 29 ops** (+43 vs Stage 1's 192), `skippedUnsupportedKind` **0** (was 36),
 cross-check **241/241** re-blessed across 30 files. Both kinds modeled per the contract
 above — Option carries no `elem` (decode is Some-only; None-as-input errors loudly).
 Built subagent-driven + TDD + two-stage review per the method.

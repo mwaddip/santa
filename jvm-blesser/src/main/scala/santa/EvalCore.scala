@@ -5,16 +5,16 @@ import scorex.util.encode.Base16
 
 import io.circe.Json
 
-import org.ergoplatform.{ErgoBox, ErgoLikeContext, ErgoLikeTransaction}
+import org.ergoplatform.{ErgoBox, ErgoHeader, ErgoLikeContext, ErgoLikeTransaction}
 import org.ergoplatform.validation.ValidationRules
 
 import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
-import sigma.data.{CBigInt, CSigmaProp, CUnsignedBigInt, SigmaBoolean}
+import sigma.data.{CBigInt, CBox, CHeader, CSigmaProp, CUnsignedBigInt, SigmaBoolean}
 import sigma.ast.{
-  BigIntConstant, BooleanConstant, ByteConstant, CollectionConstant, Constant, ErgoTree,
-  EvaluatedValue, GroupElementConstant, IntConstant, JitCost, LongConstant, SBigInt, SBoolean,
-  SByte, SCollection, SGroupElement, SInt, SLong, SOption, SShort, SType, SUnsignedBigInt,
-  ShortConstant, STuple, UnsignedBigIntConstant
+  BigIntConstant, BooleanConstant, BoxConstant, ByteConstant, CollectionConstant, Constant,
+  ErgoTree, EvaluatedValue, GroupElementConstant, HeaderConstant, IntConstant, JitCost,
+  LongConstant, SBigInt, SBoolean, SByte, SCollection, SGroupElement, SInt, SLong, SOption,
+  SShort, SType, SUnsignedBigInt, ShortConstant, STuple, UnsignedBigIntConstant
 }
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
@@ -127,6 +127,12 @@ object EvalCore {
     case sp: CSigmaProp =>
       Json.obj("kind"    -> Json.fromString("SigmaProp"),
                "raw_hex" -> Json.fromString(Base16.encode(SigmaBoolean.serializer.toBytes(sp.sigmaTree))))
+    case b: CBox =>
+      Json.obj("kind"      -> Json.fromString("Box"),
+               "bytes_hex" -> Json.fromString(Base16.encode(b.ebox.bytes)))
+    case h: CHeader =>
+      Json.obj("kind"      -> Json.fromString("Header"),
+               "bytes_hex" -> Json.fromString(Base16.encode(h.ergoHeader.bytes)))
     case c: Coll[_] =>
       Json.obj("kind"  -> Json.fromString("Coll"),
                "elem"  -> stypeToJson(Evaluation.rtypeToSType(c.tItem)),
@@ -171,8 +177,8 @@ object EvalCore {
   // ── SValue JSON decoder ────────────────────────────────────────────────────
   // Inverse of valueToJson: reconstructs the sigma-state runtime value wrapped
   // in an EvaluatedValue so it can be bound to context var 1 via ContextExtension.
-  // Covers the Stage-1 kinds: Boolean, Byte, Short, Int, Long, BigInt,
-  // UnsignedBigInt, GroupElement, Coll (incl. nested), Tuple (pair).
+  // Covers: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt, GroupElement,
+  // Coll (incl. nested), Tuple (pair), Option (Some only), Box, Header.
 
   /** Decode a `{"tag":"S…"}` SType JSON (as emitted by stypeToJson) back to SType. */
   def stypeFromJson(j: Json): SType = {
@@ -219,7 +225,8 @@ object EvalCore {
     * EvaluatedValue so it can be used as a context-var binding in evalApplied.
     *
     * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt,
-    * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair).
+    * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair),
+    * Option (Some only — None-as-input errors), Box, Header (each from its `bytes_hex`).
     * Unsupported kinds surface an immediate sys.error (not a silent wrong value). */
   def decodeInputConstant(j: Json): EvaluatedValue[_ <: SType] = {
     val cur  = j.hcursor
@@ -315,6 +322,23 @@ object EvalCore {
             sys.error("decodeInputConstant Option: None-as-input is unsupported " +
               "(untyped; no element type to reconstruct)")
         }
+
+      case "Box" =>
+        // Canonical ErgoBox bytes (identity-by-slice: parse stores the input slice as
+        // _bytes, so encode(box.bytes) == the input hex). Same entry-point as GroupElement.
+        val hex = cur.downField("bytes_hex").as[String]
+          .fold(e => sys.error(s"decodeInputConstant Box: $e"), identity)
+        val bytes = Base16.decode(hex).get
+        val ebox  = ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(bytes))
+        BoxConstant(CBox(ebox))
+
+      case "Header" =>
+        // Canonical ErgoHeader bytes (identity-by-slice, as for Box).
+        val hex = cur.downField("bytes_hex").as[String]
+          .fold(e => sys.error(s"decodeInputConstant Header: $e"), identity)
+        val bytes  = Base16.decode(hex).get
+        val header = ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(bytes))
+        HeaderConstant(new CHeader(header))
 
       case other =>
         sys.error(s"decodeInputConstant: '$other' not yet supported")

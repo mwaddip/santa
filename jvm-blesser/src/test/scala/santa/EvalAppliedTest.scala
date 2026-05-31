@@ -1,15 +1,19 @@
 package santa
 
+import scorex.util.bytesToId
 import scorex.util.encode.Base16
 
 import io.circe.Json
 
+import org.ergoplatform.ErgoBox
+
 import sigma.ast.{
-  ErgoTree, GetVar, OptionGet, SBigInt, SBoolean, SByte, SCollection, SGroupElement,
-  SInt, SLong, SOption, SShort, SType, STuple, SUnsignedBigInt, Value
+  ErgoTree, GetVar, OptionGet, SBigInt, SBoolean, SBox, SByte, SCollection, SGroupElement,
+  SHeader, SInt, SLong, SOption, SShort, SType, STuple, SUnsignedBigInt, Value
 }
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.CryptoConstants
+import sigma.data.ProveDlog
 import sigma.serialization.GroupElementSerializer
 
 /** TDD tests for EvalCore.evalApplied and the SValue input decoder.
@@ -183,6 +187,65 @@ class EvalAppliedTest extends munit.FunSuite {
     interceptMessage[RuntimeException](
       "decodeInputConstant Option: None-as-input is unsupported (untyped; no element type to reconstruct)") {
       EvalCore.decodeInputConstant(parse("""{"kind":"Option","value":null}"""))
+    }
+  }
+
+  // ── Box + Header (Stage 2a) ────────────────────────────────────────────────
+
+  /** A trivial-but-valid ErgoBox for the Box round-trip: a P2PK box on the dlog
+    * generator, mirroring EvalCore.dummyContext's selfBox shape (positive value,
+    * all-zero txid, index 0, creationHeight 0). The proposition is a real ProveDlog
+    * (not a constant) so the serialized box is representative. */
+  private def trivialBox(): ErgoBox = {
+    val tree = ErgoTree.fromSigmaBoolean(ProveDlog(CryptoConstants.dlogGroup.generator))
+    new ErgoBox(
+      value          = 1000000L,
+      ergoTree       = tree,
+      transactionId  = bytesToId(Array.fill(32)(0: Byte)),
+      index          = 0.toShort,
+      creationHeight = 0
+    )
+  }
+
+  // LOAD-BEARING: proves a BoxConstant survives decode -> bind as ContextExtension
+  // var 1 -> toSigmaContext() -> eval -> encode. If this fails, the binding model is
+  // wrong for Box (escalate, do NOT work around).
+  test("eval-back: Box (P2PK on dlog generator)") {
+    val box       = trivialBox()
+    val inputJson = parse(s"""{"kind":"Box","bytes_hex":"${Base16.encode(box.bytes)}"}""")
+    assertEvalBack(SBox, inputJson)
+  }
+
+  // Header round-trip from the upstream v2 (first byte 02) mainnet-header literal
+  // (LanguageSpecificationV6.scala). Identity tree returns the header unchanged, so
+  // PoW validity is irrelevant — this guards the codec round-trip only.
+  test("eval-back: Header (upstream v2 literal)") {
+    val headerHex =
+      "02ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+    val inputJson = parse(s"""{"kind":"Header","bytes_hex":"$headerHex"}""")
+    assertEvalBack(SHeader, inputJson)
+  }
+
+  // Pinned to the exact type, not interceptMessage: the serializer's truncation throw
+  // (BufferUnderflowException) carries a null message. A regression to the removed
+  // "'Box' not yet supported" arm would throw a bare RuntimeException, which is NOT a
+  // BufferUnderflowException — so this intercept fails on that regression rather than
+  // passing spuriously.
+  test("decoder: malformed Box bytes error loudly (no silent wrong value)") {
+    intercept[java.nio.BufferUnderflowException] {
+      EvalCore.decodeInputConstant(parse("""{"kind":"Box","bytes_hex":"00"}"""))
+    }
+  }
+
+  // Symmetric Header guard: the decode path mirrors Box (Base16.decode ->
+  // SigmaSerializer.startReader -> Header.sigmaSerializer.parse), so a malformed/truncated
+  // Header must also error loudly, never decode silently to a wrong value. Pinned to the
+  // observed type: the Header reader's truncation throw is an IllegalArgumentException
+  // ("requirement failed: Not enough bytes in the buffer"), not the BufferUnderflowException
+  // the Box path throws — verified empirically.
+  test("decoder: malformed Header bytes error loudly (no silent wrong value)") {
+    intercept[java.lang.IllegalArgumentException] {
+      EvalCore.decodeInputConstant(parse("""{"kind":"Header","bytes_hex":"00"}"""))
     }
   }
 }

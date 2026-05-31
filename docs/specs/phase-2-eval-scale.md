@@ -100,8 +100,11 @@ Entry fields:
 - **Stage 1 — value-input features**: inputs are plain SValues (Boolean / numeric / Coll
   / Tuple / …). The bulk of arithmetic, logic, collection, crypto ops. Needs
   deliverables 1–6 with a plain-value input codec.
-- **Stage 2 — context-input features**: inputs that *are* a `Context` / `Box` / `Header`
-  (the analog of the old context-bearing split). Adds context reconstruction.
+- **Stage 2 — context-input features**: inputs that *are* a `Context` / `Box` / `Header`.
+  The Stage-2 scoping investigation (2026-05-31) split this in two: **2a** (Box/Header —
+  plain values bound to context var 1, same path as Stage 1; no reconstruction) and **2b**
+  (Context — the lone genuine "context reconstruction" case, `getVarFromInput`). See
+  [phase-2-stage-2a-box-header.md](phase-2-stage-2a-box-header.md).
 
 ## Out of scope
 
@@ -114,6 +117,10 @@ Entry fields:
 
 **Stage 1 delivered — 192 `santa-eval/v2` vectors across 22 ops, cross-check green.**
 **Stage 1.5 delivered** (see [phase-2-stage-1.5-unsignedbigint-option.md](phase-2-stage-1.5-unsignedbigint-option.md)) —
-UnsignedBigInt + Option codec added; corpus grew to 235 vectors across 28 ops, skip count 0.
-`SPEC.md`'s eval-tier contract updated to v2 reality. Stage 2 (context-input features) and
+UnsignedBigInt + Option codec added; corpus grew to 235 vectors across 29 ops, skip count 0.
+**Stage 2a delivered** (see [phase-2-stage-2a-box-header.md](phase-2-stage-2a-box-header.md)) —
+Box + Header value codec added; corpus **239 vectors across 32 ops**, cross-check **245/245
+across 33 files**. The context-input skip dropped 8 → 4 (the remaining 4 are all
+`getVarFromInput`, a `Context` input → Stage 2b).
+`SPEC.md`'s eval-tier contract reflects v2 reality. Stage 2b (Context-input features) and
 the first independent runner (ergots) remain open.
