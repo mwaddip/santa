@@ -122,7 +122,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, TS) — **built 2026-05-31**; v5-scoped (covers 12, abstains 231 v6; 6 cost + 2 repr divergences → ergots) |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, TS) — **built 2026-05-31**; v5-scoped (covers 12, abstains 231 v6; drove the AddToEnvironment cost fix; 2 repr divergences open) |
 | _(unassigned)_ | `sigma-rust` fork · `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo

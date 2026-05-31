@@ -60,10 +60,10 @@ SANTA session.
 `npm test` runs the whole committed corpus (33 files / 245 entries):
 
 ```
-covered 12  = nice 6 (v1 closed trees, exact) + cost-divergent 6 (v2)
+covered 12  = nice 12  (cost bug RESOLVED 2026-06-01; was 6 nice + 6 cost-divergent v2)
 abstain 231 = v6 UnsignedBigInt 34 + not-implemented/v6 197
-divergences → ergots: 6 cost (AddToEnvironment lambda undercharge) + 2 repr (Header ts cap)
+divergences → ergots: 2 repr (Header ts cap)   — the 6 AddToEnvironment cost divergences are FIXED
 ```
 
-The e2e gate asserts Dasher is correct on every value and **pins** the 6 cost + 2 repr divergences
+The e2e gate asserts Dasher is correct on every value and **pins** the 2 remaining repr divergences (the 6 AddToEnvironment cost divergences are fixed)
 as the two known ergots bugs (see the findings doc) — so a *new* divergence fails the gate.

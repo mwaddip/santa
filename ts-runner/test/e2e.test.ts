@@ -69,9 +69,10 @@ describe('Dasher e2e conformance vs blessed corpus', () => {
   })
 
   // ---- Known ergots divergences: routed to ergots, pinned here so a NEW divergence fails the gate. ----
-  // When ergots fixes the AddToEnvironment lambda-cost bug, these 6 become nice → update to 0.
-  it('cost divergences are exactly the 6 known v2 entries (ergots AddToEnvironment lambda-cost bug)', () => {
-    expect(costDivergences).toHaveLength(6)
+  // AddToEnvironment lambda-cost bug RESOLVED 2026-06-01 (sigma-rust d59d8d9f + ergots 6171d32,
+  // ergots dist rebuilt) — was 6, now 0. Kept as a regression guard: a new cost divergence fails here.
+  it('no cost divergences — AddToEnvironment lambda-cost bug fixed (regression guard)', () => {
+    expect(costDivergences).toHaveLength(0)
   })
   // When ergots represents Header.timestamp as a full Long, these 2 become covered → update to 0.
   it('representation divergences are exactly the 2 known Header-timestamp entries (ergots cap bug)', () => {

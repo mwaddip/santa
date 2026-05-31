@@ -29,7 +29,7 @@ describe('ergots API wiring (smoke)', () => {
   // ergots' (sigma-rust-byte-compatible) serializer; value+cost read back from
   // ergots. (Reported as DONE_WITH_CONCERNS — downstream encode tasks must not
   // assume Coll.reverse is available.)
-  it('v2 function tree: Coll.indices on Coll(1,2) bound at var 1 → Coll[Int][0,1], cost 91', () => {
+  it('v2 function tree: Coll.indices on Coll(1,2) bound at var 1 → Coll[Int][0,1], cost 96', () => {
     const tree = parseTree(hexToBytes('1b1000dad9010110db0c0e720101e4e30110'))
     expect(tree.header.version).toBe(3) // header version == entry.version.ergoTree
     const elem: SType = { tag: 'SInt' }
@@ -46,6 +46,6 @@ describe('ergots API wiring (smoke)', () => {
     const v = evaluateWith(tree, ctx) as Extract<SValue, { kind: 'Coll' }>
     expect(v.kind).toBe('Coll')
     expect(v.items).toEqual([{ kind: 'Int', value: 0 }, { kind: 'Int', value: 1 }])
-    expect(ctx.jitCost).toBe(91)
+    expect(ctx.jitCost).toBe(96) // 91 + 5 AddToEnvironment lambda-arg charge (ergots fix 2026-06-01)
   })
 })

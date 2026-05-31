@@ -32,7 +32,7 @@ describe('runVector — outcome taxonomy', () => {
     const { actuals } = runVector(vec)
     expect(actuals['i']).toEqual({
       value: { kind: 'Coll', elem: { tag: 'SInt' }, items: [{ kind: 'Int', value: 0 }, { kind: 'Int', value: 1 }] },
-      cost: 91, error: null,
+      cost: 96, error: null, // 91 + 5 AddToEnvironment (ergots fix 2026-06-01)
     })
   })
 

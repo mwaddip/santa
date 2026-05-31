@@ -7,12 +7,14 @@ ergots is the first *independent* conformer, so a Dasher-vs-blessed mismatch is 
 
 ergots is **v5-scoped**. Of 245 entries it **abstains on 231** (out of v5 scope — 34
 UnsignedBigInt + 197 not-yet-implemented v6 methods; these flip to *covered* when ergots gains
-v6), **evaluates 12** (6 exactly nice, 6 cost-divergent), and **diverges on the 8 below**.
+v6), **evaluates 12** (all 12 now nice — the 6 cost divergences below were **RESOLVED 2026-06-01**), with **2 representation divergences** still open (below).
 
 Reproduce: `cd ts-runner && npx vitest run test/e2e.test.ts` (the gate pins these 8), or
 `node ts-runner/dist/runner.js vectors/eval/<op>.json`.
 
-## Cost divergences (value agrees; JIT cost differs) — OPEN
+## Cost divergences (value agrees; JIT cost differs) — RESOLVED 2026-06-01
+
+> **RESOLVED:** fixed in **sigma-rust** `d59d8d9f` (ergo-node-integration) + **ergots** `6171d32`; after ergots' `dist` rebuild Dasher matches the JVM on all six (12/12 covered nice). The e2e gate flipped 6→0, kept as a regression guard. The record + root-cause analysis below stands.
 
 ergots **undercharges JIT cost by 5 per lambda application** — it omits the `AddToEnvironment`
 (FixedCost 5) charge that sigma-state makes on **every** environment insertion, including
@@ -69,6 +71,6 @@ actuals; scored as a divergence, **not** `errored`).
 **Fix:** represent `Header.timestamp` as `bigint` (full u64) to match consensus.
 
 ## Status
-- **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **OPEN** — route to ergots (+ upstream sigma-rust). Single fix.
+- **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **RESOLVED 2026-06-01** — fixed in sigma-rust (`d59d8d9f`) + ergots (`6171d32`); ergots `dist` rebuilt; Dasher nice on all 12 covered. The e2e gate flipped 6→0 (kept as a regression guard).
 - **Repr — `Header.timestamp` cap** (2 entries): **OPEN** — route to ergots.
 - Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins both sets at their current counts (6 / 2); when ergots fixes either, the count drops and the gate flags it for un-quarantine.
