@@ -52,6 +52,7 @@ class V6ExtractorTest extends munit.FunSuite {
          |  skipped — unsupported at V3       : ${result.skippedUnsupported}
          |  skipped — error-expected (Failure): ${result.skippedError}
          |  skipped — context/box/header input: ${result.skippedContext}
+         |${result.skippedContextReasons.map("    - " + _).mkString("\n")}
          |  skipped — unsupported value kind  : ${result.skippedUnsupportedKind}
          |${result.unsupportedKindReasons.map("    - " + _).mkString("\n")}
          |  COST DIAGNOSTICS (eval vs spec)   : ${result.costDiagnostics.size}
