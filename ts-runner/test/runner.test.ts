@@ -36,7 +36,7 @@ describe('runVector — outcome taxonomy', () => {
     })
   })
 
-  it('coverage-gap: Coll.reverse (unimplemented v5 op) → gaps, NOT actuals/errored', () => {
+  it('abstain (not implemented = v6): Coll.reverse → abstainedNotImpl, NOT actuals/errored', () => {
     const vec = {
       schema: 'santa-eval/v2', op: 'Coll.reverse', blessed_by: 'x', source: 's',
       entries: [{
@@ -45,9 +45,9 @@ describe('runVector — outcome taxonomy', () => {
         version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null },
       }],
     }
-    const { actuals, gaps } = runVector(vec)
+    const { actuals, abstainedNotImpl } = runVector(vec)
     expect('r' in actuals).toBe(false)
-    expect(gaps).toContain('r')
+    expect(abstainedNotImpl).toContain('r')
   })
 
   it('abstain·v6: UnsignedBigInt input (out of v5 scope) → abstainedV6, NOT gap/errored', () => {
@@ -59,9 +59,9 @@ describe('runVector — outcome taxonomy', () => {
         version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null },
       }],
     }
-    const { actuals, abstainedV6, gaps } = runVector(vec)
+    const { actuals, abstainedV6, abstainedNotImpl } = runVector(vec)
     expect('u' in actuals).toBe(false)
     expect(abstainedV6).toContain('u')
-    expect(gaps).not.toContain('u')
+    expect(abstainedNotImpl).not.toContain('u')
   })
 })

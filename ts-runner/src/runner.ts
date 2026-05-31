@@ -17,14 +17,16 @@ type Result = { value: Json; cost: number | null; error: null | 'errored' }
 // Non-success outcomes. All but `errored` are OMITTED from the actuals file
 // (the frozen schema has only success/errored); Dasher tracks each distinctly.
 // Two verdict classes:
-//   - clean ABSTENTION (out of declared v5 scope; NOT a bug; neither nice nor naughty): ABSTAIN_V6.
-//   - NAUGHTY-BY-COVERAGE (ergots fails an in-scope v5 thing the JVM handles; a real bug to
-//     route to ergots): COVERAGE_GAP (op unbuilt) and REPR_DIVERGENCE (input unrepresentable).
-//     Same verdict, different cause; tracked as separate lists.
-const ABSTAIN_V6 = Symbol('abstain-v6')           // v6 UnsignedBigInt — out of declared v5 scope (pre-eval) — clean abstain
-const REPR_DIVERGENCE = Symbol('repr-divergence') // v5 input ergots can't represent, e.g. Header ts > 2^53 (pre-eval) — naughty-by-coverage
-const COVERAGE_GAP = Symbol('coverage-gap')       // in-scope v5 op ergots hasn't implemented (eval throws) — naughty-by-coverage
-type Outcome = Result | typeof ABSTAIN_V6 | typeof REPR_DIVERGENCE | typeof COVERAGE_GAP
+//   - clean ABSTENTION (out of ergots' declared v5/mainnet scope; NOT a bug; neither nice nor
+//     naughty; flips to covered when ergots gains v6): ABSTAIN_V6 (v6 UnsignedBigInt kind/type)
+//     and ABSTAIN_NOT_IMPL (op not on mainnet ⇒ not implemented ⇒ a v6 feature).
+//   - DIVERGENCE (naughty — a real ergots bug in something it DOES support; route to ergots):
+//     REPR_DIVERGENCE (Header input ergots can't represent). (Cost divergences also score
+//     naughty, but they evaluate, so they land in `actuals` and the comparator catches them.)
+const ABSTAIN_V6 = Symbol('abstain-v6')             // v6 UnsignedBigInt — out of v5 scope (pre-eval) — clean abstain
+const ABSTAIN_NOT_IMPL = Symbol('abstain-not-impl') // op not on mainnet ⇒ not implemented ⇒ v6 (eval throws 'method-not-implemented') — clean abstain
+const REPR_DIVERGENCE = Symbol('repr-divergence')   // v5 input ergots can't represent, e.g. Header ts > 2^53 (pre-eval) — naughty (ergots bug)
+type Outcome = Result | typeof ABSTAIN_V6 | typeof ABSTAIN_NOT_IMPL | typeof REPR_DIVERGENCE
 
 /** ergots ReaderError code for an input the v5 codec cannot represent (a Header
  *  timestamp > Number.MAX_SAFE_INTEGER). Confirmed in @ergots/scorex header.ts:72. */
@@ -68,13 +70,14 @@ export function runEntry(schema: string, e: Entry): Outcome {
   }
 
   // [2] eval ⇒ [3] encode ⇒ [4] capture.
-  //     EvalError 'method-not-implemented' ⇒ COVERAGE_GAP (op ergots hasn't built);
+  //     EvalError 'method-not-implemented' ⇒ ABSTAIN_NOT_IMPL (op not on mainnet ⇒ a v6
+  //     feature ergots doesn't implement ⇒ out of scope, clean abstain — NOT errored);
   //     any other EvalError ⇒ errored; a non-EvalError throw ⇒ loud re-throw.
   try {
     const out = evaluateWith(tree, ctx)
     return { value: encodeSValue(out, treeVersion), cost: ctx.jitCost, error: null }
   } catch (err) {
-    if (err instanceof EvalError && err.code === 'method-not-implemented') return COVERAGE_GAP
+    if (err instanceof EvalError && err.code === 'method-not-implemented') return ABSTAIN_NOT_IMPL
     if (err instanceof EvalError) return { value: null, cost: null, error: 'errored' }
     throw err
   }
@@ -82,34 +85,32 @@ export function runEntry(schema: string, e: Entry): Outcome {
 
 export interface RunReport {
   /** The actuals file: per-entry {value,cost,error}, keyed by name. Contains
-   *  success + errored entries only (abstain/gap/divergence entries are omitted). */
+   *  success + errored entries only (abstain/divergence entries are omitted). */
   actuals: Record<string, Result>
-  /** CLEAN ABSTENTION — out of declared v5 scope (v6 UnsignedBigInt). Not a bug;
-   *  neither nice nor naughty. */
+  /** CLEAN ABSTENTION — v6 UnsignedBigInt kind/type, out of v5 scope. Not a bug. */
   abstainedV6: string[]
-  /** NAUGHTY-BY-COVERAGE — a v5 input ergots can't represent (Header ts overflow):
-   *  a real ergots/JVM divergence (ergots bug). Omitted from actuals, but route to
-   *  ergots. Same verdict class as `gaps`, different cause. */
+  /** CLEAN ABSTENTION — op not on mainnet ⇒ not implemented ⇒ a v6 feature, out of v5
+   *  scope. Not a bug; flips to covered when ergots gains v6. */
+  abstainedNotImpl: string[]
+  /** DIVERGENCE (naughty) — a v5 input ergots can't represent (Header ts overflow): a
+   *  real ergots bug in a type it DOES support. Omitted from actuals; route to ergots. */
   reprDivergences: string[]
-  /** NAUGHTY-BY-COVERAGE — an in-scope v5 op ergots hasn't implemented (coverage-gap).
-   *  Omitted from actuals; route to ergots. */
-  gaps: string[]
 }
 
 /** run(vector) → actuals + Dasher-side scope metadata. */
 export function runVector(doc: Vector): RunReport {
   const actuals: Record<string, Result> = {}
   const abstainedV6: string[] = []
+  const abstainedNotImpl: string[] = []
   const reprDivergences: string[] = []
-  const gaps: string[] = []
   for (const e of doc.entries) {
     const r = runEntry(doc.schema ?? 'santa-eval/v1', e)
     if (r === ABSTAIN_V6) abstainedV6.push(e.name)
+    else if (r === ABSTAIN_NOT_IMPL) abstainedNotImpl.push(e.name)
     else if (r === REPR_DIVERGENCE) reprDivergences.push(e.name)
-    else if (r === COVERAGE_GAP) gaps.push(e.name)
     else actuals[e.name] = r
   }
-  return { actuals, abstainedV6, reprDivergences, gaps }
+  return { actuals, abstainedV6, abstainedNotImpl, reprDivergences }
 }
 
 // ---- CLI: runner <vector.json> [actuals-out.json] (mirrors Runner.scala) ----
@@ -120,7 +121,7 @@ function main(argv: string[]): void {
     process.exit(2)
   }
   const doc = JSON.parse(readFileSync(vecPath, 'utf8')) as Vector
-  const { actuals, abstainedV6, reprDivergences, gaps } = runVector(doc)
+  const { actuals, abstainedV6, abstainedNotImpl, reprDivergences } = runVector(doc)
   const json = JSON.stringify(actuals, null, 2)
   const outPath = argv[3]
   if (outPath) {
@@ -129,9 +130,9 @@ function main(argv: string[]): void {
   } else {
     console.log(json)
   }
-  if (abstainedV6.length) console.error(`abstain · v6 UnsignedBigInt (out of scope, clean): ${abstainedV6.length}`)
-  if (gaps.length) console.error(`naughty-by-coverage · op not implemented in ergots (route to ergots): ${gaps.length} — ${gaps.join(', ')}`)
-  if (reprDivergences.length) console.error(`naughty-by-coverage · ergots cannot represent input (route to ergots): ${reprDivergences.length} — ${reprDivergences.join(', ')}`)
+  if (abstainedV6.length) console.error(`abstain · v6 UnsignedBigInt (out of scope): ${abstainedV6.length}`)
+  if (abstainedNotImpl.length) console.error(`abstain · op not implemented = v6 (out of scope): ${abstainedNotImpl.length}`)
+  if (reprDivergences.length) console.error(`DIVERGENCE · ergots cannot represent input (route to ergots): ${reprDivergences.length} — ${reprDivergences.join(', ')}`)
 }
 
 // Run main only when invoked as the bin, not when imported.
