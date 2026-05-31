@@ -55,9 +55,11 @@ export function runEntry(schema: string, e: Entry): Outcome {
     if (schema === 'santa-eval/v2') {
       if (!e.input) throw new Error(`missing input in v2 entry '${e.name}'`)
       const { value, tpe } = decodeSValue(e.input, treeVersion)
-      ctx = makeContext({ treeVersion, extension: { values: { 1: { tpe, value } } } })
+      // ConstPlaceholder resolution needs the tree's segregated constants;
+      // evaluateWith (unlike evaluate) does NOT auto-populate them — pass explicitly.
+      ctx = makeContext({ treeVersion, constants: tree.constants, extension: { values: { 1: { tpe, value } } } })
     } else {
-      ctx = makeContext({ treeVersion })
+      ctx = makeContext({ treeVersion, constants: tree.constants })
     }
   } catch (err) {
     if (err instanceof AbstainError) return ABSTAIN_V6
