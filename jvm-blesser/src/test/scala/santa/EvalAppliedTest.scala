@@ -6,7 +6,7 @@ import io.circe.Json
 
 import sigma.ast.{
   ErgoTree, GetVar, OptionGet, SBigInt, SBoolean, SByte, SCollection, SGroupElement,
-  SInt, SLong, SShort, SType, STuple, Value
+  SInt, SLong, SShort, SType, STuple, SUnsignedBigInt, Value
 }
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.CryptoConstants
@@ -28,7 +28,9 @@ class EvalAppliedTest extends munit.FunSuite {
   private def idTreeHex(tpe: SType, version: Byte = 3): String = {
     val root: Value[SType] = OptionGet(GetVar(1.toByte, tpe)).asInstanceOf[Value[SType]]
     val header: HeaderType = ErgoTree.setSizeBit(ErgoTree.headerWithVersion(ZeroHeader, version))
-    Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    sigma.VersionContext.withVersions(version, version) {   // v6 ctx so code-9 (SUnsignedBigInt) serializes
+      Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    }
   }
 
   private def parse(s: String): Json = io.circe.parser.parse(s).toOption.get
@@ -88,6 +90,17 @@ class EvalAppliedTest extends munit.FunSuite {
 
   test("eval-back: BigInt") {
     assertEvalBack(SBigInt, parse("""{"kind":"BigInt","value":"123456789012345678901234567890"}"""))
+  }
+
+  test("eval-back: UnsignedBigInt") {
+    assertEvalBack(SUnsignedBigInt,
+      parse("""{"kind":"UnsignedBigInt","value":"123456789012345678901234567890"}"""))
+  }
+
+  test("eval-back: UnsignedBigInt (large, near 256-bit)") {
+    // 2^255 - 1 — exercises a value that fits UnsignedBigInt but would overflow signed paths
+    val v = java.math.BigInteger.TWO.pow(255).subtract(java.math.BigInteger.ONE).toString
+    assertEvalBack(SUnsignedBigInt, parse(s"""{"kind":"UnsignedBigInt","value":"$v"}"""))
   }
 
   test("eval-back: GroupElement (dlog generator)") {
