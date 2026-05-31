@@ -177,8 +177,8 @@ object EvalCore {
   // ── SValue JSON decoder ────────────────────────────────────────────────────
   // Inverse of valueToJson: reconstructs the sigma-state runtime value wrapped
   // in an EvaluatedValue so it can be bound to context var 1 via ContextExtension.
-  // Covers the Stage-1 kinds: Boolean, Byte, Short, Int, Long, BigInt,
-  // UnsignedBigInt, GroupElement, Coll (incl. nested), Tuple (pair).
+  // Covers: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt, GroupElement,
+  // Coll (incl. nested), Tuple (pair), Option (Some only), Box, Header.
 
   /** Decode a `{"tag":"S…"}` SType JSON (as emitted by stypeToJson) back to SType. */
   def stypeFromJson(j: Json): SType = {
@@ -225,7 +225,8 @@ object EvalCore {
     * EvaluatedValue so it can be used as a context-var binding in evalApplied.
     *
     * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt,
-    * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair).
+    * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair),
+    * Option (Some only — None-as-input errors), Box, Header (each from its `bytes_hex`).
     * Unsupported kinds surface an immediate sys.error (not a silent wrong value). */
   def decodeInputConstant(j: Json): EvaluatedValue[_ <: SType] = {
     val cur  = j.hcursor
