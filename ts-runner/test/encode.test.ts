@@ -28,3 +28,28 @@ describe('encode — primitives', () => {
     expect(() => encodeSValue({ kind: 'String', value: 'x' } as SValue, 3)).toThrow(/unmodeled|unexpected/i)
   })
 })
+
+describe('encode — composites', () => {
+  it('Coll → {elem, items} (elem via SType bridge)', () => {
+    expect(encodeSValue({ kind: 'Coll', elem: { tag: 'SInt' }, items: [
+      { kind: 'Int', value: 2 }, { kind: 'Int', value: 1 },
+    ] }, 3)).toEqual({ kind: 'Coll', elem: { tag: 'SInt' }, items: [
+      { kind: 'Int', value: 2 }, { kind: 'Int', value: 1 },
+    ] })
+  })
+  it('Tuple → positional items', () => {
+    expect(encodeSValue({ kind: 'Tuple', items: [
+      { kind: 'Int', value: 1 }, { kind: 'Boolean', value: false },
+    ] }, 3)).toEqual({ kind: 'Tuple', items: [
+      { kind: 'Int', value: 1 }, { kind: 'Boolean', value: false },
+    ] })
+  })
+  it('Option Some → {value: inner} (drops ergots elem)', () => {
+    expect(encodeSValue({ kind: 'Option', elem: { tag: 'SLong' }, value: { kind: 'Long', value: 7n } }, 3))
+      .toEqual({ kind: 'Option', value: { kind: 'Long', value: '7' } })
+  })
+  it('Option None → {value: null}', () => {
+    expect(encodeSValue({ kind: 'Option', elem: { tag: 'SInt' }, value: null }, 3))
+      .toEqual({ kind: 'Option', value: null })
+  })
+})

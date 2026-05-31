@@ -1,7 +1,6 @@
 import type { SType } from '@ergots/ergoscript'
 import { AbstainError } from './abstain'
-
-type Json = Record<string, unknown>
+import type { Json } from './json'
 
 /** SANTA's SType tags that map 1:1 to an ergots leaf SType tag. */
 const LEAF_TAGS = new Set([
@@ -9,14 +8,15 @@ const LEAF_TAGS = new Set([
   'SSigmaProp', 'SBox', 'SHeader', 'SPreHeader', 'SUnit', 'SAny',
 ])
 
-/** SANTA SType JSON → ergots SType. SUnsignedBigInt is out of v5 scope → abstain. */
-export function stypeFromSanta(t: Json): SType {
-  const tag = t.tag as string
+/** SANTA SType JSON object → ergots SType. SUnsignedBigInt is out of v5 scope → abstain.
+ *  The parameter is narrowed to a JSON object (SANTA SType JSON is always `{tag, ...}`). */
+export function stypeFromSanta(t: { [k: string]: Json }): SType {
+  const tag = t['tag'] as string
   if (tag === 'SUnsignedBigInt') throw new AbstainError('SType SUnsignedBigInt is v6-only')
   if (LEAF_TAGS.has(tag)) return { tag } as SType
-  if (tag === 'SColl') return { tag: 'SColl', elem: stypeFromSanta(t.elem as Json) }
-  if (tag === 'SOption') return { tag: 'SOption', elem: stypeFromSanta(t.elem as Json) }
-  if (tag === 'STuple') return { tag: 'STuple', items: (t.items as Json[]).map(stypeFromSanta) }
+  if (tag === 'SColl') return { tag: 'SColl', elem: stypeFromSanta(t['elem'] as { [k: string]: Json }) }
+  if (tag === 'SOption') return { tag: 'SOption', elem: stypeFromSanta(t['elem'] as { [k: string]: Json }) }
+  if (tag === 'STuple') return { tag: 'STuple', items: (t['items'] as { [k: string]: Json }[]).map(stypeFromSanta) }
   throw new Error(`unknown SANTA SType tag: ${tag}`)
 }
 

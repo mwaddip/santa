@@ -2,11 +2,10 @@ import { describe, it, expect } from 'vitest'
 import type { SType } from '@ergots/ergoscript'
 import { stypeFromSanta, stypeToSanta } from '../src/stype'
 import { AbstainError } from '../src/abstain'
-
-type Json = Record<string, unknown>
+import type { Json } from '../src/json'
 
 describe('SType bridge', () => {
-  const cases: Array<[Json, SType]> = [
+  const cases: Array<[{ [k: string]: Json }, SType]> = [
     [{ tag: 'SBoolean' }, { tag: 'SBoolean' }],
     [{ tag: 'SInt' }, { tag: 'SInt' }],
     [{ tag: 'SLong' }, { tag: 'SLong' }],
