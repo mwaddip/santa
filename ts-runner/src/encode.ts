@@ -1,9 +1,17 @@
-import type { SValue } from '@ergots/ergoscript'
+import type { SValue, SType } from '@ergots/ergoscript'
+import { serializeSValue } from '@ergots/ergoscript'
+import { ByteWriter } from '@ergots/scorex'
 import { bytesToHex } from './hex'
 import { stypeToSanta } from './stype'
 import type { Json } from './json'
 
 export type { Json }
+
+function serializeBytesKind(t: SType, v: SValue, treeVersion: number): string {
+  const w = new ByteWriter()
+  serializeSValue(t, v, treeVersion, w)
+  return bytesToHex(w.toBytes())
+}
 
 /** ergots SValue → SANTA canonical JSON (contract §4). `treeVersion` is needed
  *  only by the bytes-kinds (Box/Header/SigmaProp) wire serializer in Task 5. */
@@ -23,6 +31,12 @@ export function encodeSValue(v: SValue, treeVersion: number): Json {
     case 'Option':
       // SANTA Option has NO elem (contract §4); drop ergots' elem.
       return { kind: 'Option', value: v.value === null ? null : encodeSValue(v.value, treeVersion) }
+    case 'Box':
+      return { kind: 'Box', bytes_hex: serializeBytesKind({ tag: 'SBox' }, v, treeVersion) }
+    case 'Header':
+      return { kind: 'Header', bytes_hex: serializeBytesKind({ tag: 'SHeader' }, v, treeVersion) }
+    case 'SigmaProp':
+      return { kind: 'SigmaProp', raw_hex: serializeBytesKind({ tag: 'SSigmaProp' }, v, treeVersion) }
     default:
       throw new Error(`encode: unmodeled/unexpected ergots result kind '${(v as SValue).kind}'`)
   }

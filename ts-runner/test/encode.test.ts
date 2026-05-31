@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import type { SValue } from '@ergots/ergoscript'
+import { parseSValue } from '@ergots/ergoscript'
+import { ByteReader } from '@ergots/scorex'
 import { encodeSValue } from '../src/encode'
+import { hexToBytes } from '../src/hex'
 
 describe('encode — primitives', () => {
   it('Boolean → bare bool', () => {
@@ -51,5 +54,14 @@ describe('encode — composites', () => {
   it('Option None → {value: null}', () => {
     expect(encodeSValue({ kind: 'Option', elem: { tag: 'SInt' }, value: null }, 3))
       .toEqual({ kind: 'Option', value: null })
+  })
+})
+
+describe('encode — bytes-kinds (Box round-trip)', () => {
+  const BOX_HEX = '0a0b0208d3000000000000000000000000000000000000000000000000000000000000000000000000'
+  it('Box → bytes_hex equals ergots box serialization (round-trip)', () => {
+    const box = parseSValue({ tag: 'SBox' }, 3, new ByteReader(hexToBytes(BOX_HEX)))
+    expect(box.kind).toBe('Box')
+    expect(encodeSValue(box, 3)).toEqual({ kind: 'Box', bytes_hex: BOX_HEX })
   })
 })
