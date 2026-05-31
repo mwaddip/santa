@@ -113,5 +113,7 @@ Entry fields:
 ## Status
 
 **Stage 1 delivered — 192 `santa-eval/v2` vectors across 22 ops, cross-check green.**
+**Stage 1.5 delivered** (see [phase-2-stage-1.5-unsignedbigint-option.md](phase-2-stage-1.5-unsignedbigint-option.md)) —
+UnsignedBigInt + Option codec added; corpus grew to 235 vectors across 28 ops, skip count 0.
 `SPEC.md`'s eval-tier contract updated to v2 reality. Stage 2 (context-input features) and
 the first independent runner (ergots) remain open.

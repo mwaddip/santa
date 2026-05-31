@@ -9,11 +9,12 @@ import org.ergoplatform.{ErgoBox, ErgoLikeContext, ErgoLikeTransaction}
 import org.ergoplatform.validation.ValidationRules
 
 import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
-import sigma.data.{CBigInt, CSigmaProp, SigmaBoolean}
+import sigma.data.{CBigInt, CSigmaProp, CUnsignedBigInt, SigmaBoolean}
 import sigma.ast.{
   BigIntConstant, BooleanConstant, ByteConstant, CollectionConstant, Constant, ErgoTree,
   EvaluatedValue, GroupElementConstant, IntConstant, JitCost, LongConstant, SBigInt, SBoolean,
-  SByte, SCollection, SGroupElement, SInt, SLong, SShort, SType, ShortConstant, STuple
+  SByte, SCollection, SGroupElement, SInt, SLong, SOption, SShort, SType, SUnsignedBigInt,
+  ShortConstant, STuple, UnsignedBigIntConstant
 }
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
@@ -88,6 +89,7 @@ object EvalCore {
       case SInt        => tag("SInt")
       case SLong       => tag("SLong")
       case SBigInt     => tag("SBigInt")
+      case SUnsignedBigInt => tag("SUnsignedBigInt")
       case SUnit       => tag("SUnit")
       case SAny        => tag("SAny")
       case SGroupElement => tag("SGroupElement")
@@ -120,6 +122,8 @@ object EvalCore {
     case n: Long    => Json.obj("kind" -> Json.fromString("Long"),    "value" -> Json.fromString(n.toString))
     case b: CBigInt => Json.obj("kind" -> Json.fromString("BigInt"),
                                 "value" -> Json.fromString(b.wrappedValue.toString))
+    case u: CUnsignedBigInt => Json.obj("kind" -> Json.fromString("UnsignedBigInt"),
+                                        "value" -> Json.fromString(u.wrappedValue.toString))
     case sp: CSigmaProp =>
       Json.obj("kind"    -> Json.fromString("SigmaProp"),
                "raw_hex" -> Json.fromString(Base16.encode(SigmaBoolean.serializer.toBytes(sp.sigmaTree))))
@@ -130,6 +134,10 @@ object EvalCore {
     case (a, b) =>
       Json.obj("kind"  -> Json.fromString("Tuple"),
                "items" -> Json.arr(valueToJson(a), valueToJson(b)))
+    case opt: Option[_] => opt match {
+      case Some(x) => Json.obj("kind" -> Json.fromString("Option"), "value" -> valueToJson(x))
+      case None    => Json.obj("kind" -> Json.fromString("Option"), "value" -> Json.Null)
+    }
     case other =>
       Json.obj("kind" -> Json.fromString("Opaque"),
                "repr" -> Json.fromString(s"${other.getClass.getSimpleName}:$other"))
@@ -164,7 +172,7 @@ object EvalCore {
   // Inverse of valueToJson: reconstructs the sigma-state runtime value wrapped
   // in an EvaluatedValue so it can be bound to context var 1 via ContextExtension.
   // Covers the Stage-1 kinds: Boolean, Byte, Short, Int, Long, BigInt,
-  // GroupElement, Coll (incl. nested), Tuple (pair).
+  // UnsignedBigInt, GroupElement, Coll (incl. nested), Tuple (pair).
 
   /** Decode a `{"tag":"S…"}` SType JSON (as emitted by stypeToJson) back to SType. */
   def stypeFromJson(j: Json): SType = {
@@ -177,6 +185,11 @@ object EvalCore {
       case "SInt"          => SInt
       case "SLong"         => SLong
       case "SBigInt"       => SBigInt
+      case "SUnsignedBigInt" => SUnsignedBigInt
+      case "SOption" =>
+        val elem = j.hcursor.downField("elem").as[Json]
+          .fold(e => sys.error(s"stypeFromJson: missing elem in Option type: $e"), identity)
+        SOption(stypeFromJson(elem))
       case "SGroupElement" => SGroupElement
       case "SColl"         =>
         val elem = j.hcursor.downField("elem").as[Json]
@@ -205,8 +218,8 @@ object EvalCore {
   /** Decode a `{"kind":"…", …}` SValue JSON (as emitted by valueToJson) back to an
     * EvaluatedValue so it can be used as a context-var binding in evalApplied.
     *
-    * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, GroupElement,
-    * Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair).
+    * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt,
+    * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair).
     * Unsupported kinds surface an immediate sys.error (not a silent wrong value). */
   def decodeInputConstant(j: Json): EvaluatedValue[_ <: SType] = {
     val cur  = j.hcursor
@@ -284,6 +297,25 @@ object EvalCore {
         val pair: Any = (a.value, b.value)
         mkConstant[STuple](pair, STuple(a.tpe, b.tpe))
 
+      case "UnsignedBigInt" =>
+        // decimal string, like BigInt; CUnsignedBigInt's ctor throws on negative / >256-bit
+        val s = cur.downField("value").as[String]
+          .fold(e => sys.error(s"decodeInputConstant UnsignedBigInt: $e"), identity)
+        UnsignedBigIntConstant(new java.math.BigInteger(s))
+
+      case "Option" =>
+        // Some: element type implied by the inner value (decode it, re-wrap as SOption).
+        // None: untyped at the value level — unsupported as input. No skipped case needs
+        // None-as-input (the lone None is an OUTPUT); add an explicit elem if one ever does.
+        cur.downField("value").focus match {
+          case Some(inner) if !inner.isNull =>
+            val c = decodeInputConstant(inner)
+            mkConstant[SOption[SType]](Some(c.value), SOption(c.tpe))
+          case _ =>
+            sys.error("decodeInputConstant Option: None-as-input is unsupported " +
+              "(untyped; no element type to reconstruct)")
+        }
+
       case other =>
         sys.error(s"decodeInputConstant: '$other' not yet supported")
     }
@@ -326,6 +358,11 @@ object EvalCore {
         val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[sigma.BigInt]).toArray
         val coll = Colls.fromArray(arr)(sigma.BigIntRType)
         CollectionConstant[SBigInt.type](coll, SBigInt)
+
+      case SUnsignedBigInt =>
+        val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[sigma.UnsignedBigInt]).toArray
+        val coll = Colls.fromArray(arr)(sigma.UnsignedBigIntRType)
+        CollectionConstant[SUnsignedBigInt.type](coll, SUnsignedBigInt)
 
       case SGroupElement =>
         val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[GroupElement]).toArray

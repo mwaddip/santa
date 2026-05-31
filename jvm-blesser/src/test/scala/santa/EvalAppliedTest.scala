@@ -6,7 +6,7 @@ import io.circe.Json
 
 import sigma.ast.{
   ErgoTree, GetVar, OptionGet, SBigInt, SBoolean, SByte, SCollection, SGroupElement,
-  SInt, SLong, SShort, SType, STuple, Value
+  SInt, SLong, SOption, SShort, SType, STuple, SUnsignedBigInt, Value
 }
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.CryptoConstants
@@ -28,7 +28,9 @@ class EvalAppliedTest extends munit.FunSuite {
   private def idTreeHex(tpe: SType, version: Byte = 3): String = {
     val root: Value[SType] = OptionGet(GetVar(1.toByte, tpe)).asInstanceOf[Value[SType]]
     val header: HeaderType = ErgoTree.setSizeBit(ErgoTree.headerWithVersion(ZeroHeader, version))
-    Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    sigma.VersionContext.withVersions(version, version) {   // v6 ctx so code-9 (SUnsignedBigInt) serializes
+      Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    }
   }
 
   private def parse(s: String): Json = io.circe.parser.parse(s).toOption.get
@@ -90,6 +92,17 @@ class EvalAppliedTest extends munit.FunSuite {
     assertEvalBack(SBigInt, parse("""{"kind":"BigInt","value":"123456789012345678901234567890"}"""))
   }
 
+  test("eval-back: UnsignedBigInt") {
+    assertEvalBack(SUnsignedBigInt,
+      parse("""{"kind":"UnsignedBigInt","value":"123456789012345678901234567890"}"""))
+  }
+
+  test("eval-back: UnsignedBigInt (large, near 256-bit)") {
+    // 2^255 - 1 — exercises a value that fits UnsignedBigInt but would overflow signed paths
+    val v = java.math.BigInteger.TWO.pow(255).subtract(java.math.BigInteger.ONE).toString
+    assertEvalBack(SUnsignedBigInt, parse(s"""{"kind":"UnsignedBigInt","value":"$v"}"""))
+  }
+
   test("eval-back: GroupElement (dlog generator)") {
     // Build the input JSON from the actual generator so the round-trip is self-consistent.
     val genHex = Base16.encode(GroupElementSerializer.toBytes(CryptoConstants.dlogGroup.generator))
@@ -142,6 +155,34 @@ class EvalAppliedTest extends munit.FunSuite {
   test("decoder: out-of-range Short errors (no silent wrap)") {
     interceptMessage[RuntimeException]("decodeInputConstant Short: value 40000 out of Short range") {
       EvalCore.decodeInputConstant(parse("""{"kind":"Short","value":40000}"""))
+    }
+  }
+
+  // ── Option (Task 2): encode Some+None; decode Some only ────────────────────
+
+  // Encode: Some + None (None appears only as eval OUTPUT in the corpus — encode must handle it)
+  test("encode: Some(5) and None") {
+    assertEquals(EvalCore.valueToJson(Some(5)).noSpaces,
+      """{"kind":"Option","value":{"kind":"Int","value":5}}""")
+    assertEquals(EvalCore.valueToJson(None).noSpaces,
+      """{"kind":"Option","value":null}""")
+  }
+
+  // Decode + eval-back: Some round-trips through bind→eval→encode.
+  // NOTE: this binds an SOption value as context var 1 — the genuinely novel
+  // reconstruction. If sigma-state rejects an Option context var, that is a real
+  // finding to surface (do NOT work around it silently).
+  test("eval-back: Option Some(5)") {
+    assertEvalBack(SOption(SInt), parse("""{"kind":"Option","value":{"kind":"Int","value":5}}"""))
+  }
+
+  // None-as-INPUT is unsupported (untyped) — must error loudly, never silently decode.
+  // Message-pinned (like the Byte/Short guards above) so the test can't pass for an
+  // unrelated throw — a spuriously-passing "must reject" guard would silently weaken it.
+  test("decoder: None-as-input errors (untyped, unsupported)") {
+    interceptMessage[RuntimeException](
+      "decodeInputConstant Option: None-as-input is unsupported (untyped; no element type to reconstruct)") {
+      EvalCore.decodeInputConstant(parse("""{"kind":"Option","value":null}"""))
     }
   }
 }
