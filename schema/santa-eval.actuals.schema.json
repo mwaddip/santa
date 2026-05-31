@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-eval.actuals.schema.json",
+  "title": "SANTA eval-tier actuals",
+  "description": "A runner's output for one vector: an object mapping each entry's `name` to the runner's own { value, cost, error }. Normative companion to docs/contract/runner-contract.md §3-5. SValue/SType definitions are reused from the vector schema by $ref.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": { "$ref": "#/$defs/result" },
+  "$defs": {
+    "result": {
+      "description": "One entry's actual outcome. Success: value (SValue) + cost (number) + error null. Failure: value null + cost null + error 'errored'. Same shape as a vector's expected.",
+      "type": "object",
+      "required": ["value", "cost", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "oneOf": [
+            { "$ref": "santa-eval.vector.schema.json#/$defs/svalue" },
+            { "type": "null" }
+          ]
+        },
+        "cost": {
+          "description": "Raw JIT eval cost as a bare JSON number (NOT a string). Null iff errored.",
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "error": {
+          "description": "Coarse outcome flag: null on success, 'errored' on any failure.",
+          "enum": [null, "errored"]
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "errored => value and cost null; success => error null, cost present, value non-null.",
+          "if": {
+            "properties": { "error": { "const": "errored" } },
+            "required": ["error"]
+          },
+          "then": {
+            "properties": {
+              "value": { "type": "null" },
+              "cost": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "error": { "type": "null" },
+              "cost": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["value"],
+            "not": { "properties": { "value": { "type": "null" } } }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-eval.vector.schema.json",
+  "title": "SANTA eval-tier vector",
+  "description": "A committed conformance vector for the eval tier (santa-eval/v1 closed-tree, santa-eval/v2 input-carrying). Normative companion to docs/contract/runner-contract.md.",
+  "type": "object",
+  "required": ["schema", "op", "blessed_by", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "description": "Tier + version discriminator.",
+      "enum": ["santa-eval/v1", "santa-eval/v2"]
+    },
+    "op": {
+      "description": "The operation / property name this vector covers.",
+      "type": "string",
+      "minLength": 1
+    },
+    "blessed_by": {
+      "description": "Identifier of the oracle that produced the expected values.",
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "description": "Provenance of the cases (e.g. sigma-state:LanguageSpecificationV6).",
+      "type": "string",
+      "minLength": 1
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "santa-eval/v2 entries MUST carry an input; santa-eval/v1 entries MUST NOT. Enforced here because the schema discriminator and entries are both visible at the top level.",
+      "if": {
+        "properties": { "schema": { "const": "santa-eval/v2" } },
+        "required": ["schema"]
+      },
+      "then": {
+        "$comment": "v2 carries the `source` provenance field and every entry has an input.",
+        "required": ["source"],
+        "properties": {
+          "entries": { "items": { "required": ["input"] } }
+        }
+      },
+      "else": {
+        "$comment": "v1 (the Phase-1 closed-tree decode-point) predates `source` and carries no per-entry input.",
+        "properties": {
+          "entries": { "items": { "not": { "required": ["input"] } } }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["name", "tree_bytes_hex", "version", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "Unique-within-vector entry key (blesser appends #<index>). Runners key actuals by this.",
+          "type": "string",
+          "minLength": 1
+        },
+        "script": {
+          "description": "Optional human-readable source of the function/op (informational).",
+          "type": "string"
+        },
+        "tree_bytes_hex": {
+          "description": "Serialized ErgoTree as lower-case hex. v2: a function tree A->B; v1: a closed tree.",
+          "$ref": "#/$defs/hex"
+        },
+        "input": {
+          "description": "The input SValue, bound to context var 1 at eval time. REQUIRED for santa-eval/v2, ABSENT for santa-eval/v1 (enforced at the top level, where the schema discriminator is visible).",
+          "$ref": "#/$defs/svalue"
+        },
+        "version": { "$ref": "#/$defs/version" },
+        "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "version": {
+      "type": "object",
+      "required": ["activated", "ergoTree"],
+      "additionalProperties": false,
+      "properties": {
+        "activated": { "type": "integer", "minimum": 0, "maximum": 127 },
+        "ergoTree": { "type": "integer", "minimum": 0, "maximum": 127 }
+      }
+    },
+    "expected": {
+      "description": "The blessed result. On success: value (SValue) + cost (number) + error null. On failure: value null + cost null + error 'errored'.",
+      "type": "object",
+      "required": ["value", "cost", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "oneOf": [{ "$ref": "#/$defs/svalue" }, { "type": "null" }]
+        },
+        "cost": {
+          "description": "Raw JIT eval cost as a bare JSON number (bounded by the block cost limit; NOT a string). Null iff errored.",
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "error": {
+          "description": "Coarse outcome flag: null on success, 'errored' on any failure. No eval-tier taxonomy.",
+          "enum": [null, "errored"]
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "errored => value and cost are null; success => error null and value present.",
+          "if": { "properties": { "error": { "const": "errored" } }, "required": ["error"] },
+          "then": {
+            "properties": {
+              "value": { "type": "null" },
+              "cost": { "type": "null" }
+            }
+          },
+          "else": {
+            "properties": {
+              "error": { "type": "null" },
+              "cost": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["value"],
+            "not": { "properties": { "value": { "type": "null" } } }
+          }
+        }
+      ]
+    },
+    "hex": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{2})*$",
+      "$comment": "lower-case hex, even length (whole bytes)."
+    },
+    "svalue": {
+      "description": "Canonical SValue encoding (see runner-contract.md §4). The Int-as-number / Long-as-string asymmetry is intentional and enforced here.",
+      "type": "object",
+      "required": ["kind"],
+      "oneOf": [
+        {
+          "properties": {
+            "kind": { "const": "Boolean" },
+            "value": { "type": "boolean" }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Byte" },
+            "value": { "type": "integer", "minimum": -128, "maximum": 127 }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Short" },
+            "value": { "type": "integer", "minimum": -32768, "maximum": 32767 }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Int" },
+            "value": { "type": "integer", "minimum": -2147483648, "maximum": 2147483647 }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Long" },
+            "value": { "type": "string", "pattern": "^-?[0-9]+$" }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "BigInt" },
+            "value": { "type": "string", "pattern": "^-?[0-9]+$" }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "UnsignedBigInt" },
+            "value": { "type": "string", "pattern": "^[0-9]+$" }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "GroupElement" },
+            "bytes_hex": { "$ref": "#/$defs/hex" }
+          },
+          "required": ["kind", "bytes_hex"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "SigmaProp" },
+            "raw_hex": { "$ref": "#/$defs/hex" }
+          },
+          "required": ["kind", "raw_hex"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Box" },
+            "bytes_hex": { "$ref": "#/$defs/hex" }
+          },
+          "required": ["kind", "bytes_hex"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Header" },
+            "bytes_hex": { "$ref": "#/$defs/hex" }
+          },
+          "required": ["kind", "bytes_hex"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Coll" },
+            "elem": { "$ref": "#/$defs/stype" },
+            "items": { "type": "array", "items": { "$ref": "#/$defs/svalue" } }
+          },
+          "required": ["kind", "elem", "items"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Tuple" },
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "$ref": "#/$defs/svalue" }
+            }
+          },
+          "required": ["kind", "items"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "kind": { "const": "Option" },
+            "value": {
+              "oneOf": [{ "$ref": "#/$defs/svalue" }, { "type": "null" }]
+            }
+          },
+          "required": ["kind", "value"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "stype": {
+      "description": "Canonical SType tag (see runner-contract.md §4).",
+      "type": "object",
+      "required": ["tag"],
+      "oneOf": [
+        {
+          "properties": {
+            "tag": {
+              "enum": [
+                "SBoolean", "SByte", "SShort", "SInt", "SLong", "SBigInt",
+                "SUnsignedBigInt", "SGroupElement", "SSigmaProp", "SBox",
+                "SHeader", "SPreHeader", "SUnit", "SAny"
+              ]
+            }
+          },
+          "required": ["tag"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "tag": { "const": "SColl" },
+            "elem": { "$ref": "#/$defs/stype" }
+          },
+          "required": ["tag", "elem"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "tag": { "const": "SOption" },
+            "elem": { "$ref": "#/$defs/stype" }
+          },
+          "required": ["tag", "elem"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
+            "tag": { "const": "STuple" },
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "$ref": "#/$defs/stype" }
+            }
+          },
+          "required": ["tag", "items"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}
