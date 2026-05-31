@@ -226,14 +226,26 @@ class EvalAppliedTest extends munit.FunSuite {
     assertEvalBack(SHeader, inputJson)
   }
 
-  // Malformed-hex negative guard: too-short Box bytes must throw loudly, never silently
-  // decode a wrong value. The serializer reads past the 1-byte buffer -> BufferUnderflow
-  // (verified empirically; message is null so the type is pinned rather than the message).
-  // Pinning the type (not bare Throwable) also rules out a regression to the
-  // 'Box not yet supported' RuntimeException path passing this guard spuriously.
+  // Pinned to the exact type, not interceptMessage: the serializer's truncation throw
+  // (BufferUnderflowException) carries a null message. A regression to the removed
+  // "'Box' not yet supported" arm would throw a bare RuntimeException, which is NOT a
+  // BufferUnderflowException — so this intercept fails on that regression rather than
+  // passing spuriously.
   test("decoder: malformed Box bytes error loudly (no silent wrong value)") {
     intercept[java.nio.BufferUnderflowException] {
       EvalCore.decodeInputConstant(parse("""{"kind":"Box","bytes_hex":"00"}"""))
+    }
+  }
+
+  // Symmetric Header guard: the decode path mirrors Box (Base16.decode ->
+  // SigmaSerializer.startReader -> Header.sigmaSerializer.parse), so a malformed/truncated
+  // Header must also error loudly, never decode silently to a wrong value. Pinned to the
+  // observed type: the Header reader's truncation throw is an IllegalArgumentException
+  // ("requirement failed: Not enough bytes in the buffer"), not the BufferUnderflowException
+  // the Box path throws — verified empirically.
+  test("decoder: malformed Header bytes error loudly (no silent wrong value)") {
+    intercept[java.lang.IllegalArgumentException] {
+      EvalCore.decodeInputConstant(parse("""{"kind":"Header","bytes_hex":"00"}"""))
     }
   }
 }
