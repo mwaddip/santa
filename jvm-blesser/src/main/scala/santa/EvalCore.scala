@@ -134,6 +134,10 @@ object EvalCore {
     case (a, b) =>
       Json.obj("kind"  -> Json.fromString("Tuple"),
                "items" -> Json.arr(valueToJson(a), valueToJson(b)))
+    case opt: Option[_] => opt match {
+      case Some(x) => Json.obj("kind" -> Json.fromString("Option"), "value" -> valueToJson(x))
+      case None    => Json.obj("kind" -> Json.fromString("Option"), "value" -> Json.Null)
+    }
     case other =>
       Json.obj("kind" -> Json.fromString("Opaque"),
                "repr" -> Json.fromString(s"${other.getClass.getSimpleName}:$other"))
@@ -182,6 +186,10 @@ object EvalCore {
       case "SLong"         => SLong
       case "SBigInt"       => SBigInt
       case "SUnsignedBigInt" => SUnsignedBigInt
+      case "SOption" =>
+        val elem = j.hcursor.downField("elem").as[Json]
+          .fold(e => sys.error(s"stypeFromJson: missing elem in Option type: $e"), identity)
+        SOption(stypeFromJson(elem))
       case "SGroupElement" => SGroupElement
       case "SColl"         =>
         val elem = j.hcursor.downField("elem").as[Json]
@@ -294,6 +302,19 @@ object EvalCore {
         val s = cur.downField("value").as[String]
           .fold(e => sys.error(s"decodeInputConstant UnsignedBigInt: $e"), identity)
         UnsignedBigIntConstant(new java.math.BigInteger(s))
+
+      case "Option" =>
+        // Some: element type implied by the inner value (decode it, re-wrap as SOption).
+        // None: untyped at the value level — unsupported as input. No skipped case needs
+        // None-as-input (the lone None is an OUTPUT); add an explicit elem if one ever does.
+        cur.downField("value").focus match {
+          case Some(inner) if !inner.isNull =>
+            val c = decodeInputConstant(inner)
+            mkConstant[SOption[SType]](Some(c.value), SOption(c.tpe))
+          case _ =>
+            sys.error("decodeInputConstant Option: None-as-input is unsupported " +
+              "(untyped; no element type to reconstruct)")
+        }
 
       case other =>
         sys.error(s"decodeInputConstant: '$other' not yet supported")
