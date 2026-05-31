@@ -36,14 +36,20 @@ lambda-argument binding. (ergots already charges it for `BlockValue` ValDefs; th
 - sigma-state charges **5**: `tmp/sigma-src/sigma/ast/values.scala:1047` (`E.addFixedCost(AddToEnvironmentDesc_CostKind, …)`), with `AddToEnvironmentDesc_CostKind = FixedCost(JitCost(5))` at `values.scala:1064`.
 - Every other wrapper node matches 1:1: Apply 30, FuncValue 5, GetVar 10, OptionGet 15, ValUse 5. The `higher_order_lambdas` map per-item envelope also matches; its extra −20 is just four more instances of the same omission (5 lambda bindings × 5).
 
-**Upstream:** sigma-rust carries the identical gap — it *fixed* `AddToEnvironment` for `BlockValue`
-(`~/projects/sigma-rust/.../eval/block.rs:30`, with a comment acknowledging the Scala parity gap)
-but never for lambdas (`eval/apply.rs:36`, `func_value.rs:12`). ergots mirrors sigma-rust and
-inherited exactly that gap. This is the same class as the three cost undercharges in
-[`eval-jvm-vs-sigma-rust.md`](eval-jvm-vs-sigma-rust.md) (also first surfaced via ergots), one level down.
+**Upstream:** sigma-rust carries the same gap, narrowed to one site. It already charges
+`ADD_TO_ENV_COST` for `BlockValue` ValDefs (`eval/block.rs:30,45`, commit `50f44685`, with a comment
+documenting the Scala parity gap) **and** for coll-op lambdas (`6ded99cb`) — but **not** for the
+generic `Apply`→lambda binding (`eval/apply.rs:36`: `env.insert(*idx, arg_v)` with no charge; `Apply`
+pays only its own `add_jit_cost(30)` at line 18). ergots has the identical shape: its `coll-map`
+per-item charge is correct, so the hole is likewise the generic `Apply` path (`apply.ts`), not
+coll-ops. This is the same class as the three cost undercharges in
+[`eval-jvm-vs-sigma-rust.md`](eval-jvm-vs-sigma-rust.md) (also first surfaced via ergots), one site further.
 
-**Fix:** charge `5` (AddToEnvironment) when `evalApply` binds each lambda argument, in ergots
-(and upstream sigma-rust) — verify it isn't then double-charged anywhere. One fix closes all 6.
+**Fix:** charge `5` (AddToEnvironment) per lambda-arg binding in the **generic `Apply`** eval — in
+ergots (`apply.ts`) and upstream sigma-rust (`apply.rs:36`, mirroring `block.rs:30/45`); verify no
+double-charge against the already-fixed coll-op path. One fix closes all 6. Route the sigma-rust half
+to the open JIT-cost-parity PR **#854 `mwaddip:jit-costing`** (the line of work already carrying the
+BlockValue/coll-op ADD_TO_ENV fixes).
 
 ## Representation divergence (ergots cannot represent a valid-to-the-JVM input) — OPEN
 
