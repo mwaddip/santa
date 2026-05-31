@@ -80,7 +80,7 @@ or round-trip-ok for wire.
 | Phase | Delivers | |
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
-| **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner (ergots) routed next | ✅ done |
+| **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner **Dasher** (ergots, `ts-runner/`) **built** — v5-scoped | ✅ done |
 | **2 — eval scaled** | 239 `santa-eval/v2` vectors across 32 ops (Stage 1 + 1.5 + 2a — value-input features incl. UnsignedBigInt, Option, Box, Header), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 2a done |
 | **3 — conformers + CI** | sigma-rust / ergo-node-rust runners; CI gate on committed vectors | |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
@@ -91,11 +91,15 @@ tier** is a *parallel* track, not a sequential phase: it reuses the same `fixtur
 assets and serves the broadest conformer set (scorex, Fleet, wallets) — pick it up
 alongside the eval tier once Phase 1's loop shape is proven.
 
-> **Note on Phase 1's "reference runner":** the first runner is the JVM itself
-> (the blesser in consume-mode), so it passes trivially — it proves the *harness
-> mechanics* and defines the runner contract by example, but it is **not yet a
-> conformance check**. Real conformance begins with the first *independent* runner
-> (ergots), whose implementation lives in the ergots repo and is routed there.
+> **Note on the "reference runner":** the JVM runner (the blesser in consume-mode)
+> passes trivially — it proves the *harness mechanics* and defines the runner contract
+> by example, but it is **not yet a conformance check**. Real conformance began with the
+> first *independent* runner, **Dasher** (ergots), built **2026-05-31** in SANTA's
+> `ts-runner/` — it consumes `@ergots/ergoscript` as a library (exactly as Rudolph
+> consumes `sigma-state`; the runner is SANTA's, the implementation-under-test is a
+> dependency). On first contact it surfaced genuine JVM-vs-ergots divergences (see
+> [`docs/findings/eval-jvm-vs-ergots.md`](docs/findings/eval-jvm-vs-ergots.md)). The runner
+> lives in SANTA for now; ergots may absorb it later.
 
 ## Glossary & roster
 
@@ -118,7 +122,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| Dasher | `ergots` | first independent runner (TS) — *tentative* |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, TS) — **built 2026-05-31**; v5-scoped (covers 12, abstains 231 v6; 6 cost + 2 repr divergences → ergots) |
 | _(unassigned)_ | `sigma-rust` fork · `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo
