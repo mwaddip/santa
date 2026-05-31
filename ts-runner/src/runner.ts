@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs'
+import { pathToFileURL } from 'node:url'
 import { parseTree, evaluateWith, makeContext, EvalError } from '@ergots/ergoscript'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
@@ -135,5 +136,6 @@ function main(argv: string[]): void {
   if (reprDivergences.length) console.error(`DIVERGENCE · ergots cannot represent input (route to ergots): ${reprDivergences.length} — ${reprDivergences.join(', ')}`)
 }
 
-// Run main only when invoked as the bin, not when imported.
-if (import.meta.url === `file://${process.argv[1]}`) main(process.argv)
+// Run main only when invoked as the bin (not when imported). pathToFileURL resolves a
+// relative argv path to an absolute file URL so the comparison is robust.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main(process.argv)
