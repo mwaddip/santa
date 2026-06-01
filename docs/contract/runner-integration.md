@@ -24,19 +24,20 @@ and `runners/blitzen-eni/` — to compare an implementation's branches side by s
   "name":  "blitzen-develop",                 // unique; the dir's identity
   "label": "blitzen (sigma-rust @ develop)",  // shown in the table
   "scope": ["v5", "v6"],                       // which vectors/eval/<ver>/ dirs it claims
-  "impl":  { "path": "../sigma-rust", "ref": "develop" }   // or null
+  "impl":  "https://github.com/ergoplatform/sigma-rust.git#develop"  // <url>#<ref>, or null
 }
 ```
 
 - **`scope`** is the **input-side selection** (eval contract §3): the version dirs this runner
   claims. A v5-only library declares `["v5"]`; a full implementation `["v5","v6"]`. The orchestrator
   runs the runner once per scoped version and never feeds it a vector outside its scope.
-- **`impl`** is the implementation-under-test dependency, or `null` if the runner is self-contained
-  (Rudolph builds sigma-state via sbt; Dasher resolves ergots via an in-repo dependency). When
-  present it is a **sibling working-copy + ref**: `path` is a checkout (e.g. a Cargo/path or npm
-  sibling), `ref` the branch/commit it should be built against. This matches how Rust runners pin
-  sigma-rust (a Cargo `path` dependency on a sibling checkout), so develop-vs-eni is *which branch
-  that checkout is on* — there is no central lockfile. **Auto-checkout of `ref` is deferred** (see §5).
+- **`impl`** is the implementation-under-test dependency as **one string `<url>#<ref>`**, or `null`
+  if the runner is self-contained (Rudolph builds sigma-state via sbt; Dasher resolves ergots via an
+  in-repo dependency). `<ref>` is a branch or tag (→ **latest** at run time), a commit SHA
+  (→ **pinned**), or `<branch>@<sha>` (a named branch pinned to a commit). **Santa owns the
+  checkout** (§3): it clones the URL into a per-instance cache and checks out `<ref>`, so two dirs
+  (`blitzen-develop`, `blitzen-eni`) pinning different refs never collide. No hardcoded paths, no
+  central lockfile.
 
 ## 3. The entrypoint — `santa-run`
 
@@ -46,8 +47,9 @@ An executable at `runners/<name>/santa-run`:
 santa-run <impl-path> <vectors-dir> <out-dir>
 ```
 
-It MUST: build the runner against `<impl-path>` (the checked-out impl source; `-` when `impl` is
-null), evaluate **every `*.json` vector** in `<vectors-dir>`, and write **one actuals file per
+It MUST: build the runner against the impl Santa checked out under `<impl-path>` (see below;
+`<impl-path>` is `-` when `impl` is null), evaluate **every `*.json` vector** in `<vectors-dir>`, and
+write **one actuals file per
 vector** to `<out-dir>/<same-filename>`. The actuals file is the frozen actuals schema
 ([`schema/santa-eval.actuals.schema.json`](../../schema/santa-eval.actuals.schema.json)):
 
@@ -60,6 +62,13 @@ vector** to `<out-dir>/<same-filename>`. The actuals file is the frozen actuals 
 from a per-entry `errored`, which is a normal outcome *inside* the actuals (eval contract §3).
 
 Resolve `<vectors-dir>`/`<out-dir>` to absolute paths if the entrypoint `cd`s before running.
+
+**`<impl-path>`** is the directory Santa checked the runner's `impl` out into; the runner finds its
+dependency there **by repo name** — `<impl-path>/sigma-rust`, `<impl-path>/ergots`, etc. (Santa
+clones `<url>` into `<impl-path>/<repo-name>`, §2). A runner MUST use `<impl-path>` and MUST NOT
+hardcode a shared location — that is what lets two runners pin different refs of the same impl
+without colliding. For a `null` impl, `<impl-path>` is `-`. (E.g. a Cargo runner whose path-dep is
+`../sigma-rust` can `ln -sfn "$1/sigma-rust" ../sigma-rust` in `santa-run`, then build.)
 
 ## 4. The runner does not compare — the orchestrator does
 
@@ -77,13 +86,13 @@ cross-implementation check on "equal". The first orchestrator run demonstrated i
 
 ## 5. Deferred (named, not silent)
 
-- **Auto-checkout of `impl.ref`** — when a runner declares `impl: {path, ref}`, the orchestrator
-  will (in a later iteration, once a runner needs it) ensure `path` is on `ref` before invoking
-  `santa-run`, and pass the resolved path as `<impl-path>`. v1 passes `-` and runners build against
-  whatever their sibling checkout is currently on.
-- **Per-instance build cache**, so two checkouts of the same impl don't clobber each other's build.
-- **Rendered report** (HTML/SVG) — v1 prints a terminal table (`./conform`) and an optional
-  `--matrix` op×runner ✓/✗ grid.
+- **Rendered report** (HTML/SVG) — `./conform` prints a terminal table and an optional `--matrix`
+  op×runner ✓/✗ grid; an exported report is not built.
+- **Compiled-artifact cache** — the impl *checkout* is per-instance (`.santa/impl/<runner>/`), but
+  build outputs aren't cached across runs, so each `./conform` rebuilds.
+
+*(Done since v1: the `impl` auto-checkout — Santa clones `<url>#<ref>` per-instance and passes
+`<impl-path>` — see §2/§3.)*
 
 ## 6. Worked example — adding a runner
 
