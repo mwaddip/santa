@@ -28,9 +28,13 @@ final case class ExtractResult(
 
 object SpecExtract {
 
-  /** Filesystem-safe slug for an op name (property name) → vector filename stem. */
+  /** Filesystem-safe slug for an op name (property name) → vector filename stem.
+    * Logic operators are transliterated to words first — the generic strip below
+    * would otherwise collapse `&&` / `||` to nothing, colliding e.g.
+    * "&& boolean equivalence" and "|| boolean equivalence" onto one filename. */
   def slug(op: String): String =
     op.trim
+      .replace("&&", " and ").replace("||", " or ")
       .replaceAll("""\[""", "_").replaceAll("""\]""", "")
       .replaceAll("""[^A-Za-z0-9._]+""", "_")
       .replaceAll("_+", "_")
@@ -199,6 +203,13 @@ object SpecExtract {
     * committed vectors/eval/, which lands in Task 5). One file per op. */
   def writeVectors(result: ExtractResult, outDir: java.nio.file.Path): Unit = {
     java.nio.file.Files.createDirectories(outDir)
+    // Totality: two ops sharing a slug would write the same file, silently dropping
+    // one's entries. Refuse loudly rather than overwrite (a silent drop once lost the
+    // `|| boolean`/`|| sigma` ops to their `&&` siblings).
+    val collisions = result.vectors.keys.groupBy(slug).filter(_._2.size > 1)
+    if (collisions.nonEmpty)
+      sys.error("SpecExtract.writeVectors: slug collision would silently drop entries — " +
+        collisions.map { case (stem, ops) => s"'$stem.json' ← ${ops.mkString(" / ")}" }.mkString("; "))
     result.vectors.foreach { case (op, json) =>
       val path = outDir.resolve(s"${slug(op)}.json")
       java.nio.file.Files.write(path,

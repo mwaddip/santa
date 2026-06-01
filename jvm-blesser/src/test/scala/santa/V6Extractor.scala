@@ -188,6 +188,9 @@ object V6Extractor {
   /** Drive the spec, capture every Stage-1 success case, encode to v2 vectors.
     * Pure (no file IO) so tests can assert on the result; `SpecExtract.writeVectors` persists. */
   def extract(): ExtractResult = {
+    // Reproducible blessing: pin ScalaCheck's global RNG seed so re-extraction is byte-stable
+    // (mirrors V5Extractor — a blessed corpus must be reproducible, not RNG-dependent).
+    scala.util.Random.setSeed(0L)
     val tap = new Tap
     val propertyFailures = tap.runAllProperties()
     SpecExtract.encode(

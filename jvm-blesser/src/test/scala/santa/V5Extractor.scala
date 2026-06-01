@@ -62,10 +62,10 @@ object V5Extractor {
         preGeneratedSamples: Option[Seq[A]]): Unit =
       features.foreach(f => verifyCases(cases, f, printTestCases, failOnTestVectors, preGeneratedSamples))
 
-    def runAllProperties(): Seq[String] = {
+    def runAllProperties(only: String => Boolean): Seq[String] = {
       val reporter = new RecordingReporter
       val tracker  = new Tracker
-      testNames.toSeq.sorted.filterNot(_.endsWith("_MCLowering")).foreach { name =>
+      testNames.toSeq.sorted.filterNot(_.endsWith("_MCLowering")).filter(only).foreach { name =>
         currentOp = name
         try runTest(name, Args(reporter, tracker = tracker))
         catch { case t: Throwable => reporter.failures += s"$name (threw): ${EvalCore.errClass(t)}" }
@@ -74,9 +74,13 @@ object V5Extractor {
     }
   }
 
-  def extract(): ExtractResult = {
+  def extract(only: String => Boolean = _ => true): ExtractResult = {
+    // Reproducible blessing: LanguageSpecificationV5 samples some inputs (e.g. Coll.append)
+    // via ScalaCheck, whose Seed.random() draws from the global scala.util.Random. Pin it so
+    // re-extraction is byte-stable — a blessed corpus must be reproducible, not RNG-dependent.
+    scala.util.Random.setSeed(0L)
     val tap = new Tap
-    val propertyFailures = tap.runAllProperties()
+    val propertyFailures = tap.runAllProperties(only)
     SpecExtract.encode(
       captures = tap.captures.toSeq,
       skippedUnsupported = tap.skippedUnsupported,

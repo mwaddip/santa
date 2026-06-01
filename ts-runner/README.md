@@ -63,7 +63,7 @@ SANTA session.
 entry's actual against the blessed `expected`:
 
 ```
-nice 1486 · RED 61 — every entry evaluated; no abstain
+nice 1497 · RED 61 — every entry evaluated; no abstain
 RED → route to ergots: 10 value + 36 cost + 15 not-implemented + 0 unrepresentable
 ```
 
