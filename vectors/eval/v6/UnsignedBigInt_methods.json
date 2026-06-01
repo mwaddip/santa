@@ -600,7 +600,61 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(24),(CUnsignedBigInt(24),CUnsignedBigInt(10)))#20",
+      "name" : "(CUnsignedBigInt(24),-1)#20",
+      "script" : "{ (x: (UnsignedBigInt, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014504dc090d8c720101018c72010201e4e3014504",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "UnsignedBigInt",
+            "value" : "24"
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(CUnsignedBigInt(24),256)#21",
+      "script" : "{ (x: (UnsignedBigInt, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014504dc090d8c720101018c72010201e4e3014504",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "UnsignedBigInt",
+            "value" : "24"
+          },
+          {
+            "kind" : "Int",
+            "value" : 256
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(CUnsignedBigInt(24),(CUnsignedBigInt(24),CUnsignedBigInt(10)))#22",
       "script" : "{ (x: (UnsignedBigInt, (UnsignedBigInt, UnsignedBigInt))) => x._1.plusMod(x._2._1, x._2._2) }",
       "tree_bytes_hex" : "1b2500dad90101455dd801d6038c720102dc090f8c720101028c7203018c72030201e4e301455d",
       "input" : {
@@ -639,7 +693,7 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(24),(CUnsignedBigInt(24),CUnsignedBigInt(24)))#21",
+      "name" : "(CUnsignedBigInt(24),(CUnsignedBigInt(24),CUnsignedBigInt(24)))#23",
       "script" : "{ (x: (UnsignedBigInt, (UnsignedBigInt, UnsignedBigInt))) => x._1.plusMod(x._2._1, x._2._2) }",
       "tree_bytes_hex" : "1b2500dad90101455dd801d6038c720102dc090f8c720101028c7203018c72030201e4e301455d",
       "input" : {
@@ -678,7 +732,7 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337)))#22",
+      "name" : "(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337)))#24",
       "script" : "{ (x: (UnsignedBigInt, (UnsignedBigInt, UnsignedBigInt))) => x._1.plusMod(x._2._1, x._2._2) }",
       "tree_bytes_hex" : "1b2500dad90101455dd801d6038c720102dc090f8c720101028c7203018c72030201e4e301455d",
       "input" : {
@@ -717,7 +771,7 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(0),(CUnsignedBigInt(24),CUnsignedBigInt(10)))#23",
+      "name" : "(CUnsignedBigInt(0),(CUnsignedBigInt(24),CUnsignedBigInt(10)))#25",
       "script" : "{ (x: (UnsignedBigInt, (UnsignedBigInt, UnsignedBigInt))) => x._1.subtractMod(x._2._1, x._2._2) }",
       "tree_bytes_hex" : "1b2500dad90101455dd801d6038c720102dc09108c720101028c7203018c72030201e4e301455d",
       "input" : {
@@ -756,7 +810,7 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(24),(CUnsignedBigInt(24),CUnsignedBigInt(24)))#24",
+      "name" : "(CUnsignedBigInt(24),(CUnsignedBigInt(24),CUnsignedBigInt(24)))#26",
       "script" : "{ (x: (UnsignedBigInt, (UnsignedBigInt, UnsignedBigInt))) => x._1.subtractMod(x._2._1, x._2._2) }",
       "tree_bytes_hex" : "1b2500dad90101455dd801d6038c720102dc09108c720101028c7203018c72030201e4e301455d",
       "input" : {
@@ -795,7 +849,7 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337)))#25",
+      "name" : "(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),(CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337),CUnsignedBigInt(115792089237316195423570985008687907852837564279074904382605163141518161494337)))#27",
       "script" : "{ (x: (UnsignedBigInt, (UnsignedBigInt, UnsignedBigInt))) => x._1.multiplyMod(x._2._1, x._2._2) }",
       "tree_bytes_hex" : "1b2500dad90101455dd801d6038c720102dc09118c720101028c7203018c72030201e4e301455d",
       "input" : {
@@ -834,7 +888,7 @@
       }
     },
     {
-      "name" : "(CUnsignedBigInt(12),CUnsignedBigInt(5))#26",
+      "name" : "(CUnsignedBigInt(12),CUnsignedBigInt(5))#28",
       "script" : "{ (x: (UnsignedBigInt, UnsignedBigInt)) => x._1.modInverse(x._2) }",
       "tree_bytes_hex" : "1b1700dad901015ddc090e8c720101018c72010201e4e3015d",
       "input" : {

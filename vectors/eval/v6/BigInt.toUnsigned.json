@@ -26,7 +26,25 @@
       }
     },
     {
-      "name" : "CBigInt(0)#1",
+      "name" : "CBigInt(-5)#1",
+      "script" : "{(x: BigInt) => x.toUnsigned }",
+      "tree_bytes_hex" : "1b1000dad9010106db060e720101e4e30106",
+      "input" : {
+        "kind" : "BigInt",
+        "value" : "-5"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "CBigInt(0)#2",
       "script" : "{(x: BigInt) => x.toUnsigned }",
       "tree_bytes_hex" : "1b1000dad9010106db060e720101e4e30106",
       "input" : {

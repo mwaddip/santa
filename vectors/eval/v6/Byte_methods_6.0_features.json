@@ -376,7 +376,61 @@
       }
     },
     {
-      "name" : "(24,3)#10",
+      "name" : "(3,-1)#10",
+      "script" : "{ (x: (Byte, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901013e04dc020c8c720101018c72010201e4e3013e04",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 3
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(3,8)#11",
+      "script" : "{ (x: (Byte, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901013e04dc020c8c720101018c72010201e4e3013e04",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 3
+          },
+          {
+            "kind" : "Int",
+            "value" : 8
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(24,3)#12",
       "script" : "{ (x: (Byte, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901013e04dc020d8c720101018c72010201e4e3013e04",
       "input" : {
@@ -406,7 +460,7 @@
       }
     },
     {
-      "name" : "(24,0)#11",
+      "name" : "(24,0)#13",
       "script" : "{ (x: (Byte, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901013e04dc020d8c720101018c72010201e4e3013e04",
       "input" : {
@@ -433,6 +487,60 @@
         },
         "cost" : 104,
         "error" : null
+      }
+    },
+    {
+      "name" : "(24,-1)#14",
+      "script" : "{ (x: (Byte, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901013e04dc020d8c720101018c72010201e4e3013e04",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 24
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(24,8)#15",
+      "script" : "{ (x: (Byte, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901013e04dc020d8c720101018c72010201e4e3013e04",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 24
+          },
+          {
+            "kind" : "Int",
+            "value" : 8
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
       }
     }
   ]

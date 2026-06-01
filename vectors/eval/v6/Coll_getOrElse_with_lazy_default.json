@@ -32,6 +32,28 @@
         "cost" : 101,
         "error" : null
       }
+    },
+    {
+      "name" : "Coll()#1",
+      "script" : "{ (x: Coll[Int]) => x.getOrElse(0, 1 / 0) }",
+      "tree_bytes_hex" : "1b1c03040004020400dad9010110b272017300019d7301730201e4e30110",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SInt"
+        },
+        "items" : [
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
     }
   ]
 }

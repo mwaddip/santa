@@ -111,7 +111,42 @@
       }
     },
     {
-      "name" : "(Coll(-1),-2147483647)#3",
+      "name" : "(Coll(1),2147483647)#3",
+      "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => if (i2 > 0) i1 + i2 else i1 }) }",
+      "tree_bytes_hex" : "1a3a010400dad901014c0eb08c7201018c720102d901034002d802d6057e8c72030204d6068c7203019591720573009a72067205720601e4e3014c0e",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 1
+              }
+            ]
+          },
+          {
+            "kind" : "Int",
+            "value" : 2147483647
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(Coll(-1),-2147483647)#4",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => if (i2 > 0) i1 + i2 else i1 }) }",
       "tree_bytes_hex" : "1a3a010400dad901014c0eb08c7201018c720102d901034002d802d6057e8c72030204d6068c7203019591720573009a72067205720601e4e3014c0e",
       "input" : {
@@ -149,7 +184,7 @@
       }
     },
     {
-      "name" : "(Coll(-1),-2147483648)#4",
+      "name" : "(Coll(-1),-2147483648)#5",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => if (i2 > 0) i1 + i2 else i1 }) }",
       "tree_bytes_hex" : "1a3a010400dad901014c0eb08c7201018c720102d901034002d802d6057e8c72030204d6068c7203019591720573009a72067205720601e4e3014c0e",
       "input" : {
@@ -187,7 +222,7 @@
       }
     },
     {
-      "name" : "(Coll(1,2),0)#5",
+      "name" : "(Coll(1,2),0)#6",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => if (i2 > 0) i1 + i2 else i1 }) }",
       "tree_bytes_hex" : "1a3a010400dad901014c0eb08c7201018c720102d901034002d802d6057e8c72030204d6068c7203019591720573009a72067205720601e4e3014c0e",
       "input" : {
@@ -229,7 +264,7 @@
       }
     },
     {
-      "name" : "(Coll(1,-1),0)#6",
+      "name" : "(Coll(1,-1),0)#7",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => if (i2 > 0) i1 + i2 else i1 }) }",
       "tree_bytes_hex" : "1a3a010400dad901014c0eb08c7201018c720102d901034002d802d6057e8c72030204d6068c7203019591720573009a72067205720601e4e3014c0e",
       "input" : {
@@ -271,7 +306,7 @@
       }
     },
     {
-      "name" : "(Coll(1,-1,1),0)#7",
+      "name" : "(Coll(1,-1,1),0)#8",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => if (i2 > 0) i1 + i2 else i1 }) }",
       "tree_bytes_hex" : "1a3a010400dad901014c0eb08c7201018c720102d901034002d802d6057e8c72030204d6068c7203019591720573009a72067205720601e4e3014c0e",
       "input" : {

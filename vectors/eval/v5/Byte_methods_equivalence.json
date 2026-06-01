@@ -740,7 +740,142 @@
       }
     },
     {
-      "name" : "(-103,1)#35",
+      "name" : "(-128,-128)#35",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -128
+          },
+          {
+            "kind" : "Byte",
+            "value" : -128
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-128,0)#36",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -128
+          },
+          {
+            "kind" : "Byte",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-128,17)#37",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -128
+          },
+          {
+            "kind" : "Byte",
+            "value" : 17
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-128,127)#38",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -128
+          },
+          {
+            "kind" : "Byte",
+            "value" : 127
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-120,82)#39",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -120
+          },
+          {
+            "kind" : "Byte",
+            "value" : 82
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-103,1)#40",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -806,7 +941,169 @@
       }
     },
     {
-      "name" : "(-1,-1)#36",
+      "name" : "(-90,37)#41",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -90
+          },
+          {
+            "kind" : "Byte",
+            "value" : 37
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-78,-111)#42",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -78
+          },
+          {
+            "kind" : "Byte",
+            "value" : -111
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-71,-44)#43",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -71
+          },
+          {
+            "kind" : "Byte",
+            "value" : -44
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-53,0)#44",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -53
+          },
+          {
+            "kind" : "Byte",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-34,8)#45",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -34
+          },
+          {
+            "kind" : "Byte",
+            "value" : 8
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-24,127)#46",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -24
+          },
+          {
+            "kind" : "Byte",
+            "value" : 127
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-1,-1)#47",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -872,7 +1169,7 @@
       }
     },
     {
-      "name" : "(-1,23)#37",
+      "name" : "(-1,23)#48",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -938,7 +1235,34 @@
       }
     },
     {
-      "name" : "(0,-23)#38",
+      "name" : "(0,-128)#49",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 0
+          },
+          {
+            "kind" : "Byte",
+            "value" : -128
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(0,-23)#50",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1004,7 +1328,7 @@
       }
     },
     {
-      "name" : "(0,-1)#39",
+      "name" : "(0,-1)#51",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1070,7 +1394,34 @@
       }
     },
     {
-      "name" : "(0,1)#40",
+      "name" : "(0,0)#52",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 0
+          },
+          {
+            "kind" : "Byte",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(0,1)#53",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1136,7 +1487,7 @@
       }
     },
     {
-      "name" : "(0,60)#41",
+      "name" : "(0,60)#54",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1202,7 +1553,7 @@
       }
     },
     {
-      "name" : "(0,127)#42",
+      "name" : "(0,127)#55",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1268,7 +1619,7 @@
       }
     },
     {
-      "name" : "(1,-1)#43",
+      "name" : "(1,-1)#56",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1334,7 +1685,34 @@
       }
     },
     {
-      "name" : "(1,26)#44",
+      "name" : "(1,0)#57",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 1
+          },
+          {
+            "kind" : "Byte",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(1,26)#58",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1400,7 +1778,34 @@
       }
     },
     {
-      "name" : "(33,1)#45",
+      "name" : "(7,-32)#59",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 7
+          },
+          {
+            "kind" : "Byte",
+            "value" : -32
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(33,1)#60",
       "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
       "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
       "input" : {
@@ -1463,6 +1868,114 @@
         },
         "cost" : 292,
         "error" : null
+      }
+    },
+    {
+      "name" : "(90,0)#61",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 90
+          },
+          {
+            "kind" : "Byte",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(127,-128)#62",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 127
+          },
+          {
+            "kind" : "Byte",
+            "value" : -128
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(127,-47)#63",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 127
+          },
+          {
+            "kind" : "Byte",
+            "value" : -47
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(127,127)#64",
+      "script" : "{ (x: (Byte, Byte)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010156d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30156",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 127
+          },
+          {
+            "kind" : "Byte",
+            "value" : 127
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
       }
     }
   ]
