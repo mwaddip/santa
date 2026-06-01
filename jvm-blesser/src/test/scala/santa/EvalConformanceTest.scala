@@ -1,6 +1,6 @@
 package santa
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.{Files, Path, Paths}
 
 import io.circe.Json
 import io.circe.parser.parse
@@ -24,9 +24,12 @@ class EvalConformanceTest extends munit.FunSuite {
 
   private def vectorFiles: Seq[java.nio.file.Path] = {
     import scala.jdk.CollectionConverters._
-    val stream = Files.newDirectoryStream(vectorsDir, "*.json")
-    try stream.iterator().asScala.toSeq.sortBy(_.getFileName.toString)
-    finally stream.close()
+    Files.walk(vectorsDir)
+      .filter((p: Path) => p.toString.endsWith(".json"))
+      .iterator()
+      .asScala
+      .toSeq
+      .sortBy(_.toString)
   }
 
   private def parse(s: String): Json =

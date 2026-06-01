@@ -53,7 +53,7 @@ class RunnerTest extends munit.FunSuite {
   // ── v2 dispatch ───────────────────────────────────────────────────────────
 
   test("Runner: higher_order_lambdas (v2) — actuals match expected; no errored entries") {
-    val doc     = readVector("higher_order_lambdas.json")
+    val doc     = readVector("v6/higher_order_lambdas.json")
     val actuals = runActuals(doc)
 
     // No entry may be all-errored (that was the bug)
@@ -65,7 +65,7 @@ class RunnerTest extends munit.FunSuite {
   }
 
   test("Runner: Coll.reverse (v2) — actuals match expected; no errored entries") {
-    val doc     = readVector("Coll.reverse.json")
+    val doc     = readVector("v6/Coll.reverse.json")
     val actuals = runActuals(doc)
 
     val allErrored = actuals.values.forall(j =>
@@ -78,7 +78,7 @@ class RunnerTest extends munit.FunSuite {
   // ── v1 regression ─────────────────────────────────────────────────────────
 
   test("Runner: decode-point (v1) — actuals match expected (regression guard)") {
-    val doc     = readVector("decode-point.json")
+    val doc     = readVector("v6/decode-point.json")
     val actuals = runActuals(doc)
     assertNice(doc, actuals)
   }

@@ -9,7 +9,14 @@ import { structuralEqual } from './_match'
 const here = path.dirname(fileURLToPath(import.meta.url))
 const vectorsDir = path.resolve(here, '../../vectors/eval')
 const schemaDir = path.resolve(here, '../../schema')
-const files = readdirSync(vectorsDir).filter((f) => f.endsWith('.json')).sort()
+function walkVectors(dir: string, base = ''): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
+    const rel = base ? `${base}/${d.name}` : d.name
+    if (d.isDirectory()) return walkVectors(path.join(dir, d.name), rel)
+    return d.name.endsWith('.json') ? [rel] : []
+  })
+}
+const files = walkVectors(vectorsDir).sort()
 
 // Reuse the frozen actuals schema as a conformance oracle (§3 postcondition).
 const ajv = new Ajv2020({ strict: false })
