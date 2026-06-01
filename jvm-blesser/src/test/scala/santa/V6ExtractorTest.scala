@@ -64,7 +64,7 @@ class V6ExtractorTest extends munit.FunSuite {
          |""".stripMargin)
 
     // Gate: any mid-body throw means that property's Capture list is truncated —
-    // a truncated op must never ship silently.  The quarantine in V6Extractor
+    // a truncated op must never ship silently.  The quarantine in SpecExtract.encode
     // prevents the truncated entries from reaching the output dir, but this assert
     // makes the condition loud so it cannot be ignored.
     assert(result.propertyFailures.isEmpty,
@@ -75,7 +75,7 @@ class V6ExtractorTest extends munit.FunSuite {
 
     // Persist staging vectors (build artifact — target/, not committed yet).
     val outDir = java.nio.file.Paths.get("target", "v6-vectors")
-    V6Extractor.writeVectors(result, outDir)
+    SpecExtract.writeVectors(result, outDir)
     assert(java.nio.file.Files.exists(outDir.resolve("Global.serialize_Byte.json")),
       "staging vector for Global.serialize[Byte] was not written")
   }

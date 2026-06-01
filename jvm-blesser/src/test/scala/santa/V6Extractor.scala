@@ -48,8 +48,6 @@ import scala.collection.mutable
 
 import scorex.util.encode.Base16
 
-import io.circe.Json
-
 import org.scalatest.{Args, Reporter, Tracker}
 import org.scalatest.events.{Event, TestFailed}
 
@@ -60,41 +58,10 @@ import sigma.eval.CostDetails
 
 import sigma.LanguageSpecificationV6
 
-/** The captured-and-encoded extraction result for the whole spec. */
-final case class ExtractResult(
-    vectors: Map[String, Json],          // op (property name) -> v2 envelope Json
-    captured: Int,                       // entries emitted
-    skippedUnsupported: Int,             // feature not supported at V3
-    skippedError: Int,                   // expected value is a Failure
-    skippedContext: Int,                 // input is a Context (Stage 2b; Box/Header now captured)
-    skippedUnsupportedKind: Int,         // input/value of a kind valueToJson can't encode
-    unsupportedKindReasons: Seq[String], // distinct "op: kind not encodable" detail lines
-    skippedContextReasons: Seq[String],  // distinct "op: input=<class> | <script>" for Context skips
-    costDiagnostics: Seq[String],        // DIAGNOSTIC: cases where eval cost != a spec cost field
-    propertyFailures: Seq[String])       // properties whose body threw at V3 (logged, not fatal)
-
 object V6Extractor {
 
   /** Pinned target version: full v6 (activated=3, ergoTree=3). */
   val V3: Byte = VersionContext.V6SoftForkVersion
-
-  /** Filesystem-safe slug for an op name (property name) → vector filename stem. */
-  def slug(op: String): String =
-    op.trim
-      .replaceAll("""\[""", "_").replaceAll("""\]""", "")
-      .replaceAll("""[^A-Za-z0-9._]+""", "_")
-      .replaceAll("_+", "_")
-      .stripPrefix("_").stripSuffix("_")
-
-  /** One captured case, pre-encoding (raw runtime types from the spec). */
-  private final case class Capture(
-      op: String,
-      script: String,
-      treeBytesHex: String,
-      input: Any,
-      expectedValue: Any,
-      verificationCost: Option[Int], // Expected.verificationCost for the pinned version (verify-path cost)
-      costDetailsCost: Option[Int])  // CostDetails.cost = summed JIT trace (the eval cost the spec pins)
 
   /** Silent reporter that records test failures instead of printing/throwing. */
   private final class RecordingReporter extends Reporter {
@@ -115,7 +82,7 @@ object V6Extractor {
     override protected val activatedVersions: Seq[Byte] = Array(V3)
     override val ergoTreeVersions: Seq[Byte] = Array(V3)
 
-    val captures: mutable.ArrayBuffer[Capture] = mutable.ArrayBuffer.empty
+    val captures: mutable.ArrayBuffer[SpecExtract.Capture] = mutable.ArrayBuffer.empty
     var skippedUnsupported = 0
     var skippedError = 0
     var skippedContext = 0
@@ -171,7 +138,7 @@ object V6Extractor {
         } else if (expRes.value.isFailure) {
           skippedError += 1                         // error-expected (snag 3)
         } else {
-          captures += Capture(
+          captures += SpecExtract.Capture(
             op = currentOp,
             script = f.script,
             treeBytesHex = treeHex,
@@ -218,156 +185,19 @@ object V6Extractor {
     }
   }
 
-  // ── Encoding a capture → a v2 entry ───────────────────────────────────────────
-  /** True if the encoded SValue JSON contains an Opaque kind ANYWHERE — top-level
-    * OR nested inside Coll `items` / Tuple `items`. A top-level-only check misses
-    * e.g. a Tuple(GroupElement, UnsignedBigInt) whose second item is Opaque; the
-    * input decoder would then fail mid-eval. Recurse so such cases are skipped. */
-  private def hasOpaque(j: Json): Boolean = {
-    val c = j.hcursor
-    c.downField("kind").as[String].toOption.contains("Opaque") || {
-      c.downField("items").as[List[Json]].toOption.exists(_.exists(hasOpaque))
-    }
-  }
-
-  /** Encode one capture into a v2 entry, deriving/validating its cost via the eval.
-    *
-    * `entryIndex` is the 0-based position within this property's emitted entries;
-    * it is appended to `name` to guarantee uniqueness within a vector — multi-
-    * feature properties share an `input` (and therefore `input.toString`), so a
-    * bare `c.input.toString` repeats across entries. A consumer keying by `name`
-    * must never collide within a single op's entry list.
-    *
-    * Returns `Left(reason)` ONLY for an unsupported-kind input/value — valueToJson
-    * emits {kind:"Opaque"} for a kind it doesn't model; we must never bake a guessed
-    * encoding into a vector, so such a case is skipped-and-reported (not emitted).
-    * Genuine bad-vector conditions (eval failure on an encodable input, or a
-    * value/cost MISMATCH between the spec and the eval) are fail-loud `sys.error`s —
-    * the whole point of the suite is that a silent wrong value can never ship. */
-  private def toEntry(c: Capture, entryIndex: Int): Either[String, (Json, Option[String])] = {
-    val inputJson = EvalCore.valueToJson(c.input)
-    val valueJson = EvalCore.valueToJson(c.expectedValue)
-
-    // Escalation: refuse to emit an Opaque (unsupported Stage-1 kind), incl. one
-    // nested in a Coll/Tuple. Skip + report (never bake a guessed encoding).
-    if (hasOpaque(inputJson))
-      return Left(s"${c.op}: input kind not encodable — ${inputJson.noSpaces}")
-    if (hasOpaque(valueJson))
-      return Left(s"${c.op}: expected-value kind not encodable — ${valueJson.noSpaces}")
-
-    // Re-bless via SANTA's apply-eval (the SAME CErgoTreeEvaluator the spec uses).
-    // Pinned to activated=3 (the tree itself carries ergoTree version 3).
-    val (_, outcome) = EvalCore.evalApplied(c.treeBytesHex, inputJson, activated = V3)
-    val (evalValue, evalCost) = outcome match {
-      case Right(vc) => vc
-      case Left(err) =>
-        sys.error(s"V6Extractor: apply-eval failed for op '${c.op}' (${c.script}) " +
-          s"on input ${inputJson.noSpaces}: $err")
-    }
-
-    // The eval value MUST match the spec's expected value (canonical-by-construction).
-    if (evalValue.noSpaces != valueJson.noSpaces)
-      sys.error(s"V6Extractor: VALUE MISMATCH for op '${c.op}' (${c.script}): " +
-        s"spec=${valueJson.noSpaces} vs eval=${evalValue.noSpaces}")
-
-    // DIAGNOSTIC: emit the eval cost (the v2-defined "raw JIT eval cost"); record
-    // any case where a spec cost field disagrees with it, to characterize which
-    // field (CostDetails.cost vs verificationCost) tracks the eval cost.
-    val diag: Option[String] = {
-      val dCD = c.costDetailsCost.filter(_.toLong != evalCost)
-        .map(v => s"CostDetails.cost=$v")
-      val dVC = c.verificationCost.filter(_.toLong != evalCost)
-        .map(v => s"verificationCost=$v")
-      val mism = (dCD ++ dVC).toSeq
-      if (mism.isEmpty) None
-      else Some(s"${c.op} [${c.script}] input=${inputJson.noSpaces}: evalCost=$evalCost vs ${mism.mkString(", ")}")
-    }
-
-    Right((Json.obj(
-      "name"           -> Json.fromString(s"${c.input.toString}#$entryIndex"),
-      "script"         -> Json.fromString(c.script),
-      "tree_bytes_hex" -> Json.fromString(c.treeBytesHex),
-      "input"          -> inputJson,
-      "version"        -> Json.obj("activated" -> Json.fromInt(V3.toInt),
-                                   "ergoTree"  -> Json.fromInt(V3.toInt)),
-      "expected"       -> Json.obj("value" -> valueJson,
-                                   "cost"  -> Json.fromLong(evalCost),
-                                   "error" -> Json.Null)), diag))
-  }
-
-  /** Wrap a property's entries in the v2 envelope. */
-  private def envelope(op: String, entries: Seq[Json]): Json =
-    Json.obj(
-      "schema"     -> Json.fromString("santa-eval/v2"),
-      "op"         -> Json.fromString(op),
-      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.3"),
-      "source"     -> Json.fromString("sigma-state:LanguageSpecificationV6"),
-      "entries"    -> Json.arr(entries: _*))
-
   /** Drive the spec, capture every Stage-1 success case, encode to v2 vectors.
-    * Pure (no file IO) so tests can assert on the result; `writeVectors` persists. */
+    * Pure (no file IO) so tests can assert on the result; `SpecExtract.writeVectors` persists. */
   def extract(): ExtractResult = {
     val tap = new Tap
-    // Run each registered property by name, pinned to V3 via the version-set
-    // overrides. testFun_Run inside the framework wraps each in withVersions(3,3).
     val propertyFailures = tap.runAllProperties()
-
-    // Encode each capture; partition emitted entries from unsupported-kind skips.
-    val byOp: Map[String, Seq[Capture]] =
-      tap.captures.groupBy(_.op).map { case (op, cs) => op -> cs.toSeq }
-
-    val unsupportedKindReasons = mutable.LinkedHashSet.empty[String]
-    val costDiagnostics = mutable.ArrayBuffer.empty[String]
-    var skippedUnsupportedKind = 0
-    val vectors = mutable.Map.empty[String, Json]
-
-    byOp.foreach { case (op, cs) =>
-      // Quarantine: if the property's body threw mid-capture, its Capture list
-      // may be truncated (recording stopped partway through the case-set).  A
-      // truncated op must NEVER reach the output dir, so skip it entirely here —
-      // the matching assert in V6ExtractorTest will make the failure loud.
-      if (propertyFailures.exists(_.startsWith(op))) {
-        System.err.println(s"[V6Extractor] QUARANTINED op '$op' — its property threw; skipping all ${cs.size} captured entries")
-      } else {
-        var entryIndex = 0
-        val entries = cs.flatMap { c =>
-          toEntry(c, entryIndex) match {
-            case Right((entry, diag)) =>
-              diag.foreach(costDiagnostics += _)
-              entryIndex += 1
-              Some(entry)
-            case Left(reason) =>
-              skippedUnsupportedKind += 1
-              unsupportedKindReasons += reason
-              None
-          }
-        }
-        // Only emit an envelope if the property yielded at least one Stage-1 entry.
-        if (entries.nonEmpty) vectors += (op -> envelope(op, entries))
-      }
-    }
-
-    ExtractResult(
-      vectors = vectors.toMap,
-      captured = vectors.values.map(_.hcursor.downField("entries").values.fold(0)(_.size)).sum,
+    SpecExtract.encode(
+      captures = tap.captures.toSeq,
       skippedUnsupported = tap.skippedUnsupported,
       skippedError = tap.skippedError,
       skippedContext = tap.skippedContext,
-      skippedUnsupportedKind = skippedUnsupportedKind,
-      unsupportedKindReasons = unsupportedKindReasons.toSeq,
       skippedContextReasons = tap.skippedContextReasons.toSeq,
-      costDiagnostics = costDiagnostics.toSeq,
-      propertyFailures = propertyFailures)
-  }
-
-  /** Persist the extracted vectors to a staging dir (a build artifact — NOT the
-    * committed vectors/eval/, which lands in Task 5). One file per op. */
-  def writeVectors(result: ExtractResult, outDir: java.nio.file.Path): Unit = {
-    java.nio.file.Files.createDirectories(outDir)
-    result.vectors.foreach { case (op, json) =>
-      val path = outDir.resolve(s"${slug(op)}.json")
-      java.nio.file.Files.write(path,
-        json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
-    }
+      propertyFailures = propertyFailures,
+      activated = V3,
+      source = "sigma-state:LanguageSpecificationV6")
   }
 }
