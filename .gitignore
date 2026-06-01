@@ -18,3 +18,7 @@ project/project/
 # Local scratch dir — research artifacts, extracted reference sources, session
 # notes. Persists across sessions; never committed. (Repo-root tmp/, not system /tmp.)
 tmp/
+
+# Python — schema-validator gate (schema/validate.py). Local-only; recreate via:
+#   python3 -m venv .venv && .venv/bin/pip install jsonschema referencing
+.venv/
