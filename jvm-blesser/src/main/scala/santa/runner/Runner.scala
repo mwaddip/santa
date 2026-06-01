@@ -46,28 +46,46 @@ object Runner {
     name -> actual
   }
 
-  def main(args: Array[String]): Unit = {
-    val vecPath = args.headOption.getOrElse {
-      System.err.println("usage: runner <vector.json> [<actuals-out.json>]")
-      sys.exit(2)
-    }
-    val outPath = args.lift(1)
-
+  /** Run one vector file, writing actuals to outPath (or stdout if None). */
+  def runFile(vecPath: String, outPath: Option[String]): Unit = {
     val doc     = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
     val schema  = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
     val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
-
-    val results: Vector[(String, Json)] = entries.toVector.map(evalEntry(schema, _))
-
-    val out = Json.obj(results: _*).spaces2
+    val out     = Json.obj(entries.toVector.map(evalEntry(schema, _)): _*).spaces2
     outPath match {
       case Some(p) =>
         java.nio.file.Files.write(java.nio.file.Paths.get(p),
           out.getBytes(java.nio.charset.StandardCharsets.UTF_8))
-        System.err.println(s"actuals → $p")
-      case None =>
-        println(out)
+      case None => println(out)
+    }
+  }
+
+  /** Run every *.json vector in vecDir, writing actuals to outDir/<same-name>. */
+  def runDir(vecDir: String, outDir: String): Unit = {
+    java.nio.file.Files.createDirectories(java.nio.file.Paths.get(outDir))
+    val it = java.nio.file.Files.list(java.nio.file.Paths.get(vecDir)).iterator()
+    while (it.hasNext) {
+      val p = it.next()
+      if (p.toString.endsWith(".json"))
+        runFile(p.toString, Some(java.nio.file.Paths.get(outDir, p.getFileName.toString).toString))
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    val path = args.headOption.getOrElse {
+      System.err.println("usage: runner <vector.json|vectors-dir> [<out.json|out-dir>]")
+      sys.exit(2)
+    }
+    if (java.nio.file.Files.isDirectory(java.nio.file.Paths.get(path))) {
+      val outDir = args.lift(1).getOrElse {
+        System.err.println("usage: runner <vectors-dir> <out-dir>"); sys.exit(2)
+      }
+      runDir(path, outDir)
+      System.err.println(s"actuals → $outDir/")
+    } else {
+      runFile(path, args.lift(1))
+      args.lift(1).foreach(p => System.err.println(s"actuals → $p"))
     }
   }
 }

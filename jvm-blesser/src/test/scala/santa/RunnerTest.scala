@@ -82,4 +82,18 @@ class RunnerTest extends munit.FunSuite {
     val actuals = runActuals(doc)
     assertNice(doc, actuals)
   }
+
+  // ── directory mode (orchestrator entrypoint) ───────────────────────────────
+
+  test("Runner.runDir writes one actuals file per vector in the dir") {
+    val tmpIn  = Files.createTempDirectory("santa-rin")
+    val tmpOut = Files.createTempDirectory("santa-rout")
+    Files.copy(vectorsDir.resolve("v6/decode-point.json"), tmpIn.resolve("dp.json"))
+    Runner.runDir(tmpIn.toString, tmpOut.toString)
+    val out = tmpOut.resolve("dp.json")
+    assert(Files.exists(out), "runDir must write one actuals file per vector")
+    val parsed = parseJson(new String(Files.readAllBytes(out), "UTF-8"))
+      .fold(e => fail(s"actuals not valid JSON: $e"), identity)
+    assertEquals(parsed.asObject.map(_.size), Some(6), "actuals keyed by all 6 entry names")
+  }
 }
