@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# santa-run <impl-path> <vectors-dir> <out-dir>  — Rudolph (JVM reference runner).
+# impl-path ($1) is ignored: Rudolph self-contains sigma-state 6.0.3 via sbt.
+# One JVM invocation processes the whole dir (Runner dir-mode).
+set -euo pipefail
+VECTORS="$(realpath "$2")"
+OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # runners/rudolph -> repo root
+(cd "$ROOT/jvm-blesser" && sbt --batch "runMain santa.runner.Runner $VECTORS $OUT")

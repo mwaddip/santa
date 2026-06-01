@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# santa-run <impl-path> <vectors-dir> <out-dir>  — Dasher (ergots, pure-TS).
+# impl-path ($1) ignored in v1: ergots resolves via ts-runner's in-repo file: dep.
+set -euo pipefail
+VECTORS="$(realpath "$2")"
+OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
+ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # runners/dasher -> repo root
+TS="$ROOT/ts-runner"
+(cd "$TS" && npm run build >/dev/null 2>&1)
+for f in "$VECTORS"/*.json; do
+  node "$TS/dist/runner.js" "$f" "$OUT/$(basename "$f")"
+done
