@@ -39,31 +39,34 @@ canonical SANTA JSON → capture `{value, cost, error}`. The **encode/decode bri
 `src/decode.ts`, `src/stype.ts`) is the substance; `ergots` `parseSValue`/`serializeSValue` are
 the wire codec for the bytes-kinds (Box/Header/SigmaProp), not the JSON bridge.
 
-## Scope & the five per-entry outcomes
+## Scope & the four per-entry outcomes
 
-Dasher declares **v5** scope. Each entry yields exactly one of:
+ergots is a **v5/mainnet** library, so Dasher's gate runs the **v5 input bucket**
+(`vectors/eval/v5/`); v6 vectors are the JVM's column and ergots' future. The runner is a
+total function — it emits exactly one outcome for **every** entry, never omitting (there is
+no "abstain"; scope is the input subset you run):
 
-| outcome | in actuals? | meaning |
-|---|---|---|
-| **nice / naughty** | yes | evaluated; structural-match vs blessed `expected` (value AND cost exact) |
-| **errored** | yes (`{null,null,errored}`) | ergots implements the op and eval threw |
-| **abstain · v6 UnsignedBigInt** | no | out of v5 scope (pre-eval) — clean, neither nice nor naughty |
-| **abstain · not-implemented** | no | op not on mainnet ⇒ a v6 feature ergots hasn't built — clean abstain (flips to covered when ergots gains v6) |
-| **divergence · repr** | no | a v5 input ergots can't represent (Header ts > 2⁵³) — a real ergots bug; route upstream |
+| outcome (`error`) | meaning |
+|---|---|
+| **success** (`null`) | evaluated; `value`+`cost` present; structural-match vs blessed `expected` decides nice/naughty |
+| **errored** (`"errored"`) | ergots implements the op and eval threw (coarse — no reason taxonomy) |
+| **not-implemented** (`"not-implemented"`) | ergots has no impl for this op/method/type — a coverage gap; route to ergots |
+| **unrepresentable** (`"unrepresentable"`) | ergots has the type but can't hold this value (e.g. Header ts > 2⁵³) — a repr bug; route to ergots |
 
-A **cross-impl divergence is a finding, never silenced** — investigate (Dasher bug? real ergots
-bug?), then record under `docs/findings/` and route to ergots. Never edit the ergots repo from a
+A **cross-impl divergence is a finding, never silenced** — every RED is the runner doing its
+job. Record under `docs/findings/` and route to ergots. Never edit the ergots repo from a
 SANTA session.
 
-## Current conformance result (2026-05-31, ergots v5 build)
+## Current conformance result (v5 gate)
 
-`npm test` runs the whole committed corpus (33 files / 245 entries):
+`npm test` runs the whole committed **v5** corpus (`vectors/eval/v5/`) and compares each
+entry's actual against the blessed `expected`:
 
 ```
-covered 12  = nice 12  (cost bug RESOLVED 2026-06-01; was 6 nice + 6 cost-divergent v2)
-abstain 231 = v6 UnsignedBigInt 34 + not-implemented/v6 197
-divergences → ergots: 2 repr (Header ts cap)   — the 6 AddToEnvironment cost divergences are FIXED
+nice 1486 · RED 61 — every entry evaluated; no abstain
+RED → route to ergots: 10 value + 36 cost + 15 not-implemented + 0 unrepresentable
 ```
 
-The e2e gate asserts Dasher is correct on every value and **pins** the 2 remaining repr divergences (the 6 AddToEnvironment cost divergences are fixed)
-as the two known ergots bugs (see the findings doc) — so a *new* divergence fails the gate.
+The gate pins each known-RED count, so a *new* divergence (count ↑) or an ergots fix
+(count ↓) fails the gate and must be re-baselined — RED is recorded and tracked, never
+hidden. (Update these numbers if the corpus or ergots changes them.)

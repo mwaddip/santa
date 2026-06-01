@@ -64,16 +64,20 @@ closed-tree `decode-point` special case):
 - **version** it's blessed under — `(activatedVersion, ergoTreeVersion)`;
 - expected: typed value `{ kind, … }` + **raw JIT cost** + coarse **error-class**
   (success ⇒ null).
-- Source: `sigma-state LanguageSpecificationV6` (JVM-native `verifyCases`, v2) — the oracle's
-  own expected values, not fork-computed. Input-carrying form preserves cost fidelity
+- Source: `sigma-state` `LanguageSpecificationV5` + `V6` (JVM-native `verifyCases`, v2) — the
+  oracle's own expected values, not fork-computed. Input-carrying form preserves cost fidelity
   (cost of applying a function to an input, not of a baked closed tree).
 
-**Runner I/O contract** — *pinned in Phase 1*: vector in → normalized result out, so
-the harness can compare any conformer's output to the blessed expected. A runner
-**declares which ops/tiers it supports** and *abstains* on the rest — Fleet runs wire
-ops and abstains on eval (neither nice nor naughty on what it doesn't implement). The
-result shape is whatever the op asserts: value + JIT cost for eval; parsed structure
-or round-trip-ok for wire.
+**Runner I/O contract** — *frozen for the eval tier*
+([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md)): vector in → one
+**actuals** record per entry, so the harness can compare any conformer's output to the
+blessed expected. The runner is **total** — it emits a faithful outcome for *every* entry
+and never drops or hides one: value + JIT cost on success, else a coarse outcome tag
+(`errored` / `not-implemented` / `unrepresentable`). A conformer's **scope is selected on
+the input side** — it is run against the vector subset it claims (a v5-only library runs
+the `v5/` corpus; a wire-only tool like Fleet runs wire vectors, not eval) — never by the
+runner suppressing results. The result shape is whatever the op asserts: value + JIT cost
+for eval; parsed structure or round-trip-ok for wire.
 
 ## Phase roadmap
 
@@ -81,12 +85,12 @@ or round-trip-ok for wire.
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner **Dasher** (ergots, `ts-runner/`) **built** — v5-scoped | ✅ done |
-| **2 — eval scaled** | 239 `santa-eval/v2` vectors across 32 ops (Stage 1 + 1.5 + 2a — value-input features incl. UnsignedBigInt, Option, Box, Header), sourced from `LanguageSpecificationV6`; cross-check green | ✅ Stage 2a done |
+| **2 — eval scaled** | the eval corpus at scale — **1,792 entries / 115 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (Context-input `getVarFromInput` = Stage 2b, open) |
 | **3 — conformers + CI** | sigma-rust / ergo-node-rust runners; CI gate on committed vectors | |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
 
-Phases 2–5 are roadmap, not spec — each gets its subspec when reached. The **wire
+Phases 3–5 are roadmap, not spec — each gets its subspec when reached. The **wire
 tier** is a *parallel* track, not a sequential phase: it reuses the same `fixture-gen`
 assets and serves the broadest conformer set (scorex, Fleet, wallets) — pick it up
 alongside the eval tier once Phase 1's loop shape is proven.
@@ -122,7 +126,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, TS) — **built 2026-05-31**; v5-scoped (covers 12, abstains 231 v6; drove the AddToEnvironment cost fix; 2 repr divergences open) |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1486 nice · 61 divergent** (10 value · 36 cost · 15 not-yet-implemented), routed to ergots; v6 is out of its declared scope. Drove the AddToEnvironment cost fix. |
 | _(unassigned)_ | `sigma-rust` fork · `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo
@@ -130,9 +134,14 @@ consensus implementations.
 
 ## Status
 
-Phase 1 delivered — the eval loop runs green end-to-end on `decode-point` (`nice ✓ 6/6`).
-Phase 2 Stage 2a delivered — 239 `santa-eval/v2` vectors across 32 ops (Stage 1's 192 +
-43 UnsignedBigInt/Option + 4 Box/Header cases recovered; unsupported-kind skips 0), cross-check
-green (245/245 entries re-blessed across 33 files, including the 6 Phase-1 v1 entries). The
-context-input skip is now 4 — all `getVarFromInput` (a `Context` input), deferred to Stage 2b.
-**Next: the first independent runner (ergots) and/or Phase 2 Stage 2b (Context-input features).**
+Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
+corpus at scale**: **1,792 entries across 115 files**, blessed by `sigma-state` from its
+language specification and version-split into **v5** (1,547 — the cumulative v5/mainnet
+surface) and **v6** (245 — the v6 new-feature surface); a JSON-Schema gate validates all
+115. The first independent runner, **Dasher** (ergots), gates the v5 corpus against the
+JVM-blessed expected — **1,486 nice / 61 divergent**, recorded and routed. The runner
+contract is frozen on a faithful per-entry outcome model (no abstention — scope is an
+input-side selection).
+**Next:** more conformers (`sigma-rust`, the nodes), the **reject arm** (authored negative
+vectors), the **wire** and **block** tiers, and a full CI gate. The open eval gap is a
+`Context`-input feature (`getVarFromInput`, Stage 2b).

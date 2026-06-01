@@ -1,6 +1,5 @@
 export { runVector, runEntry } from './runner'
-export type { RunReport } from './runner'
 export { encodeSValue } from './encode'
 export { decodeSValue } from './decode'
 export { stypeFromSanta, stypeToSanta } from './stype'
-export { AbstainError, isV6TypeRejection } from './abstain'
+export { UnsupportedTypeError, isUnsupportedType } from './abstain'

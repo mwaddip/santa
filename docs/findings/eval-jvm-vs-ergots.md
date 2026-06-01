@@ -5,12 +5,14 @@ the committed `santa-eval` corpus (33 files / 245 entries) against the JVM-bless
 ergots is the first *independent* conformer, so a Dasher-vs-blessed mismatch is a genuine
 **JVM-vs-ergots** divergence (the JVM `sigma-state` 6.0.3 is canonical per BOOTSTRAP decision 1).
 
-ergots is **v5-scoped**. Of 245 entries it **abstains on 231** (out of v5 scope — 34
-UnsignedBigInt + 197 not-yet-implemented v6 methods; these flip to *covered* when ergots gains
-v6), **evaluates 12** (all 12 now nice — the 6 cost divergences below were **RESOLVED 2026-06-01**), with **2 representation divergences** still open (below).
+ergots is a **v5/mainnet** library; Dasher's gate runs the v5 input bucket. The runner emits
+one faithful outcome for every entry (no abstain — scope is which vectors you run, not a runner
+behavior). Current gate: **1486 nice · 61 RED** across 1547 v5 entries. See v5 corpus section below
+for the full breakdown. The repr (Header-ts) findings in the old 245-entry corpus are still open
+but now in the v6 bucket (not run by the v5 gate) — documented below.
 
-Reproduce: `cd ts-runner && npx vitest run test/e2e.test.ts` (the gate pins these 8), or
-`node ts-runner/dist/runner.js vectors/eval/<op>.json`.
+Reproduce: `cd ts-runner && npm test`, or
+`node ts-runner/dist/runner.js vectors/eval/v5/<op>.json`.
 
 ## Cost divergences (value agrees; JIT cost differs) — RESOLVED 2026-06-01
 
@@ -65,17 +67,22 @@ ergots stores `Header.timestamp` as a JS `number` and rejects any value `> Numbe
 (2⁵³) with `ReaderError('vlq-overflow')` — a deliberate NIP-08 byte-exact-round-trip decision at
 `~/projects/ergots/packages/scorex/src/header.ts:69`. The JVM uses a full `Long`, accepts the
 header, and evaluates. Real chain timestamps fit in <2⁴⁵, so this never bites mainnet — only this
-synthetic spec value. Dasher records these as **representation divergences** (omitted from
-actuals; scored as a divergence, **not** `errored`).
+synthetic spec value. Dasher records these as **`unrepresentable`** outcomes (value/cost null, `error:
+"unrepresentable"`) — present in actuals, never omitted. They live in the **v6** corpus, so
+they are *not* exercised by ergots' v5 gate; they remain a real, open repr bug for ergots'
+future v6 support.
 
 **Fix:** represent `Header.timestamp` as `bigint` (full u64) to match consensus.
 
 ## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`)
 
-Dasher's first run of the **v5** spec corpus (`vectors/eval/v5/`, 82 files / 1558 entries, extracted
-at ErgoTree v2) against the JVM-blessed `expected`: **1498 nice, 46 divergent** (10 value/error, 36
-cost), **0 v5 abstains** (ergots implements the v5 surface). Routed to the ergots session via a local
-`prompts/ergots-v5-divergences.md` (git-excluded). All ergots-vs-JVM (JVM canonical).
+Dasher's run of the **v5** spec corpus (`vectors/eval/v5/`, 82 files / 1547 entries, extracted
+at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: **1486 nice,
+61 RED** — 10 value/error, 36 cost, and **15 `not-implemented`** (3 v5 methods ergots lacks:
+`Coll.updated`, `Coll.updateMany`, `GroupElement.negate` — confirmed v5 in sigma-state
+`methods.scala` `v5Methods`, NOT v6-gated). There is no "abstain" — every entry yields a
+faithful outcome; the 15 gaps are honest RED, routed via `prompts/ergots-v5-method-gaps.md`,
+the 46 divergences via `prompts/ergots-v5-divergences.md`. All ergots-vs-JVM (JVM canonical).
 
 **Value/error (10):**
 - **Negation overflow (4)** — `Numeric_Negation_equivalence` `-{128, 32768, 2147483648, 9223372036854775808}` (`#0/#9/#18/#26`): JVM wraps `-MIN_VALUE` → `MIN_VALUE`; ergots `errored`. (ergots negation appears *checked*; sigma-state wraps.)
@@ -87,12 +94,8 @@ cost), **0 v5 abstains** (ergots implements the v5 surface). Routed to the ergot
 `SigmaProp.propBytes` (Δ −18…−210 — ergots flat 111; JVM scales with the sigma-tree's serialized size).
 Full per-entry deltas are in the e2e `cost-divergences:` block.
 
-> **Not yet pinned in the e2e gate.** The v5 corpus is staged (`vectors/eval/v5/`, uncommitted) and the
-> e2e currently FAILS on these (valueCoal=10, costDivergences=36) until ergots fixes them or the gate is
-> re-pinned to this baseline.
-
 ## Status
 - **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **RESOLVED 2026-06-01** — fixed in sigma-rust (`d59d8d9f`) + ergots (`6171d32`); ergots `dist` rebuilt; Dasher nice on all 12 covered. The e2e gate flipped 6→0 (kept as a regression guard).
 - **Repr — `Header.timestamp` cap** (2 entries): **OPEN** — route to ergots.
-- **v5 corpus** (2026-06-01): **46 divergences** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) — **OPEN**, routed to ergots. The v5 corpus is **staged, uncommitted**, and these are **not yet pinned** in the e2e gate.
-- Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins both sets at their current counts (6 / 2); when ergots fixes either, the count drops and the gate flags it for un-quarantine.
+- **v5 corpus** (2026-06-01): **61 RED** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) + 15 not-implemented (Coll.updated / Coll.updateMany / GroupElement.negate) — **OPEN**, routed to ergots. Pinned in the e2e gate (value 10 / cost 36 / not-implemented 15 / unrepresentable 0).
+- Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins each RED count; when ergots fixes any, the count drops and the gate flags it for re-baselining.

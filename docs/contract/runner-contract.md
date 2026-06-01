@@ -24,7 +24,8 @@ run(vector) → actuals
   `source`) carrying a list of `entries`. Each entry is one (`tree_bytes_hex`, `version`,
   optional `input`) case with the **blessed** `expected` result the JVM reference produced.
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
-  runner's *own* `{ value, cost, error }` for that entry.
+  runner's *own* `{ value, cost, error }` for that entry, where `error` is the outcome tag
+  (§3) — `null` on success, else `errored` / `not-implemented` / `unrepresentable`.
 
 Conformance is then a separate comparison step (§5): an entry is **nice** when the
 runner's actual equals the vector's blessed `expected`, **a lump of coal** otherwise.
@@ -60,19 +61,31 @@ because "equal" is pinned (§5).
   unique within a vector — the blesser appends `#<index>`.)
 - **Success:** `{ "value": <SValue §4>, "cost": <number>, "error": null }`.
 - **Failure:** `{ "value": null, "cost": null, "error": "errored" }`.
+- **Not-implemented:** `{ "value": null, "cost": null, "error": "not-implemented" }` — the runner has no implementation for this op/method/type.
+- **Unrepresentable:** `{ "value": null, "cost": null, "error": "unrepresentable" }` — the runner *has* the type but cannot represent this value.
 - The runner **MUST NOT read the vector's `expected`** when producing actuals. Actuals are
   produced blind; otherwise the comparison is meaningless.
 
 ### Invariants (hold for any runner, any vector)
 - **Determinism.** Same vector → byte-stable actuals on every run. No clocks, no RNG, no
   ambient state.
-- **Totality.** Every input entry yields exactly one result — success or `errored`. A
-  runner never silently drops an entry, and a single failing entry never aborts the file.
-- **Abstention is per-vector, never per-entry.** A runner declares which ops/tiers it
-  supports. For an op it does *not* implement, it abstains on the **whole vector** — emits
-  no actuals for it, scoring neither nice nor naughty. A runner **must not** emit
-  `"errored"` to mean "unsupported": `errored` means *"I implement this op and the
-  evaluation failed."* This keeps **naughty** = real divergence, never a missing feature.
+- **Totality.** Every input entry yields exactly one outcome — success, `errored`,
+  `not-implemented`, or `unrepresentable`. A runner never silently drops or omits an entry,
+  and an entry that fails in a *recognized* way (`errored`) never aborts the file. A failure
+  the runner does **not** recognize — a malformed vector, an unexpected codec or internal
+  error — is instead **propagated as a loud error** (aborting the run), never mislabeled as
+  one of the four outcomes: surfacing a real bug always beats silently absorbing it.
+- **No abstention; scope is an input-side selection.** A runner emits a faithful outcome
+  for **every entry of every vector it is given** — including `not-implemented` (an
+  op/method/type it doesn't implement) and `unrepresentable` (a type it has but a value it
+  can't hold). It never omits an entry or suppresses a would-diverge result to look
+  conformant. A conformer expresses its scope by **which vectors it is run against**: the
+  corpus is version-split (`vectors/eval/{v5,v6}/`), so a v5-only conformer runs the v5
+  subset and never sees a v6 vector. Which entries "count" — and how they slice into
+  v5/v6 or pass/gap tables — is a downstream **consumer's** judgment over the raw actuals
+  plus each entry's `version`/`op`; it is never a runner behavior. `errored` still means
+  *"I implement this op and the evaluation failed"* — never "unsupported"; that distinction
+  is carried by `not-implemented`.
 - **No oracle dependency.** Producing actuals requires only the vector plus the runner's
   own implementation — no JVM, no network, no access to the blesser.
 
@@ -136,15 +149,24 @@ whitespace as drift sources, and is implementable identically in any language.
 - **`value` and `cost` must match exactly, 1/1.** Both are consensus-critical: a wrong
   value is a real divergence; cost gates the block cost limit, so two implementations with
   different costs can disagree on transaction validity. No tolerance on either.
-- **`error` is coarse:** `null` (success) or the literal `"errored"` (any failure). A
-  match requires both sides agree on success-vs-failure. There is **no error taxonomy at
-  the eval tier** — see §7.
+- **`error` is compared as an exact string.** A committed `expected`'s `error` is always
+  `null` (success) or `"errored"` (failure) — there is **no error taxonomy at the eval
+  tier** (§7). An *actual* may also be `not-implemented` or `unrepresentable` (§3); by
+  construction those never appear in `expected`, so they match neither and score a lump of
+  coal (see below).
 - **On an errored entry, `cost` is `null`** (an aborted evaluation has no well-defined
   cost) and `value` is `null`. So a matched failure is `{null, null, "errored"}` on both
   sides; cost/value are not compared further once both errored.
 
-A vector is **nice** for a runner iff every entry it does *not* abstain on is nice; one
-lump of coal makes the runner **naughty** on that vector.
+A `not-implemented` or `unrepresentable` actual matches only an `expected` carrying the identical `error` string.
+Because the blessing oracle implements the full language and the bless-time
+wire-encodability gate drops un-ingestable inputs, a committed `expected` is always
+`success` or `errored` — so these two tags never match and always score a lump of coal.
+That is intentional: they are always real findings (a coverage gap or a representation
+bug), surfaced rather than hidden.
+
+A vector is **nice** for a runner iff every entry is nice; one lump of coal makes the runner
+**naughty** on that vector.
 
 ## 6. Comparator topology (no oracle dependency)
 
@@ -169,6 +191,11 @@ non-goals, to be specified when each arm is actually built (do not implement aga
   matching, so classification is deferred to the reject arm — where rejection *reason* is
   the actual subject. The `error` field is the slot that refinement will fill; adding
   classified reasons there is an additive change, not a breaking one.
+  This is distinct from the `not-implemented`/`unrepresentable` outcome tags (§3): those are
+  a *coverage/representability* axis — "the runner did not produce a value" — detected by
+  each runner's own typed conditions, not by fragile cross-impl error-message matching. The
+  deferred taxonomy concerns *why an attempted evaluation failed* (the `errored` case),
+  which stays coarse at the eval tier.
 - **Wire tier.** Result shape is a serialization round-trip outcome ("parsed structure" /
   "round-trip-ok"), not value+cost. A new `schema` discriminator + a new result-shape
   section; the eval contract is untouched.

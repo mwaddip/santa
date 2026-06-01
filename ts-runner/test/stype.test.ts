@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import type { SType } from '@ergots/ergoscript'
 import { stypeFromSanta, stypeToSanta } from '../src/stype'
-import { AbstainError } from '../src/abstain'
+import { UnsupportedTypeError } from '../src/abstain'
 import type { Json } from '../src/json'
 
 describe('SType bridge', () => {
@@ -27,11 +27,11 @@ describe('SType bridge', () => {
     })
   }
 
-  it('SUnsignedBigInt → AbstainError (decode side)', () => {
-    expect(() => stypeFromSanta({ tag: 'SUnsignedBigInt' })).toThrow(AbstainError)
+  it('SUnsignedBigInt → UnsupportedTypeError (decode side)', () => {
+    expect(() => stypeFromSanta({ tag: 'SUnsignedBigInt' })).toThrow(UnsupportedTypeError)
   })
 
-  it('nested SColl[SUnsignedBigInt] → AbstainError', () => {
-    expect(() => stypeFromSanta({ tag: 'SColl', elem: { tag: 'SUnsignedBigInt' } })).toThrow(AbstainError)
+  it('nested SColl[SUnsignedBigInt] → UnsupportedTypeError', () => {
+    expect(() => stypeFromSanta({ tag: 'SColl', elem: { tag: 'SUnsignedBigInt' } })).toThrow(UnsupportedTypeError)
   })
 })
