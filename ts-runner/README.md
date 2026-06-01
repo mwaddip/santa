@@ -63,8 +63,8 @@ SANTA session.
 entry's actual against the blessed `expected`:
 
 ```
-nice 1497 · RED 61 — every entry evaluated; no abstain
-RED → route to ergots: 10 value + 36 cost + 15 not-implemented + 0 unrepresentable
+nice 1632 · RED 73 — every entry evaluated; no abstain
+RED → route to ergots: 10 value + 36 cost + 27 not-implemented + 0 unrepresentable + 0 reject
 ```
 
 The gate pins each known-RED count, so a *new* divergence (count ↑) or an ergots fix

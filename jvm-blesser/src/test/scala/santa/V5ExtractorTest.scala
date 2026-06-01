@@ -90,7 +90,7 @@ class V5ExtractorTest extends munit.FunSuite {
          |  properties with emitted entries    : ${result.vectors.size}
          |  entries emitted (Stage-1 success)  : ${result.captured}
          |  skipped — unsupported at V5        : ${result.skippedUnsupported}
-         |  skipped — error-expected (Failure) : ${result.skippedError}
+         |  reject vectors blessed (Failure-expected) : ${result.rejectsCaptured}
          |  skipped — Context input (Stage 2b) : ${result.skippedContext}
          |${result.skippedContextReasons.map("    - " + _).mkString("\n")}
          |  skipped — unsupported value kind   : ${result.skippedUnsupportedKind}

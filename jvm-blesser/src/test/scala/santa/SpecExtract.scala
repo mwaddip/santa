@@ -21,6 +21,7 @@ final case class ExtractResult(
     skippedError: Int,                   // expected value is a Failure
     skippedContext: Int,                 // input is a Context (Stage 2b; Box/Header now captured)
     skippedUnsupportedKind: Int,         // input/value of a kind valueToJson can't encode
+    rejectsCaptured: Int,                // Failure-expected cases blessed as `errored` reject vectors
     unsupportedKindReasons: Seq[String], // distinct "op: kind not encodable" detail lines
     skippedContextReasons: Seq[String],  // distinct "op: input=<class> | <script>" for Context skips
     costDiagnostics: Seq[String],        // DIAGNOSTIC: cases where eval cost != a spec cost field
@@ -48,7 +49,8 @@ object SpecExtract {
       input: Any,
       expectedValue: Any,
       verificationCost: Option[Int], // Expected.verificationCost for the pinned version (verify-path cost)
-      costDetailsCost: Option[Int])  // CostDetails.cost = summed JIT trace (the eval cost the spec pins)
+      costDetailsCost: Option[Int],  // CostDetails.cost = summed JIT trace (the eval cost the spec pins)
+      expectsFailure: Boolean = false) // spec expects this (tree, input) to FAIL → bless a coarse reject
 
   /** True if the encoded SValue JSON contains an Opaque kind ANYWHERE — top-level
     * OR nested inside Coll `items` / Tuple `items`. A top-level-only check misses
@@ -143,6 +145,41 @@ object SpecExtract {
                                    "error" -> Json.Null)), diag))
   }
 
+  /** Encode a Failure-expected capture into a coarse reject entry. The spec says this
+    * (tree, input) fails, so bless { value:null, cost:null, error:"errored" } — but ONLY
+    * after the SAME input gates as toEntry (Opaque / decodable / wire-encodable), AND only
+    * if SANTA's own eval also fails (rejected for the right reason, coarse). If the eval
+    * produces a VALUE, that is the mirror of toEntry's VALUE MISMATCH: a "should-fail" that
+    * actually succeeds must never ship — fail loud. */
+  private[santa] def rejectToEntry(c: Capture, entryIndex: Int, activated: Byte): Either[String, (Json, Option[String])] = {
+    val inputJson = EvalCore.valueToJson(c.input)
+    if (hasOpaque(inputJson))
+      return Left(s"${c.op}: reject input kind not encodable — ${inputJson.noSpaces}")
+    val decoded =
+      try EvalCore.decodeInputConstant(inputJson)
+      catch { case t: Throwable => return Left(s"${c.op}: reject input not decodable — ${EvalCore.errClass(t)}") }
+    if (!EvalCore.isWireEncodable(decoded, activated))
+      return Left(s"${c.op}: reject input type ${decoded.tpe} not wire-encodable at ErgoTree v$activated")
+
+    val (_, outcome) = EvalCore.evalApplied(c.treeBytesHex, inputJson, activated = activated)
+    outcome match {
+      case Left(_) =>
+        Right((Json.obj(
+          "name"           -> Json.fromString(s"${c.input.toString}#$entryIndex"),
+          "script"         -> Json.fromString(c.script),
+          "tree_bytes_hex" -> Json.fromString(c.treeBytesHex),
+          "input"          -> inputJson,
+          "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                       "ergoTree"  -> Json.fromInt(activated.toInt)),
+          "expected"       -> Json.obj("value" -> Json.Null,
+                                       "cost"  -> Json.Null,
+                                       "error" -> Json.fromString("errored"))), None))
+      case Right((evalValue, _)) =>
+        sys.error(s"SpecExtract: REJECT MISMATCH for op '${c.op}' (${c.script}) on input " +
+          s"${inputJson.noSpaces}: spec expects Failure but eval produced ${evalValue.noSpaces}")
+    }
+  }
+
   /** Wrap a property's entries in the v2 envelope. */
   private def envelope(op: String, entries: Seq[Json], source: String): Json =
     Json.obj(
@@ -171,6 +208,7 @@ object SpecExtract {
     val unsupportedKindReasons = mutable.LinkedHashSet.empty[String]
     val costDiagnostics = mutable.ArrayBuffer.empty[String]
     var skippedUnsupportedKind = 0
+    var rejectsCaptured = 0
     val vectors = mutable.Map.empty[String, Json]
     byOp.foreach { case (op, cs) =>
       if (propertyFailures.exists(_.startsWith(op))) {
@@ -178,9 +216,15 @@ object SpecExtract {
       } else {
         var entryIndex = 0
         val entries = cs.flatMap { c =>
-          toEntry(c, entryIndex, activated) match {
-            case Right((entry, diag)) => diag.foreach(costDiagnostics += _); entryIndex += 1; Some(entry)
-            case Left(reason)         => skippedUnsupportedKind += 1; unsupportedKindReasons += reason; None
+          val outcome = if (c.expectsFailure) rejectToEntry(c, entryIndex, activated)
+                        else toEntry(c, entryIndex, activated)
+          outcome match {
+            case Right((entry, diag)) =>
+              diag.foreach(costDiagnostics += _)
+              if (c.expectsFailure) rejectsCaptured += 1
+              entryIndex += 1
+              Some(entry)
+            case Left(reason) => skippedUnsupportedKind += 1; unsupportedKindReasons += reason; None
           }
         }
         if (entries.nonEmpty) vectors += (op -> envelope(op, entries, source))
@@ -193,6 +237,7 @@ object SpecExtract {
       skippedError = skippedError,
       skippedContext = skippedContext,
       skippedUnsupportedKind = skippedUnsupportedKind,
+      rejectsCaptured = rejectsCaptured,
       unsupportedKindReasons = unsupportedKindReasons.toSeq,
       skippedContextReasons = skippedContextReasons,
       costDiagnostics = costDiagnostics.toSeq,

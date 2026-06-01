@@ -111,7 +111,42 @@
       }
     },
     {
-      "name" : "(Coll(-1),-2147483647)#3",
+      "name" : "(Coll(1),2147483647)#3",
+      "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => i1 + i2 }) }",
+      "tree_bytes_hex" : "1a2600dad901014c0eb08c7201018c720102d9010340029a8c7203017e8c7203020401e4e3014c0e",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 1
+              }
+            ]
+          },
+          {
+            "kind" : "Int",
+            "value" : 2147483647
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(Coll(-1),-2147483647)#4",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => i1 + i2 }) }",
       "tree_bytes_hex" : "1a2600dad901014c0eb08c7201018c720102d9010340029a8c7203017e8c7203020401e4e3014c0e",
       "input" : {
@@ -149,7 +184,42 @@
       }
     },
     {
-      "name" : "(Coll(1,2),0)#4",
+      "name" : "(Coll(-1),-2147483648)#5",
+      "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => i1 + i2 }) }",
+      "tree_bytes_hex" : "1a2600dad901014c0eb08c7201018c720102d9010340029a8c7203017e8c7203020401e4e3014c0e",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : -1
+              }
+            ]
+          },
+          {
+            "kind" : "Int",
+            "value" : -2147483648
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(Coll(1,2),0)#6",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => i1 + i2 }) }",
       "tree_bytes_hex" : "1a2600dad901014c0eb08c7201018c720102d9010340029a8c7203017e8c7203020401e4e3014c0e",
       "input" : {
@@ -191,7 +261,7 @@
       }
     },
     {
-      "name" : "(Coll(1,-1),0)#5",
+      "name" : "(Coll(1,-1),0)#7",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => i1 + i2 }) }",
       "tree_bytes_hex" : "1a2600dad901014c0eb08c7201018c720102d9010340029a8c7203017e8c7203020401e4e3014c0e",
       "input" : {
@@ -233,7 +303,7 @@
       }
     },
     {
-      "name" : "(Coll(1,-1,1),0)#6",
+      "name" : "(Coll(1,-1,1),0)#8",
       "script" : "{ (x: (Coll[Byte], Int)) => x._1.fold(x._2, { (i1: Int, i2: Byte) => i1 + i2 }) }",
       "tree_bytes_hex" : "1a2600dad901014c0eb08c7201018c720102d9010340029a8c7203017e8c7203020401e4e3014c0e",
       "input" : {

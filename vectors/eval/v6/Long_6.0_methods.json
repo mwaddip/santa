@@ -1942,7 +1942,61 @@
       }
     },
     {
-      "name" : "(24,3)#29",
+      "name" : "(-222,-1)#29",
+      "script" : "{ (x: (Long, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014104dc050c8c720101018c72010201e4e3014104",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "-222"
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-222,64)#30",
+      "script" : "{ (x: (Long, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014104dc050c8c720101018c72010201e4e3014104",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "-222"
+          },
+          {
+            "kind" : "Int",
+            "value" : 64
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(24,3)#31",
       "script" : "{ (x: (Long, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014104dc050d8c720101018c72010201e4e3014104",
       "input" : {
@@ -1972,7 +2026,7 @@
       }
     },
     {
-      "name" : "(1600,8)#30",
+      "name" : "(1600,8)#32",
       "script" : "{ (x: (Long, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014104dc050d8c720101018c72010201e4e3014104",
       "input" : {
@@ -2002,7 +2056,7 @@
       }
     },
     {
-      "name" : "(-3200,8)#31",
+      "name" : "(-3200,8)#33",
       "script" : "{ (x: (Long, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014104dc050d8c720101018c72010201e4e3014104",
       "input" : {
@@ -2032,7 +2086,7 @@
       }
     },
     {
-      "name" : "(-320019,18)#32",
+      "name" : "(-320019,18)#34",
       "script" : "{ (x: (Long, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014104dc050d8c720101018c72010201e4e3014104",
       "input" : {
@@ -2062,7 +2116,7 @@
       }
     },
     {
-      "name" : "(-320019,63)#33",
+      "name" : "(-320019,63)#35",
       "script" : "{ (x: (Long, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014104dc050d8c720101018c72010201e4e3014104",
       "input" : {
@@ -2089,6 +2143,33 @@
         },
         "cost" : 104,
         "error" : null
+      }
+    },
+    {
+      "name" : "(24,-1)#36",
+      "script" : "{ (x: (Long, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014104dc050d8c720101018c72010201e4e3014104",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "24"
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
       }
     }
   ]

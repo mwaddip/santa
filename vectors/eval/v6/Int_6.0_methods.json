@@ -1234,7 +1234,61 @@
       }
     },
     {
-      "name" : "(24,3)#24",
+      "name" : "(-222,32)#24",
+      "script" : "{ (x: (Int, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1700dad9010158dc040c8c720101018c72010201e4e30158",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Int",
+            "value" : -222
+          },
+          {
+            "kind" : "Int",
+            "value" : 32
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-222,-1)#25",
+      "script" : "{ (x: (Int, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1700dad9010158dc040c8c720101018c72010201e4e30158",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Int",
+            "value" : -222
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(24,3)#26",
       "script" : "{ (x: (Int, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1700dad9010158dc040d8c720101018c72010201e4e30158",
       "input" : {
@@ -1264,7 +1318,7 @@
       }
     },
     {
-      "name" : "(1600,8)#25",
+      "name" : "(1600,8)#27",
       "script" : "{ (x: (Int, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1700dad9010158dc040d8c720101018c72010201e4e30158",
       "input" : {
@@ -1294,7 +1348,7 @@
       }
     },
     {
-      "name" : "(-3200,8)#26",
+      "name" : "(-3200,8)#28",
       "script" : "{ (x: (Int, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1700dad9010158dc040d8c720101018c72010201e4e30158",
       "input" : {
@@ -1324,7 +1378,7 @@
       }
     },
     {
-      "name" : "(-320019,18)#27",
+      "name" : "(-320019,18)#29",
       "script" : "{ (x: (Int, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1700dad9010158dc040d8c720101018c72010201e4e30158",
       "input" : {
@@ -1351,6 +1405,60 @@
         },
         "cost" : 104,
         "error" : null
+      }
+    },
+    {
+      "name" : "(-320019,32)#30",
+      "script" : "{ (x: (Int, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1700dad9010158dc040d8c720101018c72010201e4e30158",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Int",
+            "value" : -320019
+          },
+          {
+            "kind" : "Int",
+            "value" : 32
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(-320019,-1)#31",
+      "script" : "{ (x: (Int, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1700dad9010158dc040d8c720101018c72010201e4e30158",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Int",
+            "value" : -320019
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
       }
     }
   ]

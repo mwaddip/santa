@@ -40,16 +40,16 @@ Three tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 1,803 entries across 117 vector files**, produced by the
+- ✅ **A blessed eval corpus — 1,974 entries across 117 vector files**, produced by the
   JVM reference interpreter (`sigma-state`) from its own language specification and
-  version-split into **v5** (1,558 entries — the cumulative v5/mainnet method surface)
-  and **v6** (245 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
+  version-split into **v5** (1,705 entries — the cumulative v5/mainnet method surface)
+  and **v6** (269 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
 - ✅ **An independent runner under test — *Dasher*** (the pure-TypeScript `ergots`
   library, in [`ts-runner/`](ts-runner/)). It consumes the committed vectors and is
-  checked against the JVM-blessed `expected`. On the v5 surface it scores **1,497 nice ·
-  61 divergent** (10 value, 36 cost, 15 not-yet-implemented methods) — the divergences
+  checked against the JVM-blessed `expected`. On the v5 surface it scores **1,632 nice ·
+  73 divergent** (10 value, 36 cost, 27 not-implemented, 0 reject) — the divergences
   are recorded and routed back to `ergots`. (`ergots` consumes `sigma-state` as Rudolph,
   the JVM reference runner, does — the runner is SANTA's; the implementation under test
   is a dependency.)

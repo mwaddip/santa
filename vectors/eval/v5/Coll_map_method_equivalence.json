@@ -114,6 +114,40 @@
         "cost" : 148,
         "error" : null
       }
+    },
+    {
+      "name" : "Coll(1,2,2147483647)#3",
+      "script" : "{ (x: Coll[Int]) => x.map({ (v: Int) => v + 1 }) }",
+      "tree_bytes_hex" : "1a19010402dad9010110ad7201d90103049a7203730001e4e30110",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SInt"
+        },
+        "items" : [
+          {
+            "kind" : "Int",
+            "value" : 1
+          },
+          {
+            "kind" : "Int",
+            "value" : 2
+          },
+          {
+            "kind" : "Int",
+            "value" : 2147483647
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
     }
   ]
 }

@@ -136,7 +136,9 @@ object V6Extractor {
           if (seenContextTreeClasses.add(cls))
             System.err.println(s"[ctx-tree] $currentOp ($cls) script=${f.script}\n          tree=$compiledTree")
         } else if (expRes.value.isFailure) {
-          skippedError += 1                         // error-expected (snag 3)
+          captures += SpecExtract.Capture(
+            op = currentOp, script = f.script, treeBytesHex = treeHex, input = input,
+            expectedValue = null, verificationCost = None, costDetailsCost = None, expectsFailure = true)
         } else {
           captures += SpecExtract.Capture(
             op = currentOp,

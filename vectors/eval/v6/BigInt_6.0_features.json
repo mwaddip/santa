@@ -986,7 +986,61 @@
       }
     },
     {
-      "name" : "(CBigInt(24),3)#29",
+      "name" : "(CBigInt(-222),-1)#29",
+      "script" : "{ (x: (BigInt, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014204dc060c8c720101018c72010201e4e3014204",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "BigInt",
+            "value" : "-222"
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(CBigInt(-222),256)#30",
+      "script" : "{ (x: (BigInt, Int)) => x._1.shiftLeft(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014204dc060c8c720101018c72010201e4e3014204",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "BigInt",
+            "value" : "-222"
+          },
+          {
+            "kind" : "Int",
+            "value" : 256
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(CBigInt(24),3)#31",
       "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
       "input" : {
@@ -1016,7 +1070,7 @@
       }
     },
     {
-      "name" : "(CBigInt(1600),8)#30",
+      "name" : "(CBigInt(1600),8)#32",
       "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
       "input" : {
@@ -1046,7 +1100,7 @@
       }
     },
     {
-      "name" : "(CBigInt(-3200),8)#31",
+      "name" : "(CBigInt(-3200),8)#33",
       "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
       "input" : {
@@ -1076,7 +1130,7 @@
       }
     },
     {
-      "name" : "(CBigInt(-320019),18)#32",
+      "name" : "(CBigInt(-320019),18)#34",
       "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
       "input" : {
@@ -1106,7 +1160,7 @@
       }
     },
     {
-      "name" : "(CBigInt(-320019),63)#33",
+      "name" : "(CBigInt(-320019),63)#35",
       "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
       "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
       "input" : {
@@ -1133,6 +1187,60 @@
         },
         "cost" : 104,
         "error" : null
+      }
+    },
+    {
+      "name" : "(CBigInt(24),-1)#36",
+      "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "BigInt",
+            "value" : "24"
+          },
+          {
+            "kind" : "Int",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "(CBigInt(24),256)#37",
+      "script" : "{ (x: (BigInt, Int)) => x._1.shiftRight(x._2) }",
+      "tree_bytes_hex" : "1b1900dad901014204dc060d8c720101018c72010201e4e3014204",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "BigInt",
+            "value" : "24"
+          },
+          {
+            "kind" : "Int",
+            "value" : 256
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
       }
     }
   ]

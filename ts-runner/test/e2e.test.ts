@@ -33,6 +33,7 @@ const notImplemented: string[] = []   // ergots lacks this v5 method (gap → ro
 const unrepresentable: string[] = []  // ergots has the type but can't hold this value
 const valueCoal: string[] = []        // value/error mismatch
 const costDivergences: string[] = []  // value matches, cost differs
+const rejectDivergences: string[] = [] // JVM rejects this input; ergots did not reject it identically
 const schemaErrors: string[] = []
 
 for (const file of files) {
@@ -49,6 +50,12 @@ for (const file of files) {
     if (structuralEqual(act, exp)) { nice++; continue }
     if (act.error === 'not-implemented') notImplemented.push(`${file} :: ${e.name}`)
     else if (act.error === 'unrepresentable') unrepresentable.push(`${file} :: ${e.name}`)
+    else if (exp.error === 'errored') {
+      // JVM rejects this input. structuralEqual already credited the reject-nice case (both
+      // {null,null,errored}); reaching here means ergots did NOT reject identically — most
+      // seriously, it may ACCEPT what the JVM rejects (a consensus bug). The reject arm's payoff.
+      rejectDivergences.push(`${file} :: ${e.name} — expected errored, got ${JSON.stringify({ value: act.value, error: act.error })}`)
+    }
     else if (act.error === null && exp.error === null && structuralEqual(act.value, exp.value) && act.cost !== exp.cost) {
       costDivergences.push(`${file} :: ${String(e.name).slice(0, 28)}  cost ${act.cost} vs ${exp.cost} (Δ${(act.cost ?? 0) - (exp.cost ?? 0)})`)
     } else {
@@ -57,14 +64,15 @@ for (const file of files) {
   }
 }
 
-const red = notImplemented.length + unrepresentable.length + valueCoal.length + costDivergences.length
+const red = notImplemented.length + unrepresentable.length + valueCoal.length + costDivergences.length + rejectDivergences.length
 console.log(`\n=== Dasher conformance · v5 (${files.length} files / ${total} entries) ===`)
 console.log(`  nice ${nice} · RED ${red} — every entry evaluated; no abstain`)
-console.log(`  RED → route to ergots: ${valueCoal.length} value + ${costDivergences.length} cost + ${notImplemented.length} not-implemented + ${unrepresentable.length} unrepresentable`)
+console.log(`  RED → route to ergots: ${valueCoal.length} value + ${costDivergences.length} cost + ${notImplemented.length} not-implemented + ${unrepresentable.length} unrepresentable + ${rejectDivergences.length} reject`)
 if (valueCoal.length) console.log(`  value:\n    ${valueCoal.join('\n    ')}`)
 if (costDivergences.length) console.log(`  cost:\n    ${costDivergences.join('\n    ')}`)
 if (notImplemented.length) console.log(`  not-implemented (v5 method gaps):\n    ${notImplemented.join('\n    ')}`)
 if (unrepresentable.length) console.log(`  unrepresentable:\n    ${unrepresentable.join('\n    ')}`)
+if (rejectDivergences.length) console.log(`  reject (ergots accepts/mis-rejects what JVM rejects):\n    ${rejectDivergences.join('\n    ')}`)
 
 describe('Dasher e2e conformance vs blessed v5 corpus', () => {
   it('every actuals object validates against the frozen actuals schema (§3)', () => {
@@ -86,10 +94,17 @@ describe('Dasher e2e conformance vs blessed v5 corpus', () => {
   it('cost divergences are exactly the 36 recorded v5 ergots cost-model gaps', () => {
     expect(costDivergences).toHaveLength(36)
   })
-  it('not-implemented gaps are exactly the 15 recorded v5 methods ergots lacks', () => {
-    expect(notImplemented, `not-implemented:\n${notImplemented.join('\n')}`).toHaveLength(15)
+  it('not-implemented gaps are exactly the 27 recorded (Coll.updated/updateMany/GroupElement.negate — accept + reject cases)', () => {
+    expect(notImplemented, `not-implemented:\n${notImplemented.join('\n')}`).toHaveLength(27)
   })
   it('unrepresentable is empty in v5 (the 2 Header-ts cases live in v6, not run here)', () => {
     expect(unrepresentable).toHaveLength(0)
+  })
+
+  // The reject arm (harvested Failure-expected vectors): ergots must reject every input the JVM
+  // rejects. 0 divergences = its reject path is sound (no consensus accept-bug). 135 reject cases
+  // score reject-nice; 12 land in not-implemented above (reject cases on the unimplemented ops).
+  it('reject divergences are 0 — ergots rejects every input the JVM rejects', () => {
+    expect(rejectDivergences, `reject divergences:\n${rejectDivergences.join('\n')}`).toHaveLength(0)
   })
 })
