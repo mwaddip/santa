@@ -1,7 +1,17 @@
 # Finding: `Header.nBits` sign round-trip divergence (V5 extraction)
 
-**Status:** open divergence — single excluded case at V5 capture (wiring lands in a
-later task). The loud value-mismatch guard in `SpecExtract.toEntry` is **intentionally
+**Status:** at V5, MOOT — superseded by the general wire-encodability gate. `Header`
+(`SHeader`) is a v6-only wire type (`DataSerializer.scala:19` gates the `SHeader` arm on
+`ergoTreeVersion >= 3`), so no `Header` SValue is a valid v5 input at all; the
+wire-encodability gate in `SpecExtract.toEntry` drops every `(x: Header) => …` case at
+v5 generically, `nBits` included. The old `nBits`-specific capture exclusion has been
+removed (it was a special-case of what the gate now handles).
+
+The sign round-trip below remains a **v6-relevant** observation: at v6, where `Header`
+inputs ARE wire-encodable, `nBits` still round-trips through the unsigned
+`DifficultySerializer`, so an in-memory `-1L` literal would still re-read as
+`4294967295`. If/when v6 Header-accessor extraction reaches `nBits`, this is the case to
+watch. The loud value-mismatch guard in `SpecExtract.toEntry` is **intentionally
 preserved** — this finding does NOT silence it.
 
 ## The case
@@ -75,21 +85,26 @@ in-memory literal.
 
 ## Disposition
 
-- **The V5 extractor will EXCLUDE this single case at capture** (the wiring lands in a
-  later task — this finding documents the why; it is not yet wired). The exclusion is
-  scoped to exactly this `(x: Header) => x.nBits` case, not a blanket value-mismatch
-  skip.
+- **At V5: dropped by the general wire-encodability gate, not a special case.**
+  `SpecExtract.toEntry` calls `EvalCore.isWireEncodable(decoded, activated)` before
+  emitting an entry; it serializes the decoded input through sigma-state's own
+  `DataSerializer` at the target ErgoTree version and skips (skip-and-report) anything
+  that throws. At v5 (ergoTree=2) the `SHeader` arm is gated off, so EVERY `Header` input
+  — `nBits` and all the other `(x: Header) => …` accessors — is dropped generically. The
+  old `ExcludedScripts`/`excludedKnownDivergence` capture-side hack in `V5Extractor` has
+  been removed; the gate subsumes it. (V5 captured count: ~1611 → ~1558; the 53 dropped
+  are the Header-input cases.)
 - **The cardinal rule stays intact.** `SpecExtract.toEntry` still `sys.error`s on ANY
-  value mismatch. We do NOT add a blanket value-mismatch skip, and we do NOT relax the
-  guard for Header. "No silent wrong value can ever ship" is preserved; this one case is
-  removed at the *source* (capture-side exclusion), where it is visible and auditable,
-  rather than swallowed by the comparator.
+  value mismatch. The wire gate is a skip on *wire-encodability*, NOT a value-mismatch
+  skip — it fires before the eval/compare. "No silent wrong value can ever ship" is
+  preserved; the Header cases are removed at the *source* (they are not valid v5 wire
+  encodings any conformer could deserialize), where it is visible and auditable.
 
-## Notes / open questions for the later wiring task
+## Notes / open questions
 
-- The exclusion should key on the property name + script (`Header properties
-  equivalence` / `{ (x: Header) => x.nBits }`) so it is precise and self-documenting.
-- Worth confirming whether the conformers under test (ergots, sigma-rust) read
-  `Header.nBits` as signed or unsigned — if any reads it signed, that is itself a
+- The gate is generic (sigma-state's `DataSerializer` is the single source of truth for
+  "valid wire constant at version N"), so it self-documents and needs no per-script list.
+- The sign round-trip becomes live again at **v6**, where `Header` inputs ARE
+  wire-encodable. Worth confirming whether the conformers under test (ergots, sigma-rust)
+  read `Header.nBits` as signed or unsigned — if any reads it signed, that is itself a
   cross-implementation divergence worth its own vector once a representation is agreed.
-  (Out of scope for Task 3; noted so it is not lost.)

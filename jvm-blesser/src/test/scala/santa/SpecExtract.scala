@@ -86,8 +86,19 @@ object SpecExtract {
     // skip-and-report, don't crash. This classifies a decode failure as a skip, leaving
     // evalApplied's Left below to mean a genuine EVAL failure (which stays loud) and a
     // value MISMATCH to stay loud (the cardinal "no silent wrong value can ever ship" rule).
-    try EvalCore.decodeInputConstant(inputJson)
-    catch { case t: Throwable => return Left(s"${c.op}: input not decodable — ${EvalCore.errClass(t)}") }
+    val decoded =
+      try EvalCore.decodeInputConstant(inputJson)
+      catch { case t: Throwable => return Left(s"${c.op}: input not decodable — ${EvalCore.errClass(t)}") }
+
+    // Wire-encodability gate: EvalCore binds inputs in-memory (bypassing sigma-state's
+    // DataSerializer version gate), so it can over-capture inputs that aren't valid wire
+    // encodings at the target ErgoTree version (e.g. SHeader requires ergoTree >= 3, so a
+    // Header input is NOT a valid v5 encoding). Such a vector would crash every conformer
+    // that deserializes from the wire (ergots, sigma-rust). Drop it here, using sigma-state's
+    // OWN gate, so the corpus is exactly what every implementation can deserialize. NOT a
+    // value-mismatch skip — the cardinal loud-on-mismatch rule below is untouched.
+    if (!EvalCore.isWireEncodable(decoded, activated))
+      return Left(s"${c.op}: input type ${decoded.tpe} not wire-encodable at ErgoTree v$activated (version-gated constant)")
 
     // Re-bless via SANTA's apply-eval (the SAME CErgoTreeEvaluator the spec uses).
     val (_, outcome) = EvalCore.evalApplied(c.treeBytesHex, inputJson, activated = activated)

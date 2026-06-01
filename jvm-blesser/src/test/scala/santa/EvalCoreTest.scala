@@ -2,7 +2,9 @@ package santa
 
 import scorex.util.encode.Base16
 
-import sigma.ast.{SBox, SHeader, SInt, SLong, SPreHeader, SSigmaProp, STuple}
+import sigma.ast.{
+  BoxConstant, HeaderConstant, IntConstant, SBox, SHeader, SInt, SLong, SPreHeader, SSigmaProp, STuple
+}
 import sigma.crypto.CryptoConstants
 import sigma.data.{CSigmaProp, ProveDlog, SigmaBoolean}
 import sigma.serialization.{SigmaSerializer}
@@ -124,6 +126,54 @@ class EvalCoreTest extends munit.FunSuite {
     val collJson = parse("""{"kind":"Coll","elem":{"tag":"SPreHeader"},"items":[]}""")
     val constant = EvalCore.decodeInputConstant(collJson)
     assertEquals(constant.tpe, sigma.ast.SCollection(SPreHeader): sigma.ast.SType)
+  }
+
+  // ── isWireEncodable: version-gated input drop (Task 8) ─────────────────────
+  // EvalCore binds inputs in-memory (ErgoHeader.sigmaSerializer + a ContextExtension var),
+  // which BYPASSES sigma-state's DataSerializer version gate. isWireEncodable re-applies that
+  // gate: serialize the decoded constant through DataSerializer at the target ErgoTree version
+  // and report whether it succeeds. SHeader is guarded by `ergoTreeVersion >= 3`
+  // (DataSerializer.scala:19), so a Header input is NOT a valid v5 (ergoTree=2) wire encoding —
+  // EvalCore over-captures it in-memory, and ergots/sigma-rust correctly reject it. The gate
+  // drops exactly such cases so the corpus is what every impl can deserialize.
+
+  // Upstream v2 mainnet-header literal (same one the Coll[Header] round-trip above uses).
+  private val mainnetHeaderHex =
+    "02ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+
+  private def headerConstant: sigma.ast.Constant[SHeader.type] = {
+    val bytes  = Base16.decode(mainnetHeaderHex).get
+    val header = org.ergoplatform.ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(bytes))
+    HeaderConstant(new sigma.data.CHeader(header))
+  }
+
+  private def boxConstant: sigma.ast.Constant[SBox.type] = {
+    val tree = sigma.ast.ErgoTree.fromSigmaBoolean(ProveDlog(CryptoConstants.dlogGroup.generator))
+    val box = new org.ergoplatform.ErgoBox(
+      value = 1000000L, ergoTree = tree,
+      transactionId = scorex.util.bytesToId(Array.fill(32)(0: Byte)),
+      index = 0.toShort, creationHeight = 0)
+    BoxConstant(sigma.data.CBox(box))
+  }
+
+  test("isWireEncodable: Header input is NOT wire-encodable at v5 (activated=2)") {
+    assert(!EvalCore.isWireEncodable(headerConstant, activated = 2),
+      "Header should be rejected at ErgoTree v2 — DataSerializer gates SHeader on version >= 3")
+  }
+
+  test("isWireEncodable: Header input IS wire-encodable at v6 (activated=3)") {
+    assert(EvalCore.isWireEncodable(headerConstant, activated = 3),
+      "Header should serialize at ErgoTree v3 — the SHeader arm is enabled there")
+  }
+
+  test("isWireEncodable: Box input IS wire-encodable at v5 (activated=2)") {
+    assert(EvalCore.isWireEncodable(boxConstant, activated = 2),
+      "Box is wire-encodable at v5 — the SBox arm is not version-gated")
+  }
+
+  test("isWireEncodable: Int input IS wire-encodable at v5 (activated=2)") {
+    assert(EvalCore.isWireEncodable(IntConstant(5), activated = 2),
+      "Int is a primitive, wire-encodable at every version")
   }
 
   // ── SpecExtract.toEntry robustness: encodable-but-undecodable → skip (Task 3 part a) ──

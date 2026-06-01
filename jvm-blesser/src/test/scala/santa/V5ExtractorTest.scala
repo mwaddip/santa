@@ -3,8 +3,9 @@ package santa
 /** TDD + smoke test for the V5 extractor.
   *
   * Drives LanguageSpecificationV5 at (2,2), asserts corpus shape and the
-  * nBits exclusion, writes staging vectors, and anchors one deterministic
-  * entry byte-for-byte to guard against encoder drift. */
+  * wire-encodability gate (no Header inputs — SHeader is v6-only), writes staging
+  * vectors, and anchors one deterministic entry byte-for-byte to guard against
+  * encoder drift. */
 class V5ExtractorTest extends munit.FunSuite {
 
   // Extraction is moderately expensive; run it once and share across all tests.
@@ -16,8 +17,10 @@ class V5ExtractorTest extends munit.FunSuite {
   }
 
   test("V5 extraction emits a non-trivial Stage-1 corpus (> 1500 entries)") {
+    // ~1558 after the wire-encodability gate drops the 53 Header-input cases (SHeader is
+    // v6-only — not a valid v5 wire encoding). Floor is a safe margin below that.
     assert(result.captured > 1500,
-      s"only ${result.captured} entries captured — expected ~1611")
+      s"only ${result.captured} entries captured — expected ~1558")
   }
 
   test("Coll patch method equivalence vector is present (cumulative v5 surface)") {
@@ -33,16 +36,20 @@ class V5ExtractorTest extends munit.FunSuite {
     assertEquals(env.hcursor.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.3"))
   }
 
-  test("Header.nBits script is excluded — no entry with nBits appears anywhere in vectors") {
-    // The ExcludedScripts guard prevents capture; without it, toEntry's VALUE MISMATCH
-    // sys.error (spec -1 vs eval 4294967295) would throw and abort this test.
-    val allScripts = result.vectors.values.toSeq.flatMap { env =>
+  test("no entry anywhere has a Header input — SHeader is not wire-encodable at v5") {
+    // SHeader requires ErgoTree version >= 3 (DataSerializer.scala:19), so a Header input is
+    // not a valid v5 wire encoding. The wire-encodability gate in SpecExtract.toEntry drops
+    // every such case generically (this subsumes the old Header.nBits-specific exclusion;
+    // nBits is a Header input, so it goes too). Assert NO entry's `input` is a Header (top-
+    // level kind "Header"), which is the canonical signal — broader and more robust than the
+    // old script-substring "nBits" check.
+    val headerInputs = result.vectors.values.toSeq.flatMap { env =>
       env.hcursor.downField("entries").as[List[io.circe.Json]].getOrElse(Nil)
-        .flatMap(_.hcursor.get[String]("script").toOption)
+        .filter(_.hcursor.downField("input").get[String]("kind").toOption.contains("Header"))
     }
-    val nBitsScripts = allScripts.filter(_.contains("nBits"))
-    assert(nBitsScripts.isEmpty,
-      s"found ${nBitsScripts.size} nBits entry/entries that should have been excluded: ${nBitsScripts.take(3)}")
+    assert(headerInputs.isEmpty,
+      s"found ${headerInputs.size} Header-input entry/entries that the wire gate should have dropped: " +
+        headerInputs.take(3).map(_.hcursor.get[String]("script").toOption).mkString(", "))
   }
 
   test("byte-anchor: first BinXor(logical XOR) equivalence entry matches canonical capture") {

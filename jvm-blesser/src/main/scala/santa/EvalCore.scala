@@ -20,7 +20,7 @@ import sigma.ast.{
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
 import sigma.interpreter.ContextExtension
-import sigma.serialization.{GroupElementSerializer, SigmaSerializer}
+import sigma.serialization.{DataSerializer, GroupElementSerializer, SigmaSerializer}
 import sigma.util.Extensions.EcpOps
 
 import sigmastate.eval._ // CPreHeader
@@ -448,6 +448,32 @@ object EvalCore {
         sys.error(s"decodeColl: elem type '$other' not yet supported")
     }
   }
+
+  // ── Wire-encodability gate ─────────────────────────────────────────────────
+
+  /** Serialize `c.value` as `c.tpe` through sigma-state's DataSerializer.
+    *
+    * Generic over `S <: SType` for the SAME reason as `mkConstant`: `DataSerializer.serialize`
+    * takes `v: S#WrappedType`, and casting `c.value` to a *concrete* `S#WrappedType` would emit
+    * a checkcast that throws (e.g. STuple#WrappedType == Coll[Any] vs a Scala Tuple2). With `S`
+    * a type parameter, `S#WrappedType` erases to `java.lang.Object`, so the cast is a no-op and
+    * DataSerializer dispatches on the runtime `tpe` value instead. `startWriter()` returns a
+    * `SigmaByteWriter` (<: CoreByteWriter), which the SBox/SHeader arms re-cast to SigmaByteWriter. */
+  private def serializeData[S <: SType](c: EvaluatedValue[S]): Unit =
+    DataSerializer.serialize[S](c.value.asInstanceOf[S#WrappedType], c.tpe, SigmaSerializer.startWriter())
+
+  /** True iff the given decoded input constant can be serialized by sigma-state's
+    * DataSerializer at the given ErgoTree version — i.e. it's a valid wire-encodable
+    * constant there. Mirrors the gate ergots/sigma-rust enforce (e.g. SHeader requires
+    * ergoTreeVersion >= 3, so a Header input is NOT wire-encodable at v5). Used to drop
+    * inputs the JVM itself can't wire-encode at the target version, so the corpus is exactly
+    * what every implementation can deserialize. `activated` sets both the activated and
+    * ErgoTree version (matching how the corpus stamps version.activated == version.ergoTree). */
+  def isWireEncodable(c: EvaluatedValue[_ <: SType], activated: Byte): Boolean =
+    try {
+      VersionContext.withVersions(activated, activated) { serializeData(c) }
+      true
+    } catch { case _: Throwable => false }
 
   // ── Context with var 1 bound to an input value ─────────────────────────────
 
