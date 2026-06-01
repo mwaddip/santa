@@ -12,7 +12,9 @@ type JsonObj = { [k: string]: Json }
 export interface Decoded { value: SValue; tpe: SType }
 
 /** SANTA canonical JSON → ergots SValue + its SType (the tpe needed for the
- *  ctx var-1 binding). Inverse of encodeSValue. UnsignedBigInt → abstain. */
+ *  ctx var-1 binding). Inverse of encodeSValue. UnsignedBigInt is a type this runner does
+ *  not implement → throws UnsupportedTypeError, surfaced as a `not-implemented` outcome
+ *  (runner-contract §3). */
 export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
   const kind = j['kind'] as string
   switch (kind) {

@@ -8,8 +8,10 @@ const LEAF_TAGS = new Set([
   'SSigmaProp', 'SBox', 'SHeader', 'SPreHeader', 'SUnit', 'SAny',
 ])
 
-/** SANTA SType JSON object → ergots SType. SUnsignedBigInt is out of v5 scope → abstain.
- *  The parameter is narrowed to a JSON object (SANTA SType JSON is always `{tag, ...}`). */
+/** SANTA SType JSON object → ergots SType. SUnsignedBigInt is a type this runner does not
+ *  implement → throws UnsupportedTypeError, which the runner surfaces as a `not-implemented`
+ *  outcome (runner-contract §3). The parameter is narrowed to a JSON object (SANTA SType
+ *  JSON is always `{tag, ...}`). */
 export function stypeFromSanta(t: { [k: string]: Json }): SType {
   const tag = t['tag'] as string
   if (tag === 'SUnsignedBigInt') throw new UnsupportedTypeError('SType SUnsignedBigInt is v6-only')
