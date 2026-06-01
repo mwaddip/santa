@@ -1,0 +1,134 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Conditional access to registers",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "sigma-state:LanguageSpecificationV5",
+  "entries" : [
+    {
+      "name" : "Box(id=Coll(-95,19,-93,107,-53,58,90,-70,-22,73,-114,-91,126,127,83,62,4,-90,-116,-89,99,58,-77,-34,-32,72,-47,106,0,2,28,-52); value=20; regs=Coll(TestValue(20),TestValue(Coll(10,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),TestValue(0),TestValue(1024),null,null,null,null))#0",
+      "script" : "{ (x: Box) =>\n  val tagOpt = x.R5[Short]\n  if (tagOpt.isDefined) {\n    tagOpt.get\n  } else {\n    0.toShort\n  }\n}",
+      "tree_bytes_hex" : "1a1f010300dad9010163d801d603c67201050395e67203e47203730001e4e30163",
+      "input" : {
+        "kind" : "Box",
+        "bytes_hex" : "140a0208d30000020200038010000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Short",
+          "value" : 1024
+        },
+        "cost" : 172,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Box(id=Coll(10,0,-127,22,-29,-123,69,43,-77,-119,-61,122,-67,-104,39,38,111,55,41,67,87,-128,-2,100,-57,-89,-2,-37,-69,51,61,63); value=20; regs=Coll(TestValue(20),TestValue(Coll(10,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),TestValue(2),null,null,null,null,null))#1",
+      "script" : "{ (x: Box) =>\n  val tagOpt = x.R5[Short]\n  if (tagOpt.isDefined) {\n    tagOpt.get\n  } else {\n    0.toShort\n  }\n}",
+      "tree_bytes_hex" : "1a1f010300dad9010163d801d603c67201050395e67203e47203730001e4e30163",
+      "input" : {
+        "kind" : "Box",
+        "bytes_hex" : "140a0208d30000010202000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Short",
+          "value" : 0
+        },
+        "cost" : 153,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Box(id=Coll(-95,19,-93,107,-53,58,90,-70,-22,73,-114,-91,126,127,83,62,4,-90,-116,-89,99,58,-77,-34,-32,72,-47,106,0,2,28,-52); value=20; regs=Coll(TestValue(20),TestValue(Coll(10,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),TestValue(0),TestValue(1024),null,null,null,null))#2",
+      "script" : "{\n (x: Box) =>\n   val tagOpt = x.R4[Byte]\n   if (tagOpt.isDefined) {\n     val tag = tagOpt.get\n     if (tag == 0.toByte) {\n       val short = x.R5[Short].get  // access Short in the register\n       short.toInt\n     } else {\n       if (tag == 1.toByte) {\n         x.R5[Int].get    // access Int in the register\n       }\n       else 0\n     }\n   } else {\n     -1\n   }\n}",
+      "tree_bytes_hex" : "1a45040200020104000401dad9010163d801d603c67201040295e67203d801d604e472039593720473007ee4c67201050304959372047301e4c6720105047302730301e4e30163",
+      "input" : {
+        "kind" : "Box",
+        "bytes_hex" : "140a0208d30000020200038010000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1024
+        },
+        "cost" : 278,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Box(id=Coll(-118,50,28,86,66,-19,27,59,23,-106,-86,-94,37,112,9,-122,68,110,20,-26,-61,-17,-43,-125,111,104,-62,4,-100,-88,-19,-75); value=20; regs=Coll(TestValue(20),TestValue(Coll(10,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),TestValue(1),TestValue(1048576),null,null,null,null))#3",
+      "script" : "{\n (x: Box) =>\n   val tagOpt = x.R4[Byte]\n   if (tagOpt.isDefined) {\n     val tag = tagOpt.get\n     if (tag == 0.toByte) {\n       val short = x.R5[Short].get  // access Short in the register\n       short.toInt\n     } else {\n       if (tag == 1.toByte) {\n         x.R5[Int].get    // access Int in the register\n       }\n       else 0\n     }\n   } else {\n     -1\n   }\n}",
+      "tree_bytes_hex" : "1a45040200020104000401dad9010163d801d603c67201040295e67203d801d604e472039593720473007ee4c67201050304959372047301e4c6720105047302730301e4e30163",
+      "input" : {
+        "kind" : "Box",
+        "bytes_hex" : "140a0208d300000202010480808001000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1048576
+        },
+        "cost" : 287,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Box(id=Coll(10,0,-127,22,-29,-123,69,43,-77,-119,-61,122,-67,-104,39,38,111,55,41,67,87,-128,-2,100,-57,-89,-2,-37,-69,51,61,63); value=20; regs=Coll(TestValue(20),TestValue(Coll(10,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),TestValue(2),null,null,null,null,null))#4",
+      "script" : "{\n (x: Box) =>\n   val tagOpt = x.R4[Byte]\n   if (tagOpt.isDefined) {\n     val tag = tagOpt.get\n     if (tag == 0.toByte) {\n       val short = x.R5[Short].get  // access Short in the register\n       short.toInt\n     } else {\n       if (tag == 1.toByte) {\n         x.R5[Int].get    // access Int in the register\n       }\n       else 0\n     }\n   } else {\n     -1\n   }\n}",
+      "tree_bytes_hex" : "1a45040200020104000401dad9010163d801d603c67201040295e67203d801d604e472039593720473007ee4c67201050304959372047301e4c6720105047302730301e4e30163",
+      "input" : {
+        "kind" : "Box",
+        "bytes_hex" : "140a0208d30000010202000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 218,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Box(id=Coll(0,-50,-13,96,-68,-83,83,-64,-9,116,61,28,-36,-85,-31,113,28,-92,-65,51,123,114,37,-49,-88,-87,-59,119,88,90,108,-76); value=20; regs=Coll(TestValue(20),TestValue(Coll(10,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),null,null,null,null,null,null))#5",
+      "script" : "{\n (x: Box) =>\n   val tagOpt = x.R4[Byte]\n   if (tagOpt.isDefined) {\n     val tag = tagOpt.get\n     if (tag == 0.toByte) {\n       val short = x.R5[Short].get  // access Short in the register\n       short.toInt\n     } else {\n       if (tag == 1.toByte) {\n         x.R5[Int].get    // access Int in the register\n       }\n       else 0\n     }\n   } else {\n     -1\n   }\n}",
+      "tree_bytes_hex" : "1a45040200020104000401dad9010163d801d603c67201040295e67203d801d604e472039593720473007ee4c67201050304959372047301e4c6720105047302730301e4e30163",
+      "input" : {
+        "kind" : "Box",
+        "bytes_hex" : "140a0208d3000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 153,
+        "error" : null
+      }
+    }
+  ]
+}
