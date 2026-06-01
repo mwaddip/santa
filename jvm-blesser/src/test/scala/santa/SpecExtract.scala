@@ -82,6 +82,13 @@ object SpecExtract {
     if (hasOpaque(valueJson))
       return Left(s"${c.op}: expected-value kind not encodable — ${valueJson.noSpaces}")
 
+    // Robustness: an input we can encode but cannot re-DECODE (re-bind) can't be re-blessed —
+    // skip-and-report, don't crash. This classifies a decode failure as a skip, leaving
+    // evalApplied's Left below to mean a genuine EVAL failure (which stays loud) and a
+    // value MISMATCH to stay loud (the cardinal "no silent wrong value can ever ship" rule).
+    try EvalCore.decodeInputConstant(inputJson)
+    catch { case t: Throwable => return Left(s"${c.op}: input not decodable — ${EvalCore.errClass(t)}") }
+
     // Re-bless via SANTA's apply-eval (the SAME CErgoTreeEvaluator the spec uses).
     val (_, outcome) = EvalCore.evalApplied(c.treeBytesHex, inputJson, activated = activated)
     val (evalValue, evalCost) = outcome match {

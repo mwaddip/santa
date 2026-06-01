@@ -13,8 +13,9 @@ import sigma.data.{CBigInt, CBox, CHeader, CSigmaProp, CUnsignedBigInt, SigmaBoo
 import sigma.ast.{
   BigIntConstant, BooleanConstant, BoxConstant, ByteConstant, CollectionConstant, Constant,
   ErgoTree, EvaluatedValue, GroupElementConstant, HeaderConstant, IntConstant, JitCost,
-  LongConstant, SBigInt, SBoolean, SByte, SCollection, SGroupElement, SInt, SLong, SOption,
-  SShort, SType, SUnsignedBigInt, ShortConstant, STuple, UnsignedBigIntConstant
+  LongConstant, SBigInt, SBoolean, SBox, SByte, SCollection, SGroupElement, SHeader, SInt,
+  SLong, SOption, SPreHeader, SShort, SSigmaProp, SType, SUnsignedBigInt, ShortConstant,
+  SigmaPropConstant, STuple, UnsignedBigIntConstant
 }
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
@@ -197,6 +198,9 @@ object EvalCore {
           .fold(e => sys.error(s"stypeFromJson: missing elem in Option type: $e"), identity)
         SOption(stypeFromJson(elem))
       case "SGroupElement" => SGroupElement
+      case "SBox"          => SBox
+      case "SHeader"       => SHeader
+      case "SPreHeader"    => SPreHeader
       case "SColl"         =>
         val elem = j.hcursor.downField("elem").as[Json]
           .fold(e => sys.error(s"stypeFromJson: missing elem in Coll type: $e"), identity)
@@ -340,6 +344,20 @@ object EvalCore {
         val header = ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(bytes))
         HeaderConstant(new CHeader(header))
 
+      case "SigmaProp" =>
+        // Inverse of valueToJson's SigmaProp encode:
+        //   raw_hex = Base16(SigmaBoolean.serializer.toBytes(sp.sigmaTree))
+        // so parse the bytes back to a SigmaBoolean (same serializer the encoder used),
+        // wrap in CSigmaProp, and build a SigmaPropConstant. SigmaSerializer.startReader
+        // yields a SigmaByteReader (a CoreByteReader), accepted by serializer.parse — the
+        // same reader the GroupElement/Box/Header decodes above pass to their parsers.
+        val hex = cur.downField("raw_hex").as[String]
+          .fold(e => sys.error(s"decodeInputConstant SigmaProp: $e"), identity)
+        val bytes = Base16.decode(hex).get
+        val sigmaTree: SigmaBoolean =
+          SigmaBoolean.serializer.parse(SigmaSerializer.startReader(bytes))
+        SigmaPropConstant(CSigmaProp(sigmaTree))
+
       case other =>
         sys.error(s"decodeInputConstant: '$other' not yet supported")
     }
@@ -392,6 +410,27 @@ object EvalCore {
         val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[GroupElement]).toArray
         val coll = Colls.fromArray(arr)(sigma.GroupElementRType)
         CollectionConstant[SGroupElement.type](coll, SGroupElement)
+
+      case SBox =>
+        // Coll[Box]: element runtime values are CBox (<: Box), decoded from each item's
+        // {kind:"Box",bytes_hex}. RType is sigma.BoxRType (== stypeToRType(SBox)).
+        val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[sigma.Box]).toArray
+        val coll = Colls.fromArray(arr)(sigma.BoxRType)
+        CollectionConstant[SBox.type](coll, SBox)
+
+      case SHeader =>
+        // Coll[Header]: element values are CHeader (<: Header), from {kind:"Header",bytes_hex}.
+        val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[Header]).toArray
+        val coll = Colls.fromArray(arr)(sigma.HeaderRType)
+        CollectionConstant[SHeader.type](coll, SHeader)
+
+      case SPreHeader =>
+        // Coll[PreHeader]: present so the TYPE-TAG decode doesn't crash. valueToJson emits
+        // PreHeader VALUES as Opaque (it doesn't model them), so any populated Coll[PreHeader]
+        // is skipped upstream by hasOpaque; this branch carries the (typically empty) coll.
+        val arr  = itemsJson.map(j => decodeInputConstant(j).value.asInstanceOf[PreHeader]).toArray
+        val coll = Colls.fromArray(arr)(sigma.PreHeaderRType)
+        CollectionConstant[SPreHeader.type](coll, SPreHeader)
 
       case inner: SCollection[_] =>
         // Nested Coll (elem type is itself a Coll). The element runtime values are the
