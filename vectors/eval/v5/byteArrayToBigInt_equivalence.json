@@ -1,0 +1,193 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "byteArrayToBigInt equivalence",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "sigma-state:LanguageSpecificationV5",
+  "entries" : [
+    {
+      "name" : "Coll(0)#0",
+      "script" : "{ (x: Coll[Byte]) => byteArrayToBigInt(x) }",
+      "tree_bytes_hex" : "1a0e00dad901010e7b720101e4e3010e",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SByte"
+        },
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Coll(1)#1",
+      "script" : "{ (x: Coll[Byte]) => byteArrayToBigInt(x) }",
+      "tree_bytes_hex" : "1a0e00dad901010e7b720101e4e3010e",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SByte"
+        },
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "1"
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Coll(-1)#2",
+      "script" : "{ (x: Coll[Byte]) => byteArrayToBigInt(x) }",
+      "tree_bytes_hex" : "1a0e00dad901010e7b720101e4e3010e",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SByte"
+        },
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-1"
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Coll(-128,-42,-62,1)#3",
+      "script" : "{ (x: Coll[Byte]) => byteArrayToBigInt(x) }",
+      "tree_bytes_hex" : "1a0e00dad901010e7b720101e4e3010e",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SByte"
+        },
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : -128
+          },
+          {
+            "kind" : "Byte",
+            "value" : -42
+          },
+          {
+            "kind" : "Byte",
+            "value" : -62
+          },
+          {
+            "kind" : "Byte",
+            "value" : 1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-2133409279"
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Coll(112,-42,-62,1,112,-42,-62,1)#4",
+      "script" : "{ (x: Coll[Byte]) => byteArrayToBigInt(x) }",
+      "tree_bytes_hex" : "1a0e00dad901010e7b720101e4e3010e",
+      "input" : {
+        "kind" : "Coll",
+        "elem" : {
+          "tag" : "SByte"
+        },
+        "items" : [
+          {
+            "kind" : "Byte",
+            "value" : 112
+          },
+          {
+            "kind" : "Byte",
+            "value" : -42
+          },
+          {
+            "kind" : "Byte",
+            "value" : -62
+          },
+          {
+            "kind" : "Byte",
+            "value" : 1
+          },
+          {
+            "kind" : "Byte",
+            "value" : 112
+          },
+          {
+            "kind" : "Byte",
+            "value" : -42
+          },
+          {
+            "kind" : "Byte",
+            "value" : -62
+          },
+          {
+            "kind" : "Byte",
+            "value" : 1
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "8130899488707887617"
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    }
+  ]
+}

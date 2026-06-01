@@ -70,7 +70,29 @@ actuals; scored as a divergence, **not** `errored`).
 
 **Fix:** represent `Header.timestamp` as `bigint` (full u64) to match consensus.
 
+## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`)
+
+Dasher's first run of the **v5** spec corpus (`vectors/eval/v5/`, 82 files / 1558 entries, extracted
+at ErgoTree v2) against the JVM-blessed `expected`: **1498 nice, 46 divergent** (10 value/error, 36
+cost), **0 v5 abstains** (ergots implements the v5 surface). Routed to the ergots session via a local
+`prompts/ergots-v5-divergences.md` (git-excluded). All ergots-vs-JVM (JVM canonical).
+
+**Value/error (10):**
+- **Negation overflow (4)** — `Numeric_Negation_equivalence` `-{128, 32768, 2147483648, 9223372036854775808}` (`#0/#9/#18/#26`): JVM wraps `-MIN_VALUE` → `MIN_VALUE`; ergots `errored`. (ergots negation appears *checked*; sigma-state wraps.)
+- **substConstants (5)** — `substConstants_equivalence` `(Coll[Byte], pos)`: JVM returns the substituted `Coll[Byte]`; ergots `errored`. **Input-specific** — ergots evals the v6 substConstants fine.
+- **flatMap empty-Coll type (1)** — `Coll_flatMap_method_equivalence :: Coll()#0`: JVM `Coll[SByte][]`, ergots `Coll[SAny][]`. Empty input → no first-iteration elem refinement (ergots `mir/expr-tpe.ts:147-150`, in-code acknowledged).
+
+**Cost (36, ergots mostly under-charges; distinct from the resolved `AddToEnvironment −5`):**
+`Coll.flatMap` (Δ −90…−190) · `Coll.indexOf` (Δ ±3…16) · `NEQ`-nested-colls (Δ −1…−18) ·
+`SigmaProp.propBytes` (Δ −18…−210 — ergots flat 111; JVM scales with the sigma-tree's serialized size).
+Full per-entry deltas are in the e2e `cost-divergences:` block.
+
+> **Not yet pinned in the e2e gate.** The v5 corpus is staged (`vectors/eval/v5/`, uncommitted) and the
+> e2e currently FAILS on these (valueCoal=10, costDivergences=36) until ergots fixes them or the gate is
+> re-pinned to this baseline.
+
 ## Status
 - **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **RESOLVED 2026-06-01** — fixed in sigma-rust (`d59d8d9f`) + ergots (`6171d32`); ergots `dist` rebuilt; Dasher nice on all 12 covered. The e2e gate flipped 6→0 (kept as a regression guard).
 - **Repr — `Header.timestamp` cap** (2 entries): **OPEN** — route to ergots.
+- **v5 corpus** (2026-06-01): **46 divergences** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) — **OPEN**, routed to ergots. The v5 corpus is **staged, uncommitted**, and these are **not yet pinned** in the e2e gate.
 - Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins both sets at their current counts (6 / 2); when ergots fixes either, the count drops and the gate flags it for un-quarantine.

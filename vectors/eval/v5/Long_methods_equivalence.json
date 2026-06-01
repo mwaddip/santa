@@ -1,0 +1,470 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Long methods equivalence",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "sigma-state:LanguageSpecificationV5",
+  "entries" : [
+    {
+      "name" : "(-4564956247298949325,-1)#0",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "-4564956247298949325"
+          },
+          {
+            "kind" : "Long",
+            "value" : "-1"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "-4564956247298949326"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "-4564956247298949324"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "4564956247298949325"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "4564956247298949325"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    },
+    {
+      "name" : "(-1,-4354407074688367443)#1",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "-1"
+          },
+          {
+            "kind" : "Long",
+            "value" : "-4354407074688367443"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "-4354407074688367444"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "4354407074688367442"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "4354407074688367443"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "-1"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    },
+    {
+      "name" : "(-1,-1)#2",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "-1"
+          },
+          {
+            "kind" : "Long",
+            "value" : "-1"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "-2"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "0"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "1"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "1"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    },
+    {
+      "name" : "(-1,5665019549505434695)#3",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "-1"
+          },
+          {
+            "kind" : "Long",
+            "value" : "5665019549505434695"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "5665019549505434694"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "-5665019549505434696"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "-5665019549505434695"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "-1"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    },
+    {
+      "name" : "(0,-1)#4",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "0"
+          },
+          {
+            "kind" : "Long",
+            "value" : "-1"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "-1"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "0"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    },
+    {
+      "name" : "(0,2112386634269044172)#5",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "0"
+          },
+          {
+            "kind" : "Long",
+            "value" : "2112386634269044172"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "2112386634269044172"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "-2112386634269044172"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "0"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    },
+    {
+      "name" : "(2903872550238813643,1)#6",
+      "script" : "{ (x: (Long, Long)) =>\n  val a = x._1; val b = x._2\n  val plus = a + b\n  val minus = a - b\n  val mul = a * b\n  val div = a / b\n  val mod = a % b\n  (plus, (minus, (mul, (div, mod))))\n}",
+      "tree_bytes_hex" : "1a3a00dad9010159d802d6038c720101d6048c72010286029a720372048602997203720486029c7203720486029d720372049e7203720401e4e30159",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Long",
+            "value" : "2903872550238813643"
+          },
+          {
+            "kind" : "Long",
+            "value" : "1"
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Long",
+              "value" : "2903872550238813644"
+            },
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Long",
+                  "value" : "2903872550238813642"
+                },
+                {
+                  "kind" : "Tuple",
+                  "items" : [
+                    {
+                      "kind" : "Long",
+                      "value" : "2903872550238813643"
+                    },
+                    {
+                      "kind" : "Tuple",
+                      "items" : [
+                        {
+                          "kind" : "Long",
+                          "value" : "2903872550238813643"
+                        },
+                        {
+                          "kind" : "Long",
+                          "value" : "0"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 292,
+        "error" : null
+      }
+    }
+  ]
+}

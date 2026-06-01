@@ -26,7 +26,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 VEC_PATH = os.path.join(HERE, "santa-eval.vector.schema.json")
 ACT_PATH = os.path.join(HERE, "santa-eval.actuals.schema.json")
-VECTORS = os.path.join(ROOT, "vectors", "eval", "*.json")
+VECTORS = os.path.join(ROOT, "vectors", "eval", "**", "*.json")
 
 
 def main() -> int:
@@ -54,7 +54,7 @@ def main() -> int:
     act_validator = Draft202012Validator(act_schema, registry=reg)
 
     # 2. Every committed vector validates against the vector schema.
-    files = sorted(glob.glob(VECTORS))
+    files = sorted(glob.glob(VECTORS, recursive=True))
     print(f"\n[corpus] validating {len(files)} committed vectors:")
     ok = 0
     for f in files:
