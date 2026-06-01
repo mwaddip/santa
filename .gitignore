@@ -22,3 +22,7 @@ tmp/
 # Python — schema-validator gate (schema/validate.py). Local-only; recreate via:
 #   python3 -m venv .venv && .venv/bin/pip install jsonschema referencing
 .venv/
+
+# Conformance impl cache — ./conform clones each runner's `impl` checkout here
+# (.santa/impl/<runner>/<repo>); a build artifact, regenerated on demand.
+.santa/

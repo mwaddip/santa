@@ -28,8 +28,33 @@ def discover():
     return out
 
 
+def resolve_impl(impl, cache_dir):
+    """impl = "<url>#<ref>" (ref = a branch/tag for latest, a <sha>, or "<branch>@<sha>" to
+    pin). Clone/fetch <url> into cache_dir/<repo-name> and check out the ref; return cache_dir
+    — the dir Santa passes as <impl-path>, where the runner finds its dependency as
+    ./<repo-name> (e.g. ./sigma-rust). impl null → "-" (self-contained: no checkout)."""
+    if not impl:
+        return "-"
+    url, sep, ref = impl.partition("#")
+    if not (sep and url and ref):
+        sys.exit(f"bad impl '{impl}': expected <url>#<ref>")
+    branch, _, sha = ref.partition("@")
+    target = sha or branch                       # @sha pins; otherwise the branch/tag/sha
+    name = os.path.basename(url.rstrip("/")).removesuffix(".git")
+    os.makedirs(cache_dir, exist_ok=True)
+    dest = os.path.join(cache_dir, name)
+    if not os.path.isdir(os.path.join(dest, ".git")):
+        subprocess.run(["git", "clone", "-q", url, dest], check=True)
+    subprocess.run(["git", "-C", dest, "fetch", "-q", "--all", "--tags"], check=True)
+    subprocess.run(["git", "-C", dest, "checkout", "-q", target], check=True)
+    if branch and not sha:                       # bare branch → move to its latest tip
+        subprocess.run(["git", "-C", dest, "pull", "-q", "--ff-only"], check=False)
+    return cache_dir
+
+
 def run_one(m, outroot):
     """Run a runner over each scoped version dir; return {version: {file: actuals_obj}}."""
+    impl_path = resolve_impl(m.get("impl"), os.path.join(ROOT, ".santa", "impl", m["name"]))
     res = {}
     for ver in m["scope"]:
         vdir = os.path.join(VECTORS, ver)
@@ -37,7 +62,7 @@ def run_one(m, outroot):
             continue
         odir = os.path.join(outroot, m["name"], ver)
         os.makedirs(odir, exist_ok=True)
-        subprocess.run([m["_run"], "-", vdir, odir], check=True)
+        subprocess.run([m["_run"], impl_path, vdir, odir], check=True)
         res[ver] = {}
         for fn in sorted(os.listdir(odir)):
             if fn.endswith(".json"):
