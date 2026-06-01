@@ -1,14 +1,14 @@
 # Findings — JVM (sigma-state) vs ergots eval divergences
 
 Discovered **2026-05-31** by the ergots runner (**Dasher**, `ts-runner/`) on its first run of
-the committed `santa-eval` corpus (33 files / 245 entries) against the JVM-blessed `expected`.
+the committed `santa-eval` corpus (33 files / 269 entries) against the JVM-blessed `expected`.
 ergots is the first *independent* conformer, so a Dasher-vs-blessed mismatch is a genuine
 **JVM-vs-ergots** divergence (the JVM `sigma-state` 6.0.3 is canonical per BOOTSTRAP decision 1).
 
 ergots is a **v5/mainnet** library; Dasher's gate runs the v5 input bucket. The runner emits
 one faithful outcome for every entry (no abstain — scope is which vectors you run, not a runner
-behavior). Current gate: **1497 nice · 61 RED** across 1558 v5 entries. See v5 corpus section below
-for the full breakdown. The repr (Header-ts) findings in the old 245-entry corpus are still open
+behavior). Current gate: **1632 nice · 73 RED** across 1705 v5 entries. See v5 corpus section below
+for the full breakdown. The repr (Header-ts) findings are still open
 but now in the v6 bucket (not run by the v5 gate) — documented below.
 
 Reproduce: `cd ts-runner && npm test`, or
@@ -76,13 +76,17 @@ future v6 support.
 
 ## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`)
 
-Dasher's run of the **v5** spec corpus (`vectors/eval/v5/`, 84 files / 1558 entries, extracted
-at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: **1497 nice,
-61 RED** — 10 value/error, 36 cost, and **15 `not-implemented`** (3 v5 methods ergots lacks:
-`Coll.updated`, `Coll.updateMany`, `GroupElement.negate` — confirmed v5 in sigma-state
-`methods.scala` `v5Methods`, NOT v6-gated). There is no "abstain" — every entry yields a
-faithful outcome; the 15 gaps are honest RED, routed via `prompts/ergots-v5-method-gaps.md`,
-the 46 divergences via `prompts/ergots-v5-divergences.md`. All ergots-vs-JVM (JVM canonical).
+Dasher's run of the **v5** spec corpus (`vectors/eval/v5/`, 84 files / 1705 entries, extracted
+at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: **1632 nice,
+73 RED** — 10 value/error, 36 cost, **27 `not-implemented`**, and **0 reject**. The corpus now
+includes 147 harvested reject vectors (the spec's Failure-expected cases blessed as coarse
+`errored`); ergots rejects every input the JVM rejects, so reject divergences are 0 (135 score
+reject-nice). The 27 `not-implemented` are the 3 v5 methods ergots lacks (`Coll.updated`,
+`Coll.updateMany`, `GroupElement.negate` — confirmed v5 in sigma-state `methods.scala`
+`v5Methods`, NOT v6-gated): their 15 accept cases plus the 12 `updated`/`updateMany` reject
+cases. No "abstain" — every entry yields a faithful outcome; gaps are honest RED, routed via
+`prompts/ergots-v5-method-gaps.md`, the 46 value/cost divergences via
+`prompts/ergots-v5-divergences.md`. All ergots-vs-JVM (JVM canonical).
 
 **Value/error (10):**
 - **Negation overflow (4)** — `Numeric_Negation_equivalence` `-{128, 32768, 2147483648, 9223372036854775808}` (`#0/#9/#18/#26`): JVM wraps `-MIN_VALUE` → `MIN_VALUE`; ergots `errored`. (ergots negation appears *checked*; sigma-state wraps.)
@@ -97,5 +101,6 @@ Full per-entry deltas are in the e2e `cost-divergences:` block.
 ## Status
 - **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **RESOLVED 2026-06-01** — fixed in sigma-rust (`d59d8d9f`) + ergots (`6171d32`); ergots `dist` rebuilt; Dasher nice on all 12 covered. The e2e gate flipped 6→0 (kept as a regression guard).
 - **Repr — `Header.timestamp` cap** (2 entries): **OPEN** — route to ergots.
-- **v5 corpus** (2026-06-01): **61 RED** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) + 15 not-implemented (Coll.updated / Coll.updateMany / GroupElement.negate) — **OPEN**, routed to ergots. Pinned in the e2e gate (value 10 / cost 36 / not-implemented 15 / unrepresentable 0).
+- **v5 corpus** (2026-06-01): **73 RED** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) + 27 not-implemented (Coll.updated / Coll.updateMany / GroupElement.negate — accept + reject cases) + 0 reject — **OPEN**, routed to ergots. Pinned in the e2e gate (value 10 / cost 36 / not-implemented 27 / unrepresentable 0 / reject 0).
+- **Reject arm** (2026-06-01): the corpus now harvests `LanguageSpecificationV5/V6`'s Failure-expected cases as coarse `errored` reject vectors (147 v5 + 24 v6). Dasher's reject bucket found **0 divergences** — ergots rejects every input the JVM rejects. Coarse only; the rejection-*reason* taxonomy stays deferred (runner-contract §7).
 - Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins each RED count; when ergots fixes any, the count drops and the gate flags it for re-baselining.

@@ -85,7 +85,7 @@ for eval; parsed structure or round-trip-ok for wire.
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner **Dasher** (ergots, `ts-runner/`) **built** — v5-scoped | ✅ done |
-| **2 — eval scaled** | the eval corpus at scale — **1,803 entries / 117 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (Context-input `getVarFromInput` = Stage 2b, open) |
+| **2 — eval scaled** | the eval corpus at scale — **1,974 entries / 117 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (Context-input `getVarFromInput` = Stage 2b, open) |
 | **3 — conformers + CI** | sigma-rust / ergo-node-rust runners; CI gate on committed vectors | |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
@@ -126,7 +126,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1497 nice · 61 divergent** (10 value · 36 cost · 15 not-yet-implemented), routed to ergots; v6 is out of its declared scope. Drove the AddToEnvironment cost fix. |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1632 nice · 73 divergent** (10 value · 36 cost · 27 not-implemented · 0 reject), routed to ergots; v6 is out of its declared scope. Reject arm now harvested (0 ergots reject divergences). |
 | _(unassigned)_ | `sigma-rust` fork · `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo
@@ -135,11 +135,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**: **1,803 entries across 117 files**, blessed by `sigma-state` from its
-language specification and version-split into **v5** (1,558 — the cumulative v5/mainnet
-surface) and **v6** (245 — the v6 new-feature surface); a JSON-Schema gate validates all
+corpus at scale**: **1,974 entries across 117 files**, blessed by `sigma-state` from its
+language specification and version-split into **v5** (1,705 — the cumulative v5/mainnet
+surface) and **v6** (269 — the v6 new-feature surface); a JSON-Schema gate validates all
 117. The first independent runner, **Dasher** (ergots), gates the v5 corpus against the
-JVM-blessed expected — **1,497 nice / 61 divergent**, recorded and routed. The runner
+JVM-blessed expected — **1,632 nice / 73 divergent**, recorded and routed. The runner
 contract is frozen on a faithful per-entry outcome model (no abstention — scope is an
 input-side selection).
 **Next:** more conformers (`sigma-rust`, the nodes), the **reject arm** (authored negative
