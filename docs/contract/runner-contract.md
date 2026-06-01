@@ -71,7 +71,10 @@ because "equal" is pinned (§5).
   ambient state.
 - **Totality.** Every input entry yields exactly one outcome — success, `errored`,
   `not-implemented`, or `unrepresentable`. A runner never silently drops or omits an entry,
-  and a single failing entry never aborts the file.
+  and an entry that fails in a *recognized* way (`errored`) never aborts the file. A failure
+  the runner does **not** recognize — a malformed vector, an unexpected codec or internal
+  error — is instead **propagated as a loud error** (aborting the run), never mislabeled as
+  one of the four outcomes: surfacing a real bug always beats silently absorbing it.
 - **No abstention; scope is an input-side selection.** A runner emits a faithful outcome
   for **every entry of every vector it is given** — including `not-implemented` (an
   op/method/type it doesn't implement) and `unrepresentable` (a type it has but a value it
