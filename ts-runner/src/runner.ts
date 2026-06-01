@@ -3,7 +3,7 @@ import { pathToFileURL } from 'node:url'
 import { parseTree, evaluateWith, makeContext, EvalError } from '@ergots/ergoscript'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
-import { AbstainError, isV6TypeRejection } from './abstain'
+import { UnsupportedTypeError, isUnsupportedType } from './abstain'
 import { hexToBytes } from './hex'
 
 interface Entry {
@@ -45,7 +45,7 @@ export function runEntry(schema: string, e: Entry): Outcome {
   try {
     tree = parseTree(hexToBytes(e.tree_bytes_hex))
   } catch (err) {
-    if (isV6TypeRejection(err)) return ABSTAIN_V6
+    if (isUnsupportedType(err)) return ABSTAIN_V6
     throw err
   }
 
@@ -65,7 +65,7 @@ export function runEntry(schema: string, e: Entry): Outcome {
       ctx = makeContext({ treeVersion, constants: tree.constants })
     }
   } catch (err) {
-    if (err instanceof AbstainError) return ABSTAIN_V6
+    if (err instanceof UnsupportedTypeError) return ABSTAIN_V6
     if (isReprLimit(err)) return REPR_DIVERGENCE
     throw err
   }

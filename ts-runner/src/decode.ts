@@ -3,7 +3,7 @@ import { parseSValue } from '@ergots/ergoscript'
 import { ByteReader } from '@ergots/scorex'
 import { hexToBytes } from './hex'
 import { stypeFromSanta } from './stype'
-import { AbstainError } from './abstain'
+import { UnsupportedTypeError } from './abstain'
 import type { Json } from './json'
 
 /** A SANTA canonical-JSON object node (an SValue or SType). */
@@ -22,7 +22,7 @@ export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
     case 'Int': return { value: { kind: 'Int', value: j['value'] as number }, tpe: { tag: 'SInt' } }
     case 'Long': return { value: { kind: 'Long', value: BigInt(j['value'] as string) }, tpe: { tag: 'SLong' } }
     case 'BigInt': return { value: { kind: 'BigInt', value: BigInt(j['value'] as string) }, tpe: { tag: 'SBigInt' } }
-    case 'UnsignedBigInt': throw new AbstainError('SValue UnsignedBigInt is v6-only')
+    case 'UnsignedBigInt': throw new UnsupportedTypeError('SValue UnsignedBigInt is v6-only')
     case 'GroupElement':
       return { value: { kind: 'GroupElement', value: hexToBytes(j['bytes_hex'] as string) }, tpe: { tag: 'SGroupElement' } }
     case 'Box': return parseBytesKind({ tag: 'SBox' }, j['bytes_hex'] as string, treeVersion)

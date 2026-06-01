@@ -1,5 +1,5 @@
 import type { SType } from '@ergots/ergoscript'
-import { AbstainError } from './abstain'
+import { UnsupportedTypeError } from './abstain'
 import type { Json } from './json'
 
 /** SANTA's SType tags that map 1:1 to an ergots leaf SType tag. */
@@ -12,7 +12,7 @@ const LEAF_TAGS = new Set([
  *  The parameter is narrowed to a JSON object (SANTA SType JSON is always `{tag, ...}`). */
 export function stypeFromSanta(t: { [k: string]: Json }): SType {
   const tag = t['tag'] as string
-  if (tag === 'SUnsignedBigInt') throw new AbstainError('SType SUnsignedBigInt is v6-only')
+  if (tag === 'SUnsignedBigInt') throw new UnsupportedTypeError('SType SUnsignedBigInt is v6-only')
   if (LEAF_TAGS.has(tag)) return { tag } as SType
   if (tag === 'SColl') return { tag: 'SColl', elem: stypeFromSanta(t['elem'] as { [k: string]: Json }) }
   if (tag === 'SOption') return { tag: 'SOption', elem: stypeFromSanta(t['elem'] as { [k: string]: Json }) }

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { decodeSValue } from '../src/decode'
-import { AbstainError } from '../src/abstain'
+import { UnsupportedTypeError } from '../src/abstain'
 
 describe('decode — value + tpe', () => {
   it('Int → {value, tpe SInt}', () => {
@@ -33,7 +33,7 @@ describe('decode — value + tpe', () => {
     expect(r.tpe).toEqual({ tag: 'SOption', elem: { tag: 'SLong' } })
     expect(r.value).toEqual({ kind: 'Option', elem: { tag: 'SLong' }, value: { kind: 'Long', value: 7n } })
   })
-  it('UnsignedBigInt → AbstainError', () => {
-    expect(() => decodeSValue({ kind: 'UnsignedBigInt', value: '42' }, 3)).toThrow(AbstainError)
+  it('UnsignedBigInt → UnsupportedTypeError', () => {
+    expect(() => decodeSValue({ kind: 'UnsignedBigInt', value: '42' }, 3)).toThrow(UnsupportedTypeError)
   })
 })
