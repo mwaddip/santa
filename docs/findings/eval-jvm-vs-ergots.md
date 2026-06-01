@@ -7,7 +7,7 @@ ergots is the first *independent* conformer, so a Dasher-vs-blessed mismatch is 
 
 ergots is a **v5/mainnet** library; Dasher's gate runs the v5 input bucket. The runner emits
 one faithful outcome for every entry (no abstain — scope is which vectors you run, not a runner
-behavior). Current gate: **1486 nice · 61 RED** across 1547 v5 entries. See v5 corpus section below
+behavior). Current gate: **1497 nice · 61 RED** across 1558 v5 entries. See v5 corpus section below
 for the full breakdown. The repr (Header-ts) findings in the old 245-entry corpus are still open
 but now in the v6 bucket (not run by the v5 gate) — documented below.
 
@@ -76,8 +76,8 @@ future v6 support.
 
 ## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`)
 
-Dasher's run of the **v5** spec corpus (`vectors/eval/v5/`, 82 files / 1547 entries, extracted
-at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: **1486 nice,
+Dasher's run of the **v5** spec corpus (`vectors/eval/v5/`, 84 files / 1558 entries, extracted
+at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: **1497 nice,
 61 RED** — 10 value/error, 36 cost, and **15 `not-implemented`** (3 v5 methods ergots lacks:
 `Coll.updated`, `Coll.updateMany`, `GroupElement.negate` — confirmed v5 in sigma-state
 `methods.scala` `v5Methods`, NOT v6-gated). There is no "abstain" — every entry yields a
