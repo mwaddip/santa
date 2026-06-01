@@ -88,11 +88,13 @@ cross-implementation check on "equal". The first orchestrator run demonstrated i
 
 - **Rendered report** (HTML/SVG) — `./conform` prints a terminal table and an optional `--matrix`
   op×runner ✓/✗ grid; an exported report is not built.
-- **Compiled-artifact cache** — the impl *checkout* is per-instance (`.santa/impl/<runner>/`), but
-  build outputs aren't cached across runs, so each `./conform` rebuilds.
+- **Compiled-artifact cache** — a runner's whole workspace `.santa/<name>/` (the cached impl
+  checkout + `out/<ver>/` actuals) is self-contained and delete-able; the checkout is reused across
+  runs (fetch+checkout), but compiled build outputs aren't cached, so each `./conform` rebuilds.
+  `./conform --clean` (or `rm -rf .santa`) resets everything.
 
-*(Done since v1: the `impl` auto-checkout — Santa clones `<url>#<ref>` per-instance and passes
-`<impl-path>` — see §2/§3.)*
+*(Done since v1: the `impl` auto-checkout — Santa clones `<url>#<ref>` into the per-runner workspace
+and passes `<impl-path>` — see §2/§3.)*
 
 ## 6. Worked example — adding a runner
 
