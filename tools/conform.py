@@ -3,7 +3,7 @@
 valid runner.json + executable santa-run is run against the blessed corpus; one shared
 comparator (compare.py) decides nice/coal; a side-by-side table is printed. See
 docs/contract/runner-integration.md."""
-import json, os, subprocess, sys, tempfile, glob
+import json, os, shutil, subprocess, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from compare import categorize
 
@@ -52,15 +52,20 @@ def resolve_impl(impl, cache_dir):
     return cache_dir
 
 
-def run_one(m, outroot):
-    """Run a runner over each scoped version dir; return {version: {file: actuals_obj}}."""
-    impl_path = resolve_impl(m.get("impl"), os.path.join(ROOT, ".santa", "impl", m["name"]))
+def run_one(m):
+    """Run a runner over each scoped version dir; return {version: {file: actuals_obj}}.
+    Everything for a runner lives under one workspace `.santa/<name>/` — the impl checkout
+    (cached, reused across runs) and the actuals under `out/<ver>/` — so the whole dir is a
+    self-contained, delete-able unit."""
+    ws = os.path.join(ROOT, ".santa", m["name"])
+    impl_path = resolve_impl(m.get("impl"), ws)          # clones into ws/<repo>; "-" if null
     res = {}
     for ver in m["scope"]:
         vdir = os.path.join(VECTORS, ver)
         if not os.path.isdir(vdir):
             continue
-        odir = os.path.join(outroot, m["name"], ver)
+        odir = os.path.join(ws, "out", ver)
+        shutil.rmtree(odir, ignore_errors=True)          # fresh actuals each run
         os.makedirs(odir, exist_ok=True)
         subprocess.run([m["_run"], impl_path, vdir, odir], check=True)
         res[ver] = {}
@@ -94,15 +99,16 @@ def tally(m, actuals):
 
 def main(argv):
     matrix = "--matrix" in argv
+    if "--clean" in argv:
+        shutil.rmtree(os.path.join(ROOT, ".santa"), ignore_errors=True)
     runners = discover()
     if not runners:
         print("no runners under runners/*/ (need runner.json + executable santa-run)")
         return 1
-    outroot = tempfile.mkdtemp(prefix="santa-conform-")
     results = {}
     for m in runners:
         print(f"running {m['name']} …", file=sys.stderr)
-        results[m["name"]] = (m, tally(m, run_one(m, outroot)))
+        results[m["name"]] = (m, tally(m, run_one(m)))
 
     print(f"\n=== SANTA conformance · {len(runners)} runner(s) ===")
     for name, (m, (counts, _ops)) in results.items():
