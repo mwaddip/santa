@@ -50,7 +50,8 @@ object V5Extractor {
       cases.foreach { case (input, expected) =>
         val (expRes, expDetails) = expected.newResults(ergoTreeVersionInTests)
         if (input.isInstanceOf[Context]) skippedContext += 1
-        else if (expRes.value.isFailure) skippedError += 1
+        else if (expRes.value.isFailure)
+          captures += SpecExtract.Capture(currentOp, f.script, treeHex, input, null, None, None, expectsFailure = true)
         else captures += SpecExtract.Capture(currentOp, f.script, treeHex, input,
           expRes.value.get, expRes.verificationCost, expDetails.map(_.cost.value))
       }

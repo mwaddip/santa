@@ -25,7 +25,7 @@ class SpecExtractTest extends munit.FunSuite {
     val result = ExtractResult(
       vectors = Map("foo-bar" -> dummy, "foo_bar" -> dummy),
       captured = 0, skippedUnsupported = 0, skippedError = 0, skippedContext = 0,
-      skippedUnsupportedKind = 0, unsupportedKindReasons = Nil, skippedContextReasons = Nil,
+      skippedUnsupportedKind = 0, rejectsCaptured = 0, unsupportedKindReasons = Nil, skippedContextReasons = Nil,
       costDiagnostics = Nil, propertyFailures = Nil)
     val tmp = java.nio.file.Files.createTempDirectory("santa-slug-collision-test")
     val ex = intercept[RuntimeException] { SpecExtract.writeVectors(result, tmp) }
