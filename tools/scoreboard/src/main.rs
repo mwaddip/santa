@@ -51,26 +51,34 @@ fn badges(results: &Value) -> Vec<(String, String)> {
     out
 }
 
+/// Escape text interpolated into the HTML dashboard. & must be replaced first.
+fn html_escape(s: &str) -> String {
+    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
+}
+
 /// Self-contained HTML dashboard: one row per (runner, slice) with per-dimension tallies.
 fn dashboard(results: &Value, git_ref: &str) -> String {
     let mut rows = String::new();
     let runners = results.get("runners").and_then(|r| r.as_array()).cloned().unwrap_or_default();
+    // borrow fallback for a runner with no "slices" key (avoids allocating per row)
     let empty = serde_json::Map::new();
     for runner in &runners {
         let name = runner.get("name").and_then(|n| n.as_str()).unwrap_or("?");
         let mark = runner.get("mark").and_then(|m| m.as_str()).unwrap_or("?");
         let icon = if mark == "nice" { "\u{1f381}" } else { "\u{1faa8}" }; // 🎁 / 🪨
+        let escaped_name = html_escape(name);
         let control = if CONTROL_RUNNERS.contains(&name) { " <em>(control)</em>" } else { "" };
         let slices = runner.get("slices").and_then(|s| s.as_object()).unwrap_or(&empty);
         let mut keys: Vec<&String> = slices.keys().collect();
         keys.sort();
         for key in keys {
+            let escaped_key = html_escape(key);
             let s = &slices[key];
             let g = |f: &str| s.get(f).and_then(|v| v.as_u64()).unwrap_or(0);
             let red = s.get("red").and_then(|r| r.as_array()).map(|a| a.len()).unwrap_or(0);
             let cls = if red > 0 { " class=\"red\"" } else { "" };
             rows.push_str(&format!(
-                "<tr{cls}><td>{icon} {name}{control}</td><td>{key}</td><td>{}/{}</td>\
+                "<tr{cls}><td>{icon} {escaped_name}{control}</td><td>{escaped_key}</td><td>{}/{}</td>\
                  <td>{}/{}</td><td>{}/{}</td><td>{}</td><td>{}</td></tr>\n",
                 g("value_nice"), g("value_total"),
                 g("cost_nice"), g("cost_graded"),
@@ -81,6 +89,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
     }
     let nice_icon = "\u{1f381}"; // 🎁
     let coal_icon = "\u{1faa8}"; // 🪨
+    let escaped_git_ref = html_escape(git_ref);
     format!(
         r#"<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -96,7 +105,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 </style></head><body>
 <h1>SANTA conformance scoreboard</h1>
 <p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.
-{nice_icon} all-nice · {coal_icon} divergences found (the deliverable). Generated from <code>{git_ref}</code>.</p>
+{nice_icon} all-nice · {coal_icon} divergences found (the deliverable). Generated from <code>{escaped_git_ref}</code>.</p>
 <table>
 <thead><tr><th>runner</th><th>slice</th><th>value</th><th>cost</th><th>reject</th><th>unrepr</th><th>red</th></tr></thead>
 <tbody>
@@ -116,7 +125,7 @@ fn repo_root() -> PathBuf {
 fn main() {
     let root = repo_root();
     let args: Vec<String> = env::args().skip(1).collect();
-    let results_path = args.get(0).map(PathBuf::from).unwrap_or_else(|| root.join(".santa/results.json"));
+    let results_path = args.first().map(PathBuf::from).unwrap_or_else(|| root.join(".santa/results.json"));
     let out_dir = args.get(1).map(PathBuf::from).unwrap_or_else(|| root.join("site"));
 
     let raw = fs::read_to_string(&results_path)
