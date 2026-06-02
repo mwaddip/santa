@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
-exec "$(dirname "$0")/.venv/bin/python" "$(dirname "$0")/tools/conform.py" "$@"
+# Prefer the local .venv (dev), else any python3 (CI / a clean clone): conform.py is pure
+# stdlib — the .venv is only for schema/validate.py (jsonschema). This lets a bare clone run it.
+d="$(dirname "$0")"
+py="$d/.venv/bin/python"; [ -x "$py" ] || py="$(command -v python3)"
+exec "$py" "$d/tools/conform.py" "$@"
