@@ -11,6 +11,8 @@ jobs:
   four-way:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: write          # force-push the generated scoreboard to gh-pages
     steps:
       - uses: actions/checkout@v6
         with:
@@ -24,3 +26,17 @@ jobs:
         run: ./validate
       - name: 4-way conformance
         run: ./conform
+      - name: scoreboard
+        run: ./scoreboard
+        env:
+          SANTA_SCOREBOARD_REF: ${{ github.sha }}
+      - name: publish scoreboard to gh-pages
+        run: |
+          cd site
+          git init -q
+          git checkout -q -b gh-pages
+          git add -A
+          git -c user.name=santa-ci -c user.email=ci@santa.local commit -q -m "scoreboard @ ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
