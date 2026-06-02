@@ -13,6 +13,22 @@ JVM column is the blessed truth and each row is a candidate **sigma-rust PR**.
 Reproduce: bless the `tree` bytes with `santa.blesser.Main`, or
 `EvalCore.evalEntry(tree, activated = 3)`.
 
+## Blitzen 4-way (2026-06-02) — the spec corpus, live
+
+`./conform` now runs `sigma-rust` directly as **Blitzen**: two submodules over the blessed
+spec corpus — `develop` (upstream `ergoplatform/sigma-rust`, value-only, `cost:false`) and the
+`ergo-node-integration` fork (`--features jit-cost`, value + cost). Headline:
+
+- **v5 — eni fork: 1558/1558 value · 1558/1558 cost · 147/147 reject (perfect).** The fork is
+  fully v5-conformant. **Upstream `develop`: 1548/1558 value** — **10 v5 value divergences** the
+  fork already fixed (the historical sigma-rust v5 gaps, localized to upstream).
+- **v6 — both divergent: 198/206 value · 40 unrepresentable · 23/23 reject**, and eni's cost
+  **16/198** (its jit-cost tracks the JVM on v5 but not v6). These are *surfaced, not yet
+  verified per-op* — the detailed v6 analysis (which ops; real-vs-harness) is the next focus.
+
+This supersedes the fixture-gen-era findings below (which predate the spec corpus). JVM
+`sigma-state` 6.0.3 stays canonical.
+
 ## Cost divergences (value agrees; JIT cost differs) — RESOLVED
 
 | op / entry | tree (hex) | JVM (canonical) | sigma-rust (before fix) | Δ | Resolution |

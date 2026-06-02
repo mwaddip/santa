@@ -59,7 +59,10 @@ The orchestrator performs discovery + filtering and stages the runner's selected
 `vectors/<tier>/<version>/<provenance>/` layout is invisible to it.
 
 **Exit 0** = it ran (actuals written). **Non-zero** = the runner itself failed to run — distinct
-from a per-entry `errored`, which is a normal outcome *inside* the actuals (eval contract §3).
+from a per-entry `errored`, which is a normal outcome *inside* the actuals (eval contract §3). The
+orchestrator **catches** a non-zero exit (build / run / impl-checkout failure): that runner is
+reported **⚠️ "could not build/run"** — distinct from a 🪨 divergence, since it was never tested —
+and the remaining runners still grade, so one broken conformer can't abort the run.
 
 Resolve `<vectors-dir>`/`<out-dir>` to absolute paths if the entrypoint `cd`s before running.
 
@@ -81,8 +84,8 @@ as a *dev convenience*, but the `santa-run` path emits actuals and leaves the ve
 
 (`tools/compare.py` is a third comparator alongside the TypeScript one (Dasher) and the Scala
 `Harness`; §5/§6 require all three to return the same verdict on the same bytes, so it doubles as a
-cross-implementation check on "equal". The first orchestrator run demonstrated it: Dasher scored
-1632/1705 · RED 73 under `compare.py`, matching its TS-comparator e2e pins exactly.)
+cross-implementation check on "equal". The orchestrator now runs a 4-way (Rudolph · Dasher · Blitzen develop & eni); Dasher scores
+**1705/1705** under `compare.py`, matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared verdict.)
 
 ## 5. Deferred (named, not silent)
 

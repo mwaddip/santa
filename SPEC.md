@@ -86,7 +86,7 @@ for eval; parsed structure or round-trip-ok for wire.
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner **Dasher** (ergots, `ts-runner/`) **built** — v5-scoped | ✅ done |
 | **2 — eval scaled** | the eval corpus at scale — **1,974 entries / 117 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (Context-input `getVarFromInput` = Stage 2b, open) |
-| **3 — conformers + CI** | runner-agnostic orchestrator `./conform` + [integration contract](docs/contract/runner-integration.md) built (presence-as-state over `runners/*/`, one shared comparator, side-by-side table); **rudolph + dasher** wired; sigma-rust (Blitzen) + ergo-node-rust runners + CI gate next | 🟢 underway |
+| **3 — conformers + CI** | runner-agnostic orchestrator `./conform` + [integration contract](docs/contract/runner-integration.md) built (presence-as-state over `runners/*/`, one shared comparator, per-slice table); **rudolph + dasher + Blitzen** (`sigma-rust` develop & eni — two submodules) wired into a live **4-way**; ergo-node-rust runner + CI gate next | 🟢 underway |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
 
@@ -126,8 +126,9 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1632 nice · 73 divergent** (10 value · 36 cost · 27 not-implemented · 0 reject), routed to ergots; v6 is out of its declared scope. Reject arm now harvested (0 ergots reject divergences). |
-| _(unassigned)_ | `sigma-rust` fork · `ergo-node-rust` · … | assigned on registration |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1705 / 1705 — fully green** (every routed value/cost divergence + the 27 not-implemented methods fixed in ergots `35eac6b`); v6 is out of its declared scope. |
+| **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni v5-perfect, both v6-divergent; develop also misses 10 v5 values the fork fixed |
+| _(unassigned)_ | `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo
 consensus implementations.
@@ -138,10 +139,12 @@ Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the
 corpus at scale**: **1,974 entries across 117 files**, blessed by `sigma-state` from its
 language specification and version-split into **v5** (1,705 — the cumulative v5/mainnet
 surface) and **v6** (269 — the v6 new-feature surface); a JSON-Schema gate validates all
-117. The first independent runner, **Dasher** (ergots), gates the v5 corpus against the
-JVM-blessed expected — **1,632 nice / 73 divergent**, recorded and routed. The runner
-contract is frozen on a faithful per-entry outcome model (no abstention — scope is an
-input-side selection).
-**Next:** more conformers (`sigma-rust`, the nodes), the **reject arm** (authored negative
-vectors), the **wire** and **block** tiers, and a full CI gate. The open eval gap is a
+117. The conformer layer is live: `./conform` runs a **4-way** (Rudolph · Dasher · Blitzen
+develop & eni) over `runners/*/`. **Dasher (ergots) is fully green on v5 — 1,705 / 1,705**
+(every routed divergence fixed). **Blitzen** (`sigma-rust`) is perfect on v5 via the eni
+fork but divergent on v6, and upstream `develop` misses 10 v5 values the fork fixed — the
+loop surfacing genuine cross-impl divergences, recorded and routed. The runner contract
+holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
+**Next:** the node runners (`ergo-node-rust`, block tier), the authored **reject arm**
+(mutation vectors), the **wire** tier, and a full CI gate. The open eval gap is a
 `Context`-input feature (`getVarFromInput`, Stage 2b).

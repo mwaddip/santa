@@ -63,10 +63,12 @@ SANTA session.
 entry's actual against the blessed `expected`:
 
 ```
-nice 1632 · RED 73 — every entry evaluated; no abstain
-RED → route to ergots: 10 value + 36 cost + 27 not-implemented + 0 unrepresentable + 0 reject
+nice 1705 · RED 0 — every entry evaluated; no abstain; fully green on v5
+(was 1632/73, then 1678/27) — ergots fixed every routed value/cost divergence AND the 27
+not-implemented methods (Coll.updated / Coll.updateMany / GroupElement.negate, 35eac6b);
+SANTA also re-blessed box inputs to >= protocol-min. The pins are now a full-green guard.
 ```
 
-The gate pins each known-RED count, so a *new* divergence (count ↑) or an ergots fix
-(count ↓) fails the gate and must be re-baselined — RED is recorded and tracked, never
+The gate pins each known-RED count, so a *new* divergence (count ↑) or an ergots regression
+(count ↑ from 0) fails the gate and must be investigated — RED is recorded and tracked, never
 hidden. (Update these numbers if the corpus or ergots changes them.)

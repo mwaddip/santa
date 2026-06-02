@@ -46,13 +46,18 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   and **v6** (269 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
-- ✅ **An independent runner under test — *Dasher*** (the pure-TypeScript `ergots`
-  library, in [`ts-runner/`](ts-runner/)). It consumes the committed vectors and is
-  checked against the JVM-blessed `expected`. On the v5 surface it scores **1,632 nice ·
-  73 divergent** (10 value, 36 cost, 27 not-implemented, 0 reject) — the divergences
-  are recorded and routed back to `ergots`. (`ergots` consumes `sigma-state` as Rudolph,
-  the JVM reference runner, does — the runner is SANTA's; the implementation under test
-  is a dependency.)
+- ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
+  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Four runners wired today:
+  **Rudolph** (the JVM reference — the all-🎁 control that blessed the corpus), **Dasher**
+  (the pure-TS `ergots` library, [`ts-runner/`](ts-runner/)), and **Blitzen** as two
+  submodules pinning `sigma-rust` at upstream `develop` (value-only) and the
+  `ergo-node-integration` fork (`--features jit-cost`). Each is graded against the
+  JVM-blessed `expected` — the runner is SANTA's; the implementation under test is a dependency.
+- ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green on
+  v5 (1,705 / 1,705)**: every divergence SANTA routed is now fixed in `ergots`. Blitzen shows
+  the suite working — `sigma-rust`'s `ergo-node-integration` fork is also perfect on v5 but
+  divergent on v6 (value, cost, and representability gaps), while plain upstream `develop`
+  misses 10 v5 values the fork already fixed. A 🪨 is the suite doing its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
   **total**: it emits one faithful outcome for *every* entry — value + cost on success,
@@ -67,7 +72,7 @@ Still greenfield, and where help is most wanted (see below):
 
 - the **wire tier** (serialization round-trips — the broadest surface) and the **block
   tier** (chain-blessed block vectors);
-- more **independent runners** — `sigma-rust`, the full nodes;
+- more **independent runners** — the full nodes (`sigma-rust` is now wired, as Blitzen);
 - the **reject arm** — authored negative / mutation vectors (rejected *for the right
   reason*); and a full CI gate.
 
@@ -83,6 +88,8 @@ schema/            JSON Schemas for vectors + actuals, and the validator
 vectors/eval/      the canonical eval corpus — the "nice list" (v5/ and v6/)
 jvm-blesser/       Scala: the blesser, the JVM reference runner (Rudolph), the harness
 ts-runner/         Dasher — the ergots runner + the conformance gate
+runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni)
+conform            the runner-agnostic orchestrator — runs every runner, prints the table
 README.md          this file
 ```
 

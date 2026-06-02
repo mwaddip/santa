@@ -7,9 +7,9 @@ ergots is the first *independent* conformer, so a Dasher-vs-blessed mismatch is 
 
 ergots is a **v5/mainnet** library; Dasher's gate runs the v5 input bucket. The runner emits
 one faithful outcome for every entry (no abstain — scope is which vectors you run, not a runner
-behavior). Current gate: **1632 nice · 73 RED** across 1705 v5 entries. See v5 corpus section below
-for the full breakdown. The repr (Header-ts) findings are still open
-but now in the v6 bucket (not run by the v5 gate) — documented below.
+behavior). Current gate: **1705 / 1705 — fully green** (was 1632/73, then 1678/27); every value/cost
+divergence and the 27 not-implemented methods below are now fixed in ergots. The repr (Header-ts)
+findings remain open but live in the v6 bucket (not run by the v5 gate) — documented below.
 
 Reproduce: `cd ts-runner && npm test`, or
 `node ts-runner/dist/runner.js vectors/eval/v5/<op>.json`.
@@ -74,11 +74,16 @@ future v6 support.
 
 **Fix:** represent `Header.timestamp` as `bigint` (full u64) to match consensus.
 
-## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`)
+## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`) — RESOLVED 2026-06-02
+
+> **RESOLVED:** all 73 closed. ergots landed every value/cost fix and then the 27
+> not-implemented methods (`Coll.updated`/`updateMany`/`GroupElement.negate`, `35eac6b`);
+> SANTA re-blessed box inputs to ≥protocol-min (`santa-rebless-min-box-value`). **Dasher v5 =
+> 1705/1705**, pinned as a full-green regression guard. The record below stands.
 
 Dasher's run of the **v5** spec corpus (`vectors/eval/v5/`, 84 files / 1705 entries, extracted
-at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: **1632 nice,
-73 RED** — 10 value/error, 36 cost, **27 `not-implemented`**, and **0 reject**. The corpus now
+at ErgoTree v2) against the JVM-blessed `expected`, ergots' declared v5 scope: originally **1632
+nice, 73 RED** — 10 value/error, 36 cost, **27 `not-implemented`**, and **0 reject**. The corpus now
 includes 147 harvested reject vectors (the spec's Failure-expected cases blessed as coarse
 `errored`); ergots rejects every input the JVM rejects, so reject divergences are 0 (135 score
 reject-nice). The 27 `not-implemented` are the 3 v5 methods ergots lacks (`Coll.updated`,
@@ -101,6 +106,6 @@ Full per-entry deltas are in the e2e `cost-divergences:` block.
 ## Status
 - **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **RESOLVED 2026-06-01** — fixed in sigma-rust (`d59d8d9f`) + ergots (`6171d32`); ergots `dist` rebuilt; Dasher nice on all 12 covered. The e2e gate flipped 6→0 (kept as a regression guard).
 - **Repr — `Header.timestamp` cap** (2 entries): **OPEN** — route to ergots.
-- **v5 corpus** (2026-06-01): **73 RED** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) + 27 not-implemented (Coll.updated / Coll.updateMany / GroupElement.negate — accept + reject cases) + 0 reject — **OPEN**, routed to ergots. Pinned in the e2e gate (value 10 / cost 36 / not-implemented 27 / unrepresentable 0 / reject 0).
+- **v5 corpus** (2026-06-01 → **RESOLVED 2026-06-02**): originally **73 RED** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) + 27 not-implemented (Coll.updated / Coll.updateMany / GroupElement.negate — accept + reject cases) + 0 reject. **All fixed in ergots** (value/cost via the routed fixes; the 27 methods via `35eac6b`); SANTA re-blessed box inputs to ≥min. **Dasher v5 = 1705/1705** — the e2e pins are now a full-green guard.
 - **Reject arm** (2026-06-01): the corpus now harvests `LanguageSpecificationV5/V6`'s Failure-expected cases as coarse `errored` reject vectors (147 v5 + 24 v6). Dasher's reject bucket found **0 divergences** — ergots rejects every input the JVM rejects. Coarse only; the rejection-*reason* taxonomy stays deferred (runner-contract §7).
 - Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins each RED count; when ergots fixes any, the count drops and the gate flags it for re-baselining.
