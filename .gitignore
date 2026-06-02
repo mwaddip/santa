@@ -19,8 +19,8 @@ project/project/
 # notes. Persists across sessions; never committed. (Repo-root tmp/, not system /tmp.)
 tmp/
 
-# Python — schema-validator gate (schema/validate.py). Local-only; recreate via:
-#   python3 -m venv .venv && .venv/bin/pip install jsonschema referencing
+# Obsolete pre-rust python venv / caches (SANTA's tooling is now the tools/ rust workspace —
+# conform + validate + santa-check). Kept ignored for any local leftover; safe to delete.
 .venv/
 __pycache__/
 

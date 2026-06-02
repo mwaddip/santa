@@ -15,10 +15,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive          # blitzen-develop / blitzen-eni
-      - name: Install mise (binary only — runners self-provision their toolchains)
+      - name: Install mise (binary only — runners + SANTA's own tooling self-provision)
         uses: jdx/mise-action@v2
         with:
           version: 2026.5.18
-          install: false                 # no root config by design; each santa-run does `mise install`
+          install: false                 # no root config by design; each wrapper/santa-run does `mise install`
+      - name: schema gate
+        run: ./validate
       - name: 4-way conformance
         run: ./conform

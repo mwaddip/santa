@@ -94,23 +94,27 @@ The orchestrator stays **toolchain-agnostic** — `./conform` never learns a run
 invokes `santa-run`. The pin lives **with the runner** (presence-as-state): drop a dir in, it carries
 its toolchain; remove it, nothing dangles. Deliberately **per-runner, not a shared union** — two
 same-language runners (`blitzen-develop`/`blitzen-eni`) can pin different versions, which one flattened
-`[tools]` could not. **Bootstrap deps** (assumed, not runner-provisioned): `mise`, `git`, and
-`./conform`'s own `python3`. CI installs mise via `jdx/mise-action`; `mise install` may delegate to a
-native manager (rust → rustup, which mise bootstraps) — still root-less and version-pinned.
+`[tools]` could not. **Bootstrap deps** (assumed, not provisioned): `mise` and `git`. Everything else
+self-provisions — each runner its own toolchain (above), and SANTA's own tooling (the `conform` +
+`validate` + `santa-check` rust workspace under `tools/`) via the wrappers' `mise exec` against
+`tools/mise.toml`. CI installs mise via `jdx/mise-action`; `mise install` may delegate to a native
+manager (rust → rustup, which mise bootstraps) — still root-less and version-pinned.
 
 ## 4. The runner does not compare — the orchestrator does
 
 Per eval contract §6, conformance comparison needs no oracle and must be **pinned identically
-across runners**. So the orchestrator runs **one shared comparator** ([`tools/compare.py`](../../tools/compare.py),
-the §5 algorithm) over *every* runner's actuals. **A runner MUST NOT self-judge for orchestration**
+across runners**. So the orchestrator grades with **one shared comparator** — the Rust
+[`santa-check`](../../tools/santa-check) lib (§5 equality + §6 grading), linked into `conform`
+in-process — over *every* runner's actuals. **A runner MUST NOT self-judge for orchestration**
 — it only emits actuals; the orchestrator decides nice/coal and categorizes RED
 (value / cost / not-implemented / unrepresentable / reject). A standalone self-compare mode is fine
 as a *dev convenience*, but the `santa-run` path emits actuals and leaves the verdict to `conform`.
 
-(`tools/compare.py` is a third comparator alongside the TypeScript one (Dasher) and the Scala
-`Harness`; §5/§6 require all three to return the same verdict on the same bytes, so it doubles as a
-cross-implementation check on "equal". The orchestrator now runs a 4-way (Rudolph · Dasher · Blitzen develop & eni); Dasher scores
-**1705/1705** under `compare.py`, matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared verdict.)
+(`santa-check` is the canonical engine alongside the per-ecosystem references — the TypeScript one
+(Dasher) and the Scala `Harness`; §5/§6 require all to return the same verdict on the same bytes, and
+each is proven against the [verdict-oracle](../../oracle) (`oracle/*.json`) so they can't drift. The
+orchestrator runs a 4-way (Rudolph · Dasher · Blitzen develop & eni); Dasher scores **1705/1705**,
+matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared verdict.)
 
 ## 5. Deferred (named, not silent)
 
