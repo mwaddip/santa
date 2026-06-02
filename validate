@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# SANTA schema gate — validate the committed vectors against the eval-tier JSON Schemas. Same
+# self-provision as ./conform (rust via tools/mise.toml); builds + runs the Rust `validate`.
+# (Replaces the former `.venv/bin/python schema/validate.py`.)
+set -euo pipefail
+d="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
+  mise trust "$d/tools/mise.toml" >/dev/null
+  mise --cd "$d/tools" install
+  exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$0" "$@"
+fi
+exec cargo run --manifest-path "$d/tools/Cargo.toml" -p validate -q -- "$@"

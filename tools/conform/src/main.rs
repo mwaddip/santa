@@ -368,3 +368,103 @@ fn main() -> ExitCode {
     eprintln!("\nresults → .santa/results.json");
     ExitCode::SUCCESS
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{parse_relpath, resolve_impl, select, Vec5};
+    use std::fs;
+    use std::process::Command;
+
+    fn sample() -> Vec<Vec5> {
+        ["eval/v5/spec/a.json", "eval/v6/spec/b.json", "eval/v5/authored/c.json", "wire/v5/spec/d.json"]
+            .iter()
+            .map(|r| {
+                let (t, v, p, o) = parse_relpath(r);
+                (r.to_string(), t, v, p, o)
+            })
+            .collect()
+    }
+
+    fn selected_rels(version: &str, tiers: &[&str]) -> Vec<String> {
+        let s = sample();
+        let tiers: Vec<String> = tiers.iter().map(|t| t.to_string()).collect();
+        let mut rels: Vec<String> = select(&s, version, &tiers).iter().map(|v| v.0.clone()).collect();
+        rels.sort();
+        rels
+    }
+
+    #[test]
+    fn parse_relpath_splits_taxonomy() {
+        assert_eq!(
+            parse_relpath("eval/v5/spec/plus.json"),
+            ("eval".into(), "v5".into(), "spec".into(), "plus".into())
+        );
+    }
+
+    #[test]
+    fn select_v6_eval_is_cumulative() {
+        assert_eq!(
+            selected_rels("v6", &["eval"]),
+            ["eval/v5/authored/c.json", "eval/v5/spec/a.json", "eval/v6/spec/b.json"]
+        );
+    }
+
+    #[test]
+    fn select_v5_eval_excludes_v6_and_other_tiers() {
+        assert_eq!(
+            selected_rels("v5", &["eval"]),
+            ["eval/v5/authored/c.json", "eval/v5/spec/a.json"]
+        );
+    }
+
+    #[test]
+    fn select_auto_includes_authored_provenance() {
+        assert!(selected_rels("v5", &["eval"]).iter().any(|r| r.contains("/authored/")));
+    }
+
+    // Port of the former tools/test_checkout.py: a throwaway local "remote" with v1 then v2 on
+    // branch main; resolve_impl clones into <impl-path>/<repo-name>, honors a bare branch (latest)
+    // vs a @<sha> pin, and maps a null impl to "-".
+    #[test]
+    fn resolve_impl_checkout() {
+        let tmp = std::env::temp_dir().join(format!("santa-checkout-test-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&tmp);
+        let remote = tmp.join("remote");
+        fs::create_dir_all(&remote).unwrap();
+        let rs = remote.to_str().unwrap();
+        let g = |args: &[&str]| assert!(Command::new("git").args(args).status().unwrap().success());
+        g(&["init", "-q", "-b", "main", rs]);
+        g(&["-C", rs, "config", "user.email", "t@santa"]);
+        g(&["-C", rs, "config", "user.name", "santa"]);
+        fs::write(remote.join("VERSION"), "v1\n").unwrap();
+        g(&["-C", rs, "add", "."]);
+        g(&["-C", rs, "commit", "-qm", "v1"]);
+        let sha1 = String::from_utf8(
+            Command::new("git").args(["-C", rs, "rev-parse", "HEAD"]).output().unwrap().stdout,
+        )
+        .unwrap()
+        .trim()
+        .to_string();
+        fs::write(remote.join("VERSION"), "v2\n").unwrap();
+        g(&["-C", rs, "add", "."]);
+        g(&["-C", rs, "commit", "-qm", "v2"]);
+
+        // 1) bare branch -> latest tip (v2); impl_path is the passed cache dir; checkout at <dir>/remote.
+        let cache = tmp.join("cache");
+        let impl_path = resolve_impl(&Some(format!("{rs}#main")), &cache).unwrap();
+        assert_eq!(impl_path, cache.to_string_lossy());
+        let checkout = cache.join("remote");
+        assert!(checkout.join(".git").is_dir());
+        assert_eq!(fs::read_to_string(checkout.join("VERSION")).unwrap().trim(), "v2");
+
+        // 2) @<sha> pin -> that commit (v1), not the tip.
+        let cache2 = tmp.join("cache2");
+        resolve_impl(&Some(format!("{rs}#main@{sha1}")), &cache2).unwrap();
+        assert_eq!(fs::read_to_string(cache2.join("remote").join("VERSION")).unwrap().trim(), "v1");
+
+        // 3) null impl -> "-".
+        assert_eq!(resolve_impl(&None, &cache).unwrap(), "-");
+
+        let _ = fs::remove_dir_all(&tmp);
+    }
+}

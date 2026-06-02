@@ -1,0 +1,6 @@
+# SANTA's own orchestrator toolchain — the conform + validate + santa-check workspace. Self-provisioned
+# by the ./conform and ./validate wrappers via `mise exec`, the same pattern the runners use. This rust
+# pin is independent of any runner's (e.g. blitzen's) — per-context, never a shared union. mise + git
+# are the only bootstrap deps; everything else (this, plus each runner's toolchain) is self-provided.
+[tools]
+rust = "1.92.0"

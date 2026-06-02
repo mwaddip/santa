@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
-# Prefer the local .venv (dev), else any python3 (CI / a clean clone): conform.py is pure
-# stdlib — the .venv is only for schema/validate.py (jsonschema). This lets a bare clone run it.
-d="$(dirname "$0")"
-py="$d/.venv/bin/python"; [ -x "$py" ] || py="$(command -v python3)"
-exec "$py" "$d/tools/conform.py" "$@"
+# SANTA conformance orchestrator. Self-provisions SANTA's own toolchain (rust, via tools/mise.toml)
+# the same way each runner self-provisions, then builds + runs the Rust `conform`. mise + git are the
+# only bootstrap deps; runners self-provide their languages. (Replaces the former python conform.py.)
+# Distinct guard var from the runners' SANTA_MISE_ACTIVE, so conform's spawned santa-runs still
+# self-provision their own toolchains.
+set -euo pipefail
+d="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
+  mise trust "$d/tools/mise.toml" >/dev/null
+  mise --cd "$d/tools" install
+  exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$0" "$@"
+fi
+exec cargo run --manifest-path "$d/tools/Cargo.toml" -p conform -q -- "$@"
