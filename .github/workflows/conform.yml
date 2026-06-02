@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive          # blitzen-develop / blitzen-eni
       - name: Install mise (binary only — runners + SANTA's own tooling self-provision)
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
         with:
           version: 2026.5.18
           install: false                 # no root config by design; each wrapper/santa-run does `mise install`
