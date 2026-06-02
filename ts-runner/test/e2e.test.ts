@@ -7,11 +7,16 @@ import { runVector } from '../src/runner'
 import { structuralEqual } from './_match'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
-// ergots is a v5/mainnet library — its conformance gate runs the v5 INPUT bucket only.
-// v6 vectors are a different conformer's column (JVM) and ergots' future; selecting scope on
-// the input side (which dirs we run) is *why* there is no "abstain" outcome (runner-contract §3).
-const v5Dir = path.resolve(here, '../../vectors/eval/v5')
+const evalDir = path.resolve(here, '../../vectors/eval')
 const schemaDir = path.resolve(here, '../../schema')
+// Dasher = ergots, a v5/mainnet library. Its manifest declares version v5, tier eval, and whether it
+// claims the cost dimension. We grade only what it claims (cost gated on `cost`), and slice outcomes
+// by provenance (spec vs authored) so each ledger is independent — adding authored vectors never
+// perturbs the spec pins. Scope is input-side (which vectors we run); that is why there is no
+// "abstain" (runner-contract §3).
+const manifest = JSON.parse(readFileSync(path.resolve(here, '../../runners/dasher/runner.json'), 'utf8'))
+const CLAIMS_COST: boolean = manifest.cost
+
 function walkVectors(dir: string, base = ''): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((d) => {
     const rel = base ? `${base}/${d.name}` : d.name
@@ -19,92 +24,111 @@ function walkVectors(dir: string, base = ''): string[] {
     return d.name.endsWith('.json') ? [rel] : []
   })
 }
-const files = walkVectors(v5Dir).sort()
+const v5Root = path.join(evalDir, 'v5')
+const files = walkVectors(v5Root).sort() // e.g. "spec/plus.json"; later "authored/<family>.json"
 
 // Reuse the frozen actuals schema as a conformance oracle (§3 postcondition).
 const ajv = new Ajv2020({ strict: false })
 ajv.addSchema(JSON.parse(readFileSync(path.join(schemaDir, 'santa-eval.vector.schema.json'), 'utf8')))
 const validateActuals = ajv.compile(JSON.parse(readFileSync(path.join(schemaDir, 'santa-eval.actuals.schema.json'), 'utf8')))
 
-// ---- Run the whole v5 corpus once. Every entry yields an actual (no omission); the
-// comparator decides nice vs RED, and RED is categorized for routing — never hidden. ----
-let total = 0, nice = 0
-const notImplemented: string[] = []   // ergots lacks this v5 method (gap → route to ergots)
-const unrepresentable: string[] = []  // ergots has the type but can't hold this value
-const valueCoal: string[] = []        // value/error mismatch
-const costDivergences: string[] = []  // value matches, cost differs
-const rejectDivergences: string[] = [] // JVM rejects this input; ergots did not reject it identically
+type Slice = {
+  valueTotal: number; valueNice: number; valueCoal: string[]
+  notImpl: string[]; unrepr: string[]
+  costGraded: number; costNice: number; costCoal: string[]
+  rejectTotal: number; rejectNice: number; rejectCoal: string[]
+}
+const blank = (): Slice => ({
+  valueTotal: 0, valueNice: 0, valueCoal: [], notImpl: [], unrepr: [],
+  costGraded: 0, costNice: 0, costCoal: [], rejectTotal: 0, rejectNice: 0, rejectCoal: [],
+})
+const slices: Record<string, Slice> = {}
 const schemaErrors: string[] = []
+const sliceOf = (file: string) => file.split('/')[0] // "spec" | "authored"
+let total = 0
 
+// ---- Run the v5 corpus once, accounting per provenance slice. Every entry yields exactly one
+// verdict (totality §3). Coverage gaps (not-implemented / unrepresentable) take precedence over the
+// accept/reject value classification — this mirrors tools/compare.grade so every comparator returns
+// the same verdict (runner-contract §6). ----
 for (const file of files) {
-  const doc = JSON.parse(readFileSync(path.join(v5Dir, file), 'utf8'))
+  const doc = JSON.parse(readFileSync(path.join(v5Root, file), 'utf8'))
   const actuals = runVector(doc)
   total += doc.entries.length
   if (!validateActuals(actuals)) schemaErrors.push(`${file}: ${JSON.stringify(validateActuals.errors)}`)
+  const s = (slices[sliceOf(file)] ??= blank())
   for (const e of doc.entries) {
-    const act = actuals[e.name] as { value: unknown; cost: number | null; error: string | null }
+    const act = actuals[e.name] as { value: unknown; cost: number | null; error: string | null } | undefined
     const exp = e.expected as { value: unknown; cost: number | null; error: string | null }
-    // Totality (§3) guarantees every entry has an actual; if a future regression drops one,
-    // name the offending entry instead of throwing a bare TypeError on `act.error` below.
-    if (!act) { valueCoal.push(`${file} :: ${e.name} — MISSING from actuals`); continue }
-    if (structuralEqual(act, exp)) { nice++; continue }
-    if (act.error === 'not-implemented') notImplemented.push(`${file} :: ${e.name}`)
-    else if (act.error === 'unrepresentable') unrepresentable.push(`${file} :: ${e.name}`)
-    else if (exp.error === 'errored') {
-      // JVM rejects this input. structuralEqual already credited the reject-nice case (both
-      // {null,null,errored}); reaching here means ergots did NOT reject identically — most
-      // seriously, it may ACCEPT what the JVM rejects (a consensus bug). The reject arm's payoff.
-      rejectDivergences.push(`${file} :: ${e.name} — expected errored, got ${JSON.stringify({ value: act.value, error: act.error })}`)
+    // coverage precedence: the runner didn't engage with the op, whatever the vector expected
+    if (act && act.error === 'not-implemented') { s.notImpl.push(`${file} :: ${e.name}`); continue }
+    if (act && act.error === 'unrepresentable') { s.unrepr.push(`${file} :: ${e.name}`); continue }
+    if (exp.error === 'errored') { // reject vector — one verdict: did it reject identically?
+      s.rejectTotal++
+      if (act && act.error === 'errored') s.rejectNice++
+      else s.rejectCoal.push(`${file} :: ${e.name} — expected errored, got ${JSON.stringify({ value: act?.value, error: act?.error })}`)
+      continue
     }
-    else if (act.error === null && exp.error === null && structuralEqual(act.value, exp.value) && act.cost !== exp.cost) {
-      costDivergences.push(`${file} :: ${String(e.name).slice(0, 28)}  cost ${act.cost} vs ${exp.cost} (Δ${(act.cost ?? 0) - (exp.cost ?? 0)})`)
+    // accept vector — independent value + cost verdicts
+    s.valueTotal++
+    if (!act) { s.valueCoal.push(`${file} :: ${e.name} — MISSING from actuals`); continue }
+    if (act.error === null && structuralEqual(act.value, exp.value)) {
+      s.valueNice++
+      if (CLAIMS_COST) { // cost graded only when the runner claims the cost dimension
+        s.costGraded++
+        if (act.cost === exp.cost) s.costNice++
+        else s.costCoal.push(`${file} :: ${String(e.name).slice(0, 28)}  cost ${act.cost} vs ${exp.cost} (Δ${(act.cost ?? 0) - (exp.cost ?? 0)})`)
+      }
     } else {
-      valueCoal.push(`${file} :: ${e.name}\n    actual:   ${JSON.stringify(act)}\n    expected: ${JSON.stringify(exp)}`)
+      s.valueCoal.push(`${file} :: ${e.name}\n    actual:   ${JSON.stringify(act)}\n    expected: ${JSON.stringify(exp)}`)
     }
   }
 }
 
-const red = notImplemented.length + unrepresentable.length + valueCoal.length + costDivergences.length + rejectDivergences.length
-console.log(`\n=== Dasher conformance · v5 (${files.length} files / ${total} entries) ===`)
-console.log(`  nice ${nice} · RED ${red} — every entry evaluated; no abstain`)
-console.log(`  RED → route to ergots: ${valueCoal.length} value + ${costDivergences.length} cost + ${notImplemented.length} not-implemented + ${unrepresentable.length} unrepresentable + ${rejectDivergences.length} reject`)
-if (valueCoal.length) console.log(`  value:\n    ${valueCoal.join('\n    ')}`)
-if (costDivergences.length) console.log(`  cost:\n    ${costDivergences.join('\n    ')}`)
-if (notImplemented.length) console.log(`  not-implemented (v5 method gaps):\n    ${notImplemented.join('\n    ')}`)
-if (unrepresentable.length) console.log(`  unrepresentable:\n    ${unrepresentable.join('\n    ')}`)
-if (rejectDivergences.length) console.log(`  reject (ergots accepts/mis-rejects what JVM rejects):\n    ${rejectDivergences.join('\n    ')}`)
+const spec = slices['spec'] ?? blank()
+const redOf = (s: Slice) => s.valueCoal.length + s.notImpl.length + s.unrepr.length + s.costCoal.length + s.rejectCoal.length
+const accounted = Object.values(slices).reduce((n, s) => n + s.valueTotal + s.notImpl.length + s.unrepr.length + s.rejectTotal, 0)
+console.log(`\n=== Dasher conformance · v5 (${files.length} files / ${total} entries, cost=${CLAIMS_COST}) ===`)
+for (const [name, s] of Object.entries(slices)) {
+  console.log(`  [${name}] value ${s.valueNice}/${s.valueTotal} · cost ${s.costNice}/${s.costGraded}` +
+    ` · not-impl ${s.notImpl.length} · unrepr ${s.unrepr.length} · reject ${s.rejectNice}/${s.rejectTotal} · RED ${redOf(s)}`)
+}
+if (spec.notImpl.length) console.log(`  spec not-implemented (v5 method gaps):\n    ${spec.notImpl.join('\n    ')}`)
+if (spec.valueCoal.length) console.log(`  spec value:\n    ${spec.valueCoal.join('\n    ')}`)
+if (spec.costCoal.length) console.log(`  spec cost:\n    ${spec.costCoal.join('\n    ')}`)
+if (spec.rejectCoal.length) console.log(`  spec reject:\n    ${spec.rejectCoal.join('\n    ')}`)
 
-describe('Dasher e2e conformance vs blessed v5 corpus', () => {
-  it('every actuals object validates against the frozen actuals schema (§3)', () => {
+describe('Dasher e2e conformance vs blessed v5 corpus (per-provenance slice)', () => {
+  it('every actuals object validates against the actuals schema (§3)', () => {
     expect(schemaErrors).toEqual([])
   })
 
-  // Totality (runner-contract §3): every entry yields exactly one actual — none dropped/abstained.
-  it('full accounting: nice + RED == every entry (no silent drops, no abstain)', () => {
-    expect(nice + red).toBe(total)
+  // Totality (§3): every entry lands in exactly one bucket (coverage / reject / accept-value) — none
+  // dropped, none double-counted.
+  it('full accounting: every entry bucketed exactly once (no drops, no abstain)', () => {
+    expect(accounted).toBe(total)
   })
 
-  // ---- Known ergots RED, recorded so the gate flags any CHANGE — a regression (count ↑) or an
-  // ergots fix (count ↓, then re-baseline) — never hidden. Routed to ergots
-  // (docs/findings/eval-jvm-vs-ergots.md, prompts/). This is regression-tracking, NOT
-  // green-chasing: the suite's job is to surface divergences, so RED is the runner working. ----
-  it('value divergences are exactly the 10 recorded v5 ergots bugs', () => {
-    expect(valueCoal, `value coal:\n${valueCoal.join('\n')}`).toHaveLength(10)
+  // ---- spec slice. ergots LANDED the routed v5 divergence fixes (its git log: a60bb12 JVM-align #1
+  // coercion, ce555d3 #2 reject, 5e56367 substConstants, 8125612 empty-flatMap A3, 740af17 "6
+  // SANTA-found eval cost/value divergences", + cost-charge fixes). So the 10 value + 36 cost
+  // divergences SANTA surfaced are now RESOLVED → 0/0; the 27 not-implemented
+  // (Coll.updated/updateMany/GroupElement.negate) are the remaining method gaps. These pins flag any
+  // CHANGE — a regression (count ↑) or a further fix (count ↓, then re-baseline) — never hidden.
+  // Divergences are the deliverable; a re-baseline after a verified fix is the suite working. ----
+  it('spec value divergences: 0 (ergots fixed the routed v5 value bugs)', () => {
+    expect(spec.valueCoal, `value coal:\n${spec.valueCoal.join('\n')}`).toHaveLength(0)
   })
-  it('cost divergences are exactly the 36 recorded v5 ergots cost-model gaps', () => {
-    expect(costDivergences).toHaveLength(36)
+  it('spec cost divergences: 0 (ergots fixed the routed v5 cost-model gaps)', () => {
+    expect(spec.costCoal, `cost coal:\n${spec.costCoal.join('\n')}`).toHaveLength(0)
   })
-  it('not-implemented gaps are exactly the 27 recorded (Coll.updated/updateMany/GroupElement.negate — accept + reject cases)', () => {
-    expect(notImplemented, `not-implemented:\n${notImplemented.join('\n')}`).toHaveLength(27)
+  it('spec not-implemented: 27 (Coll.updated/updateMany/GroupElement.negate, accept + reject cases)', () => {
+    expect(spec.notImpl, `not-impl:\n${spec.notImpl.join('\n')}`).toHaveLength(27)
   })
-  it('unrepresentable is empty in v5 (the 2 Header-ts cases live in v6, not run here)', () => {
-    expect(unrepresentable).toHaveLength(0)
+  it('spec unrepresentable: 0 (the Header-ts cases live in v6, not run here)', () => {
+    expect(spec.unrepr).toHaveLength(0)
   })
-
-  // The reject arm (harvested Failure-expected vectors): ergots must reject every input the JVM
-  // rejects. 0 divergences = its reject path is sound (no consensus accept-bug). 135 reject cases
-  // score reject-nice; 12 land in not-implemented above (reject cases on the unimplemented ops).
-  it('reject divergences are 0 — ergots rejects every input the JVM rejects', () => {
-    expect(rejectDivergences, `reject divergences:\n${rejectDivergences.join('\n')}`).toHaveLength(0)
+  it('spec reject divergences: 0 — ergots rejects every input the JVM rejects', () => {
+    expect(spec.rejectCoal, `reject:\n${spec.rejectCoal.join('\n')}`).toHaveLength(0)
   })
 })
