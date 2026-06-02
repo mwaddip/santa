@@ -1,0 +1,131 @@
+{
+  "schema": "santa-oracle/v1",
+  "description": "Verdict meta-vectors: (actual, expected, claims_cost) -> grade verdict. A comparator implementation (Rust santa-check, TS Dasher, Scala Harness, Python compare.py) is conformant iff it reproduces every `verdict`. Encodes runner-contract §5 (structural equality) + §6 (grading: coverage precedence, independent value/cost). Verdicts match tools/compare.py:grade — the current canonical reference, to be ported to santa-check.",
+  "cases": [
+    {"name": "accept-nice",
+     "actual":   {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "nice"}},
+
+    {"name": "value-mismatch",
+     "actual":   {"value": {"kind": "Int", "value": 7}, "cost": 36, "error": null},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "cost-mismatch-when-claimed",
+     "actual":   {"value": {"kind": "Int", "value": 6}, "cost": 37, "error": null},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "cost"}},
+
+    {"name": "cost-mismatch-not-claimed-is-na",
+     "actual":   {"value": {"kind": "Int", "value": 6}, "cost": 37, "error": null},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": false,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "n/a"}},
+
+    {"name": "cost-null-while-claimed-is-coal",
+     "actual":   {"value": {"kind": "Int", "value": 6}, "cost": null, "error": null},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "cost"}},
+
+    {"name": "value-coal-suppresses-cost",
+     "actual":   {"value": {"kind": "Int", "value": 7}, "cost": 37, "error": null},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "eq-object-key-order-insensitive",
+     "actual":   {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "expected": {"value": {"value": 6, "kind": "Int"}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "nice"}},
+
+    {"name": "neq-array-order-sensitive",
+     "actual":   {"value": {"kind": "Coll", "items": [1, 2]}, "cost": 36, "error": null},
+     "expected": {"value": {"kind": "Coll", "items": [2, 1]}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "neq-bool-is-not-int",
+     "actual":   {"value": true, "cost": 36, "error": null},
+     "expected": {"value": 1, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "neq-null-only-equals-null",
+     "actual":   {"value": null, "cost": 36, "error": null},
+     "expected": {"value": 0, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "eq-long-as-string-exact",
+     "actual":   {"value": {"kind": "Long", "value": "3"}, "cost": 36, "error": null},
+     "expected": {"value": {"kind": "Long", "value": "3"}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "nice"}},
+
+    {"name": "neq-string-vs-number-kinds",
+     "actual":   {"value": {"kind": "Long", "value": "3"}, "cost": 36, "error": null},
+     "expected": {"value": {"kind": "Long", "value": 3}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "eq-nested-recursive",
+     "actual":   {"value": {"kind": "Tuple", "items": [{"kind": "Int", "value": 1}, {"kind": "Long", "value": "2"}]}, "cost": 36, "error": null},
+     "expected": {"value": {"kind": "Tuple", "items": [{"kind": "Int", "value": 1}, {"kind": "Long", "value": "2"}]}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "nice", "cost": "nice"}},
+
+    {"name": "errored-on-accept-is-value-coal",
+     "actual":   {"value": null, "cost": null, "error": "errored"},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "reject-nice-both-errored",
+     "actual":   {"value": null, "cost": null, "error": "errored"},
+     "expected": {"value": null, "cost": null, "error": "errored"},
+     "claims_cost": true,
+     "verdict": {"kind": "reject", "verdict": "nice"}},
+
+    {"name": "reject-divergence-accepted-what-jvm-rejects",
+     "actual":   {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "expected": {"value": null, "cost": null, "error": "errored"},
+     "claims_cost": true,
+     "verdict": {"kind": "reject", "verdict": "reject"}},
+
+    {"name": "coverage-not-implemented-on-accept",
+     "actual":   {"value": null, "cost": null, "error": "not-implemented"},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "coverage", "tag": "not-implemented"}},
+
+    {"name": "coverage-not-implemented-precedence-over-reject",
+     "actual":   {"value": null, "cost": null, "error": "not-implemented"},
+     "expected": {"value": null, "cost": null, "error": "errored"},
+     "claims_cost": true,
+     "verdict": {"kind": "coverage", "tag": "not-implemented"}},
+
+    {"name": "coverage-unrepresentable-on-accept",
+     "actual":   {"value": null, "cost": null, "error": "unrepresentable"},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "coverage", "tag": "unrepresentable"}},
+
+    {"name": "coverage-unrepresentable-precedence-over-reject",
+     "actual":   {"value": null, "cost": null, "error": "unrepresentable"},
+     "expected": {"value": null, "cost": null, "error": "errored"},
+     "claims_cost": true,
+     "verdict": {"kind": "coverage", "tag": "unrepresentable"}},
+
+    {"name": "totality-breach-missing-actual-is-value-coal",
+     "actual":   null,
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}}
+  ]
+}
