@@ -109,21 +109,21 @@ describe('Dasher e2e conformance vs blessed v5 corpus (per-provenance slice)', (
     expect(accounted).toBe(total)
   })
 
-  // ---- spec slice. ergots LANDED the routed v5 divergence fixes (its git log: a60bb12 JVM-align #1
-  // coercion, ce555d3 #2 reject, 5e56367 substConstants, 8125612 empty-flatMap A3, 740af17 "6
-  // SANTA-found eval cost/value divergences", + cost-charge fixes). So the 10 value + 36 cost
-  // divergences SANTA surfaced are now RESOLVED → 0/0; the 27 not-implemented
-  // (Coll.updated/updateMany/GroupElement.negate) are the remaining method gaps. These pins flag any
-  // CHANGE — a regression (count ↑) or a further fix (count ↓, then re-baseline) — never hidden.
-  // Divergences are the deliverable; a re-baseline after a verified fix is the suite working. ----
+  // ---- spec slice. ergots has LANDED every routed v5 fix, so Dasher v5 is now FULLY conformant
+  // (1705/1705, RED 0): the 10 value + 36 cost divergences (a60bb12 coercion #1, ce555d3 reject #2,
+  // 5e56367 substConstants, 8125612 empty-flatMap A3, 740af17 the 6 SANTA-found divergences, + cost
+  // charges) AND the 27 not-implemented methods Coll.updated/updateMany/GroupElement.negate (35eac6b).
+  // SANTA's box inputs are also re-blessed to ≥min (santa-rebless-min-box-value) so they're
+  // consensus-valid. These pins are now a full-green REGRESSION guard — any count > 0 is a new
+  // divergence/gap to surface, never hide (divergences are the deliverable). ----
   it('spec value divergences: 0 (ergots fixed the routed v5 value bugs)', () => {
     expect(spec.valueCoal, `value coal:\n${spec.valueCoal.join('\n')}`).toHaveLength(0)
   })
   it('spec cost divergences: 0 (ergots fixed the routed v5 cost-model gaps)', () => {
     expect(spec.costCoal, `cost coal:\n${spec.costCoal.join('\n')}`).toHaveLength(0)
   })
-  it('spec not-implemented: 27 (Coll.updated/updateMany/GroupElement.negate, accept + reject cases)', () => {
-    expect(spec.notImpl, `not-impl:\n${spec.notImpl.join('\n')}`).toHaveLength(27)
+  it('spec not-implemented: 0 (Coll.updated/updateMany/GroupElement.negate implemented, ergots 35eac6b)', () => {
+    expect(spec.notImpl, `not-impl:\n${spec.notImpl.join('\n')}`).toHaveLength(0)
   })
   it('spec unrepresentable: 0 (the Header-ts cases live in v6, not run here)', () => {
     expect(spec.unrepr).toHaveLength(0)
