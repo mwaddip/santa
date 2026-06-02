@@ -13,6 +13,11 @@ import scala.collection.mutable
 
 import io.circe.Json
 
+import org.ergoplatform.ErgoBox
+
+import sigma.{Box, BoxRType, Coll, Colls}
+import sigma.data.CBox
+
 /** The captured-and-encoded extraction result for the whole spec. */
 final case class ExtractResult(
     vectors: Map[String, Json],          // op (property name) -> v2 envelope Json
@@ -52,6 +57,40 @@ object SpecExtract {
       costDetailsCost: Option[Int],  // CostDetails.cost = summed JIT trace (the eval cost the spec pins)
       expectsFailure: Boolean = false) // spec expects this (tree, input) to FAIL → bless a coarse reject
 
+  // ── Box-value re-bless (sigma-rust prompt santa-rebless-min-box-value) ────────
+  // LanguageSpecification's test boxes carry sub-minimum values (1/20) the test ErgoBox permits but a
+  // protocol-enforcing impl (sigma-rust) can't deserialize → Blitzen tags them `unrepresentable`.
+  // Floor every box input at the protocol min so the corpus is consensus-valid. The spec hardcodes
+  // each case's expected (it does NOT recompute from the box), so a bumped input desyncs from the
+  // captured expected; toEntry therefore takes the JVM re-eval as the expected for bumped cases (and
+  // drops the spec cross-check — evalApplied IS sigma-state 6.0.3, the oracle). Bumping changes the
+  // result of value-reading scripts (e.g. `x.exists(b => b.value > 1)` → true), which is correct and
+  // unavoidable: those vectors were un-runnable for a min-enforcing impl at sub-min values.
+  private val MinBoxValue: Long = 1000000L
+
+  private def bumpCBox(cb: CBox): CBox = {
+    val e = cb.ebox
+    if (e.value >= MinBoxValue) cb
+    else CBox(new ErgoBox(MinBoxValue, e.ergoTree, e.additionalTokens, e.additionalRegisters,
+                          e.transactionId, e.index, e.creationHeight))
+  }
+
+  /** Floor any box in a captured input (a Box or a Coll[Box]) at MinBoxValue. Returns the
+    * (possibly-rebuilt) input and whether anything actually changed. Non-box inputs pass through. */
+  private def bumpBoxes(v: Any): (Any, Boolean) = v match {
+    case cb: CBox =>
+      val b = bumpCBox(cb); (b, !(b eq cb))
+    case coll: Coll[_] if sigma.Evaluation.rtypeToSType(coll.tItem) == sigma.ast.SBox =>
+      val arr: Array[Box] = coll.asInstanceOf[Coll[Box]].toArray
+      var changed = false
+      val bumped: Array[Box] = arr.map {
+        case cb: CBox => val nb = bumpCBox(cb); if (!(nb eq cb)) changed = true; (nb: Box)
+        case o        => o
+      }
+      if (changed) (Colls.fromArray(bumped)(BoxRType), true) else (v, false)
+    case other => (other, false)
+  }
+
   /** True if the encoded SValue JSON contains an Opaque kind ANYWHERE — top-level
     * OR nested inside Coll `items` / Tuple `items`. A top-level-only check misses
     * e.g. a Tuple(GroupElement, UnsignedBigInt) whose second item is Opaque; the
@@ -68,7 +107,7 @@ object SpecExtract {
     * `entryIndex` is the 0-based position within this property's emitted entries;
     * it is appended to `name` to guarantee uniqueness within a vector — multi-
     * feature properties share an `input` (and therefore `input.toString`), so a
-    * bare `c.input.toString` repeats across entries. A consumer keying by `name`
+    * bare `input.toString` repeats across entries. A consumer keying by `name`
     * must never collide within a single op's entry list.
     *
     * Returns `Left(reason)` ONLY for an unsupported-kind input/value — valueToJson
@@ -78,7 +117,8 @@ object SpecExtract {
     * value/cost MISMATCH between the spec and the eval) are fail-loud `sys.error`s —
     * the whole point of the suite is that a silent wrong value can never ship. */
   private[santa] def toEntry(c: Capture, entryIndex: Int, activated: Byte): Either[String, (Json, Option[String])] = {
-    val inputJson = EvalCore.valueToJson(c.input)
+    val (input, rebless) = bumpBoxes(c.input)
+    val inputJson = EvalCore.valueToJson(input)
     val valueJson = EvalCore.valueToJson(c.expectedValue)
 
     // Escalation: refuse to emit an Opaque (unsupported Stage-1 kind), incl. one
@@ -115,32 +155,40 @@ object SpecExtract {
           s"on input ${inputJson.noSpaces}: $err")
     }
 
-    // The eval value MUST match the spec's expected value (canonical-by-construction).
-    if (evalValue.noSpaces != valueJson.noSpaces)
-      sys.error(s"SpecExtract: VALUE MISMATCH for op '${c.op}' (${c.script}): " +
-        s"spec=${valueJson.noSpaces} vs eval=${evalValue.noSpaces}")
+    // Expected value: when a sub-min box input was floored (rebless), the spec's captured expected is
+    // for the ORIGINAL (un-representable) box — trust the JVM re-eval (evalApplied IS sigma-state
+    // 6.0.3, the oracle) and skip the spec cross-check. Otherwise the eval value MUST match the spec's
+    // expected (canonical-by-construction; a silent wrong value can never ship).
+    val expectedJson =
+      if (rebless) evalValue
+      else {
+        if (evalValue.noSpaces != valueJson.noSpaces)
+          sys.error(s"SpecExtract: VALUE MISMATCH for op '${c.op}' (${c.script}): " +
+            s"spec=${valueJson.noSpaces} vs eval=${evalValue.noSpaces}")
+        valueJson
+      }
 
-    // DIAGNOSTIC: emit the eval cost (the v2-defined "raw JIT eval cost"); record
-    // any case where a spec cost field disagrees with it, to characterize which
-    // field (CostDetails.cost vs verificationCost) tracks the eval cost.
-    val diag: Option[String] = {
-      val dCD = c.costDetailsCost.filter(_.toLong != evalCost)
-        .map(v => s"CostDetails.cost=$v")
-      val dVC = c.verificationCost.filter(_.toLong != evalCost)
-        .map(v => s"verificationCost=$v")
-      val mism = (dCD ++ dVC).toSeq
-      if (mism.isEmpty) None
-      else Some(s"${c.op} [${c.script}] input=${inputJson.noSpaces}: evalCost=$evalCost vs ${mism.mkString(", ")}")
-    }
+    // DIAGNOSTIC: emit the eval cost (the v2-defined "raw JIT eval cost"); record any case where a
+    // spec cost field disagrees with it. Skipped for rebless cases (the spec cost is for the un-bumped
+    // box, so it would always "disagree" — noise, not signal).
+    val diag: Option[String] =
+      if (rebless) None
+      else {
+        val dCD = c.costDetailsCost.filter(_.toLong != evalCost).map(v => s"CostDetails.cost=$v")
+        val dVC = c.verificationCost.filter(_.toLong != evalCost).map(v => s"verificationCost=$v")
+        val mism = (dCD ++ dVC).toSeq
+        if (mism.isEmpty) None
+        else Some(s"${c.op} [${c.script}] input=${inputJson.noSpaces}: evalCost=$evalCost vs ${mism.mkString(", ")}")
+      }
 
     Right((Json.obj(
-      "name"           -> Json.fromString(s"${c.input.toString}#$entryIndex"),
+      "name"           -> Json.fromString(s"${input.toString}#$entryIndex"),
       "script"         -> Json.fromString(c.script),
       "tree_bytes_hex" -> Json.fromString(c.treeBytesHex),
       "input"          -> inputJson,
       "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
                                    "ergoTree"  -> Json.fromInt(activated.toInt)),
-      "expected"       -> Json.obj("value" -> valueJson,
+      "expected"       -> Json.obj("value" -> expectedJson,
                                    "cost"  -> Json.fromLong(evalCost),
                                    "error" -> Json.Null)), diag))
   }
@@ -150,9 +198,11 @@ object SpecExtract {
     * after the SAME input gates as toEntry (Opaque / decodable / wire-encodable), AND only
     * if SANTA's own eval also fails (rejected for the right reason, coarse). If the eval
     * produces a VALUE, that is the mirror of toEntry's VALUE MISMATCH: a "should-fail" that
-    * actually succeeds must never ship — fail loud. */
+    * actually succeeds must never ship — fail loud. Box inputs are floored at the protocol min
+    * (santa-rebless-min-box-value) before re-eval; a register/type-mismatch reject still fails. */
   private[santa] def rejectToEntry(c: Capture, entryIndex: Int, activated: Byte): Either[String, (Json, Option[String])] = {
-    val inputJson = EvalCore.valueToJson(c.input)
+    val (input, _) = bumpBoxes(c.input)
+    val inputJson = EvalCore.valueToJson(input)
     if (hasOpaque(inputJson))
       return Left(s"${c.op}: reject input kind not encodable — ${inputJson.noSpaces}")
     val decoded =
@@ -165,7 +215,7 @@ object SpecExtract {
     outcome match {
       case Left(_) =>
         Right((Json.obj(
-          "name"           -> Json.fromString(s"${c.input.toString}#$entryIndex"),
+          "name"           -> Json.fromString(s"${input.toString}#$entryIndex"),
           "script"         -> Json.fromString(c.script),
           "tree_bytes_hex" -> Json.fromString(c.treeBytesHex),
           "input"          -> inputJson,

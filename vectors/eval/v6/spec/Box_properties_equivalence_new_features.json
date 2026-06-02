@@ -5,12 +5,12 @@
   "source" : "sigma-state:LanguageSpecificationV6",
   "entries" : [
     {
-      "name" : "Box(id=Coll(114,123,67,-28,-86,122,-4,-124,-36,77,-46,-5,20,37,103,-4,-82,-42,-58,-8,-74,-6,-47,111,-105,40,-100,-80,-69,28,-69,-113); value=10; regs=Coll(TestValue(10),TestValue(Coll(11,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),null,null,null,null,null,null))#0",
+      "name" : "Box(id=Coll(-26,94,-18,-120,-107,-124,33,119,-106,-121,-47,-72,119,62,-108,-54,63,96,-53,32,-19,-127,7,-85,-9,-26,11,121,-81,61,72,-21); value=1000000; regs=Coll(TestValue(1000000),TestValue(Coll(11,2,8,-45)),TestValue(Coll()),TestValue((0,Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0))),null,null,null,null,null,null))#0",
       "script" : "{ (x: Box) => x.getReg[Long](0).get }",
       "tree_bytes_hex" : "1b1100dad9010163e4c67201000501e4e30163",
       "input" : {
         "kind" : "Box",
-        "bytes_hex" : "0a0b0208d3000000000000000000000000000000000000000000000000000000000000000000000000"
+        "bytes_hex" : "c0843d0b0208d3000000000000000000000000000000000000000000000000000000000000000000000000"
       },
       "version" : {
         "activated" : 3,
@@ -19,7 +19,7 @@
       "expected" : {
         "value" : {
           "kind" : "Long",
-          "value" : "10"
+          "value" : "1000000"
         },
         "cost" : 135,
         "error" : null
