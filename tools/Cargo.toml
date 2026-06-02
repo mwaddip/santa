@@ -1,0 +1,5 @@
+# SANTA's own tooling, one Rust workspace (replacing the former Python conform.py / compare.py /
+# validate.py). Runners self-provide their own toolchains; this is the orchestrator side.
+[workspace]
+resolver = "2"
+members = ["santa-check", "validate"]

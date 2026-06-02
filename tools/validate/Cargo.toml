@@ -1,0 +1,11 @@
+[package]
+name = "validate"
+version = "0.1.0"
+edition = "2021"
+description = "SANTA schema gate: validate committed vectors against the eval-tier JSON Schemas (Rust port of schema/validate.py)."
+
+[dependencies]
+serde_json = "1"
+# default-features off drops resolve-http/file + the reqwest/hyper/tokio/rustls stack — all $refs
+# are registered in-memory, nothing is fetched over the network.
+jsonschema = { version = "0.46", default-features = false }
