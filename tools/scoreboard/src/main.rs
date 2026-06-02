@@ -1,4 +1,7 @@
 use std::collections::BTreeMap;
+use std::env;
+use std::fs;
+use std::path::{Path, PathBuf};
 use serde_json::Value;
 
 /// Runners that are NOT conformers under test (the JVM oracle/control); shown in the
@@ -104,8 +107,38 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
     )
 }
 
+/// tools/scoreboard -> repo root (CWD-independent; the mise wrapper runs us from tools/).
+/// Mirrors conform::repo_root.
+fn repo_root() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
+}
+
 fn main() {
-    println!("scoreboard: not yet implemented");
+    let root = repo_root();
+    let args: Vec<String> = env::args().skip(1).collect();
+    let results_path = args.get(0).map(PathBuf::from).unwrap_or_else(|| root.join(".santa/results.json"));
+    let out_dir = args.get(1).map(PathBuf::from).unwrap_or_else(|| root.join("site"));
+
+    let raw = fs::read_to_string(&results_path)
+        .unwrap_or_else(|e| panic!("scoreboard: cannot read {}: {e}", results_path.display()));
+    let results: Value = serde_json::from_str(&raw)
+        .unwrap_or_else(|e| panic!("scoreboard: invalid JSON in {}: {e}", results_path.display()));
+
+    let git_ref = env::var("SANTA_SCOREBOARD_REF").unwrap_or_else(|_| "(local)".to_string());
+
+    let badges_dir = out_dir.join("badges");
+    fs::create_dir_all(&badges_dir).expect("scoreboard: create badges dir");
+    let pairs = badges(&results);
+    for (name, json) in &pairs {
+        let path = badges_dir.join(format!("{name}.json"));
+        fs::write(&path, json).unwrap_or_else(|e| panic!("scoreboard: write {}: {e}", path.display()));
+    }
+
+    let index = out_dir.join("index.html");
+    fs::write(&index, dashboard(&results, &git_ref))
+        .unwrap_or_else(|e| panic!("scoreboard: write {}: {e}", index.display()));
+
+    println!("scoreboard: wrote {} badges + {}", pairs.len(), index.display());
 }
 
 #[cfg(test)]
