@@ -56,6 +56,21 @@ fn html_escape(s: &str) -> String {
     s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
 }
 
+/// Human-readable source label for the scoreboard: "owner/repo#branch @ sha9", or "—" for null impl.
+fn source_label(runner: &Value) -> String {
+    match runner.get("impl").and_then(|v| v.as_str()).filter(|s| !s.is_empty()) {
+        None => "\u{2014}".to_string(), // — em dash
+        Some(s) => {
+            let (url, refspec) = s.split_once('#').unwrap_or((s, ""));
+            let repo = url.trim_end_matches('/').trim_end_matches(".git")
+                .trim_start_matches("https://github.com/").trim_start_matches("git@github.com:");
+            let sha = runner.get("sha").and_then(|v| v.as_str()).unwrap_or("");
+            let sha9 = &sha[..sha.len().min(9)];
+            if sha9.is_empty() { format!("{repo}#{refspec}") } else { format!("{repo}#{refspec} @ {sha9}") }
+        }
+    }
+}
+
 /// Self-contained HTML dashboard: one row per (runner, slice) with per-dimension tallies.
 fn dashboard(results: &Value, git_ref: &str) -> String {
     let mut rows = String::new();
@@ -68,6 +83,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
         let icon = if mark == "nice" { "\u{1f381}" } else { "\u{1faa8}" }; // 🎁 / 🪨
         let escaped_name = html_escape(name);
         let control = if CONTROL_RUNNERS.contains(&name) { " <em>(control)</em>" } else { "" };
+        let escaped_source = html_escape(&source_label(runner));
         let slices = runner.get("slices").and_then(|s| s.as_object()).unwrap_or(&empty);
         let mut keys: Vec<&String> = slices.keys().collect();
         keys.sort();
@@ -78,7 +94,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
             let red = s.get("red").and_then(|r| r.as_array()).map(|a| a.len()).unwrap_or(0);
             let cls = if red > 0 { " class=\"red\"" } else { "" };
             rows.push_str(&format!(
-                "<tr{cls}><td>{icon} {escaped_name}{control}</td><td>{escaped_key}</td><td>{}/{}</td>\
+                "<tr{cls}><td>{icon} {escaped_name}{control}</td><td>{escaped_source}</td><td>{escaped_key}</td><td>{}/{}</td>\
                  <td>{}/{}</td><td>{}/{}</td><td>{}</td><td>{}</td></tr>\n",
                 g("value_nice"), g("value_total"),
                 g("cost_nice"), g("cost_graded"),
@@ -107,7 +123,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.
 {nice_icon} all-nice · {coal_icon} divergences found (the deliverable). Generated from <code>{escaped_git_ref}</code>.</p>
 <table>
-<thead><tr><th>runner</th><th>slice</th><th>value</th><th>cost</th><th>reject</th><th>unrepr</th><th>red</th></tr></thead>
+<thead><tr><th>runner</th><th>source</th><th>slice</th><th>value</th><th>cost</th><th>reject</th><th>unrepr</th><th>red</th></tr></thead>
 <tbody>
 {rows}</tbody>
 </table>
@@ -159,11 +175,13 @@ mod tests {
         json!({
           "schema": "santa-results/v1",
           "runners": [
-            { "name": "rudolph", "mark": "nice", "red_total": 0,
+            { "name": "rudolph", "mark": "nice", "red_total": 0, "impl": null,
               "slices": { "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]} } },
             { "name": "dasher", "mark": "nice", "red_total": 0,
               "slices": { "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]} } },
             { "name": "blitzen-eni", "mark": "coal", "red_total": 3,
+              "impl": "https://github.com/mwaddip/sigma-rust.git#ergo-node-integration",
+              "sha": "abcdef1234567890abcdef1234567890abcdef12",
               "slices": {
                 "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]},
                 "eval/v6/authored": {"value_nice":14,"value_total":14,"cost_nice":3,"cost_graded":14,"unrepr":3,"reject_total":0,"reject_nice":0,
@@ -209,5 +227,7 @@ mod tests {
         assert!(html.contains("class=\"red\""));           // the v6/authored divergent row
         assert!(html.contains("abc123"));                  // the stamped ref
         assert!(html.contains("eval/v6/authored"));
+        assert!(html.contains("mwaddip/sigma-rust#ergo-node-integration @ abcdef123")); // blitzen-eni source
+        assert!(html.contains("\u{2014}"));                // — em dash for rudolph null impl
     }
 }
