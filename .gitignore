@@ -27,3 +27,8 @@ __pycache__/
 # Conformance workspaces — ./conform puts each runner's impl checkout + actuals
 # under .santa/<runner>/ (self-contained, regenerated; --clean / rm -rf resets).
 .santa/
+
+# Build symlink the blitzen runners' santa-run creates: the fixed Cargo path-dep
+# ../sigma-rust -> the per-instance .santa/<runner>/sigma-rust checkout. Regenerated
+# every run; the last runner wins. Not a runner dir (no runner.json), so ./conform skips it.
+runners/sigma-rust
