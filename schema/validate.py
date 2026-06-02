@@ -77,6 +77,7 @@ def main() -> int:
         ("success w/ string cost rejected", {"x#0": {"value": {"kind": "Int", "value": 6}, "cost": "36", "error": None}}, False),
         ("errored w/ non-null cost rejected", {"x#0": {"value": None, "cost": 5, "error": "errored"}}, False),
         ("Long as string", {"x#0": {"value": {"kind": "Long", "value": "9000000000"}, "cost": 1, "error": None}}, True),
+        ("success w/ null cost accepted (cost-not-claimed)", {"x#0": {"value": {"kind": "Int", "value": 6}, "cost": None, "error": None}}, True),
         ("Long as number rejected", {"x#0": {"value": {"kind": "Long", "value": 9000000000}, "cost": 1, "error": None}}, False),
         ("Int as string rejected", {"x#0": {"value": {"kind": "Int", "value": "42"}, "cost": 1, "error": None}}, False),
     ]
