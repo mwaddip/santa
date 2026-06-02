@@ -144,7 +144,15 @@ def main(argv):
     print(f"\n=== SANTA conformance · {len(runners)} runner(s) ===")
     for m in runners:
         print(f"running {m['name']} …", file=sys.stderr)
-        slices = tally(run_one(m), m.get("cost", True))
+        try:
+            actuals = run_one(m)
+        except subprocess.CalledProcessError as e:
+            # A runner that can't build/run (or whose impl checkout fails) must not abort the whole
+            # orchestrator — grade what we can, report what we can't. Distinct from 🪨 (divergent):
+            # this runner was never tested, so it contributes no slices.
+            print(f"  ⚠️  {m['label']}  — santa-run exited {e.returncode}: could not build/run (see error above)")
+            continue
+        slices = tally(actuals, m.get("cost", True))
         def red(c):
             return c["value_coal"] + c["not_impl"] + c["unrepr"] + c["cost_coal"] + c["reject_coal"]
         agg_red = sum(red(c) for c in slices.values())
