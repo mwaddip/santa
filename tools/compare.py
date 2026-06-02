@@ -40,3 +40,25 @@ def categorize(actual, expected):
             and actual.get("cost") != expected.get("cost")):
         return "cost"
     return "value"
+
+
+def grade(actual, expected, claims_cost):
+    """Per-entry verdict. Reject vectors (expected errored) -> one verdict. Accept vectors ->
+    independent value + cost verdicts; cost only graded when the runner claims the cost dimension."""
+    if actual is None:
+        return {"kind": "accept", "value": "value", "cost": "n/a"}  # totality breach -> coal
+    aerr, eerr = actual.get("error"), expected.get("error")
+    if eerr == "errored":  # reject vector
+        return {"kind": "reject", "verdict": "nice" if aerr == "errored" else "reject"}
+    # accept vector
+    if aerr in ("not-implemented", "unrepresentable"):
+        value = aerr
+    elif aerr is None and structural_equal(actual.get("value"), expected.get("value")):
+        value = "nice"
+    else:
+        value = "value"
+    if not claims_cost or value != "nice":
+        cost = "n/a"  # cost not claimed, or value didn't evaluate -> cost moot
+    else:
+        cost = "nice" if actual.get("cost") == expected.get("cost") else "cost"
+    return {"kind": "accept", "value": value, "cost": cost}
