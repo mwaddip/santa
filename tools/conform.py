@@ -5,7 +5,7 @@ comparator (compare.py) decides nice/coal; a side-by-side table is printed. See
 docs/contract/runner-integration.md."""
 import json, os, shutil, subprocess, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from compare import categorize, grade
+from compare import grade
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RUNNERS_DIR = os.path.join(ROOT, "runners")
@@ -15,7 +15,8 @@ VERSIONS = ["v5", "v6"]  # ordered; cumulative (a runner's version implies all l
 
 
 def parse_relpath(rel):
-    """vectors/eval/<tier>/<version>/<provenance>/<op>.json relpath -> (tier, version, provenance, op)."""
+    """<tier>/<version>/<provenance>/<op>.json relpath (relative to VECTORS=vectors/) ->
+    (tier, version, provenance, op). The tier (e.g. eval) is parts[0]."""
     parts = rel.split(os.sep)
     if len(parts) != 4 or not parts[3].endswith(".json"):
         sys.exit(f"vector path is not <tier>/<version>/<provenance>/<op>.json: {rel}")
@@ -24,7 +25,7 @@ def parse_relpath(rel):
 
 
 def discover_vectors():
-    """One recursive walk of vectors/eval/. Returns sorted [(relpath, tier, version, provenance, op)]."""
+    """One recursive walk of vectors/. Returns sorted [(relpath, tier, version, provenance, op)]."""
     out = []
     for dirpath, _dirs, files in os.walk(VECTORS):
         for fn in files:
@@ -37,6 +38,8 @@ def discover_vectors():
 def select(vectors, version, tiers):
     """Keep vectors where tier in declared tiers AND version <= declared (cumulative).
     Order follows the input — discover_vectors() returns relpath-sorted, so runs are deterministic."""
+    if version not in VERSIONS:
+        sys.exit(f"unknown manifest version {version!r}; known: {VERSIONS}")
     vmax = VERSIONS.index(version)
     return [v for v in vectors
             if v[1] in tiers and v[2] in VERSIONS and VERSIONS.index(v[2]) <= vmax]
@@ -91,15 +94,17 @@ def run_one(m):
     odir  = os.path.join(ws, "out"); shutil.rmtree(odir, ignore_errors=True); os.makedirs(odir)
     staged = {}  # staged filename -> source relpath
     for (rel, _t, _v, _p, _op) in selected:
-        name = rel.replace(os.sep, "__")            # flatten; unique across the tree
+        name = rel.replace(os.sep, "__")            # flatten; unique (no path component contains "__")
         os.symlink(os.path.join(VECTORS, rel), os.path.join(indir, name))
         staged[name] = rel
     subprocess.run([m["_run"], impl_path, indir, odir], check=True)
     res = {}
     for name, rel in staged.items():
         ofile = os.path.join(odir, name)
-        if os.path.isfile(ofile):
-            res[rel] = json.load(open(ofile))
+        # Totality: every SELECTED vector must appear, even if the runner wrote no output for it.
+        # An absent file becomes {} so tally grades each of its entries (act None -> coal), surfacing
+        # the breach instead of silently dropping the whole vector from the count.
+        res[rel] = json.load(open(ofile)) if os.path.isfile(ofile) else {}
     return res
 
 

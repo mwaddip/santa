@@ -2,8 +2,9 @@
 
 structural_equal implements runner-contract §5 (objects key-order-INsensitive,
 arrays order-SENSITIVE, numbers numeric, strings exact, null==only-null, bool is
-not int). categorize mirrors the Dasher e2e: nice / value / cost / not-implemented
-/ unrepresentable / reject. Pure — no I/O."""
+not int). grade gives the per-dimension verdict (independent value/cost, coverage precedence)
+used by the orchestrator and mirrored by the Dasher e2e; categorize is the legacy single-bucket
+classifier, retained for reference. Pure — no I/O."""
 
 
 def structural_equal(a, b):
