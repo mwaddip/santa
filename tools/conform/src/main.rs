@@ -124,13 +124,20 @@ fn git(args: &[&str]) -> Result<(), i32> {
     }
 }
 
+fn git_out(args: &[&str]) -> Option<String> {
+    Command::new("git").args(args).output().ok()
+        .filter(|o| o.status.success())
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())
+        .filter(|s| !s.is_empty())
+}
+
 /// impl = "<url>#<ref>" (ref = branch/tag for latest, a <sha>, or "<branch>@<sha>"). Clone/fetch into
-/// cache_dir/<repo-name>, check out the ref; return cache_dir (passed to santa-run as <impl-path>,
-/// where the runner finds its dep as ./<repo-name>). impl null -> "-" (self-contained).
-fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<String, i32> {
+/// cache_dir/<repo-name>, check out the ref; return (cache_dir, resolved HEAD sha) (passed to
+/// santa-run as <impl-path>, where the runner finds its dep as ./<repo-name>). impl null -> ("-", None).
+fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<(String, Option<String>), i32> {
     let spec = match impl_ {
         Some(s) if !s.is_empty() => s,
-        _ => return Ok("-".to_string()),
+        _ => return Ok(("-".to_string(), None)),
     };
     let (url, refspec) = spec
         .split_once('#')
@@ -154,15 +161,16 @@ fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<String, i32>
         // bare branch -> move to its latest tip (best-effort, like conform.py's check=False)
         let _ = git(&["-C", dest_s, "pull", "-q", "--ff-only"]);
     }
-    Ok(cache_dir.to_string_lossy().into_owned())
+    let resolved_sha = git_out(&["-C", dest_s, "rev-parse", "HEAD"]);
+    Ok((cache_dir.to_string_lossy().into_owned(), resolved_sha))
 }
 
 /// Filter by (version<=, tiers), stage selected vectors flat as symlinks, run, collect actuals keyed
 /// by source relpath. Everything per-runner lives under .santa/<name>/. Err(code) = the runner (or
 /// its impl checkout) failed to run — surfaced as ⚠️, not graded.
-fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<BTreeMap<String, Value>, i32> {
+fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<(BTreeMap<String, Value>, Option<String>), i32> {
     let ws = root.join(".santa").join(&m.name);
-    let impl_path = resolve_impl(&m.impl_, &ws)?;
+    let (impl_path, sha) = resolve_impl(&m.impl_, &ws)?;
     let selected = select(vectors, &m.version, &m.tiers);
     let indir = ws.join("in");
     let _ = fs::remove_dir_all(&indir);
@@ -199,7 +207,7 @@ fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<BTreeMap<String,
         };
         res.insert(rel, act);
     }
-    Ok(res)
+    Ok((res, sha))
 }
 
 #[derive(Default)]
@@ -316,11 +324,12 @@ fn main() -> ExitCode {
                 println!("  ⚠️  {}  — santa-run exited {code}: could not build/run (see error above)", m.label);
                 results.push(json!({
                     "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
+                    "impl": &m.impl_, "sha": Value::Null,
                     "mark": "errored", "red_total": Value::Null, "slices": {},
                     "error": format!("santa-run exited {code}: could not build/run"),
                 }));
             }
-            Ok(actuals) => {
+            Ok((actuals, sha)) => {
                 let slices = tally(&actuals, m.cost, &root);
                 let agg_red: u64 = slices.values().map(Counts::red_total).sum();
                 let mark = if agg_red == 0 { "🎁" } else { "🪨" };
@@ -359,6 +368,7 @@ fn main() -> ExitCode {
                     .collect();
                 results.push(json!({
                     "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
+                    "impl": &m.impl_, "sha": sha,
                     "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
                 }));
             }
@@ -451,19 +461,21 @@ mod tests {
 
         // 1) bare branch -> latest tip (v2); impl_path is the passed cache dir; checkout at <dir>/remote.
         let cache = tmp.join("cache");
-        let impl_path = resolve_impl(&Some(format!("{rs}#main")), &cache).unwrap();
+        let (impl_path, sha_out) = resolve_impl(&Some(format!("{rs}#main")), &cache).unwrap();
         assert_eq!(impl_path, cache.to_string_lossy());
         let checkout = cache.join("remote");
         assert!(checkout.join(".git").is_dir());
         assert_eq!(fs::read_to_string(checkout.join("VERSION")).unwrap().trim(), "v2");
+        assert!(sha_out.as_ref().is_some_and(|s| s.len() == 40));
 
         // 2) @<sha> pin -> that commit (v1), not the tip.
         let cache2 = tmp.join("cache2");
-        resolve_impl(&Some(format!("{rs}#main@{sha1}")), &cache2).unwrap();
+        let (_, sha_pin) = resolve_impl(&Some(format!("{rs}#main@{sha1}")), &cache2).unwrap();
         assert_eq!(fs::read_to_string(cache2.join("remote").join("VERSION")).unwrap().trim(), "v1");
+        assert_eq!(sha_pin, Some(sha1.clone()));
 
-        // 3) null impl -> "-".
-        assert_eq!(resolve_impl(&None, &cache).unwrap(), "-");
+        // 3) null impl -> ("-", None).
+        assert_eq!(resolve_impl(&None, &cache).unwrap(), ("-".to_string(), None));
 
         let _ = fs::remove_dir_all(&tmp);
     }
