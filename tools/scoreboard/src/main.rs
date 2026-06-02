@@ -48,6 +48,62 @@ fn badges(results: &Value) -> Vec<(String, String)> {
     out
 }
 
+/// Self-contained HTML dashboard: one row per (runner, slice) with per-dimension tallies.
+fn dashboard(results: &Value, git_ref: &str) -> String {
+    let mut rows = String::new();
+    let runners = results.get("runners").and_then(|r| r.as_array()).cloned().unwrap_or_default();
+    let empty = serde_json::Map::new();
+    for runner in &runners {
+        let name = runner.get("name").and_then(|n| n.as_str()).unwrap_or("?");
+        let mark = runner.get("mark").and_then(|m| m.as_str()).unwrap_or("?");
+        let icon = if mark == "nice" { "\u{1f381}" } else { "\u{1faa8}" }; // 🎁 / 🪨
+        let control = if CONTROL_RUNNERS.contains(&name) { " <em>(control)</em>" } else { "" };
+        let slices = runner.get("slices").and_then(|s| s.as_object()).unwrap_or(&empty);
+        let mut keys: Vec<&String> = slices.keys().collect();
+        keys.sort();
+        for key in keys {
+            let s = &slices[key];
+            let g = |f: &str| s.get(f).and_then(|v| v.as_u64()).unwrap_or(0);
+            let red = s.get("red").and_then(|r| r.as_array()).map(|a| a.len()).unwrap_or(0);
+            let cls = if red > 0 { " class=\"red\"" } else { "" };
+            rows.push_str(&format!(
+                "<tr{cls}><td>{icon} {name}{control}</td><td>{key}</td><td>{}/{}</td>\
+                 <td>{}/{}</td><td>{}/{}</td><td>{}</td><td>{}</td></tr>\n",
+                g("value_nice"), g("value_total"),
+                g("cost_nice"), g("cost_graded"),
+                g("reject_nice"), g("reject_total"),
+                g("unrepr"), red
+            ));
+        }
+    }
+    let nice_icon = "\u{1f381}"; // 🎁
+    let coal_icon = "\u{1faa8}"; // 🪨
+    format!(
+        r#"<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>SANTA conformance scoreboard</title>
+<style>
+ body {{ font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }}
+ h1 {{ font-size: 1.4rem; }}
+ table {{ border-collapse: collapse; margin-top: 1rem; }}
+ th, td {{ border: 1px solid #ccc; padding: .35rem .6rem; text-align: left; }}
+ th {{ background: #f4f4f4; }}
+ tr.red td {{ background: #fff0f0; }}
+ .meta {{ color: #666; font-size: .85rem; }}
+</style></head><body>
+<h1>SANTA conformance scoreboard</h1>
+<p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.
+{nice_icon} all-nice · {coal_icon} divergences found (the deliverable). Generated from <code>{git_ref}</code>.</p>
+<table>
+<thead><tr><th>runner</th><th>slice</th><th>value</th><th>cost</th><th>reject</th><th>unrepr</th><th>red</th></tr></thead>
+<tbody>
+{rows}</tbody>
+</table>
+</body></html>
+"#
+    )
+}
+
 fn main() {
     println!("scoreboard: not yet implemented");
 }
@@ -100,5 +156,16 @@ mod tests {
         assert_eq!(b["color"], "red");
         // v5 clean, v6 has 3 red (2 cost + 1 unrepr); BTreeMap keeps v5 before v6.
         assert_eq!(b["message"], "v5 \u{2713} \u{b7} v6 \u{2717} (3)"); // "v5 ✓ · v6 ✗ (3)"
+    }
+
+    #[test]
+    fn dashboard_lists_runners_and_flags_red_rows() {
+        let html = dashboard(&sample(), "abc123");
+        assert!(html.contains("\u{1f381} dasher"));        // 🎁 dasher (nice)
+        assert!(html.contains("\u{1faa8} blitzen-eni"));   // 🪨 blitzen-eni (coal)
+        assert!(html.contains("(control)"));               // rudolph annotated
+        assert!(html.contains("class=\"red\""));           // the v6/authored divergent row
+        assert!(html.contains("abc123"));                  // the stamped ref
+        assert!(html.contains("eval/v6/authored"));
     }
 }
