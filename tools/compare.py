@@ -43,17 +43,21 @@ def categorize(actual, expected):
 
 
 def grade(actual, expected, claims_cost):
-    """Per-entry verdict. Reject vectors (expected errored) -> one verdict. Accept vectors ->
-    independent value + cost verdicts; cost only graded when the runner claims the cost dimension."""
+    """Per-entry verdict, mirroring the Dasher e2e precedence. Coverage gaps (runner returned
+    not-implemented / unrepresentable) take precedence — the runner didn't engage with the op,
+    whether the vector is accept or reject. Otherwise reject vectors (expected errored) get one
+    verdict; accept vectors get independent value + cost verdicts (cost only when claimed)."""
     if actual is None:
         return {"kind": "accept", "value": "value", "cost": "n/a"}  # totality breach -> coal
     aerr, eerr = actual.get("error"), expected.get("error")
-    if eerr == "errored":  # reject vector
+    if aerr == "not-implemented":
+        return {"kind": "coverage", "tag": "not-implemented"}  # coverage > accept/reject classification
+    if aerr == "unrepresentable":
+        return {"kind": "coverage", "tag": "unrepresentable"}
+    if eerr == "errored":  # reject vector — the runner engaged; did it reject identically?
         return {"kind": "reject", "verdict": "nice" if aerr == "errored" else "reject"}
     # accept vector
-    if aerr in ("not-implemented", "unrepresentable"):
-        value = aerr
-    elif aerr is None and structural_equal(actual.get("value"), expected.get("value")):
+    if aerr is None and structural_equal(actual.get("value"), expected.get("value")):
         value = "nice"
     else:
         value = "value"

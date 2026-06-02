@@ -40,6 +40,13 @@ cases = [
      {"kind": "accept", "value": "value", "cost": "n/a"}),
     ("grade reject-nice", grade(ERRORED, ERRORED, True), {"kind": "reject", "verdict": "nice"}),
     ("grade reject-divergence", grade(V_INT6, ERRORED, True), {"kind": "reject", "verdict": "reject"}),
+    # coverage gaps take precedence over the accept/reject value classification (matches the e2e)
+    ("grade not-impl on accept", grade({"value": None, "cost": None, "error": "not-implemented"}, V_INT6, True),
+     {"kind": "coverage", "tag": "not-implemented"}),
+    ("grade not-impl on reject (coverage, NOT reject-divergence)", grade({"value": None, "cost": None, "error": "not-implemented"}, ERRORED, True),
+     {"kind": "coverage", "tag": "not-implemented"}),
+    ("grade unrepresentable on accept", grade({"value": None, "cost": None, "error": "unrepresentable"}, V_INT6, True),
+     {"kind": "coverage", "tag": "unrepresentable"}),
 ]
 ok = all(chk(n, g, w) for n, g, w in cases)
 print("=== compare.py: ALL OK ===" if ok else "=== compare.py: FAILURES ===")

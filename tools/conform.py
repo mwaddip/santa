@@ -115,15 +115,14 @@ def tally(actuals, claims_cost):
         vec = json.load(open(os.path.join(VECTORS, rel)))
         for e in vec["entries"]:
             g = grade(act.get(e["name"]), e["expected"], claims_cost)
-            if g["kind"] == "reject":
+            if g["kind"] == "coverage":  # not-implemented / unrepresentable — precedence over value/reject
+                c["not_impl" if g["tag"] == "not-implemented" else "unrepr"] += 1
+            elif g["kind"] == "reject":
                 c["reject_total"] += 1
                 c["reject_nice" if g["verdict"] == "nice" else "reject_coal"] += 1
-            else:
+            else:  # accept vector — independent value + cost verdicts
                 c["value_total"] += 1
-                if g["value"] == "nice": c["value_nice"] += 1
-                elif g["value"] == "not-implemented": c["not_impl"] += 1
-                elif g["value"] == "unrepresentable": c["unrepr"] += 1
-                else: c["value_coal"] += 1
+                c["value_nice" if g["value"] == "nice" else "value_coal"] += 1
                 if g["cost"] != "n/a":
                     c["cost_graded"] += 1
                     c["cost_nice" if g["cost"] == "nice" else "cost_coal"] += 1
