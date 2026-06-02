@@ -11,6 +11,36 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RUNNERS_DIR = os.path.join(ROOT, "runners")
 VECTORS = os.path.join(ROOT, "vectors", "eval")
 CATEGORIES = ["value", "cost", "not-implemented", "unrepresentable", "reject"]
+VERSIONS = ["v5", "v6"]  # ordered; cumulative (a runner's version implies all lower)
+
+
+def parse_relpath(rel):
+    """vectors/eval/<tier>/<version>/<provenance>/<op>.json relpath -> (tier, version, provenance, op)."""
+    parts = rel.split(os.sep)
+    if len(parts) != 4 or not parts[3].endswith(".json"):
+        sys.exit(f"vector path is not <tier>/<version>/<provenance>/<op>.json: {rel}")
+    tier, version, provenance, leaf = parts
+    return tier, version, provenance, leaf[:-len(".json")]
+
+
+def discover_vectors():
+    """One recursive walk of vectors/eval/. Returns sorted [(relpath, tier, version, provenance, op)]."""
+    out = []
+    for dirpath, _dirs, files in os.walk(VECTORS):
+        for fn in files:
+            if fn.endswith(".json"):
+                rel = os.path.relpath(os.path.join(dirpath, fn), VECTORS)
+                out.append((rel,) + parse_relpath(rel))
+    return sorted(out)
+
+
+def select(vectors, version, tiers):
+    """Keep vectors where tier in declared tiers AND version <= declared (cumulative).
+    Returns entries stable-sorted by (version-index, op) so output order is deterministic."""
+    vmax = VERSIONS.index(version)
+    filtered = [v for v in vectors
+                if v[1] in tiers and v[2] in VERSIONS and VERSIONS.index(v[2]) <= vmax]
+    return sorted(filtered, key=lambda v: (VERSIONS.index(v[2]), v[4]))
 
 
 def discover():
@@ -53,82 +83,64 @@ def resolve_impl(impl, cache_dir):
 
 
 def run_one(m):
-    """Run a runner over each scoped version dir; return {version: {file: actuals_obj}}.
-    Everything for a runner lives under one workspace `.santa/<name>/` — the impl checkout
-    (cached, reused across runs) and the actuals under `out/<ver>/` — so the whole dir is a
-    self-contained, delete-able unit."""
+    """Filter by (version<=, tiers), stage selected vectors flat as symlinks, run, collect actuals
+    keyed by source relpath. Everything per-runner lives under .santa/<name>/."""
     ws = os.path.join(ROOT, ".santa", m["name"])
-    impl_path = resolve_impl(m.get("impl"), ws)          # clones into ws/<repo>; "-" if null
+    impl_path = resolve_impl(m.get("impl"), ws)
+    selected = select(discover_vectors(), m["version"], m["tiers"])
+    indir = os.path.join(ws, "in"); shutil.rmtree(indir, ignore_errors=True); os.makedirs(indir)
+    odir  = os.path.join(ws, "out"); shutil.rmtree(odir, ignore_errors=True); os.makedirs(odir)
+    staged = {}  # staged filename -> source relpath
+    for (rel, _t, _v, _p, _op) in selected:
+        name = rel.replace(os.sep, "__")            # flatten; unique across the tree
+        os.symlink(os.path.join(VECTORS, rel), os.path.join(indir, name))
+        staged[name] = rel
+    subprocess.run([m["_run"], impl_path, indir, odir], check=True)
     res = {}
-    for ver in m["scope"]:
-        vdir = os.path.join(VECTORS, ver)
-        if not os.path.isdir(vdir):
-            continue
-        odir = os.path.join(ws, "out", ver)
-        shutil.rmtree(odir, ignore_errors=True)          # fresh actuals each run
-        os.makedirs(odir, exist_ok=True)
-        subprocess.run([m["_run"], impl_path, vdir, odir], check=True)
-        res[ver] = {}
-        for fn in sorted(os.listdir(odir)):
-            if fn.endswith(".json"):
-                res[ver][fn] = json.load(open(os.path.join(odir, fn)))
+    for name, rel in staged.items():
+        ofile = os.path.join(odir, name)
+        if os.path.isfile(ofile):
+            res[rel] = json.load(open(ofile))
     return res
 
 
-def tally(m, actuals):
-    """Compare actuals vs blessed expected; return per-version counts + per-op verdicts."""
-    counts, ops = {}, {}
-    for ver, byfile in actuals.items():
-        c = {"total": 0, "nice": 0, **{k: 0 for k in CATEGORIES}}
-        ops[ver] = {}
-        for fn, act in byfile.items():
-            vec = json.load(open(os.path.join(VECTORS, ver, fn)))
-            op_nice = True
-            for e in vec["entries"]:
-                cat = categorize(act.get(e["name"]), e["expected"])
-                c["total"] += 1
-                if cat == "nice":
-                    c["nice"] += 1
-                else:
-                    c[cat] += 1
-                    op_nice = False
-            ops[ver][fn] = "nice" if op_nice else "coal"
-        counts[ver] = c
-    return counts, ops
+def tally(actuals):
+    """actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): counts}."""
+    slices = {}
+    for rel, act in sorted(actuals.items()):
+        tier, version, prov, _op = parse_relpath(rel)
+        key = (tier, version, prov)
+        c = slices.setdefault(key, {"total": 0, "nice": 0, **{k: 0 for k in CATEGORIES}})
+        vec = json.load(open(os.path.join(VECTORS, rel)))
+        for e in vec["entries"]:
+            cat = categorize(act.get(e["name"]), e["expected"])
+            c["total"] += 1
+            if cat == "nice":
+                c["nice"] += 1
+            else:
+                c[cat] += 1
+    return slices
 
 
 def main(argv):
-    matrix = "--matrix" in argv
     if "--clean" in argv:
         shutil.rmtree(os.path.join(ROOT, ".santa"), ignore_errors=True)
     runners = discover()
     if not runners:
         print("no runners under runners/*/ (need runner.json + executable santa-run)")
         return 1
-    results = {}
+    print(f"\n=== SANTA conformance · {len(runners)} runner(s) ===")
     for m in runners:
         print(f"running {m['name']} …", file=sys.stderr)
-        results[m["name"]] = (m, tally(m, run_one(m)))
-
-    print(f"\n=== SANTA conformance · {len(runners)} runner(s) ===")
-    for name, (m, (counts, _ops)) in results.items():
-        for ver, c in counts.items():
+        slices = tally(run_one(m))
+        agg_red = sum(sum(c[k] for k in CATEGORIES) for c in slices.values())
+        mark = "🎁" if agg_red == 0 else "🪨"
+        print(f"  {mark} {m['label']}  (version≤{m['version']}, tiers={','.join(m['tiers'])}, cost={m.get('cost', True)})")
+        for (tier, version, prov), c in sorted(slices.items()):
             red = sum(c[k] for k in CATEGORIES)
-            mark = "🎁" if red == 0 else "🪨"
             brk = " ".join(f"{c[k]}{k[0]}" for k in CATEGORIES if c[k])
-            line = f"  {mark} {m['label']:<40} {ver}: {c['nice']}/{c['total']} nice"
+            line = f"      {tier}/{version}/{prov}: {c['nice']}/{c['total']} nice"
             print(line + (f" · RED {red} ({brk})" if red else ""))
-
-    if matrix:
-        cols = [name for name in results if "v5" in results[name][0]["scope"]]
-        allops = sorted({fn for c in cols for fn in results[c][1][1].get("v5", {})})
-        print("\n  per-op (v5)             " + "  ".join(f"{c[:10]:>10}" for c in cols))
-        for fn in allops:
-            cells = []
-            for c in cols:
-                v = results[c][1][1].get("v5", {}).get(fn)
-                cells.append("        ✓ " if v == "nice" else ("        ✗ " if v == "coal" else "        – "))
-            print(f"  {fn[:22]:<22}" + "".join(cells))
     return 0
 
 

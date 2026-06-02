@@ -86,8 +86,7 @@ cross-implementation check on "equal". The first orchestrator run demonstrated i
 
 ## 5. Deferred (named, not silent)
 
-- **Rendered report** (HTML/SVG) — `./conform` prints a terminal table and an optional `--matrix`
-  op×runner ✓/✗ grid; an exported report is not built.
+- **Rendered report** (HTML/SVG) — `./conform` prints a per-slice terminal table; an exported report is not built.
 - **Compiled-artifact cache** — a runner's whole workspace `.santa/<name>/` (the cached impl
   checkout + `out/<ver>/` actuals) is self-contained and delete-able; the checkout is reused across
   runs (fetch+checkout), but compiled build outputs aren't cached, so each `./conform` rebuilds.
@@ -101,7 +100,7 @@ and passes `<impl-path>` — see §2/§3.)*
 1. Implement `santa-run` (any language) emitting actuals per §3.
 2. Add `runner.json` (§2) declaring `version`, `tiers`, `cost`, and `impl`.
 3. Make `santa-run` executable and place the dir under `runners/` (in-tree or `git submodule add`).
-4. `./conform` discovers and runs it; `./conform --matrix` shows it in the ✓/✗ grid.
+4. `./conform` discovers and runs it; the per-slice table shows its results.
 
 The JVM reference (Rudolph) is canonical (eval contract §6 / BOOTSTRAP decision 1): where a runner
 diverges from the blessed `expected`, the runner is wrong — surfaced as RED, routed, never hidden.
