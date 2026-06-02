@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 # santa-run <impl-path> <vectors-dir> <out-dir>  — Dasher (ergots, pure-TS).
-# impl-path ($1) ignored in v1: ergots resolves via ts-runner's in-repo file: dep.
+# SANTA clones runner.json's impl (ergots) and passes the containing dir as $1;
+# our dependency is the ergots checkout at $1/ergots. Build ergots' dist (npm
+# workspaces), point ts-runner's file: deps at it via a gitignored symlink
+# (ergots-impl), build ts-runner against it, then emit. Using $1 (not a shared
+# sibling) is what lets the pin live in runner.json — parity with the blitzen
+# runners (the extra steps are just the JS two-repo dist build).
 set -euo pipefail
+impl="$(cd "$1" && pwd)"
 VECTORS="$(realpath "$2")"
 OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # runners/dasher -> repo root
 TS="$ROOT/ts-runner"
-(cd "$TS" && npm run build >/dev/null 2>&1)
+(cd "$impl/ergots" && npm install --no-audit --no-fund >/dev/null 2>&1 && npm run build >/dev/null 2>&1)
+ln -sfn "$impl/ergots" "$TS/ergots-impl"
+(cd "$TS" && npm install --no-audit --no-fund >/dev/null 2>&1 && npm run build >/dev/null 2>&1)
 for f in "$VECTORS"/*.json; do
   node "$TS/dist/runner.js" "$f" "$OUT/$(basename "$f")"
 done

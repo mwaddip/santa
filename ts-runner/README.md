@@ -14,21 +14,29 @@ Contract: [`docs/contract/runner-contract.md`](../docs/contract/runner-contract.
 
 ## Build / run / test
 
+**Canonical entry (repo root):** `./conform` fetches the pinned ergots `impl`, builds it, wires
+`ts-runner/ergots-impl`, builds Dasher, and grades the 4-way (see *Dependency*). Direct ts-runner
+use needs `ergots-impl` present first — `./conform` creates it, or point it at a local ergots tree.
+
 ```bash
 cd ts-runner
 npm install                 # resolves the @ergots file: deps (see below)
 npm test                    # vitest: bridge unit tests + round-trip + schema oracle + e2e
 npm run build               # tsup → dist/ (incl. the `runner` bin)
-node dist/runner.js ../vectors/eval/decode-point.json   # actuals JSON → stdout; scope notes → stderr
+node dist/runner.js ../vectors/eval/v5/spec/Long.toBigInt_method.json   # actuals → stdout; scope notes → stderr
 node dist/runner.js <vector.json> <actuals-out.json>    # …or write actuals to a file
 ```
 
-## Dependency (provisional, one-line swap)
+## Dependency (SANTA-fetched impl)
 
-`@ergots/ergoscript` (+ `@ergots/scorex` for the wire I/O primitives) are consumed via **`file:`
-paths** to `~/projects/ergots/packages/{ergoscript,scorex}` (their `dist/` is built locally).
-Runner code imports **by package name only**; all provisionality lives in `package.json`. When
-ergots publishes to npm, each `file:` becomes a pinned version — a one-line change per dep.
+`@ergots/ergoscript` (+ `@ergots/scorex` for the wire I/O primitives) are the
+implementation-under-test. SANTA owns the checkout: `runners/dasher/runner.json` pins
+`impl: "https://github.com/mwaddip/ergots.git#ergoscript-v6"`, and `./conform` clones it into
+`.santa/dasher/ergots`. `runners/dasher/santa-run` builds ergots' `dist/` (npm workspaces) and
+symlinks that checkout to `ts-runner/ergots-impl` (gitignored), which the `@ergots/*` `file:`
+deps resolve against — so a clean recursive clone runs Dasher with no `~/projects/ergots`
+sibling. Runner code imports **by package name only**. (To develop against a local ergots,
+point `ergots-impl` at your working tree, or temporarily repoint the `file:` deps.)
 
 ## Pipeline (per entry)
 
