@@ -1,8 +1,10 @@
 # Phase 3 — Self-test kit & conformance scoreboard (design)
 
-> **Status: design, not built.** What runs today is the in-SANTA `./conform` 4-way (rudolph · dasher ·
-> blitzen-develop · blitzen-eni). This subspec captures the optional capability that lets a runner
-> self-test in its own CI and turns SANTA into a public conformance scoreboard. Contract touchpoint:
+> **Status: items 0–2 BUILT (2026-06-02); the kit (3) + badges (4) remain.** SANTA's tooling is now an
+> all-Rust workspace — `santa-check` (the §5/§6 comparator), `conform`, `validate` — with the verdict-oracle
+> (`oracle/verdicts.json`) and structured `.santa/results.json`; the reproducibility floor (per-runner mise,
+> dasher fetched impl, manual CI) is in. What remains is the public-facing half below: the versioned kit a
+> runner self-tests against, and the scoreboard/badges. Contract touchpoint:
 > [`docs/contract/runner-integration.md`](../contract/runner-integration.md) §7.
 
 ## Goal
@@ -146,19 +148,18 @@ reproducible properly, at once. This pass is the floor the kit and scoreboard st
 
 ## Build order
 
-0. **Reproducibility pass (precondition)** — dasher's fetched `impl` + a `mise.toml` on every runner +
-   a CI workflow running the 4-way (the section above); the floor everything below stands on.
-
-1. Factor the grading core → `results.json` (structured output from `./conform`).
-2. Port the canonical comparator to Rust (`santa-check`, replacing `compare.py`); write the
-   verdict-oracle; prove `santa-check` + the TS/Scala references against it.
-3. Kit packaging + Release CI (cut `santa-data-v…` on tag).
-4. Badge/dashboard generator + GitHub Pages publish from `results.json`.
+0. ✅ **Reproducibility pass (DONE)** — dasher's fetched `impl` + per-runner `mise.toml` (self-provision,
+   not a union) + a manual `workflow_dispatch` CI. (CI not yet dispatched in a clean env.)
+1. ✅ **Grading core → `results.json` (DONE)** — `./conform` emits `.santa/results.json` (`santa-results/v1`).
+2. ✅ **Rust comparator + oracle (DONE, and then some)** — `santa-check` (Rust lib) replaced `compare.py`;
+   `oracle/verdicts.json` (21 meta-vectors) proves it; `conform` + `validate` are Rust too, **python retired**.
+3. **Kit packaging + Release CI** (cut `santa-data-v…` on tag) — remaining.
+4. **Badge/dashboard generator + GitHub Pages** publish from `results.json` — remaining.
 
 ## Open / to refine
 
 - **Badge granularity** — one per runner, or per runner × version (a v5 badge, a v6 badge)?
 - **Oracle coverage** — enumerate the exact branch set; it *is* the contract for "agrees."
-- **Rust migration** — `compare.py` → `santa-check` is a real port; the schema validator
-  (`validate.py`, leaning on Python `jsonschema`) is separable and can stay Python or move later.
+- ~~**Rust migration**~~ — DONE: `compare.py` → `santa-check`, *and* `conform.py`/`validate.py` → Rust
+  (the latter via the `jsonschema` crate); python fully retired (went further than "can stay Python").
 - **Pages topology** — branch vs `/docs`, and endpoint-URL stability (READMEs pin to it).
