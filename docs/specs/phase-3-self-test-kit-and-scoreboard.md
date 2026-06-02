@@ -119,7 +119,35 @@ corpus-parameterized function that emits structured results. **One** change then
 the terminal table (today), the kit self-test gate, and the badge/dashboard generator. Bundle with
 porting the canonical comparator Python → Rust (`santa-check`).
 
+## Reproducibility preconditions (a clean recursive clone must run the 4-way)
+
+The kit and scoreboard both assume a clean clone can run `./conform` — the scoreboard's canonical badge
+run *is* a clean-environment CI run. Today it can't, on two counts (found by walking the fresh-checkout
+case):
+
+1. **dasher's impl is a local path, not fetched.** `ts-runner/package.json` points `@ergots/*` at
+   `file:../../ergots/...` (a `~/projects/ergots` sibling not in the checkout), and
+   `runners/dasher/santa-run` runs `npm run build` with no `npm install` — so dasher only runs on the
+   author's box. Fix (SANTA-side, no ergots change): give dasher a real `impl: "<ergots-url>#<ref>"` so
+   `./conform` clones ergots into `.santa/dasher/`, and have `santa-run` build ergots' `dist/` then
+   `npm install && build` the ts-runner against `$1/ergots` — the fetch-the-impl model blitzen already
+   follows (the extra steps are just the JS two-repo dist build). rudolph + blitzen are already correct.
+2. **Toolchains aren't bootstrapped.** `./conform` assumes `python3`; rudolph a JDK + sbt; blitzen
+   cargo; dasher node — with no installer and no CI. **Decision: a per-runner `mise.toml`** of pinned
+   toolchains; `mise install` is the recursive, daemon-less, root-less installer (the "text file of
+   deps + installer" shape, already built and maintained). It pins *versions*, not a sandbox — fine
+   while every runner is first-party/trusted. Per-runner *isolation* is a separate future concern (a
+   container/VM, for when untrusted third-party runners exist — chroot / PATH-shims aren't a security
+   boundary), not built now.
+
+Do these as **one pass** — dasher's `impl` + a `mise.toml` on every runner + a CI workflow running the
+4-way — not piecemeal: the runners are being brought in line anyway, so make the clean clone
+reproducible properly, at once. This pass is the floor the kit and scoreboard stand on.
+
 ## Build order
+
+0. **Reproducibility pass (precondition)** — dasher's fetched `impl` + a `mise.toml` on every runner +
+   a CI workflow running the 4-way (the section above); the floor everything below stands on.
 
 1. Factor the grading core → `results.json` (structured output from `./conform`).
 2. Port the canonical comparator to Rust (`santa-check`, replacing `compare.py`); write the
