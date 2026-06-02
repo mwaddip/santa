@@ -9,6 +9,9 @@ d="$(cd "$(dirname "$0")" && pwd)"
 if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
   mise trust "$d/tools/mise.toml" >/dev/null
   mise --cd "$d/tools" install
-  exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$0" "$@"
+  # Re-exec under the tools' mise. Use an ABSOLUTE self-path: `mise --cd` changes the
+  # command's cwd to tools/, so a relative "$0" (e.g. ./conform) would resolve to
+  # tools/conform and fail ("couldn't exec process: Permission denied").
+  exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$d/$(basename "$0")" "$@"
 fi
 exec cargo run --manifest-path "$d/tools/Cargo.toml" -p conform -q -- "$@"
