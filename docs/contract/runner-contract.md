@@ -63,6 +63,9 @@ because "equal" is pinned (§5).
 - **Failure:** `{ "value": null, "cost": null, "error": "errored" }`.
 - **Not-implemented:** `{ "value": null, "cost": null, "error": "not-implemented" }` — the runner has no implementation for this op/method/type.
 - **Unrepresentable:** `{ "value": null, "cost": null, "error": "unrepresentable" }` — the runner *has* the type but cannot represent this value.
+- **Value-success with cost not claimed:** `{ "value": <SValue>, "cost": null, "error": null }` — the
+  runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
+  This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
 - The runner **MUST NOT read the vector's `expected`** when producing actuals. Actuals are
   produced blind; otherwise the comparison is meaningless.
 
@@ -86,6 +89,10 @@ because "equal" is pinned (§5).
   plus each entry's `version`/`op`; it is never a runner behavior. `errored` still means
   *"I implement this op and the evaluation failed"* — never "unsupported"; that distinction
   is carried by `not-implemented`.
+  Scope spans three axes: **version** (cumulative — a runner declares one and implies all lower),
+  **tiers** (eval/wire/block — the result-shape it implements), and **dimensions** (value always;
+  cost only if `cost: true`). A dimension the runner does not claim is not graded — distinct from
+  abstaining on a vector it *does* run.
 - **No oracle dependency.** Producing actuals requires only the vector plus the runner's
   own implementation — no JVM, no network, no access to the blesser.
 
@@ -146,9 +153,11 @@ Comparison is **structural, never raw-string/byte** — this removes JSON key-or
 whitespace as drift sources, and is implementable identically in any language.
 
 **Per-field bar:**
-- **`value` and `cost` must match exactly, 1/1.** Both are consensus-critical: a wrong
-  value is a real divergence; cost gates the block cost limit, so two implementations with
-  different costs can disagree on transaction validity. No tolerance on either.
+- **`value` and `cost` are graded as independent verdicts.** Value is always graded. Cost is graded
+  only when the runner claims the cost dimension (`cost: true`); for a `cost: false` runner, cost is
+  ignored (not nice, not coal — out of scope). Both remain consensus-critical when graded: no
+  tolerance. A `cost: true` runner that emits `cost: null` on a value-success is **cost-not-implemented**
+  (coal on the cost verdict), the value verdict unaffected.
 - **`error` is compared as an exact string.** A committed `expected`'s `error` is always
   `null` (success) or `"errored"` (failure) — there is **no error taxonomy at the eval
   tier** (§7). An *actual* may also be `not-implemented` or `unrepresentable` (§3); by
