@@ -1,0 +1,9 @@
+[package]
+name = "conform"
+version = "0.1.0"
+edition = "2021"
+description = "SANTA conformance orchestrator (Rust port of conform.py): presence-as-state over runners/*/, runs each against the blessed corpus, grades via the santa-check lib in-process, prints the table + emits .santa/results.json."
+
+[dependencies]
+serde_json = "1"
+santa-check = { path = "../santa-check" }

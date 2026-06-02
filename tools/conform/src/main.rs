@@ -1,0 +1,370 @@
+//! SANTA conformance orchestrator (Rust port of the former tools/conform.py). Presence-as-state
+//! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
+//! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
+//! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
+use santa_check::grade;
+use serde_json::{json, Value};
+use std::collections::BTreeMap;
+use std::os::unix::fs::{symlink, PermissionsExt};
+use std::path::{Path, PathBuf};
+use std::process::{Command, ExitCode};
+use std::{env, fs};
+
+const VERSIONS: [&str; 2] = ["v5", "v6"]; // ordered; cumulative (a runner's version implies all lower)
+
+fn repo_root() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("../..") // tools/conform -> repo root
+}
+
+fn die(msg: String) -> ! {
+    eprintln!("{msg}");
+    std::process::exit(1);
+}
+
+/// <tier>/<version>/<provenance>/<op>.json relpath (relative to vectors/) -> (tier, version, prov, op).
+fn parse_relpath(rel: &str) -> (String, String, String, String) {
+    let p: Vec<&str> = rel.split('/').collect();
+    if p.len() != 4 || !p[3].ends_with(".json") {
+        die(format!("vector path is not <tier>/<version>/<provenance>/<op>.json: {rel}"));
+    }
+    (p[0].into(), p[1].into(), p[2].into(), p[3].trim_end_matches(".json").into())
+}
+
+type Vec5 = (String, String, String, String, String); // (rel, tier, version, prov, op)
+
+/// One recursive walk of vectors/, sorted by relpath.
+fn discover_vectors(vectors: &Path) -> Vec<Vec5> {
+    fn walk(d: &Path, base: &Path, out: &mut Vec<String>) {
+        if let Ok(rd) = fs::read_dir(d) {
+            for e in rd.flatten() {
+                let p = e.path();
+                if p.is_dir() {
+                    walk(&p, base, out);
+                } else if p.extension().and_then(|x| x.to_str()) == Some("json") {
+                    out.push(p.strip_prefix(base).unwrap().to_string_lossy().replace('\\', "/"));
+                }
+            }
+        }
+    }
+    let mut rels = Vec::new();
+    walk(vectors, vectors, &mut rels);
+    rels.sort();
+    rels.into_iter()
+        .map(|rel| {
+            let (t, v, p, o) = parse_relpath(&rel);
+            (rel, t, v, p, o)
+        })
+        .collect()
+}
+
+fn version_index(v: &str) -> Option<usize> {
+    VERSIONS.iter().position(|x| *x == v)
+}
+
+/// Keep vectors where tier in declared tiers AND version <= declared (cumulative).
+fn select<'a>(vectors: &'a [Vec5], version: &str, tiers: &[String]) -> Vec<&'a Vec5> {
+    let vmax = version_index(version)
+        .unwrap_or_else(|| die(format!("unknown manifest version {version:?}; known: {VERSIONS:?}")));
+    vectors
+        .iter()
+        .filter(|v| tiers.iter().any(|t| t == &v.1) && version_index(&v.2).is_some_and(|i| i <= vmax))
+        .collect()
+}
+
+struct Runner {
+    name: String,
+    label: String,
+    version: String,
+    tiers: Vec<String>,
+    cost: bool,
+    impl_: Option<String>,
+    run: PathBuf,
+}
+
+/// presence-as-state: a runner dir is valid iff it has runner.json + an executable santa-run.
+fn discover(runners_dir: &Path) -> Vec<Runner> {
+    let mut dirs: Vec<PathBuf> = fs::read_dir(runners_dir)
+        .map(|rd| {
+            rd.flatten()
+                .map(|e| e.path())
+                .filter(|p| p.is_dir() && p.join("runner.json").is_file())
+                .collect()
+        })
+        .unwrap_or_default();
+    dirs.sort();
+    let mut out = Vec::new();
+    for d in dirs {
+        let run = d.join("santa-run");
+        let executable = run.is_file()
+            && fs::metadata(&run).map(|m| m.permissions().mode() & 0o111 != 0).unwrap_or(false);
+        if !executable {
+            eprintln!("  skip {}: no executable santa-run", d.file_name().unwrap().to_string_lossy());
+            continue;
+        }
+        let j: Value = serde_json::from_str(&fs::read_to_string(d.join("runner.json")).unwrap())
+            .unwrap_or_else(|e| die(format!("bad runner.json in {}: {e}", d.display())));
+        out.push(Runner {
+            name: j["name"].as_str().unwrap().to_string(),
+            label: j["label"].as_str().unwrap().to_string(),
+            version: j["version"].as_str().unwrap().to_string(),
+            tiers: j["tiers"].as_array().unwrap().iter().map(|t| t.as_str().unwrap().to_string()).collect(),
+            cost: j.get("cost").and_then(Value::as_bool).unwrap_or(true),
+            impl_: j.get("impl").and_then(Value::as_str).map(String::from),
+            run,
+        });
+    }
+    out
+}
+
+fn git(args: &[&str]) -> Result<(), i32> {
+    match Command::new("git").args(args).status() {
+        Ok(s) if s.success() => Ok(()),
+        Ok(s) => Err(s.code().unwrap_or(1)),
+        Err(_) => Err(1),
+    }
+}
+
+/// impl = "<url>#<ref>" (ref = branch/tag for latest, a <sha>, or "<branch>@<sha>"). Clone/fetch into
+/// cache_dir/<repo-name>, check out the ref; return cache_dir (passed to santa-run as <impl-path>,
+/// where the runner finds its dep as ./<repo-name>). impl null -> "-" (self-contained).
+fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<String, i32> {
+    let spec = match impl_ {
+        Some(s) if !s.is_empty() => s,
+        _ => return Ok("-".to_string()),
+    };
+    let (url, refspec) = spec
+        .split_once('#')
+        .filter(|(u, r)| !u.is_empty() && !r.is_empty())
+        .unwrap_or_else(|| die(format!("bad impl '{spec}': expected <url>#<ref>")));
+    let (branch, sha) = match refspec.split_once('@') {
+        Some((b, s)) => (b, Some(s)),
+        None => (refspec, None),
+    };
+    let target = sha.unwrap_or(branch); // @sha pins; otherwise the branch/tag/sha
+    let name = url.trim_end_matches('/').rsplit('/').next().unwrap().trim_end_matches(".git");
+    fs::create_dir_all(cache_dir).ok();
+    let dest = cache_dir.join(name);
+    let dest_s = dest.to_str().unwrap();
+    if !dest.join(".git").is_dir() {
+        git(&["clone", "-q", url, dest_s])?;
+    }
+    git(&["-C", dest_s, "fetch", "-q", "--all", "--tags"])?;
+    git(&["-C", dest_s, "checkout", "-q", target])?;
+    if sha.is_none() {
+        // bare branch -> move to its latest tip (best-effort, like conform.py's check=False)
+        let _ = git(&["-C", dest_s, "pull", "-q", "--ff-only"]);
+    }
+    Ok(cache_dir.to_string_lossy().into_owned())
+}
+
+/// Filter by (version<=, tiers), stage selected vectors flat as symlinks, run, collect actuals keyed
+/// by source relpath. Everything per-runner lives under .santa/<name>/. Err(code) = the runner (or
+/// its impl checkout) failed to run — surfaced as ⚠️, not graded.
+fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<BTreeMap<String, Value>, i32> {
+    let ws = root.join(".santa").join(&m.name);
+    let impl_path = resolve_impl(&m.impl_, &ws)?;
+    let selected = select(vectors, &m.version, &m.tiers);
+    let indir = ws.join("in");
+    let _ = fs::remove_dir_all(&indir);
+    fs::create_dir_all(&indir).unwrap();
+    let odir = ws.join("out");
+    let _ = fs::remove_dir_all(&odir);
+    fs::create_dir_all(&odir).unwrap();
+    let mut staged: Vec<(String, String)> = Vec::new(); // (staged filename, source relpath)
+    for v in &selected {
+        let rel = &v.0;
+        let name = rel.replace('/', "__"); // flatten; unique (no path component contains "__")
+        symlink(root.join("vectors").join(rel), indir.join(&name)).unwrap();
+        staged.push((name, rel.clone()));
+    }
+    match Command::new(&m.run)
+        .arg(&impl_path)
+        .arg(&indir)
+        .arg(&odir)
+        .status()
+    {
+        Ok(s) if s.success() => {}
+        Ok(s) => return Err(s.code().unwrap_or(1)),
+        Err(_) => return Err(1),
+    }
+    let mut res = BTreeMap::new();
+    for (name, rel) in staged {
+        let ofile = odir.join(&name);
+        // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the
+        // breach rather than silently dropping the vector.
+        let act = if ofile.is_file() {
+            serde_json::from_str(&fs::read_to_string(&ofile).unwrap()).unwrap()
+        } else {
+            json!({})
+        };
+        res.insert(rel, act);
+    }
+    Ok(res)
+}
+
+#[derive(Default)]
+struct Counts {
+    value_total: u64,
+    value_nice: u64,
+    value_coal: u64,
+    not_impl: u64,
+    unrepr: u64,
+    cost_graded: u64,
+    cost_nice: u64,
+    cost_coal: u64,
+    reject_total: u64,
+    reject_nice: u64,
+    reject_coal: u64,
+    red: Vec<Value>,
+}
+
+impl Counts {
+    fn red_total(&self) -> u64 {
+        self.value_coal + self.not_impl + self.unrepr + self.cost_coal + self.reject_coal
+    }
+    fn to_json(&self) -> Value {
+        json!({
+            "value_total": self.value_total, "value_nice": self.value_nice, "value_coal": self.value_coal,
+            "not_impl": self.not_impl, "unrepr": self.unrepr,
+            "cost_graded": self.cost_graded, "cost_nice": self.cost_nice, "cost_coal": self.cost_coal,
+            "reject_total": self.reject_total, "reject_nice": self.reject_nice, "reject_coal": self.reject_coal,
+            "red": self.red,
+        })
+    }
+}
+
+/// actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): counts + red}, slice keys
+/// ordered (BTreeMap), entries in vector order — matching conform.py's sorted iteration.
+fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> BTreeMap<(String, String, String), Counts> {
+    let mut slices: BTreeMap<(String, String, String), Counts> = BTreeMap::new();
+    for (rel, act) in actuals {
+        let (tier, version, prov, op) = parse_relpath(rel);
+        let c = slices.entry((tier, version, prov)).or_default();
+        let vec: Value =
+            serde_json::from_str(&fs::read_to_string(root.join("vectors").join(rel)).unwrap()).unwrap();
+        for e in vec["entries"].as_array().unwrap() {
+            let name = e["name"].as_str().unwrap();
+            let actual = act.get(name).cloned().unwrap_or(Value::Null);
+            let g = grade(&actual, &e["expected"], claims_cost);
+            match g["kind"].as_str() {
+                Some("coverage") => {
+                    let tag = g["tag"].as_str().unwrap();
+                    if tag == "not-implemented" {
+                        c.not_impl += 1;
+                    } else {
+                        c.unrepr += 1;
+                    }
+                    c.red.push(json!({"op": op, "entry": name, "dim": tag}));
+                }
+                Some("reject") => {
+                    c.reject_total += 1;
+                    if g["verdict"] == "nice" {
+                        c.reject_nice += 1;
+                    } else {
+                        c.reject_coal += 1;
+                        c.red.push(json!({"op": op, "entry": name, "dim": "reject"}));
+                    }
+                }
+                _ => {
+                    c.value_total += 1;
+                    if g["value"] == "nice" {
+                        c.value_nice += 1;
+                    } else {
+                        c.value_coal += 1;
+                        c.red.push(json!({"op": op, "entry": name, "dim": "value"}));
+                    }
+                    if g["cost"] != "n/a" {
+                        c.cost_graded += 1;
+                        if g["cost"] == "nice" {
+                            c.cost_nice += 1;
+                        } else {
+                            c.cost_coal += 1;
+                            c.red.push(json!({"op": op, "entry": name, "dim": "cost"}));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    slices
+}
+
+fn write_results(root: &Path, results: &[Value]) {
+    let out = root.join(".santa");
+    fs::create_dir_all(&out).ok();
+    let doc = json!({"schema": "santa-results/v1", "runners": results});
+    fs::write(out.join("results.json"), serde_json::to_string_pretty(&doc).unwrap()).unwrap();
+}
+
+fn main() -> ExitCode {
+    let root = repo_root();
+    if env::args().any(|a| a == "--clean") {
+        let _ = fs::remove_dir_all(root.join(".santa"));
+    }
+    let runners = discover(&root.join("runners"));
+    if runners.is_empty() {
+        println!("no runners under runners/*/ (need runner.json + executable santa-run)");
+        return ExitCode::FAILURE;
+    }
+    println!("\n=== SANTA conformance · {} runner(s) ===", runners.len());
+    let vectors = discover_vectors(&root.join("vectors"));
+    let mut results: Vec<Value> = Vec::new();
+    for m in &runners {
+        eprintln!("running {} …", m.name);
+        match run_one(m, &root, &vectors) {
+            Err(code) => {
+                println!("  ⚠️  {}  — santa-run exited {code}: could not build/run (see error above)", m.label);
+                results.push(json!({
+                    "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
+                    "mark": "errored", "red_total": Value::Null, "slices": {},
+                    "error": format!("santa-run exited {code}: could not build/run"),
+                }));
+            }
+            Ok(actuals) => {
+                let slices = tally(&actuals, m.cost, &root);
+                let agg_red: u64 = slices.values().map(Counts::red_total).sum();
+                let mark = if agg_red == 0 { "🎁" } else { "🪨" };
+                println!(
+                    "  {mark} {}  (version≤{}, tiers={}, cost={})",
+                    m.label,
+                    m.version,
+                    m.tiers.join(","),
+                    if m.cost { "True" } else { "False" }
+                );
+                for ((tier, version, prov), c) in &slices {
+                    let mut bits: Vec<String> = Vec::new();
+                    if c.value_total > 0 {
+                        bits.push(format!("value {}/{}", c.value_nice, c.value_total));
+                        if c.value_coal > 0 {
+                            bits.push(format!("{} val-coal", c.value_coal));
+                        }
+                        if c.not_impl > 0 {
+                            bits.push(format!("{} not-impl", c.not_impl));
+                        }
+                        if c.unrepr > 0 {
+                            bits.push(format!("{} unrepr", c.unrepr));
+                        }
+                    }
+                    if c.cost_graded > 0 {
+                        bits.push(format!("cost {}/{}", c.cost_nice, c.cost_graded));
+                    }
+                    if c.reject_total > 0 {
+                        bits.push(format!("reject {}/{}", c.reject_nice, c.reject_total));
+                    }
+                    println!("      {tier}/{version}/{prov}: {}", bits.join(" · "));
+                }
+                let slices_json: serde_json::Map<String, Value> = slices
+                    .iter()
+                    .map(|((t, v, p), c)| (format!("{t}/{v}/{p}"), c.to_json()))
+                    .collect();
+                results.push(json!({
+                    "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
+                    "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
+                }));
+            }
+        }
+    }
+    write_results(&root, &results);
+    eprintln!("\nresults → .santa/results.json");
+    ExitCode::SUCCESS
+}
