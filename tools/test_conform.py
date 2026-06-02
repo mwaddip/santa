@@ -20,10 +20,10 @@ SAMPLE = [
 cases = [
     ("parse", parse_relpath("eval/v5/spec/plus.json"), ("eval", "v5", "spec", "plus")),
     ("version order", VERSIONS.index("v5") < VERSIONS.index("v6"), True),
-    ("select v6 eval", [s[0] for s in select(SAMPLE, "v6", ["eval"])],
-     ["eval/v5/spec/a.json", "eval/v5/authored/c.json", "eval/v6/spec/b.json"]),
-    ("select v5 eval", [s[0] for s in select(SAMPLE, "v5", ["eval"])],
-     ["eval/v5/spec/a.json", "eval/v5/authored/c.json"]),
+    ("select v6 eval", sorted(s[0] for s in select(SAMPLE, "v6", ["eval"])),
+     sorted(["eval/v5/spec/a.json", "eval/v5/authored/c.json", "eval/v6/spec/b.json"])),
+    ("select v5 eval", sorted(s[0] for s in select(SAMPLE, "v5", ["eval"])),
+     sorted(["eval/v5/spec/a.json", "eval/v5/authored/c.json"])),
     ("authored auto-included", any(s[3] == "authored" for s in select(SAMPLE, "v5", ["eval"])), True),
 ]
 ok = all(chk(n, g, w) for n, g, w in cases)

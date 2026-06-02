@@ -36,11 +36,10 @@ def discover_vectors():
 
 def select(vectors, version, tiers):
     """Keep vectors where tier in declared tiers AND version <= declared (cumulative).
-    Returns entries stable-sorted by (version-index, op) so output order is deterministic."""
+    Order follows the input — discover_vectors() returns relpath-sorted, so runs are deterministic."""
     vmax = VERSIONS.index(version)
-    filtered = [v for v in vectors
-                if v[1] in tiers and v[2] in VERSIONS and VERSIONS.index(v[2]) <= vmax]
-    return sorted(filtered, key=lambda v: (VERSIONS.index(v[2]), v[4]))
+    return [v for v in vectors
+            if v[1] in tiers and v[2] in VERSIONS and VERSIONS.index(v[2]) <= vmax]
 
 
 def discover():
