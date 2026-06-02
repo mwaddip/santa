@@ -1,0 +1,8 @@
+[package]
+name = "santa-check"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical SANTA comparator: runner-contract §5 structural equality + §6 grading. Pure JSON, no sigma-rust dep — a Rust runner can depend on it for its own self-test."
+
+[dependencies]
+serde_json = "1"
