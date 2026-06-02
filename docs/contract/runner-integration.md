@@ -107,3 +107,30 @@ and passes `<impl-path>` — see §2/§3.)*
 
 The JVM reference (Rudolph) is canonical (eval contract §6 / BOOTSTRAP decision 1): where a runner
 diverges from the blessed `expected`, the runner is wrong — surfaced as RED, routed, never hidden.
+
+## 7. Self-test kit (optional) — SANTA's published-data interface
+
+Everything above is how SANTA *runs* a runner (`./conform` over `runners/*/`). Optionally, a runner may
+also **run itself** against SANTA's blessings in its own CI — the way Ethereum clients consume an
+`execution-spec-tests` fixture release. This section describes SANTA's side of that interface; how a
+runner wires it into CI is the runner's business. **Optional and additive** — a runner stays a
+`runners/*/` dir for the in-SANTA grid whether or not it self-tests.
+
+**SANTA publishes a versioned conformance kit** — a GitHub Release tied to a SANTA tag
+(`santa-data-v…`) containing: the **blessed corpus** in its `vectors/<tier>/<version>/<provenance>/`
+layout (each entry carrying the JVM-blessed `{value, cost, error}`); the **actuals schema**; the
+**comparator spec** (the §5 equality + §6 grading of the eval contract, [`runner-contract.md`](runner-contract.md));
+a **verdict-oracle** — meta-test vectors `(actual, expected, claims_cost) → expected verdict` that let
+an implementation *prove* it grades identically; and a **version stamp** (the SANTA commit it was cut
+from, so a 🪨 traces to an exact corpus).
+
+The kit ships **no comparator binary**: the comparison *is* the §5/§6 spec, which a runner implements
+natively and proves against the oracle (§6 made executable). A runner's self-test: fetch a pinned kit →
+run `santa-run` over the subset its `runner.json` selects (`version ≤`, `tiers ∈`) → grade with its own
+oracle-checked comparator → gate. By construction the verdict equals `./conform`'s.
+
+**Badges are SANTA-minted, never self-reported.** SANTA's CI runs the canonical 4-way and publishes
+per-runner naughty/nice badges + a dashboard; a runner's README *references* the SANTA-hosted endpoint.
+A runner's own gate is for its dev loop; the public 🎁/🪨 is SANTA's to award, so it means something.
+
+Full design: [`docs/specs/phase-3-self-test-kit-and-scoreboard.md`](../specs/phase-3-self-test-kit-and-scoreboard.md).
