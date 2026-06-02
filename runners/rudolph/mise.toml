@@ -1,0 +1,8 @@
+# Rudolph's toolchain — self-provisioned by santa-run via `mise exec` (presence-as-state:
+# it lives with the runner, so ./conform stays toolchain-agnostic). java runs sbt + the
+# Runner. `sbt` here is only the launcher — the *build's* sbt version is pinned by
+# jvm-blesser/project/build.properties (1.11.1), which the launcher bootstraps; mise's
+# asdf-sbt plugin offers 1.11.7 as the nearest 1.11.x launcher.
+[tools]
+java = "temurin-17.0.18+8"
+sbt = "1.11.7"

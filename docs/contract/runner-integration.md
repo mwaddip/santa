@@ -73,6 +73,31 @@ hardcode a shared location — that is what lets two runners pin different refs 
 without colliding. For a `null` impl, `<impl-path>` is `-`. (E.g. a Cargo runner whose path-dep is
 `../sigma-rust` can `ln -sfn "$1/sigma-rust" ../sigma-rust` in `santa-run`, then build.)
 
+### Toolchain (self-provisioned, per-runner)
+
+A runner declares its toolchain in `runners/<name>/mise.toml` ([mise](https://mise.jdx.dev) `[tools]`),
+and its `santa-run` provisions it — re-exec once under `mise exec` so the tools are on `PATH` for the
+whole build subtree (the build often runs elsewhere — `ts-runner/`, `jvm-blesser/`, the cloned impl —
+which mise's cwd resolution alone wouldn't reach):
+
+```bash
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -z "${SANTA_MISE_ACTIVE:-}" ]; then
+  mise trust "$here/mise.toml" >/dev/null      # a runner vouches for its own co-located config
+  mise --cd "$here" install
+  exec env SANTA_MISE_ACTIVE=1 mise --cd "$here" exec -- "$0" "$@"
+fi
+# … tools now on PATH …
+```
+
+The orchestrator stays **toolchain-agnostic** — `./conform` never learns a runner's language, it just
+invokes `santa-run`. The pin lives **with the runner** (presence-as-state): drop a dir in, it carries
+its toolchain; remove it, nothing dangles. Deliberately **per-runner, not a shared union** — two
+same-language runners (`blitzen-develop`/`blitzen-eni`) can pin different versions, which one flattened
+`[tools]` could not. **Bootstrap deps** (assumed, not runner-provisioned): `mise`, `git`, and
+`./conform`'s own `python3`. CI installs mise via `jdx/mise-action`; `mise install` may delegate to a
+native manager (rust → rustup, which mise bootstraps) — still root-less and version-pinned.
+
 ## 4. The runner does not compare — the orchestrator does
 
 Per eval contract §6, conformance comparison needs no oracle and must be **pinned identically
@@ -100,8 +125,8 @@ and passes `<impl-path>` — see §2/§3.)*
 
 ## 6. Worked example — adding a runner
 
-1. Implement `santa-run` (any language) emitting actuals per §3.
-2. Add `runner.json` (§2) declaring `version`, `tiers`, `cost`, and `impl`.
+1. Implement `santa-run` (any language) emitting actuals per §3, self-provisioning its toolchain.
+2. Add `runner.json` (§2) and a `mise.toml` (§3 Toolchain) pinning the toolchain.
 3. Make `santa-run` executable and place the dir under `runners/` (in-tree or `git submodule add`).
 4. `./conform` discovers and runs it; the per-slice table shows its results.
 

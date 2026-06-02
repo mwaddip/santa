@@ -1,12 +1,22 @@
 #!/usr/bin/env bash
 # santa-run <impl-path> <vectors-dir> <out-dir>  — Dasher (ergots, pure-TS).
-# SANTA clones runner.json's impl (ergots) and passes the containing dir as $1;
-# our dependency is the ergots checkout at $1/ergots. Build ergots' dist (npm
-# workspaces), point ts-runner's file: deps at it via a gitignored symlink
-# (ergots-impl), build ts-runner against it, then emit. Using $1 (not a shared
-# sibling) is what lets the pin live in runner.json — parity with the blitzen
-# runners (the extra steps are just the JS two-repo dist build).
+#
+# Self-provision the runner's toolchain (presence-as-state: runners/dasher/mise.toml).
+# We re-exec once under `mise exec` so node is on PATH for the whole build subtree
+# (ts-runner/ + the cloned ergots), which `mise` alone wouldn't cover by cwd. The
+# orchestrator stays toolchain-agnostic — it only invokes santa-run. `mise` on PATH is
+# the one bootstrap dep. santa-run trusts its own co-located config: the toml and this
+# script live together, so an attacker who could edit one could edit the other — no new
+# surface. Per-runner (not a shared union) so two same-language runners can pin different
+# versions.
 set -euo pipefail
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -z "${SANTA_MISE_ACTIVE:-}" ]; then
+  mise trust "$here/mise.toml" >/dev/null
+  mise --cd "$here" install
+  exec env SANTA_MISE_ACTIVE=1 mise --cd "$here" exec -- "$0" "$@"
+fi
+# --- toolchain (node) now on PATH ---
 impl="$(cd "$1" && pwd)"
 VECTORS="$(realpath "$2")"
 OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
