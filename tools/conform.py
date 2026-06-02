@@ -5,7 +5,7 @@ comparator (compare.py) decides nice/coal; a side-by-side table is printed. See
 docs/contract/runner-integration.md."""
 import json, os, shutil, subprocess, sys, glob
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from compare import categorize
+from compare import categorize, grade
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RUNNERS_DIR = os.path.join(ROOT, "runners")
@@ -103,21 +103,30 @@ def run_one(m):
     return res
 
 
-def tally(actuals):
-    """actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): counts}."""
+def tally(actuals, claims_cost):
+    """actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): per-dimension counts}."""
     slices = {}
     for rel, act in sorted(actuals.items()):
         tier, version, prov, _op = parse_relpath(rel)
-        key = (tier, version, prov)
-        c = slices.setdefault(key, {"total": 0, "nice": 0, **{k: 0 for k in CATEGORIES}})
+        c = slices.setdefault((tier, version, prov), {
+            "value_total": 0, "value_nice": 0, "value_coal": 0, "not_impl": 0, "unrepr": 0,
+            "cost_graded": 0, "cost_nice": 0, "cost_coal": 0,
+            "reject_total": 0, "reject_nice": 0, "reject_coal": 0})
         vec = json.load(open(os.path.join(VECTORS, rel)))
         for e in vec["entries"]:
-            cat = categorize(act.get(e["name"]), e["expected"])
-            c["total"] += 1
-            if cat == "nice":
-                c["nice"] += 1
+            g = grade(act.get(e["name"]), e["expected"], claims_cost)
+            if g["kind"] == "reject":
+                c["reject_total"] += 1
+                c["reject_nice" if g["verdict"] == "nice" else "reject_coal"] += 1
             else:
-                c[cat] += 1
+                c["value_total"] += 1
+                if g["value"] == "nice": c["value_nice"] += 1
+                elif g["value"] == "not-implemented": c["not_impl"] += 1
+                elif g["value"] == "unrepresentable": c["unrepr"] += 1
+                else: c["value_coal"] += 1
+                if g["cost"] != "n/a":
+                    c["cost_graded"] += 1
+                    c["cost_nice" if g["cost"] == "nice" else "cost_coal"] += 1
     return slices
 
 
@@ -131,15 +140,24 @@ def main(argv):
     print(f"\n=== SANTA conformance · {len(runners)} runner(s) ===")
     for m in runners:
         print(f"running {m['name']} …", file=sys.stderr)
-        slices = tally(run_one(m))
-        agg_red = sum(sum(c[k] for k in CATEGORIES) for c in slices.values())
+        slices = tally(run_one(m), m.get("cost", True))
+        def red(c):
+            return c["value_coal"] + c["not_impl"] + c["unrepr"] + c["cost_coal"] + c["reject_coal"]
+        agg_red = sum(red(c) for c in slices.values())
         mark = "🎁" if agg_red == 0 else "🪨"
         print(f"  {mark} {m['label']}  (version≤{m['version']}, tiers={','.join(m['tiers'])}, cost={m.get('cost', True)})")
         for (tier, version, prov), c in sorted(slices.items()):
-            red = sum(c[k] for k in CATEGORIES)
-            brk = " ".join(f"{c[k]}{k[0]}" for k in CATEGORIES if c[k])
-            line = f"      {tier}/{version}/{prov}: {c['nice']}/{c['total']} nice"
-            print(line + (f" · RED {red} ({brk})" if red else ""))
+            bits = []
+            if c["value_total"]:
+                bits.append(f"value {c['value_nice']}/{c['value_total']}")
+                if c["value_coal"]: bits.append(f"{c['value_coal']} val-coal")
+                if c["not_impl"]: bits.append(f"{c['not_impl']} not-impl")
+                if c["unrepr"]: bits.append(f"{c['unrepr']} unrepr")
+            if c["cost_graded"]:
+                bits.append(f"cost {c['cost_nice']}/{c['cost_graded']}")
+            if c["reject_total"]:
+                bits.append(f"reject {c['reject_nice']}/{c['reject_total']}")
+            print(f"      {tier}/{version}/{prov}: " + " · ".join(bits))
     return 0
 
 
