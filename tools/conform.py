@@ -9,7 +9,7 @@ from compare import categorize
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RUNNERS_DIR = os.path.join(ROOT, "runners")
-VECTORS = os.path.join(ROOT, "vectors", "eval")
+VECTORS = os.path.join(ROOT, "vectors")
 CATEGORIES = ["value", "cost", "not-implemented", "unrepresentable", "reject"]
 VERSIONS = ["v5", "v6"]  # ordered; cumulative (a runner's version implies all lower)
 
