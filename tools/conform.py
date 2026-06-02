@@ -109,29 +109,48 @@ def run_one(m):
 
 
 def tally(actuals, claims_cost):
-    """actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): per-dimension counts}."""
+    """actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): per-dimension counts
+    plus "red" — the list of failing entries ({op, entry, dim}) for routing / drill-down}."""
     slices = {}
     for rel, act in sorted(actuals.items()):
-        tier, version, prov, _op = parse_relpath(rel)
+        tier, version, prov, op = parse_relpath(rel)
         c = slices.setdefault((tier, version, prov), {
             "value_total": 0, "value_nice": 0, "value_coal": 0, "not_impl": 0, "unrepr": 0,
             "cost_graded": 0, "cost_nice": 0, "cost_coal": 0,
-            "reject_total": 0, "reject_nice": 0, "reject_coal": 0})
+            "reject_total": 0, "reject_nice": 0, "reject_coal": 0, "red": []})
         vec = json.load(open(os.path.join(VECTORS, rel)))
         for e in vec["entries"]:
             g = grade(act.get(e["name"]), e["expected"], claims_cost)
             if g["kind"] == "coverage":  # not-implemented / unrepresentable — precedence over value/reject
                 c["not_impl" if g["tag"] == "not-implemented" else "unrepr"] += 1
+                c["red"].append({"op": op, "entry": e["name"], "dim": g["tag"]})
             elif g["kind"] == "reject":
                 c["reject_total"] += 1
                 c["reject_nice" if g["verdict"] == "nice" else "reject_coal"] += 1
+                if g["verdict"] != "nice":
+                    c["red"].append({"op": op, "entry": e["name"], "dim": "reject"})
             else:  # accept vector — independent value + cost verdicts
                 c["value_total"] += 1
                 c["value_nice" if g["value"] == "nice" else "value_coal"] += 1
+                if g["value"] != "nice":
+                    c["red"].append({"op": op, "entry": e["name"], "dim": "value"})
                 if g["cost"] != "n/a":
                     c["cost_graded"] += 1
                     c["cost_nice" if g["cost"] == "nice" else "cost_coal"] += 1
+                    if g["cost"] != "nice":
+                        c["red"].append({"op": op, "entry": e["name"], "dim": "cost"})
     return slices
+
+
+def write_results(results):
+    """Emit the structured grading result to .santa/results.json — the linchpin that feeds the
+    terminal table (above), the kit self-test gate, and the badge/dashboard generator. Generated
+    artifact: gitignored, rewritten every run."""
+    out = os.path.join(ROOT, ".santa"); os.makedirs(out, exist_ok=True)
+    path = os.path.join(out, "results.json")
+    with open(path, "w") as f:
+        json.dump({"schema": "santa-results/v1", "runners": results}, f, indent=2)
+    return path
 
 
 def main(argv):
@@ -142,8 +161,11 @@ def main(argv):
         print("no runners under runners/*/ (need runner.json + executable santa-run)")
         return 1
     print(f"\n=== SANTA conformance · {len(runners)} runner(s) ===")
+    results = []
     for m in runners:
         print(f"running {m['name']} …", file=sys.stderr)
+        rec = {"name": m["name"], "label": m["label"], "version": m["version"],
+               "tiers": m["tiers"], "cost": m.get("cost", True)}
         try:
             actuals = run_one(m)
         except subprocess.CalledProcessError as e:
@@ -151,11 +173,14 @@ def main(argv):
             # orchestrator — grade what we can, report what we can't. Distinct from 🪨 (divergent):
             # this runner was never tested, so it contributes no slices.
             print(f"  ⚠️  {m['label']}  — santa-run exited {e.returncode}: could not build/run (see error above)")
+            rec.update(mark="errored", red_total=None, slices={},
+                       error=f"santa-run exited {e.returncode}: could not build/run")
+            results.append(rec)
             continue
         slices = tally(actuals, m.get("cost", True))
-        def red(c):
+        def red_count(c):
             return c["value_coal"] + c["not_impl"] + c["unrepr"] + c["cost_coal"] + c["reject_coal"]
-        agg_red = sum(red(c) for c in slices.values())
+        agg_red = sum(red_count(c) for c in slices.values())
         mark = "🎁" if agg_red == 0 else "🪨"
         print(f"  {mark} {m['label']}  (version≤{m['version']}, tiers={','.join(m['tiers'])}, cost={m.get('cost', True)})")
         for (tier, version, prov), c in sorted(slices.items()):
@@ -170,6 +195,11 @@ def main(argv):
             if c["reject_total"]:
                 bits.append(f"reject {c['reject_nice']}/{c['reject_total']}")
             print(f"      {tier}/{version}/{prov}: " + " · ".join(bits))
+        rec.update(mark="nice" if agg_red == 0 else "coal", red_total=agg_red,
+                   slices={f"{t}/{v}/{p}": c for (t, v, p), c in sorted(slices.items())})
+        results.append(rec)
+    path = write_results(results)
+    print(f"\nresults → {os.path.relpath(path, ROOT)}", file=sys.stderr)
     return 0
 
 
