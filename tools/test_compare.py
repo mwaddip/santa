@@ -1,6 +1,6 @@
 """Self-test for tools/compare.py (plain asserts; run with .venv/bin/python)."""
 import sys
-from compare import structural_equal, categorize
+from compare import structural_equal, categorize, grade
 
 
 def chk(name, got, want):
@@ -28,6 +28,25 @@ cases = [
     ("unrepresentable", categorize({"value": None, "cost": None, "error": "unrepresentable"}, V_INT6), "unrepresentable"),
     ("reject-nice", categorize(ERRORED, ERRORED), "nice"),
     ("reject divergence (accepted)", categorize(V_INT6, ERRORED), "reject"),
+    # grade(): independent value + cost verdicts; cost gated on claims_cost
+    ("grade nice/nice", grade(V_INT6, V_INT6, True), {"kind": "accept", "value": "nice", "cost": "nice"}),
+    ("grade nice/cost-coal", grade({"value": {"kind": "Int", "value": 6}, "cost": 37, "error": None}, V_INT6, True),
+     {"kind": "accept", "value": "nice", "cost": "cost"}),
+    ("grade cost not claimed -> n/a", grade({"value": {"kind": "Int", "value": 6}, "cost": 37, "error": None}, V_INT6, False),
+     {"kind": "accept", "value": "nice", "cost": "n/a"}),
+    ("grade cost:null while claimed -> coal", grade({"value": {"kind": "Int", "value": 6}, "cost": None, "error": None}, V_INT6, True),
+     {"kind": "accept", "value": "nice", "cost": "cost"}),
+    ("grade value coal", grade({"value": {"kind": "Int", "value": 7}, "cost": 36, "error": None}, V_INT6, True),
+     {"kind": "accept", "value": "value", "cost": "n/a"}),
+    ("grade reject-nice", grade(ERRORED, ERRORED, True), {"kind": "reject", "verdict": "nice"}),
+    ("grade reject-divergence", grade(V_INT6, ERRORED, True), {"kind": "reject", "verdict": "reject"}),
+    # coverage gaps take precedence over the accept/reject value classification (matches the e2e)
+    ("grade not-impl on accept", grade({"value": None, "cost": None, "error": "not-implemented"}, V_INT6, True),
+     {"kind": "coverage", "tag": "not-implemented"}),
+    ("grade not-impl on reject (coverage, NOT reject-divergence)", grade({"value": None, "cost": None, "error": "not-implemented"}, ERRORED, True),
+     {"kind": "coverage", "tag": "not-implemented"}),
+    ("grade unrepresentable on accept", grade({"value": None, "cost": None, "error": "unrepresentable"}, V_INT6, True),
+     {"kind": "coverage", "tag": "unrepresentable"}),
 ]
 ok = all(chk(n, g, w) for n, g, w in cases)
 print("=== compare.py: ALL OK ===" if ok else "=== compare.py: FAILURES ===")

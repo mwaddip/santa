@@ -70,6 +70,32 @@ def main() -> int:
             ok += 1
     print(f"[corpus] {ok}/{len(files)} valid")
 
+    # 2b. Path ⟺ envelope consistency: the self-describing taxonomy path must agree with the in-data
+    # catalogue, so the fast path-selector and the self-contained envelope can never silently drift.
+    VERSION_ACTIVATED = {"v5": 2, "v6": 3}
+    TIER_SCHEMA_PREFIX = {"eval": "santa-eval/"}
+    print("\n[catalogue] path ⟺ envelope guard:")
+    guard_errs = 0
+    for f in files:
+        rel = os.path.relpath(f, os.path.join(ROOT, "vectors"))  # <tier>/<version>/<provenance>/<op>.json
+        parts = rel.split(os.sep)
+        if len(parts) != 4:
+            guard_errs += 1; print(f"  [WRONG] {rel}: not <tier>/<version>/<provenance>/<op>.json"); continue
+        tier, version, prov, _leaf = parts
+        doc = json.load(open(f))
+        if not str(doc.get("schema", "")).startswith(TIER_SCHEMA_PREFIX.get(tier, "\0")):
+            guard_errs += 1; print(f"  [WRONG] {rel}: schema {doc.get('schema')!r} != tier {tier!r}")
+        is_authored = str(doc.get("source", "")).startswith("santa:authored")
+        if (prov == "authored") != is_authored:
+            guard_errs += 1; print(f"  [WRONG] {rel}: provenance {prov!r} vs source {doc.get('source')!r}")
+        want = VERSION_ACTIVATED.get(version)
+        off = [e["name"] for e in doc["entries"] if e["version"]["activated"] != want]
+        if want is None or off:
+            guard_errs += 1; print(f"  [WRONG] {rel}: version {version!r} wants activated={want}, off: {off[:3]}")
+    errs += guard_errs
+    print(f"  [OK] all {len(files)} paths agree with their envelopes" if guard_errs == 0
+          else f"  {guard_errs} path/envelope mismatch(es)")
+
     # 3. Actuals-schema guards: the contract's load-bearing asymmetries must stay enforced.
     checks = [
         ("success", {"x#0": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": None}}, True),
@@ -77,6 +103,7 @@ def main() -> int:
         ("success w/ string cost rejected", {"x#0": {"value": {"kind": "Int", "value": 6}, "cost": "36", "error": None}}, False),
         ("errored w/ non-null cost rejected", {"x#0": {"value": None, "cost": 5, "error": "errored"}}, False),
         ("Long as string", {"x#0": {"value": {"kind": "Long", "value": "9000000000"}, "cost": 1, "error": None}}, True),
+        ("success w/ null cost accepted (cost-not-claimed)", {"x#0": {"value": {"kind": "Int", "value": 6}, "cost": None, "error": None}}, True),
         ("Long as number rejected", {"x#0": {"value": {"kind": "Long", "value": 9000000000}, "cost": 1, "error": None}}, False),
         ("Int as string rejected", {"x#0": {"value": {"kind": "Int", "value": "42"}, "cost": 1, "error": None}}, False),
     ]

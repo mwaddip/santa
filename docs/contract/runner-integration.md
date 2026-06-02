@@ -21,23 +21,19 @@ and `runners/blitzen-eni/` — to compare an implementation's branches side by s
 
 ```jsonc
 {
-  "name":  "blitzen-develop",                 // unique; the dir's identity
-  "label": "blitzen (sigma-rust @ develop)",  // shown in the table
-  "scope": ["v5", "v6"],                       // which vectors/eval/<ver>/ dirs it claims
-  "impl":  "https://github.com/ergoplatform/sigma-rust.git#develop"  // <url>#<ref>, or null
+  "name":    "blitzen-develop",                 // unique; the dir's identity
+  "label":   "blitzen (sigma-rust @ develop)",  // shown in the table
+  "version": "v6",                               // single max protocol version; implies all lower (cumulative)
+  "tiers":   ["eval"],                           // result-shape tiers it implements (eval/wire/block)
+  "cost":    false,                              // claims the cost dimension? (eval-only libs: false)
+  "impl":    "https://github.com/ergoplatform/sigma-rust.git#develop"  // <url>#<ref>, or null
 }
 ```
 
-- **`scope`** is the **input-side selection** (eval contract §3): the version dirs this runner
-  claims. A v5-only library declares `["v5"]`; a full implementation `["v5","v6"]`. The orchestrator
-  runs the runner once per scoped version and never feeds it a vector outside its scope.
-- **`impl`** is the implementation-under-test dependency as **one string `<url>#<ref>`**, or `null`
-  if the runner is self-contained (Rudolph builds sigma-state via sbt; Dasher resolves ergots via an
-  in-repo dependency). `<ref>` is a branch or tag (→ **latest** at run time), a commit SHA
-  (→ **pinned**), or `<branch>@<sha>` (a named branch pinned to a commit). **Santa owns the
-  checkout** (§3): it clones the URL into a per-instance cache and checks out `<ref>`, so two dirs
-  (`blitzen-develop`, `blitzen-eni`) pinning different refs never collide. No hardcoded paths, no
-  central lockfile.
+- **`version`** — one per runner, the max protocol version it supports; **cumulative** (v6 ⊃ v5, soft-fork). The orchestrator selects every vector whose `version ≤` this.
+- **`tiers`** — the set of result-shape tiers the runner implements (`eval` today; `wire`/`block` later). Tiers are *not* cumulative; declaring `eval` never pulls in `wire`. Uneven maturity across tiers is surfaced as naughty (the grid is the readiness map), not hidden by under-declaring.
+- **`cost`** — whether the runner claims the **cost dimension**. `false` = value-only (a wallet/eval-only SDK); the orchestrator grades value and ignores cost for it. Declared scope, not abstention.
+- **`impl`** — unchanged (`<url>#<ref>` or `null`).
 
 ## 3. The entrypoint — `santa-run`
 
@@ -57,6 +53,10 @@ vector** to `<out-dir>/<same-filename>`. The actuals file is the frozen actuals 
 { "<entry-name>": { "value": <SValue|null>, "cost": <number|null>,
                     "error": null | "errored" | "not-implemented" | "unrepresentable" }, … }
 ```
+
+The orchestrator performs discovery + filtering and stages the runner's selected vectors **flat** into
+`<vectors-dir>` (symlinks). A runner therefore still globs `*.json` one level deep — the nested
+`vectors/<tier>/<version>/<provenance>/` layout is invisible to it.
 
 **Exit 0** = it ran (actuals written). **Non-zero** = the runner itself failed to run — distinct
 from a per-entry `errored`, which is a normal outcome *inside* the actuals (eval contract §3).
@@ -86,8 +86,7 @@ cross-implementation check on "equal". The first orchestrator run demonstrated i
 
 ## 5. Deferred (named, not silent)
 
-- **Rendered report** (HTML/SVG) — `./conform` prints a terminal table and an optional `--matrix`
-  op×runner ✓/✗ grid; an exported report is not built.
+- **Rendered report** (HTML/SVG) — `./conform` prints a per-slice terminal table; an exported report is not built.
 - **Compiled-artifact cache** — a runner's whole workspace `.santa/<name>/` (the cached impl
   checkout + `out/<ver>/` actuals) is self-contained and delete-able; the checkout is reused across
   runs (fetch+checkout), but compiled build outputs aren't cached, so each `./conform` rebuilds.
@@ -99,9 +98,9 @@ and passes `<impl-path>` — see §2/§3.)*
 ## 6. Worked example — adding a runner
 
 1. Implement `santa-run` (any language) emitting actuals per §3.
-2. Add `runner.json` (§2) declaring `scope` + `impl`.
+2. Add `runner.json` (§2) declaring `version`, `tiers`, `cost`, and `impl`.
 3. Make `santa-run` executable and place the dir under `runners/` (in-tree or `git submodule add`).
-4. `./conform` discovers and runs it; `./conform --matrix` shows it in the ✓/✗ grid.
+4. `./conform` discovers and runs it; the per-slice table shows its results.
 
 The JVM reference (Rudolph) is canonical (eval contract §6 / BOOTSTRAP decision 1): where a runner
 diverges from the blessed `expected`, the runner is wrong — surfaced as RED, routed, never hidden.

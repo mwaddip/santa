@@ -75,7 +75,7 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     // must report this as `unrepresentable`, NOT not-implemented and NOT a re-throw.
     type FixtureEntry = { name: string; tree_bytes_hex: string; input?: { kind: string; bytes_hex: string }; version: { activated: number; ergoTree: number } }
     const fixture = JSON.parse(
-      readFileSync(path.resolve(here, '../../vectors/eval/v6/Header_new_methods.json'), 'utf8'),
+      readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/Header_new_methods.json'), 'utf8'),
     ) as { schema: string; op: string; blessed_by: string; source: string; entries: FixtureEntry[] }
     const overflowEntry = fixture.entries[0]
     const vec = {
