@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# SANTA scoreboard generator — turns .santa/results.json into shields.io badge JSONs + an
+# index.html dashboard (the public conformance scoreboard). Self-provisions rust via tools/mise.toml,
+# same as ./validate / ./conform. Usage: ./scoreboard [results.json] [out-dir]
+# (defaults: <repo>/.santa/results.json and <repo>/site).
+set -euo pipefail
+d="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
+  mise trust "$d/tools/mise.toml" >/dev/null
+  mise --cd "$d/tools" install
+  # Absolute self-path: `mise --cd` changes the command's cwd to tools/, so a relative "$0"
+  # would resolve to tools/scoreboard and fail ("couldn't exec process: Permission denied").
+  exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$d/$(basename "$0")" "$@"
+fi
+exec cargo run --manifest-path "$d/tools/Cargo.toml" -p scoreboard -q -- "$@"
