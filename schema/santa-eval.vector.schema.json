@@ -230,6 +230,14 @@
         },
         {
           "properties": {
+            "kind": { "const": "AvlTree" },
+            "bytes_hex": { "$ref": "#/$defs/hex" }
+          },
+          "required": ["kind", "bytes_hex"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
             "kind": { "const": "Coll" },
             "elem": { "$ref": "#/$defs/stype" },
             "items": { "type": "array", "items": { "$ref": "#/$defs/svalue" } }
@@ -272,7 +280,7 @@
               "enum": [
                 "SBoolean", "SByte", "SShort", "SInt", "SLong", "SBigInt",
                 "SUnsignedBigInt", "SGroupElement", "SSigmaProp", "SBox",
-                "SHeader", "SPreHeader", "SUnit", "SAny"
+                "SHeader", "SPreHeader", "SUnit", "SAny", "SAvlTree"
               ]
             }
           },

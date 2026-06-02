@@ -239,6 +239,50 @@ object SpecExtract {
       "source"     -> Json.fromString(source),
       "entries"    -> Json.arr(entries: _*))
 
+  // ── Authored path (for vectors the spec doesn't declare) ─────────────────────
+  // The spec covers Global.serialize only for direct types; the delegated-serializer
+  // types (GroupElement/SigmaProp/UnsignedBigInt/AvlTree/Box/Header + composites) are
+  // absent, so we AUTHOR them: pick representative inputs, build the spec's own
+  // `serialize` tree (via mkSerializeFeature), and bless value+cost from the JVM eval.
+  // There is no spec-declared expected to cross-check, so (unlike toEntry) evalApplied's
+  // value+cost ARE canonical — the rebless philosophy (evalApplied IS sigma-state 6.0.3,
+  // the oracle). Honest provenance ⇒ vectors/eval/v6/authored/, source "santa:authored".
+
+  /** Author one v2 entry from a hand-picked input. The input passes the SAME
+    * wire-encodability gate as extracted vectors — an authored input that isn't
+    * wire-encodable at the target version would be unusable by every conformer; since
+    * we control authored inputs, that is a fail-loud authoring bug, not a silent skip. */
+  def authoredEntry(op: String, script: String, treeBytesHex: String, name: String,
+                    inputJson: Json, activated: Byte): Json = {
+    val decoded =
+      try EvalCore.decodeInputConstant(inputJson)
+      catch { case t: Throwable =>
+        sys.error(s"authoredEntry: input not decodable for '$op': ${EvalCore.errClass(t)} — ${inputJson.noSpaces}") }
+    if (!EvalCore.isWireEncodable(decoded, activated))
+      sys.error(s"authoredEntry: input ${decoded.tpe} not wire-encodable at ErgoTree v$activated for '$op' — ${inputJson.noSpaces}")
+
+    val (_, outcome) = EvalCore.evalApplied(treeBytesHex, inputJson, activated = activated)
+    val (valueJson, cost) = outcome match {
+      case Right(vc) => vc
+      case Left(err) =>
+        sys.error(s"authoredEntry: apply-eval failed for '$op' ($script) on ${inputJson.noSpaces}: $err")
+    }
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "input"          -> inputJson,
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+      "expected"       -> Json.obj("value" -> valueJson,
+                                   "cost"  -> Json.fromLong(cost),
+                                   "error" -> Json.Null))
+  }
+
+  /** Public v2 envelope for authored vectors (reuses the canonical envelope). */
+  def authoredEnvelope(op: String, entries: Seq[Json], source: String): Json =
+    envelope(op, entries, source)
+
   /** Encode captured cases into an ExtractResult: group by op; quarantine any op whose
     * property threw mid-capture (its Capture list may be truncated, so it must never
     * ship); encode the rest via `toEntry` (Opaque/unsupported-kind cases are skipped

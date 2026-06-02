@@ -116,6 +116,7 @@ these shapes. The asymmetries are deliberate — mirror them exactly.
 | SigmaProp | `{"kind":"SigmaProp","raw_hex":"<hex>"}` | serialized SigmaBoolean, lower-case hex |
 | Box | `{"kind":"Box","bytes_hex":"<hex>"}` | `ErgoBox.sigmaSerializer` bytes, lower-case hex |
 | Header | `{"kind":"Header","bytes_hex":"<hex>"}` | `ErgoHeader.sigmaSerializer` bytes (incl. PoW), lower-case hex |
+| AvlTree | `{"kind":"AvlTree","bytes_hex":"<hex>"}` | `AvlTreeData.serializer` bytes (digest+flags+keyLength+optValueLen), lower-case hex |
 | Coll | `{"kind":"Coll","elem":<SType>,"items":[<SValue>,…]}` | `elem` = element SType tag; `items` positional |
 | Tuple | `{"kind":"Tuple","items":[<SValue>,…]}` | ≥2 items, positional. Today's corpus is all pairs; the encoding admits higher arity (sigma-state has arity-3+ tuples). |
 | Option | `{"kind":"Option","value":<SValue> \| null}` | `null` = `None`; otherwise the inner SValue |
@@ -132,7 +133,7 @@ skips-and-reports instead), so a runner never needs to encode one.
 
 ### SType tags (the type side, used in `elem`)
 `{"tag":"SBoolean"}`, `SByte`, `SShort`, `SInt`, `SLong`, `SBigInt`, `SUnsignedBigInt`,
-`SGroupElement`, `SSigmaProp`, `SBox`, `SHeader`, `SPreHeader`, `SUnit`, `SAny`; and the
+`SGroupElement`, `SSigmaProp`, `SBox`, `SHeader`, `SPreHeader`, `SAvlTree`, `SUnit`, `SAny`; and the
 recursive forms `{"tag":"SColl","elem":<SType>}`, `{"tag":"SOption","elem":<SType>}`,
 `{"tag":"STuple","items":[<SType>,…]}`. These appear inside `Coll.elem` and nested type
 positions; pinned in the schema.

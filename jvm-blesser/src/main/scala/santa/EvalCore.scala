@@ -9,11 +9,11 @@ import org.ergoplatform.{ErgoBox, ErgoHeader, ErgoLikeContext, ErgoLikeTransacti
 import org.ergoplatform.validation.ValidationRules
 
 import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
-import sigma.data.{CBigInt, CBox, CHeader, CSigmaProp, CUnsignedBigInt, SigmaBoolean}
+import sigma.data.{CAvlTree, CBigInt, CBox, CHeader, CSigmaProp, CUnsignedBigInt, SigmaBoolean}
 import sigma.ast.{
-  BigIntConstant, BooleanConstant, BoxConstant, ByteConstant, CollectionConstant, Constant,
+  AvlTreeConstant, BigIntConstant, BooleanConstant, BoxConstant, ByteConstant, CollectionConstant, Constant,
   ErgoTree, EvaluatedValue, GroupElementConstant, HeaderConstant, IntConstant, JitCost,
-  LongConstant, SBigInt, SBoolean, SBox, SByte, SCollection, SGroupElement, SHeader, SInt,
+  LongConstant, SAvlTree, SBigInt, SBoolean, SBox, SByte, SCollection, SGroupElement, SHeader, SInt,
   SLong, SOption, SPreHeader, SShort, SSigmaProp, SType, SUnsignedBigInt, ShortConstant,
   SigmaPropConstant, STuple, UnsignedBigIntConstant
 }
@@ -134,6 +134,11 @@ object EvalCore {
     case h: CHeader =>
       Json.obj("kind"      -> Json.fromString("Header"),
                "bytes_hex" -> Json.fromString(Base16.encode(h.ergoHeader.bytes)))
+    case avl: CAvlTree =>
+      // AvlTreeData (digest + flags + keyLength + optional valueLength) via the same
+      // CoreSerializer Global.serialize delegates to. Mirrors Box/Header (bytes_hex).
+      Json.obj("kind"      -> Json.fromString("AvlTree"),
+               "bytes_hex" -> Json.fromString(Base16.encode(AvlTreeData.serializer.toBytes(avl.treeData))))
     case c: Coll[_] =>
       Json.obj("kind"  -> Json.fromString("Coll"),
                "elem"  -> stypeToJson(Evaluation.rtypeToSType(c.tItem)),
@@ -179,7 +184,7 @@ object EvalCore {
   // Inverse of valueToJson: reconstructs the sigma-state runtime value wrapped
   // in an EvaluatedValue so it can be bound to context var 1 via ContextExtension.
   // Covers: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt, GroupElement,
-  // Coll (incl. nested), Tuple (pair), Option (Some only), Box, Header.
+  // Coll (incl. nested), Tuple (pair), Option (Some only), Box, Header, AvlTree.
 
   /** Decode a `{"tag":"S…"}` SType JSON (as emitted by stypeToJson) back to SType. */
   def stypeFromJson(j: Json): SType = {
@@ -201,6 +206,7 @@ object EvalCore {
       case "SBox"          => SBox
       case "SHeader"       => SHeader
       case "SPreHeader"    => SPreHeader
+      case "SAvlTree"      => SAvlTree
       case "SColl"         =>
         val elem = j.hcursor.downField("elem").as[Json]
           .fold(e => sys.error(s"stypeFromJson: missing elem in Coll type: $e"), identity)
@@ -230,7 +236,7 @@ object EvalCore {
     *
     * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt,
     * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair),
-    * Option (Some only — None-as-input errors), Box, Header (each from its `bytes_hex`).
+    * Option (Some only — None-as-input errors), Box, Header, AvlTree (each from its `bytes_hex`).
     * Unsupported kinds surface an immediate sys.error (not a silent wrong value). */
   def decodeInputConstant(j: Json): EvaluatedValue[_ <: SType] = {
     val cur  = j.hcursor
@@ -343,6 +349,15 @@ object EvalCore {
         val bytes  = Base16.decode(hex).get
         val header = ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(bytes))
         HeaderConstant(new CHeader(header))
+
+      case "AvlTree" =>
+        // Canonical AvlTreeData bytes via the same CoreSerializer Global.serialize delegates
+        // to (mirrors Box/Header). AvlTreeConstant wraps it as CAvlTree at type SAvlTree.
+        val hex = cur.downField("bytes_hex").as[String]
+          .fold(e => sys.error(s"decodeInputConstant AvlTree: $e"), identity)
+        val bytes = Base16.decode(hex).get
+        val data  = AvlTreeData.serializer.parse(SigmaSerializer.startReader(bytes))
+        AvlTreeConstant(data)
 
       case "SigmaProp" =>
         // Inverse of valueToJson's SigmaProp encode:
