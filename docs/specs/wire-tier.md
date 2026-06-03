@@ -104,13 +104,15 @@ contract's totality model with `value`+`cost` replaced by a single `bytes_hex`:
 - **Success:** `{ "bytes_hex": "<reserialization>", "error": null }`.
 - **Failure (recognized):** `{ "bytes_hex": null, "error": "errored" }` — parse/reserialize threw.
 - **Not-implemented:** `{ "bytes_hex": null, "error": "not-implemented" }` — no serializer for this `kind`.
-- **Unrepresentable:** `{ "bytes_hex": null, "error": "unrepresentable" }` — has the `kind`, can't hold this value.
+- **Panicked:** `{ "bytes_hex": null, "error": "panicked", "note": "<message>" }` — any other uncaught
+  throw, caught so the run continues (always coal). A serializer's **own** failure on a value it cannot
+  hold lands here too — recorded faithfully, never pre-classified into an "excuse" tag.
 - **Totality** holds exactly as eval `§3`: one faithful outcome per entry, never dropped; an
-  unrecognized failure propagates loud, never mislabeled.
+  unrecognized failure is caught as `panicked`, never mislabeled.
 - **No cost dimension.** Wire grades a single **`roundtrip`** verdict per entry. A serialization
   divergence is `{ bytes_hex: <different>, error: null }` — the analog of an eval value-mismatch:
   the runner produced bytes, they just aren't canonical → **coal** (the deliverable). `not-implemented`
-  / `unrepresentable` are coal exactly as eval `§5` (always real coverage findings).
+  is coal exactly as eval `§5` (always a real coverage finding).
 - A wire-only conformer declares `tiers: [wire]` and is inherently cost-less (`cost` is not a wire
   concept) — scope selection (`runner-integration.md`) is otherwise unchanged.
 

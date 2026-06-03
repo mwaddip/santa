@@ -51,7 +51,7 @@ vector** to `<out-dir>/<same-filename>`. The actuals file is the frozen actuals 
 
 ```json
 { "<entry-name>": { "value": <SValue|null>, "cost": <number|null>,
-                    "error": null | "errored" | "not-implemented" | "unrepresentable" | "panicked",
+                    "error": null | "errored" | "not-implemented" | "panicked",
                     "note": <string, present iff error == "panicked"> }, … }
 ```
 
@@ -108,7 +108,7 @@ across runners**. So the orchestrator grades with **one shared comparator** — 
 [`santa-check`](../../tools/santa-check) lib (§5 equality + §6 grading), linked into `conform`
 in-process — over *every* runner's actuals. **A runner MUST NOT self-judge for orchestration**
 — it only emits actuals; the orchestrator decides nice/coal and categorizes RED
-(value / cost / not-implemented / unrepresentable / reject / panicked). A standalone self-compare mode is fine
+(value / cost / not-implemented / reject / panicked). A standalone self-compare mode is fine
 as a *dev convenience*, but the `santa-run` path emits actuals and leaves the verdict to `conform`.
 
 (`santa-check` is the canonical engine alongside the per-ecosystem references — the TypeScript one

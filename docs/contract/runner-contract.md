@@ -25,7 +25,7 @@ run(vector) → actuals
   optional `input`) case with the **blessed** `expected` result the JVM reference produced.
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
   runner's *own* `{ value, cost, error }` for that entry, where `error` is the outcome tag
-  (§3) — `null` on success, else `errored` / `not-implemented` / `unrepresentable` / `panicked`.
+  (§3) — `null` on success, else `errored` / `not-implemented` / `panicked`.
 
 Conformance is then a separate comparison step (§5): an entry is **nice** when the
 runner's actual equals the vector's blessed `expected`, **a lump of coal** otherwise.
@@ -62,12 +62,13 @@ because "equal" is pinned (§5).
 - **Success:** `{ "value": <SValue §4>, "cost": <number>, "error": null }`.
 - **Failure:** `{ "value": null, "cost": null, "error": "errored" }`.
 - **Not-implemented:** `{ "value": null, "cost": null, "error": "not-implemented" }` — the runner has no implementation for this op/method/type.
-- **Unrepresentable:** `{ "value": null, "cost": null, "error": "unrepresentable" }` — the runner *has* the type but cannot represent this value.
 - **Panicked:** `{ "value": null, "cost": null, "error": "panicked", "note": "<message>" }` — an
-  otherwise-uncaught internal error on this entry, caught so the run continues. Graded coal
-  **unconditionally** (§5/§6), even against a reject-expected vector: a crash is not a clean
-  rejection (hence a distinct tag, not a reuse of `errored`). `note` (present iff
-  `error == "panicked"`) carries the message for diagnosis.
+  otherwise-uncaught internal error on this entry, caught so the run continues. This is also the
+  landing for the implementation's **own** failure to represent or hold a value (e.g. its codec
+  rejecting an out-of-range field): the runner records that real failure rather than pre-classifying
+  it into a softer outcome on the implementation's behalf. Graded coal **unconditionally** (§5/§6),
+  even against a reject-expected vector: a crash is not a clean rejection (hence a distinct tag, not a
+  reuse of `errored`). `note` (present iff `error == "panicked"`) carries the message for diagnosis.
 - **Value-success with cost not claimed:** `{ "value": <SValue>, "cost": null, "error": null }` — the
   runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
   This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
@@ -78,18 +79,27 @@ because "equal" is pinned (§5).
 - **Determinism.** Same vector → byte-stable actuals on every run. No clocks, no RNG, no
   ambient state.
 - **Totality & never-panic.** Every input entry yields exactly one outcome — success,
-  `errored`, `not-implemented`, `unrepresentable`, or `panicked`. A runner never silently
+  `errored`, `not-implemented`, or `panicked`. A runner never silently
   drops or omits an entry, and **no single entry may abort the file.** An entry that fails in
-  a *recognized* way (`errored`) is a normal outcome; a failure the runner does **not**
-  recognize — a malformed vector, an unexpected codec or internal error — is **caught and
-  surfaced as `panicked`** (coal, message in `note`), never propagated as a process-aborting
-  error. Surfacing a crash as a visible divergence beats both silently absorbing it and
-  aborting the whole run.
+  a *recognized* way (`errored`) is a normal outcome; any other failure the runner does **not**
+  classify — a malformed vector, an internal error, or the implementation's own codec/representation
+  failure on a value it cannot hold — is **caught and surfaced as `panicked`** (coal, message in
+  `note`), never propagated as a process-aborting error. `panicked` is therefore not presumed rare:
+  it is the faithful landing for any such throw. Surfacing it as a visible divergence beats both
+  silently absorbing it and aborting the whole run.
+- **Faithful outcomes — the runner never excuses the implementation.** A runner reports the
+  implementation's *actual* behavior; it never authors a classification that softens a divergence on
+  the implementation's behalf. An implementation's own failure — including failing to represent or
+  hold a value its types nominally cover — is `errored` (a recognized eval failure) or `panicked`
+  (any other throw), recorded as it happened. A gap in the **SANTA harness itself** (e.g. a bridge
+  that cannot yet encode a value the implementation correctly produced) is `panicked` with a `note`
+  naming the TODO — a defect to fix by making the harness total, never a standing "we don't test
+  this" outcome. (This is why there is no `unrepresentable` tag: it had drifted into exactly such an
+  excuse — the same anti-pattern as the removed `abstain`.)
 - **No abstention; scope is an input-side selection.** A runner emits a faithful outcome
   for **every entry of every vector it is given** — including `not-implemented` (an
-  op/method/type it doesn't implement), `unrepresentable` (a type it has but a value it
-  can't hold), and `panicked` (an uncaught internal error, always coal). It never omits an
-  entry or suppresses a would-diverge result to look
+  op/method/type it doesn't implement) and `panicked` (an uncaught internal error, always coal).
+  It never omits an entry or suppresses a would-diverge result to look
   conformant. A conformer expresses its scope by **which vectors it is run against**: the
   corpus is version-split (`vectors/eval/{v5,v6}/`), so a v5-only conformer runs the v5
   subset and never sees a v6 vector. Which entries "count" — and how they slice into
@@ -169,19 +179,19 @@ whitespace as drift sources, and is implementable identically in any language.
   (coal on the cost verdict), the value verdict unaffected.
 - **`error` is compared as an exact string.** A committed `expected`'s `error` is always
   `null` (success) or `"errored"` (failure) — there is **no error taxonomy at the eval
-  tier** (§7). An *actual* may also be `not-implemented`, `unrepresentable`, or `panicked` (§3); by
+  tier** (§7). An *actual* may also be `not-implemented` or `panicked` (§3); by
   construction those never appear in `expected`, so they match neither and score a lump of
   coal (see below).
 - **On an errored entry, `cost` is `null`** (an aborted evaluation has no well-defined
   cost) and `value` is `null`. So a matched failure is `{null, null, "errored"}` on both
   sides; cost/value are not compared further once both errored.
 
-A `not-implemented` or `unrepresentable` actual matches only an `expected` carrying the identical `error` string.
+A `not-implemented` actual matches only an `expected` carrying the identical `error` string.
 Because the blessing oracle implements the full language and the bless-time
 wire-encodability gate drops un-ingestable inputs, a committed `expected` is always
-`success` or `errored` — so these two tags never match and always score a lump of coal.
-That is intentional: they are always real findings (a coverage gap or a representation
-bug), surfaced rather than hidden. `panicked` is coal **unconditionally** — unlike `errored`
+`success` or `errored` — so `not-implemented` never matches and always scores a lump of coal.
+That is intentional: it is always a real finding (a coverage gap), surfaced rather than hidden.
+`panicked` is coal **unconditionally** — unlike `errored`
 it never matches a reject-expected `expected` (a crash is not a clean rejection), which is
 why it is a distinct tag rather than a refinement of `errored`.
 
@@ -211,8 +221,8 @@ non-goals, to be specified when each arm is actually built (do not implement aga
   matching, so classification is deferred to the reject arm — where rejection *reason* is
   the actual subject. The `error` field is the slot that refinement will fill; adding
   classified reasons there is an additive change, not a breaking one.
-  This is distinct from the `not-implemented`/`unrepresentable` outcome tags (§3): those are
-  a *coverage/representability* axis — "the runner did not produce a value" — detected by
+  This is distinct from the `not-implemented` outcome tag (§3): that is
+  a *coverage* axis — "the runner has no implementation for this op/method/type" — detected by
   each runner's own typed conditions, not by fragile cross-impl error-message matching. The
   deferred taxonomy concerns *why an attempted evaluation failed* (the `errored` case),
   which stays coarse at the eval tier.

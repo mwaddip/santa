@@ -56,12 +56,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green on
   v5 (1,705 / 1,705)**: every divergence SANTA routed is now fixed in `ergots`. Blitzen shows
   the suite working — `sigma-rust`'s `ergo-node-integration` fork is also perfect on v5 but
-  divergent on v6 (value, cost, and representability gaps), while plain upstream `develop`
+  divergent on v6 (value and cost gaps), while plain upstream `develop`
   misses 10 v5 values the fork already fixed. A 🪨 is the suite doing its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
   **total**: it emits one faithful outcome for *every* entry — value + cost on success,
-  else a coarse tag (`errored` / `not-implemented` / `unrepresentable` / `panicked`) — and
+  else a coarse tag (`errored` / `not-implemented` / `panicked`) — and
   never drops, hides, or aborts the run on one. A conformer's **scope is chosen on the input side** (it runs the vector
   subset it claims; ergots runs `v5/`). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.

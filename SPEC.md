@@ -73,7 +73,7 @@ closed-tree `decode-point` special case):
 **actuals** record per entry, so the harness can compare any conformer's output to the
 blessed expected. The runner is **total** — it emits a faithful outcome for *every* entry
 and never drops, hides, or aborts on one: value + JIT cost on success, else a coarse outcome
-tag (`errored` / `not-implemented` / `unrepresentable` / `panicked`). A conformer's **scope is selected on
+tag (`errored` / `not-implemented` / `panicked`). A conformer's **scope is selected on
 the input side** — it is run against the vector subset it claims (a v5-only library runs
 the `v5/` corpus; a wire-only tool like Fleet runs wire vectors, not eval) — never by the
 runner suppressing results. The result shape is whatever the op asserts: value + JIT cost
