@@ -189,7 +189,10 @@ object AuthoredSerialize {
                                          Json.obj("tag" -> Json.fromString("SColl"), "elem" -> stype("SByte")),
                                          Seq(collJsonE(stype("SByte"), Seq(byteJson(1), byteJson(2)))))),
             "R4=(Int,Int)"          -> r4Box(tupleJson(intJson(1), intJson(2))),
-            "R4=(Int,Long)"         -> r4Box(tupleJson(intJson(1), longJson(2L))))),
+            "R4=(Int,Long)"         -> r4Box(tupleJson(intJson(1), longJson(2L))),
+            // TUPLE_PAIR2: (non-prim, prim) — first elem Coll[Byte], a distinct fast-path tuple type code
+            "R4=(Coll[Byte],Int)"   -> r4Box(tupleJson(collJsonE(stype("SByte"),
+                                         Seq(byteJson(1), byteJson(2), byteJson(3), byteJson(4))), intJson(42))))),
       target(tap, "Global.serialize[Header]", HeaderRType,
         Seq("specFixture" -> headerJson(HeaderHex))),
       target(tap, "Global.serialize[Coll[GroupElement]]", collRType(GroupElementRType),
