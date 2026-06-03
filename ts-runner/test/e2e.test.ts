@@ -34,12 +34,12 @@ const validateActuals = ajv.compile(JSON.parse(readFileSync(path.join(schemaDir,
 
 type Slice = {
   valueTotal: number; valueNice: number; valueCoal: string[]
-  notImpl: string[]; unrepr: string[]
+  notImpl: string[]
   costGraded: number; costNice: number; costCoal: string[]
   rejectTotal: number; rejectNice: number; rejectCoal: string[]
 }
 const blank = (): Slice => ({
-  valueTotal: 0, valueNice: 0, valueCoal: [], notImpl: [], unrepr: [],
+  valueTotal: 0, valueNice: 0, valueCoal: [], notImpl: [],
   costGraded: 0, costNice: 0, costCoal: [], rejectTotal: 0, rejectNice: 0, rejectCoal: [],
 })
 const slices: Record<string, Slice> = {}
@@ -48,7 +48,7 @@ const sliceOf = (file: string) => file.split('/')[0] // "spec" | "authored"
 let total = 0
 
 // ---- Run the v5 corpus once, accounting per provenance slice. Every entry yields exactly one
-// verdict (totality §3). Coverage gaps (not-implemented / unrepresentable) take precedence over the
+// verdict (totality §3). Coverage gaps (not-implemented) take precedence over the
 // accept/reject value classification — this mirrors tools/compare.grade so every comparator returns
 // the same verdict (runner-contract §6). ----
 for (const file of files) {
@@ -62,7 +62,6 @@ for (const file of files) {
     const exp = e.expected as { value: unknown; cost: number | null; error: string | null }
     // coverage precedence: the runner didn't engage with the op, whatever the vector expected
     if (act && act.error === 'not-implemented') { s.notImpl.push(`${file} :: ${e.name}`); continue }
-    if (act && act.error === 'unrepresentable') { s.unrepr.push(`${file} :: ${e.name}`); continue }
     if (exp.error === 'errored') { // reject vector — one verdict: did it reject identically?
       s.rejectTotal++
       if (act && act.error === 'errored') s.rejectNice++
@@ -86,12 +85,12 @@ for (const file of files) {
 }
 
 const spec = slices['spec'] ?? blank()
-const redOf = (s: Slice) => s.valueCoal.length + s.notImpl.length + s.unrepr.length + s.costCoal.length + s.rejectCoal.length
-const accounted = Object.values(slices).reduce((n, s) => n + s.valueTotal + s.notImpl.length + s.unrepr.length + s.rejectTotal, 0)
+const redOf = (s: Slice) => s.valueCoal.length + s.notImpl.length + s.costCoal.length + s.rejectCoal.length
+const accounted = Object.values(slices).reduce((n, s) => n + s.valueTotal + s.notImpl.length + s.rejectTotal, 0)
 console.log(`\n=== Dasher conformance · v5 (${files.length} files / ${total} entries, cost=${CLAIMS_COST}) ===`)
 for (const [name, s] of Object.entries(slices)) {
   console.log(`  [${name}] value ${s.valueNice}/${s.valueTotal} · cost ${s.costNice}/${s.costGraded}` +
-    ` · not-impl ${s.notImpl.length} · unrepr ${s.unrepr.length} · reject ${s.rejectNice}/${s.rejectTotal} · RED ${redOf(s)}`)
+    ` · not-impl ${s.notImpl.length} · reject ${s.rejectNice}/${s.rejectTotal} · RED ${redOf(s)}`)
 }
 if (spec.notImpl.length) console.log(`  spec not-implemented (v5 method gaps):\n    ${spec.notImpl.join('\n    ')}`)
 if (spec.valueCoal.length) console.log(`  spec value:\n    ${spec.valueCoal.join('\n    ')}`)
@@ -124,9 +123,6 @@ describe('Dasher e2e conformance vs blessed v5 corpus (per-provenance slice)', (
   })
   it('spec not-implemented: 0 (Coll.updated/updateMany/GroupElement.negate implemented, ergots 35eac6b)', () => {
     expect(spec.notImpl, `not-impl:\n${spec.notImpl.join('\n')}`).toHaveLength(0)
-  })
-  it('spec unrepresentable: 0 (the Header-ts cases live in v6, not run here)', () => {
-    expect(spec.unrepr).toHaveLength(0)
   })
   it('spec reject divergences: 0 — ergots rejects every input the JVM rejects', () => {
     expect(spec.rejectCoal, `reject:\n${spec.rejectCoal.join('\n')}`).toHaveLength(0)

@@ -68,11 +68,13 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     expect(actuals['u']).toEqual({ value: null, cost: null, error: 'not-implemented' })
   })
 
-  it('value the runner has the type for but cannot represent (Header ts > 2^53) → unrepresentable', () => {
+  it("an input ergots' codec rejects at runtime (Header ts > 2^53) → panicked, not a pre-classified excuse", () => {
     // REAL fixture: the v6 Header corpus carries a Header whose timestamp is
     // 4928911477310178288 (> Number.MAX_SAFE_INTEGER). ergots HAS SHeader, but its codec
-    // rejects the decode with ReaderError 'vlq-overflow' (scorex header.ts:69) → the runner
-    // must report this as `unrepresentable`, NOT not-implemented and NOT a re-throw.
+    // throws ReaderError 'vlq-overflow' (scorex header.ts) decoding it. The runner records
+    // ergots' ACTUAL failure — the never-panic net catches the throw as `panicked`, message in
+    // `note` — rather than relabelling it the softer `unrepresentable` on ergots' behalf. Same
+    // coal grade; the divergence now speaks for itself and self-heals when ergots widens the type.
     type FixtureEntry = { name: string; tree_bytes_hex: string; input?: { kind: string; bytes_hex: string }; version: { activated: number; ergoTree: number } }
     const fixture = JSON.parse(
       readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/Header_new_methods.json'), 'utf8'),
@@ -83,8 +85,15 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
       entries: [overflowEntry],
     }
     const actuals = runVector(vec)
-    // Pin the EXACT tag — not merely "not nice": value:null, cost:null, error:'unrepresentable'.
-    expect(actuals[overflowEntry.name]).toEqual({ value: null, cost: null, error: 'unrepresentable' })
+    const act = actuals[overflowEntry.name]
+    // No pre-classification: value/cost null, error 'panicked', and a non-empty note carrying
+    // ergots' own message (we do NOT pin the exact text — that would re-couple us to a brittle
+    // internal codec string, the very thing the removed `isReprLimit` guard did).
+    expect(act.error).toBe('panicked')
+    expect(act.value).toBeNull()
+    expect(act.cost).toBeNull()
+    expect(typeof act.note).toBe('string')
+    expect((act.note ?? '').length).toBeGreaterThan(0)
   })
 
   it('AvlTree serialize input decodes (no crash) but ergots lacks serialize(AvlTree) → not-implemented, total', () => {
@@ -93,7 +102,7 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     // even though ergots fully supports SAvlTree (parse-svalue.ts `case 'SAvlTree'`, type code 100).
     // The gap was the SANTA-side bridge, not ergots. With the decode case added, the input decodes;
     // ergots' eval then throws EvalError 'method-not-implemented' for serialize(AvlTree), so the
-    // faithful outcome is `not-implemented` — NOT `unrepresentable` (ergots CAN hold the value) and
+    // faithful outcome is `not-implemented` (ergots HAS SAvlTree but lacks serialize(AvlTree)) —
     // NOT a crash — for EVERY entry (the second is no longer lost to the first's abort).
     const fixture = JSON.parse(
       readFileSync(path.resolve(here, '../../vectors/eval/v6/authored/Global.serialize_AvlTree.json'), 'utf8'),

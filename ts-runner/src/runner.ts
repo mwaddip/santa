@@ -19,7 +19,6 @@ interface Vector { schema: string; entries: Entry[] }
  *    - error null              → evaluated to a value (value + cost present)
  *    - error 'errored'         → the runner implements the op and eval threw (coarse; §7)
  *    - error 'not-implemented' → the runner has no impl for this op/method/type
- *    - error 'unrepresentable' → the runner HAS the type but can't represent this value
  *    - error 'panicked'        → an otherwise-uncaught throw on this entry, caught so the run
  *                                continues; value/cost null, message in `note`. Coal
  *                                unconditionally (§6) — a crash is not a clean rejection.
@@ -29,20 +28,13 @@ interface Vector { schema: string; entries: Entry[] }
 type Result = {
   value: Json
   cost: number | null
-  error: null | 'errored' | 'not-implemented' | 'unrepresentable' | 'panicked'
+  error: null | 'errored' | 'not-implemented' | 'panicked'
   note?: string
 }
 
 // Frozen so a consumer of the public runVector/runEntry API can't mutate the shared
-// singleton (these are returned by reference, not copied, on every gap/limit hit).
+// singleton (returned by reference, not copied, on every gap hit).
 const NOT_IMPL: Result = Object.freeze({ value: null, cost: null, error: 'not-implemented' })
-const UNREPRESENTABLE: Result = Object.freeze({ value: null, cost: null, error: 'unrepresentable' })
-
-/** ergots ReaderError code for an input the v5 codec cannot represent (a Header
- *  timestamp > Number.MAX_SAFE_INTEGER). Confirmed in @ergots/scorex header.ts:72. */
-function isReprLimit(err: unknown): boolean {
-  return (err as { code?: unknown })?.code === 'vlq-overflow'
-}
 
 /** Run one entry → exactly one Result. Never-panic invariant (runner-contract §3): any
  *  otherwise-uncaught throw — a malformed entry, an unexpected codec or internal error — is
@@ -74,8 +66,11 @@ function runEntryInner(schema: string, e: Entry): Result {
   }
 
   // [1] decode + bind input at ctx var 1 (v2 only).
-  //     A type the runner doesn't implement ⇒ not-implemented; an input it can't represent
-  //     (Header ts overflow ⇒ ReaderError 'vlq-overflow') ⇒ unrepresentable; else ⇒ panic-net.
+  //     A type the runner doesn't implement ⇒ not-implemented. ANY other decode failure —
+  //     including an input ergots' own codec rejects at runtime (e.g. a Header timestamp > 2⁵³,
+  //     which @ergots/scorex throws on as ReaderError 'vlq-overflow') — falls through to
+  //     runEntry's panic-net ⇒ `panicked`. We record ergots' ACTUAL failure (message in `note`);
+  //     we do not pre-classify it into a softer "unrepresentable" bucket on ergots' behalf.
   let ctx
   try {
     if (schema === 'santa-eval/v2') {
@@ -89,7 +84,6 @@ function runEntryInner(schema: string, e: Entry): Result {
     }
   } catch (err) {
     if (err instanceof UnsupportedTypeError) return NOT_IMPL
-    if (isReprLimit(err)) return UNREPRESENTABLE
     throw err
   }
 
