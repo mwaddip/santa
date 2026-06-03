@@ -105,21 +105,33 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     }
   })
 
-  it('a parse failure that is NOT an unsupported-type re-throws (no silent swallowing)', () => {
-    // The whole design rests on this: a decode/parse failure the runner does NOT recognize as
-    // an unsupported-type or a repr-limit must PROPAGATE, never become a tagged outcome. Empty
-    // tree bytes make parseTree throw ErgoTreeParseError('empty ErgoTree bytes', code 'empty') —
-    // code is NOT 'unsupported-type', so isUnsupportedType() is false and runEntry re-throws.
+  it('an unrecognized failure becomes `panicked` (note carries the message) and the run continues', () => {
+    // Never-panic invariant (runner-contract §3): a parse/codec failure the runner does NOT
+    // recognize as unsupported-type or a repr-limit must NOT abort the file — it becomes the
+    // `panicked` outcome (coal, message in `note`), and later entries still grade. Empty tree
+    // bytes make parseTree throw ErgoTreeParseError('empty ErgoTree bytes', code 'empty') —
+    // code is NOT 'unsupported-type', so it falls through to runEntry's panic-net.
     const vec = {
       schema: 'santa-eval/v2', op: 'malformed', blessed_by: 'x', source: 's',
-      entries: [{
-        name: 'oops', tree_bytes_hex: '',
-        version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null },
-      }],
+      entries: [
+        { name: 'oops', tree_bytes_hex: '',
+          version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null } },
+        // A valid entry AFTER the panic — it must still produce its outcome (run continues).
+        // This is the Coll.indices tree from the v2 test above → [0,1], cost 96.
+        { name: 'after', tree_bytes_hex: '1b1000dad9010110db0c0e720101e4e30110',
+          input: { kind: 'Coll', elem: { tag: 'SInt' }, items: [{ kind: 'Int', value: 1 }, { kind: 'Int', value: 2 }] },
+          version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null } },
+      ],
     }
-    // Pin the message so this guards the parseTree re-throw arm specifically — if `throw err`
-    // were replaced by a swallow (e.g. returning an `errored` Result), runVector would NOT throw
-    // and this expectation would fail.
-    expect(() => runVector(vec)).toThrow(/empty ErgoTree bytes/)
+    const actuals = runVector(vec)
+    expect(actuals['oops'].error).toBe('panicked')
+    expect(actuals['oops'].value).toBeNull()
+    expect(actuals['oops'].cost).toBeNull()
+    expect(actuals['oops'].note).toMatch(/empty ErgoTree bytes/)
+    // run continues: the second entry still grades
+    expect(actuals['after']).toEqual({
+      value: { kind: 'Coll', elem: { tag: 'SInt' }, items: [{ kind: 'Int', value: 0 }, { kind: 'Int', value: 1 }] },
+      cost: 96, error: null,
+    })
   })
 })

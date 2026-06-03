@@ -4,6 +4,7 @@ import { parseSValue } from '@ergots/ergoscript'
 import { ByteReader } from '@ergots/scorex'
 import { encodeSValue } from '../src/encode'
 import { hexToBytes } from '../src/hex'
+import { UnsupportedTypeError } from '../src/abstain'
 
 describe('encode — primitives', () => {
   it('Boolean → bare bool', () => {
@@ -29,6 +30,10 @@ describe('encode — primitives', () => {
   })
   it('unmodeled result kind (String) → loud throw', () => {
     expect(() => encodeSValue({ kind: 'String', value: 'x' } as SValue, 3)).toThrow(/unmodeled|unexpected/i)
+  })
+  it('UnsignedBigInt result kind → UnsupportedTypeError (deliberate not-impl, decode-consistent)', () => {
+    expect(() => encodeSValue({ kind: 'UnsignedBigInt', value: '42' } as unknown as SValue, 3))
+      .toThrow(UnsupportedTypeError)
   })
 })
 
