@@ -213,4 +213,18 @@ class EvalCoreTest extends munit.FunSuite {
       case Left(reason) => fail(s"expected Right for a decodable input, got Left: $reason")
     }
   }
+
+  // ── evalWithInputExtensions (Task 1) ────────────────────────────────────────
+  // getVarFromInput[Boolean](0,11): reads var 11 from input 0's ContextExtension.
+  // With a binding present  → Some(true)  / cost 17
+  // With an empty extension → None        / cost 17
+  test("evalWithInputExtensions reads getVarFromInput from input 0 extension") {
+    val treeHex = "1b0f020300020bdc650cfe027300730101" // getVarFromInput[Boolean](0,11)
+    def run(ext: Map[Byte, sigma.ast.EvaluatedValue[_ <: sigma.ast.SType]]) =
+      EvalCore.evalWithInputExtensions(treeHex, Seq(ext), activated = 3)._2
+    def json(s: String) = io.circe.parser.parse(s).toOption.get
+    assertEquals(run(Map(11.toByte -> sigma.ast.BooleanConstant(true))),
+      Right((json("""{"kind":"Option","value":{"kind":"Boolean","value":true}}"""), 17L)))
+    assertEquals(run(Map.empty), Right((json("""{"kind":"Option","value":null}"""), 17L)))
+  }
 }

@@ -5,7 +5,7 @@ import scorex.util.encode.Base16
 
 import io.circe.Json
 
-import org.ergoplatform.{ErgoBox, ErgoHeader, ErgoLikeContext, ErgoLikeTransaction}
+import org.ergoplatform.{ErgoBox, ErgoHeader, ErgoLikeContext, ErgoLikeTransaction, Input}
 import org.ergoplatform.validation.ValidationRules
 
 import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
@@ -19,7 +19,7 @@ import sigma.ast.{
 }
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
-import sigma.interpreter.ContextExtension
+import sigma.interpreter.{ContextExtension, ProverResult}
 import sigma.serialization.{DataSerializer, GroupElementSerializer, SigmaSerializer}
 import sigma.util.Extensions.EcpOps
 
@@ -541,6 +541,58 @@ object EvalCore {
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
           val (v, _blockCost) = CErgoTreeEvaluator.eval(
+            ctx.toSigmaContext(), acc, tree.constants,
+            tree.toProposition(replaceConstants = false), DefaultEvalSettings)
+          (v, acc.totalCost.value)
+        }
+        (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
+      } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
+    } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
+
+  // ── Context with per-input extensions (santa-eval/v3, getVarFromInput) ──────────
+
+  /** Dummy context whose spending-tx inputs each carry a ContextExtension (read by
+    * getVarFromInput). Mirrors contextWithVar1, but the extensions go on the inputs,
+    * not the top-level (var 1). */
+  private def contextWithInputExtensions(tree: ErgoTree, activatedVersion: Byte,
+      inputExtensions: Seq[Map[Byte, EvaluatedValue[_ <: SType]]]): ErgoLikeContext = {
+    val selfBox = new ErgoBox(
+      value = 1000000L, ergoTree = tree,
+      transactionId = bytesToId(Array.fill(32)(0: Byte)), index = 0.toShort, creationHeight = 0)
+    val inputs = inputExtensions.map(ext =>
+      Input(selfBox.id, new ProverResult(Array.emptyByteArray, ContextExtension(ext)))).toIndexedSeq
+    new ErgoLikeContext(
+      lastBlockUtxoRoot = AvlTreeData.dummy,
+      headers = Colls.emptyColl[Header],
+      preHeader = dummyPreHeader(0),
+      dataBoxes = IndexedSeq.empty,
+      boxesToSpend = IndexedSeq(selfBox),
+      spendingTransaction = ErgoLikeTransaction(inputs, IndexedSeq()),
+      selfIndex = 0,
+      extension = ContextExtension.empty,
+      validationSettings = ValidationRules.currentSettings,
+      costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
+      initCost = 0L,
+      activatedScriptVersion = activatedVersion
+    ).withErgoTreeVersion(tree.version)
+  }
+
+  /** Eval a tree against a context carrying per-input extensions → (value JSON, cost) or a
+    * coarse error. Parallel to evalApplied; for santa-eval/v3 (getVarFromInput) vectors. */
+  def evalWithInputExtensions(treeBytesHex: String,
+      inputExtensions: Seq[Map[Byte, EvaluatedValue[_ <: SType]]],
+      activated: Byte): (Byte, Either[String, (Json, Long)]) =
+    try {
+      val bytes   = Base16.decode(treeBytesHex).get
+      val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
+      val treeVer = tree.version
+      try {
+        val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
+          val ctx = contextWithInputExtensions(tree, activated, inputExtensions)
+          val acc = new CostAccumulator(
+            initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
+            costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
+          val (v, _) = CErgoTreeEvaluator.eval(
             ctx.toSigmaContext(), acc, tree.constants,
             tree.toProposition(replaceConstants = false), DefaultEvalSettings)
           (v, acc.totalCost.value)
