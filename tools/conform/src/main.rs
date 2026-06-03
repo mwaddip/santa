@@ -2,7 +2,7 @@
 //! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
 //! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
 //! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
-use santa_check::grade;
+use santa_check::{grade, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -224,12 +224,15 @@ struct Counts {
     reject_nice: u64,
     reject_coal: u64,
     panicked: u64,
+    roundtrip_total: u64,
+    roundtrip_nice: u64,
+    roundtrip_coal: u64,
     red: Vec<Value>,
 }
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.unrepr + self.cost_coal + self.reject_coal + self.panicked
+        self.value_coal + self.not_impl + self.unrepr + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal
     }
     fn to_json(&self) -> Value {
         json!({
@@ -238,12 +241,17 @@ impl Counts {
             "cost_graded": self.cost_graded, "cost_nice": self.cost_nice, "cost_coal": self.cost_coal,
             "reject_total": self.reject_total, "reject_nice": self.reject_nice, "reject_coal": self.reject_coal,
             "panicked": self.panicked,
+            "roundtrip_total": self.roundtrip_total, "roundtrip_nice": self.roundtrip_nice, "roundtrip_coal": self.roundtrip_coal,
             "red": self.red,
         })
     }
     /// The human summary line printed after "tier/version/prov: " in the run loop.
     fn summary(&self) -> String {
         let mut bits: Vec<String> = Vec::new();
+        // wire slices carry only the round-trip dimension (+ any coverage/panicked gaps below).
+        if self.roundtrip_total > 0 {
+            bits.push(format!("roundtrip {}/{}", self.roundtrip_nice, self.roundtrip_total));
+        }
         if self.value_total > 0 {
             bits.push(format!("value {}/{}", self.value_nice, self.value_total));
             if self.value_coal > 0 {
@@ -280,10 +288,17 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         let c = slices.entry((tier, version, prov)).or_default();
         let vec: Value =
             serde_json::from_str(&fs::read_to_string(root.join("vectors").join(rel)).unwrap()).unwrap();
+        // Dispatch on the vector's schema discriminator: wire grades a single round-trip verdict
+        // (expected IS the entry's own bytes_hex), eval grades value/cost against e["expected"].
+        let is_wire = vec["schema"].as_str().is_some_and(|s| s.starts_with("santa-wire/"));
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
-            let g = grade(&actual, &e["expected"], claims_cost);
+            let g = if is_wire {
+                grade_wire(&actual, e)
+            } else {
+                grade(&actual, &e["expected"], claims_cost)
+            };
             match g["kind"].as_str() {
                 Some("panicked") => {
                     c.panicked += 1;
@@ -306,6 +321,15 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                     } else {
                         c.reject_coal += 1;
                         c.red.push(json!({"op": op, "entry": name, "dim": "reject"}));
+                    }
+                }
+                Some("roundtrip") => {
+                    c.roundtrip_total += 1;
+                    if g["verdict"] == "nice" {
+                        c.roundtrip_nice += 1;
+                    } else {
+                        c.roundtrip_coal += 1;
+                        c.red.push(json!({"op": op, "entry": name, "dim": "roundtrip"}));
                     }
                 }
                 _ => {
@@ -527,5 +551,46 @@ mod tests {
             ..Default::default()
         };
         assert_eq!(c.summary(), "value 10/10 · 254 not-impl · 2 unrepr · cost 10/10 · reject 3/3");
+    }
+
+    #[test]
+    fn summary_and_red_total_count_roundtrip() {
+        // A wire slice: the single round-trip dimension renders, and the differs count as red.
+        let c = super::Counts { roundtrip_total: 4, roundtrip_nice: 3, roundtrip_coal: 1, ..Default::default() };
+        assert_eq!(c.summary(), "roundtrip 3/4");
+        assert_eq!(c.red_total(), 1);
+    }
+
+    #[test]
+    fn tally_grades_wire_roundtrip_against_committed_box_vector() {
+        use serde_json::{json, Map, Value};
+        use std::collections::BTreeMap;
+        let root = super::repo_root();
+        let rel = "wire/v5/authored/Box.json".to_string();
+        let vec: Value =
+            serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&rel)).unwrap()).unwrap();
+        let entries = vec["entries"].as_array().unwrap();
+        let key = ("wire".to_string(), "v5".to_string(), "authored".to_string());
+
+        // Echo actuals: every entry reserializes to its own committed bytes -> all round-trip nice.
+        let mut act = Map::new();
+        for e in entries {
+            act.insert(e["name"].as_str().unwrap().to_string(), json!({"bytes_hex": e["bytes_hex"], "error": null}));
+        }
+        let mut actuals = BTreeMap::new();
+        actuals.insert(rel.clone(), Value::Object(act.clone()));
+        let c = &super::tally(&actuals, true, &root)[&key];
+        assert_eq!(c.roundtrip_total, entries.len() as u64);
+        assert_eq!(c.roundtrip_nice, entries.len() as u64);
+        assert_eq!(c.red_total(), 0);
+
+        // Corrupt one reserialization -> exactly one differ (coal), tagged dim "roundtrip".
+        act.insert(entries[0]["name"].as_str().unwrap().to_string(), json!({"bytes_hex": "00", "error": null}));
+        let mut actuals2 = BTreeMap::new();
+        actuals2.insert(rel, Value::Object(act));
+        let c2 = &super::tally(&actuals2, true, &root)[&key];
+        assert_eq!(c2.roundtrip_coal, 1);
+        assert_eq!(c2.red_total(), 1);
+        assert_eq!(c2.red[0]["dim"], "roundtrip");
     }
 }

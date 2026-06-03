@@ -140,8 +140,9 @@ contract's totality model with `value`+`cost` replaced by a single `bytes_hex`:
   bytes-present invariant.
 - **santa-check:** a wire branch keyed on the `santa-wire/v1` discriminator — grade = `bytes_hex`
   string-equality (lower-case, exact) + `error` match, a single `roundtrip` verdict (no value/cost
-  split). Extends `oracle/verdicts.json` with wire meta-vectors (round-trip-ok / bytes-differ /
-  not-impl / unrepr).
+  split). Adds a sibling `oracle/verdicts-wire.json` (`santa-oracle-wire/v1`) of wire meta-vectors
+  (round-trip-ok / bytes-differ / not-impl / panicked) — a sibling, not an extension of
+  `verdicts.json`, mirroring the wire *schemas* being siblings of the eval pair.
 - **conform / results.json:** wire vectors grade alongside eval; `results.json` gains wire slices
   (dimension `roundtrip`). Runners declare `tiers` including `wire`; presence-as-state unchanged.
 - **scoreboard:** wire rows render green (round-trip-ok) / red (N bytes-differ) / grey (out of
@@ -174,7 +175,7 @@ the wire reject/mutation arm (malformed bytes a real parser must reject — an e
 0. Schemas (`santa-wire.{vector,actuals}`) + `tools/validate` coverage.
 1. `WireCanonicalize` + `AuthoredWire` blesser; harvest ergots' wire corpus → `wire/v5/authored/*`,
    anchored TDD (`AuthoredWireTest` pins each canonical `bytes_hex` + any JVM-vs-sigma-rust finding).
-2. santa-check wire branch + `oracle/verdicts.json` wire meta-vectors; conform/results wire slices.
+2. santa-check wire branch + `oracle/verdicts-wire.json` wire meta-vectors; conform/results wire slices.
 3. Wire runner shape on the serializers already wired — rudolph (control, trivially green: it *is*
    the canonicalizer), dasher (`@ergots/ergoscript` + `@ergots/scorex`), blitzen-eni/develop
    (`sigma_parse`/`sigma_serialize`). Scoreboard wire cells.
@@ -187,7 +188,7 @@ the wire reject/mutation arm (malformed bytes a real parser must reject — an e
   (parse→reserialize per `kind`).
 - **schema:** the two new files validate; `tools/validate` count bumps.
 - **conform:** wire slices grade across rudolph/dasher/blitzen×2; rudolph all round-trip-ok.
-- **santa-check:** `oracle/verdicts.json` wire branch reproduced by `tests/oracle.rs`.
+- **santa-check:** `oracle/verdicts-wire.json` reproduced by `tests/oracle.rs` (alongside the eval oracle).
 
 ## Out of scope / Deferred
 

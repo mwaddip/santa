@@ -1,0 +1,40 @@
+{
+  "schema": "santa-oracle-wire/v1",
+  "description": "Wire-tier verdict meta-vectors: (actual, expected) -> grade_wire verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the wire-tier grading from docs/specs/wire-tier.md: a single round-trip judgment (bytes_hex lower-case exact-equality + error null), no value/cost split; not-implemented and panicked reuse the eval coverage/panicked verdict shapes (conform tallies them uniformly across tiers). The blessed expected IS the entry's own bytes_hex (round-trip to self).",
+  "cases": [
+    {"name": "roundtrip-ok",
+     "actual":   {"bytes_hex": "c0843d09", "error": null},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "roundtrip", "verdict": "nice"}},
+
+    {"name": "roundtrip-ok-hex-case-insensitive",
+     "actual":   {"bytes_hex": "C0843D09", "error": null},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "roundtrip", "verdict": "nice"}},
+
+    {"name": "bytes-differ-is-coal",
+     "actual":   {"bytes_hex": "c0843d0900", "error": null},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "roundtrip", "verdict": "differ"}},
+
+    {"name": "errored-reserialize-is-differ",
+     "actual":   {"bytes_hex": null, "error": "errored"},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "roundtrip", "verdict": "differ"}},
+
+    {"name": "not-implemented-is-coverage",
+     "actual":   {"bytes_hex": null, "error": "not-implemented"},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "coverage", "tag": "not-implemented"}},
+
+    {"name": "panicked-is-coal",
+     "actual":   {"bytes_hex": null, "error": "panicked", "note": "boom in the box serializer"},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "panicked"}},
+
+    {"name": "totality-breach-null-actual-is-differ",
+     "actual":   null,
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "roundtrip", "verdict": "differ"}}
+  ]
+}

@@ -87,3 +87,31 @@ pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
     };
     json!({"kind": "accept", "value": value, "cost": cost})
 }
+
+/// §6 wire-tier verdict: a single round-trip judgment. The blessed expected IS the entry's own
+/// `bytes_hex` (round-trip to self), so grading is `bytes_hex` lower-case exact-equality + `error`
+/// null -> a `roundtrip` nice/differ verdict — no value/cost split (the wire tier has no cost
+/// dimension). `not-implemented` (no serializer for this kind) and `panicked` (a runner crash) reuse
+/// the eval `coverage`/`panicked` verdict shapes, so conform tallies them uniformly across tiers; a
+/// non-null `errored` / a byte mismatch / a null actual (totality breach) is differ (coal).
+pub fn grade_wire(actual: &Value, expected: &Value) -> Value {
+    if actual.is_null() {
+        return json!({"kind": "roundtrip", "verdict": "differ"});
+    }
+    if err_is(actual, "panicked") {
+        return json!({"kind": "panicked"});
+    }
+    if err_is(actual, "not-implemented") {
+        return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+    let ok = actual.get("error").map_or(true, Value::is_null)
+        && hex_eq(actual.get("bytes_hex"), expected.get("bytes_hex"));
+    json!({"kind": "roundtrip", "verdict": if ok { "nice" } else { "differ" }})
+}
+
+/// Lower-case exact hex equality (the wire grade's byte comparison). Either side absent/non-string
+/// (e.g. the null `bytes_hex` carried by an errored actual) -> not equal.
+fn hex_eq(a: Option<&Value>, b: Option<&Value>) -> bool {
+    matches!((a.and_then(Value::as_str), b.and_then(Value::as_str)),
+        (Some(x), Some(y)) if x.eq_ignore_ascii_case(y))
+}

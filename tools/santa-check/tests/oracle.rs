@@ -1,6 +1,6 @@
 //! Prove santa-check reproduces the SANTA verdict-oracle (../../oracle/*.json) — §6 made executable,
 //! the same contract tools/test_oracle.py holds compare.py to. Both must agree on every verdict.
-use santa_check::grade;
+use santa_check::{grade, grade_wire};
 use serde_json::Value;
 use std::{fs, path::Path};
 
@@ -15,11 +15,16 @@ fn reproduces_verdict_oracle() {
             continue;
         }
         let doc: Value = serde_json::from_str(&fs::read_to_string(&p).unwrap()).unwrap();
+        let wire = doc["schema"] == "santa-oracle-wire/v1";
         for c in doc["cases"].as_array().expect("cases[]") {
             total += 1;
-            let got = grade(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap());
+            let got = if wire {
+                grade_wire(&c["actual"], &c["expected"])
+            } else {
+                grade(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap())
+            };
             if got != c["verdict"] {
-                fails.push(format!("{}: got {} want {}", c["name"], got, c["verdict"]));
+                fails.push(format!("{} [{}]: got {} want {}", c["name"], p.display(), got, c["verdict"]));
             }
         }
     }
