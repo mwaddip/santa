@@ -163,10 +163,17 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  td.na {{ background: #f7f7f7; color: #aaa; text-align: center; }}
  .src {{ color: #666; font-size: .8rem; font-weight: normal; }}
  .meta {{ color: #666; font-size: .85rem; }}
+ .legend {{ margin-top: 1rem; font-size: .9rem; }}
+ .legend > div {{ margin: .2rem 0; }}
+ .legend .sw {{ display: inline-block; width: .9em; height: .9em; border: 1px solid #ccc; vertical-align: -.1em; margin-right: .45em; }}
+ .legend .sw.nice {{ background: #e7f6e7; }}
+ .legend .sw.partial {{ background: #fdf0c4; }}
+ .legend .sw.coal {{ background: #fde6e6; }}
+ .legend .sw.na {{ background: #f7f7f7; }}
+ .legend .hint {{ color: #666; margin-top: .5rem; }}
 </style></head><body>
 <h1>SANTA conformance scoreboard</h1>
-<p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.
-Cells: <b>green</b> = value+cost pass · <b>amber</b> = value-only pass (cost not graded) · <b>red</b> {coal_icon} N = N divergences (the deliverable) · <b>grey</b> — = not in scope. Hover a cell for the value/cost/reject/unrepr breakdown. Generated from <code>{escaped_git_ref}</code>.</p>
+<p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.</p>
 <table>
 <thead>
 {header}
@@ -174,6 +181,14 @@ Cells: <b>green</b> = value+cost pass · <b>amber</b> = value-only pass (cost no
 <tbody>
 {body}</tbody>
 </table>
+<div class="legend">
+<div><span class="sw nice"></span><b>green</b> — value + cost pass</div>
+<div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
+<div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
+<div><span class="sw na"></span><b>grey</b> — not in scope</div>
+<div class="hint">Hover a cell for the value / cost / reject / unrepr breakdown.</div>
+</div>
+<p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
 "#
     )
