@@ -283,6 +283,40 @@ object SpecExtract {
   def authoredEnvelope(op: String, entries: Seq[Json], source: String): Json =
     envelope(op, entries, source)
 
+  /** Author one santa-eval/v3 entry: extensions given as {varId -> SValue JSON} per input,
+    * decoded to Constants for the eval and written verbatim into the vector. JVM blesses
+    * value+cost via evalWithInputExtensions (the oracle; no spec-declared expected to cross-check). */
+  def authoredV3Entry(op: String, script: String, treeBytesHex: String, name: String,
+      inputExtensionsJson: Seq[Map[Byte, Json]], activated: Byte): Json = {
+    val inputExtensions =
+      inputExtensionsJson.map(_.map { case (id, j) => id -> EvalCore.decodeInputConstant(j) })
+    val (_, outcome) = EvalCore.evalWithInputExtensions(treeBytesHex, inputExtensions, activated)
+    val (valueJson, cost) = outcome match {
+      case Right(vc) => vc
+      case Left(err) => sys.error(s"authoredV3Entry: eval failed for '$op' ($script): $err")
+    }
+    val inputsJson = inputExtensionsJson.map { ext =>
+      Json.obj("extension" -> Json.obj(
+        ext.toSeq.sortBy(_._1).map { case (id, j) => (id & 0xff).toString -> j }: _*))
+    }
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "inputs"         -> Json.arr(inputsJson: _*),
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+      "expected"       -> Json.obj("value" -> valueJson, "cost" -> Json.fromLong(cost), "error" -> Json.Null))
+  }
+
+  def authoredV3Envelope(op: String, entries: Seq[Json], source: String): Json =
+    Json.obj(
+      "schema"     -> Json.fromString("santa-eval/v3"),
+      "op"         -> Json.fromString(op),
+      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.3"),
+      "source"     -> Json.fromString(source),
+      "entries"    -> Json.arr(entries: _*))
+
   /** Encode captured cases into an ExtractResult: group by op; quarantine any op whose
     * property threw mid-capture (its Capture list may be truncated, so it must never
     * ship); encode the rest via `toEntry` (Opaque/unsupported-kind cases are skipped
