@@ -25,7 +25,7 @@ run(vector) → actuals
   optional `input`) case with the **blessed** `expected` result the JVM reference produced.
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
   runner's *own* `{ value, cost, error }` for that entry, where `error` is the outcome tag
-  (§3) — `null` on success, else `errored` / `not-implemented` / `unrepresentable`.
+  (§3) — `null` on success, else `errored` / `not-implemented` / `unrepresentable` / `panicked`.
 
 Conformance is then a separate comparison step (§5): an entry is **nice** when the
 runner's actual equals the vector's blessed `expected`, **a lump of coal** otherwise.
@@ -63,6 +63,11 @@ because "equal" is pinned (§5).
 - **Failure:** `{ "value": null, "cost": null, "error": "errored" }`.
 - **Not-implemented:** `{ "value": null, "cost": null, "error": "not-implemented" }` — the runner has no implementation for this op/method/type.
 - **Unrepresentable:** `{ "value": null, "cost": null, "error": "unrepresentable" }` — the runner *has* the type but cannot represent this value.
+- **Panicked:** `{ "value": null, "cost": null, "error": "panicked", "note": "<message>" }` — an
+  otherwise-uncaught internal error on this entry, caught so the run continues. Graded coal
+  **unconditionally** (§5/§6), even against a reject-expected vector: a crash is not a clean
+  rejection (hence a distinct tag, not a reuse of `errored`). `note` (present iff
+  `error == "panicked"`) carries the message for diagnosis.
 - **Value-success with cost not claimed:** `{ "value": <SValue>, "cost": null, "error": null }` — the
   runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
   This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
@@ -72,16 +77,19 @@ because "equal" is pinned (§5).
 ### Invariants (hold for any runner, any vector)
 - **Determinism.** Same vector → byte-stable actuals on every run. No clocks, no RNG, no
   ambient state.
-- **Totality.** Every input entry yields exactly one outcome — success, `errored`,
-  `not-implemented`, or `unrepresentable`. A runner never silently drops or omits an entry,
-  and an entry that fails in a *recognized* way (`errored`) never aborts the file. A failure
-  the runner does **not** recognize — a malformed vector, an unexpected codec or internal
-  error — is instead **propagated as a loud error** (aborting the run), never mislabeled as
-  one of the four outcomes: surfacing a real bug always beats silently absorbing it.
+- **Totality & never-panic.** Every input entry yields exactly one outcome — success,
+  `errored`, `not-implemented`, `unrepresentable`, or `panicked`. A runner never silently
+  drops or omits an entry, and **no single entry may abort the file.** An entry that fails in
+  a *recognized* way (`errored`) is a normal outcome; a failure the runner does **not**
+  recognize — a malformed vector, an unexpected codec or internal error — is **caught and
+  surfaced as `panicked`** (coal, message in `note`), never propagated as a process-aborting
+  error. Surfacing a crash as a visible divergence beats both silently absorbing it and
+  aborting the whole run.
 - **No abstention; scope is an input-side selection.** A runner emits a faithful outcome
   for **every entry of every vector it is given** — including `not-implemented` (an
-  op/method/type it doesn't implement) and `unrepresentable` (a type it has but a value it
-  can't hold). It never omits an entry or suppresses a would-diverge result to look
+  op/method/type it doesn't implement), `unrepresentable` (a type it has but a value it
+  can't hold), and `panicked` (an uncaught internal error, always coal). It never omits an
+  entry or suppresses a would-diverge result to look
   conformant. A conformer expresses its scope by **which vectors it is run against**: the
   corpus is version-split (`vectors/eval/{v5,v6}/`), so a v5-only conformer runs the v5
   subset and never sees a v6 vector. Which entries "count" — and how they slice into
@@ -161,7 +169,7 @@ whitespace as drift sources, and is implementable identically in any language.
   (coal on the cost verdict), the value verdict unaffected.
 - **`error` is compared as an exact string.** A committed `expected`'s `error` is always
   `null` (success) or `"errored"` (failure) — there is **no error taxonomy at the eval
-  tier** (§7). An *actual* may also be `not-implemented` or `unrepresentable` (§3); by
+  tier** (§7). An *actual* may also be `not-implemented`, `unrepresentable`, or `panicked` (§3); by
   construction those never appear in `expected`, so they match neither and score a lump of
   coal (see below).
 - **On an errored entry, `cost` is `null`** (an aborted evaluation has no well-defined
@@ -173,7 +181,9 @@ Because the blessing oracle implements the full language and the bless-time
 wire-encodability gate drops un-ingestable inputs, a committed `expected` is always
 `success` or `errored` — so these two tags never match and always score a lump of coal.
 That is intentional: they are always real findings (a coverage gap or a representation
-bug), surfaced rather than hidden.
+bug), surfaced rather than hidden. `panicked` is coal **unconditionally** — unlike `errored`
+it never matches a reject-expected `expected` (a crash is not a clean rejection), which is
+why it is a distinct tag rather than a refinement of `errored`.
 
 A vector is **nice** for a runner iff every entry is nice; one lump of coal makes the runner
 **naughty** on that vector.
