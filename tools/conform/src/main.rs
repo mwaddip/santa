@@ -223,12 +223,13 @@ struct Counts {
     reject_total: u64,
     reject_nice: u64,
     reject_coal: u64,
+    panicked: u64,
     red: Vec<Value>,
 }
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.unrepr + self.cost_coal + self.reject_coal
+        self.value_coal + self.not_impl + self.unrepr + self.cost_coal + self.reject_coal + self.panicked
     }
     fn to_json(&self) -> Value {
         json!({
@@ -236,6 +237,7 @@ impl Counts {
             "not_impl": self.not_impl, "unrepr": self.unrepr,
             "cost_graded": self.cost_graded, "cost_nice": self.cost_nice, "cost_coal": self.cost_coal,
             "reject_total": self.reject_total, "reject_nice": self.reject_nice, "reject_coal": self.reject_coal,
+            "panicked": self.panicked,
             "red": self.red,
         })
     }
@@ -255,6 +257,9 @@ impl Counts {
         }
         if self.unrepr > 0 {
             bits.push(format!("{} unrepr", self.unrepr));
+        }
+        if self.panicked > 0 {
+            bits.push(format!("{} panicked", self.panicked));
         }
         if self.cost_graded > 0 {
             bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
@@ -280,6 +285,11 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
             let g = grade(&actual, &e["expected"], claims_cost);
             match g["kind"].as_str() {
+                Some("panicked") => {
+                    c.panicked += 1;
+                    c.red.push(json!({"op": op, "entry": name, "dim": "panicked",
+                        "note": actual.get("note").cloned().unwrap_or(Value::Null)}));
+                }
                 Some("coverage") => {
                     let tag = g["tag"].as_str().unwrap();
                     if tag == "not-implemented" {
@@ -493,6 +503,13 @@ mod tests {
         // 1 unrepr) printed a blank line before this was pinned.
         let c = super::Counts { not_impl: 22, unrepr: 1, ..Default::default() };
         assert_eq!(c.summary(), "22 not-impl · 1 unrepr");
+    }
+
+    #[test]
+    fn summary_and_red_total_count_panicked() {
+        let c = super::Counts { panicked: 2, ..Default::default() };
+        assert_eq!(c.summary(), "2 panicked");
+        assert_eq!(c.red_total(), 2);
     }
 
     #[test]
