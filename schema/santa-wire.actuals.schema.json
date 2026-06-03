@@ -14,8 +14,12 @@
       "properties": {
         "bytes_hex": { "oneOf": [ { "$ref": "#/$defs/hex" }, { "type": "null" } ] },
         "error": {
-          "description": "null = round-tripped to bytes; 'errored' = parse/reserialize threw; 'not-implemented' = no serializer for this kind; 'unrepresentable' = has the kind, can't hold this value.",
-          "enum": [null, "errored", "not-implemented", "unrepresentable"]
+          "description": "null = round-tripped to bytes; 'errored' = parse/reserialize threw; 'not-implemented' = no serializer for this kind; 'unrepresentable' = has the kind, can't hold this value; 'panicked' = an uncaught internal error, caught so the run continues (always coal, message in 'note').",
+          "enum": [null, "errored", "not-implemented", "unrepresentable", "panicked"]
+        },
+        "note": {
+          "description": "Panic message/class. Present iff error == 'panicked'; forbidden otherwise.",
+          "type": "string"
         }
       },
       "allOf": [
@@ -24,6 +28,12 @@
           "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
           "then": { "required": ["bytes_hex"], "not": { "properties": { "bytes_hex": { "type": "null" } } } },
           "else": { "properties": { "bytes_hex": { "type": "null" } } }
+        },
+        {
+          "$comment": "note present iff error is 'panicked'; forbidden otherwise.",
+          "if": { "properties": { "error": { "const": "panicked" } }, "required": ["error"] },
+          "then": { "required": ["note"] },
+          "else": { "not": { "required": ["note"] } }
         }
       ]
     },

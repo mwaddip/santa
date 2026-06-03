@@ -214,6 +214,10 @@ fn actuals_guards(v: &Validator) -> u32 {
         ("success w/ null cost accepted", json!({"x#0": {"value": {"kind": "Int", "value": 6}, "cost": null, "error": null}}), true),
         ("Long as number rejected", json!({"x#0": {"value": {"kind": "Long", "value": 9000000000i64}, "cost": 1, "error": null}}), false),
         ("Int as string rejected", json!({"x#0": {"value": {"kind": "Int", "value": "42"}, "cost": 1, "error": null}}), false),
+        ("panicked carries note", json!({"x#0": {"value": null, "cost": null, "error": "panicked", "note": "boom: unmodeled kind"}}), true),
+        ("panicked without note rejected", json!({"x#0": {"value": null, "cost": null, "error": "panicked"}}), false),
+        ("note on non-panicked rejected", json!({"x#0": {"value": null, "cost": null, "error": "errored", "note": "x"}}), false),
+        ("panicked w/ non-null value rejected", json!({"x#0": {"value": {"kind": "Int", "value": 6}, "cost": null, "error": "panicked", "note": "b"}}), false),
     ];
     println!("\n[actuals] asymmetry guards:");
     let mut bad: u32 = 0;
@@ -299,6 +303,9 @@ fn wire_actuals_guards(v: &Validator) -> u32 {
         ("errored w/ bytes rejected", json!({"e#0": {"bytes_hex": "c0", "error": "errored"}}), false),
         ("upper-case hex rejected", json!({"e#0": {"bytes_hex": "C0", "error": null}}), false),
         ("extra cost field rejected", json!({"e#0": {"bytes_hex": "c0", "error": null, "cost": 1}}), false),
+        ("panicked carries note", json!({"e#0": {"bytes_hex": null, "error": "panicked", "note": "boom"}}), true),
+        ("panicked without note rejected", json!({"e#0": {"bytes_hex": null, "error": "panicked"}}), false),
+        ("note on non-panicked rejected", json!({"e#0": {"bytes_hex": null, "error": "errored", "note": "x"}}), false),
     ];
     println!("\n[wire actuals] asymmetry guards:");
     let mut bad: u32 = 0;

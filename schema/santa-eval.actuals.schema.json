@@ -8,7 +8,7 @@
   "additionalProperties": { "$ref": "#/$defs/result" },
   "$defs": {
     "result": {
-      "description": "One entry's actual outcome (runner-contract §3). Success: value (SValue) + cost (number) + error null. Otherwise value null + cost null + error one of 'errored' / 'not-implemented' / 'unrepresentable'. A vector's `expected` uses the narrower {null, errored} subset (the oracle never abstains).",
+      "description": "One entry's actual outcome (runner-contract §3). Success: value (SValue) + cost (number) + error null. Otherwise value null + cost null + error one of 'errored' / 'not-implemented' / 'unrepresentable' / 'panicked' (the last carrying a 'note'). A vector's `expected` uses the narrower {null, errored} subset (the oracle never abstains).",
       "type": "object",
       "required": ["value", "cost", "error"],
       "additionalProperties": false,
@@ -25,8 +25,12 @@
           "minimum": 0
         },
         "error": {
-          "description": "Outcome tag (runner-contract §3): null = evaluated to a value; 'errored' = runner implements the op and eval threw (coarse — no reason taxonomy, §7); 'not-implemented' = runner has no impl for this op/method/type; 'unrepresentable' = runner has the type but cannot represent this value. Any non-null tag has value:null and cost:null.",
-          "enum": [null, "errored", "not-implemented", "unrepresentable"]
+          "description": "Outcome tag (runner-contract §3): null = evaluated to a value; 'errored' = runner implements the op and eval threw (coarse — no reason taxonomy, §7); 'not-implemented' = runner has no impl for this op/method/type; 'unrepresentable' = runner has the type but cannot represent this value; 'panicked' = an otherwise-uncaught internal error on this entry, caught so the run continues — always coal (§6), with the message in 'note'. Any non-null tag has value:null and cost:null.",
+          "enum": [null, "errored", "not-implemented", "unrepresentable", "panicked"]
+        },
+        "note": {
+          "description": "Panic message/class, for diagnosis. Present iff error == 'panicked'; forbidden otherwise.",
+          "type": "string"
         }
       },
       "allOf": [
@@ -49,6 +53,12 @@
               "cost": { "type": "null" }
             }
           }
+        },
+        {
+          "$comment": "note present iff error is 'panicked'; forbidden on every other outcome.",
+          "if": { "properties": { "error": { "const": "panicked" } }, "required": ["error"] },
+          "then": { "required": ["note"] },
+          "else": { "not": { "required": ["note"] } }
         }
       ]
     }

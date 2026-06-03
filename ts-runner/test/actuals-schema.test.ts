@@ -24,4 +24,20 @@ describe('encoder/runner output validates against the frozen actuals schema', ()
     expect(validate.errors ?? []).toEqual([])
     expect(ok).toBe(true)
   })
+
+  it('a panicked actuals object (value/cost null + note) validates', () => {
+    const ok = validate({
+      'x#0': { value: null, cost: null, error: 'panicked', note: 'ErgoTreeParseError: empty ErgoTree bytes' },
+    })
+    expect(validate.errors ?? []).toEqual([])
+    expect(ok).toBe(true)
+  })
+
+  it('panicked without a note is rejected', () => {
+    expect(validate({ 'x#0': { value: null, cost: null, error: 'panicked' } })).toBe(false)
+  })
+
+  it('a note on a non-panicked outcome is rejected', () => {
+    expect(validate({ 'x#0': { value: null, cost: null, error: 'errored', note: 'x' } })).toBe(false)
+  })
 })
