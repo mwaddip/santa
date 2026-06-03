@@ -87,6 +87,24 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     expect(actuals[overflowEntry.name]).toEqual({ value: null, cost: null, error: 'unrepresentable' })
   })
 
+  it('AvlTree serialize input decodes (no crash) but ergots lacks serialize(AvlTree) → not-implemented, total', () => {
+    // Regression: decode.ts had no `case 'AvlTree'`, so an AvlTree SValue input threw
+    // `unknown SANTA SValue kind 'AvlTree'` and ABORTED the whole vector (a §3 totality break) —
+    // even though ergots fully supports SAvlTree (parse-svalue.ts `case 'SAvlTree'`, type code 100).
+    // The gap was the SANTA-side bridge, not ergots. With the decode case added, the input decodes;
+    // ergots' eval then throws EvalError 'method-not-implemented' for serialize(AvlTree), so the
+    // faithful outcome is `not-implemented` — NOT `unrepresentable` (ergots CAN hold the value) and
+    // NOT a crash — for EVERY entry (the second is no longer lost to the first's abort).
+    const fixture = JSON.parse(
+      readFileSync(path.resolve(here, '../../vectors/eval/v6/authored/Global.serialize_AvlTree.json'), 'utf8'),
+    ) as Parameters<typeof runVector>[0]
+    const actuals = runVector(fixture)
+    expect(Object.keys(actuals)).toEqual(fixture.entries.map((e) => e.name)) // totality: no abort
+    for (const e of fixture.entries) {
+      expect(actuals[e.name]).toEqual({ value: null, cost: null, error: 'not-implemented' })
+    }
+  })
+
   it('a parse failure that is NOT an unsupported-type re-throws (no silent swallowing)', () => {
     // The whole design rests on this: a decode/parse failure the runner does NOT recognize as
     // an unsupported-type or a repr-limit must PROPAGATE, never become a tagged outcome. Empty

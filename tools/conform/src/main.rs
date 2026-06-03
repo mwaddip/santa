@@ -239,6 +239,31 @@ impl Counts {
             "red": self.red,
         })
     }
+    /// The human summary line printed after "tier/version/prov: " in the run loop.
+    fn summary(&self) -> String {
+        let mut bits: Vec<String> = Vec::new();
+        if self.value_total > 0 {
+            bits.push(format!("value {}/{}", self.value_nice, self.value_total));
+            if self.value_coal > 0 {
+                bits.push(format!("{} val-coal", self.value_coal));
+            }
+        }
+        // not-impl / unrepr render independent of value coverage: a slice can be entirely
+        // coverage-gaps (value_total 0, e.g. dasher's eval/v6/authored) and must still show them.
+        if self.not_impl > 0 {
+            bits.push(format!("{} not-impl", self.not_impl));
+        }
+        if self.unrepr > 0 {
+            bits.push(format!("{} unrepr", self.unrepr));
+        }
+        if self.cost_graded > 0 {
+            bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
+        }
+        if self.reject_total > 0 {
+            bits.push(format!("reject {}/{}", self.reject_nice, self.reject_total));
+        }
+        bits.join(" · ")
+    }
 }
 
 /// actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): counts + red}, slice keys
@@ -341,26 +366,7 @@ fn main() -> ExitCode {
                     if m.cost { "True" } else { "False" }
                 );
                 for ((tier, version, prov), c) in &slices {
-                    let mut bits: Vec<String> = Vec::new();
-                    if c.value_total > 0 {
-                        bits.push(format!("value {}/{}", c.value_nice, c.value_total));
-                        if c.value_coal > 0 {
-                            bits.push(format!("{} val-coal", c.value_coal));
-                        }
-                        if c.not_impl > 0 {
-                            bits.push(format!("{} not-impl", c.not_impl));
-                        }
-                        if c.unrepr > 0 {
-                            bits.push(format!("{} unrepr", c.unrepr));
-                        }
-                    }
-                    if c.cost_graded > 0 {
-                        bits.push(format!("cost {}/{}", c.cost_nice, c.cost_graded));
-                    }
-                    if c.reject_total > 0 {
-                        bits.push(format!("reject {}/{}", c.reject_nice, c.reject_total));
-                    }
-                    println!("      {tier}/{version}/{prov}: {}", bits.join(" · "));
+                    println!("      {tier}/{version}/{prov}: {}", c.summary());
                 }
                 let slices_json: serde_json::Map<String, Value> = slices
                     .iter()
@@ -478,5 +484,31 @@ mod tests {
         assert_eq!(resolve_impl(&None, &cache).unwrap(), ("-".to_string(), None));
 
         let _ = fs::remove_dir_all(&tmp);
+    }
+
+    #[test]
+    fn summary_reports_coverage_gaps_without_value_coverage() {
+        // A slice that is 100% coverage-gaps has value_total 0 (no value-graded entry); its
+        // not-impl/unrepr counts must still render. dasher's eval/v6/authored (22 not-impl,
+        // 1 unrepr) printed a blank line before this was pinned.
+        let c = super::Counts { not_impl: 22, unrepr: 1, ..Default::default() };
+        assert_eq!(c.summary(), "22 not-impl · 1 unrepr");
+    }
+
+    #[test]
+    fn summary_pins_full_slice_format() {
+        // dasher's eval/v6/spec shape: value coverage, then gaps, then cost, then reject — in order.
+        let c = super::Counts {
+            value_total: 10,
+            value_nice: 10,
+            not_impl: 254,
+            unrepr: 2,
+            cost_graded: 10,
+            cost_nice: 10,
+            reject_total: 3,
+            reject_nice: 3,
+            ..Default::default()
+        };
+        assert_eq!(c.summary(), "value 10/10 · 254 not-impl · 2 unrepr · cost 10/10 · reject 3/3");
     }
 }

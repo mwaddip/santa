@@ -29,6 +29,7 @@ export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
       return { value: { kind: 'GroupElement', value: hexToBytes(j['bytes_hex'] as string) }, tpe: { tag: 'SGroupElement' } }
     case 'Box': return parseBytesKind({ tag: 'SBox' }, j['bytes_hex'] as string, treeVersion)
     case 'Header': return parseBytesKind({ tag: 'SHeader' }, j['bytes_hex'] as string, treeVersion)
+    case 'AvlTree': return parseBytesKind({ tag: 'SAvlTree' }, j['bytes_hex'] as string, treeVersion)
     case 'SigmaProp': return parseBytesKind({ tag: 'SSigmaProp' }, j['raw_hex'] as string, treeVersion)
     case 'Coll': {
       const elem = stypeFromSanta(j['elem'] as JsonObj)
