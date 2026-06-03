@@ -60,6 +60,7 @@ no "abstain"; scope is the input subset you run):
 | **errored** (`"errored"`) | ergots implements the op and eval threw (coarse — no reason taxonomy) |
 | **not-implemented** (`"not-implemented"`) | ergots has no impl for this op/method/type — a coverage gap; route to ergots |
 | **unrepresentable** (`"unrepresentable"`) | ergots has the type but can't hold this value (e.g. Header ts > 2⁵³) — a repr bug; route to ergots |
+| **panicked** (`"panicked"`) | an otherwise-uncaught throw on this entry, caught so the run continues — always coal, message in `note`; a runner must never abort the file |
 
 A **cross-impl divergence is a finding, never silenced** — every RED is the runner doing its
 job. Record under `docs/findings/` and route to ergots. Never edit the ergots repo from a

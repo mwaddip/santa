@@ -61,8 +61,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
   **total**: it emits one faithful outcome for *every* entry — value + cost on success,
-  else a coarse tag (`errored` / `not-implemented` / `unrepresentable`) — and never drops
-  or hides one. A conformer's **scope is chosen on the input side** (it runs the vector
+  else a coarse tag (`errored` / `not-implemented` / `unrepresentable` / `panicked`) — and
+  never drops, hides, or aborts the run on one. A conformer's **scope is chosen on the input side** (it runs the vector
   subset it claims; ergots runs `v5/`). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.
 - ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (117/117)
