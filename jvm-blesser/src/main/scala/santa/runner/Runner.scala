@@ -2,6 +2,8 @@ package santa.runner
 
 import io.circe.Json
 
+import sigma.ast.{EvaluatedValue, SType}
+
 import santa.EvalCore
 
 /** JVM reference runner — Rudolph.
@@ -11,6 +13,7 @@ import santa.EvalCore
   * under the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
+  *   - `santa-eval/v3` → EvalCore.evalWithInputExtensions (per-input extension map)
   *   - `santa-eval/v2` → EvalCore.evalApplied (reads the entry's `input` binding)
   *   - `santa-eval/v1` → EvalCore.evalEntry   (closed tree, no input)
   *
@@ -29,6 +32,15 @@ object Runner {
       .map(_.toByte).getOrElse(sigma.VersionContext.MaxSupportedScriptVersion)
 
     val (_, outcome) = schema match {
+      case "santa-eval/v3" =>
+        val inputs = c.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
+          val ext = inp.hcursor.downField("extension")
+          ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
+            k.toByte -> EvalCore.decodeInputConstant(
+              ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
+          }.toMap
+        }
+        EvalCore.evalWithInputExtensions(hex, inputs, activated)
       case "santa-eval/v2" =>
         val inputJson = c.downField("input").focus
           .getOrElse(sys.error(s"missing input field in v2 entry '${name}'"))

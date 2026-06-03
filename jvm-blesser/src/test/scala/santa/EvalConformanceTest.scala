@@ -5,6 +5,8 @@ import java.nio.file.{Files, Path, Paths}
 import io.circe.Json
 import io.circe.parser.parse
 
+import sigma.ast.{EvaluatedValue, SType}
+
 /** Cross-check / regression gate: every committed vector file under vectors/eval/ must
   * reproduce when re-evaluated through EvalCore.
   *
@@ -67,6 +69,15 @@ class EvalConformanceTest extends munit.FunSuite {
         .getOrElse(sys.error(s"missing expected.error in $op/$name"))
 
       val (_, outcome) = schema match {
+        case "santa-eval/v3" =>
+          val inputs = ec.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
+            val ext = inp.hcursor.downField("extension")
+            ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
+              k.toByte -> EvalCore.decodeInputConstant(
+                ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
+            }.toMap
+          }
+          EvalCore.evalWithInputExtensions(treeHex, inputs, activated)
         case "santa-eval/v2" =>
           val inputJson = ec.downField("input").focus
             .getOrElse(sys.error(s"missing input in $op/$name"))
