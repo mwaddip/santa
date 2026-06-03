@@ -247,7 +247,7 @@ mod tests {
               "slices": {
                 "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]},
                 "eval/v6/authored": {"value_nice":14,"value_total":14,"cost_nice":3,"cost_graded":14,"unrepr":3,"reject_total":0,"reject_nice":0,
-                  "red":[{"dim":"cost","entry":"a","op":"x"},{"dim":"cost","entry":"b","op":"y"},{"dim":"unrepresentable","entry":"c","op":"z"}]}
+                  "red":[{"dim":"cost","entry":"a","op":"x"},{"dim":"cost","entry":"b","op":"y"},{"dim":"panicked","entry":"c","op":"z"}]}
               } },
             { "name": "blitzen-develop", "mark": "coal", "red_total": 1, "cost": false,
               "impl": "https://github.com/ergoplatform/sigma-rust.git#develop",
