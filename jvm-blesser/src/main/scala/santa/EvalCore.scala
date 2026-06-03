@@ -15,7 +15,7 @@ import sigma.ast.{
   ErgoTree, EvaluatedValue, GroupElementConstant, HeaderConstant, IntConstant, JitCost,
   LongConstant, SAvlTree, SBigInt, SBoolean, SBox, SByte, SCollection, SGroupElement, SHeader, SInt,
   SLong, SOption, SPreHeader, SShort, SSigmaProp, SType, SUnsignedBigInt, ShortConstant,
-  SigmaPropConstant, STuple, UnsignedBigIntConstant
+  SigmaPropConstant, StringConstant, STuple, UnsignedBigIntConstant
 }
 import sigma.crypto.CryptoConstants
 import sigma.data.AvlTreeData
@@ -372,6 +372,12 @@ object EvalCore {
         val sigmaTree: SigmaBoolean =
           SigmaBoolean.serializer.parse(SigmaSerializer.startReader(bytes))
         SigmaPropConstant(CSigmaProp(sigmaTree))
+
+      case "String" =>
+        // SString IS data-serializable (CoreDataSerializer) though no ErgoScript op produces a
+        // runtime String value — supported so the SigmaProp-eq String-reachability probe can feed one.
+        StringConstant(cur.downField("value").as[String]
+          .fold(e => sys.error(s"decodeInputConstant String: $e"), identity))
 
       case other =>
         sys.error(s"decodeInputConstant: '$other' not yet supported")

@@ -29,6 +29,47 @@ spec corpus — `develop` (upstream `ergoplatform/sigma-rust`, value-only, `cost
 This supersedes the fixture-gen-era findings below (which predate the spec corpus). JVM
 `sigma-state` 6.0.3 stays canonical.
 
+## SigmaProp equality cost (2026-06-03) — authored to fill a coverage hole
+
+`SigmaProp == SigmaProp` was **never exercised by the corpus**: `LanguageSpecificationV5`'s NEQ
+"predefined types" features exclude SigmaProp, so the spec-extracted corpus carries zero SigmaProp
+under EQ/NEQ (its SigmaProp values are all constructors / `&&` / `||` / `propBytes` / `serialize`).
+That blind spot let **both** non-JVM conformers ship a flat `EQ_PRIM_COST`-equivalent (3) for
+SigmaProp equality where the JVM charges *structurally* — `DataValueComparer.equalSigmaBoolean`
+charges `MatchType` (1) per tree node + `EQ_GroupElement` (172) per EcPoint. Surfaced by the
+sigma-rust `/code-review` backstop (`SANTA_SIGMAPROP_EQ_COST_VECTOR_NEEDED.md`); **authored** to fill
+the gap (you can't extract what the spec never tested).
+
+**Vector:** `vectors/eval/v5/authored/EQ_of_SigmaProp.json` — one tree
+`{ getVar[SigmaProp](1).get == getVar[SigmaProp](1).get }` (reads var 1, compares it to itself: a full
+structural walk, no short-circuit, nothing to constant-fold; getVar/OptionGet/EQ overhead is identical
+across impls, so the only thing that can move the total is the comparer), with three SigmaProp inputs.
+
+| SigmaProp shape | JVM (canonical) | ergots **and** sigma-rust | Δ undercharge |
+|---|---|---|---|
+| `proveDlog` (1 EcPoint) | **224** | 53 | 171 |
+| `proveDHTuple` (4 EcPoints) | **740** | 53 | 687 |
+| `CAND` (2 children) | **398** | 53 | 345 |
+
+Both conformers charge a **flat 53** regardless of structure (50 shared tree overhead + their flat 3);
+the JVM's variable part is exactly the comparer contribution (174/690/348, matching the prompt's
+hand-derivation to the unit). A genuine consensus-cost divergence — a crafted tx could sit under
+`MaxBlockCost` on one impl and over it on the JVM.
+
+**String equality — checked, NOT a divergence (unreachable).** `DataValueComparer` has a dedicated
+`String` arm too, but the JVM evaluator **rejects** `String == String`:
+`getVar[String](1).get == getVar[String](1).get` throws `RuntimeException: Unknown type SString` (no
+SType→RType mapping; no op produces a runtime String; the typer only folds `"+"` on two String
+constants). String is compile-time-only, so String equality is unreachable in any evaluable ErgoTree —
+the flat-3 there is dead/defensive code, not a consensus concern. No vector authored;
+`AuthoredSigmaPropEq.stringEqProbe` + `AuthoredSigmaPropEqTest` guard the verdict (they flip loud if a
+future sigma-state ever evaluates SString).
+
+**Status: OPEN.** sigma-rust fix forthcoming (a real `SigmaProp` arm in `eq_with_cost` mirroring
+`equalSigmaBoolean` — its own `develop fix/` PR + eni cherry-pick). ergots shares the undercharge
+(same flat-53; an ergots-side fix lands separately). `./conform` flags blitzen-eni
+`eval/v5/authored: cost 0/3` until fixed.
+
 ## Cost divergences (value agrees; JIT cost differs) — RESOLVED
 
 | op / entry | tree (hex) | JVM (canonical) | sigma-rust (before fix) | Δ | Resolution |
@@ -63,5 +104,7 @@ envelope cost relative to sigma-state 6.0.3. Recorded here as a success story.
 ## Status
 - **Cost divergences** (`and_empty`, `coll_bool_constants_3`, `calc_blake2b256_empty`):
   **RESOLVED** — fixed in sigma-rust oracle fork 2026-05-31. Kept as record.
+- **SigmaProp equality cost** (`EQ of SigmaProp`, authored 2026-06-03): **OPEN** — both ergots and
+  sigma-rust undercharge flat-53 vs the JVM's structural 224/740/398; sigma-rust fix forthcoming. See above.
 - **Behavioral divergences** (`plus_kind_mismatch_int_long`, `tuple_triple_bool_byte_short`):
   **OPEN** — not yet filed as sigma-rust PRs. Revisit once the eval tier stabilizes further.
