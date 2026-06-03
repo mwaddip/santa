@@ -126,9 +126,9 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                     let g = |f: &str| s.get(f).and_then(|v| v.as_u64()).unwrap_or(0);
                     let red = s.get("red").and_then(|x| x.as_array()).map(|a| a.len()).unwrap_or(0);
                     let title = format!(
-                        "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} unrepr {}",
+                        "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} unrepr {} \u{b7} panicked {}",
                         g("value_nice"), g("value_total"), g("cost_nice"), g("cost_graded"),
-                        g("reject_nice"), g("reject_total"), g("unrepr")
+                        g("reject_nice"), g("reject_total"), g("unrepr"), g("panicked")
                     );
                     if red > 0 {
                         body.push_str(&format!("<td class=\"coal\" title=\"{title}\">{coal_icon} {red}</td>"));
@@ -304,6 +304,7 @@ mod tests {
         assert!(html.contains("class=\"partial\""));       // amber = value-only pass (blitzen-develop × v6/authored)
         assert!(html.contains("class=\"coal\""));          // red = blitzen-eni × eval/v6/authored diverges
         assert!(html.contains("class=\"na\""));            // rudolph/dasher don't cover eval/v6/authored
+        assert!(html.contains("unrepr 3 \u{b7} panicked 0")); // tooltip carries the panicked figure
         assert!(html.contains("abc123"));                  // the stamped ref
         assert!(html.contains("\u{2014}"));                // — (na cell / null-impl source)
     }
