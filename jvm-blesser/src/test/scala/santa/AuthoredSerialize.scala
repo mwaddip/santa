@@ -97,6 +97,14 @@ object AuthoredSerialize {
     Json.obj("kind" -> Json.fromString("Option"), "value" -> inner)
   private def tupleJson(a: Json, b: Json): Json =
     Json.obj("kind" -> Json.fromString("Tuple"), "items" -> Json.arr(a, b))
+  private def byteJson(n: Int): Json =
+    Json.obj("kind" -> Json.fromString("Byte"), "value" -> Json.fromInt(n))
+  private def longJson(v: Long): Json =
+    Json.obj("kind" -> Json.fromString("Long"), "value" -> Json.fromString(v.toString))
+  private def stype(tag: String): Json = Json.obj("tag" -> Json.fromString(tag))
+  /** Coll with an explicit element-SType JSON (nested elems collJson's tag-string can't express). */
+  private def collJsonE(elem: Json, items: Seq[Json]): Json =
+    Json.obj("kind" -> Json.fromString("Coll"), "elem" -> elem, "items" -> Json.arr(items: _*))
 
   // ── representative inputs ─────────────────────────────────────────────────────
   private val gen: EcPointType = CryptoConstants.dlogGroup.generator
@@ -113,6 +121,21 @@ object AuthoredSerialize {
       minBox.transactionId, minBox.index, minBox.creationHeight)
     Base16.encode(ErgoBox.sigmaSerializer.toBytes(rich))
   }
+
+  // Fast-path register families (sigma-rust SANTA_SERIALIZE_FASTPATH_VECTORS_NEEDED): a box whose R4
+  // holds a COMPOUND value whose SType serializes via an embedded-type combined type-code byte (the
+  // fast path). The register value is built by reusing EvalCore.decodeInputConstant (the same decoder
+  // grading uses), placed in R4, and the box serialized — so serialize[Box] exercises that type-code
+  // byte; the JVM cost is the oracle for sigma-rust's +1 fast-path metering.
+  private def boxWithR4Hex(regJson: Json): String = {
+    val minBox = ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(MinBoxHex).get))
+    val regs: ErgoBox.AdditionalRegisters = Map(ErgoBox.R4 -> EvalCore.decodeInputConstant(regJson))
+    val box = new ErgoBox(minBox.value, minBox.ergoTree, minBox.additionalTokens, regs,
+      minBox.transactionId, minBox.index, minBox.creationHeight)
+    Base16.encode(ErgoBox.sigmaSerializer.toBytes(box))
+  }
+  /** serialize[Box] input for a box carrying `regJson` in R4. */
+  private def r4Box(regJson: Json): Json = boxJson(boxWithR4Hex(regJson))
 
   // The corpus's v6 header fixture (Header_new_methods) — a structurally-complete header.
   // serialize is version-agnostic in its put sequence (HeaderWithoutPowSerializer writes the
@@ -155,7 +178,18 @@ object AuthoredSerialize {
       target(tap, "Global.serialize[AvlTree]", AvlTreeRType,
         Seq("dummy" -> avlJson(avlDummy), "withValueLen" -> avlJson(avlWithValueLen))),
       target(tap, "Global.serialize[Box]", BoxRType,
-        Seq("minimal" -> boxJson(MinBoxHex), "withR4" -> boxJson(RichBoxHex))),
+        Seq("minimal" -> boxJson(MinBoxHex), "withR4" -> boxJson(RichBoxHex),
+            // fast-path register families: R4 holds a compound type → embedded combined type-code byte
+            "R4=Coll[Byte]"         -> r4Box(collJsonE(stype("SByte"), (0 until 32).map(byteJson))),
+            "R4=Coll[Int]"          -> r4Box(collJsonE(stype("SInt"), Seq(intJson(1), intJson(2), intJson(3)))),
+            // Option register values are NOT data-serializable (JVM rule 1009 rejects SOption.OptionTypeCode
+            // since v5.0), so the OPTION+prim / OPTION_COLL fast-path families are un-authorable as a box
+            // register — and unreachable via Global.serialize (an Option value can't be serialized at all).
+            "R4=Coll[Coll[Byte]]"   -> r4Box(collJsonE(
+                                         Json.obj("tag" -> Json.fromString("SColl"), "elem" -> stype("SByte")),
+                                         Seq(collJsonE(stype("SByte"), Seq(byteJson(1), byteJson(2)))))),
+            "R4=(Int,Int)"          -> r4Box(tupleJson(intJson(1), intJson(2))),
+            "R4=(Int,Long)"         -> r4Box(tupleJson(intJson(1), longJson(2L))))),
       target(tap, "Global.serialize[Header]", HeaderRType,
         Seq("specFixture" -> headerJson(HeaderHex))),
       target(tap, "Global.serialize[Coll[GroupElement]]", collRType(GroupElementRType),
