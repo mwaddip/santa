@@ -126,6 +126,24 @@
      "actual":   null,
      "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
      "claims_cost": true,
-     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}}
+     "verdict": {"kind": "accept", "value": "value", "cost": "n/a"}},
+
+    {"name": "panicked-on-accept-is-coal",
+     "actual":   {"value": null, "cost": null, "error": "panicked", "note": "encode: unmodeled ergots result kind 'X'"},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": true,
+     "verdict": {"kind": "panicked"}},
+
+    {"name": "panicked-on-reject-is-coal-not-nice",
+     "actual":   {"value": null, "cost": null, "error": "panicked", "note": "boom in the reject path"},
+     "expected": {"value": null, "cost": null, "error": "errored"},
+     "claims_cost": true,
+     "verdict": {"kind": "panicked"}},
+
+    {"name": "panicked-verdict-ignores-claims-cost",
+     "actual":   {"value": null, "cost": null, "error": "panicked", "note": "x"},
+     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
+     "claims_cost": false,
+     "verdict": {"kind": "panicked"}}
   ]
 }

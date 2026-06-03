@@ -44,9 +44,18 @@ fn err_is(v: &Value, tag: &str) -> bool {
 /// precedence — the runner didn't engage the op, accept or reject. Otherwise reject vectors
 /// (expected errored) get one verdict; accept vectors get independent value + cost verdicts
 /// (cost graded only when claimed and value is nice). A null `actual` is a totality breach -> coal.
+/// A `panicked` actual (a runner crash) is coal unconditionally, before any expected check.
 pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
     if actual.is_null() {
         return json!({"kind": "accept", "value": "value", "cost": "n/a"});
+    }
+    if err_is(actual, "panicked") {
+        // A runner that crashed on this entry. Unconditional coal — even against a
+        // reject-expected vector (a crash is not a clean rejection), which is exactly why
+        // this is a distinct tag and not a reuse of `errored` (errored grades nice on a
+        // reject). The diagnostic `note` lives on the actual and is surfaced downstream
+        // (conform -> results.json), so the verdict stays a pure classification.
+        return json!({"kind": "panicked"});
     }
     if err_is(actual, "not-implemented") {
         return json!({"kind": "coverage", "tag": "not-implemented"});
