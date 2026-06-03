@@ -1,10 +1,14 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
-import { parseTree, evaluateWith, makeContext, EvalError } from '@ergots/ergoscript'
+import {
+  parseTree, evaluateWith, makeContext, EvalError,
+  parseSValue, serializeSValue, SValueParseError, SValueSerializeError, type SType,
+} from '@ergots/ergoscript'
+import { ByteReader, ByteWriter } from '@ergots/scorex'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
 import { UnsupportedTypeError, isUnsupportedType } from './abstain'
-import { hexToBytes } from './hex'
+import { hexToBytes, bytesToHex } from './hex'
 
 interface Entry {
   name: string
@@ -13,6 +17,14 @@ interface Entry {
   version: { activated: number; ergoTree: number }
 }
 interface Vector { schema: string; entries: Entry[] }
+
+interface WireEntry {
+  name: string
+  kind: string
+  bytes_hex: string
+  version: { activated: number; ergoTree: number }
+}
+interface WireVector { schema: string; entries: WireEntry[] }
 
 /** One entry's faithful outcome. The runner emits exactly one of these for EVERY entry —
  *  it never omits, never abstains, never pre-judges scope (runner-contract §3):
@@ -112,6 +124,68 @@ export function runVector(doc: Vector): Record<string, Result> {
   return actuals
 }
 
+/** One wire entry's outcome — the round-trip analog of Result: a single bytes_hex replaces
+ *  value+cost (the wire tier has no cost dimension). Same totality + never-panic invariants
+ *  (runner-contract §3 / docs/specs/wire-tier.md):
+ *    - error null              → reserialized; bytes_hex present (graded byte-identical downstream)
+ *    - error 'errored'         → the runner's codec rejected the bytes (parse/reserialize threw)
+ *    - error 'not-implemented' → no serializer for this kind reachable via the public API
+ *    - error 'panicked'        → an otherwise-uncaught throw, caught so the run continues; note set */
+type WireResult = {
+  bytes_hex: string | null
+  error: null | 'errored' | 'not-implemented' | 'panicked'
+  note?: string
+}
+
+const SBOX: SType = { tag: 'SBox' }
+
+/** Round-trip one wire entry → exactly one WireResult. Never-panic net mirrors runEntry: any
+ *  otherwise-uncaught throw becomes `panicked` (note carries the message) so the run continues. */
+export function runWireEntry(e: WireEntry): WireResult {
+  try {
+    return runWireEntryInner(e)
+  } catch (err) {
+    const note = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
+    return { bytes_hex: null, error: 'panicked', note }
+  }
+}
+
+function runWireEntryInner(e: WireEntry): WireResult {
+  const treeVersion = e.version.ergoTree
+  switch (e.kind) {
+    case 'Box': {
+      // Full ErgoBox::sigma_serialize form (value … tokens … registers … tx_id … index) via the
+      // public SValue codec — parseSValue(SBox)/serializeSValue(SBox) handle the with-ref form.
+      const bytes = hexToBytes(e.bytes_hex)
+      try {
+        const value = parseSValue(SBOX, treeVersion, new ByteReader(bytes))
+        const w = new ByteWriter()
+        serializeSValue(SBOX, value, treeVersion, w)
+        return { bytes_hex: bytesToHex(w.toBytes()), error: null }
+      } catch (err) {
+        // A codec rejection of the bytes is `errored` — a real round-trip divergence if the JVM
+        // accepted them. Anything unexpected falls through to runWireEntry's panic-net.
+        if (err instanceof SValueParseError || err instanceof SValueSerializeError) {
+          return { bytes_hex: null, error: 'errored' }
+        }
+        throw err
+      }
+    }
+    default:
+      // SigmaBoolean (and future kinds) aren't reachable via @ergots' public API yet:
+      // parseSigmaBoolean/serializeSigmaBoolean exist but aren't exported. The faithful
+      // runner-level outcome is not-implemented. Routed: prompts/ergots-wire-sigmaboolean-export.md.
+      return { bytes_hex: null, error: 'not-implemented' }
+  }
+}
+
+/** run(wire vector) → actuals: exactly one WireResult per entry, keyed by name (total). */
+export function runWireVector(doc: WireVector): Record<string, WireResult> {
+  const actuals: Record<string, WireResult> = {}
+  for (const e of doc.entries) actuals[e.name] = runWireEntry(e)
+  return actuals
+}
+
 // ---- CLI: runner <vector.json> [actuals-out.json] (mirrors Runner.scala) ----
 function main(argv: string[]): void {
   const vecPath = argv[2]
@@ -119,8 +193,9 @@ function main(argv: string[]): void {
     console.error('usage: runner <vector.json> [<actuals-out.json>]')
     process.exit(2)
   }
-  const doc = JSON.parse(readFileSync(vecPath, 'utf8')) as Vector
-  const actuals = runVector(doc)
+  const raw = JSON.parse(readFileSync(vecPath, 'utf8')) as { schema?: string }
+  const isWire = (raw.schema ?? '').startsWith('santa-wire/')
+  const actuals = isWire ? runWireVector(raw as WireVector) : runVector(raw as Vector)
   const json = JSON.stringify(actuals, null, 2)
   const outPath = argv[3]
   if (outPath) {
