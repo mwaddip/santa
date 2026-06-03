@@ -9,7 +9,7 @@
   "properties": {
     "schema": {
       "description": "Tier + version discriminator.",
-      "enum": ["santa-eval/v1", "santa-eval/v2"]
+      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3"]
     },
     "op": {
       "description": "The operation / property name this vector covers.",
@@ -40,17 +40,40 @@
         "required": ["schema"]
       },
       "then": {
-        "$comment": "v2 carries the `source` provenance field and every entry has an input.",
+        "$comment": "v2 carries `source`; every entry has an `input` and no `inputs`.",
         "required": ["source"],
         "properties": {
-          "entries": { "items": { "required": ["input"] } }
+          "entries": { "items": {
+            "required": ["input"],
+            "not": { "required": ["inputs"] }
+          } }
         }
       },
       "else": {
-        "$comment": "v1 (the Phase-1 closed-tree decode-point) predates `source` and carries no per-entry input.",
+        "$comment": "Not v2: either v1 (no input, no inputs) or v3 (handled by the second allOf element). Prohibit `input` for all non-v2 entries.",
         "properties": {
           "entries": { "items": { "not": { "required": ["input"] } } }
         }
+      }
+    },
+    {
+      "$comment": "santa-eval/v3 carries `source`; every entry has `inputs` (per-input extensions) and NO single `input`.",
+      "if": { "properties": { "schema": { "const": "santa-eval/v3" } }, "required": ["schema"] },
+      "then": {
+        "required": ["source"],
+        "properties": { "entries": { "items": {
+          "required": ["inputs"],
+          "not": { "required": ["input"] }
+        } } }
+      }
+    },
+    {
+      "$comment": "santa-eval/v1 entries carry neither `input` nor `inputs`.",
+      "if": { "properties": { "schema": { "const": "santa-eval/v1" } }, "required": ["schema"] },
+      "then": {
+        "properties": { "entries": { "items": {
+          "allOf": [ { "not": { "required": ["input"] } }, { "not": { "required": ["inputs"] } } ]
+        } } }
       }
     }
   ],
@@ -76,6 +99,22 @@
         "input": {
           "description": "The input SValue, bound to context var 1 at eval time. REQUIRED for santa-eval/v2, ABSENT for santa-eval/v1 (enforced at the top level, where the schema discriminator is visible).",
           "$ref": "#/$defs/svalue"
+        },
+        "inputs": {
+          "description": "santa-eval/v3: per-spending-tx-input ContextExtensions, in input order. Read by getVarFromInput.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["extension"],
+            "additionalProperties": false,
+            "properties": {
+              "extension": {
+                "type": "object",
+                "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
+                "additionalProperties": { "$ref": "#/$defs/svalue" }
+              }
+            }
+          }
         },
         "version": { "$ref": "#/$defs/version" },
         "expected": { "$ref": "#/$defs/expected" }
