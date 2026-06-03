@@ -40,7 +40,7 @@ fn err_is(v: &Value, tag: &str) -> bool {
     v.get("error").and_then(Value::as_str) == Some(tag)
 }
 
-/// §6 per-entry verdict, as a JSON object. Coverage (not-implemented / unrepresentable) takes
+/// §6 per-entry verdict, as a JSON object. Coverage (not-implemented) takes
 /// precedence — the runner didn't engage the op, accept or reject. Otherwise reject vectors
 /// (expected errored) get one verdict; accept vectors get independent value + cost verdicts
 /// (cost graded only when claimed and value is nice). A null `actual` is a totality breach -> coal.
@@ -59,9 +59,6 @@ pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
     }
     if err_is(actual, "not-implemented") {
         return json!({"kind": "coverage", "tag": "not-implemented"});
-    }
-    if err_is(actual, "unrepresentable") {
-        return json!({"kind": "coverage", "tag": "unrepresentable"});
     }
     if err_is(expected, "errored") {
         let v = if err_is(actual, "errored") { "nice" } else { "reject" };

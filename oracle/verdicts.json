@@ -110,18 +110,6 @@
      "claims_cost": true,
      "verdict": {"kind": "coverage", "tag": "not-implemented"}},
 
-    {"name": "coverage-unrepresentable-on-accept",
-     "actual":   {"value": null, "cost": null, "error": "unrepresentable"},
-     "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
-     "claims_cost": true,
-     "verdict": {"kind": "coverage", "tag": "unrepresentable"}},
-
-    {"name": "coverage-unrepresentable-precedence-over-reject",
-     "actual":   {"value": null, "cost": null, "error": "unrepresentable"},
-     "expected": {"value": null, "cost": null, "error": "errored"},
-     "claims_cost": true,
-     "verdict": {"kind": "coverage", "tag": "unrepresentable"}},
-
     {"name": "totality-breach-missing-actual-is-value-coal",
      "actual":   null,
      "expected": {"value": {"kind": "Int", "value": 6}, "cost": 36, "error": null},
