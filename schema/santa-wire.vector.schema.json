@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-wire.vector.schema.json",
+  "title": "SANTA wire-tier vector",
+  "description": "A committed conformance vector for the wire tier (santa-wire/v1, byte round-trip). The blessed expected is the entry's own bytes_hex (round-trip to self). Normative companion to docs/specs/wire-tier.md.",
+  "type": "object",
+  "required": ["schema", "op", "blessed_by", "source", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "enum": ["santa-wire/v1"] },
+    "op": { "description": "Structure-family slice label.", "type": "string", "minLength": 1 },
+    "blessed_by": { "type": "string", "minLength": 1 },
+    "source": { "description": "Candidate origin (e.g. ergots:fixture-gen/wire, testnet:capture@<range>).", "type": "string", "minLength": 1 },
+    "entries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entry" } }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["name", "kind", "bytes_hex", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "kind": {
+          "description": "Serializer selector the runner dispatches on.",
+          "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean"]
+        },
+        "description": { "type": "string" },
+        "bytes_hex": { "$ref": "#/$defs/hex" },
+        "version": { "$ref": "#/$defs/version" }
+      }
+    },
+    "version": {
+      "type": "object",
+      "required": ["activated", "ergoTree"],
+      "additionalProperties": false,
+      "properties": {
+        "activated": { "type": "integer", "minimum": 0, "maximum": 127 },
+        "ergoTree": { "type": "integer", "minimum": 0, "maximum": 127 }
+      }
+    },
+    "hex": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{2})+$",
+      "$comment": "lower-case hex, whole bytes, non-empty (a wire object is >= 1 byte)."
+    }
+  }
+}

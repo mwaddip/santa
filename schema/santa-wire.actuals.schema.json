@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-wire.actuals.schema.json",
+  "title": "SANTA wire-tier actuals",
+  "description": "A runner's output for one wire vector: an object mapping each entry's name to { bytes_hex, error }. Success: the runner's reserialization (lower-case hex) + error null. Otherwise bytes_hex null + an outcome tag. A single round-trip verdict; no cost dimension. Companion to docs/specs/wire-tier.md.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": { "$ref": "#/$defs/result" },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "required": ["bytes_hex", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "bytes_hex": { "oneOf": [ { "$ref": "#/$defs/hex" }, { "type": "null" } ] },
+        "error": {
+          "description": "null = round-tripped to bytes; 'errored' = parse/reserialize threw; 'not-implemented' = no serializer for this kind; 'unrepresentable' = has the kind, can't hold this value.",
+          "enum": [null, "errored", "not-implemented", "unrepresentable"]
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "error null => bytes_hex non-null (the reserialization); any non-null tag => bytes_hex null.",
+          "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
+          "then": { "required": ["bytes_hex"], "not": { "properties": { "bytes_hex": { "type": "null" } } } },
+          "else": { "properties": { "bytes_hex": { "type": "null" } } }
+        }
+      ]
+    },
+    "hex": { "type": "string", "pattern": "^([0-9a-f]{2})+$" }
+  }
+}
