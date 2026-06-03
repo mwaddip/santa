@@ -70,6 +70,15 @@ fn main() -> ExitCode {
         .expect("actuals schema invalid");
     println!("[meta] vector + actuals schemas: built (valid Draft 2020-12)");
 
+    // Wire tier (santa-wire/v1): independent schemas, no cross-ref (hex is inlined).
+    let wire_vec_schema = load(&schema_dir.join("santa-wire.vector.schema.json"));
+    let wire_act_schema = load(&schema_dir.join("santa-wire.actuals.schema.json"));
+    let wire_vec_validator =
+        jsonschema::validator_for(&wire_vec_schema).expect("wire vector schema invalid");
+    let wire_act_validator =
+        jsonschema::validator_for(&wire_act_schema).expect("wire actuals schema invalid");
+    println!("[meta] wire vector + actuals schemas: built (valid Draft 2020-12)");
+
     // 2. Every committed vector validates against the vector schema.
     let files = json_files(&root.join("vectors").join("eval"));
     println!("\n[corpus] validating {} committed vectors:", files.len());
@@ -91,6 +100,27 @@ fn main() -> ExitCode {
 
     errs += path_envelope_guard(&root, &files);
     errs += actuals_guards(&act_validator);
+
+    // Wire corpus: validate every committed wire vector against the wire vector schema.
+    let wire_files = json_files(&root.join("vectors").join("wire"));
+    println!("\n[wire corpus] validating {} committed wire vectors:", wire_files.len());
+    let mut wok = 0;
+    for f in &wire_files {
+        let doc = load(f);
+        let errors: Vec<_> = wire_vec_validator.iter_errors(&doc).collect();
+        if errors.is_empty() {
+            wok += 1;
+        } else {
+            errs += 1;
+            println!("  FAIL {}", f.file_name().unwrap().to_string_lossy());
+            for e in errors.iter().take(4) {
+                println!("      {}", truncate(&e.to_string(), 180));
+            }
+        }
+    }
+    println!("[wire corpus] {wok}/{} valid", wire_files.len());
+    errs += wire_path_guard(&root, &wire_files);
+    errs += wire_actuals_guards(&wire_act_validator);
 
     println!(
         "\n=== {} ===",
@@ -186,6 +216,91 @@ fn actuals_guards(v: &Validator) -> u32 {
         ("Int as string rejected", json!({"x#0": {"value": {"kind": "Int", "value": "42"}, "cost": 1, "error": null}}), false),
     ];
     println!("\n[actuals] asymmetry guards:");
+    let mut bad: u32 = 0;
+    for (label, doc, want) in checks {
+        let got = v.is_valid(doc);
+        let good = got == *want;
+        if !good {
+            bad += 1;
+        }
+        println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
+    }
+    bad
+}
+
+/// Wire taxonomy path <-> in-data envelope guard (parallel to path_envelope_guard, wire
+/// rules). tier "wire" => schema "santa-wire/"; version v5->activated 2, v6->3; provenance
+/// "authored" iff source is NOT a capture (captures use a "testnet:" source).
+fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
+    let version_activated = |v: &str| match v {
+        "v5" => Some(2i64),
+        "v6" => Some(3i64),
+        _ => None,
+    };
+    println!("\n[wire catalogue] path <-> envelope guard:");
+    let vroot = root.join("vectors");
+    let mut g: u32 = 0;
+    for f in files {
+        let rel = f.strip_prefix(&vroot).unwrap();
+        let parts: Vec<String> = rel
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned())
+            .collect();
+        if parts.len() != 4 {
+            g += 1;
+            println!("  [WRONG] {}: not <tier>/<version>/<provenance>/<op>.json", rel.display());
+            continue;
+        }
+        let (tier, version, prov) = (&parts[0], &parts[1], &parts[2]);
+        let doc = load(f);
+        let schema = doc.get("schema").and_then(Value::as_str).unwrap_or("");
+        if tier != "wire" || !schema.starts_with("santa-wire/") {
+            g += 1;
+            println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
+        }
+        let source = doc.get("source").and_then(Value::as_str).unwrap_or("");
+        let is_authored = !source.starts_with("testnet:");
+        if (prov == "authored") != is_authored {
+            g += 1;
+            println!("  [WRONG] {}: provenance {prov:?} vs source {source:?}", rel.display());
+        }
+        let want = version_activated(version);
+        let off: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| e["version"]["activated"].as_i64() != want)
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if want.is_none() || !off.is_empty() {
+            let head = &off[..off.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+        }
+    }
+    if g == 0 {
+        println!("  [OK] all {} wire paths agree with their envelopes", files.len());
+    } else {
+        println!("  {g} wire path/envelope mismatch(es)");
+    }
+    g
+}
+
+/// Wire actuals asymmetry guards: round-trip-ok carries hex bytes + null error; any tag
+/// carries null bytes. (No cost dimension at the wire tier.)
+fn wire_actuals_guards(v: &Validator) -> u32 {
+    let checks: &[(&str, Value, bool)] = &[
+        ("roundtrip-ok", json!({"e#0": {"bytes_hex": "c0843d", "error": null}}), true),
+        ("errored", json!({"e#0": {"bytes_hex": null, "error": "errored"}}), true),
+        ("not-implemented", json!({"e#0": {"bytes_hex": null, "error": "not-implemented"}}), true),
+        ("ok w/ null bytes rejected", json!({"e#0": {"bytes_hex": null, "error": null}}), false),
+        ("errored w/ bytes rejected", json!({"e#0": {"bytes_hex": "c0", "error": "errored"}}), false),
+        ("upper-case hex rejected", json!({"e#0": {"bytes_hex": "C0", "error": null}}), false),
+        ("extra cost field rejected", json!({"e#0": {"bytes_hex": "c0", "error": null, "cost": 1}}), false),
+    ];
+    println!("\n[wire actuals] asymmetry guards:");
     let mut bad: u32 = 0;
     for (label, doc, want) in checks {
         let got = v.is_valid(doc);
