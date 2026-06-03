@@ -96,4 +96,25 @@ class RunnerTest extends munit.FunSuite {
       .fold(e => fail(s"actuals not valid JSON: $e"), identity)
     assertEquals(parsed.asObject.map(_.size), Some(6), "actuals keyed by all 6 entry names")
   }
+
+  // ── never-panic invariant (runner-contract §3) ──────────────────────────────
+
+  test("Runner.evalEntry: an entry that throws becomes `panicked` (note carries the message), never propagates") {
+    // A santa-eval/v2 entry with no `input` makes evalEntry's `sys.error` throw
+    // (RuntimeException "missing input field in v2 entry '…'") after `name` is bound.
+    // Never-panic: that must become a `panicked` actual (coal, message in note), not abort.
+    val entry = parseJson(
+      """{"name": "oops#0", "tree_bytes_hex": "00", "version": {"activated": 3, "ergoTree": 3}}"""
+    ).fold(e => sys.error(s"bad test json: $e"), identity)
+
+    val (name, actual) = Runner.evalEntry("santa-eval/v2", entry)
+    assertEquals(name, "oops#0")
+    val c = actual.hcursor
+    assertEquals(c.get[String]("error").toOption, Some("panicked"))
+    assertEquals(c.downField("value").focus, Some(Json.Null))
+    assertEquals(c.downField("cost").focus, Some(Json.Null))
+    assert(
+      c.get[String]("note").toOption.exists(_.contains("missing input field")),
+      s"note must carry the message, got: ${actual.noSpaces}")
+  }
 }

@@ -27,35 +27,47 @@ object Runner {
   def evalEntry(schema: String, e: Json): (String, Json) = {
     val c    = e.hcursor
     val name = c.get[String]("name").toOption.getOrElse("?")
-    val hex  = c.get[String]("tree_bytes_hex").toOption.getOrElse("")
-    val activated = c.downField("version").get[Int]("activated").toOption
-      .map(_.toByte).getOrElse(sigma.VersionContext.MaxSupportedScriptVersion)
+    try {
+      val hex  = c.get[String]("tree_bytes_hex").toOption.getOrElse("")
+      val activated = c.downField("version").get[Int]("activated").toOption
+        .map(_.toByte).getOrElse(sigma.VersionContext.MaxSupportedScriptVersion)
 
-    val (_, outcome) = schema match {
-      case "santa-eval/v3" =>
-        val inputs = c.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
-          val ext = inp.hcursor.downField("extension")
-          ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
-            k.toInt.toByte -> EvalCore.decodeInputConstant(
-              ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
-          }.toMap
-        }
-        EvalCore.evalWithInputExtensions(hex, inputs, activated)
-      case "santa-eval/v2" =>
-        val inputJson = c.downField("input").focus
-          .getOrElse(sys.error(s"missing input field in v2 entry '${name}'"))
-        EvalCore.evalApplied(hex, inputJson, activated)
-      case _ =>
-        EvalCore.evalEntry(hex, activated)
-    }
+      val (_, outcome) = schema match {
+        case "santa-eval/v3" =>
+          val inputs = c.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
+            val ext = inp.hcursor.downField("extension")
+            ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
+              k.toInt.toByte -> EvalCore.decodeInputConstant(
+                ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
+            }.toMap
+          }
+          EvalCore.evalWithInputExtensions(hex, inputs, activated)
+        case "santa-eval/v2" =>
+          val inputJson = c.downField("input").focus
+            .getOrElse(sys.error(s"missing input field in v2 entry '${name}'"))
+          EvalCore.evalApplied(hex, inputJson, activated)
+        case _ =>
+          EvalCore.evalEntry(hex, activated)
+      }
 
-    val actual = outcome match {
-      case Right((value, cost)) =>
-        Json.obj("value" -> value, "cost" -> Json.fromLong(cost), "error" -> Json.Null)
-      case Left(_) =>
-        Json.obj("value" -> Json.Null, "cost" -> Json.Null, "error" -> Json.fromString("errored"))
+      val actual = outcome match {
+        case Right((value, cost)) =>
+          Json.obj("value" -> value, "cost" -> Json.fromLong(cost), "error" -> Json.Null)
+        case Left(_) =>
+          Json.obj("value" -> Json.Null, "cost" -> Json.Null, "error" -> Json.fromString("errored"))
+      }
+      name -> actual
+    } catch {
+      // Never-panic (runner-contract §3): an uncaught internal error on one entry becomes the
+      // `panicked` outcome (coal, message in note) so the run continues. NonFatal excludes
+      // fatal errors (OOM, etc.).
+      case scala.util.control.NonFatal(t) =>
+        name -> Json.obj(
+          "value" -> Json.Null,
+          "cost"  -> Json.Null,
+          "error" -> Json.fromString("panicked"),
+          "note"  -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}"))
     }
-    name -> actual
   }
 
   /** Run one vector file, writing actuals to outPath (or stdout if None). */
