@@ -74,7 +74,7 @@ fn source_label(runner: &Value) -> String {
 /// Self-contained HTML dashboard: a slice × runner MATRIX. Rows are slices, columns are runners;
 /// each cell is green (🎁 nice) / red (🪨 N, coal with N divergences) / grey (— the runner doesn't
 /// cover that slice), so a passing cell stays green even when others in its slice row diverge. The
-/// per-dimension breakdown (value/cost/reject/unrepr) is in each cell's tooltip.
+/// per-dimension breakdown (value/cost/reject/panicked) is in each cell's tooltip.
 fn dashboard(results: &Value, git_ref: &str) -> String {
     let nice_icon = "\u{1f381}"; // 🎁
     let coal_icon = "\u{1faa8}"; // 🪨
@@ -126,9 +126,9 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                     let g = |f: &str| s.get(f).and_then(|v| v.as_u64()).unwrap_or(0);
                     let red = s.get("red").and_then(|x| x.as_array()).map(|a| a.len()).unwrap_or(0);
                     let title = format!(
-                        "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} unrepr {} \u{b7} panicked {}",
+                        "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} panicked {}",
                         g("value_nice"), g("value_total"), g("cost_nice"), g("cost_graded"),
-                        g("reject_nice"), g("reject_total"), g("unrepr"), g("panicked")
+                        g("reject_nice"), g("reject_total"), g("panicked")
                     );
                     if red > 0 {
                         body.push_str(&format!("<td class=\"coal\" title=\"{title}\">{coal_icon} {red}</td>"));
@@ -186,7 +186,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
-<div class="hint">Hover a cell for the value / cost / reject / unrepr breakdown.</div>
+<div class="hint">Hover a cell for the value / cost / reject / panicked breakdown.</div>
 </div>
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
@@ -238,24 +238,24 @@ mod tests {
           "schema": "santa-results/v1",
           "runners": [
             { "name": "rudolph", "mark": "nice", "red_total": 0, "impl": null,
-              "slices": { "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]} } },
+              "slices": { "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"red":[]} } },
             { "name": "dasher", "mark": "nice", "red_total": 0,
-              "slices": { "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]} } },
+              "slices": { "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"red":[]} } },
             { "name": "blitzen-eni", "mark": "coal", "red_total": 3,
               "impl": "https://github.com/mwaddip/sigma-rust.git#ergo-node-integration",
               "sha": "abcdef1234567890abcdef1234567890abcdef12",
               "slices": {
-                "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"unrepr":0,"red":[]},
-                "eval/v6/authored": {"value_nice":14,"value_total":14,"cost_nice":3,"cost_graded":14,"unrepr":3,"reject_total":0,"reject_nice":0,
+                "eval/v5/spec": {"value_nice":1558,"value_total":1558,"cost_nice":1558,"cost_graded":1558,"reject_nice":147,"reject_total":147,"red":[]},
+                "eval/v6/authored": {"value_nice":14,"value_total":14,"cost_nice":3,"cost_graded":14,"reject_total":0,"reject_nice":0,
                   "red":[{"dim":"cost","entry":"a","op":"x"},{"dim":"cost","entry":"b","op":"y"},{"dim":"panicked","entry":"c","op":"z"}]}
               } },
             { "name": "blitzen-develop", "mark": "coal", "red_total": 1, "cost": false,
               "impl": "https://github.com/ergoplatform/sigma-rust.git#develop",
               "sha": "7f927613c5a70000000000000000000000abcdef",
               "slices": {
-                "eval/v5/spec": {"value_nice":1548,"value_total":1558,"cost_graded":0,"unrepr":0,"reject_nice":147,"reject_total":147,
+                "eval/v5/spec": {"value_nice":1548,"value_total":1558,"cost_graded":0,"reject_nice":147,"reject_total":147,
                   "red":[{"dim":"value","entry":"m","op":"n"}]},
-                "eval/v6/authored": {"value_nice":14,"value_total":14,"cost_graded":0,"unrepr":0,"reject_total":0,"reject_nice":0,"red":[]}
+                "eval/v6/authored": {"value_nice":14,"value_total":14,"cost_graded":0,"reject_total":0,"reject_nice":0,"red":[]}
               } }
           ]
         })
@@ -284,7 +284,7 @@ mod tests {
         let (_, j) = badges(&sample()).into_iter().find(|(n, _)| n == "blitzen-eni").unwrap();
         let b: Value = serde_json::from_str(&j).unwrap();
         assert_eq!(b["color"], "red");
-        // v5 clean, v6 has 3 red (2 cost + 1 unrepr); BTreeMap keeps v5 before v6.
+        // v5 clean, v6 has 3 red (2 cost + 1 panicked); BTreeMap keeps v5 before v6.
         assert_eq!(b["message"], "v5 \u{2713} \u{b7} v6 \u{2717} (3)"); // "v5 ✓ · v6 ✗ (3)"
     }
 
@@ -304,7 +304,8 @@ mod tests {
         assert!(html.contains("class=\"partial\""));       // amber = value-only pass (blitzen-develop × v6/authored)
         assert!(html.contains("class=\"coal\""));          // red = blitzen-eni × eval/v6/authored diverges
         assert!(html.contains("class=\"na\""));            // rudolph/dasher don't cover eval/v6/authored
-        assert!(html.contains("unrepr 3 \u{b7} panicked 0")); // tooltip carries the panicked figure
+        assert!(html.contains("panicked 0")); // tooltip carries the panicked figure
+        assert!(!html.contains("unrepr")); // unrepresentable removed end-to-end
         assert!(html.contains("abc123"));                  // the stamped ref
         assert!(html.contains("\u{2014}"));                // — (na cell / null-impl source)
     }

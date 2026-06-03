@@ -216,7 +216,6 @@ struct Counts {
     value_nice: u64,
     value_coal: u64,
     not_impl: u64,
-    unrepr: u64,
     cost_graded: u64,
     cost_nice: u64,
     cost_coal: u64,
@@ -232,12 +231,12 @@ struct Counts {
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.unrepr + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal
+        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal
     }
     fn to_json(&self) -> Value {
         json!({
             "value_total": self.value_total, "value_nice": self.value_nice, "value_coal": self.value_coal,
-            "not_impl": self.not_impl, "unrepr": self.unrepr,
+            "not_impl": self.not_impl,
             "cost_graded": self.cost_graded, "cost_nice": self.cost_nice, "cost_coal": self.cost_coal,
             "reject_total": self.reject_total, "reject_nice": self.reject_nice, "reject_coal": self.reject_coal,
             "panicked": self.panicked,
@@ -258,13 +257,10 @@ impl Counts {
                 bits.push(format!("{} val-coal", self.value_coal));
             }
         }
-        // not-impl / unrepr render independent of value coverage: a slice can be entirely
-        // coverage-gaps (value_total 0, e.g. dasher's eval/v6/authored) and must still show them.
+        // not-impl renders independent of value coverage: a slice can be entirely coverage-gaps
+        // (value_total 0, e.g. dasher's eval/v6/authored) and must still show it.
         if self.not_impl > 0 {
             bits.push(format!("{} not-impl", self.not_impl));
-        }
-        if self.unrepr > 0 {
-            bits.push(format!("{} unrepr", self.unrepr));
         }
         if self.panicked > 0 {
             bits.push(format!("{} panicked", self.panicked));
@@ -306,12 +302,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         "note": actual.get("note").cloned().unwrap_or(Value::Null)}));
                 }
                 Some("coverage") => {
+                    // not-implemented is the only coverage tag (unrepresentable was removed end-to-end).
                     let tag = g["tag"].as_str().unwrap();
-                    if tag == "not-implemented" {
-                        c.not_impl += 1;
-                    } else {
-                        c.unrepr += 1;
-                    }
+                    c.not_impl += 1;
                     c.red.push(json!({"op": op, "entry": name, "dim": tag}));
                 }
                 Some("reject") => {
@@ -523,10 +516,10 @@ mod tests {
     #[test]
     fn summary_reports_coverage_gaps_without_value_coverage() {
         // A slice that is 100% coverage-gaps has value_total 0 (no value-graded entry); its
-        // not-impl/unrepr counts must still render. dasher's eval/v6/authored (22 not-impl,
-        // 1 unrepr) printed a blank line before this was pinned.
-        let c = super::Counts { not_impl: 22, unrepr: 1, ..Default::default() };
-        assert_eq!(c.summary(), "22 not-impl · 1 unrepr");
+        // not-impl count must still render. dasher's eval/v6/authored (22 not-impl) printed a
+        // blank line before this was pinned.
+        let c = super::Counts { not_impl: 22, ..Default::default() };
+        assert_eq!(c.summary(), "22 not-impl");
     }
 
     #[test]
@@ -543,14 +536,13 @@ mod tests {
             value_total: 10,
             value_nice: 10,
             not_impl: 254,
-            unrepr: 2,
             cost_graded: 10,
             cost_nice: 10,
             reject_total: 3,
             reject_nice: 3,
             ..Default::default()
         };
-        assert_eq!(c.summary(), "value 10/10 · 254 not-impl · 2 unrepr · cost 10/10 · reject 3/3");
+        assert_eq!(c.summary(), "value 10/10 · 254 not-impl · cost 10/10 · reject 3/3");
     }
 
     #[test]
