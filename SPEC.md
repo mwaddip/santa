@@ -85,7 +85,7 @@ for eval; parsed structure or round-trip-ok for wire.
 |---|---|---|
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner **Dasher** (ergots, `ts-runner/`) **built** — v5-scoped | ✅ done |
-| **2 — eval scaled** | the eval corpus at scale — **1,974 entries / 117 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (Context-input `getVarFromInput` = Stage 2b, open) |
+| **2 — eval scaled** | the eval corpus at scale — **1,974 entries / 117 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (incl. Context-input `getVarFromInput`, Stage 2b) |
 | **3 — conformers + CI** | runner-agnostic orchestrator `./conform` + [integration contract](docs/contract/runner-integration.md) built (presence-as-state over `runners/*/`, one shared comparator, per-slice table); **rudolph + dasher + Blitzen** (`sigma-rust` develop & eni — two submodules) wired into a live **4-way**; ergo-node-rust runner + CI gate next; [self-test kit + scoreboard](docs/specs/phase-3-self-test-kit-and-scoreboard.md) designed | 🟢 underway |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
@@ -93,7 +93,10 @@ for eval; parsed structure or round-trip-ok for wire.
 Phases 3–5 are roadmap, not spec — each gets its subspec when reached. The **wire
 tier** is a *parallel* track, not a sequential phase: it reuses the same `fixture-gen`
 assets and serves the broadest conformer set (scorex, Fleet, wallets) — pick it up
-alongside the eval tier once Phase 1's loop shape is proven.
+alongside the eval tier once Phase 1's loop shape is proven. **Now underway:** the
+`santa-wire/v1` round-trip blesser is live — authored `Box` + `SigmaBoolean` vectors
+(`vectors/wire/v5/authored/`), JVM-canonicalized from ergots' `fixture-gen` seeds and
+schema-gated; runners + grading next ([`docs/specs/wire-tier.md`](docs/specs/wire-tier.md)).
 
 > **Note on the "reference runner":** the JVM runner (the blesser in consume-mode)
 > passes trivially — it proves the *harness mechanics* and defines the runner contract
@@ -145,6 +148,9 @@ develop & eni) over `runners/*/`. **Dasher (ergots) is fully green on v5 — 1,7
 fork but divergent on v6, and upstream `develop` misses 10 v5 values the fork fixed — the
 loop surfacing genuine cross-impl divergences, recorded and routed. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
-**Next:** the node runners (`ergo-node-rust`, block tier), the authored **reject arm**
-(mutation vectors), the **wire** tier, and a full CI gate. The open eval gap is a
-`Context`-input feature (`getVarFromInput`, Stage 2b).
+The **wire tier is opened** — `santa-wire/v1` byte-round-trip vectors (`Box` + `SigmaBoolean`,
+JVM-canonicalized from ergots' `fixture-gen`) are blessed and schema-gated, and its first finding
+(a box `creation_height` overflow the JVM rejects but sigma-rust accepts) is recorded in
+[`docs/findings/`](docs/findings/wire-jvm-vs-sigma-rust.md). **Next:** wire runners + grading (the
+wire result shape across the conformers), the node runners (`ergo-node-rust`, block tier), the
+authored **reject arm** (mutation vectors), and a full CI gate.
