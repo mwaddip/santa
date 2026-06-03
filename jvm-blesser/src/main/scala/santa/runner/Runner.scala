@@ -36,7 +36,7 @@ object Runner {
         val inputs = c.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
           val ext = inp.hcursor.downField("extension")
           ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
-            k.toByte -> EvalCore.decodeInputConstant(
+            k.toInt.toByte -> EvalCore.decodeInputConstant(
               ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
           }.toMap
         }
