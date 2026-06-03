@@ -117,4 +117,38 @@ class RunnerTest extends munit.FunSuite {
       c.get[String]("note").toOption.exists(_.contains("missing input field")),
       s"note must carry the message, got: ${actual.noSpaces}")
   }
+
+  // ── wire tier (round-trip to self) ──────────────────────────────────────────
+
+  private val wireDir = Paths.get("../vectors/wire")
+
+  test("Runner.wireEntry: Box — the control reserializes each entry to its own bytes (round-trip nice)") {
+    val raw     = new String(Files.readAllBytes(wireDir.resolve("v5/authored/Box.json")))
+    val doc     = parseJson(raw).fold(e => sys.error(s"bad json: $e"), identity)
+    val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
+    val actuals = entries.toVector.map(Runner.wireEntry).toMap
+    entries.toVector.foreach { e =>
+      val c    = e.hcursor
+      val name = c.get[String]("name").toOption.getOrElse("?")
+      val want = c.get[String]("bytes_hex").toOption.getOrElse("?")
+      val a    = actuals.getOrElse(name, Json.Null).hcursor
+      assertEquals(a.get[String]("bytes_hex").toOption, Some(want), s"round-trip mismatch for $name")
+      assertEquals(a.downField("error").focus, Some(Json.Null), s"error must be null for $name")
+    }
+  }
+
+  test("Runner.runFile dispatches a santa-wire/v1 vector to the round-trip path (bytes_hex actuals)") {
+    val tmpOut = Files.createTempFile("santa-wire-out", ".json")
+    Runner.runFile(wireDir.resolve("v5/authored/SigmaBoolean.json").toString, Some(tmpOut.toString))
+    val parsed = parseJson(new String(Files.readAllBytes(tmpOut), "UTF-8"))
+      .fold(e => fail(s"actuals not valid JSON: $e"), identity)
+    val obj = parsed.asObject.getOrElse(fail("actuals must be an object"))
+    assert(obj.nonEmpty, "actuals must have entries")
+    // wire actuals carry bytes_hex (not value/cost); an eval-dispatched vector would carry value/cost.
+    obj.toList.foreach { case (name, v) =>
+      val hc = v.hcursor
+      assert(hc.downField("bytes_hex").succeeded, s"entry $name must carry bytes_hex (wire shape), got ${v.noSpaces}")
+      assertEquals(hc.downField("error").focus, Some(Json.Null), s"control round-trip: error null for $name")
+    }
+  }
 }

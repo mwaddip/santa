@@ -4,18 +4,19 @@ import io.circe.Json
 
 import sigma.ast.{EvaluatedValue, SType}
 
-import santa.EvalCore
+import santa.{EvalCore, WireCanonicalize}
 
 /** JVM reference runner — Rudolph.
   *
-  * Consumes a `santa-eval` vector and emits, per entry, its ACTUAL
-  * `{ value, cost, error }` — JSON keyed by entry `name`. Each entry is evaluated
-  * under the version the vector records.
+  * Consumes a `santa-eval` or `santa-wire` vector and emits, per entry, its ACTUAL —
+  * eval `{ value, cost, error }` or wire `{ bytes_hex, error }` — JSON keyed by entry
+  * `name`. Each entry is processed under the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
   *   - `santa-eval/v3` → EvalCore.evalWithInputExtensions (per-input extension map)
   *   - `santa-eval/v2` → EvalCore.evalApplied (reads the entry's `input` binding)
   *   - `santa-eval/v1` → EvalCore.evalEntry   (closed tree, no input)
+  *   - `santa-wire/v1` → WireCanonicalize.canonicalize (parse + reserialize, round-trip)
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
@@ -70,13 +71,49 @@ object Runner {
     }
   }
 
+  /** Round-trip one wire-tier entry: parse `bytes_hex` as `kind` under the entry's version and
+    * reserialize. Rudolph IS the JVM canonicalizer, so this reproduces the blessed bytes — actuals
+    * `{ bytes_hex, error }` (no value/cost). A recognized parse/reserialize failure is `errored`;
+    * any other uncaught throw is `panicked` (note carries the message), per the wire result shape
+    * (docs/specs/wire-tier.md). Finer outcome classification (e.g. not-implemented for an
+    * unsupported `kind`) is deferred — for the control every vector's kind is supported by
+    * construction (the same canonicalizer blessed it). */
+  def wireEntry(e: Json): (String, Json) = {
+    val c    = e.hcursor
+    val name = c.get[String]("name").toOption.getOrElse("?")
+    try {
+      val kind = c.get[String]("kind").toOption
+        .getOrElse(sys.error(s"wire entry '$name': missing kind"))
+      val hex  = c.get[String]("bytes_hex").toOption
+        .getOrElse(sys.error(s"wire entry '$name': missing bytes_hex"))
+      val activated = c.downField("version").get[Int]("activated").toOption.map(_.toByte)
+        .getOrElse(sys.error(s"wire entry '$name': missing version.activated"))
+      val ergoTree  = c.downField("version").get[Int]("ergoTree").toOption.map(_.toByte)
+        .getOrElse(sys.error(s"wire entry '$name': missing version.ergoTree"))
+      scala.util.Try(WireCanonicalize.canonicalize(kind, hex, activated, ergoTree)) match {
+        case scala.util.Success(bytes) =>
+          name -> Json.obj("bytes_hex" -> Json.fromString(bytes), "error" -> Json.Null)
+        case scala.util.Failure(scala.util.control.NonFatal(_)) =>
+          name -> Json.obj("bytes_hex" -> Json.Null, "error" -> Json.fromString("errored"))
+      }
+    } catch {
+      case scala.util.control.NonFatal(t) =>
+        name -> Json.obj(
+          "bytes_hex" -> Json.Null,
+          "error"     -> Json.fromString("panicked"),
+          "note"      -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}"))
+    }
+  }
+
   /** Run one vector file, writing actuals to outPath (or stdout if None). */
   def runFile(vecPath: String, outPath: Option[String]): Unit = {
     val doc     = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
     val schema  = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
     val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
-    val out     = Json.obj(entries.toVector.map(evalEntry(schema, _)): _*).spaces2
+    val isWire  = schema.startsWith("santa-wire/")
+    val pairs   = entries.toVector.map(e => if (isWire) wireEntry(e) else evalEntry(schema, e))
+    val out     = Json.obj(pairs: _*).spaces2
     outPath match {
       case Some(p) =>
         java.nio.file.Files.write(java.nio.file.Paths.get(p),
