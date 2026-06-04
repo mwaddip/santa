@@ -98,7 +98,7 @@ New schemas (siblings of the eval pair, NOT an extension of them):
 ## Wire result shape (runner contract)
 
 The eval contract (`runner-contract.md`) stays **frozen**; the wire result shape is its own
-companion (`docs/contract/runner-contract-wire.md`, written when this lands). It mirrors the eval
+companion (`docs/contract/runner-contract-wire.md`). It mirrors the eval
 contract's totality model with `value`+`cost` replaced by a single `bytes_hex`:
 
 - **Success:** `{ "bytes_hex": "<reserialization>", "error": null }`.
