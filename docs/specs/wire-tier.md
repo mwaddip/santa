@@ -27,27 +27,32 @@ canonical). The wire blesser is a single uniform step:
 candidate bytes ──parse via the JVM serializer for `kind`──▶ object ──reserialize──▶ JVM-canonical bytes
 ```
 
-The committed vector carries the **JVM-canonical** bytes. **Candidate bytes come from two
-sources, one blesser:**
+The committed vector carries the **JVM-canonical** bytes. Each entry records its own
+**`source`** (per-entry, so one slice — e.g. `Box` — can hold vectors from several
+frameworks), which places it under `vectors/wire/<version>/<provenance>/`:
 
-- **`authored`** — harvest ergots' existing `fixture-gen/.../wire/` corpus wholesale
-  (`sbox_roundtrip`, `ergo_box_bytes`, `sheader_constants`, `sigma_boolean_variants`): each
-  entry is `{name, description, bytes_hex}`. Those bytes are produced by **sigma-rust**
-  (`ErgoBox::sigma_serialize_bytes()`), so feeding them through the JVM both re-anchors them
-  to the canonical oracle and makes the harvest itself the **first JVM-vs-sigma-rust wire
-  diff**: where the JVM reserializes differently, the JVM bytes win and the divergence is a
-  finding (`docs/findings/`); where the JVM can't parse a fixture, that is logged too. Covers
-  **boxes + constants + sigma-booleans**. ("No re-doing ergots' work" — we reuse its curated
-  edge shapes, not re-author them.)
-- **`captured`** — real testnet boxes, **transactions**, and **block headers** (the rust-node
-  session gathers these from the syncing node's REST endpoint; routed via `prompts/` once this
-  schema is pinned). Real chain objects are consensus-canonical, so the JVM canonicalize is
-  normally a confirmation; any mismatch (e.g. a node re-serializing at the REST boundary) is
-  itself a finding. Captures are how **tx and header** coverage enters at all — ergots authors no
-  tx/standalone-header wire fixtures.
+- **`vendored`** — harvested from another framework's serializer test corpus and re-anchored
+  through the JVM. Two sources today: **ergots** `fixture-gen/.../wire/` (`sbox_roundtrip`,
+  `sigma_boolean_variants`) and **Fleet** `packages/serializer/src/_test-vectors/`
+  (`signedTransactions`, `constantVectors`, `boxVectors`). Those bytes are produced by the
+  framework's own serializer (sigma-rust for ergots, Fleet's scorex reimpl), so feeding them
+  through the JVM both re-anchors them to the oracle and makes each harvest a
+  **JVM-vs-that-framework wire diff**: where the JVM reserializes differently the JVM bytes
+  win and the divergence is a finding (`docs/findings/`); where the JVM can't parse a fixture
+  it is logged and excluded (a reject seed). Box round-trips from ergots **and** Fleet share
+  one `vendored/Box.json` slice, each entry tagged by its `source`.
+- **`authored`** — our own manually-curated cases filling spec gaps: real testnet
+  `Transaction`/`Header`/box **captures** (the rust-node session gathers these from the REST
+  endpoint, routed via `prompts/`; `testnet:` source), plus any hand-built vectors. Captures
+  are consensus-canonical, so the JVM canonicalize is normally a confirmation; a mismatch
+  (e.g. a node re-serializing at the REST boundary) is itself a finding. Captures are how
+  **tx and header** coverage from real chain data enters.
+- **`spec`** — extracted from an official serialization specification. None today:
+  serialization has no enumerable spec the way eval has `LanguageSpecificationV5/V6`, so
+  `wire/*/spec/` stays an empty slot.
 
-The two provenances differ only in *where the candidate bytes come from*; the blesser, schema,
-and runner contract are identical.
+The provenances differ only in *where the candidate bytes come from*; the blesser, schema, and
+runner contract are identical.
 
 ## Format — `santa-wire/v1`
 
@@ -55,15 +60,15 @@ New schemas (siblings of the eval pair, NOT an extension of them):
 `schema/santa-wire.vector.schema.json` + `schema/santa-wire.actuals.schema.json`.
 
 ```jsonc
-// vector: vectors/wire/v5/authored/Box.json
+// vector: vectors/wire/v5/vendored/Box.json
 {
   "schema": "santa-wire/v1",
   "op": "Box",                              // slice label (file-level), like eval's `op`
   "blessed_by": "jvm:sigma-state-6.0.3",    // the JVM canonicalizer, always
-  "source": "ergots:fixture-gen/wire/sbox_roundtrip",
   "entries": [{
     "name": "sbox_minimal",
     "kind": "Box",                          // serializer selector (entry-level); see below
+    "source": "ergots:fixture-gen/wire",    // candidate origin, PER ENTRY (a Box slice mixes ergots + fleet)
     "description": "value=1_000_000, no tokens, no registers, height=0, index=0",
     "bytes_hex": "80897a1000...",           // the JVM-CANONICAL bytes; expected = these, round-trip-to-self
     "version": { "activated": 2, "ergoTree": 2 }
@@ -124,11 +129,13 @@ contract's totality model with `value`+`cost` replaced by a single `bytes_hex`:
   (parse-fail). All serializers it needs already back eval SValue encodings (`ErgoBox`,
   `ErgoHeader`, `DataSerializer` per runner-contract `§4`; `ErgoLikeTransaction.serializer` from
   sigma-state main).
-- An `AuthoredWire` driver (mirrors `AuthoredGetVarFromInput`): reads ergots' committed wire
-  fixture JSONs (`packages/ergoscript/test/fixtures/wire/*.json`, reachable via the dasher ergots
-  checkout), canonicalizes each `bytes_hex`, emits `vectors/wire/<v>/authored/<op>.json`. At bless
-  time it **diffs JVM-canonical vs the sigma-rust candidate** and reports any mismatch (a finding)
-  — the bless run is itself a JVM-vs-sigma-rust pass.
+- Per-framework drivers `VendoredWireErgots` + `VendoredWireFleet` read each framework's vendored
+  seeds (ergots' `fixture-gen/wire/*` and Fleet's `_test-vectors/*`, vendored under
+  `src/test/resources/{ergots,fleet}-wire/`), canonicalize each `bytes_hex`, and stamp a per-entry
+  `source`. A `VendoredWire` assembler merges them by op (so `Box` unions both frameworks) and
+  `VendoredWireTest` writes `vectors/wire/<v>/vendored/<op>.json`. At bless time each diffs
+  JVM-canonical vs the framework candidate and reports any mismatch (a finding) — the bless run is
+  itself a JVM-vs-framework pass.
 - Captured candidates are canonicalized by the same `WireCanonicalize`; the capture-side gathering
   is the rust-node session's job (separate `prompts/` spec, this schema as its contract).
 
@@ -151,8 +158,9 @@ contract's totality model with `value`+`cost` replaced by a single `bytes_hex`:
 ## Vectors / taxonomy
 
 `vectors/wire/<version>/<provenance>/<op>.json` — mirrors `vectors/eval/<version>/<provenance>/`.
-First files: `wire/v5/authored/{Box,Constant,SigmaBoolean}.json` (ergots harvest);
-`wire/{v5,v6}/captured/{Box,Transaction,Header}.json` (rust-node captures).
+First files: `wire/v5/vendored/{Box,SigmaBoolean,Transaction,Constant}.json` (ergots + Fleet
+harvest; Box unions both frameworks); `wire/{v5,v6}/authored/{Header,…}.json` (rust-node captures,
+`testnet:` source).
 
 ## Honest limitations (round-trip to self)
 
@@ -173,8 +181,9 @@ the wire reject/mutation arm (malformed bytes a real parser must reject — an e
 ## Build order
 
 0. Schemas (`santa-wire.{vector,actuals}`) + `tools/validate` coverage.
-1. `WireCanonicalize` + `AuthoredWire` blesser; harvest ergots' wire corpus → `wire/v5/authored/*`,
-   anchored TDD (`AuthoredWireTest` pins each canonical `bytes_hex` + any JVM-vs-sigma-rust finding).
+1. `WireCanonicalize` + the `VendoredWire{Ergots,Fleet}` harvesters + `VendoredWire` assembler;
+   harvest ergots + Fleet → `wire/v5/vendored/*`, anchored TDD (the `VendoredWire*Test`s pin each
+   canonical `bytes_hex` + any JVM-vs-framework finding).
 2. santa-check wire branch + `oracle/verdicts-wire.json` wire meta-vectors; conform/results wire slices.
 3. Wire runner shape on the serializers already wired — rudolph (control, trivially green: it *is*
    the canonicalizer), dasher (`@ergots/ergoscript` + `@ergots/scorex`), blitzen-eni/develop
@@ -184,8 +193,8 @@ the wire reject/mutation arm (malformed bytes a real parser must reject — an e
 
 ## Gates / testing (TDD)
 
-- **jvm:** `AuthoredWireTest` (anchors canonical bytes + divergence findings); `WireCanonicalizeTest`
-  (parse→reserialize per `kind`).
+- **jvm:** `VendoredWireErgotsTest` / `VendoredWireFleetTest` / `VendoredWireTest` (anchor canonical
+  bytes, per-framework + merged counts, divergence findings); `WireCanonicalizeTest` (parse→reserialize per `kind`).
 - **schema:** the two new files validate; `tools/validate` count bumps.
 - **conform:** wire slices grade across rudolph/dasher/blitzen×2; rudolph all round-trip-ok.
 - **santa-check:** `oracle/verdicts-wire.json` reproduced by `tests/oracle.rs` (alongside the eval oracle).

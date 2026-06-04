@@ -18,10 +18,13 @@ Same `run(vector) → actuals` shape as eval (`runner-contract.md` §1), with th
 **serialization round-trip** instead of value+cost.
 
 - A **wire vector** is a committed JSON file under [`/vectors/wire`](../../vectors/wire/):
-  an envelope (`schema: "santa-wire/v1"`, `op`, `blessed_by`, `source`, `entries`) carrying
-  a list of `entries`. Each entry is `{ name, kind, bytes_hex, version }` — **there is no
+  an envelope (`schema: "santa-wire/v1"`, `op`, `blessed_by`, `entries`) carrying a list of
+  `entries`. Each entry is `{ name, kind, source, bytes_hex, version }` — **there is no
   `expected` field.** The blessed expected *is the entry's own `bytes_hex`* (round-trip to
-  self): the JVM-canonical bytes for that object.
+  self): the JVM-canonical bytes for that object. `source` is **per entry** (not the
+  envelope), so one slice — e.g. `Box` — can hold vectors vendored from several frameworks
+  (ergots + Fleet), each tagged with its origin; the provenance dir follows (framework source
+  ⇒ `vendored`, `testnet:`/`santa:` ⇒ `authored`).
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
   runner's **`{ bytes_hex, error }`** — its reserialization of the input bytes.
 
@@ -111,10 +114,11 @@ built (do not implement against them) — see `wire-tier.md` "Out of scope / Def
 ## 7. Worked example
 
 ```jsonc
-// vector entry (in vectors/wire/v5/authored/Box.json → entries[…]) — no `expected`
+// vector entry (in vectors/wire/v5/vendored/Box.json → entries[…]) — no `expected`
 {
   "name": "sbox_minimal",
   "kind": "Box",
+  "source": "ergots:fixture-gen/wire",
   "bytes_hex": "c0843d09020101000000000000000000000000000000000000000000000000000000000000000000000000",
   "version": { "activated": 2, "ergoTree": 2 }
 }

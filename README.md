@@ -121,6 +121,16 @@ like to plug in.
   executable spec + test framework (the former `execution-spec-tests` / EEST,
   consolidated in 2025); the project SANTA's structure is modeled on.
 
+## Acknowledgements
+
+- [**Fleet SDK**](https://github.com/fleet-sdk/fleet) — its serializer test vectors
+  (`packages/serializer/src/_test-vectors`) are **vendored** into SANTA's **wire tier**:
+  harvested and re-anchored through the JVM oracle, so each harvest doubles as a JVM-vs-Fleet
+  differential pass (178 constants, 17 signed transactions, 7 boxes).
+- [**ergots**](https://github.com/mwaddip/ergots)' `fixture-gen` wire fixtures are vendored too
+  (boxes + sigma-booleans). Box round-trips from ergots and Fleet share one slice, each entry
+  tagged by its framework.
+
 ## License
 
 [MIT](LICENSE).

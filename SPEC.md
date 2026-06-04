@@ -94,9 +94,12 @@ Phases 3–5 are roadmap, not spec — each gets its subspec when reached. The *
 tier** is a *parallel* track, not a sequential phase: it reuses the same `fixture-gen`
 assets and serves the broadest conformer set (scorex, Fleet, wallets) — pick it up
 alongside the eval tier once Phase 1's loop shape is proven. **Now underway:** the
-`santa-wire/v1` round-trip blesser is live — authored `Box` + `SigmaBoolean` vectors
-(`vectors/wire/v5/authored/`), JVM-canonicalized from ergots' `fixture-gen` seeds and
-schema-gated; runners + grading next ([`docs/specs/wire-tier.md`](docs/specs/wire-tier.md)).
+`santa-wire/v1` round-trip tier is live end-to-end — **vendored** `Box` (11) · `SigmaBoolean`
+(7) · `Transaction` (17) · `Constant` (178) = 213 round-trips (`vectors/wire/v5/vendored/`),
+JVM-canonicalized from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds, schema-gated, and
+graded across the 4-way (rudolph 213/213; dasher + blitzen round-trip Box+SigmaBoolean and mark
+tx/constant not-implemented). Header stays capture-only
+([`docs/specs/wire-tier.md`](docs/specs/wire-tier.md)).
 
 > **Note on the "reference runner":** the JVM runner (the blesser in consume-mode)
 > passes trivially — it proves the *harness mechanics* and defines the runner contract
