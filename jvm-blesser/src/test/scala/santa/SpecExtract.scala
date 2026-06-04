@@ -279,6 +279,36 @@ object SpecExtract {
                                    "error" -> Json.Null))
   }
 
+  /** Author one v2 REJECT entry from a hand-picked input — the reject twin of [[authoredEntry]].
+    * Same input gates, but REQUIRES SANTA's eval to FAIL (rejected for the right reason); a
+    * success is a loud authoring bug. Emits the coarse reject shape (value/cost null, errored). */
+  def authoredRejectEntry(op: String, script: String, treeBytesHex: String, name: String,
+                          inputJson: Json, activated: Byte): Json = {
+    val decoded =
+      try EvalCore.decodeInputConstant(inputJson)
+      catch { case t: Throwable =>
+        sys.error(s"authoredRejectEntry: input not decodable for '$op': ${EvalCore.errClass(t)} — ${inputJson.noSpaces}") }
+    if (!EvalCore.isWireEncodable(decoded, activated))
+      sys.error(s"authoredRejectEntry: input ${decoded.tpe} not wire-encodable at ErgoTree v$activated for '$op' — ${inputJson.noSpaces}")
+
+    val (_, outcome) = EvalCore.evalApplied(treeBytesHex, inputJson, activated = activated)
+    outcome match {
+      case Left(_)   => // expected: eval rejects (the right reason — coarse)
+      case Right(vc) =>
+        sys.error(s"authoredRejectEntry: expected REJECT but '$op' ($script) eval succeeded on ${inputJson.noSpaces}: $vc")
+    }
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "input"          -> inputJson,
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+      "expected"       -> Json.obj("value" -> Json.Null,
+                                   "cost"  -> Json.Null,
+                                   "error" -> Json.fromString("errored")))
+  }
+
   /** Public v2 envelope for authored vectors (reuses the canonical envelope). */
   def authoredEnvelope(op: String, entries: Seq[Json], source: String): Json =
     envelope(op, entries, source)
