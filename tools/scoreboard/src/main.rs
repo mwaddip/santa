@@ -125,14 +125,25 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                 Some(s) => {
                     let g = |f: &str| s.get(f).and_then(|v| v.as_u64()).unwrap_or(0);
                     let red = s.get("red").and_then(|x| x.as_array()).map(|a| a.len()).unwrap_or(0);
-                    let title = format!(
-                        "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} panicked {}",
-                        g("value_nice"), g("value_total"), g("cost_nice"), g("cost_graded"),
-                        g("reject_nice"), g("reject_total"), g("panicked")
-                    );
+                    // Wire slices grade a single round-trip verdict (no value/cost/reject) — keyed on
+                    // the slice path. Build the matching tooltip; wire is never amber (it has no cost).
+                    let is_wire = sk.starts_with("wire/");
+                    let title = if is_wire {
+                        let mut t = format!("roundtrip {}/{}", g("roundtrip_nice"), g("roundtrip_total"));
+                        if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
+                        if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        t
+                    } else {
+                        format!(
+                            "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} panicked {}",
+                            g("value_nice"), g("value_total"), g("cost_nice"), g("cost_graded"),
+                            g("reject_nice"), g("reject_total"), g("panicked")
+                        )
+                    };
                     if red > 0 {
                         body.push_str(&format!("<td class=\"coal\" title=\"{title}\">{coal_icon} {red}</td>"));
-                    } else if cost_graded {
+                    } else if is_wire || cost_graded {
+                        // Wire round-trip pass, or a full value+cost pass → green.
                         body.push_str(&format!("<td class=\"nice\" title=\"{title}\">{nice_icon}</td>"));
                     } else {
                         body.push_str(&format!(
@@ -182,11 +193,11 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 {body}</tbody>
 </table>
 <div class="legend">
-<div><span class="sw nice"></span><b>green</b> — value + cost pass</div>
+<div><span class="sw nice"></span><b>green</b> — value + cost pass (wire: round-trip-ok)</div>
 <div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
-<div class="hint">Hover a cell for the value / cost / reject / panicked breakdown.</div>
+<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, or wire round-trip.</div>
 </div>
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
@@ -308,5 +319,31 @@ mod tests {
         assert!(!html.contains("unrepr")); // unrepresentable removed end-to-end
         assert!(html.contains("abc123"));                  // the stamped ref
         assert!(html.contains("\u{2014}"));                // — (na cell / null-impl source)
+    }
+
+    #[test]
+    fn dashboard_renders_wire_cells_with_roundtrip_verdict() {
+        // Wire grades a single round-trip verdict — no value/cost/reject. The cell tooltip shows
+        // `roundtrip N/M` (+ gaps), and a clean round-trip is GREEN even for a cost:false runner
+        // (wire has no cost dimension, so a wire pass is never amber/value-only).
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "blitzen-develop", "mark": "nice", "red_total": 0, "cost": false,
+              "impl": "https://github.com/ergoplatform/sigma-rust.git#develop", "sha": "abc",
+              "slices": { "wire/v5/authored": {"roundtrip_nice": 11, "roundtrip_total": 11, "not_impl": 0, "panicked": 0, "red": []} } },
+            { "name": "dasher", "mark": "coal", "red_total": 2,
+              "slices": { "wire/v5/authored": {"roundtrip_nice": 4, "roundtrip_total": 4, "not_impl": 2, "panicked": 0,
+                "red": [{"dim":"not-implemented","entry":"a","op":"SigmaBoolean"},{"dim":"not-implemented","entry":"b","op":"SigmaBoolean"}]} } }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        // round-trip verdict in the tooltip, not value/cost
+        assert!(html.contains("roundtrip 11/11"), "wire tooltip must show roundtrip N/M");
+        // clean round-trip is green even for cost:false — wire has no cost dimension (not amber)
+        assert!(html.contains("class=\"nice\" title=\"roundtrip 11/11\""), "clean wire cell must be green, not amber");
+        assert!(!html.contains("value-only (cost not graded)"), "wire cells never carry the value-only amber note");
+        // a wire slice with gaps shows the round-trip count + the gap
+        assert!(html.contains("roundtrip 4/4 \u{b7} not-impl 2"), "wire tooltip must show not-impl gaps");
     }
 }
