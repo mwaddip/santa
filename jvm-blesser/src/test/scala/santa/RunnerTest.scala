@@ -123,7 +123,7 @@ class RunnerTest extends munit.FunSuite {
   private val wireDir = Paths.get("../vectors/wire")
 
   test("Runner.wireEntry: Box — the control reserializes each entry to its own bytes (round-trip nice)") {
-    val raw     = new String(Files.readAllBytes(wireDir.resolve("v5/authored/Box.json")))
+    val raw     = new String(Files.readAllBytes(wireDir.resolve("v5/vendored/Box.json")))
     val doc     = parseJson(raw).fold(e => sys.error(s"bad json: $e"), identity)
     val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
     val actuals = entries.toVector.map(Runner.wireEntry).toMap
@@ -139,7 +139,7 @@ class RunnerTest extends munit.FunSuite {
 
   test("Runner.runFile dispatches a santa-wire/v1 vector to the round-trip path (bytes_hex actuals)") {
     val tmpOut = Files.createTempFile("santa-wire-out", ".json")
-    Runner.runFile(wireDir.resolve("v5/authored/SigmaBoolean.json").toString, Some(tmpOut.toString))
+    Runner.runFile(wireDir.resolve("v5/vendored/SigmaBoolean.json").toString, Some(tmpOut.toString))
     val parsed = parseJson(new String(Files.readAllBytes(tmpOut), "UTF-8"))
       .fold(e => fail(s"actuals not valid JSON: $e"), identity)
     val obj = parsed.asObject.getOrElse(fail("actuals must be an object"))

@@ -1,10 +1,11 @@
 package santa
 
 import scorex.util.encode.Base16
-import org.ergoplatform.ErgoBox
+import org.ergoplatform.{ErgoBox, ErgoLikeTransaction}
 import sigma.VersionContext
+import sigma.ast.DeserializationSigmaBuilder
 import sigma.data.SigmaBoolean
-import sigma.serialization.SigmaSerializer
+import sigma.serialization.{ConstantSerializer, SigmaSerializer}
 
 /** Parse `bytesHex` as `kind` under the (activated, ergoTree) version context and
   * reserialize — the JVM's canonical bytes for that object. The wire tier's bless +
@@ -23,9 +24,18 @@ object WireCanonicalize {
           Base16.encode(ErgoBox.sigmaSerializer.toBytes(ErgoBox.sigmaSerializer.parse(r)))
         case "SigmaBoolean" =>
           Base16.encode(SigmaBoolean.serializer.toBytes(SigmaBoolean.serializer.parse(r)))
+        case "Transaction" =>
+          Base16.encode(ErgoLikeTransaction.serializer.toBytes(ErgoLikeTransaction.serializer.parse(r)))
+        case "Constant" =>
+          // A self-describing constant is bare [type][data] (no opcode); ConstantSerializer's own
+          // deserialize/serialize handle exactly that pairing (putType + DataSerializer).
+          val cs = ConstantSerializer(DeserializationSigmaBuilder)
+          val w  = SigmaSerializer.startWriter()
+          cs.serialize(cs.deserialize(r), w)
+          Base16.encode(w.toBytes)
         case other =>
           sys.error(s"WireCanonicalize: unsupported kind '$other' " +
-            "(Box/SigmaBoolean implemented; Transaction/Header/Constant arrive with captures)")
+            "(Box/SigmaBoolean/Transaction/Constant implemented; Header arrives with captures)")
       }
     }
 }

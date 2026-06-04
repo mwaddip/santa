@@ -234,7 +234,7 @@ fn actuals_guards(v: &Validator) -> u32 {
 
 /// Wire taxonomy path <-> in-data envelope guard (parallel to path_envelope_guard, wire
 /// rules). tier "wire" => schema "santa-wire/"; version v5->activated 2, v6->3; provenance
-/// "authored" iff source is NOT a capture (captures use a "testnet:" source).
+/// follows each entry's `source`: framework => vendored, testnet:/santa: => authored, spec => spec.
 fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
     let version_activated = |v: &str| match v {
         "v5" => Some(2i64),
@@ -262,11 +262,34 @@ fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
         }
-        let source = doc.get("source").and_then(Value::as_str).unwrap_or("");
-        let is_authored = !source.starts_with("testnet:");
-        if (prov == "authored") != is_authored {
+        // Provenance follows each entry's `source` (per-entry, so one slice can vendor from
+        // several frameworks): a framework source => vendored; testnet:/santa: => authored;
+        // sigma-state:/spec: => spec. Every entry's source must agree with the dir.
+        let prov_of = |src: &str| -> &'static str {
+            if src.starts_with("testnet:") || src.starts_with("santa:") {
+                "authored"
+            } else if src.starts_with("sigma-state:") || src.starts_with("spec:") {
+                "spec"
+            } else {
+                "vendored"
+            }
+        };
+        let bad_src: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let s = e["source"].as_str().unwrap_or("");
+                        s.is_empty() || prov_of(s) != prov.as_str()
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_src.is_empty() {
+            let head = &bad_src[..bad_src.len().min(3)];
             g += 1;
-            println!("  [WRONG] {}: provenance {prov:?} vs source {source:?}", rel.display());
+            println!("  [WRONG] {}: provenance {prov:?} but entry source(s) disagree: {head:?}", rel.display());
         }
         let want = version_activated(version);
         let off: Vec<&str> = doc["entries"]

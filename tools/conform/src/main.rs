@@ -558,11 +558,11 @@ mod tests {
         use serde_json::{json, Map, Value};
         use std::collections::BTreeMap;
         let root = super::repo_root();
-        let rel = "wire/v5/authored/Box.json".to_string();
+        let rel = "wire/v5/vendored/Box.json".to_string();
         let vec: Value =
             serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&rel)).unwrap()).unwrap();
         let entries = vec["entries"].as_array().unwrap();
-        let key = ("wire".to_string(), "v5".to_string(), "authored".to_string());
+        let key = ("wire".to_string(), "v5".to_string(), "vendored".to_string());
 
         // Echo actuals: every entry reserializes to its own committed bytes -> all round-trip nice.
         let mut act = Map::new();

@@ -15,7 +15,7 @@ import io.circe.parser.{parse => parseJson}
   * not a JVM-canonical round-trip vector — it is the isWireEncodable analog: caught
   * per-entry, EXCLUDED from the round-trip corpus, and reported as a reject finding (a seed
   * for the future wire reject arm). See docs/findings/wire-jvm-vs-sigma-rust.md. */
-object AuthoredWire {
+object VendoredWireErgots {
   val Source = "ergots:fixture-gen/wire"
   val V5activated: Byte = 2 // v5 activation byte (cf. tools/validate version map v5->2)
   val V5ergoTree: Byte  = 2
@@ -37,9 +37,9 @@ object AuthoredWire {
     val vectors = seeds.flatMap { case (file, op, kind) =>
       val text = new String(java.nio.file.Files.readAllBytes(seedDir.resolve(file)),
         java.nio.charset.StandardCharsets.UTF_8)
-      val root = parseJson(text).fold(e => sys.error(s"AuthoredWire: bad seed $file: $e"), identity)
+      val root = parseJson(text).fold(e => sys.error(s"VendoredWireErgots: bad seed $file: $e"), identity)
       val seedEntries = root.hcursor.downField("entries").as[List[Json]]
-        .fold(e => sys.error(s"AuthoredWire: $file entries: $e"), identity)
+        .fold(e => sys.error(s"VendoredWireErgots: $file entries: $e"), identity)
       val entries = seedEntries.flatMap { se =>
         val sc = se.hcursor
         val name = sc.get[String]("name").fold(e => sys.error(s"$file entry name: $e"), identity)
@@ -58,23 +58,23 @@ object AuthoredWire {
           Json.obj(
             "name"        -> Json.fromString(name),
             "kind"        -> Json.fromString(kind),
+            "source"      -> Json.fromString(Source),
             "description" -> Json.fromString(desc),
             "bytes_hex"   -> Json.fromString(canonical),
             "version"     -> Json.obj("activated" -> Json.fromInt(V5activated.toInt),
                                       "ergoTree"  -> Json.fromInt(V5ergoTree.toInt)))
         }
       }
-      if (entries.nonEmpty) Some(op -> envelope(op, entries, Source)) else None
+      if (entries.nonEmpty) Some(op -> envelope(op, entries)) else None
     }.toMap
     (vectors, diffs.toSeq, rejects.toSeq)
   }
 
-  private def envelope(op: String, entries: Seq[Json], source: String): Json =
+  private def envelope(op: String, entries: Seq[Json]): Json =
     Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
       "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.3"),
-      "source"     -> Json.fromString(source),
       "entries"    -> Json.arr(entries: _*))
 
   /** Persist to a staging dir (build artifact; cp into vectors/wire/v5/authored/ once
@@ -83,7 +83,7 @@ object AuthoredWire {
     java.nio.file.Files.createDirectories(outDir)
     val collisions = vectors.keys.groupBy(SpecExtract.slug).filter(_._2.size > 1)
     if (collisions.nonEmpty)
-      sys.error("AuthoredWire.writeVectors: slug collision would silently drop entries — " +
+      sys.error("VendoredWireErgots.writeVectors: slug collision would silently drop entries — " +
         collisions.map { case (s, ops) => s"'$s.json' <- ${ops.mkString(" / ")}" }.mkString("; "))
     vectors.foreach { case (op, json) =>
       java.nio.file.Files.write(outDir.resolve(s"${SpecExtract.slug(op)}.json"),

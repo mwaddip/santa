@@ -4,25 +4,28 @@
   "title": "SANTA wire-tier vector",
   "description": "A committed conformance vector for the wire tier (santa-wire/v1, byte round-trip). The blessed expected is the entry's own bytes_hex (round-trip to self). Normative companion to docs/specs/wire-tier.md.",
   "type": "object",
-  "required": ["schema", "op", "blessed_by", "source", "entries"],
+  "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
   "properties": {
     "schema": { "enum": ["santa-wire/v1"] },
     "op": { "description": "Structure-family slice label.", "type": "string", "minLength": 1 },
     "blessed_by": { "type": "string", "minLength": 1 },
-    "source": { "description": "Candidate origin (e.g. ergots:fixture-gen/wire, testnet:capture@<range>).", "type": "string", "minLength": 1 },
     "entries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entry" } }
   },
   "$defs": {
     "entry": {
       "type": "object",
-      "required": ["name", "kind", "bytes_hex", "version"],
+      "required": ["name", "kind", "source", "bytes_hex", "version"],
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string", "minLength": 1 },
         "kind": {
           "description": "Serializer selector the runner dispatches on.",
           "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean"]
+        },
+        "source": {
+          "description": "Candidate origin for THIS entry (e.g. fleet:serializer/_test-vectors, ergots:fixture-gen/wire, testnet:capture@<range>). Per-entry so one slice (e.g. Box) can hold vectors vendored from several frameworks. Provenance dir follows: framework source => vendored; testnet:/santa: => authored.",
+          "type": "string", "minLength": 1
         },
         "description": { "type": "string" },
         "bytes_hex": { "$ref": "#/$defs/hex" },

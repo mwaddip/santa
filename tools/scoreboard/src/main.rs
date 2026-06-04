@@ -331,9 +331,9 @@ mod tests {
           "runners": [
             { "name": "blitzen-develop", "mark": "nice", "red_total": 0, "cost": false,
               "impl": "https://github.com/ergoplatform/sigma-rust.git#develop", "sha": "abc",
-              "slices": { "wire/v5/authored": {"roundtrip_nice": 11, "roundtrip_total": 11, "not_impl": 0, "panicked": 0, "red": []} } },
+              "slices": { "wire/v5/vendored": {"roundtrip_nice": 11, "roundtrip_total": 11, "not_impl": 0, "panicked": 0, "red": []} } },
             { "name": "dasher", "mark": "coal", "red_total": 2,
-              "slices": { "wire/v5/authored": {"roundtrip_nice": 4, "roundtrip_total": 4, "not_impl": 2, "panicked": 0,
+              "slices": { "wire/v5/vendored": {"roundtrip_nice": 4, "roundtrip_total": 4, "not_impl": 2, "panicked": 0,
                 "red": [{"dim":"not-implemented","entry":"a","op":"SigmaBoolean"},{"dim":"not-implemented","entry":"b","op":"SigmaBoolean"}]} } }
           ]
         });
