@@ -45,6 +45,14 @@ writes actuals. It never reads `expected` (§3). The comparison is a distinct st
 *may* be the JVM harness, the runner's own checker, or a CI script — all must agree
 because "equal" is pinned (§5).
 
+**Evaluation includes deserialize-substitution.** A tree may carry `DeserializeContext(id)`
+nodes; the runner resolves them against the entry's context — the eager whole-tree pass,
+matching the JVM's `Interpreter.applyDeserializeContext` — *before* reducing. The JVM (and a
+conforming runner) leaves the node in place when `id` is absent or not a `Coll[Byte]`, so a
+`DeserializeContext` on a never-taken branch is tolerated while one on the live path errors at
+eval. A runner that skips this pass cannot grade the `DeserializeContext` vectors faithfully —
+e.g. sigma-rust's `try_eval_with_deserialize` runs it, the bare `try_eval_out` does not.
+
 ## 3. Preconditions, postconditions, invariants
 
 ### Preconditions (a runner may assume)
