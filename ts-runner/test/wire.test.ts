@@ -12,7 +12,7 @@ const loadVector = (
 
 describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
   it('Box: every entry round-trips to its own canonical bytes (public parseSValue/serializeSValue(SBox))', () => {
-    const vec = loadVector('v5/authored/Box.json')
+    const vec = loadVector('v5/vendored/Box.json')
     const actuals = runWireVector(vec)
     // totality: one outcome per entry, keyed by name, none omitted
     expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
@@ -22,11 +22,29 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
   })
 
   it('SigmaBoolean: every entry round-trips to its own canonical bytes (public parseSigmaBoolean/serializeSigmaBoolean)', () => {
-    const vec = loadVector('v5/authored/SigmaBoolean.json')
+    const vec = loadVector('v5/vendored/SigmaBoolean.json')
     const actuals = runWireVector(vec)
     expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
     for (const e of vec.entries) {
       expect(actuals[e.name]).toEqual({ bytes_hex: e.bytes_hex, error: null })
+    }
+  })
+
+  it('Constant: every entry round-trips to its own canonical bytes (public parseSType+parseSValue / serializeSType+serializeSValue)', () => {
+    const vec = loadVector('v5/vendored/Constant.json')
+    const actuals = runWireVector(vec)
+    expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
+    for (const e of vec.entries) {
+      expect(actuals[e.name]).toEqual({ bytes_hex: e.bytes_hex, error: null })
+    }
+  })
+
+  it('Transaction: not-implemented — ergots has no transaction serializer (it is an eval library, not a tx builder)', () => {
+    const vec = loadVector('v5/vendored/Transaction.json')
+    const actuals = runWireVector(vec)
+    expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
+    for (const e of vec.entries) {
+      expect(actuals[e.name]).toEqual({ bytes_hex: null, error: 'not-implemented' })
     }
   })
 })

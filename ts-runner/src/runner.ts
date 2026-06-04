@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import {
   parseTree, evaluateWith, makeContext, EvalError,
-  parseSValue, serializeSValue, SValueParseError, SValueSerializeError, type SType,
+  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
 } from '@ergots/ergoscript'
 import { ByteReader, ByteWriter } from '@ergots/scorex'
@@ -189,8 +189,29 @@ function runWireEntryInner(e: WireEntry): WireResult {
         throw err
       }
     }
+    case 'Constant': {
+      // Self-describing constant: SType || SValue (the ContextExtension / register form). Read the
+      // type, then its data, and write both back — via ergots' public parseSType + parseSValue /
+      // serializeSType + serializeSValue (the codec ergots exposes for ContextExtension decoding).
+      const bytes = hexToBytes(e.bytes_hex)
+      try {
+        const r = new ByteReader(bytes)
+        const type = parseSType(r)
+        const value = parseSValue(type, treeVersion, r)
+        const w = new ByteWriter()
+        serializeSType(type, w)
+        serializeSValue(type, value, treeVersion, w)
+        return { bytes_hex: bytesToHex(w.toBytes()), error: null }
+      } catch (err) {
+        if (err instanceof SValueParseError || err instanceof SValueSerializeError) {
+          return { bytes_hex: null, error: 'errored' }
+        }
+        throw err
+      }
+    }
     default:
-      // Future kinds (Transaction, Header, Constant) — no serializer wired in dasher yet.
+      // Transaction + Header stay not-implemented: ergots has no transaction serializer (it is an
+      // eval library, not a tx builder), and a bare Header parses via a different (scorex) path.
       return { bytes_hex: null, error: 'not-implemented' }
   }
 }
