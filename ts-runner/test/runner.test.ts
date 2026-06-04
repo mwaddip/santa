@@ -41,18 +41,19 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     })
   })
 
-  it('op the runner lacks (Coll.reverse) → not-implemented, present in actuals (NOT omitted)', () => {
-    const vec = {
-      schema: 'santa-eval/v2', op: 'Coll.reverse', blessed_by: 'x', source: 's',
-      entries: [{
-        name: 'r', tree_bytes_hex: '1b1000dad9010110db0c1e720101e4e30110',
-        input: { kind: 'Coll', elem: { tag: 'SInt' }, items: [{ kind: 'Int', value: 1 }, { kind: 'Int', value: 2 }] },
-        version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null },
-      }],
+  it('op the runner lacks (GroupElement.expUnsigned) → not-implemented for every entry (NOT omitted)', () => {
+    // Re-pinned from Coll.reverse, which ergots implemented in ergoscript-v6 (v6 P2 methods).
+    // GroupElement.expUnsigned stays not-implemented as long as ergots defers UnsignedBigInt (the
+    // deliberate v6 gap), so it's a stable op for this totality check. If ergots lands UnsignedBigInt
+    // this flips to a value and needs re-pinning — same as any tracked divergence (a fix drops the count).
+    const fixture = JSON.parse(
+      readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/GroupElement.expUnsigned.json'), 'utf8'),
+    ) as Parameters<typeof runVector>[0]
+    const actuals = runVector(fixture)
+    expect(Object.keys(actuals)).toEqual(fixture.entries.map((e) => e.name)) // totality: no entry omitted
+    for (const e of fixture.entries) {
+      expect(actuals[e.name]).toEqual({ value: null, cost: null, error: 'not-implemented' })
     }
-    const actuals = runVector(vec)
-    expect('r' in actuals).toBe(true) // totality: every entry yields an outcome
-    expect(actuals['r']).toEqual({ value: null, cost: null, error: 'not-implemented' })
   })
 
   it('type the runner lacks (UnsignedBigInt input) → not-implemented, NOT errored/omitted', () => {

@@ -3,6 +3,7 @@ import { pathToFileURL } from 'node:url'
 import {
   parseTree, evaluateWith, makeContext, EvalError,
   parseSValue, serializeSValue, SValueParseError, SValueSerializeError, type SType,
+  parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
 } from '@ergots/ergoscript'
 import { ByteReader, ByteWriter } from '@ergots/scorex'
 import { decodeSValue } from './decode'
@@ -171,10 +172,25 @@ function runWireEntryInner(e: WireEntry): WireResult {
         throw err
       }
     }
+    case 'SigmaBoolean': {
+      // Bare SigmaBoolean (op_code + payload — the inner proposition tree, no SValue framing),
+      // round-tripped via ergots' public parseSigmaBoolean/serializeSigmaBoolean (exported in
+      // ergoscript-v6 @ 122957d, the reply to prompts/ergots-wire-sigmaboolean-export.md).
+      const bytes = hexToBytes(e.bytes_hex)
+      try {
+        const sb = parseSigmaBoolean(new ByteReader(bytes))
+        const w = new ByteWriter()
+        serializeSigmaBoolean(sb, w)
+        return { bytes_hex: bytesToHex(w.toBytes()), error: null }
+      } catch (err) {
+        if (err instanceof SigmaBooleanParseError || err instanceof SigmaBooleanSerializeError) {
+          return { bytes_hex: null, error: 'errored' }
+        }
+        throw err
+      }
+    }
     default:
-      // SigmaBoolean (and future kinds) aren't reachable via @ergots' public API yet:
-      // parseSigmaBoolean/serializeSigmaBoolean exist but aren't exported. The faithful
-      // runner-level outcome is not-implemented. Routed: prompts/ergots-wire-sigmaboolean-export.md.
+      // Future kinds (Transaction, Header, Constant) — no serializer wired in dasher yet.
       return { bytes_hex: null, error: 'not-implemented' }
   }
 }

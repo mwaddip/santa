@@ -21,11 +21,12 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
     }
   })
 
-  it('SigmaBoolean: not-implemented until ergots exports the bare-SigmaBoolean wire functions', () => {
+  it('SigmaBoolean: every entry round-trips to its own canonical bytes (public parseSigmaBoolean/serializeSigmaBoolean)', () => {
     const vec = loadVector('v5/authored/SigmaBoolean.json')
     const actuals = runWireVector(vec)
+    expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
     for (const e of vec.entries) {
-      expect(actuals[e.name]).toEqual({ bytes_hex: null, error: 'not-implemented' })
+      expect(actuals[e.name]).toEqual({ bytes_hex: e.bytes_hex, error: null })
     }
   })
 })
