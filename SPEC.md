@@ -97,8 +97,8 @@ alongside the eval tier once Phase 1's loop shape is proven. **Now underway:** t
 `santa-wire/v1` round-trip tier is live end-to-end — **vendored** `Box` (11) · `SigmaBoolean`
 (7) · `Transaction` (17) · `Constant` (178) = 213 round-trips (`vectors/wire/v5/vendored/`),
 JVM-canonicalized from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds, schema-gated, and
-graded across the 4-way (rudolph 213/213; dasher + blitzen round-trip Box+SigmaBoolean and mark
-tx/constant not-implemented). Header stays capture-only
+graded across the 4-way (rudolph + blitzen 213/213; dasher 196 round-trips Box+SigmaBoolean+Constant,
+Transaction 17 not-implemented — ergots has no tx serializer). Header stays capture-only
 ([`docs/specs/wire-tier.md`](docs/specs/wire-tier.md)).
 
 > **Note on the "reference runner":** the JVM runner (the blesser in consume-mode)
