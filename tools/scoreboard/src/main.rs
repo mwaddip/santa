@@ -124,14 +124,38 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                 None => body.push_str("<td class=\"na\">\u{2014}</td>"), // — not in this runner's scope
                 Some(s) => {
                     let g = |f: &str| s.get(f).and_then(|v| v.as_u64()).unwrap_or(0);
-                    let red = s.get("red").and_then(|x| x.as_array()).map(|a| a.len()).unwrap_or(0);
+                    let red_arr = s.get("red").and_then(|x| x.as_array()).cloned().unwrap_or_default();
+                    let red = red_arr.len();
                     // Wire slices grade a single round-trip verdict (no value/cost/reject) — keyed on
                     // the slice path. Build the matching tooltip; wire is never amber (it has no cost).
                     let is_wire = sk.starts_with("wire/");
+                    let is_tx = sk.starts_with("transaction/");
                     let title = if is_wire {
                         let mut t = format!("roundtrip {}/{}", g("roundtrip_nice"), g("roundtrip_total"));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        t
+                    } else if is_tx {
+                        // Transaction tier: valid + cost (when graded) + optional not-impl/panicked gaps.
+                        let mut t = format!("valid {}/{}", g("tx_valid_nice"), g("tx_valid_total"));
+                        if g("cost_graded") > 0 {
+                            t.push_str(&format!(" \u{b7} cost {}/{}", g("cost_nice"), g("cost_graded")));
+                        }
+                        if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
+                        if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        // Append dim-labelled details for genuine divergences (valid/cost) — skip
+                        // not-implemented entries since they are already counted in the not-impl N summary.
+                        for entry in &red_arr {
+                            let dim = entry.get("dim").and_then(|v| v.as_str()).unwrap_or("?");
+                            if dim == "not-implemented" { continue; }
+                            let name = entry.get("entry").and_then(|v| v.as_str()).unwrap_or("?");
+                            t.push_str(&format!(" \u{b7} [{dim}] {}", html_escape(name)));
+                            if let Some(note) = entry.get("note").and_then(|v| v.as_str()) {
+                                // Truncate long notes at first newline for tooltip brevity.
+                                let brief = note.lines().next().unwrap_or(note);
+                                t.push_str(&format!(": {}", html_escape(brief)));
+                            }
+                        }
                         t
                     } else {
                         format!(
@@ -140,12 +164,23 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                             g("reject_nice"), g("reject_total"), g("panicked")
                         )
                     };
-                    if red > 0 {
+                    // For tx slices: if every red entry is dim="not-implemented" it is a coverage/roadmap
+                    // cell (the impl doesn't support this tier yet), not a genuine divergence. Render with
+                    // the not-impl count and a distinct style rather than as a red coal cell.
+                    let all_not_impl = is_tx && red > 0
+                        && red_arr.iter().all(|e| e.get("dim").and_then(|v| v.as_str()) == Some("not-implemented"));
+                    if all_not_impl {
+                        body.push_str(&format!(
+                            "<td class=\"coverage\" title=\"{title}\">not-impl {}</td>",
+                            g("not_impl")
+                        ));
+                    } else if red > 0 {
                         body.push_str(&format!("<td class=\"coal\" title=\"{title}\">{coal_icon} {red}</td>"));
                     } else if is_wire || cost_graded {
-                        // Wire round-trip pass, or a full value+cost pass → green.
+                        // Wire round-trip pass, or a full value+cost pass (eval/tx on a cost-graded runner) → green.
                         body.push_str(&format!("<td class=\"nice\" title=\"{title}\">{nice_icon}</td>"));
                     } else {
+                        // cost:false runner: value-only pass (eval) or valid-only pass (tx) — amber.
                         body.push_str(&format!(
                             "<td class=\"partial\" title=\"{title} \u{b7} value-only (cost not graded)\">{nice_icon}</td>"
                         ));
@@ -172,6 +207,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  td.partial {{ background: #fdf0c4; text-align: center; }}
  td.coal {{ background: #fde6e6; text-align: center; white-space: nowrap; }}
  td.na {{ background: #f7f7f7; color: #aaa; text-align: center; }}
+ td.coverage {{ background: #e8eaf6; color: #444; text-align: center; }}
  .src {{ color: #666; font-size: .8rem; font-weight: normal; }}
  .meta {{ color: #666; font-size: .85rem; }}
  .legend {{ margin-top: 1rem; font-size: .9rem; }}
@@ -181,6 +217,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  .legend .sw.partial {{ background: #fdf0c4; }}
  .legend .sw.coal {{ background: #fde6e6; }}
  .legend .sw.na {{ background: #f7f7f7; }}
+ .legend .sw.coverage {{ background: #e8eaf6; }}
  .legend .hint {{ color: #666; margin-top: .5rem; }}
 </style></head><body>
 <h1>SANTA conformance scoreboard</h1>
@@ -197,7 +234,8 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
-<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, or wire round-trip.</div>
+<div><span class="sw coverage"></span><b>blue</b> — not-impl (roadmap; no verdict yet)</div>
+<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, or tx valid / cost.</div>
 </div>
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
@@ -345,5 +383,176 @@ mod tests {
         assert!(!html.contains("value-only (cost not graded)"), "wire cells never carry the value-only amber note");
         // a wire slice with gaps shows the round-trip count + the gap
         assert!(html.contains("roundtrip 4/4 \u{b7} not-impl 2"), "wire tooltip must show not-impl gaps");
+    }
+
+    // ── Transaction tier cell tests ─────────────────────────────────────────────────────────────
+
+    fn tx_fixture() -> Value {
+        json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            // rudolph: control, no tx slice → grey —
+            { "name": "rudolph", "mark": "nice", "red_total": 0, "impl": null, "slices": {} },
+            // comet: also no tx slice → grey —
+            { "name": "comet", "mark": "nice", "red_total": 0, "slices": {} },
+            // dasher: all not-implemented → coverage cell, not coal
+            { "name": "dasher", "mark": "coal", "red_total": 4,
+              "slices": { "transaction/v6/captured": {
+                "tx_valid_total": 0, "tx_valid_nice": 0, "tx_valid_coal": 0,
+                "cost_graded": 0, "cost_nice": 0, "cost_coal": 0,
+                "not_impl": 4, "panicked": 0,
+                "red": [
+                  {"dim":"not-implemented","entry":"atleast-degenerate-bound-184137","op":"atleast-degenerate-bound-184137"},
+                  {"dim":"not-implemented","entry":"bigint-downcast-2666","op":"bigint-downcast-2666"},
+                  {"dim":"not-implemented","entry":"deserialize-context-111927","op":"deserialize-context-111927"},
+                  {"dim":"not-implemented","entry":"powhit-return-type-28474","op":"powhit-return-type-28474"}
+                ]
+              }}
+            },
+            // blitzen-develop: all valid-coal → RED 4
+            { "name": "blitzen-develop", "mark": "coal", "red_total": 4, "cost": false,
+              "slices": { "transaction/v6/captured": {
+                "tx_valid_total": 4, "tx_valid_nice": 0, "tx_valid_coal": 4,
+                "cost_graded": 0, "cost_nice": 0, "cost_coal": 0,
+                "not_impl": 0, "panicked": 0,
+                "red": [
+                  {"dim":"valid","entry":"atleast-degenerate-bound-184137","note":"Verifier error: AtLeast bound","op":"atleast-degenerate-bound-184137"},
+                  {"dim":"valid","entry":"bigint-downcast-2666","note":"Verifier error: cannot downcast BigInt","op":"bigint-downcast-2666"},
+                  {"dim":"valid","entry":"deserialize-context-111927","note":"Verifier error: context extension var 0","op":"deserialize-context-111927"},
+                  {"dim":"valid","entry":"powhit-return-type-28474","note":"Verifier error: invalid condition tpe","op":"powhit-return-type-28474"}
+                ]
+              }}
+            },
+            // blitzen-eni: valid 4/4 nice, cost 1/4 (3 coal) → RED 3
+            { "name": "blitzen-eni", "mark": "coal", "red_total": 3,
+              "slices": { "transaction/v6/captured": {
+                "tx_valid_total": 4, "tx_valid_nice": 4, "tx_valid_coal": 0,
+                "cost_graded": 4, "cost_nice": 1, "cost_coal": 3,
+                "not_impl": 0, "panicked": 0,
+                "red": [
+                  {"dim":"cost","entry":"bigint-downcast-2666","op":"bigint-downcast-2666"},
+                  {"dim":"cost","entry":"deserialize-context-111927","op":"deserialize-context-111927"},
+                  {"dim":"cost","entry":"powhit-return-type-28474","op":"powhit-return-type-28474"}
+                ]
+              }}
+            },
+            // all-nice: valid 4/4 + cost 4/4 → GREEN
+            { "name": "full-nice", "mark": "nice", "red_total": 0,
+              "slices": { "transaction/v6/captured": {
+                "tx_valid_total": 4, "tx_valid_nice": 4, "tx_valid_coal": 0,
+                "cost_graded": 4, "cost_nice": 4, "cost_coal": 0,
+                "not_impl": 0, "panicked": 0,
+                "red": []
+              }}
+            },
+            // cost-false passing valid: valid 4/4, cost_graded=0 → AMBER (value-only)
+            { "name": "cost-false-pass", "mark": "nice", "red_total": 0, "cost": false,
+              "slices": { "transaction/v6/captured": {
+                "tx_valid_total": 4, "tx_valid_nice": 4, "tx_valid_coal": 0,
+                "cost_graded": 0, "cost_nice": 0, "cost_coal": 0,
+                "not_impl": 0, "panicked": 0,
+                "red": []
+              }}
+            }
+          ]
+        })
+    }
+
+    #[test]
+    fn tx_all_nice_valid_and_cost_is_green() {
+        let html = dashboard(&tx_fixture(), "test");
+        // full-nice has red=[] and cost_graded runner → green cell
+        // tooltip must show valid 4/4 · cost 4/4
+        assert!(html.contains("class=\"nice\" title=\"valid 4/4 \u{b7} cost 4/4\""),
+            "all-nice tx cell must be green with valid+cost tooltip");
+    }
+
+    #[test]
+    fn tx_valid_nice_cost_partial_coal_is_red_with_count() {
+        let html = dashboard(&tx_fixture(), "test");
+        // blitzen-eni: red=3 (all cost entries); valid 4/4 · cost 1/4 in tooltip
+        assert!(html.contains("class=\"coal\" title=\"valid 4/4 \u{b7} cost 1/4"),
+            "blitzen-eni tx cell must be red with valid+cost breakdown in tooltip");
+        // the cell shows the coal icon and count 3
+        assert!(html.contains("\u{1faa8} 3"),
+            "blitzen-eni tx cell must show coal icon and count 3");
+    }
+
+    #[test]
+    fn tx_all_valid_coal_is_red_with_count_4() {
+        let html = dashboard(&tx_fixture(), "test");
+        // blitzen-develop: red=4 (all valid entries); valid 0/4 in tooltip
+        assert!(html.contains("class=\"coal\" title=\"valid 0/4"),
+            "blitzen-develop tx cell must be red with valid 0/4 in tooltip");
+        assert!(html.contains("\u{1faa8} 4"),
+            "blitzen-develop tx cell must show coal icon and count 4");
+    }
+
+    #[test]
+    fn tx_red_tooltip_includes_entry_details_with_note() {
+        let html = dashboard(&tx_fixture(), "test");
+        // blitzen-develop entries have notes — first line of note should appear in tooltip
+        assert!(html.contains("[valid] atleast-degenerate-bound-184137: Verifier error: AtLeast bound"),
+            "tx tooltip must include dim+entry+note for red entries");
+    }
+
+    #[test]
+    fn tx_cost_false_runner_passing_valid_is_amber() {
+        let html = dashboard(&tx_fixture(), "test");
+        // cost-false-pass: red=0, cost:false runner → amber (value-only)
+        // tooltip shows valid 4/4 (no cost since cost_graded=0) + amber suffix
+        assert!(html.contains("class=\"partial\" title=\"valid 4/4 \u{b7} value-only (cost not graded)\""),
+            "cost:false runner passing tx valid must be amber with value-only note");
+    }
+
+    #[test]
+    fn tx_all_not_impl_is_coverage_cell_not_coal() {
+        let html = dashboard(&tx_fixture(), "test");
+        // dasher: all red entries are dim=not-implemented → coverage cell
+        assert!(html.contains("class=\"coverage\""),
+            "all-not-impl tx slice must render as coverage cell, not coal");
+        assert!(html.contains("not-impl 4"),
+            "coverage cell must show not-impl count");
+        // must NOT appear as a coal cell
+        // (dasher has no other coal slices in this fixture)
+        // verify the coverage cell has the not-impl tooltip
+        assert!(html.contains("class=\"coverage\" title=\"valid 0/0 \u{b7} not-impl 4\""),
+            "coverage cell must carry the not-impl tooltip");
+    }
+
+    #[test]
+    fn tx_no_slice_runners_get_grey_na_cell() {
+        let html = dashboard(&tx_fixture(), "test");
+        // rudolph and comet have no tx slice → their cells must be na (grey —)
+        // The na cell content is just — (em dash), class=na
+        // We can't assert per-runner position directly, but at least two na cells exist
+        let na_count = html.matches("class=\"na\"").count();
+        assert!(na_count >= 2, "rudolph+comet must both get grey na cells for the tx row, found {na_count}");
+    }
+
+    #[test]
+    fn tx_badge_red_count_includes_valid_coal_and_cost_coal() {
+        // blitzen-eni: 3 cost-coal red entries flow into version_reds → v6 badge red=3
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "blitzen-eni", "mark": "coal", "red_total": 3,
+              "slices": { "transaction/v6/captured": {
+                "tx_valid_total": 4, "tx_valid_nice": 4, "tx_valid_coal": 0,
+                "cost_graded": 4, "cost_nice": 1, "cost_coal": 3,
+                "not_impl": 0, "panicked": 0,
+                "red": [
+                  {"dim":"cost","entry":"a","op":"a"},
+                  {"dim":"cost","entry":"b","op":"b"},
+                  {"dim":"cost","entry":"c","op":"c"}
+                ]
+              }}
+            }
+          ]
+        });
+        let (_, j) = badges(&data).into_iter().find(|(n, _)| n == "blitzen-eni").unwrap();
+        let b: Value = serde_json::from_str(&j).unwrap();
+        assert_eq!(b["color"], "red");
+        assert_eq!(b["message"], "v6 \u{2717} (3)"); // "v6 ✗ (3)"
     }
 }
