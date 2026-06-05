@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-transaction.actuals.schema.json",
+  "title": "SANTA transaction-tier actuals",
+  "description": "A runner's output for one transaction vector: each entry name -> { valid, cost, error, reason? }. valid is non-null IFF error is null (the runner produced a verdict). valid:false is a normal value (clean rejection), distinct from error:errored. Reason is a diagnostic note, never graded.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": { "$ref": "#/$defs/result" },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "required": ["valid", "cost", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "valid": { "oneOf": [ { "type": "boolean" }, { "type": "null" } ] },
+        "cost": { "oneOf": [ { "type": "integer", "minimum": 0 }, { "type": "null" } ] },
+        "error": { "enum": [null, "errored", "not-implemented", "panicked"] },
+        "reason": { "type": "string", "description": "Rejecting/erroring impl's reason string. Diagnostic only — not graded." },
+        "note": { "type": "string", "description": "Panic message/class. Present iff error == 'panicked'; forbidden otherwise." }
+      },
+      "allOf": [
+        { "$comment": "error null => valid non-null (a verdict); any non-null error => valid null.",
+          "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
+          "then": { "not": { "properties": { "valid": { "type": "null" } } } },
+          "else": { "properties": { "valid": { "type": "null" } } } },
+        { "$comment": "note present iff error is 'panicked'.",
+          "if": { "properties": { "error": { "const": "panicked" } }, "required": ["error"] },
+          "then": { "required": ["note"] },
+          "else": { "not": { "required": ["note"] } } }
+      ]
+    }
+  }
+}
