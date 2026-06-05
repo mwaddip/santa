@@ -79,6 +79,15 @@ fn main() -> ExitCode {
         jsonschema::validator_for(&wire_act_schema).expect("wire actuals schema invalid");
     println!("[meta] wire vector + actuals schemas: built (valid Draft 2020-12)");
 
+    // Transaction tier (santa-transaction/v1): independent schemas, no cross-ref.
+    let tx_vec_schema = load(&schema_dir.join("santa-transaction.vector.schema.json"));
+    let tx_act_schema = load(&schema_dir.join("santa-transaction.actuals.schema.json"));
+    let tx_vec_validator =
+        jsonschema::validator_for(&tx_vec_schema).expect("transaction vector schema invalid");
+    let tx_act_validator =
+        jsonschema::validator_for(&tx_act_schema).expect("transaction actuals schema invalid");
+    println!("[meta] transaction vector + actuals schemas: built (valid Draft 2020-12)");
+
     // 2. Every committed vector validates against the vector schema.
     let files = json_files(&root.join("vectors").join("eval"));
     println!("\n[corpus] validating {} committed vectors:", files.len());
@@ -121,6 +130,27 @@ fn main() -> ExitCode {
     println!("[wire corpus] {wok}/{} valid", wire_files.len());
     errs += wire_path_guard(&root, &wire_files);
     errs += wire_actuals_guards(&wire_act_validator);
+
+    // Transaction corpus: validate every committed transaction vector against the tx vector schema.
+    let tx_files = json_files(&root.join("vectors").join("transaction"));
+    println!("\n[transaction corpus] validating {} committed transaction vectors:", tx_files.len());
+    let mut tok = 0;
+    for f in &tx_files {
+        let doc = load(f);
+        let errors: Vec<_> = tx_vec_validator.iter_errors(&doc).collect();
+        if errors.is_empty() {
+            tok += 1;
+        } else {
+            errs += 1;
+            println!("  FAIL {}", f.file_name().unwrap().to_string_lossy());
+            for e in errors.iter().take(4) {
+                println!("      {}", truncate(&e.to_string(), 180));
+            }
+        }
+    }
+    println!("[transaction corpus] {tok}/{} valid", tx_files.len());
+    errs += tx_path_guard(&root, &tx_files);
+    errs += transaction_actuals_guards(&tx_act_validator);
 
     println!(
         "\n=== {} ===",
@@ -341,4 +371,250 @@ fn wire_actuals_guards(v: &Validator) -> u32 {
         println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
     }
     bad
+}
+
+/// Transaction actuals asymmetry guards: error null => valid non-null (verdict present);
+/// any non-null error => valid null; panicked carries note.
+fn transaction_actuals_guards(v: &Validator) -> u32 {
+    let checks: &[(&str, Value, bool)] = &[
+        // valid cases
+        ("accepted", json!({"t#0": {"valid": true, "cost": 1200, "error": null}}), true),
+        ("rejected", json!({"t#0": {"valid": false, "cost": null, "error": null}}), true),
+        // cost is integer-or-null independent of valid; a clean rejection may carry a non-null cost.
+        ("rejected with cost", json!({"t#0": {"valid": false, "cost": 500, "error": null}}), true),
+        ("errored", json!({"t#0": {"valid": null, "cost": null, "error": "errored"}}), true),
+        ("not-implemented", json!({"t#0": {"valid": null, "cost": null, "error": "not-implemented"}}), true),
+        ("panicked carries note", json!({"t#0": {"valid": null, "cost": null, "error": "panicked", "note": "boom"}}), true),
+        // invalid: error null AND valid null (no verdict)
+        ("error null + valid null rejected", json!({"t#0": {"valid": null, "cost": null, "error": null}}), false),
+        // invalid: non-null error AND non-null valid
+        ("errored + valid non-null rejected", json!({"t#0": {"valid": false, "cost": null, "error": "errored"}}), false),
+        ("panicked + valid non-null rejected", json!({"t#0": {"valid": true, "cost": null, "error": "panicked", "note": "b"}}), false),
+        // invalid: cost as string
+        ("string cost rejected", json!({"t#0": {"valid": true, "cost": "1200", "error": null}}), false),
+        // invalid: panicked without note
+        ("panicked without note rejected", json!({"t#0": {"valid": null, "cost": null, "error": "panicked"}}), false),
+        // invalid: note on non-panicked
+        ("note on non-panicked rejected", json!({"t#0": {"valid": null, "cost": null, "error": "errored", "note": "x"}}), false),
+    ];
+    println!("\n[transaction actuals] asymmetry guards:");
+    let mut bad: u32 = 0;
+    for (label, doc, want) in checks {
+        let got = v.is_valid(doc);
+        let good = got == *want;
+        if !good {
+            bad += 1;
+        }
+        println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
+    }
+    bad
+}
+
+/// Transaction taxonomy path <-> in-data envelope guard. tier "transaction" => schema
+/// "santa-transaction/v1"; version v6 => activated 3; provenance captured => every entry
+/// source starts with "testnet:" AND expected.valid == true; provenance authored => every
+/// entry source starts with "santa:".
+fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
+    let version_activated = |v: &str| match v {
+        "v6" => Some(3i64),
+        _ => None,
+    };
+    println!("\n[transaction catalogue] path <-> envelope guard:");
+    let vroot = root.join("vectors");
+    let mut g: u32 = 0;
+    for f in files {
+        let rel = f.strip_prefix(&vroot).unwrap();
+        let parts: Vec<String> = rel
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned())
+            .collect();
+        if parts.len() != 4 {
+            g += 1;
+            println!("  [WRONG] {}: not <tier>/<version>/<provenance>/<op>.json", rel.display());
+            continue;
+        }
+        let (tier, version, prov) = (&parts[0], &parts[1], &parts[2]);
+        let doc = load(f);
+        let schema = doc.get("schema").and_then(Value::as_str).unwrap_or("");
+        if tier != "transaction" || !schema.starts_with("santa-transaction/") {
+            g += 1;
+            println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
+        }
+        // version -> activated: unknown version fires [WRONG] unconditionally (mirrors wire).
+        let want = version_activated(version);
+        let off: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| e["version"]["activated"].as_i64() != want)
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if want.is_none() || !off.is_empty() {
+            let head = &off[..off.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+        }
+        // Provenance: captured => source starts with "testnet:" AND expected.valid == true.
+        // authored => source starts with "santa:".
+        let bad_src: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let src = e["source"].as_str().unwrap_or("");
+                        match prov.as_str() {
+                            "captured" => {
+                                let wrong_src = !src.starts_with("testnet:");
+                                let wrong_valid = e["expected"]["valid"].as_bool() != Some(true);
+                                wrong_src || wrong_valid
+                            }
+                            "authored" => !src.starts_with("santa:"),
+                            _ => false,
+                        }
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_src.is_empty() {
+            let head = &bad_src[..bad_src.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: provenance {prov:?} but entry source/expected disagree: {head:?}", rel.display());
+        }
+    }
+    if g == 0 {
+        println!("  [OK] all {} transaction paths agree with their envelopes", files.len());
+    } else {
+        println!("  {g} transaction path/envelope mismatch(es)");
+    }
+    g
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::Path;
+
+    fn schema_dir() -> std::path::PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../..").join("schema")
+    }
+
+    fn tx_vec_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-transaction.vector.schema.json"));
+        jsonschema::validator_for(&schema).expect("tx vector schema invalid")
+    }
+
+    fn tx_act_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-transaction.actuals.schema.json"));
+        jsonschema::validator_for(&schema).expect("tx actuals schema invalid")
+    }
+
+    fn minimal_tx_entry(source: &str, valid: bool, reason: Option<&str>) -> Value {
+        json!({
+            "name": "test-entry",
+            "source": source,
+            "tx": { "id": "abc", "inputs": [], "dataInputs": [], "outputs": [] },
+            "inputBoxes": [{}],
+            "dataInputBoxes": [],
+            "context": { "height": 100 },
+            "version": { "activated": 3, "ergoTree": 1 },
+            "expected": {
+                "valid": valid,
+                "cost": if valid { json!(1000) } else { json!(null) },
+                "reason": reason.map(|r| json!(r)).unwrap_or(json!(null))
+            }
+        })
+    }
+
+    fn minimal_tx_vector(source: &str, valid: bool, reason: Option<&str>) -> Value {
+        json!({
+            "schema": "santa-transaction/v1",
+            "op": "test-op",
+            "blessed_by": "test",
+            "entries": [minimal_tx_entry(source, valid, reason)]
+        })
+    }
+
+    /// A well-formed santa-transaction/v1 vector passes the transaction schema guard.
+    #[test]
+    fn tx_vector_well_formed_passes() {
+        let v = tx_vec_validator();
+        let doc = minimal_tx_vector("testnet:chain-xyz", true, None);
+        assert!(v.is_valid(&doc), "well-formed tx vector should pass schema");
+    }
+
+    /// valid:true with a non-null reason must be rejected by the vector schema.
+    #[test]
+    fn tx_vector_valid_true_with_reason_fails() {
+        let v = tx_vec_validator();
+        let doc = minimal_tx_vector("testnet:chain-xyz", true, Some("spurious reason"));
+        assert!(!v.is_valid(&doc), "valid:true + non-null reason must fail schema");
+    }
+
+    /// Actuals: error null AND valid null — no verdict — must fail.
+    #[test]
+    fn tx_actuals_error_null_valid_null_fails() {
+        let v = tx_act_validator();
+        let doc = json!({"t#0": {"valid": null, "cost": null, "error": null}});
+        assert!(!v.is_valid(&doc), "error:null + valid:null must fail actuals schema");
+    }
+
+    /// Actuals: non-null error ("errored") with valid:false — must fail (error non-null => valid null).
+    #[test]
+    fn tx_actuals_errored_with_valid_false_fails() {
+        let v = tx_act_validator();
+        let doc = json!({"t#0": {"valid": false, "cost": null, "error": "errored"}});
+        assert!(!v.is_valid(&doc), "error:errored + valid:false must fail actuals schema");
+    }
+
+    /// transaction_actuals_guards returns 0 failures against the real schema.
+    #[test]
+    fn tx_actuals_guards_all_pass() {
+        let schema = load(&schema_dir().join("santa-transaction.actuals.schema.json"));
+        let v = jsonschema::validator_for(&schema).expect("tx actuals schema invalid");
+        let bad = transaction_actuals_guards(&v);
+        assert_eq!(bad, 0, "transaction_actuals_guards should report 0 failures");
+    }
+
+    /// tx_path_guard on an empty file list is a no-op (returns 0).
+    #[test]
+    fn tx_path_guard_empty_tree_ok() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."); // tools/validate -> repo root
+        let bad = tx_path_guard(&root, &[]);
+        assert_eq!(bad, 0, "empty tx tree must not produce path-guard failures");
+    }
+
+    /// tx_path_guard fires [WRONG] for an unrecognized version directory (e.g. v7), mirroring
+    /// wire_path_guard's unconditional unknown-version rejection.
+    #[test]
+    fn tx_path_guard_unknown_version_fires_wrong() {
+        // Build a temp vectors/transaction/v7/authored/box-test.json tree.
+        let tmp = std::env::temp_dir().join(format!("santa-test-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("transaction").join("v7").join("authored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        // A well-formed vector whose entry has activated=3 (valid for v6) but filed under v7.
+        let doc = json!({
+            "schema": "santa-transaction/v1",
+            "op": "test-op",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "test-entry",
+                "source": "santa:authored",
+                "tx": { "id": "abc", "inputs": [], "dataInputs": [], "outputs": [] },
+                "inputBoxes": [{}],
+                "dataInputBoxes": [],
+                "context": { "height": 100 },
+                "version": { "activated": 3, "ergoTree": 1 },
+                "expected": { "valid": true, "cost": 1000, "reason": null }
+            }]
+        });
+        let fpath = vdir.join("box-test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = tx_path_guard(&tmp, &[fpath]);
+        // Clean up regardless.
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "unknown version directory v7 must fire at least one [WRONG]");
+    }
 }
