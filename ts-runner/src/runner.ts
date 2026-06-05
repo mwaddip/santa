@@ -223,6 +223,34 @@ export function runWireVector(doc: WireVector): Record<string, WireResult> {
   return actuals
 }
 
+// ---- Transaction tier ----
+// ergots is an eval library; aggregate tx validation (conservation, tokens, min-value, cost) is
+// not implemented. Returning valid:true from script-verify alone would be an unsound false-green
+// (e.g. a non-conserving tx passes script checks but must be rejected). The faithful outcome for
+// every entry is not-implemented — a coverage verdict, not coal. These entries are the growth
+// ledger: they flip green as ergots grows its tx-validation layer (runner-contract §6).
+
+interface TxVectorEntry { name: string }
+interface TxVector { schema: string; entries: TxVectorEntry[] }
+
+/** One transaction entry's faithful outcome. */
+type TxResult = {
+  valid: boolean | null
+  cost: number | null
+  error: null | 'errored' | 'not-implemented' | 'panicked'
+  note?: string
+}
+
+// Frozen singleton — returned by reference on every entry (never mutated).
+const TX_NOT_IMPL: TxResult = Object.freeze({ valid: null, cost: null, error: 'not-implemented' })
+
+/** run(transaction vector) → actuals: exactly one TxResult per entry, keyed by name (total). */
+export function runTransactionVector(doc: TxVector): Record<string, TxResult> {
+  const actuals: Record<string, TxResult> = {}
+  for (const e of doc.entries) actuals[e.name] = TX_NOT_IMPL
+  return actuals
+}
+
 // ---- CLI: runner <vector.json> [actuals-out.json] (mirrors Runner.scala) ----
 function main(argv: string[]): void {
   const vecPath = argv[2]
@@ -231,8 +259,12 @@ function main(argv: string[]): void {
     process.exit(2)
   }
   const raw = JSON.parse(readFileSync(vecPath, 'utf8')) as { schema?: string }
-  const isWire = (raw.schema ?? '').startsWith('santa-wire/')
-  const actuals = isWire ? runWireVector(raw as WireVector) : runVector(raw as Vector)
+  const schema = raw.schema ?? ''
+  const actuals = schema.startsWith('santa-wire/')
+    ? runWireVector(raw as WireVector)
+    : schema.startsWith('santa-transaction/')
+    ? runTransactionVector(raw as TxVector)
+    : runVector(raw as Vector)
   const json = JSON.stringify(actuals, null, 2)
   const outPath = argv[3]
   if (outPath) {
