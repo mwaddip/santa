@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-transaction.vector.schema.json",
+  "title": "SANTA transaction-tier vector",
+  "description": "A committed conformance vector for the transaction tier (santa-transaction/v1): a captured/authored tx + its referenced boxes + minimal context, with the JVM-blessed {valid, cost, reason}. Normative companion to docs/contract/runner-contract-transaction.md.",
+  "type": "object",
+  "required": ["schema", "op", "blessed_by", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "enum": ["santa-transaction/v1"] },
+    "op": { "type": "string", "minLength": 1 },
+    "blessed_by": { "type": "string", "minLength": 1 },
+    "entries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entry" } }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["name", "source", "tx", "inputBoxes", "dataInputBoxes", "context", "version", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "source": {
+          "description": "Per-entry origin. testnet:<...> => captured provenance (valid:true chain history); santa:<...> => authored (the adversarial reject arm).",
+          "type": "string", "minLength": 1
+        },
+        "description": { "type": "string" },
+        "tx": { "type": "object", "description": "The signed transaction, node-API JSON (id, inputs[].spendingProof, dataInputs, outputs)." },
+        "inputBoxes": { "type": "array", "items": { "type": "object" }, "minItems": 1, "description": "Full ErgoBox JSON per input, ordered to match tx.inputs." },
+        "dataInputBoxes": { "type": "array", "items": { "type": "object" }, "description": "Full ErgoBox JSON per data-input (may be empty)." },
+        "context": {
+          "type": "object", "required": ["height"], "additionalProperties": false,
+          "properties": { "height": { "type": "integer", "minimum": 0 } }
+        },
+        "version": { "$ref": "#/$defs/version" },
+        "expected": {
+          "type": "object", "required": ["valid", "cost", "reason"], "additionalProperties": false,
+          "properties": {
+            "valid": { "type": "boolean" },
+            "cost": { "oneOf": [ { "type": "integer", "minimum": 0 }, { "type": "null" } ] },
+            "reason": { "oneOf": [ { "type": "string" }, { "type": "null" } ] }
+          },
+          "allOf": [
+            { "$comment": "valid:false carries a reason; valid:true has cost and null reason.",
+              "if": { "properties": { "valid": { "const": true } } },
+              "then": { "properties": { "reason": { "type": "null" } } } }
+          ]
+        }
+      }
+    },
+    "version": {
+      "type": "object", "required": ["activated", "ergoTree"], "additionalProperties": false,
+      "properties": {
+        "activated": { "type": "integer", "minimum": 0, "maximum": 127 },
+        "ergoTree": { "type": "integer", "minimum": 0, "maximum": 127 }
+      }
+    }
+  }
+}
