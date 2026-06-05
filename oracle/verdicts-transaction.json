@@ -1,0 +1,46 @@
+{
+  "schema": "santa-oracle-transaction/v1",
+  "description": "Transaction-tier verdict meta-vectors: (actual, expected) -> grade_transaction verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the tx-tier grading from grade_transaction: independent valid + cost dimensions; panicked and not-implemented reuse the shared vocabulary. Notable: reject + errored is coal (valid=value) — BY DESIGN differs from the eval reject arm where errored IS the clean reject. The tx tier separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null).",
+  "cases": [
+    {"name": "accept-nice",
+     "expected": {"valid": true,  "cost": 14846, "reason": null},
+     "actual":   {"valid": true,  "cost": 14846, "error": null},
+     "verdict":  {"kind": "transaction", "valid": "nice", "cost": "nice"}},
+
+    {"name": "accept-valid-mismatch-coal",
+     "expected": {"valid": true,  "cost": null,  "reason": null},
+     "actual":   {"valid": false, "cost": null,  "error": null},
+     "verdict":  {"kind": "transaction", "valid": "value", "cost": "n/a"}},
+
+    {"name": "accept-cost-mismatch",
+     "expected": {"valid": true,  "cost": 14846, "reason": null},
+     "actual":   {"valid": true,  "cost": 9999,  "error": null},
+     "verdict":  {"kind": "transaction", "valid": "nice", "cost": "cost"}},
+
+    {"name": "accept-cost-unclaimed",
+     "expected": {"valid": true,  "cost": 14846, "reason": null},
+     "actual":   {"valid": true,  "cost": null,  "error": null},
+     "verdict":  {"kind": "transaction", "valid": "nice", "cost": "n/a"}},
+
+    {"name": "accept-not-impl-coverage",
+     "expected": {"valid": true,  "cost": null,  "reason": null},
+     "actual":   {"valid": null,  "cost": null,  "error": "not-implemented"},
+     "verdict":  {"kind": "coverage", "tag": "not-implemented"}},
+
+    {"name": "accept-panicked-coal",
+     "expected": {"valid": true,  "cost": null,  "reason": null},
+     "actual":   {"valid": null,  "cost": null,  "error": "panicked", "note": "OOM in validateStateful"},
+     "verdict":  {"kind": "panicked"}},
+
+    {"name": "reject-nice",
+     "expected": {"valid": false, "cost": null,  "reason": "script evaluation failed"},
+     "actual":   {"valid": false, "cost": null,  "error": null, "reason": "token preservation violated"},
+     "verdict":  {"kind": "transaction", "valid": "nice", "cost": "n/a"}},
+
+    {"name": "reject-errored-coal",
+     "description": "BY DESIGN: errored on a reject vector is coal, not a clean rejection. The tx tier explicitly separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null). Differs from the eval reject arm where errored IS the clean reject.",
+     "expected": {"valid": false, "cost": null,  "reason": "script evaluation failed"},
+     "actual":   {"valid": null,  "cost": null,  "error": "errored", "reason": "decode boom"},
+     "verdict":  {"kind": "transaction", "valid": "value", "cost": "n/a"}}
+  ]
+}
