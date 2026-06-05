@@ -115,3 +115,195 @@ fn hex_eq(a: Option<&Value>, b: Option<&Value>) -> bool {
     matches!((a.and_then(Value::as_str), b.and_then(Value::as_str)),
         (Some(x), Some(y)) if x.eq_ignore_ascii_case(y))
 }
+
+/// §6 transaction-tier verdict: two independent dimensions — `valid` (always graded) + `cost`
+/// (graded only when BOTH sides declare one). Coverage/panicked precede all grading.
+///
+/// Precedence:
+/// 1. `panicked` → coal unconditionally (before expected check).
+/// 2. `not-implemented` → coverage (NOT coal).
+/// 3. Accept vector (`expected.valid == true`):
+///    - `actual.error == null && actual.valid == true` → valid=nice; else → valid=value (coal).
+///    - Cost graded iff `expected.cost != null && actual.cost != null`: nice|cost depending on equality.
+/// 4. Reject vector (`expected.valid == false`):
+///    - `actual.valid == false && actual.error == null` → valid=nice (clean rejection).
+///    - `actual.error == "errored"` → valid=value (coal). Differs from the eval reject arm BY DESIGN:
+///      eval rejection manifests as an error (errored IS the clean reject); the tx tier explicitly
+///      separates clean-reject (valid:false) from failed-verdict (errored, i.e. valid:null).
+///    - `actual.valid == true` → coal.
+///    - Cost not graded on reject vectors.
+///
+/// Returns a verdict object in the same vocabulary as `grade` and `grade_wire` so `conform` can
+/// tally all tiers uniformly:
+/// - `{"kind": "panicked"}`
+/// - `{"kind": "coverage", "tag": "not-implemented"}`
+/// - `{"kind": "transaction", "valid": "nice"|"value", "cost": "nice"|"cost"|"n/a"}`
+pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
+    if err_is(actual, "panicked") {
+        return json!({"kind": "panicked"});
+    }
+    if err_is(actual, "not-implemented") {
+        return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+
+    let expected_valid = expected
+        .get("valid")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+
+    if expected_valid {
+        // Accept vector: need actual.error == null && actual.valid == true.
+        let actual_clean = actual.get("error").map_or(true, Value::is_null);
+        let actual_valid = actual.get("valid").and_then(Value::as_bool).unwrap_or(false);
+        let valid = if actual_clean && actual_valid { "nice" } else { "value" };
+
+        // Cost graded only when both sides declare it (non-null).
+        let expected_cost = expected.get("cost").filter(|v| !v.is_null());
+        let actual_cost = actual.get("cost").filter(|v| !v.is_null());
+        let cost = match (valid, expected_cost, actual_cost) {
+            ("nice", Some(ec), Some(ac)) => {
+                if structural_equal(ec, ac) { "nice" } else { "cost" }
+            }
+            _ => "n/a",
+        };
+
+        json!({"kind": "transaction", "valid": valid, "cost": cost})
+    } else {
+        // Reject vector: only a clean valid:false (error:null) → nice; anything else → coal.
+        // Differs from the eval reject arm BY DESIGN — eval rejection manifests as an error
+        // (errored IS the clean reject); the tx tier explicitly separates clean-reject
+        // (valid:false) from failed-verdict (errored, i.e. valid:null).
+        // Cost is not graded on reject vectors.
+        let actual_valid_false =
+            actual.get("error").map_or(true, Value::is_null)
+            && actual.get("valid").and_then(Value::as_bool) == Some(false);
+        let valid = if actual_valid_false { "nice" } else { "value" };
+        json!({"kind": "transaction", "valid": valid, "cost": "n/a"})
+    }
+}
+
+#[cfg(test)]
+mod tx_tests {
+    use super::*;
+    use serde_json::json;
+
+    fn exp_accept() -> Value {
+        json!({"valid": true, "cost": null, "reason": null})
+    }
+    fn exp_accept_cost(c: i64) -> Value {
+        json!({"valid": true, "cost": c, "reason": null})
+    }
+    fn exp_reject() -> Value {
+        json!({"valid": false, "cost": null, "reason": "some reason"})
+    }
+
+    // ── accept vectors ────────────────────────────────────────────────────────
+
+    #[test]
+    fn grade_transaction_accept_no_cost_nice() {
+        // accept + {valid:true, cost:null, error:null} => valid=nice, cost=n/a
+        let actual = json!({"valid": true, "cost": null, "error": null});
+        let v = grade_transaction(&actual, &exp_accept());
+        assert_eq!(v, json!({"kind": "transaction", "valid": "nice", "cost": "n/a"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_cost_match_nice() {
+        // accept(cost declared) + {valid:true, cost:<match>} => nice on both dims
+        let actual = json!({"valid": true, "cost": 1000, "error": null});
+        let v = grade_transaction(&actual, &exp_accept_cost(1000));
+        assert_eq!(v, json!({"kind": "transaction", "valid": "nice", "cost": "nice"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_cost_mismatch() {
+        // accept(cost declared) + {valid:true, cost:<mismatch>} => valid=nice, cost=cost (coal)
+        let actual = json!({"valid": true, "cost": 999, "error": null});
+        let v = grade_transaction(&actual, &exp_accept_cost(1000));
+        assert_eq!(v, json!({"kind": "transaction", "valid": "nice", "cost": "cost"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_valid_false_is_coal() {
+        // accept + {valid:false} => coal (valid mismatch)
+        let actual = json!({"valid": false, "cost": null, "error": null});
+        let v = grade_transaction(&actual, &exp_accept());
+        assert_eq!(v, json!({"kind": "transaction", "valid": "value", "cost": "n/a"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_errored_is_coal() {
+        // accept + {error:"errored"} => coal
+        let actual = json!({"valid": null, "cost": null, "error": "errored"});
+        let v = grade_transaction(&actual, &exp_accept());
+        assert_eq!(v, json!({"kind": "transaction", "valid": "value", "cost": "n/a"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_panicked_is_coal() {
+        // accept + {error:"panicked"} => panicked kind (coal unconditional)
+        let actual = json!({"valid": null, "cost": null, "error": "panicked", "note": "OOM"});
+        let v = grade_transaction(&actual, &exp_accept());
+        assert_eq!(v, json!({"kind": "panicked"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_not_impl_is_coverage() {
+        // accept + {error:"not-implemented"} => coverage (NOT coal)
+        let actual = json!({"valid": null, "cost": null, "error": "not-implemented"});
+        let v = grade_transaction(&actual, &exp_accept());
+        assert_eq!(v, json!({"kind": "coverage", "tag": "not-implemented"}));
+    }
+
+    #[test]
+    fn grade_transaction_accept_cost_declared_but_actual_null_is_na() {
+        // cost declared in expected but actual.cost is null => cost not graded
+        let actual = json!({"valid": true, "cost": null, "error": null});
+        let v = grade_transaction(&actual, &exp_accept_cost(500));
+        assert_eq!(v, json!({"kind": "transaction", "valid": "nice", "cost": "n/a"}));
+    }
+
+    // ── reject vectors ────────────────────────────────────────────────────────
+
+    #[test]
+    fn grade_transaction_reject_clean_nice() {
+        // reject + {valid:false, error:null} (different reason text) => nice (reason not matched)
+        let actual = json!({"valid": false, "cost": null, "error": null, "reason": "different reason"});
+        let v = grade_transaction(&actual, &exp_reject());
+        assert_eq!(v, json!({"kind": "transaction", "valid": "nice", "cost": "n/a"}));
+    }
+
+    #[test]
+    fn grade_transaction_reject_valid_true_is_coal() {
+        // reject + {valid:true} => coal
+        let actual = json!({"valid": true, "cost": null, "error": null});
+        let v = grade_transaction(&actual, &exp_reject());
+        assert_eq!(v, json!({"kind": "transaction", "valid": "value", "cost": "n/a"}));
+    }
+
+    #[test]
+    fn grade_transaction_reject_panicked_is_coal() {
+        // reject + {error:"panicked"} => coal (unconditional, before expected check)
+        let actual = json!({"valid": null, "cost": null, "error": "panicked", "note": "crash"});
+        let v = grade_transaction(&actual, &exp_reject());
+        assert_eq!(v, json!({"kind": "panicked"}));
+    }
+
+    #[test]
+    fn grade_transaction_reject_errored_is_coal() {
+        // reject + {error:"errored"} => coal (valid=value). BY DESIGN: differs from the eval
+        // reject arm where errored IS the clean reject; the tx tier separates clean-reject
+        // (valid:false) from failed-verdict (errored = runner never reached a verdict).
+        let actual = json!({"valid": null, "cost": null, "error": "errored"});
+        let v = grade_transaction(&actual, &exp_reject());
+        assert_eq!(v, json!({"kind": "transaction", "valid": "value", "cost": "n/a"}));
+    }
+
+    #[test]
+    fn grade_transaction_reject_not_impl_is_coverage() {
+        // reject + {error:"not-implemented"} => coverage (not coal, before expected check)
+        let actual = json!({"valid": null, "cost": null, "error": "not-implemented"});
+        let v = grade_transaction(&actual, &exp_reject());
+        assert_eq!(v, json!({"kind": "coverage", "tag": "not-implemented"}));
+    }
+}
