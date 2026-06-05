@@ -2,7 +2,7 @@
 //! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
 //! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
 //! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
-use santa_check::{grade, grade_wire};
+use santa_check::{grade, grade_transaction, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -226,12 +226,17 @@ struct Counts {
     roundtrip_total: u64,
     roundtrip_nice: u64,
     roundtrip_coal: u64,
+    // transaction tier: dedicated valid dim (mirrors wire's dedicated roundtrip fields);
+    // cost dim reuses cost_graded/cost_nice/cost_coal (shared concept across eval + tx).
+    tx_valid_total: u64,
+    tx_valid_nice: u64,
+    tx_valid_coal: u64,
     red: Vec<Value>,
 }
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal
+        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal
     }
     fn to_json(&self) -> Value {
         json!({
@@ -241,6 +246,7 @@ impl Counts {
             "reject_total": self.reject_total, "reject_nice": self.reject_nice, "reject_coal": self.reject_coal,
             "panicked": self.panicked,
             "roundtrip_total": self.roundtrip_total, "roundtrip_nice": self.roundtrip_nice, "roundtrip_coal": self.roundtrip_coal,
+            "tx_valid_total": self.tx_valid_total, "tx_valid_nice": self.tx_valid_nice, "tx_valid_coal": self.tx_valid_coal,
             "red": self.red,
         })
     }
@@ -265,6 +271,10 @@ impl Counts {
         if self.panicked > 0 {
             bits.push(format!("{} panicked", self.panicked));
         }
+        // transaction slices: valid dim first, then cost (cost reuses the shared cost counters).
+        if self.tx_valid_total > 0 {
+            bits.push(format!("valid {}/{}", self.tx_valid_nice, self.tx_valid_total));
+        }
         if self.cost_graded > 0 {
             bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
         }
@@ -284,14 +294,17 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         let c = slices.entry((tier, version, prov)).or_default();
         let vec: Value =
             serde_json::from_str(&fs::read_to_string(root.join("vectors").join(rel)).unwrap()).unwrap();
-        // Dispatch on the vector's schema discriminator: wire grades a single round-trip verdict
-        // (expected IS the entry's own bytes_hex), eval grades value/cost against e["expected"].
-        let is_wire = vec["schema"].as_str().is_some_and(|s| s.starts_with("santa-wire/"));
+        // Dispatch on the vector's schema discriminator.
+        let schema = vec["schema"].as_str().unwrap_or("");
+        let is_wire = schema.starts_with("santa-wire/");
+        let is_tx = schema.starts_with("santa-transaction/");
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
             let g = if is_wire {
                 grade_wire(&actual, e)
+            } else if is_tx {
+                grade_transaction(&actual, &e["expected"])
             } else {
                 grade(&actual, &e["expected"], claims_cost)
             };
@@ -323,6 +336,31 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                     } else {
                         c.roundtrip_coal += 1;
                         c.red.push(json!({"op": op, "entry": name, "dim": "roundtrip"}));
+                    }
+                }
+                Some("transaction") => {
+                    // valid dim: always graded; cost dim: only when verdict's cost != "n/a".
+                    c.tx_valid_total += 1;
+                    if g["valid"] == "nice" {
+                        c.tx_valid_nice += 1;
+                    } else {
+                        c.tx_valid_coal += 1;
+                        // Surface the actual's "reason" string as note when present (reject diagnostic).
+                        let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
+                        let mut detail = json!({"op": op, "entry": name, "dim": "valid"});
+                        if let Some(n) = note {
+                            detail["note"] = n;
+                        }
+                        c.red.push(detail);
+                    }
+                    if g["cost"] != "n/a" {
+                        c.cost_graded += 1;
+                        if g["cost"] == "nice" {
+                            c.cost_nice += 1;
+                        } else {
+                            c.cost_coal += 1;
+                            c.red.push(json!({"op": op, "entry": name, "dim": "cost"}));
+                        }
                     }
                 }
                 _ => {
@@ -551,6 +589,170 @@ mod tests {
         let c = super::Counts { roundtrip_total: 4, roundtrip_nice: 3, roundtrip_coal: 1, ..Default::default() };
         assert_eq!(c.summary(), "roundtrip 3/4");
         assert_eq!(c.red_total(), 1);
+    }
+
+    // ── transaction tally tests ──────────────────────────────────────────────
+
+    /// Build a synthetic santa-transaction/v1 vector JSON with the given entries.
+    /// Each entry: (name, expected_valid, expected_cost). A null cost means cost:null in expected.
+    fn tx_vector(entries: &[(&str, bool, Option<i64>)]) -> serde_json::Value {
+        let arr: Vec<serde_json::Value> = entries.iter().map(|(name, valid, cost)| {
+            let cost_val: serde_json::Value = match cost {
+                Some(c) => serde_json::json!(c),
+                None => serde_json::Value::Null,
+            };
+            serde_json::json!({
+                "name": name,
+                "source": "synthetic",
+                "tx": {},
+                "input_boxes": [],
+                "data_input_boxes": [],
+                "expected": {"valid": valid, "cost": cost_val, "reason": serde_json::Value::Null}
+            })
+        }).collect();
+        serde_json::json!({
+            "schema": "santa-transaction/v1",
+            "op": "tx:test:synthetic",
+            "blessed_by": "test",
+            "entries": arr
+        })
+    }
+
+    /// Run tally against a synthetic in-memory transaction vector (avoids disk I/O).
+    /// Returns the Counts for the single slice.
+    fn tally_tx_inline(
+        vec_json: &serde_json::Value,
+        actuals_obj: serde_json::Map<String, serde_json::Value>,
+    ) -> super::Counts {
+        use serde_json::Value;
+        // Inline: reproduce the tx arm of the tally loop directly (tally() reads vectors from disk
+        // by relpath; avoiding a temp tree here keeps the test self-contained).
+        let vec = vec_json;
+        let mut c = super::Counts::default();
+        for e in vec["entries"].as_array().unwrap() {
+            let name = e["name"].as_str().unwrap();
+            let actual = actuals_obj.get(name).cloned().unwrap_or(Value::Null);
+            let g = santa_check::grade_transaction(&actual, &e["expected"]);
+            match g["kind"].as_str() {
+                Some("panicked") => {
+                    c.panicked += 1;
+                    c.red.push(serde_json::json!({"op": "test", "entry": name, "dim": "panicked",
+                        "note": actual.get("note").cloned().unwrap_or(Value::Null)}));
+                }
+                Some("coverage") => {
+                    let tag = g["tag"].as_str().unwrap();
+                    c.not_impl += 1;
+                    c.red.push(serde_json::json!({"op": "test", "entry": name, "dim": tag}));
+                }
+                Some("transaction") => {
+                    c.tx_valid_total += 1;
+                    if g["valid"] == "nice" {
+                        c.tx_valid_nice += 1;
+                    } else {
+                        c.tx_valid_coal += 1;
+                        let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
+                        let mut detail = serde_json::json!({"op": "test", "entry": name, "dim": "valid"});
+                        if let Some(n) = note {
+                            detail["note"] = n;
+                        }
+                        c.red.push(detail);
+                    }
+                    if g["cost"] != "n/a" {
+                        c.cost_graded += 1;
+                        if g["cost"] == "nice" {
+                            c.cost_nice += 1;
+                        } else {
+                            c.cost_coal += 1;
+                            c.red.push(serde_json::json!({"op": "test", "entry": name, "dim": "cost"}));
+                        }
+                    }
+                }
+                _ => unreachable!("unexpected verdict kind in tx tally test"),
+            }
+        }
+        c
+    }
+
+    #[test]
+    fn tally_tx_all_nice_green_slice() {
+        // Two entries: accept(cost declared) + reject — both nice. No reds, clean summary.
+        let vec = tx_vector(&[
+            ("tx-accept", true, Some(14846)),
+            ("tx-reject", false, None),
+        ]);
+        let mut act = serde_json::Map::new();
+        act.insert("tx-accept".into(), serde_json::json!({"valid": true, "cost": 14846, "error": null}));
+        act.insert("tx-reject".into(), serde_json::json!({"valid": false, "cost": null, "error": null}));
+        let c = tally_tx_inline(&vec, act);
+        assert_eq!(c.tx_valid_total, 2);
+        assert_eq!(c.tx_valid_nice, 2);
+        assert_eq!(c.tx_valid_coal, 0);
+        assert_eq!(c.cost_graded, 1);
+        assert_eq!(c.cost_nice, 1);
+        assert_eq!(c.cost_coal, 0);
+        assert_eq!(c.red_total(), 0);
+        assert_eq!(c.summary(), "valid 2/2 · cost 1/1");
+    }
+
+    #[test]
+    fn tally_tx_valid_mismatch_records_red_with_reason() {
+        // accept + {valid:false} => valid=value coal; actual carries "reason" -> surfaced as note.
+        let vec = tx_vector(&[("tx-bad", true, None)]);
+        let mut act = serde_json::Map::new();
+        act.insert("tx-bad".into(), serde_json::json!({"valid": false, "cost": null, "error": null, "reason": "token preservation violated"}));
+        let c = tally_tx_inline(&vec, act);
+        assert_eq!(c.tx_valid_total, 1);
+        assert_eq!(c.tx_valid_coal, 1);
+        assert_eq!(c.red_total(), 1);
+        assert_eq!(c.red[0]["dim"], "valid");
+        assert_eq!(c.red[0]["entry"], "tx-bad");
+        assert_eq!(c.red[0]["note"], "token preservation violated");
+    }
+
+    #[test]
+    fn tally_tx_cost_mismatch_valid_green() {
+        // accept(cost declared) + {valid:true, cost:mismatch} => valid=nice, cost=cost (coal).
+        let vec = tx_vector(&[("tx-cost-bad", true, Some(14846))]);
+        let mut act = serde_json::Map::new();
+        act.insert("tx-cost-bad".into(), serde_json::json!({"valid": true, "cost": 9999, "error": null}));
+        let c = tally_tx_inline(&vec, act);
+        assert_eq!(c.tx_valid_nice, 1);
+        assert_eq!(c.tx_valid_coal, 0);
+        assert_eq!(c.cost_graded, 1);
+        assert_eq!(c.cost_coal, 1);
+        assert_eq!(c.cost_nice, 0);
+        assert_eq!(c.red_total(), 1);
+        // The cost-red entry has dim "cost"; no valid-red entry.
+        assert_eq!(c.red.len(), 1);
+        assert_eq!(c.red[0]["dim"], "cost");
+    }
+
+    #[test]
+    fn tally_tx_cost_na_not_counted_in_denominator() {
+        // accept(no cost in expected) + {valid:true, cost:null} => valid=nice, cost n/a; 0 cost_graded.
+        let vec = tx_vector(&[("tx-no-cost", true, None)]);
+        let mut act = serde_json::Map::new();
+        act.insert("tx-no-cost".into(), serde_json::json!({"valid": true, "cost": null, "error": null}));
+        let c = tally_tx_inline(&vec, act);
+        assert_eq!(c.tx_valid_nice, 1);
+        assert_eq!(c.cost_graded, 0);
+        assert_eq!(c.red_total(), 0);
+    }
+
+    #[test]
+    fn tally_tx_not_impl_and_panicked_land_in_shared_counters() {
+        let vec = tx_vector(&[
+            ("tx-not-impl", true, None),
+            ("tx-panicked", true, None),
+        ]);
+        let mut act = serde_json::Map::new();
+        act.insert("tx-not-impl".into(), serde_json::json!({"valid": null, "cost": null, "error": "not-implemented"}));
+        act.insert("tx-panicked".into(), serde_json::json!({"valid": null, "cost": null, "error": "panicked", "note": "OOM"}));
+        let c = tally_tx_inline(&vec, act);
+        assert_eq!(c.not_impl, 1);
+        assert_eq!(c.panicked, 1);
+        assert_eq!(c.tx_valid_total, 0); // not-impl and panicked don't touch tx_valid counters
+        assert_eq!(c.red_total(), 2);
     }
 
     #[test]
