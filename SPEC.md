@@ -47,6 +47,7 @@ umbrella is corrected immediately — it tracks reality, not intentions.
 |---|---|---|---|
 | **Wire** | bytes ⇄ structure (round-trip / parse) — constants, boxes, trees, txs, headers, VLQ | JVM serializers · captured chain bytes | *any serializer*: ergots, sigma-rust, **scorex**, **Fleet**, wallets/SDKs |
 | **Eval** | ErgoTree bytes (+ ctx) → typed value + JIT cost | JVM interpreter | consensus libraries (ergots, sigma-rust) + JVM |
+| **Transaction** | full tx inputs → valid? + declared cost (library-decidable: script-verify + conservation/tokens/min-value/cost) | ergo-core `validateStateful` (JVM, v6) | consensus libraries that implement tx validation |
 | **Block** | block H → valid? / state-root | the chain | full nodes (ergo-node-rust, JVM) |
 
 The **wire tier** is the broadest — every wallet/SDK serializes while only a couple
@@ -154,6 +155,4 @@ holds a faithful per-entry outcome model (no abstention — scope is an input-si
 The **wire tier is opened** — `santa-wire/v1` byte-round-trip vectors (`Box` + `SigmaBoolean`,
 JVM-canonicalized from ergots' `fixture-gen`) are blessed and schema-gated, and its first finding
 (a box `creation_height` overflow the JVM rejects but sigma-rust accepts) is recorded in
-[`docs/findings/`](docs/findings/wire-jvm-vs-sigma-rust.md). **Next:** wire runners + grading (the
-wire result shape across the conformers), the node runners (`ergo-node-rust`, block tier), the
-authored **reject arm** (mutation vectors), and a full CI gate.
+[`docs/findings/`](docs/findings/wire-jvm-vs-sigma-rust.md). The **transaction tier is live** — `santa-transaction/v1` schema; **4 captured vectors** (`vectors/transaction/v6/captured/`), JVM-blessed via `ergo-core 6.0.2.1 validateStateful`; grading (`grade_transaction`: valid + declared cost, accept-arm only); contract at [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md). Conformer stances: **Rudolph out** (oracle-tautological; keeps ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 1/4`** (3 genuine cost divergences: bigint 14826 vs 14846, deserialize 14816 vs 15374, powhit 16401 vs 16656; atleast exact) · **Blitzen-develop `valid 0/4`** (each seed red with its own upstream bug; the bigint-downcast seed exposes the production-path tree-version bug that eval structurally cannot catch) · **Dasher `4 not-implemented`** (growth ledger) · **Comet out-of-scope** (wire-only). Provenance: `captured` primary; `authored` for the reject arm (not yet built). **Next:** wire runners + grading, the node runners (`ergo-node-rust`, block tier), the authored **reject arm** (mutation vectors), and a full CI gate.

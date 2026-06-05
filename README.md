@@ -26,13 +26,16 @@ single implementation:
 - **fine-grained eval outputs (value, cost, reduced sigma-tree) → the JVM reference
   node** (ergo-core / `sigma-state`), the de-facto spec.
 
-Three tiers:
+Four tiers:
 
 - **Wire tier** — serialization: bytes ⇄ structure (constants, boxes, trees, txs,
   headers). The broadest — every wallet/SDK serializes (ergots, sigma-rust, scorex,
   Fleet, …); and a `boxId` *is* the hash of serialized bytes, so it's squarely consensus.
 - **Eval / transition tier** — operation-level (ErgoTree + context → typed value, with
   cost). Run by the consensus *libraries*, no full node required.
+- **Transaction tier** — library-decidable tx validity given full inputs (script-verify
+  + conservation / tokens / min-value / cost). No full node required; blessed by
+  `ergo-core validateStateful`.
 - **Block tier** — `block H → valid? / state-root`. Run by full *nodes*.
 
 ## Status
@@ -67,6 +70,14 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   and routed, never silenced; a red gate means the suite is working.
 - ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (117/117)
   and an end-to-end conformance gate. The CI seed.
+- ✅ **Transaction tier live** — `santa-transaction/v1` schema; **4 captured vectors**
+  (`vectors/transaction/v6/captured/`), each JVM-blessed via `ergo-core 6.0.2.1
+  validateStateful`. Conformer stances: **Rudolph out** (oracle-tautological + keeps
+  ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 1/4`** (3 genuine cost
+  divergences) · **Blitzen-develop `valid 0/4`** (upstream bugs; the bigint-downcast
+  seed exposes the tree-version bug eval cannot catch) · **Dasher `4 not-implemented`**
+  (growth ledger) · **Comet out-of-scope** (wire-only). Contract:
+  [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 
 Still greenfield, and where help is most wanted (see below):
 
@@ -81,17 +92,33 @@ Still greenfield, and where help is most wanted (see below):
 ```
 SPEC.md            umbrella spec — architecture, tiers, contracts, roadmap, glossary
 BOOTSTRAP.md       design rationale + decision log (the *why*)
-docs/contract/     the frozen runner I/O contract
+docs/contract/     the frozen runner I/O contracts (eval · wire · transaction)
 docs/specs/        per-phase subspecs
 docs/findings/     recorded cross-implementation divergences
 schema/            JSON Schemas for vectors + actuals, and the validator
 vectors/eval/      the canonical eval corpus — the "nice list" (v5/ and v6/)
+vectors/wire/      wire-tier round-trip vectors
+vectors/transaction/  transaction-tier captured vectors (v6/captured/)
 jvm-blesser/       Scala: the blesser, the JVM reference runner (Rudolph), the harness
 ts-runner/         Dasher — the ergots runner + the conformance gate
-runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni)
+runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni · comet)
 conform            the runner-agnostic orchestrator — runs every runner, prints the table
 README.md          this file
 ```
+
+## Re-blessing transaction vectors (maintainer only)
+
+The transaction blesser is env-gated and **never runs in CI** — committed vectors are
+the reproducible artifact. To re-bless (e.g. to add new seeds):
+
+1. Clone [`ergo-node-build`](https://github.com/mwaddip/ergo-node-build) at tag `v6.0.2.1`.
+2. From that clone: `sbt "avldb/publishLocal" "ergoWallet/publishLocal" "ergoCore/publishLocal"` — publishes `ergo-core 6.0.2.1` to `~/.ivy2/local`.
+3. From `jvm-blesser/`: `SANTA_TX_BLESSER=1 sbt -batch "testOnly santa.CapturedTxTest"` — stages blessed JSON under `jvm-blesser/target/tx-vectors/`.
+4. Copy the staged files into `vectors/transaction/v6/captured/` and commit.
+
+The bundled `jvm-blesser/src/test/resources/chain-testnet.conf` is pinned by the
+[transaction runner contract](docs/contract/runner-contract-transaction.md) and must
+not be changed without re-blessing.
 
 ## Contributing
 
