@@ -74,6 +74,33 @@ future v6 support.
 
 **Fix:** represent `Header.timestamp` as `bigint` (full u64) to match consensus.
 
+## v6 `Global.serialize[AvlTree]` cost undercharge (value agrees) — OPEN
+
+Surfaced **2026-06-05** when ergots closed its `serialize(AvlTree)` eval gap. It previously threw
+`method-not-implemented` for `Global.serialize[AvlTree]` (`ts-runner/test/runner.test.ts` carried that as
+a not-impl anchor, now re-pinned to a faithfulness check). With the gap closed, Dasher grades
+`vectors/eval/v6/authored/Global.serialize_AvlTree.json` **value-nice, cost-coal** — the serialized bytes
+match the JVM exactly, but the JIT cost is uniformly **1 under**:
+
+| op / entry | JVM (canonical) | ergots | Δ |
+|---|---|---|---|
+| `Global.serialize[AvlTree]` (`dummy#0`) | **127** | 126 | −1 |
+| `Global.serialize[AvlTree]` (`withValueLen#1`) | **127** | 126 | −1 |
+
+Both entries: value (the `Coll[Byte]` wire encoding of the `AvlTree`) is byte-identical to the bless; only
+the cost differs, by a fixed −1. This is the **serialize-cost-metering** family — value agrees, the JIT
+cost is short by a small fixed amount — the same axis as the other `Global.serialize[T]` cost divergences
+the v6/authored serialize work tracked (`AvlTree` was a cost-coal entry for sigma-rust too). The exact
+ergots site is **not source-confirmed from the SANTA session** (cross-repo); route to ergots to locate the
+missing 1-unit charge in its `Global.serialize` cost path.
+
+**Visible only via `./conform`** (the v6/authored slice). Dasher's ts-runner e2e gate walks the **v5** bucket
+only, so it does not grade this; the re-pinned `runner.test.ts` asserts runner faithfulness (no crash, a
+value present), **not** the cost match — the cost divergence is graded by `./conform` and recorded here, per
+divergences-are-the-deliverable (never pinned green).
+
+**Route:** `prompts/ergots-serialize-avltree-cost.md`.
+
 ## v5 corpus divergences (2026-06-01 — `LanguageSpecificationV5`) — RESOLVED 2026-06-02
 
 > **RESOLVED:** all 73 closed. ergots landed every value/cost fix and then the 27
@@ -106,6 +133,7 @@ Full per-entry deltas are in the e2e `cost-divergences:` block.
 ## Status
 - **Cost — `AddToEnvironment` lambda undercharge** (6 entries): **RESOLVED 2026-06-01** — fixed in sigma-rust (`d59d8d9f`) + ergots (`6171d32`); ergots `dist` rebuilt; Dasher nice on all 12 covered. The e2e gate flipped 6→0 (kept as a regression guard).
 - **Repr — `Header.timestamp` cap** (2 entries): **OPEN** — route to ergots.
+- **v6 — `serialize[AvlTree]` cost** (2 entries): **OPEN** (surfaced 2026-06-05 when ergots closed the `serialize(AvlTree)` not-impl gap) — ergots undercharges by 1 (126 vs JVM 127); value agrees byte-for-byte. Visible via `./conform` (v6/authored), not the v5 e2e gate. Route to ergots.
 - **v5 corpus** (2026-06-01 → **RESOLVED 2026-06-02**): originally **73 RED** — 10 value (negation overflow ×4, substConstants ×5, flatMap empty-type ×1) + 36 cost (flatMap / indexOf / NEQ / propBytes) + 27 not-implemented (Coll.updated / Coll.updateMany / GroupElement.negate — accept + reject cases) + 0 reject. **All fixed in ergots** (value/cost via the routed fixes; the 27 methods via `35eac6b`); SANTA re-blessed box inputs to ≥min. **Dasher v5 = 1705/1705** — the e2e pins are now a full-green guard.
 - **Reject arm** (2026-06-01): the corpus now harvests `LanguageSpecificationV5/V6`'s Failure-expected cases as coarse `errored` reject vectors (147 v5 + 24 v6). Dasher's reject bucket found **0 divergences** — ergots rejects every input the JVM rejects. Coarse only; the rejection-*reason* taxonomy stays deferred (runner-contract §7).
 - Dasher's e2e gate (`ts-runner/test/e2e.test.ts`) pins each RED count; when ergots fixes any, the count drops and the gate flags it for re-baselining.

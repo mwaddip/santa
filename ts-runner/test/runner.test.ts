@@ -97,21 +97,29 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     expect((act.note ?? '').length).toBeGreaterThan(0)
   })
 
-  it('AvlTree serialize input decodes (no crash) but ergots lacks serialize(AvlTree) → not-implemented, total', () => {
+  it('AvlTree serialize input decodes (no crash) — ergots now evaluates serialize(AvlTree) → value, total', () => {
     // Regression: decode.ts had no `case 'AvlTree'`, so an AvlTree SValue input threw
     // `unknown SANTA SValue kind 'AvlTree'` and ABORTED the whole vector (a §3 totality break) —
     // even though ergots fully supports SAvlTree (parse-svalue.ts `case 'SAvlTree'`, type code 100).
-    // The gap was the SANTA-side bridge, not ergots. With the decode case added, the input decodes;
-    // ergots' eval then throws EvalError 'method-not-implemented' for serialize(AvlTree), so the
-    // faithful outcome is `not-implemented` (ergots HAS SAvlTree but lacks serialize(AvlTree)) —
-    // NOT a crash — for EVERY entry (the second is no longer lost to the first's abort).
+    // The gap was the SANTA-side bridge, not ergots. With the decode case added, the input decodes
+    // and the run stays total (every entry graded, no abort).
+    //
+    // ergots SINCE closed the eval gap too: serialize(AvlTree) used to throw EvalError
+    // 'method-not-implemented'; it now returns a Coll[Byte]. This is a runner-FAITHFULNESS check — it
+    // asserts the runner reports what ergots produces (no crash, a value), NOT that the value/cost
+    // match the JVM bless. That comparison is ./conform's job: the value matches, but ergots
+    // UNDERCHARGES the cost (126 vs JVM 127, Δ−1) — a new divergence surfaced by closing the gap,
+    // recorded in docs/findings/eval-jvm-vs-ergots.md, never pinned green here.
     const fixture = JSON.parse(
       readFileSync(path.resolve(here, '../../vectors/eval/v6/authored/Global.serialize_AvlTree.json'), 'utf8'),
     ) as Parameters<typeof runVector>[0]
     const actuals = runVector(fixture)
     expect(Object.keys(actuals)).toEqual(fixture.entries.map((e) => e.name)) // totality: no abort
     for (const e of fixture.entries) {
-      expect(actuals[e.name]).toEqual({ value: null, cost: null, error: 'not-implemented' })
+      const a = actuals[e.name] as { value: unknown; cost: number | null; error: string | null }
+      expect(a.error).toBeNull() // no crash, no not-implemented — ergots evaluates it
+      expect((a.value as { kind?: string }).kind).toBe('Coll') // serialize → Coll[Byte]
+      expect(typeof a.cost).toBe('number') // cost present (graded vs the bless by ./conform, not here)
     }
   })
 
