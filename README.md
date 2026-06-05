@@ -68,7 +68,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   never drops, hides, or aborts the run on one. A conformer's **scope is chosen on the input side** (it runs the vector
   subset it claims; ergots runs `v5/`). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.
-- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (117/117)
+- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (137 eval + 4 wire + 4 tx)
   and an end-to-end conformance gate. The CI seed.
 - ✅ **Transaction tier live** — `santa-transaction/v1` schema; **4 captured vectors**
   (`vectors/transaction/v6/captured/`), each JVM-blessed via `ergo-core 6.0.2.1

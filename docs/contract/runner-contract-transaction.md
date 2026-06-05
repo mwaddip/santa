@@ -42,7 +42,7 @@ There is no `expected.error` field. The oracle either accepted (with a cost) or 
 a reason); "errored" as a vector state does not exist — the blesser hard-fails on any oracle
 failure against a captured seed (CapturedTx `FAIL-LOUD-on-valid:false`).
 
-A worked example is at §8.
+A worked example is at §9.
 
 ## 3. Actuals shape
 
