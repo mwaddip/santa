@@ -9,9 +9,21 @@
 ThisBuild / scalaVersion := "2.12.20"
 ThisBuild / organization := "io.santa"
 
+// Tx-tier blesser: ergo-core is NOT on Maven; publishLocal'd from ergo-node-build@v6.0.2.1.
+// Maintainer-only + path-gated — set SANTA_TX_BLESSER=1 to compile the tx blesser + bless.
+// Unset (incl. CI): the dep and the santa/txbless sources are excluded; eval/wire/rudolph build untouched.
+val txBlesserEnabled = sys.env.get("SANTA_TX_BLESSER").exists(v => v == "1" || v.equalsIgnoreCase("true"))
+
 lazy val jvmBlesser = (project in file("."))
   .settings(
     name := "santa-jvm-blesser",
+    // Resolvers for ergo-core's transitive deps: the node pulls leveldbjni-all from a
+    // GitLab Maven registry, and some deps live on Sonatype. Only needed when the tx
+    // blesser is enabled; excluded unconditionally so CI never resolves ergo-core.
+    resolvers ++= (if (txBlesserEnabled) Seq(
+      "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
+      "Repo for leveldbjni-all" at "https://gitlab.com/api/v4/projects/61211221/packages/maven"
+    ) else Seq.empty),
     libraryDependencies ++= Seq(
       // The reference interpreter. 6.0.3 == the version ergo-node-build pins,
       // so cost/sigma-tree output matches the canonical node (OVERRIDES rule 13).
@@ -41,6 +53,17 @@ lazy val jvmBlesser = (project in file("."))
       // shrinking the captured corpus. Pinned to sigma-state 6.0.3's own pprint.
       "com.lihaoyi"       %% "pprint"                  % "0.6.3"   % Test
     ),
+    // Tx-tier blesser: ergo-core (+ ergo-wallet for ErgoInterpreter; avldb transitively)
+    // publishLocal'd at 6.0.2.1 from ergo-node-build@v6.0.2.1 — NOT on Maven.
+    // Drives ErgoTransaction.validateStateful to bless captured tx vectors.
+    // Excluded when SANTA_TX_BLESSER is unset so CI never attempts to resolve ergo-core.
+    libraryDependencies ++= (if (txBlesserEnabled) Seq(
+      "org.ergoplatform"  %% "ergo-core"               % "6.0.2.1" % Test,
+      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.2.1" % Test
+    ) else Seq.empty),
+    // The tx-blesser sources (which import ergo-core) only compile when enabled.
+    Test / unmanagedSourceDirectories ++= (if (txBlesserEnabled)
+      Seq((Test / sourceDirectory).value / "scala-txbless") else Seq.empty),
     // JDK 17 + Scala 2.12: pre-open java.base in case sigma's crypto path
     // reflects into it. Harmless if unused.
     fork := true,
