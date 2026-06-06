@@ -63,11 +63,11 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   surfaced a SANTA harness encode gap (the result-encode bridges lacked an AvlTree arm;
   `x.R9[AvlTree].get` evaluates correctly in every conformer), fixed same-arc.
   Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is
-  green suite-wide **except two cost entries** (the deserialize-bearing pair, blessed at
-  production substituted-constant cost per the contract rule; eni's eval harness charges
-  the lazy form — routed). Everything else — eval + wire + transaction, value *and*
-  cost — is green (every divergence the suite surfaced is fixed in the fork, latest the
-  `Box.getReg` method-id and HOF FunDef/currying findings), while plain upstream `develop`
+  **fully green suite-wide**: eval + wire + transaction, value *and* cost. Every
+  divergence the suite surfaced is fixed in the fork — latest the deserialize-bearing
+  pair blessed at production substituted-constant cost per the contract rule (eni's eval
+  harness charged the lazy form; routed and fixed fork-side the same day), after the
+  `Box.getReg` method-id and HOF FunDef/currying findings — while plain upstream `develop`
   misses 10 v5 values the fork already fixed, plus the v6 surface. A 🪨 is the suite doing
   its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
