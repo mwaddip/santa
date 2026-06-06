@@ -144,11 +144,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,099 entries across 143 files**
+corpus at scale**, since grown by authored gap-fillers: **2,125 entries across 152 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-73/24), version-split into **v5** (1,767 — the cumulative v5/mainnet surface) and **v6**
+99/33), version-split into **v5** (1,793 — the cumulative v5/mainnet surface) and **v6**
 (332 — the v6 new-feature surface); a JSON-Schema gate validates all
-143. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
+152. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
 develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
 eni fork is **fully green suite-wide** — eval + wire + transaction, value *and* cost (every
 divergence the suite surfaced is fixed in the fork, latest the `Box.getReg` method-id 7→19
