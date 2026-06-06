@@ -40,8 +40,12 @@ point `ergots-impl` at your working tree, or temporarily repoint the `file:` dep
 
 ## Pipeline (per entry)
 
-`parseTree(tree_bytes_hex)` → decode SANTA input JSON → ergots `SValue` + its `SType` (bind at
-context **var 1**; pass `tree.constants` for `ConstPlaceholder`) → `evaluateWith(tree, ctx)` at
+`parseTree(tree_bytes_hex)` → decode SANTA input JSON → ergots `SValue` + its `SType`, bound
+per the entry's **envelope** (mirroring rudolph's `Runner.scala` dispatch): **v2** — single
+`input` at context **var 1**; **v3** — `inputs[].extension` → one per-input `ContextExtension`
+each (read by `Context.getVarFromInput`; SELF = input 0); **v4** — v2's var 1 **plus**
+`selfRegisters` (R4–R9) on the SELF box (dynamic-index `Box.getReg`). Always pass
+`tree.constants` for `ConstPlaceholder` → `evaluateWith(tree, ctx)` at
 `treeVersion = version.ergoTree` (read `ctx.jitCost`; catch `EvalError`) → encode `SValue` →
 canonical SANTA JSON → capture `{value, cost, error}`. The **encode/decode bridge** (`src/encode.ts`,
 `src/decode.ts`, `src/stype.ts`) is the substance; `ergots` `parseSValue`/`serializeSValue` are

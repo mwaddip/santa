@@ -41,11 +41,14 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     })
   })
 
-  it('op the runner lacks (GroupElement.expUnsigned) → not-implemented for every entry (NOT omitted)', () => {
+  it('type the BRIDGE lacks (GroupElement.expUnsigned spec inputs) → not-implemented for every entry (NOT omitted)', () => {
     // Re-pinned from Coll.reverse, which ergots implemented in ergoscript-v6 (v6 P2 methods).
-    // GroupElement.expUnsigned stays not-implemented as long as ergots defers UnsignedBigInt (the
-    // deliberate v6 gap), so it's a stable op for this totality check. If ergots lands UnsignedBigInt
-    // this flips to a value and needs re-pinning — same as any tracked divergence (a fix drops the count).
+    // ergots NOW IMPLEMENTS expUnsigned (eval/exponentiate.ts via method-call.ts, v6 P7a) — the
+    // not-implemented here is the BRIDGE's input codec: every spec entry feeds a
+    // (GroupElement, UnsignedBigInt) tuple, and decode.ts declares UnsignedBigInt a type this
+    // runner does not implement (UnsupportedTypeError → not-implemented). When the bridge grows
+    // an UnsignedBigInt codec these flip to values and need re-pinning — same as any tracked
+    // divergence (a fix drops the count).
     const fixture = JSON.parse(
       readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/GroupElement.expUnsigned.json'), 'utf8'),
     ) as Parameters<typeof runVector>[0]
@@ -120,6 +123,45 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
       expect(a.error).toBeNull() // no crash, no not-implemented — ergots evaluates it
       expect((a.value as { kind?: string }).kind).toBe('Coll') // serialize → Coll[Byte]
       expect(typeof a.cost).toBe('number') // cost present (graded vs the bless by ./conform, not here)
+    }
+  })
+
+  it('v3: inputs[].extension builds per-input ContextExtensions (getVarFromInput) — every entry matches the bless', () => {
+    // The harness gap this pins: the bridge used to evaluate santa-eval/v3 entries with NO
+    // context (the bare `else` arm), so getVarFromInput read absent inputExtensions → None for
+    // every entry — mis-presenting ergots (which implements 101:12) as value-divergent on the
+    // present-* entries. The v3 envelope: the spending tx has ONE input per `inputs[]` element,
+    // EACH carrying its own ContextExtension (SELF = input 0) — EvalCore.evalWithInputExtensions.
+    for (const file of ['Context.getVarFromInput.json', 'Context.getVarFromInput_multi_input.json']) {
+      const fixture = JSON.parse(
+        readFileSync(path.resolve(here, `../../vectors/eval/v6/authored/${file}`), 'utf8'),
+      ) as Parameters<typeof runVector>[0] & {
+        entries: { name: string; expected: { value: unknown; cost: number | null; error: string | null } }[]
+      }
+      const actuals = runVector(fixture)
+      expect(Object.keys(actuals), file).toEqual(fixture.entries.map((e) => e.name)) // totality
+      for (const e of fixture.entries) {
+        // value+cost+error all blessed-equal — incl. negative-varid-0xff#5 (wire key 255 ≡ Byte -1).
+        expect(actuals[e.name], `${file} :: ${e.name}`).toEqual(e.expected)
+      }
+    }
+  })
+
+  it('v4: selfRegisters (R4-R9) + var-1 input build the SELF box (dynamic-index getReg) — every entry matches the bless', () => {
+    // v4 = v2's single `input` (var 1) PLUS selfRegisters applied to SELF's additional
+    // registers — EvalCore.evalWithSelfRegistersAndVar1. Pre-fix the bare arm gave ergots no
+    // selfBox, so SELF threw context-field-missing → 'errored' for all four entries (the
+    // reject-wrong-type#1 entry passed by accident; the three value entries graded coal).
+    const fixture = JSON.parse(
+      readFileSync(path.resolve(here, '../../vectors/eval/v6/authored/Box.getReg_dynamic_index.json'), 'utf8'),
+    ) as Parameters<typeof runVector>[0] & {
+      entries: { name: string; expected: { value: unknown; cost: number | null; error: string | null } }[]
+    }
+    const actuals = runVector(fixture)
+    expect(Object.keys(actuals)).toEqual(fixture.entries.map((e) => e.name)) // totality
+    for (const e of fixture.entries) {
+      // Some(Long 7)@89 / reject (register-type-mismatch → errored) / None×2@89.
+      expect(actuals[e.name], e.name).toEqual(e.expected)
     }
   })
 

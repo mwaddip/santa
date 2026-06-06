@@ -4,6 +4,7 @@ import {
   parseTree, evaluateWith, makeContext, EvalError,
   parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
+  type ContextExtension, type ErgoBox,
 } from '@ergots/ergoscript'
 import { ByteReader, ByteWriter } from '@ergots/scorex'
 import { decodeSValue } from './decode'
@@ -11,10 +12,19 @@ import { encodeSValue, type Json } from './encode'
 import { UnsupportedTypeError, isUnsupportedType } from './abstain'
 import { hexToBytes, bytesToHex } from './hex'
 
+/** An SValue in SANTA canonical JSON (`{kind, …}`, contract §4). */
+type SValueJson = { [k: string]: Json }
+
 interface Entry {
   name: string
   tree_bytes_hex: string
-  input?: { [k: string]: Json }
+  /** v2 + v4: the single input bound at ctx var 1. */
+  input?: SValueJson
+  /** v3: one spending-tx input per element, EACH with its own ContextExtension
+   *  (`{<varId 0-255>: SValue}`) — read by Context.getVarFromInput; SELF = input 0. */
+  inputs?: { extension: { [varId: string]: SValueJson } }[]
+  /** v4: SELF's additional registers (`{"4".."9": SValue}` — R4-R9). */
+  selfRegisters?: { [regId: string]: SValueJson }
   version: { activated: number; ergoTree: number }
 }
 interface Vector { schema: string; entries: Entry[] }
@@ -78,7 +88,13 @@ function runEntryInner(schema: string, e: Entry): Result {
     throw err
   }
 
-  // [1] decode + bind input at ctx var 1 (v2 only).
+  // [1] decode + bind the entry's context per its envelope (rudolph Runner.scala dispatch):
+  //       v2: single `input` → var 1 in SELF's ContextExtension (EvalCore.evalApplied);
+  //       v3: `inputs[]` → the spending tx has ONE input per element, EACH with its own
+  //           ContextExtension — read by Context.getVarFromInput(inputIdx, varId); SELF = input 0
+  //           (EvalCore.evalWithInputExtensions);
+  //       v4: v2's single `input` (var 1) PLUS `selfRegisters` on SELF's additional registers
+  //           R4-R9 — read by dynamic-index Box.getReg (EvalCore.evalWithSelfRegistersAndVar1).
   //     A type the runner doesn't implement ⇒ not-implemented. ANY other decode failure —
   //     including an input ergots' own codec rejects at runtime (e.g. a Header timestamp > 2⁵³,
   //     which @ergots/scorex throws on as ReaderError 'vlq-overflow') — falls through to
@@ -92,6 +108,21 @@ function runEntryInner(schema: string, e: Entry): Result {
       // ConstPlaceholder resolution needs the tree's segregated constants; evaluateWith
       // (unlike evaluate) does NOT auto-populate them — pass explicitly.
       ctx = makeContext({ treeVersion, constants: tree.constants, extension: { values: { 1: { tpe, value } } } })
+    } else if (schema === 'santa-eval/v3') {
+      if (!e.inputs) throw new Error(`missing inputs in v3 entry '${e.name}'`)
+      const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion))
+      // Top-level extension stays empty (self-getVar reads nothing), exactly as EvalCore's
+      // contextWithInputExtensions passes ContextExtension.empty.
+      ctx = makeContext({ treeVersion, constants: tree.constants, inputExtensions })
+    } else if (schema === 'santa-eval/v4') {
+      if (!e.input) throw new Error(`missing input in v4 entry '${e.name}'`)
+      if (!e.selfRegisters) throw new Error(`missing selfRegisters in v4 entry '${e.name}'`)
+      const { value, tpe } = decodeSValue(e.input, treeVersion)
+      ctx = makeContext({
+        treeVersion, constants: tree.constants,
+        selfBox: dummySelfBox(e.selfRegisters, hexToBytes(e.tree_bytes_hex), treeVersion),
+        extension: { values: { 1: { tpe, value } } },
+      })
     } else {
       ctx = makeContext({ treeVersion, constants: tree.constants })
     }
@@ -112,6 +143,41 @@ function runEntryInner(schema: string, e: Entry): Result {
     if (err instanceof EvalError && err.code === 'method-not-implemented') return NOT_IMPL
     if (err instanceof EvalError) return { value: null, cost: null, error: 'errored' }
     throw err
+  }
+}
+
+/** SANTA `{<varId 0-255>: SValue}` map → an ergots ContextExtension. Keys are the unsigned
+ *  wire byte on both sides (the 101:12 handler normalizes its signed Byte operand to this
+ *  domain), so `Number(id)` is the identity bridge. */
+function decodeExtension(ext: { [varId: string]: SValueJson }, treeVersion: number): ContextExtension {
+  const values: ContextExtension['values'] = {}
+  for (const [id, j] of Object.entries(ext)) {
+    const { value, tpe } = decodeSValue(j, treeVersion)
+    values[Number(id)] = { tpe, value }
+  }
+  return { values }
+}
+
+/** The v4 SELF box: EvalCore's dummy (value 1000000, ergoTree = the entry's tree, all-zero
+ *  txId, index 0, creationHeight 0) carrying `selfRegisters` as its additional registers.
+ *  Ids outside 4..9 are dropped, mirroring EvalCore.evalWithSelfRegistersAndVar1's collect —
+ *  mandatory R0-R3 are synthesized from the box fields by both the JVM and ergots. */
+function dummySelfBox(regs: { [regId: string]: SValueJson }, treeBytes: Uint8Array, treeVersion: number): ErgoBox {
+  const registers: ErgoBox['registers'] = {}
+  for (const [id, j] of Object.entries(regs)) {
+    const n = Number(id)
+    if (n < 4 || n > 9) continue
+    const { value, tpe } = decodeSValue(j, treeVersion)
+    registers[n] = { tpe, value }
+  }
+  return {
+    value: 1000000n,
+    ergoTreeBytes: treeBytes,
+    registers,
+    tokens: [],
+    creationHeight: 0,
+    txId: new Uint8Array(32),
+    index: 0,
   }
 }
 
