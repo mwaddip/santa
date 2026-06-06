@@ -69,3 +69,13 @@ describe('encode — bytes-kinds (Box round-trip)', () => {
     expect(encodeSValue(box, 3)).toEqual({ kind: 'Box', bytes_hex: BOX_HEX })
   })
 })
+
+describe('encode — bytes-kinds (AvlTree round-trip)', () => {
+  // vectors/eval/v5/spec/AvlTree_properties_equivalence.json entry #0 input.
+  const AVL_HEX = '000183807f66b301530120ff7fc6bd6601ff01ff7f7d2bedbbffff00187fe8909406010101'
+  it('AvlTree → bytes_hex equals ergots AvlTreeData serialization (round-trip)', () => {
+    const tree = parseSValue({ tag: 'SAvlTree' }, 3, new ByteReader(hexToBytes(AVL_HEX)))
+    expect(tree.kind).toBe('AvlTree')
+    expect(encodeSValue(tree, 3)).toEqual({ kind: 'AvlTree', bytes_hex: AVL_HEX })
+  })
+})

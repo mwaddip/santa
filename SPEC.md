@@ -134,8 +134,8 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1,756 / 1,757** (the 52 healed AvlTree entries surfaced one SANTA harness gap — the result-encode bridge lacked an AvlTree arm; `x.R9[AvlTree].get` evaluates correctly in every conformer, fixed in the follow-up commit; all prior 1,705 green); v6 is out of its declared scope. |
-| **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni v5-perfect, both v6-divergent; develop also misses 10 v5 values the fork fixed |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1,757 / 1,757** (the 52 healed AvlTree entries initially surfaced a SANTA harness gap — the result-encode bridge lacked an AvlTree arm, fixed same-arc); v6 is out of its declared scope. |
+| **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni fully green suite-wide; develop misses 10 v5 values the fork fixed, plus the v6 surface |
 | _(unassigned)_ | `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo
@@ -149,7 +149,7 @@ corpus at scale**, since grown by authored gap-fillers: **2,099 entries across 1
 73/24), version-split into **v5** (1,767 — the cumulative v5/mainnet surface) and **v6**
 (332 — the v6 new-feature surface); a JSON-Schema gate validates all
 143. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
-develop & eni · Comet) over `runners/*/`. **Dasher (ergots) was fully green on the pre-heal v5 spec corpus — 1,705 / 1,705**; the 52 healed AvlTree-typed entries surfaced one SANTA harness gap (the result-encode bridges lacked an AvlTree arm — Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer; fixed in the follow-up commit). **Blitzen** (`sigma-rust`) via the
+develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
 eni fork is **fully green suite-wide** — eval + wire + transaction, value *and* cost (every
 divergence the suite surfaced is fixed in the fork, latest the `Box.getReg` method-id 7→19
 and the HOF FunDef/currying findings) — while upstream `develop` still misses 10 v5 values

@@ -14,7 +14,7 @@ function serializeBytesKind(t: SType, v: SValue, treeVersion: number): string {
 }
 
 /** ergots SValue → SANTA canonical JSON (contract §4). `treeVersion` is needed
- *  only by the bytes-kinds (Box/Header/SigmaProp) wire serializer in Task 5. */
+ *  only by the bytes-kinds (Box/Header/AvlTree/SigmaProp) wire serializer in Task 5. */
 export function encodeSValue(v: SValue, treeVersion: number): Json {
   switch (v.kind) {
     case 'Boolean': return { kind: 'Boolean', value: v.value }
@@ -36,6 +36,8 @@ export function encodeSValue(v: SValue, treeVersion: number): Json {
       return { kind: 'Box', bytes_hex: serializeBytesKind({ tag: 'SBox' }, v, treeVersion) }
     case 'Header':
       return { kind: 'Header', bytes_hex: serializeBytesKind({ tag: 'SHeader' }, v, treeVersion) }
+    case 'AvlTree':
+      return { kind: 'AvlTree', bytes_hex: serializeBytesKind({ tag: 'SAvlTree' }, v, treeVersion) }
     case 'SigmaProp':
       return { kind: 'SigmaProp', raw_hex: serializeBytesKind({ tag: 'SSigmaProp' }, v, treeVersion) }
     default:
