@@ -51,6 +51,18 @@ object EvalCore {
     votes = Colls.emptyColl[Byte]
   )
 
+  /** Mirror of the production constant-substitution conditionality
+    * (`Interpreter.fullReduction`, sigma-state Interpreter.scala:218): trees WITHOUT
+    * deserialize ops are evaluated lazily (ConstantPlaceholders resolved against the
+    * constants array, CP visit = JitCost 1); deserialize-bearing segregated trees are
+    * evaluated from the SUBSTITUTED proposition (Constant visit = JitCost 5) — that is
+    * what consensus charges on-chain. Blessing through this seam keeps the eval tier's
+    * cost dimension production-faithful on the only tree class where the two differ.
+    * Decision 2026-06-06 (the ergots DC dead-branch consult; probe: lazy 12 vs
+    * substituted 20, Δ = 2 ex-placeholders × 4). */
+  private def productionReplaceConstants(tree: ErgoTree): Boolean =
+    tree.isConstantSegregation && tree.hasDeserialize
+
   private def dummyContext(tree: ErgoTree, activatedVersion: Byte): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
@@ -173,7 +185,7 @@ object EvalCore {
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
           val (v, _blockCost) = CErgoTreeEvaluator.eval(
             ctx.toSigmaContext(), acc, tree.constants,
-            tree.toProposition(replaceConstants = false), DefaultEvalSettings)
+            tree.toProposition(replaceConstants = productionReplaceConstants(tree)), DefaultEvalSettings)
           (v, acc.totalCost.value)
         }
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
@@ -548,7 +560,7 @@ object EvalCore {
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
           val (v, _blockCost) = CErgoTreeEvaluator.eval(
             ctx.toSigmaContext(), acc, tree.constants,
-            tree.toProposition(replaceConstants = false), DefaultEvalSettings)
+            tree.toProposition(replaceConstants = productionReplaceConstants(tree)), DefaultEvalSettings)
           (v, acc.totalCost.value)
         }
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
@@ -622,7 +634,7 @@ object EvalCore {
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
           val (v, _blockCost) = CErgoTreeEvaluator.eval(
             ctx.toSigmaContext(), acc, tree.constants,
-            tree.toProposition(replaceConstants = false), DefaultEvalSettings)
+            tree.toProposition(replaceConstants = productionReplaceConstants(tree)), DefaultEvalSettings)
           (v, acc.totalCost.value)
         }
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
@@ -674,7 +686,7 @@ object EvalCore {
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
           val (v, _) = CErgoTreeEvaluator.eval(
             ctx.toSigmaContext(), acc, tree.constants,
-            tree.toProposition(replaceConstants = false), DefaultEvalSettings)
+            tree.toProposition(replaceConstants = productionReplaceConstants(tree)), DefaultEvalSettings)
           (v, acc.totalCost.value)
         }
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))

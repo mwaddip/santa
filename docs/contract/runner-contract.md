@@ -53,6 +53,19 @@ conforming runner) leaves the node in place when `id` is absent or not a `Coll[B
 eval. A runner that skips this pass cannot grade the `DeserializeContext` vectors faithfully —
 e.g. sigma-rust's `try_eval_with_deserialize` runs it, the bare `try_eval_out` does not.
 
+**Deserialize-bearing segregated trees are blessed at PRODUCTION (substituted-constant)
+cost.** The JVM's `fullReduction` evaluates ordinary trees lazily (ConstantPlaceholders
+resolved against the constants array; CP visit = JitCost 1) but evaluates deserialize-bearing
+trees from the constants-SUBSTITUTED proposition (Constant visit = JitCost 5) — sigma-state
+`Interpreter.scala:218` short-circuits to the lazy path only when `!ergoTree.hasDeserialize`.
+On-chain cost therefore includes the Const-vs-CP delta exactly for this tree class, and the
+blessed `cost` mirrors it (the bless seam substitutes iff `isConstantSegregation &&
+hasDeserialize`; everywhere else lazy == production, so the rest of the corpus is unaffected).
+A runner whose eval harness charges the lazy form on such trees will show a genuine cost
+divergence — that is consensus-relevant, not a harness artifact. Decided 2026-06-06
+(probe: lazy 12 vs substituted 20 on the two DC dead-branch entries, Δ = 2 ex-placeholders × 4);
+consistent with the transaction tier, which blesses this mechanism via `validateStateful`.
+
 ## 3. Preconditions, postconditions, invariants
 
 ### Preconditions (a runner may assume)

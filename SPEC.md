@@ -135,7 +135,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
 | **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-green on spec**: gates the `v5/` spec corpus against the JVM-blessed expected, **1,757 / 1,757** (the 52 healed AvlTree entries initially surfaced a SANTA harness gap — the result-encode bridge lacked an AvlTree arm, fixed same-arc); the live manifest declares **version ≤ v6**, so v6 is in scope — its v6 reds are ergots' TDD roadmap ledger, not exclusions. |
-| **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni fully green suite-wide; develop misses 10 v5 values the fork fixed, plus the v6 surface |
+| **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni green suite-wide except the 2 deserialize-cost seam entries (routed); develop misses 10 v5 values the fork fixed, plus the v6 surface |
 | _(unassigned)_ | `ergo-node-rust` · … | assigned on registration |
 
 Nine reindeer = a deliberate soft cap; there won't be dozens of independent Ergo
@@ -150,11 +150,14 @@ corpus at scale**, since grown by authored gap-fillers: **2,143 entries across 1
 (345 — the v6 new-feature surface); a JSON-Schema gate validates all
 155. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
 develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
-eni fork is **fully green suite-wide** — eval + wire + transaction, value *and* cost (every
+eni fork is green suite-wide **except two cost entries** — the DC dead-branch pair, re-blessed
+12→20 to PRODUCTION (substituted-constant) semantics per the contract's deserialize-cost rule:
+eni's eval harness charges the lazy form (its production path charges 20 like the JVM's; routed
+to sigma-rust). Everything else — eval + wire + transaction, value *and* cost — is green (every
 divergence the suite surfaced is fixed in the fork, latest the `Box.getReg` method-id 7→19
 and the HOF FunDef/currying findings) — while upstream `develop` still misses 10 v5 values
 the fork fixed, plus the v6 surface — the loop surfacing genuine cross-impl divergences,
-recorded, routed, and now converged on one conformer. The runner contract
+recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
 The **wire tier is opened** — `santa-wire/v1` byte-round-trip vectors (`Box` + `SigmaBoolean`,
 JVM-canonicalized from ergots' `fixture-gen`) are blessed and schema-gated, and its first finding

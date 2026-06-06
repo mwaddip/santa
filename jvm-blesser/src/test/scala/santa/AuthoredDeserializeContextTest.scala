@@ -67,11 +67,16 @@ class AuthoredDeserializeContextTest extends munit.FunSuite {
 
   // ── regression baseline: exact blessed value/cost/tree, locked after the first observed run.
   //    A change means the tree shape or the JVM's leniency/eval moved — investigate, don't
-  //    blindly re-bless. (dead-branch ⇒ true/cost-12; live-path ⇒ errored.)
+  //    blindly re-bless. (dead-branch ⇒ true/cost-20; live-path ⇒ errored.)
+  //    Cost 20 = PRODUCTION (substituted-constant) semantics: deserialize-bearing segregated
+  //    trees are blessed at the cost fullReduction charges on-chain (Interpreter.scala:218
+  //    evals lazily ONLY when !hasDeserialize; the deserialize branch evals the substituted
+  //    prop — Const(5) vs lazy CP(1) per visit, +8 = 2×4 here). Decision 2026-06-06 (ergots
+  //    F1 consult); EvalCore mirrors the conditionality, so the bless path produces 20.
   private val baseline: Seq[(String, String, String)] = Seq(
     // name, expected(noSpaces), tree_bytes_hex
-    ("dead-branch-absent#0",     """{"value":{"kind":"Boolean","value":true},"cost":12,"error":null}""", "1b0d02010101019573007301d40100"),
-    ("dead-branch-wrong-type#1", """{"value":{"kind":"Boolean","value":true},"cost":12,"error":null}""", "1b0d02010101019573007301d40101"),
+    ("dead-branch-absent#0",     """{"value":{"kind":"Boolean","value":true},"cost":20,"error":null}""", "1b0d02010101019573007301d40100"),
+    ("dead-branch-wrong-type#1", """{"value":{"kind":"Boolean","value":true},"cost":20,"error":null}""", "1b0d02010101019573007301d40101"),
     ("live-absent#2",            """{"value":null,"cost":null,"error":"errored"}""",                     "1b0400d40100"),
     ("live-wrong-type#3",        """{"value":null,"cost":null,"error":"errored"}""",                     "1b0400d40101"))
 
