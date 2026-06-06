@@ -43,10 +43,10 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,047 entries across 141 vector files**: 1,974 produced by
+- ✅ **A blessed eval corpus — 2,099 entries across 143 vector files**: 2,026 produced by
   the JVM reference interpreter (`sigma-state`) from its own language specification, plus
   73 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,715 entries — the cumulative v5/mainnet method surface)
+  (1,767 entries — the cumulative v5/mainnet method surface)
   and **v6** (332 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
@@ -59,7 +59,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   **Fleet SDK** — wire tier only). Each is graded against the
   JVM-blessed `expected` — the runner is SANTA's; the implementation under test is a dependency.
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green on
-  the v5 spec corpus (1,705 / 1,705)**: every divergence SANTA routed is now fixed in `ergots`.
+  the pre-heal v5 spec corpus (1,705 / 1,705)**; the 52 healed AvlTree-typed entries surfaced one SANTA harness gap (the result-encode bridges lacked an AvlTree arm — `x.R9[AvlTree].get` evaluates correctly in every conformer; fixed in the follow-up commit).
   Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is
   **fully green suite-wide** (eval + wire + transaction, value *and* cost — every
   divergence the suite surfaced is fixed in the fork, latest the `Box.getReg`
@@ -73,7 +73,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   never drops, hides, or aborts the run on one. A conformer's **scope is chosen on the input side** (it runs the vector
   subset it claims; ergots runs `v5/`). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.
-- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (141 eval + 4 wire + 4 tx)
+- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (143 eval + 4 wire + 4 tx)
   and an end-to-end conformance gate. The CI seed.
 - ✅ **Wire tier live** — `santa-wire/v1` byte-round-trip vectors, **213 entries**
   (`Constant` 178 · `Box` 11 · `SigmaBoolean` 7 · `Transaction` 17), JVM-canonicalized

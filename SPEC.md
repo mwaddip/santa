@@ -134,7 +134,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1705 / 1705 — fully green** (every routed value/cost divergence + the 27 not-implemented methods fixed in ergots `35eac6b`); v6 is out of its declared scope. |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1,756 / 1,757** (the 52 healed AvlTree entries surfaced one SANTA harness gap — the result-encode bridge lacked an AvlTree arm; `x.R9[AvlTree].get` evaluates correctly in every conformer, fixed in the follow-up commit; all prior 1,705 green); v6 is out of its declared scope. |
 | **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni v5-perfect, both v6-divergent; develop also misses 10 v5 values the fork fixed |
 | _(unassigned)_ | `ergo-node-rust` · … | assigned on registration |
 
@@ -144,13 +144,12 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,047 entries across 141 files**
-(**spec** 1,974/117 blessed by `sigma-state` from its language specification + **authored**
-73/24), version-split into **v5** (1,715 — the cumulative v5/mainnet surface) and **v6**
+corpus at scale**, since grown by authored gap-fillers: **2,099 entries across 143 files**
+(**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
+73/24), version-split into **v5** (1,767 — the cumulative v5/mainnet surface) and **v6**
 (332 — the v6 new-feature surface); a JSON-Schema gate validates all
-141. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
-develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec
-corpus — 1,705 / 1,705** (every routed divergence fixed). **Blitzen** (`sigma-rust`) via the
+143. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
+develop & eni · Comet) over `runners/*/`. **Dasher (ergots) was fully green on the pre-heal v5 spec corpus — 1,705 / 1,705**; the 52 healed AvlTree-typed entries surfaced one SANTA harness gap (the result-encode bridges lacked an AvlTree arm — Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer; fixed in the follow-up commit). **Blitzen** (`sigma-rust`) via the
 eni fork is **fully green suite-wide** — eval + wire + transaction, value *and* cost (every
 divergence the suite surfaced is fixed in the fork, latest the `Box.getReg` method-id 7→19
 and the HOF FunDef/currying findings) — while upstream `develop` still misses 10 v5 values
