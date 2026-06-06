@@ -66,7 +66,6 @@ class AuthoredAvlTier2Test extends munit.FunSuite {
   //    first observed bless. A drift means the JVM cost model, the prover material,
   //    or the tree shape moved — investigate, do not blindly re-bless.
   test("post-bless anchors: get present#0 cost + tree-hex prefix pinned") {
-    println(s"getMany proof lengths: ${AuthoredAvlTier2.getManyProofLengths}")
     val entries = vectors(AuthoredAvlTier2.OpGet).hcursor
       .downField("entries").as[Seq[io.circe.Json]].toOption.get
     val e = entries.find(_.hcursor.get[String]("name").toOption.contains("present#0")).get

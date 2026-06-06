@@ -456,6 +456,25 @@ object SpecExtract {
       propertyFailures = propertyFailures)
   }
 
+  /** Staging writer shared by authored/vendored blessers: slug-collision-guarded.
+    * Writes one JSON file per key in `vectors` (key -> slug(key).json) under
+    * `outDir`, which is created if absent. Fails loud on a slug collision so a silent
+    * overwrite can never drop entries.
+    *
+    * Note: 12 existing Authored/Vendored blessers carry an inlined copy of this
+    * logic -- left for a future sweep to avoid unrelated churn in this commit. */
+  def writeStaging(label: String, vectors: Map[String, Json], outDir: java.nio.file.Path): Unit = {
+    java.nio.file.Files.createDirectories(outDir)
+    val collisions = vectors.keys.groupBy(slug).filter(_._2.size > 1)
+    if (collisions.nonEmpty)
+      sys.error(s"$label.writeStaging: slug collision would silently drop entries -- " +
+        collisions.map { case (stem, ops) => s"'$stem.json' <- ${ops.mkString(" / ")}" }.mkString("; "))
+    vectors.foreach { case (op, json) =>
+      val path = outDir.resolve(s"${slug(op)}.json")
+      java.nio.file.Files.write(path, json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+    }
+  }
+
   /** Persist the extracted vectors to a staging dir (a build artifact — NOT the
     * committed vectors/eval/, which lands in Task 5). One file per op. */
   def writeVectors(result: ExtractResult, outDir: java.nio.file.Path): Unit = {
