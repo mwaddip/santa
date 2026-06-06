@@ -75,6 +75,19 @@ class RunnerTest extends munit.FunSuite {
     assertNice(doc, actuals)
   }
 
+  // ── v4 dispatch ───────────────────────────────────────────────────────────
+
+  test("Runner: Box.getReg_dynamic_index (v4) — actuals match expected; no panicked entries") {
+    val doc     = readVector("v6/authored/Box.getReg_dynamic_index.json")
+    val actuals = runActuals(doc)
+
+    val anyPanicked = actuals.values.exists(j =>
+      j.hcursor.downField("error").as[String].toOption.contains("panicked"))
+    assert(!anyPanicked, "v4 entry(ies) panicked — v4 dispatch is broken (selfRegisters not supplied?)")
+
+    assertNice(doc, actuals)
+  }
+
   // ── v1 regression ─────────────────────────────────────────────────────────
 
   test("Runner: decode-point (v1) — actuals match expected (regression guard)") {

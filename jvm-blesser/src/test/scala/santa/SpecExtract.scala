@@ -347,6 +347,60 @@ object SpecExtract {
       "source"     -> Json.fromString(source),
       "entries"    -> Json.arr(entries: _*))
 
+  /** Author one santa-eval/v4 ACCEPT entry. The SELF box carries `selfRegistersJson` (a map of
+    * register id [4-9, as Int] -> SValue JSON). Context var 1 is bound to `var1Json` (the register
+    * index, an Int). JVM blesses value+cost via evalWithSelfRegistersAndVar1 (the oracle).
+    * Fails loud if eval rejects (a reject arm must use authoredV4RejectEntry). */
+  def authoredV4Entry(op: String, script: String, treeBytesHex: String, name: String,
+      selfRegistersJson: Map[Int, Json], var1Json: Json, activated: Byte): Json = {
+    val (_, outcome) = EvalCore.evalWithSelfRegistersAndVar1(treeBytesHex, selfRegistersJson, var1Json, activated)
+    val (valueJson, cost) = outcome match {
+      case Right(vc) => vc
+      case Left(err) => sys.error(s"authoredV4Entry: eval failed for '$op' ($script): $err")
+    }
+    val regsJson = Json.obj(selfRegistersJson.toSeq.sortBy(_._1).map { case (id, j) => id.toString -> j }: _*)
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "selfRegisters"  -> regsJson,
+      "input"          -> var1Json,
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+      "expected"       -> Json.obj("value" -> valueJson, "cost" -> Json.fromLong(cost), "error" -> Json.Null))
+  }
+
+  /** Author one santa-eval/v4 REJECT entry. Same context as authoredV4Entry, but REQUIRES eval
+    * to FAIL. A success is a loud authoring bug. Emits the coarse reject shape (value/cost null, errored). */
+  def authoredV4RejectEntry(op: String, script: String, treeBytesHex: String, name: String,
+      selfRegistersJson: Map[Int, Json], var1Json: Json, activated: Byte): Json = {
+    val (_, outcome) = EvalCore.evalWithSelfRegistersAndVar1(treeBytesHex, selfRegistersJson, var1Json, activated)
+    outcome match {
+      case Left(_)   => // expected: eval rejects
+      case Right(vc) =>
+        sys.error(s"authoredV4RejectEntry: expected REJECT but '$op' ($script) eval succeeded: $vc")
+    }
+    val regsJson = Json.obj(selfRegistersJson.toSeq.sortBy(_._1).map { case (id, j) => id.toString -> j }: _*)
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "selfRegisters"  -> regsJson,
+      "input"          -> var1Json,
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+      "expected"       -> Json.obj("value" -> Json.Null, "cost" -> Json.Null,
+                                   "error" -> Json.fromString("errored")))
+  }
+
+  def authoredV4Envelope(op: String, entries: Seq[Json], source: String): Json =
+    Json.obj(
+      "schema"     -> Json.fromString("santa-eval/v4"),
+      "op"         -> Json.fromString(op),
+      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.3"),
+      "source"     -> Json.fromString(source),
+      "entries"    -> Json.arr(entries: _*))
+
   /** Encode captured cases into an ExtractResult: group by op; quarantine any op whose
     * property threw mid-capture (its Capture list may be truncated, so it must never
     * ship); encode the rest via `toEntry` (Opaque/unsupported-kind cases are skipped

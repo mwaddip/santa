@@ -9,7 +9,7 @@
   "properties": {
     "schema": {
       "description": "Tier + version discriminator.",
-      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3"]
+      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3", "santa-eval/v4"]
     },
     "op": {
       "description": "The operation / property name this vector covers.",
@@ -50,9 +50,15 @@
         }
       },
       "else": {
-        "$comment": "Not v2: either v1 (no input, no inputs) or v3 (handled by the second allOf element). Prohibit `input` for all non-v2 entries.",
-        "properties": {
-          "entries": { "items": { "not": { "required": ["input"] } } }
+        "$comment": "Not v2: v1/v3/v4 (v4 also uses `input`; v1/v3 must not use it). Prohibit `input` only for v1/v3 entries; v4 is handled by its own allOf element.",
+        "if": {
+          "properties": { "schema": { "enum": ["santa-eval/v1", "santa-eval/v3"] } },
+          "required": ["schema"]
+        },
+        "then": {
+          "properties": {
+            "entries": { "items": { "not": { "required": ["input"] } } }
+          }
         }
       }
     },
@@ -64,6 +70,16 @@
         "properties": { "entries": { "items": {
           "required": ["inputs"],
           "not": { "required": ["input"] }
+        } } }
+      }
+    },
+    {
+      "$comment": "santa-eval/v4 carries `source`; every entry has `input` (var 1 binding) + `selfRegisters` (non-mandatory SELF box registers, id -> SValue JSON).",
+      "if": { "properties": { "schema": { "const": "santa-eval/v4" } }, "required": ["schema"] },
+      "then": {
+        "required": ["source"],
+        "properties": { "entries": { "items": {
+          "required": ["input", "selfRegisters"]
         } } }
       }
     },
@@ -97,8 +113,14 @@
           "$ref": "#/$defs/hex"
         },
         "input": {
-          "description": "The input SValue, bound to context var 1 at eval time. REQUIRED for santa-eval/v2, ABSENT for santa-eval/v1 (enforced at the top level, where the schema discriminator is visible).",
+          "description": "The input SValue, bound to context var 1 at eval time. REQUIRED for santa-eval/v2 and santa-eval/v4, ABSENT for santa-eval/v1 (enforced at the top level, where the schema discriminator is visible).",
           "$ref": "#/$defs/svalue"
+        },
+        "selfRegisters": {
+          "description": "santa-eval/v4: non-mandatory SELF box registers, keyed by register id (0-based integer as string, valid: 4-9). Values are SValue JSON.",
+          "type": "object",
+          "propertyNames": { "pattern": "^[4-9]$" },
+          "additionalProperties": { "$ref": "#/$defs/svalue" }
         },
         "inputs": {
           "description": "santa-eval/v3: per-spending-tx-input ContextExtensions, in input order. Read by getVarFromInput.",

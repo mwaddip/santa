@@ -78,6 +78,16 @@ class EvalConformanceTest extends munit.FunSuite {
             }.toMap
           }
           EvalCore.evalWithInputExtensions(treeHex, inputs, activated)
+        case "santa-eval/v4" =>
+          // SELF box carries selfRegisters (id (0-based Int) -> SValue JSON) + var 1 = input.
+          val regsObj = ec.downField("selfRegisters").focus
+            .getOrElse(sys.error(s"missing selfRegisters in $op/$name"))
+          val registersJson: Map[Int, Json] = regsObj.asObject
+            .getOrElse(sys.error(s"selfRegisters must be an object in $op/$name"))
+            .toMap.map { case (k, v) => k.toInt -> v }
+          val inputJson = ec.downField("input").focus
+            .getOrElse(sys.error(s"missing input in $op/$name"))
+          EvalCore.evalWithSelfRegistersAndVar1(treeHex, registersJson, inputJson, activated)
         case "santa-eval/v2" =>
           val inputJson = ec.downField("input").focus
             .getOrElse(sys.error(s"missing input in $op/$name"))

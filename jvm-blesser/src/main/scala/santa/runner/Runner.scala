@@ -13,6 +13,7 @@ import santa.{EvalCore, WireCanonicalize}
   * `name`. Each entry is processed under the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
+  *   - `santa-eval/v4` → EvalCore.evalWithSelfRegistersAndVar1 (SELF box registers + var 1 = index)
   *   - `santa-eval/v3` → EvalCore.evalWithInputExtensions (per-input extension map)
   *   - `santa-eval/v2` → EvalCore.evalApplied (reads the entry's `input` binding)
   *   - `santa-eval/v1` → EvalCore.evalEntry   (closed tree, no input)
@@ -43,6 +44,15 @@ object Runner {
             }.toMap
           }
           EvalCore.evalWithInputExtensions(hex, inputs, activated)
+        case "santa-eval/v4" =>
+          val regsObj = c.downField("selfRegisters").focus
+            .getOrElse(sys.error(s"missing selfRegisters in v4 entry '$name'"))
+          val registersJson: Map[Int, io.circe.Json] = regsObj.asObject
+            .getOrElse(sys.error(s"selfRegisters must be an object in v4 entry '$name'"))
+            .toMap.map { case (k, v) => k.toInt -> v }
+          val inputJson = c.downField("input").focus
+            .getOrElse(sys.error(s"missing input field in v4 entry '$name'"))
+          EvalCore.evalWithSelfRegistersAndVar1(hex, registersJson, inputJson, activated)
         case "santa-eval/v2" =>
           val inputJson = c.downField("input").focus
             .getOrElse(sys.error(s"missing input field in v2 entry '${name}'"))

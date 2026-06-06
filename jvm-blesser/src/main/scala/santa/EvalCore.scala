@@ -555,6 +555,80 @@ object EvalCore {
       } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
     } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
 
+  // ── Context with custom SELF box + var 1 (santa-eval/v4, Box.getReg dynamic-index) ────
+
+  /** Build a context whose SELF box has custom `additionalRegisters` AND whose ContextExtension
+    * carries var 1 = `varBinding`. Used for santa-eval/v4 vectors: the tree reads SELF (with known
+    * registers) and a dynamic index from context var 1. */
+  private def contextWithSelfRegistersAndVar1(tree: ErgoTree, activatedVersion: Byte,
+      additionalRegisters: Map[ErgoBox.NonMandatoryRegisterId, sigma.ast.EvaluatedValue[_ <: SType]],
+      varBinding: EvaluatedValue[_ <: SType]): ErgoLikeContext = {
+    val selfBox = new ErgoBox(
+      value = 1000000L,
+      ergoTree = tree,
+      additionalTokens = sigma.Colls.emptyColl,
+      additionalRegisters = additionalRegisters,
+      transactionId = bytesToId(Array.fill(32)(0: Byte)),
+      index = 0.toShort,
+      creationHeight = 0
+    )
+    new ErgoLikeContext(
+      lastBlockUtxoRoot = AvlTreeData.dummy,
+      headers = Colls.emptyColl[Header],
+      preHeader = dummyPreHeader(0),
+      dataBoxes = IndexedSeq.empty,
+      boxesToSpend = IndexedSeq(selfBox),
+      spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
+      selfIndex = 0,
+      extension = ContextExtension(Map(1.toByte -> varBinding)),
+      validationSettings = ValidationRules.currentSettings,
+      costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
+      initCost = 0L,
+      activatedScriptVersion = activatedVersion
+    ).withErgoTreeVersion(tree.version)
+  }
+
+  /** Eval a tree against a context whose SELF box carries `additionalRegisters` AND whose
+    * ContextExtension has var 1 = `var1Json`. Returns (treeVersion, Either[(valueJson, cost), err]).
+    * Used for santa-eval/v4 vectors where the tree reads SELF's register by a dynamic index
+    * (var 1). The `registersJson` map is {registerId (0-based Int) -> SValue JSON}. */
+  def evalWithSelfRegistersAndVar1(treeBytesHex: String,
+      registersJson: Map[Int, Json], var1Json: Json,
+      activated: Byte): (Byte, Either[String, (Json, Long)]) =
+    try {
+      val bytes   = Base16.decode(treeBytesHex).get
+      val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
+      val treeVer = tree.version
+      try {
+        val var1 = decodeInputConstant(var1Json)
+        // Build additionalRegisters: only non-mandatory (R4-R9, ids 4-9). Mandatory R0-R3 are
+        // auto-populated by ErgoBox from its value/ergoTree/creationInfo fields.
+        val additionalRegisters: Map[ErgoBox.NonMandatoryRegisterId, sigma.ast.EvaluatedValue[_ <: SType]] =
+          registersJson.collect { case (id, j) if id >= 4 && id <= 9 =>
+            val regId = id match {
+              case 4 => ErgoBox.R4
+              case 5 => ErgoBox.R5
+              case 6 => ErgoBox.R6
+              case 7 => ErgoBox.R7
+              case 8 => ErgoBox.R8
+              case 9 => ErgoBox.R9
+            }
+            regId -> decodeInputConstant(j).asInstanceOf[sigma.ast.EvaluatedValue[_ <: SType]]
+          }
+        val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
+          val ctx = contextWithSelfRegistersAndVar1(tree, activated, additionalRegisters, var1)
+          val acc = new CostAccumulator(
+            initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
+            costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
+          val (v, _blockCost) = CErgoTreeEvaluator.eval(
+            ctx.toSigmaContext(), acc, tree.constants,
+            tree.toProposition(replaceConstants = false), DefaultEvalSettings)
+          (v, acc.totalCost.value)
+        }
+        (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
+      } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
+    } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
+
   // ── Context with per-input extensions (santa-eval/v3, getVarFromInput) ──────────
 
   /** Dummy context whose spending-tx inputs each carry a ContextExtension (read by

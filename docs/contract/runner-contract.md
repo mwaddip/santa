@@ -59,7 +59,10 @@ e.g. sigma-rust's `try_eval_with_deserialize` runs it, the bare `try_eval_out` d
 - The vector validates against `santa-eval.vector.schema.json`.
 - Every entry has `tree_bytes_hex` (hex of a serialized ErgoTree) and
   `version { activated, ergoTree }`. A `santa-eval/v2` entry also has an `input` SValue
-  (§4); a `santa-eval/v1` entry has none (closed tree).
+  (§4); a `santa-eval/v1` entry has none (closed tree). A `santa-eval/v4` entry is v2's
+  single-input form plus a per-entry `selfRegisters` object (R4–R9 SValue map, applied to
+  the SELF box's additional registers); minted for dynamic-register-read vectors
+  (Box.getReg MethodCall).
 - **Version is an input.** The runner evaluates each entry under the entry's declared
   `(activated, ergoTree)` versions — it does not choose or assume a version.
 
