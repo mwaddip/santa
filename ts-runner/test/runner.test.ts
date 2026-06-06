@@ -41,35 +41,33 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     })
   })
 
-  it('type the BRIDGE lacks (GroupElement.expUnsigned spec inputs) → not-implemented for every entry (NOT omitted)', () => {
-    // Re-pinned from Coll.reverse, which ergots implemented in ergoscript-v6 (v6 P2 methods).
-    // ergots NOW IMPLEMENTS expUnsigned (eval/exponentiate.ts via method-call.ts, v6 P7a) — the
-    // not-implemented here is the BRIDGE's input codec: every spec entry feeds a
-    // (GroupElement, UnsignedBigInt) tuple, and decode.ts declares UnsignedBigInt a type this
-    // runner does not implement (UnsupportedTypeError → not-implemented). When the bridge grows
-    // an UnsignedBigInt codec these flip to values and need re-pinning — same as any tracked
-    // divergence (a fix drops the count).
-    const fixture = JSON.parse(
+  it('UnsignedBigInt INPUTS bridge (GroupElement.expUnsigned spec) → green vs blessed for every entry', () => {
+    // Twice re-pinned: Coll.reverse → ergots implemented it (v6 P2); expUnsigned-as-not-impl →
+    // the BRIDGE grew its UnsignedBigInt codec (every spec entry feeds a (GroupElement,
+    // UnsignedBigInt) tuple through decode.ts), so the file now grades green end-to-end —
+    // value AND cost — against the JVM-blessed expected. ergots' eval side landed in v6 P7a
+    // (eval/exponentiate.ts via method-call.ts); the bridge was the last not-impl cause.
+    const raw = JSON.parse(
       readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/GroupElement.expUnsigned.json'), 'utf8'),
-    ) as Parameters<typeof runVector>[0]
-    const actuals = runVector(fixture)
-    expect(Object.keys(actuals)).toEqual(fixture.entries.map((e) => e.name)) // totality: no entry omitted
-    for (const e of fixture.entries) {
-      expect(actuals[e.name]).toEqual({ value: null, cost: null, error: 'not-implemented' })
+    ) as { entries: Array<{ name: string; expected: unknown }> }
+    const actuals = runVector(raw as unknown as Parameters<typeof runVector>[0])
+    expect(Object.keys(actuals)).toEqual(raw.entries.map((e) => e.name)) // totality: no entry omitted
+    for (const e of raw.entries) {
+      expect(actuals[e.name], e.name).toEqual(e.expected)
     }
   })
 
-  it('type the runner lacks (UnsignedBigInt input) → not-implemented, NOT errored/omitted', () => {
-    const vec = {
-      schema: 'santa-eval/v2', op: 'UnsignedBigInt methods', blessed_by: 'x', source: 's',
-      entries: [{
-        name: 'u', tree_bytes_hex: '1b1000dad9010110db0c0e720101e4e30110',
-        input: { kind: 'UnsignedBigInt', value: '42' },
-        version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null },
-      }],
+  it('UnsignedBigInt RESULT encode (BigInt.toUnsigned spec) → green vs blessed for every entry', () => {
+    // The result-direction twin of the expUnsigned input test: BigInt.toUnsigned produces an
+    // UnsignedBigInt SValue, exercising encode.ts' UBI arm (decimal string, decode-consistent).
+    const raw = JSON.parse(
+      readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/BigInt.toUnsigned.json'), 'utf8'),
+    ) as { entries: Array<{ name: string; expected: unknown }> }
+    const actuals = runVector(raw as unknown as Parameters<typeof runVector>[0])
+    expect(Object.keys(actuals)).toEqual(raw.entries.map((e) => e.name))
+    for (const e of raw.entries) {
+      expect(actuals[e.name], e.name).toEqual(e.expected)
     }
-    const actuals = runVector(vec)
-    expect(actuals['u']).toEqual({ value: null, cost: null, error: 'not-implemented' })
   })
 
   it("an input ergots' codec rejects at runtime (Header ts > 2^53) → panicked, not a pre-classified excuse", () => {

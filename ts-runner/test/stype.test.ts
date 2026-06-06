@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import type { SType } from '@ergots/ergoscript'
 import { stypeFromSanta, stypeToSanta } from '../src/stype'
-import { UnsupportedTypeError } from '../src/abstain'
 import type { Json } from '../src/json'
 
 describe('SType bridge', () => {
@@ -27,11 +26,13 @@ describe('SType bridge', () => {
     })
   }
 
-  it('SUnsignedBigInt → UnsupportedTypeError (decode side)', () => {
-    expect(() => stypeFromSanta({ tag: 'SUnsignedBigInt' })).toThrow(UnsupportedTypeError)
+  it('SUnsignedBigInt ⇄ ergots leaf (bridged since ergots shipped UBI)', () => {
+    expect(stypeFromSanta({ tag: 'SUnsignedBigInt' })).toEqual({ tag: 'SUnsignedBigInt' })
+    expect(stypeToSanta({ tag: 'SUnsignedBigInt' } as SType)).toEqual({ tag: 'SUnsignedBigInt' })
   })
 
-  it('nested SColl[SUnsignedBigInt] → UnsupportedTypeError', () => {
-    expect(() => stypeFromSanta({ tag: 'SColl', elem: { tag: 'SUnsignedBigInt' } })).toThrow(UnsupportedTypeError)
+  it('nested SColl[SUnsignedBigInt] maps through', () => {
+    expect(stypeFromSanta({ tag: 'SColl', elem: { tag: 'SUnsignedBigInt' } }))
+      .toEqual({ tag: 'SColl', elem: { tag: 'SUnsignedBigInt' } })
   })
 })

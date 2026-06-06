@@ -3,7 +3,6 @@ import { parseSValue } from '@ergots/ergoscript'
 import { ByteReader } from '@ergots/scorex'
 import { hexToBytes } from './hex'
 import { stypeFromSanta } from './stype'
-import { UnsupportedTypeError } from './abstain'
 import type { Json } from './json'
 
 /** A SANTA canonical-JSON object node (an SValue or SType). */
@@ -12,9 +11,9 @@ type JsonObj = { [k: string]: Json }
 export interface Decoded { value: SValue; tpe: SType }
 
 /** SANTA canonical JSON → ergots SValue + its SType (the tpe needed for the
- *  ctx var-1 binding). Inverse of encodeSValue. UnsignedBigInt is a type this runner does
- *  not implement → throws UnsupportedTypeError, surfaced as a `not-implemented` outcome
- *  (runner-contract §3). */
+ *  ctx var-1 binding). Inverse of encodeSValue. The kind set is total over the corpus
+ *  (UnsignedBigInt bridged since ergots shipped UBI); an unknown kind throws → the
+ *  runner's panic-net (runner-contract §3). */
 export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
   const kind = j['kind'] as string
   switch (kind) {
@@ -24,7 +23,8 @@ export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
     case 'Int': return { value: { kind: 'Int', value: j['value'] as number }, tpe: { tag: 'SInt' } }
     case 'Long': return { value: { kind: 'Long', value: BigInt(j['value'] as string) }, tpe: { tag: 'SLong' } }
     case 'BigInt': return { value: { kind: 'BigInt', value: BigInt(j['value'] as string) }, tpe: { tag: 'SBigInt' } }
-    case 'UnsignedBigInt': throw new UnsupportedTypeError('SValue UnsignedBigInt is v6-only')
+    case 'UnsignedBigInt':
+      return { value: { kind: 'UnsignedBigInt', value: BigInt(j['value'] as string) }, tpe: { tag: 'SUnsignedBigInt' } }
     case 'GroupElement':
       return { value: { kind: 'GroupElement', value: hexToBytes(j['bytes_hex'] as string) }, tpe: { tag: 'SGroupElement' } }
     case 'Box': return parseBytesKind({ tag: 'SBox' }, j['bytes_hex'] as string, treeVersion)

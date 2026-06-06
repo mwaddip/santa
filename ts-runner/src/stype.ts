@@ -1,20 +1,18 @@
 import type { SType } from '@ergots/ergoscript'
-import { UnsupportedTypeError } from './abstain'
 import type { Json } from './json'
 
 /** SANTA's SType tags that map 1:1 to an ergots leaf SType tag. */
 const LEAF_TAGS = new Set([
-  'SBoolean', 'SByte', 'SShort', 'SInt', 'SLong', 'SBigInt', 'SGroupElement',
-  'SSigmaProp', 'SBox', 'SHeader', 'SPreHeader', 'SUnit', 'SAny',
+  'SBoolean', 'SByte', 'SShort', 'SInt', 'SLong', 'SBigInt', 'SUnsignedBigInt',
+  'SGroupElement', 'SSigmaProp', 'SBox', 'SHeader', 'SPreHeader', 'SUnit', 'SAny',
 ])
 
-/** SANTA SType JSON object → ergots SType. SUnsignedBigInt is a type this runner does not
- *  implement → throws UnsupportedTypeError, which the runner surfaces as a `not-implemented`
- *  outcome (runner-contract §3). The parameter is narrowed to a JSON object (SANTA SType
- *  JSON is always `{tag, ...}`). */
+/** SANTA SType JSON object → ergots SType. The tag set is total over the corpus
+ *  (SUnsignedBigInt bridged since ergots shipped UBI); an unknown tag throws → the
+ *  runner's panic-net (runner-contract §3), never a silent skip. The parameter is
+ *  narrowed to a JSON object (SANTA SType JSON is always `{tag, ...}`). */
 export function stypeFromSanta(t: { [k: string]: Json }): SType {
   const tag = t['tag'] as string
-  if (tag === 'SUnsignedBigInt') throw new UnsupportedTypeError('SType SUnsignedBigInt is v6-only')
   if (LEAF_TAGS.has(tag)) return { tag } as SType
   if (tag === 'SColl') return { tag: 'SColl', elem: stypeFromSanta(t['elem'] as { [k: string]: Json }) }
   if (tag === 'SOption') return { tag: 'SOption', elem: stypeFromSanta(t['elem'] as { [k: string]: Json }) }
@@ -28,8 +26,8 @@ export function stypeFromSanta(t: { [k: string]: Json }): SType {
 export function stypeToSanta(t: SType): Json {
   switch (t.tag) {
     case 'SBoolean': case 'SByte': case 'SShort': case 'SInt': case 'SLong':
-    case 'SBigInt': case 'SGroupElement': case 'SSigmaProp': case 'SBox':
-    case 'SHeader': case 'SPreHeader': case 'SUnit': case 'SAny':
+    case 'SBigInt': case 'SUnsignedBigInt': case 'SGroupElement': case 'SSigmaProp':
+    case 'SBox': case 'SHeader': case 'SPreHeader': case 'SUnit': case 'SAny':
       return { tag: t.tag }
     case 'SColl': return { tag: 'SColl', elem: stypeToSanta(t.elem) }
     case 'SOption': return { tag: 'SOption', elem: stypeToSanta(t.elem) }

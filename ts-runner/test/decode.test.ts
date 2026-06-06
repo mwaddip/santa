@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { decodeSValue } from '../src/decode'
-import { UnsupportedTypeError } from '../src/abstain'
 
 describe('decode — value + tpe', () => {
   it('Int → {value, tpe SInt}', () => {
@@ -33,7 +32,11 @@ describe('decode — value + tpe', () => {
     expect(r.tpe).toEqual({ tag: 'SOption', elem: { tag: 'SLong' } })
     expect(r.value).toEqual({ kind: 'Option', elem: { tag: 'SLong' }, value: { kind: 'Long', value: 7n } })
   })
-  it('UnsignedBigInt → UnsupportedTypeError', () => {
-    expect(() => decodeSValue({ kind: 'UnsignedBigInt', value: '42' }, 3)).toThrow(UnsupportedTypeError)
+  it('UnsignedBigInt string → bigint, tpe SUnsignedBigInt (bridged since ergots shipped UBI)', () => {
+    expect(decodeSValue({ kind: 'UnsignedBigInt', value: '115792089237316195423570985008687907852837564279074904382605163141518161494337' }, 3))
+      .toEqual({
+        value: { kind: 'UnsignedBigInt', value: 115792089237316195423570985008687907852837564279074904382605163141518161494337n },
+        tpe: { tag: 'SUnsignedBigInt' },
+      })
   })
 })

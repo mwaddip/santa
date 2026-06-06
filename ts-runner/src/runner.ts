@@ -9,7 +9,6 @@ import {
 import { ByteReader, ByteWriter } from '@ergots/scorex'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
-import { UnsupportedTypeError, isUnsupportedType } from './abstain'
 import { hexToBytes, bytesToHex } from './hex'
 
 /** An SValue in SANTA canonical JSON (`{kind, …}`, contract §4). */
@@ -77,16 +76,10 @@ export function runEntry(schema: string, e: Entry): Result {
 function runEntryInner(schema: string, e: Entry): Result {
   const treeVersion = e.version.ergoTree
 
-  // [0] parseTree — a type the runner doesn't implement (e.g. v6 SUnsignedBigInt) ⇒
-  //     not-implemented; ANY other parse failure falls through to runEntry's panic-net
-  //     (⇒ panicked), NOT errored.
-  let tree
-  try {
-    tree = parseTree(hexToBytes(e.tree_bytes_hex))
-  } catch (err) {
-    if (isUnsupportedType(err)) return NOT_IMPL
-    throw err
-  }
+  // [0] parseTree — ANY parse failure falls through to runEntry's panic-net (⇒ panicked),
+  //     NOT errored. (The bridge is type-total over the corpus since UnsignedBigInt landed;
+  //     a future type gap reintroduces a not-implemented arm keyed to a live signal.)
+  const tree = parseTree(hexToBytes(e.tree_bytes_hex))
 
   // [1] decode + bind the entry's context per its envelope (rudolph Runner.scala dispatch):
   //       v2: single `input` → var 1 in SELF's ContextExtension (EvalCore.evalApplied);
@@ -95,51 +88,45 @@ function runEntryInner(schema: string, e: Entry): Result {
   //           (EvalCore.evalWithInputExtensions);
   //       v4: v2's single `input` (var 1) PLUS `selfRegisters` on SELF's additional registers
   //           R4-R9 — read by dynamic-index Box.getReg (EvalCore.evalWithSelfRegistersAndVar1).
-  //     A type the runner doesn't implement ⇒ not-implemented. ANY other decode failure —
-  //     including an input ergots' own codec rejects at runtime (e.g. a Header timestamp > 2⁵³,
-  //     which @ergots/scorex throws on as ReaderError 'vlq-overflow') — falls through to
-  //     runEntry's panic-net ⇒ `panicked`. We record ergots' ACTUAL failure (message in `note`);
-  //     we do not pre-classify it into a softer "unrepresentable" bucket on ergots' behalf.
+  //     ANY decode failure — including an input ergots' own codec rejects at runtime (e.g. a
+  //     Header timestamp > 2⁵³, which @ergots/scorex throws on as ReaderError 'vlq-overflow')
+  //     — falls through to runEntry's panic-net ⇒ `panicked`. We record ergots' ACTUAL failure
+  //     (message in `note`); we do not pre-classify it into a softer "unrepresentable" bucket
+  //     on ergots' behalf.
   let ctx
-  try {
-    if (schema === 'santa-eval/v2') {
-      if (!e.input) throw new Error(`missing input in v2 entry '${e.name}'`)
-      const { value, tpe } = decodeSValue(e.input, treeVersion)
-      // ConstPlaceholder resolution needs the tree's segregated constants; evaluateWith
-      // (unlike evaluate) does NOT auto-populate them — pass explicitly.
-      ctx = makeContext({ treeVersion, constants: tree.constants, extension: { values: { 1: { tpe, value } } } })
-    } else if (schema === 'santa-eval/v3') {
-      if (!e.inputs) throw new Error(`missing inputs in v3 entry '${e.name}'`)
-      const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion))
-      // Top-level extension stays empty (self-getVar reads nothing), exactly as EvalCore's
-      // contextWithInputExtensions passes ContextExtension.empty.
-      ctx = makeContext({ treeVersion, constants: tree.constants, inputExtensions })
-    } else if (schema === 'santa-eval/v4') {
-      if (!e.input) throw new Error(`missing input in v4 entry '${e.name}'`)
-      if (!e.selfRegisters) throw new Error(`missing selfRegisters in v4 entry '${e.name}'`)
-      const { value, tpe } = decodeSValue(e.input, treeVersion)
-      ctx = makeContext({
-        treeVersion, constants: tree.constants,
-        selfBox: dummySelfBox(e.selfRegisters, hexToBytes(e.tree_bytes_hex), treeVersion),
-        extension: { values: { 1: { tpe, value } } },
-      })
-    } else {
-      ctx = makeContext({ treeVersion, constants: tree.constants })
-    }
-  } catch (err) {
-    if (err instanceof UnsupportedTypeError) return NOT_IMPL
-    throw err
+  if (schema === 'santa-eval/v2') {
+    if (!e.input) throw new Error(`missing input in v2 entry '${e.name}'`)
+    const { value, tpe } = decodeSValue(e.input, treeVersion)
+    // ConstPlaceholder resolution needs the tree's segregated constants; evaluateWith
+    // (unlike evaluate) does NOT auto-populate them — pass explicitly.
+    ctx = makeContext({ treeVersion, constants: tree.constants, extension: { values: { 1: { tpe, value } } } })
+  } else if (schema === 'santa-eval/v3') {
+    if (!e.inputs) throw new Error(`missing inputs in v3 entry '${e.name}'`)
+    const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion))
+    // Top-level extension stays empty (self-getVar reads nothing), exactly as EvalCore's
+    // contextWithInputExtensions passes ContextExtension.empty.
+    ctx = makeContext({ treeVersion, constants: tree.constants, inputExtensions })
+  } else if (schema === 'santa-eval/v4') {
+    if (!e.input) throw new Error(`missing input in v4 entry '${e.name}'`)
+    if (!e.selfRegisters) throw new Error(`missing selfRegisters in v4 entry '${e.name}'`)
+    const { value, tpe } = decodeSValue(e.input, treeVersion)
+    ctx = makeContext({
+      treeVersion, constants: tree.constants,
+      selfBox: dummySelfBox(e.selfRegisters, hexToBytes(e.tree_bytes_hex), treeVersion),
+      extension: { values: { 1: { tpe, value } } },
+    })
+  } else {
+    ctx = makeContext({ treeVersion, constants: tree.constants })
   }
 
   // [2] eval ⇒ [3] encode ⇒ [4] capture.
-  //     encode's deliberate UnsupportedTypeError (UnsignedBigInt) ⇒ not-implemented;
-  //     EvalError 'method-not-implemented' ⇒ not-implemented (the runner lacks this op/method);
-  //     any other EvalError ⇒ errored; a non-EvalError throw ⇒ runEntry's panic-net (panicked).
+  //     EvalError 'method-not-implemented' ⇒ not-implemented (ergots lacks this op/method —
+  //     the impl's own faithful signal); any other EvalError ⇒ errored; a non-EvalError throw
+  //     (including an encode gap) ⇒ runEntry's panic-net (panicked).
   try {
     const out = evaluateWith(tree, ctx)
     return { value: encodeSValue(out, treeVersion), cost: ctx.jitCost, error: null }
   } catch (err) {
-    if (err instanceof UnsupportedTypeError) return NOT_IMPL // encode marked a deliberate not-impl (UnsignedBigInt)
     if (err instanceof EvalError && err.code === 'method-not-implemented') return NOT_IMPL
     if (err instanceof EvalError) return { value: null, cost: null, error: 'errored' }
     throw err
