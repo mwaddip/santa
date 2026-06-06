@@ -87,7 +87,7 @@ for eval; parsed structure or round-trip-ok for wire.
 | **0 — spike** | JVM blesser validated on `decode-point` | ✅ done |
 | **1 — eval loop closed** | the **basic shape**: vector schema + `decode-point` committed as a canonical vector + harness + a JVM reference runner (runs green); first *independent* runner **Dasher** (ergots, `ts-runner/`) **built** — v5-scoped | ✅ done |
 | **2 — eval scaled** | the eval corpus at scale — **1,974 entries / 117 files** from `sigma-state`'s `LanguageSpecificationV5` + `V6`, version-split (`v5/` + `v6/`); Dasher (ergots) gates v5 against the blessed expected | ✅ (incl. Context-input `getVarFromInput`, Stage 2b) |
-| **3 — conformers + CI** | runner-agnostic orchestrator `./conform` + [integration contract](docs/contract/runner-integration.md) built (presence-as-state over `runners/*/`, one shared comparator, per-slice table); **rudolph + dasher + Blitzen** (`sigma-rust` develop & eni — two submodules) wired into a live **4-way**; ergo-node-rust runner + CI gate next; [self-test kit + scoreboard](docs/specs/phase-3-self-test-kit-and-scoreboard.md) designed | 🟢 underway |
+| **3 — conformers + CI** | runner-agnostic orchestrator `./conform` + [integration contract](docs/contract/runner-integration.md) built (presence-as-state over `runners/*/`, one shared comparator, per-slice table); **rudolph + dasher + Blitzen** (`sigma-rust` develop & eni — two submodules) + **Comet** (Fleet SDK, wire-only) wired into a live **5-way**; ergo-node-rust runner + CI gate next; [self-test kit + scoreboard](docs/specs/phase-3-self-test-kit-and-scoreboard.md) designed | 🟢 underway |
 | **4 — block tier** | captured-block vectors, chain-blessed, node runner | |
 | **5 — reject arm** | authored mutation vectors (rejected *for the right reason*) | |
 
@@ -98,9 +98,10 @@ alongside the eval tier once Phase 1's loop shape is proven. **Now underway:** t
 `santa-wire/v1` round-trip tier is live end-to-end — **vendored** `Box` (11) · `SigmaBoolean`
 (7) · `Transaction` (17) · `Constant` (178) = 213 round-trips (`vectors/wire/v5/vendored/`),
 JVM-canonicalized from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds, schema-gated, and
-graded across the 4-way (rudolph + blitzen 213/213; dasher 196 round-trips Box+SigmaBoolean+Constant,
-Transaction 17 not-implemented — ergots has no tx serializer). Header stays capture-only
-([`docs/specs/wire-tier.md`](docs/specs/wire-tier.md)).
+graded across the 5-way (rudolph + blitzen 213/213; dasher 196 round-trips Box+SigmaBoolean+Constant,
+Transaction 17 not-implemented — ergots has no tx serializer; comet (Fleet SDK) 185 — its honest gaps
+are recorded findings: a SigmaProp-constant serialize asymmetry and no unsized-tree parsing).
+Header stays capture-only ([`docs/specs/wire-tier.md`](docs/specs/wire-tier.md)).
 
 > **Note on the "reference runner":** the JVM runner (the blesser in consume-mode)
 > passes trivially — it proves the *harness mechanics* and defines the runner contract
@@ -143,16 +144,19 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**: **1,974 entries across 117 files**, blessed by `sigma-state` from its
-language specification and version-split into **v5** (1,705 — the cumulative v5/mainnet
-surface) and **v6** (269 — the v6 new-feature surface); a JSON-Schema gate validates all
-117. The conformer layer is live: `./conform` runs a **4-way** (Rudolph · Dasher · Blitzen
-develop & eni) over `runners/*/`. **Dasher (ergots) is fully green on v5 — 1,705 / 1,705**
-(every routed divergence fixed). **Blitzen** (`sigma-rust`) is perfect on v5 via the eni
-fork but divergent on v6, and upstream `develop` misses 10 v5 values the fork fixed — the
-loop surfacing genuine cross-impl divergences, recorded and routed. The runner contract
+corpus at scale**, since grown by authored gap-fillers: **2,047 entries across 141 files**
+(**spec** 1,974/117 blessed by `sigma-state` from its language specification + **authored**
+73/24), version-split into **v5** (1,715 — the cumulative v5/mainnet surface) and **v6**
+(332 — the v6 new-feature surface); a JSON-Schema gate validates all
+141. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
+develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec
+corpus — 1,705 / 1,705** (every routed divergence fixed). **Blitzen** (`sigma-rust`) via the
+eni fork is down to **4 eval reds** — the authored `Box.getReg` dynamic-index/type-args
+probes (a genuine method-id divergence; the routed HOF FunDef/currying fixes landed in the
+fork and re-graded green) — while upstream `develop` still misses 10 v5 values the fork fixed,
+plus the v6 surface — the loop surfacing genuine cross-impl divergences, recorded and routed. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
 The **wire tier is opened** — `santa-wire/v1` byte-round-trip vectors (`Box` + `SigmaBoolean`,
 JVM-canonicalized from ergots' `fixture-gen`) are blessed and schema-gated, and its first finding
 (a box `creation_height` overflow the JVM rejects but sigma-rust accepts) is recorded in
-[`docs/findings/`](docs/findings/wire-jvm-vs-sigma-rust.md). The **transaction tier is live** — `santa-transaction/v1` schema; **4 captured vectors** (`vectors/transaction/v6/captured/`), JVM-blessed via `ergo-core 6.0.2.1 validateStateful`; grading (`grade_transaction`: valid + declared cost, accept-arm only); contract at [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md). Conformer stances: **Rudolph out** (oracle-tautological; keeps ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 1/4`** (3 genuine cost divergences: bigint 14826 vs 14846, deserialize 14816 vs 15374, powhit 16401 vs 16656; atleast exact) · **Blitzen-develop `valid 0/4`** (each seed red with its own upstream bug; the bigint-downcast seed exposes the production-path tree-version bug that eval structurally cannot catch) · **Dasher `4 not-implemented`** (growth ledger) · **Comet out-of-scope** (wire-only). Provenance: `captured` primary; `authored` for the reject arm (not yet built). **Next:** the tx-tier authored reject arm; block tier.
+[`docs/findings/`](docs/findings/wire-jvm-vs-sigma-rust.md). The **transaction tier is live** — `santa-transaction/v1` schema; **4 captured vectors** (`vectors/transaction/v6/captured/`), JVM-blessed via `ergo-core 6.0.2.1 validateStateful`; grading (`grade_transaction`: valid + declared cost, accept-arm only); contract at [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md). Conformer stances: **Rudolph out** (oracle-tautological; keeps ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 4/4` byte-exact** — the initial bless surfaced 3 genuine cost divergences (avl ops uncosted · deserialize-substitution presence charge · UBI-arith misclassified); decomposed, routed, fixed upstream, re-graded exact at fork-eni `324cc4cd` — the tier's first divergence→fix→convergence loop · **Blitzen-develop `valid 0/4`** (each seed red with its own upstream bug; the bigint-downcast seed exposes the production-path tree-version bug that eval structurally cannot catch) · **Dasher `4 not-implemented`** (growth ledger) · **Comet out-of-scope** (wire-only; Fleet has no verifier — see the tx contract §7). Provenance: `captured` primary; `authored` for the reject arm (not yet built). **Next:** the tx-tier authored reject arm; block tier.

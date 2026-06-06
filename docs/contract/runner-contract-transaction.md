@@ -189,6 +189,7 @@ recorded as coal, not silently swallowed.
 | Conformer | Stance | Detail |
 |---|---|---|
 | **rudolph** | out-of-scope (grey) | Does not declare `transaction` in `tiers` (`runner.json`). Oracle-tautological (its own `validateStateful` call would trivially always match) + would drag ergo-core into CI. |
+| **comet** | out-of-scope (grey) | Does not declare `transaction` in `tiers` (`runner.json`). Fleet is a tx-building/serialization SDK with no verifier: it cannot script-verify a signed input (its only adjacent surface is prover-side reduce+sign of *unsigned* txs, delegated to sigmastate-js — sigma's artifact, not Fleet code) and has no stateful aggregate. Not a growth ledger — validation is outside Fleet's design scope, so grey, not not-impl. |
 | **blitzen-eni** | full (`cost: true`) | sigma-rust @ ergo-node-integration (`jit-cost` feature). Produces `valid` + `cost`. Costed accept divergences are expected — this is the deliverable. |
 | **blitzen-develop** | value-only (`cost: false`) | sigma-rust @ upstream develop. Produces `valid` only; `cost: null` unconditionally. Each of the 4 current seeds is red with its upstream bug. |
 | **dasher** | not-implemented (growth ledger) | ergots does not yet implement stateful tx validation. Rationale: script-verify alone would false-green non-conserving txs; the tier needs the full `validateStateful` surface. dasher's not-impl slice is the roadmap ledger for the tx tier. |
@@ -198,9 +199,14 @@ recorded as coal, not silently swallowed.
 4 captured seeds: `bigint-downcast-2666`, `deserialize-context-111927`,
 `atleast-degenerate-bound-184137`, `powhit-return-type-28474`.
 
-Current 5-way result (as of the initial bless):
-- **blitzen-eni**: 4/4 `valid` nice; 3 cost divergences (eni carries the v6 fixes, matches the
-  JVM on accept; cost model diverges from the oracle for 3 of 4 seeds — the primary finding).
+Current 5-way result:
+- **blitzen-eni**: **`valid 4/4 · cost 4/4` byte-exact.** The initial bless surfaced 3 genuine
+  cost divergences (bigint 14826 vs 14846, deserialize 14816 vs 15374, powhit 16401 vs 16656;
+  atleast exact — the structural-accounting control). A decomposition spike named the ops
+  (avl get/remove uncosted · deserialize-substitution presence charge · UBI-arith
+  misclassified); routed; sigma-rust fixed all three plus the `enrich_err` cost-lattice
+  wrinkle; re-graded exact at fork-eni `324cc4cd` with zero eval side-effects — the tier's
+  first divergence→fix→convergence loop.
 - **blitzen-develop**: 0/4 — each seed red with its upstream bug, each a distinct upstream defect:
   - `bigint-downcast-2666`: production-path tree-version bug — `reduce_to_crypto` leaves
     `tree_version` at V0, so the v3-gated `Downcast` op is illegal and sigma-rust rejects what
@@ -214,6 +220,7 @@ Current 5-way result (as of the initial bless):
     parse the ergotree's `SFunc` condition type.
 - **dasher**: 4/4 not-implemented (blue coverage cells; growth ledger).
 - **rudolph**: not in the tx slice (out-of-scope grey).
+- **comet**: not in the tx slice (out-of-scope grey; wire-only — see §7).
 
 This block is easy to update as the corpus grows or runners evolve.
 

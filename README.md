@@ -43,24 +43,29 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 1,974 entries across 117 vector files**, produced by the
-  JVM reference interpreter (`sigma-state`) from its own language specification and
-  version-split into **v5** (1,705 entries — the cumulative v5/mainnet method surface)
-  and **v6** (269 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
+- ✅ **A blessed eval corpus — 2,047 entries across 141 vector files**: 1,974 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, plus
+  73 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
+  (1,715 entries — the cumulative v5/mainnet method surface)
+  and **v6** (332 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
-  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Four runners wired today:
+  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Five runners wired today:
   **Rudolph** (the JVM reference — the all-🎁 control that blessed the corpus), **Dasher**
-  (the pure-TS `ergots` library, [`ts-runner/`](ts-runner/)), and **Blitzen** as two
+  (the pure-TS `ergots` library, [`ts-runner/`](ts-runner/)), **Blitzen** as two
   submodules pinning `sigma-rust` at upstream `develop` (value-only) and the
-  `ergo-node-integration` fork (`--features jit-cost`). Each is graded against the
+  `ergo-node-integration` fork (`--features jit-cost`), and **Comet** (the pure-TS
+  **Fleet SDK** — wire tier only). Each is graded against the
   JVM-blessed `expected` — the runner is SANTA's; the implementation under test is a dependency.
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green on
-  v5 (1,705 / 1,705)**: every divergence SANTA routed is now fixed in `ergots`. Blitzen shows
-  the suite working — `sigma-rust`'s `ergo-node-integration` fork is also perfect on v5 but
-  divergent on v6 (value and cost gaps), while plain upstream `develop`
-  misses 10 v5 values the fork already fixed. A 🪨 is the suite doing its job, never silenced.
+  the v5 spec corpus (1,705 / 1,705)**: every divergence SANTA routed is now fixed in `ergots`.
+  Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is down to
+  **4 eval reds** (the authored `Box.getReg` dynamic-index/type-args probes — a genuine
+  method-id divergence; its routed HOF and tx-cost findings are fixed in the fork and re-graded
+  green), while plain upstream `develop`
+  misses 10 v5 values the fork already fixed, plus the v6 surface. A 🪨 is the suite doing
+  its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
   **total**: it emits one faithful outcome for *every* entry — value + cost on success,
@@ -68,21 +73,28 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   never drops, hides, or aborts the run on one. A conformer's **scope is chosen on the input side** (it runs the vector
   subset it claims; ergots runs `v5/`). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.
-- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (137 eval + 4 wire + 4 tx)
+- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (141 eval + 4 wire + 4 tx)
   and an end-to-end conformance gate. The CI seed.
+- ✅ **Wire tier live** — `santa-wire/v1` byte-round-trip vectors, **213 entries**
+  (`Constant` 178 · `Box` 11 · `SigmaBoolean` 7 · `Transaction` 17), JVM-canonicalized
+  from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds. Rudolph + Blitzen 213/213;
+  Dasher 196 (no tx serializer — growth ledger); Comet 185 (Fleet's honest gaps, recorded
+  as findings). Contract:
+  [`docs/contract/runner-contract-wire.md`](docs/contract/runner-contract-wire.md).
 - ✅ **Transaction tier live** — `santa-transaction/v1` schema; **4 captured vectors**
   (`vectors/transaction/v6/captured/`), each JVM-blessed via `ergo-core 6.0.2.1
   validateStateful`. Conformer stances: **Rudolph out** (oracle-tautological + keeps
-  ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 1/4`** (3 genuine cost
-  divergences) · **Blitzen-develop `valid 0/4`** (upstream bugs; the bigint-downcast
+  ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 4/4` byte-exact** (the initial
+  bless surfaced 3 genuine cost divergences — decomposed, routed, fixed in the fork,
+  re-graded exact: the tier's first divergence→fix→convergence loop) ·
+  **Blitzen-develop `valid 0/4`** (upstream bugs; the bigint-downcast
   seed exposes the tree-version bug eval cannot catch) · **Dasher `4 not-implemented`**
-  (growth ledger) · **Comet out-of-scope** (wire-only). Contract:
+  (growth ledger) · **Comet out-of-scope** (wire-only; Fleet has no verifier). Contract:
   [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 
 Still greenfield, and where help is most wanted (see below):
 
-- the **wire tier** (serialization round-trips — the broadest surface) and the **block
-  tier** (chain-blessed block vectors);
+- the **block tier** (chain-blessed block vectors) and the tx-tier **authored reject arm**;
 - more **independent runners** — the full nodes (`sigma-rust` is now wired, as Blitzen);
 - the **reject arm** — authored negative / mutation vectors (rejected *for the right
   reason*); and a full CI gate.
