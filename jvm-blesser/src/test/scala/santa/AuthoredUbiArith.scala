@@ -10,8 +10,8 @@ package santa
 // below 0, divide/mod by zero -- all eval-fail (authoredRejectEntry asserts).
 //
 // HEADLINE FINDING: plain UBI arith (+ - * / %) is flat JIT cost 17 per op,
-// operand-size-independent up to 2^256-1 (ArithOpNode.OpCost charges a fixed
-// PerKbCostOf(1) regardless of operand magnitude).
+// operand-size-independent up to 2^256-1 — empirically blessed (the test
+// anchors pin it); ArithOp carries a type-based cost kind, not operand-sized.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import scorex.util.encode.Base16

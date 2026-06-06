@@ -32,7 +32,7 @@ class AuthoredUbiArithTest extends munit.FunSuite {
   }
 
   // post-bless anchors — a re-bless that changes these is a cost-model/value change to
-  // INVESTIGATE, not blindly accept (flat-17 proves ArithOpNode.OpCost is operand-size-independent)
+  // INVESTIGATE, not blindly accept (flat-17 = ArithOp's type-based cost, operand-size-independent)
   test("accept entries: cost == 17 for all 8 (flat JIT, operand-size-independent)") {
     val accepts = vectors(AuthoredUbiArith.OpTable).hcursor
       .downField("entries").as[Seq[io.circe.Json]].toOption.get

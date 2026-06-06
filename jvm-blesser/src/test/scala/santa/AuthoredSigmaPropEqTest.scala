@@ -11,7 +11,8 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
   lazy val vectors: Map[String, io.circe.Json] = AuthoredSigmaPropEq.extract()
 
   test("EQ of SigmaProp authored; each entry well-formed (== ⇒ Boolean true, cost > 0)") {
-    assert(vectors.keySet.contains("EQ of SigmaProp"), s"missing EQ of SigmaProp key; got ${vectors.keySet}")
+    assertEquals(vectors.keySet, Set(AuthoredSigmaPropEq.Op, AuthoredSigmaPropEq.OpUnequal),
+      "extract() must emit exactly the two EQ ops")
     val env = vectors("EQ of SigmaProp").hcursor
     assertEquals(env.get[String]("schema").toOption, Some("santa-eval/v2"))
     assertEquals(env.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.3"))
