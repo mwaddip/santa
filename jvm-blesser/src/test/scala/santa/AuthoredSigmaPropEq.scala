@@ -29,10 +29,10 @@ import scorex.util.encode.Base16
 import io.circe.Json
 
 import sigma.VersionContext
-import sigma.ast.{EQ, ErgoTree, GetVar, OptionGet, SOption, SSigmaProp, SString, SType}
+import sigma.ast.{EQ, ErgoTree, GetVar, OptionGet, SOption, SSigmaProp, SString, SType, SigmaPropConstant}
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.{CryptoConstants, EcPointType}
-import sigma.data.{CAND, ProveDHTuple, ProveDlog, SigmaBoolean}
+import sigma.data.{CAND, CSigmaProp, ProveDHTuple, ProveDlog, SigmaBoolean}
 
 object AuthoredSigmaPropEq {
 
@@ -41,8 +41,9 @@ object AuthoredSigmaPropEq {
     * finding), so v5 is the honest home — it groups with the v5 equality/sigma vectors. */
   val V2: Byte = VersionContext.JitActivationVersion
 
-  val Source = "santa:authored-sigmaprop-eq"
-  val Op     = "EQ of SigmaProp"
+  val Source    = "santa:authored-sigmaprop-eq"
+  val Op        = "EQ of SigmaProp"
+  val OpUnequal = "EQ of SigmaProp unequal"
 
   /** `getVar[T](1).get == getVar[T](1).get`, serialized at v5. The input is bound to context
     * var 1 by EvalCore.evalApplied; reading it (twice, as two independent context reads) and
@@ -74,6 +75,44 @@ object AuthoredSigmaPropEq {
   private val proveDHTuple = ProveDHTuple(gen, gen, gen, gen)          // 4 EcPoints (gv/hv/uv/vv)
   private val cand         = CAND(Seq(ProveDlog(gen), ProveDlog(gen))) // 2 children → per-node recursion
 
+  // Second EC point: gen^2 — distinct from gen, deterministic, same EcPointType.
+  private val gen2: EcPointType =
+    CryptoConstants.dlogGroup.exponentiate(gen, java.math.BigInteger.valueOf(2))
+
+  /** Closed `EQ(SigmaPropConstant(a), SigmaPropConstant(b))` at v5. Both operands are
+    * constants so the comparer walks them at eval without context reads. */
+  private def unequalTree(a: SigmaBoolean, b: SigmaBoolean): String =
+    VersionContext.withVersions(V2, V2) {
+      val root = EQ(SigmaPropConstant(CSigmaProp(a)), SigmaPropConstant(CSigmaProp(b)))
+      val header: HeaderType = ErgoTree.setSizeBit(ErgoTree.headerWithVersion(ZeroHeader, V2))
+      Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    }
+
+  /** Dummy input — the unequal trees are closed (no getVar); authoredEntry requires one. */
+  private val dummyInput: Json =
+    Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0))
+
+  /** Five unequal-tree entries exercising distinct walk depths.
+    * DataValueComparer.equalSigmaBoolean short-circuits at the first mismatch — the DHT
+    * mismatch-at-first-point entry stops after 1 EQ_GroupElement; mismatch-at-fourth stops
+    * after 4. The JVM-blessed costs PROVE the short-circuit is live. */
+  private def unequalEntries: Seq[Json] = {
+    val dlogA  = ProveDlog(gen);  val dlogB = ProveDlog(gen2)
+    val dhtBase = ProveDHTuple(gen, gen, gen, gen)
+    val dhtAtG  = ProveDHTuple(gen2, gen, gen, gen)  // first point differs → short walk
+    val dhtAtV  = ProveDHTuple(gen, gen, gen, gen2)  // fourth point differs → full walk
+    val candA = CAND(Seq(dlogA, dlogA)); val candB = CAND(Seq(dlogA, dlogB))
+    Seq(
+      ("dlog-vs-dlog2#0",     dlogA,  dlogB,   "{ pk(g) == pk(g^2) }"),
+      ("dlog-vs-dht#1",       dlogA,  dhtBase, "{ pk(g) == dht(g,g,g,g) }"),
+      ("dht-mismatch-at-g#2", dhtAtG, dhtBase, "{ dht(g2,g,g,g) == dht(g,g,g,g) }"),
+      ("dht-mismatch-at-v#3", dhtAtV, dhtBase, "{ dht(g,g,g,g2) == dht(g,g,g,g) }"),
+      ("cand-second-child#4", candA,  candB,   "{ (pkA && pkA) == (pkA && pkB) }")
+    ).map { case (name, a, b, script) =>
+      SpecExtract.authoredEntry(OpUnequal, script, unequalTree(a, b), name, dummyInput, V2)
+    }
+  }
+
   /** op -> v2 envelope: one `==` tree, one entry per SigmaProp shape. */
   def extract(): Map[String, Json] = {
     val (script, treeHex) = eqSelfTree("SigmaProp", SSigmaProp)
@@ -84,7 +123,9 @@ object AuthoredSigmaPropEq {
     val entries = inputs.zipWithIndex.map { case ((name, in), i) =>
       SpecExtract.authoredEntry(Op, script, treeHex, s"$name#$i", in, V2)
     }
-    Map(Op -> SpecExtract.authoredEnvelope(Op, entries, Source))
+    Map(
+      Op        -> SpecExtract.authoredEnvelope(Op, entries, Source),
+      OpUnequal -> SpecExtract.authoredEnvelope(OpUnequal, unequalEntries, Source))
   }
 
   /** String-equality reachability probe (the prompt's secondary ask). SString has a
@@ -103,16 +144,7 @@ object AuthoredSigmaPropEq {
   }
 
   /** Persist authored vectors to a staging dir (build artifact — copied into
-    * vectors/eval/v5/authored/ once inspected). Fails loud on a slug collision. */
-  def writeVectors(vectors: Map[String, Json], outDir: java.nio.file.Path): Unit = {
-    java.nio.file.Files.createDirectories(outDir)
-    val collisions = vectors.keys.groupBy(SpecExtract.slug).filter(_._2.size > 1)
-    if (collisions.nonEmpty)
-      sys.error("AuthoredSigmaPropEq.writeVectors: slug collision would silently drop entries — " +
-        collisions.map { case (stem, ops) => s"'$stem.json' ← ${ops.mkString(" / ")}" }.mkString("; "))
-    vectors.foreach { case (op, json) =>
-      val path = outDir.resolve(s"${SpecExtract.slug(op)}.json")
-      java.nio.file.Files.write(path, json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
-    }
-  }
+    * vectors/eval/v5/authored/ once inspected). Delegates to the shared writer. */
+  def writeVectors(vectors: Map[String, Json], outDir: java.nio.file.Path): Unit =
+    SpecExtract.writeStaging("AuthoredSigmaPropEq", vectors, outDir)
 }

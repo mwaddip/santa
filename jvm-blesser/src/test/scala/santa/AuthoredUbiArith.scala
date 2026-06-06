@@ -8,6 +8,10 @@ package santa
 // is unpinned anywhere until this file. Closed ArithOp trees, v6 (3,3).
 // Rejects pin the unsigned domain edges: overflow past 2^256-1, underflow
 // below 0, divide/mod by zero -- all eval-fail (authoredRejectEntry asserts).
+//
+// HEADLINE FINDING: plain UBI arith (+ - * / %) is flat JIT cost 17 per op,
+// operand-size-independent up to 2^256-1 (ArithOpNode.OpCost charges a fixed
+// PerKbCostOf(1) regardless of operand magnitude).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import scorex.util.encode.Base16
@@ -58,7 +62,7 @@ object AuthoredUbiArith {
                            MultiplyCode,                        "{ 2^128.toUBI * 2^127.toUBI }"),
       ("divide-floor#6",   ubi("7"),  ubi("2"),  DivisionCode, "{ 7.toUBI / 2.toUBI }"),
       ("mod-small#7",      ubi("7"),  ubi("5"),  ModuloCode,   "{ 7.toUBI % 5.toUBI }")
-    ).map { case (name: String, l: Value[SType], r: Value[SType], op: OpCode, script: String) =>
+    ).map { case (name, l, r, op, script) =>
       SpecExtract.authoredEntry(OpTable, script, tree(l, r, op), name, dummyInput, V3)
     }
 
@@ -68,7 +72,7 @@ object AuthoredUbiArith {
       ("overflow-multiply#2",  ubiB(Max),  ubi("2"),  MultiplyCode, "{ MAX.toUBI * 2.toUBI }"),
       ("divide-by-zero#3",     ubi("7"),   ubi("0"),  DivisionCode, "{ 7.toUBI / 0.toUBI }"),
       ("mod-by-zero#4",        ubi("7"),   ubi("0"),  ModuloCode,   "{ 7.toUBI % 0.toUBI }")
-    ).map { case (name: String, l: Value[SType], r: Value[SType], op: OpCode, script: String) =>
+    ).map { case (name, l, r, op, script) =>
       SpecExtract.authoredRejectEntry(OpReject, script, tree(l, r, op), name, dummyInput, V3)
     }
 

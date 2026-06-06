@@ -43,10 +43,10 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,138 entries across 154 vector files**: 2,026 produced by
+- ✅ **A blessed eval corpus — 2,143 entries across 155 vector files**: 2,026 produced by
   the JVM reference interpreter (`sigma-state`) from its own language specification, plus
-  112 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,793 entries — the cumulative v5/mainnet method surface)
+  117 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
+  (1,798 entries — the cumulative v5/mainnet method surface)
   and **v6** (345 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
@@ -75,7 +75,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   never drops, hides, or aborts the run on one. A conformer's **scope is chosen on the input side** (it runs the vector
   subset it claims; ergots runs `v5/`). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.
-- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (154 eval + 4 wire + 4 tx)
+- ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (155 eval + 4 wire + 4 tx)
   and an end-to-end conformance gate. The CI seed.
 - ✅ **Wire tier live** — `santa-wire/v1` byte-round-trip vectors, **213 entries**
   (`Constant` 178 · `Box` 11 · `SigmaBoolean` 7 · `Transaction` 17), JVM-canonicalized

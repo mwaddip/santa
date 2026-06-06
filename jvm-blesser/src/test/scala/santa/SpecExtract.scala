@@ -461,7 +461,7 @@ object SpecExtract {
     * `outDir`, which is created if absent. Fails loud on a slug collision so a silent
     * overwrite can never drop entries.
     *
-    * Note: 12 existing Authored/Vendored blessers carry an inlined copy of this
+    * Note: 13 existing Authored/Vendored blessers carry an inlined copy of this
     * logic -- left for a future sweep to avoid unrelated churn in this commit. */
   def writeStaging(label: String, vectors: Map[String, Json], outDir: java.nio.file.Path): Unit = {
     java.nio.file.Files.createDirectories(outDir)

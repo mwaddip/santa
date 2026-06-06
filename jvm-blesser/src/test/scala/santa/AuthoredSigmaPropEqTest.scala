@@ -11,7 +11,7 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
   lazy val vectors: Map[String, io.circe.Json] = AuthoredSigmaPropEq.extract()
 
   test("EQ of SigmaProp authored; each entry well-formed (== ⇒ Boolean true, cost > 0)") {
-    assertEquals(vectors.keySet, Set("EQ of SigmaProp"))
+    assert(vectors.keySet.contains("EQ of SigmaProp"), s"missing EQ of SigmaProp key; got ${vectors.keySet}")
     val env = vectors("EQ of SigmaProp").hcursor
     assertEquals(env.get[String]("schema").toOption, Some("santa-eval/v2"))
     assertEquals(env.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.3"))
@@ -62,6 +62,8 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
     AuthoredSigmaPropEq.writeVectors(vectors, outDir)
     assert(java.nio.file.Files.exists(outDir.resolve("EQ_of_SigmaProp.json")),
       "staging vector EQ_of_SigmaProp.json was not written")
+    assert(java.nio.file.Files.exists(outDir.resolve("EQ_of_SigmaProp_unequal.json")),
+      "staging vector EQ_of_SigmaProp_unequal.json was not written")
   }
 
   // ── regression baseline: exact blessed costs + tree + the String-eq verdict, locked after
@@ -96,6 +98,41 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
       case Right((v, cost)) =>
         fail(s"String EQ became reachable at eval (value=${v.noSpaces} cost=$cost) — sigma-state now " +
           "evaluates SString; revisit whether a String-eq cost vector is warranted")
+    }
+  }
+
+  test("unequal op: 5 closed-tree entries, all value=false, short-circuit cost ordering") {
+    val env = vectors(AuthoredSigmaPropEq.OpUnequal)
+    val entries = env.hcursor.downField("entries").as[Seq[io.circe.Json]].toOption.get
+    assertEquals(entries.size, 5)
+    val byName = entries.map(e => e.hcursor.get[String]("name").toOption.get -> e.hcursor).toMap
+    byName.values.foreach { c =>
+      assertEquals(c.downField("expected").downField("value").get[Boolean]("value").toOption.get, false)
+    }
+    def cost(name: String): Long = byName(name).downField("expected").get[Long]("cost").toOption.get
+    // the short-circuit evidence: DHT mismatch at the FIRST point is strictly
+    // cheaper than at the FOURTH (1 vs 4 EQ_GroupElement charges)
+    assert(cost("dht-mismatch-at-g#2") < cost("dht-mismatch-at-v#3"),
+      s"${cost("dht-mismatch-at-g#2")} !< ${cost("dht-mismatch-at-v#3")}")
+  }
+
+  // post-bless anchors — a re-bless that changes these is a cost-model change to
+  // INVESTIGATE, not blindly accept (short-circuit topology is load-bearing evidence)
+  private val unequalBlessedCosts: Seq[(String, Long)] = Seq(
+    "dlog-vs-dlog2#0"     -> 176L,  // MatchType + 1×EQ_GroupElement
+    "dlog-vs-dht#1"       ->   4L,  // MatchType only — node-type mismatch, no EcPoint compared
+    "dht-mismatch-at-g#2" -> 176L,  // MatchType + 1×EQ_GroupElement (first point differs)
+    "dht-mismatch-at-v#3" -> 692L,  // MatchType + 4×EQ_GroupElement (all four points compared)
+    "cand-second-child#4" -> 350L)  // MatchType + first-child match + second-child mismatch
+
+  test("unequal op: exact blessed costs match the recorded baseline") {
+    val entries = vectors(AuthoredSigmaPropEq.OpUnequal).hcursor
+      .downField("entries").as[List[io.circe.Json]].fold(e => fail(s"entries: $e"), identity)
+    unequalBlessedCosts.foreach { case (name, expected) =>
+      val e = entries.find(_.hcursor.get[String]("name").toOption.contains(name))
+        .getOrElse(fail(s"no entry named '$name'"))
+      assertEquals(e.hcursor.downField("expected").get[Long]("cost").toOption, Some(expected),
+        s"$name cost drifted")
     }
   }
 }
