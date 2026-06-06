@@ -60,10 +60,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   JVM-blessed `expected` — the runner is SANTA's; the implementation under test is a dependency.
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green on
   the v5 spec corpus (1,705 / 1,705)**: every divergence SANTA routed is now fixed in `ergots`.
-  Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is down to
-  **4 eval reds** (the authored `Box.getReg` dynamic-index/type-args probes — a genuine
-  method-id divergence; its routed HOF and tx-cost findings are fixed in the fork and re-graded
-  green), while plain upstream `develop`
+  Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is
+  **fully green suite-wide** (eval + wire + transaction, value *and* cost — every
+  divergence the suite surfaced is fixed in the fork, latest the `Box.getReg`
+  method-id and HOF FunDef/currying findings), while plain upstream `develop`
   misses 10 v5 values the fork already fixed, plus the v6 surface. A 🪨 is the suite doing
   its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))

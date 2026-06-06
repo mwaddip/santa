@@ -151,10 +151,11 @@ corpus at scale**, since grown by authored gap-fillers: **2,047 entries across 1
 141. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
 develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec
 corpus — 1,705 / 1,705** (every routed divergence fixed). **Blitzen** (`sigma-rust`) via the
-eni fork is down to **4 eval reds** — the authored `Box.getReg` dynamic-index/type-args
-probes (a genuine method-id divergence; the routed HOF FunDef/currying fixes landed in the
-fork and re-graded green) — while upstream `develop` still misses 10 v5 values the fork fixed,
-plus the v6 surface — the loop surfacing genuine cross-impl divergences, recorded and routed. The runner contract
+eni fork is **fully green suite-wide** — eval + wire + transaction, value *and* cost (every
+divergence the suite surfaced is fixed in the fork, latest the `Box.getReg` method-id 7→19
+and the HOF FunDef/currying findings) — while upstream `develop` still misses 10 v5 values
+the fork fixed, plus the v6 surface — the loop surfacing genuine cross-impl divergences,
+recorded, routed, and now converged on one conformer. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
 The **wire tier is opened** — `santa-wire/v1` byte-round-trip vectors (`Box` + `SigmaBoolean`,
 JVM-canonicalized from ergots' `fixture-gen`) are blessed and schema-gated, and its first finding
