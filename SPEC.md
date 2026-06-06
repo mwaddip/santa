@@ -148,7 +148,10 @@ corpus at scale**, since grown by authored gap-fillers: **2,143 entries across 1
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
 117/36), version-split into **v5** (1,798 — the cumulative v5/mainnet surface) and **v6**
 (345 — the v6 new-feature surface); a JSON-Schema gate validates all
-155. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
+155. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+`santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
+shapes, read off each entry's deserialized tree and suite-gated current — the
+registry-diff surface for conformers. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
 develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
 eni fork is **fully green suite-wide** — eval + wire + transaction, value *and* cost: every
 divergence the suite surfaced is fixed in the fork, latest the DC dead-branch pair re-blessed

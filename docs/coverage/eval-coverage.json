@@ -1,0 +1,7088 @@
+{
+  "families" : {
+    "v5/authored/AvlTree.contains.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.contains",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.get.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "100:10 AvlTree.get"
+      ],
+      "op" : "AvlTree.get",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.getMany.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "100:11 AvlTree.getMany"
+      ],
+      "op" : "AvlTree.getMany",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.get_proof_ladder.json" : {
+      "accepts" : 9,
+      "entries" : 9,
+      "methods" : [
+        "100:10 AvlTree.get"
+      ],
+      "op" : "AvlTree.get proof ladder",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.insert.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "100:12 AvlTree.insert"
+      ],
+      "op" : "AvlTree.insert",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.proof_adversarial.json" : {
+      "accepts" : 0,
+      "entries" : 2,
+      "methods" : [
+        "100:10 AvlTree.get"
+      ],
+      "op" : "AvlTree.proof adversarial",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.remove.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "100:14 AvlTree.remove"
+      ],
+      "op" : "AvlTree.remove",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.update.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "100:13 AvlTree.update"
+      ],
+      "op" : "AvlTree.update",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.updateOperations_updateDigest.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "100:15 AvlTree.updateDigest",
+        "100:8 AvlTree.updateOperations"
+      ],
+      "op" : "AvlTree.updateOperations updateDigest",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/EQ_of_SigmaProp.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "EQ of SigmaProp",
+      "ops" : [
+        "EQ",
+        "GetVar",
+        "OptionGet"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/EQ_of_SigmaProp_unequal.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "EQ of SigmaProp unequal",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/atLeast_with_a_degenerate_bound.json" : {
+      "accepts" : 7,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "atLeast with a degenerate bound",
+      "ops" : [
+        "AtLeast",
+        "ConcreteCollection",
+        "ConstantPlaceholder"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Advanced_Box_test.json" : {
+      "accepts" : 7,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Advanced Box test",
+      "ops" : [
+        "Apply",
+        "ExtractRegisterAs",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/AvlTree_properties_equivalence.json" : {
+      "accepts" : 21,
+      "entries" : 21,
+      "methods" : [
+        "100:1 AvlTree.digest",
+        "100:2 AvlTree.enabledOperations",
+        "100:3 AvlTree.keyLength",
+        "100:4 AvlTree.valueLengthOpt",
+        "100:5 AvlTree.isInsertAllowed",
+        "100:6 AvlTree.isUpdateAllowed",
+        "100:7 AvlTree.isRemoveAllowed"
+      ],
+      "op" : "AvlTree properties equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 21,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/BigInt_LE_GE.json" : {
+      "accepts" : 70,
+      "entries" : 70,
+      "methods" : [
+      ],
+      "op" : "BigInt LE, GE",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GE",
+        "GetVar",
+        "LE",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 70,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/BigInt_LT_GT_NEQ.json" : {
+      "accepts" : 102,
+      "entries" : 102,
+      "methods" : [
+      ],
+      "op" : "BigInt LT, GT, NEQ",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "LT",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/BigInt_methods_equivalence.json" : {
+      "accepts" : 10,
+      "entries" : 20,
+      "methods" : [
+      ],
+      "op" : "BigInt methods equivalence",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Tuple",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 10,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 10,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/BinXor_logical_XOR_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "BinXor(logical XOR) equivalence",
+      "ops" : [
+        "Apply",
+        "BinXor",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/BinXor_logical_XOR_test.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "BinXor(logical XOR) test",
+      "ops" : [
+        "Apply",
+        "BinXor",
+        "ConstantPlaceholder",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Box_properties_equivalence.json" : {
+      "accepts" : 14,
+      "entries" : 14,
+      "methods" : [
+        "99:8 Box.tokens"
+      ],
+      "op" : "Box properties equivalence",
+      "ops" : [
+        "Apply",
+        "ExtractAmount",
+        "ExtractBytes",
+        "ExtractBytesWithNoRef",
+        "ExtractCreationInfo",
+        "ExtractId",
+        "ExtractScriptBytes",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 14,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Byte_LE_GE.json" : {
+      "accepts" : 70,
+      "entries" : 70,
+      "methods" : [
+      ],
+      "op" : "Byte LE, GE",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GE",
+        "GetVar",
+        "LE",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 70,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Byte_LT_GT_NEQ.json" : {
+      "accepts" : 102,
+      "entries" : 102,
+      "methods" : [
+      ],
+      "op" : "Byte LT, GT, NEQ",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "LT",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Byte_methods_equivalence.json" : {
+      "accepts" : 46,
+      "entries" : 65,
+      "methods" : [
+      ],
+      "op" : "Byte methods equivalence",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Tuple",
+        "Upcast",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 19,
+      "tree_shapes" : [
+        {
+          "accepts" : 46,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 19,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.append_equivalence.json" : {
+      "accepts" : 8,
+      "entries" : 8,
+      "methods" : [
+      ],
+      "op" : "Coll.append equivalence",
+      "ops" : [
+        "Append",
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.exists_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Coll.exists equivalence",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "Exists",
+        "ExtractAmount",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.filter_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Coll.filter equivalence",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "ExtractAmount",
+        "Filter",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.flatMap_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "12:15 SCollection.flatMap"
+      ],
+      "op" : "Coll.flatMap equivalence",
+      "ops" : [
+        "Apply",
+        "ExtractScriptBytes",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.forall_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Coll.forall equivalence",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "ExtractAmount",
+        "ForAll",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.indices_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "12:14 SCollection.indices"
+      ],
+      "op" : "Coll.indices equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.size_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Coll.size equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SizeOf",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll.zip_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.zip equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_apply_method_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 8,
+      "methods" : [
+      ],
+      "op" : "Coll apply method equivalence",
+      "ops" : [
+        "Apply",
+        "ByIndex",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 5,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 5,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_exists_with_nested_If.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "Coll exists with nested If",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "Exists",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "If",
+        "LT",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_filter.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "Coll filter",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "Filter",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_filter_with_nested_If.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "Coll filter with nested If",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "Filter",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "If",
+        "LT",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_flatMap_method_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:15 SCollection.flatMap",
+        "7:2 GroupElement.getEncoded"
+      ],
+      "op" : "Coll flatMap method equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_fold_method_equivalence.json" : {
+      "accepts" : 7,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Coll fold method equivalence",
+      "ops" : [
+        "+",
+        "Apply",
+        "Fold",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Upcast",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_fold_with_nested_If.json" : {
+      "accepts" : 8,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Coll fold with nested If",
+      "ops" : [
+        "+",
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "Fold",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "If",
+        "OptionGet",
+        "SelectField",
+        "Upcast",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_forall_with_nested_If.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "Coll forall with nested If",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "ForAll",
+        "FuncValue",
+        "GE",
+        "GetVar",
+        "If",
+        "LE",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_getOrElse_method_equivalence.json" : {
+      "accepts" : 9,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Coll getOrElse method equivalence",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "ByIndex",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_indexOf_method_equivalence.json" : {
+      "accepts" : 18,
+      "entries" : 18,
+      "methods" : [
+        "12:26 SCollection.indexOf"
+      ],
+      "op" : "Coll indexOf method equivalence",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 18,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_map_method_equivalence.json" : {
+      "accepts" : 3,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "Coll map method equivalence",
+      "ops" : [
+        "+",
+        "Apply",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "MapCollection",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_map_with_nested_if.json" : {
+      "accepts" : 4,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "Coll map with nested if",
+      "ops" : [
+        "*",
+        "+",
+        "Apply",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "If",
+        "MapCollection",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_patch_method_equivalence.json" : {
+      "accepts" : 12,
+      "entries" : 12,
+      "methods" : [
+        "12:19 SCollection.patch"
+      ],
+      "op" : "Coll patch method equivalence",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 12,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_slice_method_equivalence.json" : {
+      "accepts" : 10,
+      "entries" : 10,
+      "methods" : [
+      ],
+      "op" : "Coll slice method equivalence",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_updateMany_method_equivalence.json" : {
+      "accepts" : 6,
+      "entries" : 14,
+      "methods" : [
+        "12:21 SCollection.updateMany"
+      ],
+      "op" : "Coll updateMany method equivalence",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 8,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 8,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Coll_updated_method_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 8,
+      "methods" : [
+        "12:20 SCollection.updated"
+      ],
+      "op" : "Coll updated method equivalence",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Conditional_access_to_registers.json" : {
+      "accepts" : 6,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "Conditional access to registers",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "EQ",
+        "ExtractRegisterAs",
+        "FuncValue",
+        "GetVar",
+        "If",
+        "OptionGet",
+        "OptionIsDefined",
+        "Upcast",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Global.xor_equivalence.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "Global.xor equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse",
+        "Xor"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/GroupElement.exp_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "GroupElement.exp equivalence",
+      "ops" : [
+        "Apply",
+        "Exponentiate",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/GroupElement.getEncoded_equivalence.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "7:2 GroupElement.getEncoded"
+      ],
+      "op" : "GroupElement.getEncoded equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/GroupElement.multiply_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "GroupElement.multiply equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MultiplyGroup",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/GroupElement.negate_equivalence.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "7:5 GroupElement.negate"
+      ],
+      "op" : "GroupElement.negate equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Int_LE_GE.json" : {
+      "accepts" : 70,
+      "entries" : 70,
+      "methods" : [
+      ],
+      "op" : "Int LE, GE",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GE",
+        "GetVar",
+        "LE",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 70,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Int_LT_GT_NEQ.json" : {
+      "accepts" : 102,
+      "entries" : 102,
+      "methods" : [
+      ],
+      "op" : "Int LT, GT, NEQ",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "LT",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Int_methods_equivalence.json" : {
+      "accepts" : 32,
+      "entries" : 62,
+      "methods" : [
+      ],
+      "op" : "Int methods equivalence",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "Apply",
+        "BlockValue",
+        "Downcast",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Tuple",
+        "Upcast",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 30,
+      "tree_shapes" : [
+        {
+          "accepts" : 32,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 30,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/LogicalNot_equivalence.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "LogicalNot equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "LogicalNot",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long.toBigInt_method.json" : {
+      "accepts" : 7,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "Long.toBigInt method",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "Upcast",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long.toByte_method.json" : {
+      "accepts" : 5,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Long.toByte method",
+      "ops" : [
+        "Apply",
+        "Downcast",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long.toInt_method.json" : {
+      "accepts" : 5,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Long.toInt method",
+      "ops" : [
+        "Apply",
+        "Downcast",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long.toLong_method.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "Long.toLong method",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long.toShort_method.json" : {
+      "accepts" : 5,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "Long.toShort method",
+      "ops" : [
+        "Apply",
+        "Downcast",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long_LE_GE.json" : {
+      "accepts" : 70,
+      "entries" : 70,
+      "methods" : [
+      ],
+      "op" : "Long LE, GE",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GE",
+        "GetVar",
+        "LE",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 70,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long_LT_GT_NEQ.json" : {
+      "accepts" : 102,
+      "entries" : 102,
+      "methods" : [
+      ],
+      "op" : "Long LT, GT, NEQ",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "LT",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Long_methods_equivalence.json" : {
+      "accepts" : 7,
+      "entries" : 21,
+      "methods" : [
+      ],
+      "op" : "Long methods equivalence",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Tuple",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 14,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 14,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/NEQ_of_collections_of_pre_defined_types.json" : {
+      "accepts" : 76,
+      "entries" : 76,
+      "methods" : [
+      ],
+      "op" : "NEQ of collections of pre-defined types",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 76,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/NEQ_of_nested_collections_and_tuples.json" : {
+      "accepts" : 20,
+      "entries" : 20,
+      "methods" : [
+      ],
+      "op" : "NEQ of nested collections and tuples",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 20,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/NEQ_of_nested_tuples.json" : {
+      "accepts" : 20,
+      "entries" : 20,
+      "methods" : [
+      ],
+      "op" : "NEQ of nested tuples",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 20,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/NEQ_of_pre_defined_types.json" : {
+      "accepts" : 15,
+      "entries" : 15,
+      "methods" : [
+      ],
+      "op" : "NEQ of pre-defined types",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 15,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/NEQ_of_tuples_of_numerics.json" : {
+      "accepts" : 25,
+      "entries" : 25,
+      "methods" : [
+      ],
+      "op" : "NEQ of tuples of numerics",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 25,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/NEQ_of_tuples_of_pre_defined_types.json" : {
+      "accepts" : 15,
+      "entries" : 15,
+      "methods" : [
+      ],
+      "op" : "NEQ of tuples of pre-defined types",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 15,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Numeric_Negation_equivalence.json" : {
+      "accepts" : 49,
+      "entries" : 49,
+      "methods" : [
+      ],
+      "op" : "Numeric Negation equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Negation",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 49,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Short_LE_GE.json" : {
+      "accepts" : 70,
+      "entries" : 70,
+      "methods" : [
+      ],
+      "op" : "Short LE, GE",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GE",
+        "GetVar",
+        "LE",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 70,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Short_LT_GT_NEQ.json" : {
+      "accepts" : 102,
+      "entries" : 102,
+      "methods" : [
+      ],
+      "op" : "Short LT, GT, NEQ",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "LT",
+        "NEQ",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Short_methods_equivalence.json" : {
+      "accepts" : 41,
+      "entries" : 63,
+      "methods" : [
+      ],
+      "op" : "Short methods equivalence",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "Apply",
+        "BlockValue",
+        "Downcast",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "Tuple",
+        "Upcast",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 22,
+      "tree_shapes" : [
+        {
+          "accepts" : 41,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 22,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/SigmaProp.propBytes_equivalence.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "SigmaProp.propBytes equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SigmaPropBytes",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Tuple_apply_method_equivalence.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Tuple apply method equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/Tuple_size_method_equivalence.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Tuple size method equivalence",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "OptionGet"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/allOf_equivalence.json" : {
+      "accepts" : 11,
+      "entries" : 11,
+      "methods" : [
+      ],
+      "op" : "allOf equivalence",
+      "ops" : [
+        "AND",
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 11,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/and_boolean_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "&& boolean equivalence",
+      "ops" : [
+        "Apply",
+        "BinAnd",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/and_sigma_equivalence.json" : {
+      "accepts" : 7,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "&& sigma equivalence",
+      "ops" : [
+        "Apply",
+        "BoolToSigmaProp",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "SigmaAnd",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/anyOf_equivalence.json" : {
+      "accepts" : 11,
+      "entries" : 11,
+      "methods" : [
+      ],
+      "op" : "anyOf equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OR",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 11,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/blake2b256_sha256_equivalence.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "blake2b256, sha256 equivalence",
+      "ops" : [
+        "Apply",
+        "CalcBlake2b256",
+        "CalcSha256",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/byteArrayToBigInt_equivalence.json" : {
+      "accepts" : 5,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "byteArrayToBigInt equivalence",
+      "ops" : [
+        "Apply",
+        "ByteArrayToBigInt",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/byteArrayToLong_equivalence.json" : {
+      "accepts" : 6,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "byteArrayToLong equivalence",
+      "ops" : [
+        "Apply",
+        "ByteArrayToLong",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "7:2 GroupElement.getEncoded"
+      ],
+      "op" : "decodePoint(GroupElement.getEncoded) equivalence",
+      "ops" : [
+        "Apply",
+        "DecodePoint",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/groupGenerator_equivalence.json" : {
+      "accepts" : 17,
+      "entries" : 17,
+      "methods" : [
+        "106:1 SigmaDslBuilder.groupGenerator"
+      ],
+      "op" : "groupGenerator equivalence",
+      "ops" : [
+        "Apply",
+        "Exponentiate",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "GroupGenerator$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 17,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/lazy_or_and_and_boolean_equivalence.json" : {
+      "accepts" : 13,
+      "entries" : 20,
+      "methods" : [
+      ],
+      "op" : "lazy || and && boolean equivalence",
+      "ops" : [
+        "/",
+        "Apply",
+        "BinAnd",
+        "BinOr",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "LogicalNot",
+        "OptionGet",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 7,
+      "tree_shapes" : [
+        {
+          "accepts" : 13,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 7,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/longToByteArray_equivalence.json" : {
+      "accepts" : 7,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "longToByteArray equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "LongToByteArray",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/nested_loops_map_inside_fold.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "12:29 SCollection.zip"
+      ],
+      "op" : "nested loops: map inside fold",
+      "ops" : [
+        "+",
+        "Apply",
+        "Fold",
+        "FuncValue",
+        "GetVar",
+        "MapCollection",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/or_boolean_equivalence.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "|| boolean equivalence",
+      "ops" : [
+        "Apply",
+        "BinOr",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/or_sigma_equivalence.json" : {
+      "accepts" : 7,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "|| sigma equivalence",
+      "ops" : [
+        "Apply",
+        "BoolToSigmaProp",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "SigmaOr",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/proveDHTuple_equivalence.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "proveDHTuple equivalence",
+      "ops" : [
+        "Apply",
+        "CreateProveDHTuple",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/proveDlog_equivalence.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "proveDlog equivalence",
+      "ops" : [
+        "Apply",
+        "CreateProveDlog",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/sigmaProp_equivalence.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "sigmaProp equivalence",
+      "ops" : [
+        "Apply",
+        "BoolToSigmaProp",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/substConstants_equivalence.json" : {
+      "accepts" : 7,
+      "entries" : 9,
+      "methods" : [
+      ],
+      "op" : "substConstants equivalence",
+      "ops" : [
+        "Apply",
+        "BoolToSigmaProp",
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "SubstConstants",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/verify_should_respect_Context.initCost.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "verify should respect Context.initCost",
+      "ops" : [
+        "Apply",
+        "BinXor",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/spec/xorOf_equivalence.json" : {
+      "accepts" : 19,
+      "entries" : 19,
+      "methods" : [
+      ],
+      "op" : "xorOf equivalence",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse",
+        "XorOf"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 19,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v6/authored/Box.getReg_adversarial.json" : {
+      "accepts" : 1,
+      "entries" : 3,
+      "methods" : [
+        "99:7 Box.getRegV5"
+      ],
+      "op" : "Box.getReg adversarial MethodCall rejects",
+      "ops" : [
+        "ConstantPlaceholder",
+        "GetVar",
+        "If",
+        "MethodCall",
+        "OptionGet",
+        "OptionIsDefined",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 1,
+      "version" : "v6"
+    },
+    "v6/authored/Box.getReg_dynamic_index.json" : {
+      "accepts" : 3,
+      "entries" : 4,
+      "methods" : [
+        "99:19 Box.getReg"
+      ],
+      "op" : "Box.getReg dynamic index MethodCall",
+      "ops" : [
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Context.getVarFromInput.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "101:12 Context.getVarFromInput"
+      ],
+      "op" : "Context.getVarFromInput",
+      "ops" : [
+        "ConstantPlaceholder",
+        "Context$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Context.getVarFromInput_multi_input.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+        "101:12 Context.getVarFromInput"
+      ],
+      "op" : "Context.getVarFromInput",
+      "ops" : [
+        "ConstantPlaceholder",
+        "Context$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json" : {
+      "accepts" : 2,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "DeserializeContext over absent/wrong-typed var",
+      "ops" : [
+        "ConstantPlaceholder",
+        "DeserializeContext",
+        "If"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : true,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.powHit_feeding_Coll_HOF.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:8 SigmaDslBuilder.powHit"
+      ],
+      "op" : "Global.powHit feeding Coll-HOF",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "Exists",
+        "Filter",
+        "ForAll",
+        "FuncValue",
+        "GT",
+        "GetVar",
+        "Global$",
+        "MapCollection",
+        "MethodCall",
+        "OptionGet",
+        "SizeOf",
+        "Upcast",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.powHit_require_boundary.json" : {
+      "accepts" : 0,
+      "entries" : 3,
+      "methods" : [
+        "106:8 SigmaDslBuilder.powHit"
+      ],
+      "op" : "Global.powHit require boundary",
+      "ops" : [
+        "ConstantPlaceholder",
+        "Global$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.powHit_varying_k.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:8 SigmaDslBuilder.powHit"
+      ],
+      "op" : "Global.powHit varying k",
+      "ops" : [
+        "ConstantPlaceholder",
+        "Global$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_AvlTree.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[AvlTree]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Box.json" : {
+      "accepts" : 8,
+      "entries" : 8,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Box]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Box_Int.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[(Box, Int)]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Coll_GroupElement.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Coll[GroupElement]]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_GroupElement.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[GroupElement]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Header.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Header]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Option_BigInt.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Option[BigInt]]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_SigmaProp.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[SigmaProp]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_UnsignedBigInt.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[UnsignedBigInt]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/GroupElement.expUnsigned.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "7:6 GroupElement.expUnsigned"
+      ],
+      "op" : "GroupElement.expUnsigned",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/HOF_FunDef_polymorphic_identity.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "HOF FunDef polymorphic identity",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/HOF_FunDef_type_var_body.json" : {
+      "accepts" : 1,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "HOF FunDef type-var body",
+      "ops" : [
+        "+",
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/HOF_currying_Apply_of_Apply.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "HOF currying Apply of Apply",
+      "ops" : [
+        "+",
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/HOF_function_in_Coll_of_SFunc.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "HOF function in Coll of SFunc",
+      "ops" : [
+        "*",
+        "+",
+        "Apply",
+        "BlockValue",
+        "ByIndex",
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/UnsignedBigInt_arith_domain_rejects.json" : {
+      "accepts" : 0,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "UnsignedBigInt arith domain rejects",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "ConstantPlaceholder"
+      ],
+      "provenance" : "authored",
+      "rejects" : 5,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 5,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/UnsignedBigInt_arith_table.json" : {
+      "accepts" : 8,
+      "entries" : 8,
+      "methods" : [
+      ],
+      "op" : "UnsignedBigInt arith table",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "ConstantPlaceholder"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/BigInt.toUnsigned.json" : {
+      "accepts" : 2,
+      "entries" : 3,
+      "methods" : [
+        "6:14 BigInt.toUnsigned"
+      ],
+      "op" : "BigInt.toUnsigned",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/BigInt.toUnsignedMod.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+        "6:15 BigInt.toUnsignedMod"
+      ],
+      "op" : "BigInt.toUnsignedMod",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/BigInt_6.0_features.json" : {
+      "accepts" : 34,
+      "entries" : 38,
+      "methods" : [
+        "6:10 BigInt.bitwiseAnd",
+        "6:11 BigInt.bitwiseXor",
+        "6:12 BigInt.shiftLeft",
+        "6:13 BigInt.shiftRight",
+        "6:6 BigInt.toBytes",
+        "6:7 BigInt.toBits",
+        "6:8 BigInt.bitwiseInverse",
+        "6:9 BigInt.bitwiseOr"
+      ],
+      "op" : "BigInt - 6.0 features",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 34,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Box_properties_equivalence_new_features.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "Box properties equivalence (new features)",
+      "ops" : [
+        "Apply",
+        "ExtractRegisterAs",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Byte_methods_6.0_features.json" : {
+      "accepts" : 12,
+      "entries" : 16,
+      "methods" : [
+        "2:10 Byte.bitwiseAnd",
+        "2:11 Byte.bitwiseXor",
+        "2:12 Byte.shiftLeft",
+        "2:13 Byte.shiftRight",
+        "2:6 Byte.toBytes",
+        "2:7 Byte.toBits",
+        "2:8 Byte.bitwiseInverse",
+        "2:9 Byte.bitwiseOr"
+      ],
+      "op" : "Byte methods - 6.0 features",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 12,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Coll.endsWith.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "12:32 SCollection.endsWith"
+      ],
+      "op" : "Coll.endsWith",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Coll.get.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "12:33 SCollection.get"
+      ],
+      "op" : "Coll.get",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Coll.reverse.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "12:30 SCollection.reverse"
+      ],
+      "op" : "Coll.reverse",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Coll.startsWith.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+        "12:31 SCollection.startsWith"
+      ],
+      "op" : "Coll.startsWith",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Coll_getOrElse_with_lazy_default.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Coll getOrElse with lazy default",
+      "ops" : [
+        "/",
+        "Apply",
+        "ByIndex",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Fix substConstants in v6.0 for ErgoTree version > 0",
+      "ops" : [
+        "Apply",
+        "BoolToSigmaProp",
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "SelectField",
+        "SubstConstants",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.decodeNbits.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "106:7 SigmaDslBuilder.decodeNbits"
+      ],
+      "op" : "Global.decodeNbits",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.deserializeTo_group_element.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "106:4 SigmaDslBuilder.deserializeTo",
+        "7:2 GroupElement.getEncoded"
+      ],
+      "op" : "Global.deserializeTo - group element",
+      "ops" : [
+        "Apply",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.deserializeTo_header.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "106:4 SigmaDslBuilder.deserializeTo"
+      ],
+      "op" : "Global.deserializeTo - header",
+      "ops" : [
+        "Apply",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.encodeNbits.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:6 SigmaDslBuilder.encodeNbits"
+      ],
+      "op" : "Global.encodeNbits",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.powHit.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "106:8 SigmaDslBuilder.powHit"
+      ],
+      "op" : "Global.powHit",
+      "ops" : [
+        "Apply",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "Slice",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_Byte.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Byte]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_Coll_Byte.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Coll[Byte]]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_Int.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Int]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_Long.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Long]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_Long_Long.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[(Long, Long)]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_Short.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Short]",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "106:4 SigmaDslBuilder.deserializeTo"
+      ],
+      "op" : "Global.serialize & deserialize roundtrip - BigInt",
+      "ops" : [
+        "Apply",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Global_fromBigEndianBytes.json" : {
+      "accepts" : 16,
+      "entries" : 16,
+      "methods" : [
+        "106:5 SigmaDslBuilder.fromBigEndianBytes",
+        "2:6 Byte.toBytes",
+        "3:6 Short.toBytes",
+        "4:6 Int.toBytes",
+        "5:6 Long.toBytes",
+        "6:6 BigInt.toBytes",
+        "9:6 UnsignedBigInt.toBytes"
+      ],
+      "op" : "Global - fromBigEndianBytes",
+      "ops" : [
+        "Apply",
+        "EQ",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 16,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/GroupElement.expUnsigned.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "7:6 GroupElement.expUnsigned"
+      ],
+      "op" : "GroupElement.expUnsigned",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Header_new_methods.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "104:16 Header.checkPow"
+      ],
+      "op" : "Header new methods",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Int_6.0_methods.json" : {
+      "accepts" : 28,
+      "entries" : 32,
+      "methods" : [
+        "4:10 Int.bitwiseAnd",
+        "4:11 Int.bitwiseXor",
+        "4:12 Int.shiftLeft",
+        "4:13 Int.shiftRight",
+        "4:6 Int.toBytes",
+        "4:7 Int.toBits",
+        "4:8 Int.bitwiseInverse",
+        "4:9 Int.bitwiseOr"
+      ],
+      "op" : "Int - 6.0 methods",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 28,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Long_6.0_methods.json" : {
+      "accepts" : 34,
+      "entries" : 37,
+      "methods" : [
+        "5:10 Long.bitwiseAnd",
+        "5:11 Long.bitwiseXor",
+        "5:12 Long.shiftLeft",
+        "5:13 Long.shiftRight",
+        "5:6 Long.toBytes",
+        "5:7 Long.toBits",
+        "5:8 Long.bitwiseInverse",
+        "5:9 Long.bitwiseOr"
+      ],
+      "op" : "Long - 6.0 methods",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 34,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Option.getOrElse_with_lazy_default.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "Option.getOrElse with lazy default",
+      "ops" : [
+        "/",
+        "Apply",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "OptionGet",
+        "OptionGetOrElse",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/Short_6.0_methods.json" : {
+      "accepts" : 21,
+      "entries" : 25,
+      "methods" : [
+        "3:10 Short.bitwiseAnd",
+        "3:11 Short.bitwiseXor",
+        "3:12 Short.shiftLeft",
+        "3:13 Short.shiftRight",
+        "3:6 Short.toBytes",
+        "3:7 Short.toBits",
+        "3:8 Short.bitwiseInverse",
+        "3:9 Short.bitwiseOr"
+      ],
+      "op" : "Short - 6.0 methods",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 21,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/UnsignedBigInt_methods.json" : {
+      "accepts" : 27,
+      "entries" : 29,
+      "methods" : [
+        "9:10 UnsignedBigInt.bitwiseAnd",
+        "9:11 UnsignedBigInt.bitwiseXor",
+        "9:12 UnsignedBigInt.shiftLeft",
+        "9:13 UnsignedBigInt.shiftRight",
+        "9:14 UnsignedBigInt.modInverse",
+        "9:15 UnsignedBigInt.plusMod",
+        "9:16 UnsignedBigInt.subtractMod",
+        "9:17 UnsignedBigInt.multiplyMod",
+        "9:6 UnsignedBigInt.toBytes",
+        "9:7 UnsignedBigInt.toBits",
+        "9:8 UnsignedBigInt.bitwiseInverse",
+        "9:9 UnsignedBigInt.bitwiseOr"
+      ],
+      "op" : "UnsignedBigInt methods",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 27,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/decode-point.json" : {
+      "accepts" : 4,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "decode_point",
+      "ops" : [
+        "Const",
+        "DecodePoint"
+      ],
+      "provenance" : "spec",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 2,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/spec/higher_order_lambdas.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "higher order lambdas",
+      "ops" : [
+        "+",
+        "Apply",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "MapCollection",
+        "OptionGet",
+        "SelectField",
+        "Tuple",
+        "ValUse"
+      ],
+      "provenance" : "spec",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    }
+  },
+  "method_index" : {
+    "100:1" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.digest"
+    },
+    "100:10" : {
+      "families" : [
+        "v5/authored/AvlTree.get.json",
+        "v5/authored/AvlTree.get_proof_ladder.json",
+        "v5/authored/AvlTree.proof_adversarial.json"
+      ],
+      "name" : "AvlTree.get"
+    },
+    "100:11" : {
+      "families" : [
+        "v5/authored/AvlTree.getMany.json"
+      ],
+      "name" : "AvlTree.getMany"
+    },
+    "100:12" : {
+      "families" : [
+        "v5/authored/AvlTree.insert.json"
+      ],
+      "name" : "AvlTree.insert"
+    },
+    "100:13" : {
+      "families" : [
+        "v5/authored/AvlTree.update.json"
+      ],
+      "name" : "AvlTree.update"
+    },
+    "100:14" : {
+      "families" : [
+        "v5/authored/AvlTree.remove.json"
+      ],
+      "name" : "AvlTree.remove"
+    },
+    "100:15" : {
+      "families" : [
+        "v5/authored/AvlTree.updateOperations_updateDigest.json"
+      ],
+      "name" : "AvlTree.updateDigest"
+    },
+    "100:2" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.enabledOperations"
+    },
+    "100:3" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.keyLength"
+    },
+    "100:4" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.valueLengthOpt"
+    },
+    "100:5" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.isInsertAllowed"
+    },
+    "100:6" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.isUpdateAllowed"
+    },
+    "100:7" : {
+      "families" : [
+        "v5/spec/AvlTree_properties_equivalence.json"
+      ],
+      "name" : "AvlTree.isRemoveAllowed"
+    },
+    "100:8" : {
+      "families" : [
+        "v5/authored/AvlTree.updateOperations_updateDigest.json"
+      ],
+      "name" : "AvlTree.updateOperations"
+    },
+    "100:9" : {
+      "families" : [
+        "v5/authored/AvlTree.contains.json"
+      ],
+      "name" : "AvlTree.contains"
+    },
+    "101:12" : {
+      "families" : [
+        "v6/authored/Context.getVarFromInput.json",
+        "v6/authored/Context.getVarFromInput_multi_input.json"
+      ],
+      "name" : "Context.getVarFromInput"
+    },
+    "104:16" : {
+      "families" : [
+        "v6/spec/Header_new_methods.json"
+      ],
+      "name" : "Header.checkPow"
+    },
+    "106:1" : {
+      "families" : [
+        "v5/spec/groupGenerator_equivalence.json"
+      ],
+      "name" : "SigmaDslBuilder.groupGenerator"
+    },
+    "106:3" : {
+      "families" : [
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json"
+      ],
+      "name" : "SigmaDslBuilder.serialize"
+    },
+    "106:4" : {
+      "families" : [
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json"
+      ],
+      "name" : "SigmaDslBuilder.deserializeTo"
+    },
+    "106:5" : {
+      "families" : [
+        "v6/spec/Global_fromBigEndianBytes.json"
+      ],
+      "name" : "SigmaDslBuilder.fromBigEndianBytes"
+    },
+    "106:6" : {
+      "families" : [
+        "v6/spec/Global.encodeNbits.json"
+      ],
+      "name" : "SigmaDslBuilder.encodeNbits"
+    },
+    "106:7" : {
+      "families" : [
+        "v6/spec/Global.decodeNbits.json"
+      ],
+      "name" : "SigmaDslBuilder.decodeNbits"
+    },
+    "106:8" : {
+      "families" : [
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.powHit_require_boundary.json",
+        "v6/authored/Global.powHit_varying_k.json",
+        "v6/spec/Global.powHit.json"
+      ],
+      "name" : "SigmaDslBuilder.powHit"
+    },
+    "12:14" : {
+      "families" : [
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json"
+      ],
+      "name" : "SCollection.indices"
+    },
+    "12:15" : {
+      "families" : [
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json"
+      ],
+      "name" : "SCollection.flatMap"
+    },
+    "12:19" : {
+      "families" : [
+        "v5/spec/Coll_patch_method_equivalence.json"
+      ],
+      "name" : "SCollection.patch"
+    },
+    "12:20" : {
+      "families" : [
+        "v5/spec/Coll_updated_method_equivalence.json"
+      ],
+      "name" : "SCollection.updated"
+    },
+    "12:21" : {
+      "families" : [
+        "v5/spec/Coll_updateMany_method_equivalence.json"
+      ],
+      "name" : "SCollection.updateMany"
+    },
+    "12:26" : {
+      "families" : [
+        "v5/spec/Coll_indexOf_method_equivalence.json"
+      ],
+      "name" : "SCollection.indexOf"
+    },
+    "12:29" : {
+      "families" : [
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json"
+      ],
+      "name" : "SCollection.zip"
+    },
+    "12:30" : {
+      "families" : [
+        "v6/spec/Coll.reverse.json"
+      ],
+      "name" : "SCollection.reverse"
+    },
+    "12:31" : {
+      "families" : [
+        "v6/spec/Coll.startsWith.json"
+      ],
+      "name" : "SCollection.startsWith"
+    },
+    "12:32" : {
+      "families" : [
+        "v6/spec/Coll.endsWith.json"
+      ],
+      "name" : "SCollection.endsWith"
+    },
+    "12:33" : {
+      "families" : [
+        "v6/spec/Coll.get.json"
+      ],
+      "name" : "SCollection.get"
+    },
+    "2:10" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.bitwiseAnd"
+    },
+    "2:11" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.bitwiseXor"
+    },
+    "2:12" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.shiftLeft"
+    },
+    "2:13" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.shiftRight"
+    },
+    "2:6" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Global_fromBigEndianBytes.json"
+      ],
+      "name" : "Byte.toBytes"
+    },
+    "2:7" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.toBits"
+    },
+    "2:8" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.bitwiseInverse"
+    },
+    "2:9" : {
+      "families" : [
+        "v6/spec/Byte_methods_6.0_features.json"
+      ],
+      "name" : "Byte.bitwiseOr"
+    },
+    "3:10" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.bitwiseAnd"
+    },
+    "3:11" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.bitwiseXor"
+    },
+    "3:12" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.shiftLeft"
+    },
+    "3:13" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.shiftRight"
+    },
+    "3:6" : {
+      "families" : [
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.toBytes"
+    },
+    "3:7" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.toBits"
+    },
+    "3:8" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.bitwiseInverse"
+    },
+    "3:9" : {
+      "families" : [
+        "v6/spec/Short_6.0_methods.json"
+      ],
+      "name" : "Short.bitwiseOr"
+    },
+    "4:10" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.bitwiseAnd"
+    },
+    "4:11" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.bitwiseXor"
+    },
+    "4:12" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.shiftLeft"
+    },
+    "4:13" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.shiftRight"
+    },
+    "4:6" : {
+      "families" : [
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.toBytes"
+    },
+    "4:7" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.toBits"
+    },
+    "4:8" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.bitwiseInverse"
+    },
+    "4:9" : {
+      "families" : [
+        "v6/spec/Int_6.0_methods.json"
+      ],
+      "name" : "Int.bitwiseOr"
+    },
+    "5:10" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.bitwiseAnd"
+    },
+    "5:11" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.bitwiseXor"
+    },
+    "5:12" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.shiftLeft"
+    },
+    "5:13" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.shiftRight"
+    },
+    "5:6" : {
+      "families" : [
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.toBytes"
+    },
+    "5:7" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.toBits"
+    },
+    "5:8" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.bitwiseInverse"
+    },
+    "5:9" : {
+      "families" : [
+        "v6/spec/Long_6.0_methods.json"
+      ],
+      "name" : "Long.bitwiseOr"
+    },
+    "6:10" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.bitwiseAnd"
+    },
+    "6:11" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.bitwiseXor"
+    },
+    "6:12" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.shiftLeft"
+    },
+    "6:13" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.shiftRight"
+    },
+    "6:14" : {
+      "families" : [
+        "v6/spec/BigInt.toUnsigned.json"
+      ],
+      "name" : "BigInt.toUnsigned"
+    },
+    "6:15" : {
+      "families" : [
+        "v6/spec/BigInt.toUnsignedMod.json"
+      ],
+      "name" : "BigInt.toUnsignedMod"
+    },
+    "6:6" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Global_fromBigEndianBytes.json"
+      ],
+      "name" : "BigInt.toBytes"
+    },
+    "6:7" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.toBits"
+    },
+    "6:8" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.bitwiseInverse"
+    },
+    "6:9" : {
+      "families" : [
+        "v6/spec/BigInt_6.0_features.json"
+      ],
+      "name" : "BigInt.bitwiseOr"
+    },
+    "7:2" : {
+      "families" : [
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v6/spec/Global.deserializeTo_group_element.json"
+      ],
+      "name" : "GroupElement.getEncoded"
+    },
+    "7:5" : {
+      "families" : [
+        "v5/spec/GroupElement.negate_equivalence.json"
+      ],
+      "name" : "GroupElement.negate"
+    },
+    "7:6" : {
+      "families" : [
+        "v6/authored/GroupElement.expUnsigned.json",
+        "v6/spec/GroupElement.expUnsigned.json"
+      ],
+      "name" : "GroupElement.expUnsigned"
+    },
+    "99:19" : {
+      "families" : [
+        "v6/authored/Box.getReg_dynamic_index.json"
+      ],
+      "name" : "Box.getReg"
+    },
+    "99:7" : {
+      "families" : [
+        "v6/authored/Box.getReg_adversarial.json"
+      ],
+      "name" : "Box.getRegV5"
+    },
+    "99:8" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json"
+      ],
+      "name" : "Box.tokens"
+    },
+    "9:10" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.bitwiseAnd"
+    },
+    "9:11" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.bitwiseXor"
+    },
+    "9:12" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.shiftLeft"
+    },
+    "9:13" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.shiftRight"
+    },
+    "9:14" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.modInverse"
+    },
+    "9:15" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.plusMod"
+    },
+    "9:16" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.subtractMod"
+    },
+    "9:17" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.multiplyMod"
+    },
+    "9:6" : {
+      "families" : [
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.toBytes"
+    },
+    "9:7" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.toBits"
+    },
+    "9:8" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.bitwiseInverse"
+    },
+    "9:9" : {
+      "families" : [
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "name" : "UnsignedBigInt.bitwiseOr"
+    }
+  },
+  "op_index" : {
+    "%" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
+        "v6/authored/UnsignedBigInt_arith_table.json"
+      ],
+      "op_codes" : [
+        "0x9e"
+      ]
+    },
+    "*" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
+        "v6/authored/UnsignedBigInt_arith_table.json"
+      ],
+      "op_codes" : [
+        "0x9c"
+      ]
+    },
+    "+" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
+        "v6/authored/UnsignedBigInt_arith_table.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0x9a"
+      ]
+    },
+    "-" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
+        "v6/authored/UnsignedBigInt_arith_table.json"
+      ],
+      "op_codes" : [
+        "0x99"
+      ]
+    },
+    "/" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
+        "v6/authored/UnsignedBigInt_arith_table.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json"
+      ],
+      "op_codes" : [
+        "0x9d"
+      ]
+    },
+    "AND" : {
+      "families" : [
+        "v5/spec/allOf_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x96"
+      ]
+    },
+    "Append" : {
+      "families" : [
+        "v5/spec/Coll.append_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xb3"
+      ]
+    },
+    "Apply" : {
+      "families" : [
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/AvlTree_properties_equivalence.json",
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll.append_equivalence.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll.size_equivalence.json",
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Global.xor_equivalence.json",
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/GroupElement.multiply_equivalence.json",
+        "v5/spec/GroupElement.negate_equivalence.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/LogicalNot_equivalence.json",
+        "v5/spec/Long.toBigInt_method.json",
+        "v5/spec/Long.toByte_method.json",
+        "v5/spec/Long.toInt_method.json",
+        "v5/spec/Long.toLong_method.json",
+        "v5/spec/Long.toShort_method.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Numeric_Negation_equivalence.json",
+        "v5/spec/Short_LE_GE.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/SigmaProp.propBytes_equivalence.json",
+        "v5/spec/Tuple_apply_method_equivalence.json",
+        "v5/spec/Tuple_size_method_equivalence.json",
+        "v5/spec/allOf_equivalence.json",
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/anyOf_equivalence.json",
+        "v5/spec/blake2b256_sha256_equivalence.json",
+        "v5/spec/byteArrayToBigInt_equivalence.json",
+        "v5/spec/byteArrayToLong_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/longToByteArray_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v5/spec/or_boolean_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/proveDHTuple_equivalence.json",
+        "v5/spec/proveDlog_equivalence.json",
+        "v5/spec/sigmaProp_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v5/spec/verify_should_respect_Context.initCost.json",
+        "v5/spec/xorOf_equivalence.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/HOF_FunDef_polymorphic_identity.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/BigInt.toUnsigned.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Box_properties_equivalence_new_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.reverse.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Header_new_methods.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0xda"
+      ]
+    },
+    "AtLeast" : {
+      "families" : [
+        "v5/authored/atLeast_with_a_degenerate_bound.json"
+      ],
+      "op_codes" : [
+        "0x98"
+      ]
+    },
+    "BinAnd" : {
+      "families" : [
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xed"
+      ]
+    },
+    "BinOr" : {
+      "families" : [
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/or_boolean_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xec"
+      ]
+    },
+    "BinXor" : {
+      "families" : [
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/verify_should_respect_Context.initCost.json"
+      ],
+      "op_codes" : [
+        "0xf4"
+      ]
+    },
+    "BlockValue" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/HOF_FunDef_polymorphic_identity.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "op_codes" : [
+        "0xd8"
+      ]
+    },
+    "BoolToSigmaProp" : {
+      "families" : [
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/sigmaProp_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
+      ],
+      "op_codes" : [
+        "0xd1"
+      ]
+    },
+    "ByIndex" : {
+      "families" : [
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json"
+      ],
+      "op_codes" : [
+        "0xb2"
+      ]
+    },
+    "ByteArrayToBigInt" : {
+      "families" : [
+        "v5/spec/byteArrayToBigInt_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x7b"
+      ]
+    },
+    "ByteArrayToLong" : {
+      "families" : [
+        "v5/spec/byteArrayToLong_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x7c"
+      ]
+    },
+    "CalcBlake2b256" : {
+      "families" : [
+        "v5/spec/blake2b256_sha256_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xcb"
+      ]
+    },
+    "CalcSha256" : {
+      "families" : [
+        "v5/spec/blake2b256_sha256_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xcc"
+      ]
+    },
+    "ConcreteCollection" : {
+      "families" : [
+        "v5/authored/AvlTree.getMany.json",
+        "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.remove.json",
+        "v5/authored/AvlTree.update.json",
+        "v5/authored/atLeast_with_a_degenerate_bound.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
+      ],
+      "op_codes" : [
+        "0x83"
+      ]
+    },
+    "Const" : {
+      "families" : [
+        "v6/spec/decode-point.json"
+      ],
+      "op_codes" : [
+        "0x00"
+      ]
+    },
+    "ConstantPlaceholder" : {
+      "families" : [
+        "v5/authored/AvlTree.contains.json",
+        "v5/authored/AvlTree.get.json",
+        "v5/authored/AvlTree.getMany.json",
+        "v5/authored/AvlTree.get_proof_ladder.json",
+        "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.proof_adversarial.json",
+        "v5/authored/AvlTree.remove.json",
+        "v5/authored/AvlTree.update.json",
+        "v5/authored/AvlTree.updateOperations_updateDigest.json",
+        "v5/authored/EQ_of_SigmaProp_unequal.json",
+        "v5/authored/atLeast_with_a_degenerate_bound.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Tuple_size_method_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Context.getVarFromInput.json",
+        "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.powHit_require_boundary.json",
+        "v6/authored/Global.powHit_varying_k.json",
+        "v6/authored/GroupElement.expUnsigned.json",
+        "v6/authored/HOF_FunDef_polymorphic_identity.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
+        "v6/authored/UnsignedBigInt_arith_table.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0x73"
+      ]
+    },
+    "Context$" : {
+      "families" : [
+        "v6/authored/Context.getVarFromInput.json",
+        "v6/authored/Context.getVarFromInput_multi_input.json"
+      ],
+      "op_codes" : [
+        "0xfe"
+      ]
+    },
+    "CreateProveDHTuple" : {
+      "families" : [
+        "v5/spec/proveDHTuple_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xce"
+      ]
+    },
+    "CreateProveDlog" : {
+      "families" : [
+        "v5/spec/proveDlog_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xcd"
+      ]
+    },
+    "DecodePoint" : {
+      "families" : [
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v6/spec/decode-point.json"
+      ],
+      "op_codes" : [
+        "0xee"
+      ]
+    },
+    "DeserializeContext" : {
+      "families" : [
+        "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json"
+      ],
+      "op_codes" : [
+        "0xd4"
+      ]
+    },
+    "Downcast" : {
+      "families" : [
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long.toByte_method.json",
+        "v5/spec/Long.toInt_method.json",
+        "v5/spec/Long.toShort_method.json",
+        "v5/spec/Short_methods_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x7d"
+      ]
+    },
+    "EQ" : {
+      "families" : [
+        "v5/authored/EQ_of_SigmaProp.json",
+        "v5/authored/EQ_of_SigmaProp_unequal.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json"
+      ],
+      "op_codes" : [
+        "0x93"
+      ]
+    },
+    "Exists" : {
+      "families" : [
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json"
+      ],
+      "op_codes" : [
+        "0xae"
+      ]
+    },
+    "Exponentiate" : {
+      "families" : [
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x9f"
+      ]
+    },
+    "ExtractAmount" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xc1"
+      ]
+    },
+    "ExtractBytes" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xc3"
+      ]
+    },
+    "ExtractBytesWithNoRef" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xc4"
+      ]
+    },
+    "ExtractCreationInfo" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xc7"
+      ]
+    },
+    "ExtractId" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xc5"
+      ]
+    },
+    "ExtractRegisterAs" : {
+      "families" : [
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v6/spec/Box_properties_equivalence_new_features.json"
+      ],
+      "op_codes" : [
+        "0xc6"
+      ]
+    },
+    "ExtractScriptBytes" : {
+      "families" : [
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xc2"
+      ]
+    },
+    "Filter" : {
+      "families" : [
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json"
+      ],
+      "op_codes" : [
+        "0xb5"
+      ]
+    },
+    "Fold" : {
+      "families" : [
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/nested_loops_map_inside_fold.json"
+      ],
+      "op_codes" : [
+        "0xb0"
+      ]
+    },
+    "ForAll" : {
+      "families" : [
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json"
+      ],
+      "op_codes" : [
+        "0xaf"
+      ]
+    },
+    "FuncValue" : {
+      "families" : [
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/AvlTree_properties_equivalence.json",
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll.append_equivalence.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll.size_equivalence.json",
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Global.xor_equivalence.json",
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/GroupElement.multiply_equivalence.json",
+        "v5/spec/GroupElement.negate_equivalence.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/LogicalNot_equivalence.json",
+        "v5/spec/Long.toBigInt_method.json",
+        "v5/spec/Long.toByte_method.json",
+        "v5/spec/Long.toInt_method.json",
+        "v5/spec/Long.toLong_method.json",
+        "v5/spec/Long.toShort_method.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Numeric_Negation_equivalence.json",
+        "v5/spec/Short_LE_GE.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/SigmaProp.propBytes_equivalence.json",
+        "v5/spec/Tuple_apply_method_equivalence.json",
+        "v5/spec/Tuple_size_method_equivalence.json",
+        "v5/spec/allOf_equivalence.json",
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/anyOf_equivalence.json",
+        "v5/spec/blake2b256_sha256_equivalence.json",
+        "v5/spec/byteArrayToBigInt_equivalence.json",
+        "v5/spec/byteArrayToLong_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/longToByteArray_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v5/spec/or_boolean_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/proveDHTuple_equivalence.json",
+        "v5/spec/proveDlog_equivalence.json",
+        "v5/spec/sigmaProp_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v5/spec/verify_should_respect_Context.initCost.json",
+        "v5/spec/xorOf_equivalence.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/HOF_FunDef_polymorphic_identity.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/BigInt.toUnsigned.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Box_properties_equivalence_new_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.reverse.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Header_new_methods.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0xd9"
+      ]
+    },
+    "GE" : {
+      "families" : [
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Short_LE_GE.json"
+      ],
+      "op_codes" : [
+        "0x92"
+      ]
+    },
+    "GT" : {
+      "families" : [
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json"
+      ],
+      "op_codes" : [
+        "0x91"
+      ]
+    },
+    "GetVar" : {
+      "families" : [
+        "v5/authored/EQ_of_SigmaProp.json",
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/AvlTree_properties_equivalence.json",
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll.append_equivalence.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll.size_equivalence.json",
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Global.xor_equivalence.json",
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/GroupElement.multiply_equivalence.json",
+        "v5/spec/GroupElement.negate_equivalence.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/LogicalNot_equivalence.json",
+        "v5/spec/Long.toBigInt_method.json",
+        "v5/spec/Long.toByte_method.json",
+        "v5/spec/Long.toInt_method.json",
+        "v5/spec/Long.toLong_method.json",
+        "v5/spec/Long.toShort_method.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Numeric_Negation_equivalence.json",
+        "v5/spec/Short_LE_GE.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/SigmaProp.propBytes_equivalence.json",
+        "v5/spec/Tuple_apply_method_equivalence.json",
+        "v5/spec/Tuple_size_method_equivalence.json",
+        "v5/spec/allOf_equivalence.json",
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/anyOf_equivalence.json",
+        "v5/spec/blake2b256_sha256_equivalence.json",
+        "v5/spec/byteArrayToBigInt_equivalence.json",
+        "v5/spec/byteArrayToLong_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/longToByteArray_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v5/spec/or_boolean_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/proveDHTuple_equivalence.json",
+        "v5/spec/proveDlog_equivalence.json",
+        "v5/spec/sigmaProp_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v5/spec/verify_should_respect_Context.initCost.json",
+        "v5/spec/xorOf_equivalence.json",
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/spec/BigInt.toUnsigned.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Box_properties_equivalence_new_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.reverse.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Header_new_methods.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0xe3"
+      ]
+    },
+    "Global$" : {
+      "families" : [
+        "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.powHit_require_boundary.json",
+        "v6/authored/Global.powHit_varying_k.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json"
+      ],
+      "op_codes" : [
+        "0xdd"
+      ]
+    },
+    "GroupGenerator$" : {
+      "families" : [
+        "v5/spec/groupGenerator_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x82"
+      ]
+    },
+    "If" : {
+      "families" : [
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json"
+      ],
+      "op_codes" : [
+        "0x95"
+      ]
+    },
+    "LE" : {
+      "families" : [
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Short_LE_GE.json"
+      ],
+      "op_codes" : [
+        "0x90"
+      ]
+    },
+    "LT" : {
+      "families" : [
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Short_LT_GT_NEQ.json"
+      ],
+      "op_codes" : [
+        "0x8f"
+      ]
+    },
+    "LogicalNot" : {
+      "families" : [
+        "v5/spec/LogicalNot_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xef"
+      ]
+    },
+    "LongToByteArray" : {
+      "families" : [
+        "v5/spec/longToByteArray_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x7a"
+      ]
+    },
+    "MapCollection" : {
+      "families" : [
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0xad"
+      ]
+    },
+    "MethodCall" : {
+      "families" : [
+        "v5/authored/AvlTree.contains.json",
+        "v5/authored/AvlTree.get.json",
+        "v5/authored/AvlTree.getMany.json",
+        "v5/authored/AvlTree.get_proof_ladder.json",
+        "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.proof_adversarial.json",
+        "v5/authored/AvlTree.remove.json",
+        "v5/authored/AvlTree.update.json",
+        "v5/authored/AvlTree.updateOperations_updateDigest.json",
+        "v5/spec/AvlTree_properties_equivalence.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/GroupElement.negate_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Context.getVarFromInput.json",
+        "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.powHit_require_boundary.json",
+        "v6/authored/Global.powHit_varying_k.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/GroupElement.expUnsigned.json",
+        "v6/spec/BigInt.toUnsigned.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.reverse.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Header_new_methods.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "op_codes" : [
+        "0xdb",
+        "0xdc"
+      ]
+    },
+    "MultiplyGroup" : {
+      "families" : [
+        "v5/spec/GroupElement.multiply_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xa0"
+      ]
+    },
+    "NEQ" : {
+      "families" : [
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Short_LT_GT_NEQ.json"
+      ],
+      "op_codes" : [
+        "0x94"
+      ]
+    },
+    "Negation" : {
+      "families" : [
+        "v5/spec/Numeric_Negation_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xf0"
+      ]
+    },
+    "OR" : {
+      "families" : [
+        "v5/spec/anyOf_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x97"
+      ]
+    },
+    "OptionGet" : {
+      "families" : [
+        "v5/authored/EQ_of_SigmaProp.json",
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/AvlTree_properties_equivalence.json",
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll.append_equivalence.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll.size_equivalence.json",
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Global.xor_equivalence.json",
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/GroupElement.multiply_equivalence.json",
+        "v5/spec/GroupElement.negate_equivalence.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/LogicalNot_equivalence.json",
+        "v5/spec/Long.toBigInt_method.json",
+        "v5/spec/Long.toByte_method.json",
+        "v5/spec/Long.toInt_method.json",
+        "v5/spec/Long.toLong_method.json",
+        "v5/spec/Long.toShort_method.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Numeric_Negation_equivalence.json",
+        "v5/spec/Short_LE_GE.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/SigmaProp.propBytes_equivalence.json",
+        "v5/spec/Tuple_apply_method_equivalence.json",
+        "v5/spec/Tuple_size_method_equivalence.json",
+        "v5/spec/allOf_equivalence.json",
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/anyOf_equivalence.json",
+        "v5/spec/blake2b256_sha256_equivalence.json",
+        "v5/spec/byteArrayToBigInt_equivalence.json",
+        "v5/spec/byteArrayToLong_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/longToByteArray_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v5/spec/or_boolean_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/proveDHTuple_equivalence.json",
+        "v5/spec/proveDlog_equivalence.json",
+        "v5/spec/sigmaProp_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v5/spec/verify_should_respect_Context.initCost.json",
+        "v5/spec/xorOf_equivalence.json",
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/spec/BigInt.toUnsigned.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Box_properties_equivalence_new_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.reverse.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Header_new_methods.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0xe4"
+      ]
+    },
+    "OptionGetOrElse" : {
+      "families" : [
+        "v6/spec/Option.getOrElse_with_lazy_default.json"
+      ],
+      "op_codes" : [
+        "0xe5"
+      ]
+    },
+    "OptionIsDefined" : {
+      "families" : [
+        "v5/spec/Conditional_access_to_registers.json",
+        "v6/authored/Box.getReg_adversarial.json"
+      ],
+      "op_codes" : [
+        "0xe6"
+      ]
+    },
+    "SelectField" : {
+      "families" : [
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll.append_equivalence.json",
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Global.xor_equivalence.json",
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/GroupElement.multiply_equivalence.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Short_LE_GE.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/Tuple_apply_method_equivalence.json",
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v5/spec/or_boolean_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v5/spec/verify_should_respect_Context.initCost.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0x8c"
+      ]
+    },
+    "Self$" : {
+      "families" : [
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Box.getReg_dynamic_index.json"
+      ],
+      "op_codes" : [
+        "0xa7"
+      ]
+    },
+    "SigmaAnd" : {
+      "families" : [
+        "v5/spec/and_sigma_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xea"
+      ]
+    },
+    "SigmaOr" : {
+      "families" : [
+        "v5/spec/or_sigma_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xeb"
+      ]
+    },
+    "SigmaPropBytes" : {
+      "families" : [
+        "v5/spec/SigmaProp.propBytes_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xd0"
+      ]
+    },
+    "SizeOf" : {
+      "families" : [
+        "v5/spec/Coll.size_equivalence.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json"
+      ],
+      "op_codes" : [
+        "0xb1"
+      ]
+    },
+    "Slice" : {
+      "families" : [
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v6/spec/Global.powHit.json"
+      ],
+      "op_codes" : [
+        "0xb4"
+      ]
+    },
+    "SubstConstants" : {
+      "families" : [
+        "v5/spec/substConstants_equivalence.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
+      ],
+      "op_codes" : [
+        "0x74"
+      ]
+    },
+    "Tuple" : {
+      "families" : [
+        "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.update.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0x86"
+      ]
+    },
+    "Upcast" : {
+      "families" : [
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long.toBigInt_method.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json"
+      ],
+      "op_codes" : [
+        "0x7e"
+      ]
+    },
+    "ValDef" : {
+      "families" : [
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/HOF_FunDef_polymorphic_identity.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/UnsignedBigInt_methods.json"
+      ],
+      "op_codes" : [
+        "0xd6",
+        "0xd7"
+      ]
+    },
+    "ValUse" : {
+      "families" : [
+        "v5/spec/Advanced_Box_test.json",
+        "v5/spec/AvlTree_properties_equivalence.json",
+        "v5/spec/BigInt_LE_GE.json",
+        "v5/spec/BigInt_LT_GT_NEQ.json",
+        "v5/spec/BigInt_methods_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_equivalence.json",
+        "v5/spec/BinXor_logical_XOR_test.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v5/spec/Byte_LE_GE.json",
+        "v5/spec/Byte_LT_GT_NEQ.json",
+        "v5/spec/Byte_methods_equivalence.json",
+        "v5/spec/Coll.append_equivalence.json",
+        "v5/spec/Coll.exists_equivalence.json",
+        "v5/spec/Coll.filter_equivalence.json",
+        "v5/spec/Coll.flatMap_equivalence.json",
+        "v5/spec/Coll.forall_equivalence.json",
+        "v5/spec/Coll.indices_equivalence.json",
+        "v5/spec/Coll.size_equivalence.json",
+        "v5/spec/Coll.zip_equivalence.json",
+        "v5/spec/Coll_apply_method_equivalence.json",
+        "v5/spec/Coll_exists_with_nested_If.json",
+        "v5/spec/Coll_filter.json",
+        "v5/spec/Coll_filter_with_nested_If.json",
+        "v5/spec/Coll_flatMap_method_equivalence.json",
+        "v5/spec/Coll_fold_method_equivalence.json",
+        "v5/spec/Coll_fold_with_nested_If.json",
+        "v5/spec/Coll_forall_with_nested_If.json",
+        "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v5/spec/Coll_map_method_equivalence.json",
+        "v5/spec/Coll_map_with_nested_if.json",
+        "v5/spec/Coll_patch_method_equivalence.json",
+        "v5/spec/Coll_slice_method_equivalence.json",
+        "v5/spec/Coll_updateMany_method_equivalence.json",
+        "v5/spec/Coll_updated_method_equivalence.json",
+        "v5/spec/Conditional_access_to_registers.json",
+        "v5/spec/Global.xor_equivalence.json",
+        "v5/spec/GroupElement.exp_equivalence.json",
+        "v5/spec/GroupElement.getEncoded_equivalence.json",
+        "v5/spec/GroupElement.multiply_equivalence.json",
+        "v5/spec/GroupElement.negate_equivalence.json",
+        "v5/spec/Int_LE_GE.json",
+        "v5/spec/Int_LT_GT_NEQ.json",
+        "v5/spec/Int_methods_equivalence.json",
+        "v5/spec/LogicalNot_equivalence.json",
+        "v5/spec/Long.toBigInt_method.json",
+        "v5/spec/Long.toByte_method.json",
+        "v5/spec/Long.toInt_method.json",
+        "v5/spec/Long.toLong_method.json",
+        "v5/spec/Long.toShort_method.json",
+        "v5/spec/Long_LE_GE.json",
+        "v5/spec/Long_LT_GT_NEQ.json",
+        "v5/spec/Long_methods_equivalence.json",
+        "v5/spec/NEQ_of_collections_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_nested_collections_and_tuples.json",
+        "v5/spec/NEQ_of_nested_tuples.json",
+        "v5/spec/NEQ_of_pre_defined_types.json",
+        "v5/spec/NEQ_of_tuples_of_numerics.json",
+        "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
+        "v5/spec/Numeric_Negation_equivalence.json",
+        "v5/spec/Short_LE_GE.json",
+        "v5/spec/Short_LT_GT_NEQ.json",
+        "v5/spec/Short_methods_equivalence.json",
+        "v5/spec/SigmaProp.propBytes_equivalence.json",
+        "v5/spec/Tuple_apply_method_equivalence.json",
+        "v5/spec/allOf_equivalence.json",
+        "v5/spec/and_boolean_equivalence.json",
+        "v5/spec/and_sigma_equivalence.json",
+        "v5/spec/anyOf_equivalence.json",
+        "v5/spec/blake2b256_sha256_equivalence.json",
+        "v5/spec/byteArrayToBigInt_equivalence.json",
+        "v5/spec/byteArrayToLong_equivalence.json",
+        "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v5/spec/groupGenerator_equivalence.json",
+        "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v5/spec/longToByteArray_equivalence.json",
+        "v5/spec/nested_loops_map_inside_fold.json",
+        "v5/spec/or_boolean_equivalence.json",
+        "v5/spec/or_sigma_equivalence.json",
+        "v5/spec/proveDHTuple_equivalence.json",
+        "v5/spec/proveDlog_equivalence.json",
+        "v5/spec/sigmaProp_equivalence.json",
+        "v5/spec/substConstants_equivalence.json",
+        "v5/spec/verify_should_respect_Context.initCost.json",
+        "v5/spec/xorOf_equivalence.json",
+        "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_AvlTree.json",
+        "v6/authored/Global.serialize_Box.json",
+        "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Coll_GroupElement.json",
+        "v6/authored/Global.serialize_GroupElement.json",
+        "v6/authored/Global.serialize_Header.json",
+        "v6/authored/Global.serialize_Option_BigInt.json",
+        "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/HOF_FunDef_polymorphic_identity.json",
+        "v6/authored/HOF_FunDef_type_var_body.json",
+        "v6/authored/HOF_currying_Apply_of_Apply.json",
+        "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/spec/BigInt.toUnsigned.json",
+        "v6/spec/BigInt.toUnsignedMod.json",
+        "v6/spec/BigInt_6.0_features.json",
+        "v6/spec/Box_properties_equivalence_new_features.json",
+        "v6/spec/Byte_methods_6.0_features.json",
+        "v6/spec/Coll.endsWith.json",
+        "v6/spec/Coll.get.json",
+        "v6/spec/Coll.reverse.json",
+        "v6/spec/Coll.startsWith.json",
+        "v6/spec/Coll_getOrElse_with_lazy_default.json",
+        "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
+        "v6/spec/Global.decodeNbits.json",
+        "v6/spec/Global.deserializeTo_group_element.json",
+        "v6/spec/Global.deserializeTo_header.json",
+        "v6/spec/Global.encodeNbits.json",
+        "v6/spec/Global.powHit.json",
+        "v6/spec/Global.serialize_Byte.json",
+        "v6/spec/Global.serialize_Coll_Byte.json",
+        "v6/spec/Global.serialize_Int.json",
+        "v6/spec/Global.serialize_Long.json",
+        "v6/spec/Global.serialize_Long_Long.json",
+        "v6/spec/Global.serialize_Short.json",
+        "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
+        "v6/spec/Global_fromBigEndianBytes.json",
+        "v6/spec/GroupElement.expUnsigned.json",
+        "v6/spec/Header_new_methods.json",
+        "v6/spec/Int_6.0_methods.json",
+        "v6/spec/Long_6.0_methods.json",
+        "v6/spec/Option.getOrElse_with_lazy_default.json",
+        "v6/spec/Short_6.0_methods.json",
+        "v6/spec/UnsignedBigInt_methods.json",
+        "v6/spec/higher_order_lambdas.json"
+      ],
+      "op_codes" : [
+        "0x72"
+      ]
+    },
+    "Xor" : {
+      "families" : [
+        "v5/spec/Global.xor_equivalence.json"
+      ],
+      "op_codes" : [
+        "0x9b"
+      ]
+    },
+    "XorOf" : {
+      "families" : [
+        "v5/spec/xorOf_equivalence.json"
+      ],
+      "op_codes" : [
+        "0xff"
+      ]
+    }
+  },
+  "schema" : "santa-coverage/v1",
+  "tier" : "eval",
+  "totals" : {
+    "accepts" : 1952,
+    "distinct_methods" : 95,
+    "distinct_ops" : 75,
+    "entries" : 2143,
+    "files" : 155,
+    "rejects" : 191,
+    "unwalked" : 1
+  }
+}

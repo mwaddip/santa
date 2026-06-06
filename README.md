@@ -79,6 +79,13 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   and routed, never silenced; a red gate means the suite is working.
 - ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (155 eval + 4 wire + 4 tx)
   and an end-to-end conformance gate. The CI seed.
+- ✅ **A standing coverage manifest** ([`docs/coverage/eval-coverage.json`](docs/coverage/eval-coverage.json),
+  `santa-coverage/v1`) — the per-family op / method / arm map of the eval corpus, read
+  off each entry's **deserialized tree** (never script text): every node's op, every
+  `MethodCall`'s `(typeId, methodId)`, and the tree shapes
+  (version / size-bit / segregation / deserialize × accept / reject). Suite-gated
+  current; a conformer diffs its method registry against `method_index` to see what
+  the corpus exercises vs. not. See [`docs/coverage/`](docs/coverage/README.md).
 - ✅ **Wire tier live** — `santa-wire/v1` byte-round-trip vectors, **213 entries**
   (`Constant` 178 · `Box` 11 · `SigmaBoolean` 7 · `Transaction` 17), JVM-canonicalized
   from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds. Rudolph + Blitzen 213/213;
@@ -111,6 +118,7 @@ BOOTSTRAP.md       design rationale + decision log (the *why*)
 docs/contract/     the frozen runner I/O contracts (eval · wire · transaction)
 docs/specs/        per-phase subspecs
 docs/findings/     recorded cross-implementation divergences
+docs/coverage/     standing corpus coverage manifest (what the vectors exercise)
 schema/            JSON Schemas for vectors + actuals, and the validator
 vectors/eval/      the canonical eval corpus — the "nice list" (v5/ and v6/)
 vectors/wire/      wire-tier round-trip vectors
