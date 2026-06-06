@@ -3679,6 +3679,47 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Header.property_accessors.json" : {
+      "accepts" : 17,
+      "entries" : 17,
+      "methods" : [
+        "104:1 Header.id",
+        "104:10 Header.extensionRoot",
+        "104:11 Header.minerPk",
+        "104:12 Header.powOnetimePk",
+        "104:13 Header.powNonce",
+        "104:14 Header.powDistance",
+        "104:15 Header.votes",
+        "104:2 Header.version",
+        "104:3 Header.parentId",
+        "104:4 Header.ADProofsRoot",
+        "104:5 Header.stateRoot",
+        "104:6 Header.transactionsRoot",
+        "104:7 Header.timestamp",
+        "104:8 Header.nBits",
+        "104:9 Header.height"
+      ],
+      "op" : "Header.property_accessors",
+      "ops" : [
+        "GetVar",
+        "MethodCall",
+        "OptionGet"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 17,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/UnsignedBigInt_arith_domain_rejects.json" : {
       "accepts" : 0,
       "entries" : 5,
@@ -4917,11 +4958,101 @@
       ],
       "name" : "Context.getVarFromInput"
     },
+    "104:1" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.id"
+    },
+    "104:10" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.extensionRoot"
+    },
+    "104:11" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.minerPk"
+    },
+    "104:12" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.powOnetimePk"
+    },
+    "104:13" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.powNonce"
+    },
+    "104:14" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.powDistance"
+    },
+    "104:15" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.votes"
+    },
     "104:16" : {
       "families" : [
         "v6/spec/Header_new_methods.json"
       ],
       "name" : "Header.checkPow"
+    },
+    "104:2" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.version"
+    },
+    "104:3" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.parentId"
+    },
+    "104:4" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.ADProofsRoot"
+    },
+    "104:5" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.stateRoot"
+    },
+    "104:6" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.transactionsRoot"
+    },
+    "104:7" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.timestamp"
+    },
+    "104:8" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.nBits"
+    },
+    "104:9" : {
+      "families" : [
+        "v6/authored/Header.property_accessors.json"
+      ],
+      "name" : "Header.height"
     },
     "106:1" : {
       "families" : [
@@ -6315,6 +6446,7 @@
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Header.property_accessors.json",
         "v6/spec/BigInt.toUnsigned.json",
         "v6/spec/BigInt.toUnsignedMod.json",
         "v6/spec/BigInt_6.0_features.json",
@@ -6507,6 +6639,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/GroupElement.expUnsigned.json",
+        "v6/authored/Header.property_accessors.json",
         "v6/spec/BigInt.toUnsigned.json",
         "v6/spec/BigInt.toUnsignedMod.json",
         "v6/spec/BigInt_6.0_features.json",
@@ -6683,6 +6816,7 @@
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Header.property_accessors.json",
         "v6/spec/BigInt.toUnsigned.json",
         "v6/spec/BigInt.toUnsignedMod.json",
         "v6/spec/BigInt_6.0_features.json",
@@ -7077,11 +7211,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 1952,
-    "distinct_methods" : 95,
+    "accepts" : 1969,
+    "distinct_methods" : 110,
     "distinct_ops" : 75,
-    "entries" : 2143,
-    "files" : 155,
+    "entries" : 2160,
+    "files" : 156,
     "rejects" : 191,
     "unwalked" : 1
   }
