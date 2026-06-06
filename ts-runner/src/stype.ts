@@ -4,7 +4,8 @@ import type { Json } from './json'
 /** SANTA's SType tags that map 1:1 to an ergots leaf SType tag. */
 const LEAF_TAGS = new Set([
   'SBoolean', 'SByte', 'SShort', 'SInt', 'SLong', 'SBigInt', 'SUnsignedBigInt',
-  'SGroupElement', 'SSigmaProp', 'SBox', 'SHeader', 'SPreHeader', 'SUnit', 'SAny',
+  'SGroupElement', 'SSigmaProp', 'SBox', 'SHeader', 'SPreHeader', 'SAvlTree',
+  'SUnit', 'SAny',
 ])
 
 /** SANTA SType JSON object → ergots SType. The tag set is total over the corpus
@@ -20,14 +21,15 @@ export function stypeFromSanta(t: { [k: string]: Json }): SType {
   throw new Error(`unknown SANTA SType tag: ${tag}`)
 }
 
-/** ergots SType → SANTA SType JSON. (ergots tags outside SANTA's set — SAvlTree,
- *  SContext, SGlobal, SString, SFunc, STypeVar — never appear in a covered
- *  `elem`/`tpe`; throw loudly if one does.) */
+/** ergots SType → SANTA SType JSON, total over the contract-§4 tag set (which
+ *  includes SAvlTree). ergots tags outside that set — SContext, SGlobal, SString,
+ *  SFunc, STypeVar — never appear in a covered `elem`/`tpe`; throw loudly if one does. */
 export function stypeToSanta(t: SType): Json {
   switch (t.tag) {
     case 'SBoolean': case 'SByte': case 'SShort': case 'SInt': case 'SLong':
     case 'SBigInt': case 'SUnsignedBigInt': case 'SGroupElement': case 'SSigmaProp':
-    case 'SBox': case 'SHeader': case 'SPreHeader': case 'SUnit': case 'SAny':
+    case 'SBox': case 'SHeader': case 'SPreHeader': case 'SAvlTree': case 'SUnit':
+    case 'SAny':
       return { tag: t.tag }
     case 'SColl': return { tag: 'SColl', elem: stypeToSanta(t.elem) }
     case 'SOption': return { tag: 'SOption', elem: stypeToSanta(t.elem) }

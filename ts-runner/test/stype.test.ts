@@ -11,6 +11,7 @@ describe('SType bridge', () => {
     [{ tag: 'SBigInt' }, { tag: 'SBigInt' }],
     [{ tag: 'SGroupElement' }, { tag: 'SGroupElement' }],
     [{ tag: 'SBox' }, { tag: 'SBox' }],
+    [{ tag: 'SAvlTree' }, { tag: 'SAvlTree' }],
     [{ tag: 'SColl', elem: { tag: 'SInt' } }, { tag: 'SColl', elem: { tag: 'SInt' } }],
     [{ tag: 'SOption', elem: { tag: 'SLong' } }, { tag: 'SOption', elem: { tag: 'SLong' } }],
     [

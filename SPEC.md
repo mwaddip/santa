@@ -134,7 +134,7 @@ and wiring (decision 8 — the contract stays unambiguous).
 | Codename | Runner (impl) | Notes |
 |---|---|---|
 | **Rudolph** | JVM reference (`sigma-state`) | leads — the oracle/reference the others follow |
-| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-scoped**: gates the `v5/` corpus against the JVM-blessed expected, **1,757 / 1,757** (the 52 healed AvlTree entries initially surfaced a SANTA harness gap — the result-encode bridge lacked an AvlTree arm, fixed same-arc); v6 is out of its declared scope. |
+| **Dasher** | `ergots` | first independent runner (`ts-runner/`, pure-TS) — **v5-green on spec**: gates the `v5/` spec corpus against the JVM-blessed expected, **1,757 / 1,757** (the 52 healed AvlTree entries initially surfaced a SANTA harness gap — the result-encode bridge lacked an AvlTree arm, fixed same-arc); the live manifest declares **version ≤ v6**, so v6 is in scope — its v6 reds are ergots' TDD roadmap ledger, not exclusions. |
 | **Blitzen** | `sigma-rust` (×2 submodules) | `develop` (upstream, value-only, `cost:false`) + `ergo-node-integration` fork (`--features jit-cost`, `cost:true`) — eni fully green suite-wide; develop misses 10 v5 values the fork fixed, plus the v6 surface |
 | _(unassigned)_ | `ergo-node-rust` · … | assigned on registration |
 
