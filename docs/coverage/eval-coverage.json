@@ -3817,6 +3817,33 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/UnsignedBigInt.mod_toSigned.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "9:18 UnsignedBigInt.mod",
+        "9:19 UnsignedBigInt.toSigned"
+      ],
+      "op" : "UnsignedBigInt.mod_toSigned",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/UnsignedBigInt_arith_domain_rejects.json" : {
       "accepts" : 0,
       "entries" : 5,
@@ -5707,6 +5734,18 @@
       ],
       "name" : "UnsignedBigInt.multiplyMod"
     },
+    "9:18" : {
+      "families" : [
+        "v6/authored/UnsignedBigInt.mod_toSigned.json"
+      ],
+      "name" : "UnsignedBigInt.mod"
+    },
+    "9:19" : {
+      "families" : [
+        "v6/authored/UnsignedBigInt.mod_toSigned.json"
+      ],
+      "name" : "UnsignedBigInt.toSigned"
+    },
     "9:6" : {
       "families" : [
         "v6/spec/Global_fromBigEndianBytes.json",
@@ -6155,6 +6194,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/spec/Coll_getOrElse_with_lazy_default.json",
@@ -6834,6 +6874,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/Header.property_accessors.json",
+        "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/spec/BigInt.toUnsigned.json",
         "v6/spec/BigInt.toUnsignedMod.json",
         "v6/spec/BigInt_6.0_features.json",
@@ -7415,11 +7456,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 1990,
-    "distinct_methods" : 123,
+    "accepts" : 1995,
+    "distinct_methods" : 125,
     "distinct_ops" : 77,
-    "entries" : 2181,
-    "files" : 159,
+    "entries" : 2186,
+    "files" : 160,
     "rejects" : 191,
     "unwalked" : 1
   }
