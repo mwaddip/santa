@@ -472,6 +472,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/AvlTree.updateDigest_then_contains.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:15 AvlTree.updateDigest",
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.updateDigest_then_contains",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.updateOperations_updateDigest.json" : {
       "accepts" : 2,
       "entries" : 2,
@@ -489,6 +516,32 @@
       "tree_shapes" : [
         {
           "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:4 AvlTree.valueLengthOpt"
+      ],
+      "op" : "AvlTree.valueLengthOpt_wrapped_negative",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
           "constant_segregation" : true,
           "has_deserialize" : false,
           "has_size" : true,
@@ -786,6 +839,21 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SOption.pre_v3_data_constant.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "SOption.pre_v3_data_constant",
+      "ops" : [
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+      ],
+      "unwalked" : 1,
       "version" : "v5"
     },
     "v5/authored/Tuple.non_pair_arity3.json" : {
@@ -4615,6 +4683,30 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/SOption.nonzero_data_tag.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "SOption.nonzero_data_tag",
+      "ops" : [
+        "ConstantPlaceholder"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/UnsignedBigInt.mod_toSigned.json" : {
       "accepts" : 5,
       "entries" : 5,
@@ -5877,6 +5969,7 @@
     "100:15" : {
       "families" : [
         "v5/authored/AvlTree.updateDigest_any_length.json",
+        "v5/authored/AvlTree.updateDigest_then_contains.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json"
       ],
       "name" : "AvlTree.updateDigest"
@@ -5905,6 +5998,7 @@
     },
     "100:4" : {
       "families" : [
+        "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/spec/AvlTree_properties_equivalence.json"
       ],
       "name" : "AvlTree.valueLengthOpt"
@@ -5939,6 +6033,7 @@
         "v5/authored/AvlTree.contains.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
+        "v5/authored/AvlTree.updateDigest_then_contains.json",
         "v5/authored/AvlTree.wrong_tree_proof.json"
       ],
       "name" : "AvlTree.contains"
@@ -7085,7 +7180,9 @@
         "v5/authored/AvlTree.unsupported_eval_nodes.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.updateDigest_any_length.json",
+        "v5/authored/AvlTree.updateDigest_then_contains.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
+        "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
@@ -7129,6 +7226,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/SOption.nonzero_data_tag.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
@@ -7807,7 +7905,9 @@
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.updateDigest_any_length.json",
+        "v5/authored/AvlTree.updateDigest_then_contains.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
+        "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Context.preHeader_accessors.json",
@@ -8473,12 +8573,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2066,
+    "accepts" : 2069,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2284,
-    "files" : 189,
-    "rejects" : 218,
-    "unwalked" : 1
+    "entries" : 2288,
+    "files" : 193,
+    "rejects" : 219,
+    "unwalked" : 2
   }
 }
