@@ -167,7 +167,13 @@ insert version gate — which also exposed remove's op-results-ignored `cfor` se
 asks + sigma-rust's twins) that surfaced **21 new eni divergences** — 5 classes: bad-proof-bytes /
 negative-keyLength-tree / wrong-value-length **panics**, `updateDigest` non-33-byte **over-reject**,
 and `TreeLookup` eval **over-accept** (a consensus-split; ergots converges on the last two) —
-routed to sigma-rust: the loop surfacing the next round of genuine divergences.
+routed to sigma-rust: the loop surfacing the next round of genuine divergences. The
+**fork-wiring convergence (2026-06-08)** closed the crash classes: the `ergo_avltree_rust` fork's
+Err-not-panic fix (`5033d0e`) + source-compatible `AVLTree::new` (`a4a2aa7`) + eni's `3e27412b`
+updateDigest fix, pulled in by **blitzen-eni's declared `[patch.crates-io]` override** (the
+contract-§3 build-identity invariant's first live runner instance — sigma-rust eni's own manifests
+stay on crates.io; the runner manifest declares the fork, `Cargo.lock` pins the rev) — eni
+21 → 5: four cost-coals on the degenerate paths + the `option-tag-02` over-reject, re-routed.
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).

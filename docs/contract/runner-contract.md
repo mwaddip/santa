@@ -196,7 +196,13 @@ divergences were harness artifacts, not library findings); blessed values for
   behavior-bearing changes riding the same rev (that same fork also carries a `contains`-resolution
   fix). A behavior-bearing override is a real conformance fact **about that build**, never a way to
   turn coal green: you declare the patch and let the cell reflect the patched subject — the same
-  ethos by which divergences are surfaced, not pinned. This invariant is **cross-tier** (it governs
+  ethos by which divergences are surfaced, not pinned. The first live runner instance:
+  **blitzen-eni** declares `[patch.crates-io] ergo_avltree_rust → the mwaddip fork` at its build
+  root (sigma-rust eni's own manifests stay on the crates.io verifier; `Cargo.lock` pins the rev),
+  and the override is behavior-bearing at eval — the fork returns `Err` on malformed proofs /
+  out-of-range params where crates.io `.unwrap()`-panics — so the cell reflects the patched
+  subject: the f4 panic classes graded green, the residual cost divergences stayed coal
+  (2026-06-08). This invariant is **cross-tier** (it governs
   every tier's runner); it bites hardest at the **block tier**, where the node conformer *is*
   "sigma-rust + its persistence-fork dependency stack" and the cell must say so. Added 2026-06-07.
 
