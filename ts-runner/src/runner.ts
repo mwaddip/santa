@@ -4,9 +4,9 @@ import {
   parseTree, evaluateWith, makeContext, EvalError,
   parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
-  type ContextExtension, type ErgoBox,
+  type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
-import { ByteReader, ByteWriter } from '@ergots/scorex'
+import { ByteReader, ByteWriter, type Header } from '@ergots/scorex'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
 import { hexToBytes, bytesToHex } from './hex'
@@ -93,30 +93,52 @@ function runEntryInner(schema: string, e: Entry): Result {
   //     — falls through to runEntry's panic-net ⇒ `panicked`. We record ergots' ACTUAL failure
   //     (message in `note`); we do not pre-classify it into a softer "unrepresentable" bucket
   //     on ergots' behalf.
+
+  // Canonical eval context (contract §2 pin table) — shared across all schema arms.
+  // Built once here; schema-specific opts are merged per arm below.
+  // selfBox and inputs[0] MUST be the same object reference: selfBoxIndex uses indexOf
+  // (reference equality) to locate SELF in the inputs array.
+  const treeBytes = hexToBytes(e.tree_bytes_hex)
+  const preHeader = dummyPreHeader(e.version.activated)
+  const selfBoxBase = dummySelfBoxBase(treeBytes)
+  const ctxBase = {
+    treeVersion,
+    constants: tree.constants,
+    preHeader,
+    selfBox: selfBoxBase,
+    inputs: [selfBoxBase] as ErgoBox[],  // [SELF]; selfBoxIndex 0 via reference-equality indexOf
+    outputs: [] as ErgoBox[],
+    dataInputs: [] as ErgoBox[],
+    headers: [],                          // contract pin: empty; 101:9 reads headers[0] → errored (ergots diverges from JVM here)
+  }
+
   let ctx
   if (schema === 'santa-eval/v2') {
     if (!e.input) throw new Error(`missing input in v2 entry '${e.name}'`)
     const { value, tpe } = decodeSValue(e.input, treeVersion)
     // ConstPlaceholder resolution needs the tree's segregated constants; evaluateWith
     // (unlike evaluate) does NOT auto-populate them — pass explicitly.
-    ctx = makeContext({ treeVersion, constants: tree.constants, extension: { values: { 1: { tpe, value } } } })
+    ctx = makeContext({ ...ctxBase, extension: { values: { 1: { tpe, value } } } })
   } else if (schema === 'santa-eval/v3') {
     if (!e.inputs) throw new Error(`missing inputs in v3 entry '${e.name}'`)
     const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion))
     // Top-level extension stays empty (self-getVar reads nothing), exactly as EvalCore's
     // contextWithInputExtensions passes ContextExtension.empty.
-    ctx = makeContext({ treeVersion, constants: tree.constants, inputExtensions })
+    ctx = makeContext({ ...ctxBase, inputExtensions })
   } else if (schema === 'santa-eval/v4') {
     if (!e.input) throw new Error(`missing input in v4 entry '${e.name}'`)
     if (!e.selfRegisters) throw new Error(`missing selfRegisters in v4 entry '${e.name}'`)
     const { value, tpe } = decodeSValue(e.input, treeVersion)
+    // v4 replaces selfBox with the register-carrying variant; inputs[0] must track it
+    const selfBoxWithRegs = dummySelfBox(e.selfRegisters, treeBytes, treeVersion)
     ctx = makeContext({
-      treeVersion, constants: tree.constants,
-      selfBox: dummySelfBox(e.selfRegisters, hexToBytes(e.tree_bytes_hex), treeVersion),
+      ...ctxBase,
+      selfBox: selfBoxWithRegs,
+      inputs: [selfBoxWithRegs],
       extension: { values: { 1: { tpe, value } } },
     })
   } else {
-    ctx = makeContext({ treeVersion, constants: tree.constants })
+    ctx = makeContext(ctxBase)
   }
 
   // [2] eval ⇒ [3] encode ⇒ [4] capture.
@@ -143,6 +165,69 @@ function decodeExtension(ext: { [varId: string]: SValueJson }, treeVersion: numb
     values[Number(id)] = { tpe, value }
   }
   return { values }
+}
+
+// ---- Contract-pinned canonical eval context (runner-contract §2 "The canonical eval context") ----
+// Every runner constructs the SAME context, mirroring the blesser's EvalCore.dummyContext.
+
+/** secp256k1 group generator G — 33-byte SEC1-compressed ("the generator point" in sigma-rust). */
+const SECP256K1_GENERATOR = hexToBytes(
+  '0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798',
+)
+
+/** preHeader: version = activated+1 (block-version convention; satisfies both JVM and sigma-rust).
+ *  All other fields are pinned per the contract table. */
+function dummyPreHeader(activated: number): PreHeader {
+  return {
+    version: activated + 1,       // contract pin: activated+1, NOT 0
+    parentId: new Uint8Array(0),  // empty Coll[Byte]
+    timestamp: 3n,                // Long 3
+    nBits: 0,                     // Long 0 (u32 stored as JS number — within safe range)
+    height: 0,                    // Int 0
+    minerPk: SECP256K1_GENERATOR, // 33-byte SEC1 generator
+    votes: new Uint8Array(0),     // empty Coll[Byte]
+  }
+}
+
+/** The SELF box without additional registers — for v1/v2/v3 (v4 carries selfRegisters separately).
+ *  value=1000000, ergoTree=the entry's own tree, txId=32 zero bytes, index=0, creationHeight=0. */
+function dummySelfBoxBase(treeBytes: Uint8Array): ErgoBox {
+  return {
+    value: 1000000n,
+    ergoTreeBytes: treeBytes,
+    registers: {},
+    tokens: [],
+    creationHeight: 0,
+    txId: new Uint8Array(32),
+    index: 0,
+  }
+}
+
+/** A single dummy block header whose stateRoot is 33 zero bytes.
+ *  The lastBlockUtxoRootHash handler (101:9) reads ctx.headers[0].stateRoot and
+ *  synthesizes AvlTreeData from it (hardcoding flags=0b111, keyLength=32, no valueLength).
+ *  33 zero bytes → all-zero 32-byte digest + zero tree-height byte → matches AvlTreeData.dummy. */
+function dummyHeader(): Header {
+  return {
+    version: 1,
+    id: new Uint8Array(32),
+    parentId: new Uint8Array(32),
+    adProofsRoot: new Uint8Array(32),
+    stateRoot: new Uint8Array(33),    // 33 zero bytes → all-zero digest (AvlTreeData.dummy)
+    transactionRoot: new Uint8Array(32),
+    timestamp: 0n,
+    nBits: 0,
+    height: 0,
+    extensionRoot: new Uint8Array(32),
+    autolykosSolution: {
+      minerPk: SECP256K1_GENERATOR,
+      powOnetimePk: null,
+      nonce: new Uint8Array(8),
+      powDistance: null,
+    },
+    votes: new Uint8Array(3),
+    unparsedBytes: new Uint8Array(0),
+  }
 }
 
 /** The v4 SELF box: EvalCore's dummy (value 1000000, ergoTree = the entry's tree, all-zero

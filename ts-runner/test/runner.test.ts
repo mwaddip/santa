@@ -70,14 +70,15 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     }
   })
 
-  it("an input ergots' codec rejects at runtime (Header ts > 2^53) → panicked, not a pre-classified excuse", () => {
+  it("Header ts > 2^53: ergots widened timestamp to bigint — entry now evaluates green vs the bless", () => {
     // REAL fixture: the v6 Header corpus carries a Header whose timestamp is
-    // 4928911477310178288 (> Number.MAX_SAFE_INTEGER). ergots HAS SHeader, but its codec
-    // throws ReaderError 'vlq-overflow' (scorex header.ts) decoding it. The runner records
-    // ergots' ACTUAL failure — the never-panic net catches the throw as `panicked`, message in
-    // `note` — rather than relabelling it the softer `unrepresentable` on ergots' behalf. Same
-    // coal grade; the divergence now speaks for itself and self-heals when ergots widens the type.
-    type FixtureEntry = { name: string; tree_bytes_hex: string; input?: { kind: string; bytes_hex: string }; version: { activated: number; ergoTree: number } }
+    // 4928911477310178288 (> Number.MAX_SAFE_INTEGER). ergots PREVIOUSLY threw
+    // ReaderError 'vlq-overflow' (scorex header.ts) — runner recorded it as `panicked`.
+    // ergots since widened the timestamp field to bigint (lossless carry), so the decode
+    // now succeeds and the entry evaluates to the JVM-blessed Boolean true @ cost 774.
+    // This is the self-healing the prior test comment predicted: "the divergence now
+    // speaks for itself and self-heals when ergots widens the type." Pin the green outcome.
+    type FixtureEntry = { name: string; tree_bytes_hex: string; input?: { kind: string; bytes_hex: string }; version: { activated: number; ergoTree: number }; expected: unknown }
     const fixture = JSON.parse(
       readFileSync(path.resolve(here, '../../vectors/eval/v6/spec/Header_new_methods.json'), 'utf8'),
     ) as { schema: string; op: string; blessed_by: string; source: string; entries: FixtureEntry[] }
@@ -87,15 +88,8 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
       entries: [overflowEntry],
     }
     const actuals = runVector(vec)
-    const act = actuals[overflowEntry.name]
-    // No pre-classification: value/cost null, error 'panicked', and a non-empty note carrying
-    // ergots' own message (we do NOT pin the exact text — that would re-couple us to a brittle
-    // internal codec string, the very thing the removed `isReprLimit` guard did).
-    expect(act.error).toBe('panicked')
-    expect(act.value).toBeNull()
-    expect(act.cost).toBeNull()
-    expect(typeof act.note).toBe('string')
-    expect((act.note ?? '').length).toBeGreaterThan(0)
+    // ergots now evaluates successfully — result matches the JVM bless
+    expect(actuals[overflowEntry.name]).toEqual(overflowEntry.expected)
   })
 
   it('AvlTree serialize input decodes (no crash) — ergots now evaluates serialize(AvlTree) → value, total', () => {
