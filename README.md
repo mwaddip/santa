@@ -64,16 +64,15 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   `x.R9[AvlTree].get` evaluates correctly in every conformer), fixed same-arc.
   Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is green
   on everything it has converged on (eval + wire + transaction, value *and* cost — every
-  earlier routed divergence is fixed in the fork) **except the 12 genuine divergences
-  surfaced so far**, all routed: the Box u64 signed-view ×6
-  (JVM surfaces signed Longs via unbounded `getULong`; sigma-rust rejects at `try_from`
-  hydration), `CONTEXT.headers` (a `[Header; 10]` model can't express the contract's
-  empty-headers pin), `Header.stateRoot`/`powOnetimePk` type-and-default surfaces,
-  `AvlTree.insertOrUpdate#bad-proof` (JVM → None; sigma-rust errors at verifier
-  construction), and the SigmaProp EQ conjecture-mismatch throw arm ×2 (JVM's guarded
-  comparer throws where sigma-rust returns `false` — a fork both independent ports
-  carried; ergots fixed it in their F3, sigma-rust's is routed) — while plain upstream
-  `develop` misses 10 v5 values the fork already
+  earlier routed divergence is fixed in the fork; the nine 2026-06-07 context/accessor
+  divergences — Box u64 signed-view ×6, `Header.stateRoot`/`powOnetimePk`,
+  `AvlTree.insertOrUpdate#bad-proof` — all converged in one round @ `2dbac146`)
+  **leaving 3 genuine reds**: `CONTEXT.headers` (a `[Header; 10]` model can't express the
+  contract's empty-headers pin — a recorded model-fact, wontfix) and the SigmaProp EQ
+  conjecture-mismatch throw arm ×2 (JVM's guarded comparer throws where sigma-rust returns
+  `false` — a fork both independent ports carried; ergots fixed it in their F3,
+  sigma-rust's is freshly routed) — while plain upstream
+  `develop` misses the v5 values the fork already
   fixed, plus the v6 surface. A 🪨 is the suite doing its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
