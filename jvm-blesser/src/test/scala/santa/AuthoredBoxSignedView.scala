@@ -81,6 +81,9 @@ object AuthoredBoxSignedView {
       ("b.R0#nominal",    r0Tree,    boxWith(1000000L, None), "{ (b: Box) => b.R0[Long].get }"),
       ("b.R0#2^63",       r0Tree,    boxWith(min63, None),    "{ (b: Box) => b.R0[Long].get }"),
       ("b.R0#u64-max",    r0Tree,    boxWith(u64max, None),   "{ (b: Box) => b.R0[Long].get }"),
+      // token boxes carry value 1000000L (not 1L): sigma-rust's BoxValue::MIN_RAW (10800)
+      // would reject the carrier box at hydration and red the NOMINAL entry too,
+      // polluting the u64-amount isolation (the divergence under pin is the token AMOUNT).
       ("b.tokens(0)._2#nominal", tokensTree, boxWith(1000000L, Some(42L)),    "{ (b: Box) => b.tokens(0)._2 }"),
       ("b.tokens(0)._2#2^63",    tokensTree, boxWith(1000000L, Some(min63)),  "{ (b: Box) => b.tokens(0)._2 }"),
       ("b.tokens(0)._2#u64-max", tokensTree, boxWith(1000000L, Some(u64max)), "{ (b: Box) => b.tokens(0)._2 }")
