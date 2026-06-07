@@ -116,7 +116,7 @@ object AuthoredSigmaPropEq {
   }
 
   /** Four conjecture-MISMATCH entries pinning the comparer's argument-order ASYMMETRY
-    * (ergots F3 follow-up, prompts/ergots-f3-conjecture-throw-vector-ask.md).
+    * (the ergots F3 follow-up ask).
     * DataValueComparer.equalSigmaBoolean dispatches on the LEFT value with GUARDED
     * conjecture cases (`case CAND(_) if r.isInstanceOf[CAND]` etc.); a conjecture on the
     * left vs a different variant on the right fails every guard and falls through to

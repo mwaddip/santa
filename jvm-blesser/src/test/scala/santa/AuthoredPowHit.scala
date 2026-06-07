@@ -1,8 +1,8 @@
 package santa
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Authored `Global.powHit` k-parameterized vectors (v6/authored) — ergots vector
-// request `prompts/ergots-powhit-vectors.md` (v6 P5c).
+// Authored `Global.powHit` k-parameterized vectors (v6/authored) — the ergots
+// vector request (v6 P5c).
 //
 // `Global.powHit(k, msg, nonce, h, N)` is the Autolykos-2 PoW hit value for custom params
 // (raw SUnsignedBigInt, no target compare), V3-gated (methods.scala powHitMethod, methodId 8).

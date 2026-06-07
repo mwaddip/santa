@@ -1,8 +1,8 @@
 package santa
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Authored v6 higher-order-lambda vectors (eval/v6/authored) — ergots P6 request
-// `prompts/ergots-v6-hof-vectors.md`. Accept arms (value+cost) for:
+// Authored v6 higher-order-lambda vectors (eval/v6/authored) — the ergots P6
+// request. Accept arms (value+cost) for:
 //
 //   Ask 1 — FunDef polymorphic identity (0xd7), confirm+bless at v0/v2/v3.
 //   Ask 4 — currying / function-returning-function: Apply(Apply(f,[a]),[b]).

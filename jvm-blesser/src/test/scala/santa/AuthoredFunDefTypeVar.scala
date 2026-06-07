@@ -1,8 +1,8 @@
 package santa
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Authored FunDef *type-var body* vectors (v6/authored) — ergots P6 request
-// `prompts/ergots-v6-fundef-typevar-body.md`, follow-up to the HOF accept vectors.
+// Authored FunDef *type-var body* vectors (v6/authored) — the ergots P6 request,
+// follow-up to the HOF accept vectors.
 //
 // AuthoredHofV6's committed FunDef accept vector uses a CONCRETE body `(x:Int)=>x`
 // (the compiler monomorphizes `id[T]` via the compile-time-only `ApplyTypes` node, so a

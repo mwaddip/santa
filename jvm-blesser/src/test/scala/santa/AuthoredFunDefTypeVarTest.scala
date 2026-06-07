@@ -1,7 +1,7 @@
 package santa
 
-/** Guard + smoke for the authored FunDef type-var-body vectors (ergots P6,
-  * prompts/ergots-v6-fundef-typevar-body.md): a FunDef whose lambda arg is typed by the type
+/** Guard + smoke for the authored FunDef type-var-body vectors (the ergots P6
+  * follow-up request): a FunDef whose lambda arg is typed by the type
   * var `T` itself. CONSTRUCT-only accepts (Int 5); APPLY errors ("Unknown type T") regardless
   * of whether the body reads the arg. Asserts well-formedness (1 accept, 3 reject errored),
   * prints blessed values/costs/trees, writes staging. Exact anchors locked below (baseline). */

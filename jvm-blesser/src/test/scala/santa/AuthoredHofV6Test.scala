@@ -1,6 +1,6 @@
 package santa
 
-/** Guard + smoke for the authored v6 HOF vectors (ergots P6, prompts/ergots-v6-hof-vectors.md).
+/** Guard + smoke for the authored v6 HOF vectors (the ergots P6 vector request).
   * Accept arms: ask 1 (FunDef 0xd7 at v0/v2/v3 → Int 7), ask 4 (currying add(3)(1) → Int 4),
   * ask 2 (function in Coll[SFunc], fs(0)(5) → Int 6). authoredEntry throws if any rejects.
   * Exact cost/tree anchors locked once observed. */

@@ -1,8 +1,8 @@
 package santa
 
 /** Guard + smoke test for the authored `Global.powHit` k-parameterized vectors — the k≠32
-  * value+cost coverage and the require-boundary reject arm (ergots vector request
-  * `prompts/ergots-powhit-vectors.md`, v6 P5c).
+  * value+cost coverage and the require-boundary reject arm (the ergots vector
+  * request, v6 P5c).
   *
   * The only JVM-blessed powHit *value* vector (LanguageSpecificationV6, k=32) coincides with the
   * header-verify path's hardcoded k=32 — so a correct k=32 result does not exercise the general
