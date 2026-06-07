@@ -85,7 +85,7 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 | `preHeader.height` / `HEIGHT` | `0` |
 | `preHeader.minerPk` / `minerPubKey` | the secp256k1 group generator (`0279be66…f81798`) |
 | `preHeader.votes` | 3 zero bytes (chain-faithful width — `Votes` is fixed-size in byte-oriented models) |
-| `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (all-zero 32-byte digest, flags 0, keyLength 32, no value-length) |
+| `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (33-byte all-zero digest = 32-byte root hash + height byte; flags 0x07 = all operations allowed; keyLength 32; no value-length — serialized `00`×33 `07 20 00`) |
 | extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions) |
 
 *Version note:* the JVM carries `activatedScriptVersion` as its own context field and
@@ -100,7 +100,7 @@ EMPTY — the JVM expresses that; a model that structurally cannot (e.g. sigma-r
 conformance fact, not a harness artifact. Pinned 2026-06-07 when the first
 context-surface vectors exposed that each adapter had improvised this context (the
 divergences were harness artifacts, not library findings); blessed values for
-`Context.*`/`preHeader.*` families assume this table.
+`Context.*`/`preHeader.*` families assume this table. Drift gates: the pin is mirrored in EvalCore, each runner adapter, and the test anchors — a mirror that drifts goes red on the `Context.*`/`preHeader.*` families (EvalConformanceTest re-bless on the blesser side, `./conform` on the runner side).
 
 ## 3. Preconditions, postconditions, invariants
 

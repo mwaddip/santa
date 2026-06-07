@@ -138,13 +138,26 @@ class AuthoredContextPropsTest extends munit.FunSuite {
     assertEquals(kind(sbi), "Int")
     assertEquals(sbi.hcursor.downField("expected").downField("value").get[Int]("value").toOption, Some(0), "selfBoxIndex")
 
-    // LastBlockUtxoRootHash → AvlTree
+    // LastBlockUtxoRootHash → AvlTree with exact bytes_hex
+    // AvlTreeData.dummy: 33-byte zero digest · flags 0x07 (all ops allowed) · keyLength 32
     val avl = ctxEntry("CONTEXT.LastBlockUtxoRootHash#dummy")
     assertEquals(kind(avl), "AvlTree")
+    assertEquals(
+      avl.hcursor.downField("expected").downField("value").get[String]("bytes_hex").toOption,
+      Some("000000000000000000000000000000000000000000000000000000000000000000072000"),
+      "LastBlockUtxoRootHash bytes_hex"
+    )
 
-    // minerPubKey → Coll[Byte] (the 33-byte generator encoding)
+    // minerPubKey → Coll[Byte] with exact generator bytes
+    // secp256k1 generator: 0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798
     val mpk = ctxEntry("CONTEXT.minerPubKey#dummy")
     assertEquals(kind(mpk), "Coll")
+    val mpkItems = mpk.hcursor.downField("expected").downField("value").downField("items").values.get.toVector
+    assertEquals(mpkItems.size, 33, "minerPubKey items count")
+    val expectedGeneratorBytes = Vector(2, 121, -66, 102, 126, -7, -36, -69, -84, 85, -96, 98, -107,
+      -50, -121, 11, 7, 2, -101, -4, -37, 45, -50, 40, -39, 89, -14, -127, 91, 22, -8, 23, -104)
+    val actualGeneratorBytes = mpkItems.map(_.hcursor.get[Int]("value").toOption.getOrElse(fail("non-int minerPubKey item")))
+    assertEquals(actualGeneratorBytes, expectedGeneratorBytes, "minerPubKey generator bytes")
   }
 
   // ── cost anchors ──────────────────────────────────────────────────────────
@@ -160,8 +173,8 @@ class AuthoredContextPropsTest extends munit.FunSuite {
         .getOrElse(fail(s"no entry '$name'"))
         .hcursor.downField("expected").get[Long]("cost").toOption
         .getOrElse(fail(s"'$name' has no cost"))
-    // Pinned from first bless run: Context.preHeader FixedCost(15) + SPreHeaderMethods accessor FixedCost(10)
-    // + 9 base (dummy Int input decode + context bootstrap) = 34 for every accessor.
+    // cost = Context leaf 1 + 4 per MethodCall node + the method's FixedCost
+    // preHeader chain: 1+4+15+4+10 = 34 (Context leaf + MC + preHeader FixedCost(15) + MC + accessor FixedCost(10))
     val preCost = 34L
     Seq("version", "parentId", "timestamp", "nBits", "height", "minerPk", "votes").foreach { n =>
       assertEquals(costOf(s"preHeader.$n#dummy"), preCost, s"preHeader.$n cost drifted")
@@ -175,9 +188,9 @@ class AuthoredContextPropsTest extends munit.FunSuite {
         .getOrElse(fail(s"no entry '$name'"))
         .hcursor.downField("expected").get[Long]("cost").toOption
         .getOrElse(fail(s"'$name' has no cost"))
-    // Pinned from first bless run:
-    //   dataInputs/headers/LastBlockUtxoRootHash → FixedCost(15) + 5 base = 20
-    //   selfBoxIndex/minerPubKey                 → FixedCost(20) + 5 base = 25
+    // cost = Context leaf 1 + 4 per MethodCall node + the method's FixedCost
+    //   dataInputs/headers/LastBlockUtxoRootHash → 1+4+15 = 20 (ctx props FixedCost 15)
+    //   selfBoxIndex/minerPubKey                 → 1+4+20 = 25 (ctx props FixedCost 20)
     val ctxCosts: Map[String, Long] = Map(
       "CONTEXT.dataInputs#dummy"            -> 20L,
       "CONTEXT.headers#dummy"               -> 20L,
@@ -203,9 +216,10 @@ class AuthoredContextPropsTest extends munit.FunSuite {
   }
 
   test("tree-hex anchors: one representative per family, locked from first bless") {
-    // preHeader.timestamp: Context(0x10) → preHeader (SContextMethods id=3) → timestamp (SPreHeaderMethods id=3)
+    // preHeader.timestamp: Context(0xfe) → preHeader (SContextMethods id=3) → timestamp (SPreHeaderMethods id=3)
+    // 0xfe is the Context leaf opcode (trailing byte of the anchor hexes)
     assertEquals(treeHexOf(AuthoredContextProps.OpPre, "preHeader.timestamp#dummy"), "1a0800db6903db6503fe")
-    // ctx selfBoxIndex: Context(0x10) → selfBoxIndex (SContextMethods id=8)
+    // ctx selfBoxIndex: Context(0xfe) → selfBoxIndex (SContextMethods id=8)
     assertEquals(treeHexOf(AuthoredContextProps.OpCtx, "CONTEXT.selfBoxIndex#dummy"), "1a0500db6508fe")
   }
 

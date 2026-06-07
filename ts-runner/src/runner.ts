@@ -6,7 +6,7 @@ import {
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
-import { ByteReader, ByteWriter, type Header } from '@ergots/scorex'
+import { ByteReader, ByteWriter } from '@ergots/scorex'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
 import { hexToBytes, bytesToHex } from './hex'
@@ -109,7 +109,7 @@ function runEntryInner(schema: string, e: Entry): Result {
     inputs: [selfBoxBase] as ErgoBox[],  // [SELF]; selfBoxIndex 0 via reference-equality indexOf
     outputs: [] as ErgoBox[],
     dataInputs: [] as ErgoBox[],
-    headers: [],                          // contract pin: empty; 101:9 reads headers[0] → errored (ergots diverges from JVM here)
+    headers: [],                          // contract pin: empty; 101:9 reads headers[0] → errored (ergots diverges from JVM here — a zero header whose stateRoot is 33 zero bytes WOULD reproduce AvlTreeData.dummy through that synthesis, but the contract pins headers empty)
   }
 
   let ctx
@@ -200,33 +200,6 @@ function dummySelfBoxBase(treeBytes: Uint8Array): ErgoBox {
     creationHeight: 0,
     txId: new Uint8Array(32),
     index: 0,
-  }
-}
-
-/** A single dummy block header whose stateRoot is 33 zero bytes.
- *  The lastBlockUtxoRootHash handler (101:9) reads ctx.headers[0].stateRoot and
- *  synthesizes AvlTreeData from it (hardcoding flags=0b111, keyLength=32, no valueLength).
- *  33 zero bytes → all-zero 32-byte digest + zero tree-height byte → matches AvlTreeData.dummy. */
-function dummyHeader(): Header {
-  return {
-    version: 1,
-    id: new Uint8Array(32),
-    parentId: new Uint8Array(32),
-    adProofsRoot: new Uint8Array(32),
-    stateRoot: new Uint8Array(33),    // 33 zero bytes → all-zero digest (AvlTreeData.dummy)
-    transactionRoot: new Uint8Array(32),
-    timestamp: 0n,
-    nBits: 0,
-    height: 0,
-    extensionRoot: new Uint8Array(32),
-    autolykosSolution: {
-      minerPk: SECP256K1_GENERATOR,
-      powOnetimePk: null,
-      nonce: new Uint8Array(8),
-      powDistance: null,
-    },
-    votes: new Uint8Array(3),
-    unparsedBytes: new Uint8Array(0),
   }
 }
 
