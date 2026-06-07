@@ -114,8 +114,10 @@ as a *dev convenience*, but the `santa-run` path emits actuals and leaves the ve
 (`santa-check` is the canonical engine alongside the per-ecosystem references — the TypeScript one
 (Dasher) and the Scala `Harness`; §5/§6 require all to return the same verdict on the same bytes, and
 each is proven against the [verdict-oracle](../../oracle) (`oracle/*.json`) so they can't drift. The
-orchestrator runs a 4-way (Rudolph · Dasher · Blitzen develop & eni); Dasher scores **1705/1705**,
-matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared verdict.)
+orchestrator runs the full grid over `runners/*` — the N-way is whatever is checked in, never a
+hardcoded count (currently Rudolph · Dasher · Blitzen develop & eni · Comet); Dasher scores
+**1705/1705**, matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared
+verdict.)
 
 ## 5. Deferred (named, not silent)
 
@@ -159,7 +161,7 @@ natively and proves against the oracle (§6 made executable). A runner's self-te
 run `santa-run` over the subset its `runner.json` selects (`version ≤`, `tiers ∈`) → grade with its own
 oracle-checked comparator → gate. By construction the verdict equals `./conform`'s.
 
-**Badges are SANTA-minted, never self-reported.** SANTA's CI runs the canonical 4-way and publishes
+**Badges are SANTA-minted, never self-reported.** SANTA's CI runs the canonical grid and publishes
 per-runner naughty/nice badges + a dashboard; a runner's README *references* the SANTA-hosted endpoint.
 A runner's own gate is for its dev loop; the public 🎁/🪨 is SANTA's to award, so it means something.
 

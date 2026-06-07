@@ -151,8 +151,8 @@ corpus at scale**, since grown by authored gap-fillers: **2,225 entries across 1
 173. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
-registry-diff surface for conformers. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
-develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
+registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way
+is discovered, not declared (currently Rudolph · Dasher · Blitzen develop & eni · Comet). **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
 eni fork is **FULLY GREEN at `a4ee7442` (2026-06-07): red_total 0 across the whole canonical
 surface** — eval value *and* cost (all 2,225 entries), wire 213/213, transaction 4/4 valid +
 4/4 cost. The road there was the loop working as designed, divergences surfaced → routed →

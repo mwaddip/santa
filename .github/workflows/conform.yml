@@ -1,14 +1,17 @@
 name: conform
 
-# Manual only — the project is in active, high-churn development and the 4-way is a
+# Manual only — the project is in active, high-churn development and the full grid is a
 # cold-heavy build (sbt builds the Scala node, cargo builds sigma-rust x2, npm builds
 # ergots + ts-runner). Run it from the Actions tab ("Run workflow") when you want a
-# canonical clean-environment 4-way. Auto-on-push can be added later.
+# canonical clean-environment grid run. Auto-on-push can be added later.
+#
+# Naming note: runner count is discovered at run time (whatever lives under runners/),
+# so nothing here hardcodes an N — the actual N-way lands in the run summary.
 on:
   workflow_dispatch:
 
 jobs:
-  four-way:
+  grid:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -24,8 +27,15 @@ jobs:
           install: false                 # no root config by design; each wrapper/santa-run does `mise install`
       - name: schema gate
         run: ./validate
-      - name: 4-way conformance
+      - name: conformance grid
         run: ./conform
+      - name: grid summary (the dynamic N-way)
+        run: |
+          jq -r '.runners
+                 | "## \(length)-way conformance grid\n"
+                   + (map("- **\(.name)** (`\((.sha // "in-tree")[0:9])`): red_total \(.red_total)")
+                      | join("\n"))' \
+            .santa/results.json >> "$GITHUB_STEP_SUMMARY"
       - name: scoreboard
         run: ./scoreboard
         env:
