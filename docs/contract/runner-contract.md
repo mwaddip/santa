@@ -66,6 +66,38 @@ divergence — that is consensus-relevant, not a harness artifact. Decided 2026-
 (probe: lazy 12 vs substituted 20 on the two DC dead-branch entries, Δ = 2 ex-placeholders × 4);
 consistent with the transaction tier, which blesses this mechanism via `validateStateful`.
 
+**The canonical eval context.** Vectors may read context surfaces (`CONTEXT.*`,
+`CONTEXT.preHeader.*`, `SELF`), so the context a runner evaluates under is part of the
+contract — every runner constructs the SAME one (it mirrors the blesser's
+`EvalCore.dummyContext`). Pinned fields:
+
+| surface | pinned value |
+|---|---|
+| `SELF` box | `value = 1000000`, `ergoTree` = the entry's own tree, `transactionId` = 32 zero bytes, `index = 0`, `creationHeight = 0`, no tokens; registers beyond the mandatory ones only via `santa-eval/v4` `selfRegisters` |
+| `INPUTS` / `boxesToSpend` | exactly `[SELF]` (so `selfBoxIndex = 0`) |
+| `OUTPUTS` / spending tx | empty (no outputs, no other inputs) |
+| `dataInputs` | empty |
+| `headers` | empty |
+| `preHeader.version` | **`activated + 1`** (block-version convention; see note) |
+| `preHeader.parentId` | empty `Coll[Byte]` |
+| `preHeader.timestamp` | `3` |
+| `preHeader.nBits` | `0` |
+| `preHeader.height` / `HEIGHT` | `0` |
+| `preHeader.minerPk` / `minerPubKey` | the secp256k1 group generator (`0279be66…f81798`) |
+| `preHeader.votes` | empty `Coll[Byte]` |
+| `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (all-zero 32-byte digest, flags 0, keyLength 32, no value-length) |
+| extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions) |
+
+*Version note:* the JVM carries `activatedScriptVersion` as its own context field and
+treats `preHeader.version` as data, while sigma-rust DERIVES script activation from the
+block version (`pre_header.version`). The pin `preHeader.version = activated + 1`
+satisfies both: it is the on-chain convention (script v2 activates at block v3) and the
+only choice that lets a block-version-deriving implementation evaluate at the declared
+`activated`. Pinned 2026-06-07 when the first context-surface vectors exposed that each
+adapter had improvised this context (the divergences were harness artifacts, not
+library findings); blessed values for `Context.*`/`preHeader.*` families assume this
+table.
+
 ## 3. Preconditions, postconditions, invariants
 
 ### Preconditions (a runner may assume)

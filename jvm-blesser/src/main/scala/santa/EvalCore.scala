@@ -41,8 +41,12 @@ object EvalCore {
   private val dummyPubkey: Array[Byte] =
     GroupElementSerializer.toBytes(CryptoConstants.dlogGroup.generator)
 
-  private def dummyPreHeader(height: Int): PreHeader = CPreHeader(
-    version = 0,
+  // The contract's canonical eval context (runner-contract.md §2): preHeader.version is
+  // pinned to activated+1 (block-version convention) because sigma-rust DERIVES script
+  // activation from the block version — version 0 would break its gating; the JVM treats
+  // it as data (activation rides the separate activatedScriptVersion field either way).
+  private def dummyPreHeader(height: Int, activated: Byte): PreHeader = CPreHeader(
+    version = (activated + 1).toByte,
     parentId = Colls.emptyColl[Byte],
     timestamp = 3L,
     nBits = 0L,
@@ -74,7 +78,7 @@ object EvalCore {
     new ErgoLikeContext(
       lastBlockUtxoRoot = AvlTreeData.dummy,
       headers = Colls.emptyColl[Header],
-      preHeader = dummyPreHeader(0),
+      preHeader = dummyPreHeader(0, activatedVersion),
       dataBoxes = IndexedSeq.empty,
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
@@ -524,7 +528,7 @@ object EvalCore {
     new ErgoLikeContext(
       lastBlockUtxoRoot = AvlTreeData.dummy,
       headers = Colls.emptyColl[Header],
-      preHeader = dummyPreHeader(0),
+      preHeader = dummyPreHeader(0, activatedVersion),
       dataBoxes = IndexedSeq.empty,
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
@@ -587,7 +591,7 @@ object EvalCore {
     new ErgoLikeContext(
       lastBlockUtxoRoot = AvlTreeData.dummy,
       headers = Colls.emptyColl[Header],
-      preHeader = dummyPreHeader(0),
+      preHeader = dummyPreHeader(0, activatedVersion),
       dataBoxes = IndexedSeq.empty,
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
@@ -656,7 +660,7 @@ object EvalCore {
     new ErgoLikeContext(
       lastBlockUtxoRoot = AvlTreeData.dummy,
       headers = Colls.emptyColl[Header],
-      preHeader = dummyPreHeader(0),
+      preHeader = dummyPreHeader(0, activatedVersion),
       dataBoxes = IndexedSeq.empty,
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(inputs, IndexedSeq()),
