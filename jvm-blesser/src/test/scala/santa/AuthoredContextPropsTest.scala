@@ -73,18 +73,20 @@ class AuthoredContextPropsTest extends munit.FunSuite {
     e.hcursor.downField("expected").downField("value").get[String]("kind")
       .toOption.getOrElse(fail(s"no kind in ${e.noSpaces}"))
 
-  test("preHeader value anchors: dummy-context surfaces (version=activated+1=3, parentId=empty, timestamp=3, nBits=0, height=0, minerPk=generator, votes=empty)") {
+  test("preHeader value anchors: dummy-context surfaces (version=activated+1=3, parentId=32 zero bytes, timestamp=3, nBits=0, height=0, minerPk=generator, votes=3 zero bytes)") {
     // version → Byte 3: the contract pins preHeader.version = activated+1 (block-version
     // convention; sigma-rust derives script activation from it — runner-contract.md §2)
     val ver = preEntry("preHeader.version#dummy")
     assertEquals(kind(ver), "Byte")
     assertEquals(ver.hcursor.downField("expected").downField("value").get[Int]("value").toOption, Some(3), "version")
 
-    // parentId → Coll[Byte] with 0 items
+    // parentId → Coll[Byte], 32 zero bytes (chain wire width — the contract pins the
+    // fixed-size form so byte-oriented models (BlockId) can represent it exactly)
     val parentId = preEntry("preHeader.parentId#dummy")
     assertEquals(kind(parentId), "Coll")
     val parentItems = parentId.hcursor.downField("expected").downField("value").downField("items").values.get.toVector
-    assertEquals(parentItems.size, 0, "parentId items")
+    assertEquals(parentItems.size, 32, "parentId items")
+    assert(parentItems.forall(_.hcursor.get[Int]("value").toOption.contains(0)), "parentId all-zero")
 
     // timestamp → Long "3"
     val ts = preEntry("preHeader.timestamp#dummy")
@@ -110,11 +112,12 @@ class AuthoredContextPropsTest extends munit.FunSuite {
       "minerPk generator"
     )
 
-    // votes → Coll[Byte] with 0 items
+    // votes → Coll[Byte], 3 zero bytes (chain wire width, same principle as parentId)
     val votes = preEntry("preHeader.votes#dummy")
     assertEquals(kind(votes), "Coll")
     val votesItems = votes.hcursor.downField("expected").downField("value").downField("items").values.get.toVector
-    assertEquals(votesItems.size, 0, "votes items")
+    assertEquals(votesItems.size, 3, "votes items")
+    assert(votesItems.forall(_.hcursor.get[Int]("value").toOption.contains(0)), "votes all-zero")
   }
 
   test("ctx-property value anchors: dataInputs=empty, headers=empty, selfBoxIndex=0, LastBlockUtxoRootHash=AvlTree, minerPubKey=Coll[Byte]") {

@@ -47,12 +47,12 @@ object EvalCore {
   // it as data (activation rides the separate activatedScriptVersion field either way).
   private def dummyPreHeader(height: Int, activated: Byte): PreHeader = CPreHeader(
     version = (activated + 1).toByte,
-    parentId = Colls.emptyColl[Byte],
+    parentId = Colls.fromArray(Array.fill(32)(0: Byte)), // chain wire width (BlockId)
     timestamp = 3L,
     nBits = 0L,
     height = height,
     minerPk = GroupElementSerializer.parse(SigmaSerializer.startReader(dummyPubkey)).toGroupElement,
-    votes = Colls.emptyColl[Byte]
+    votes = Colls.fromArray(Array.fill(3)(0: Byte)) // chain wire width (Votes)
   )
 
   /** Mirror of the production constant-substitution conditionality

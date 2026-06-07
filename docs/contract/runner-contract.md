@@ -79,12 +79,12 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 | `dataInputs` | empty |
 | `headers` | empty |
 | `preHeader.version` | **`activated + 1`** (block-version convention; see note) |
-| `preHeader.parentId` | empty `Coll[Byte]` |
+| `preHeader.parentId` | 32 zero bytes (chain-faithful width — `BlockId` is fixed-size in byte-oriented models) |
 | `preHeader.timestamp` | `3` |
 | `preHeader.nBits` | `0` |
 | `preHeader.height` / `HEIGHT` | `0` |
 | `preHeader.minerPk` / `minerPubKey` | the secp256k1 group generator (`0279be66…f81798`) |
-| `preHeader.votes` | empty `Coll[Byte]` |
+| `preHeader.votes` | 3 zero bytes (chain-faithful width — `Votes` is fixed-size in byte-oriented models) |
 | `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (all-zero 32-byte digest, flags 0, keyLength 32, no value-length) |
 | extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions) |
 
@@ -93,10 +93,14 @@ treats `preHeader.version` as data, while sigma-rust DERIVES script activation f
 block version (`pre_header.version`). The pin `preHeader.version = activated + 1`
 satisfies both: it is the on-chain convention (script v2 activates at block v3) and the
 only choice that lets a block-version-deriving implementation evaluate at the declared
-`activated`. Pinned 2026-06-07 when the first context-surface vectors exposed that each
-adapter had improvised this context (the divergences were harness artifacts, not
-library findings); blessed values for `Context.*`/`preHeader.*` families assume this
-table.
+`activated`. Same principle for parentId/votes: zeroed at their chain wire widths
+rather than empty, so fixed-size models can represent the pin exactly. `headers` stays
+EMPTY — the JVM expresses that; a model that structurally cannot (e.g. sigma-rust's
+`[Header; 10]`) will show a STRUCTURAL divergence on `CONTEXT.headers`, which is a real
+conformance fact, not a harness artifact. Pinned 2026-06-07 when the first
+context-surface vectors exposed that each adapter had improvised this context (the
+divergences were harness artifacts, not library findings); blessed values for
+`Context.*`/`preHeader.*` families assume this table.
 
 ## 3. Preconditions, postconditions, invariants
 
