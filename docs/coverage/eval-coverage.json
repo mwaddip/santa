@@ -3628,6 +3628,35 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.some_none.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "106:10 SigmaDslBuilder.none",
+        "106:9 SigmaDslBuilder.some"
+      ],
+      "op" : "Global.some_none",
+      "ops" : [
+        "ConstantPlaceholder",
+        "Global$",
+        "MethodCall",
+        "OptionIsDefined"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/GroupElement.expUnsigned.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -5289,6 +5318,12 @@
       ],
       "name" : "SigmaDslBuilder.groupGenerator"
     },
+    "106:10" : {
+      "families" : [
+        "v6/authored/Global.some_none.json"
+      ],
+      "name" : "SigmaDslBuilder.none"
+    },
     "106:3" : {
       "families" : [
         "v6/authored/Global.serialize_AvlTree.json",
@@ -5345,6 +5380,12 @@
         "v6/spec/Global.powHit.json"
       ],
       "name" : "SigmaDslBuilder.powHit"
+    },
+    "106:9" : {
+      "families" : [
+        "v6/authored/Global.some_none.json"
+      ],
+      "name" : "SigmaDslBuilder.some"
     },
     "12:14" : {
       "families" : [
@@ -6218,6 +6259,7 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
+        "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
@@ -6752,6 +6794,7 @@
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.some_none.json",
         "v6/spec/Global.decodeNbits.json",
         "v6/spec/Global.deserializeTo_group_element.json",
         "v6/spec/Global.deserializeTo_header.json",
@@ -6902,6 +6945,7 @@
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
@@ -7140,7 +7184,8 @@
     "OptionIsDefined" : {
       "families" : [
         "v5/spec/Conditional_access_to_registers.json",
-        "v6/authored/Box.getReg_adversarial.json"
+        "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Global.some_none.json"
       ],
       "op_codes" : [
         "0xe6"
@@ -7487,11 +7532,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 1995,
-    "distinct_methods" : 125,
+    "accepts" : 1999,
+    "distinct_methods" : 127,
     "distinct_ops" : 77,
-    "entries" : 2188,
-    "files" : 161,
+    "entries" : 2192,
+    "files" : 162,
     "rejects" : 193,
     "unwalked" : 1
   }
