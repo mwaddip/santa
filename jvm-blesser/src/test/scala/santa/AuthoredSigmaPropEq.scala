@@ -32,7 +32,7 @@ import sigma.VersionContext
 import sigma.ast.{EQ, ErgoTree, GetVar, OptionGet, SOption, SSigmaProp, SString, SType, SigmaPropConstant}
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.{CryptoConstants, EcPointType}
-import sigma.data.{CAND, CSigmaProp, ProveDHTuple, ProveDlog, SigmaBoolean}
+import sigma.data.{CAND, CSigmaProp, CTHRESHOLD, ProveDHTuple, ProveDlog, SigmaBoolean, TrivialProp}
 
 object AuthoredSigmaPropEq {
 
@@ -41,9 +41,10 @@ object AuthoredSigmaPropEq {
     * finding), so v5 is the honest home — it groups with the v5 equality/sigma vectors. */
   val V2: Byte = VersionContext.JitActivationVersion
 
-  val Source    = "santa:authored-sigmaprop-eq"
-  val Op        = "EQ of SigmaProp"
-  val OpUnequal = "EQ of SigmaProp unequal"
+  val Source       = "santa:authored-sigmaprop-eq"
+  val Op           = "EQ of SigmaProp"
+  val OpUnequal    = "EQ of SigmaProp unequal"
+  val OpConjecture = "EQ of SigmaProp conjecture mismatch"
 
   /** `getVar[T](1).get == getVar[T](1).get`, serialized at v5. The input is bound to context
     * var 1 by EvalCore.evalApplied; reading it (twice, as two independent context reads) and
@@ -113,6 +114,35 @@ object AuthoredSigmaPropEq {
     }
   }
 
+  /** Four conjecture-MISMATCH entries pinning the comparer's argument-order ASYMMETRY
+    * (ergots F3 follow-up, prompts/ergots-f3-conjecture-throw-vector-ask.md).
+    * DataValueComparer.equalSigmaBoolean dispatches on the LEFT value with GUARDED
+    * conjecture cases (`case CAND(_) if r.isInstanceOf[CAND]` etc.); a conjecture on the
+    * left vs a different variant on the right fails every guard and falls through to
+    * `sys.error` — the script eval THROWS. A LEAF on the left (ProveDlog/TrivialProp) vs
+    * any different right returns false via the leaf arm's inner `case _`. Reachable from
+    * honest script — `(pkA && pkB) == pkA` evals EQ over CAND-vs-ProveDlog runtime values
+    * — so throw-vs-false here is a consensus VALUE fork (ergots returned false pre-F3).
+    * Spike-verified: both orderings of every pair behave as the source reads; the two
+    * accept twins cost envelope + outer MatchType(1) + node MatchType(1) = 4, same as the
+    * unequal family's node-type-mismatch class. Reject entries carry the coarse shape
+    * (value/cost null) — cost-at-throw is not blessed. */
+  private def conjectureEntries: Seq[Json] = {
+    val dlogA  = ProveDlog(gen)
+    val candAB = CAND(Seq(dlogA, ProveDlog(gen2)))
+    val cthAB  = CTHRESHOLD(1, Seq(dlogA, ProveDlog(gen2)))
+    val rejects = Set(0, 3)
+    Seq(
+      ("cand-vs-dlog#0",       candAB,            dlogA,  "{ (pkA && pkB) == pkA }"),
+      ("dlog-vs-cand#1",       dlogA: SigmaBoolean, candAB, "{ pkA == (pkA && pkB) }"),
+      ("trivial-vs-dlog#2",    TrivialProp(true), dlogA,  "{ sigmaProp(true) == pkA }"),
+      ("cthreshold-vs-cand#3", cthAB,             candAB, "{ cthreshold(1, pkA, pkB) == (pkA && pkB) }")
+    ).zipWithIndex.map { case ((name, a, b, script), i) =>
+      val mk = if (rejects(i)) SpecExtract.authoredRejectEntry _ else SpecExtract.authoredEntry _
+      mk(OpConjecture, script, unequalTree(a, b), name, dummyInput, V2)
+    }
+  }
+
   /** op -> v2 envelope: one `==` tree, one entry per SigmaProp shape. */
   def extract(): Map[String, Json] = {
     val (script, treeHex) = eqSelfTree("SigmaProp", SSigmaProp)
@@ -124,8 +154,9 @@ object AuthoredSigmaPropEq {
       SpecExtract.authoredEntry(Op, script, treeHex, s"$name#$i", in, V2)
     }
     Map(
-      Op        -> SpecExtract.authoredEnvelope(Op, entries, Source),
-      OpUnequal -> SpecExtract.authoredEnvelope(OpUnequal, unequalEntries, Source))
+      Op           -> SpecExtract.authoredEnvelope(Op, entries, Source),
+      OpUnequal    -> SpecExtract.authoredEnvelope(OpUnequal, unequalEntries, Source),
+      OpConjecture -> SpecExtract.authoredEnvelope(OpConjecture, conjectureEntries, Source))
   }
 
   /** String-equality reachability probe (the prompt's secondary ask). SString has a

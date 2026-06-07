@@ -364,6 +364,31 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json" : {
+      "accepts" : 2,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "EQ of SigmaProp conjecture mismatch",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/EQ_of_SigmaProp_unequal.json" : {
       "accepts" : 5,
       "entries" : 5,
@@ -6307,6 +6332,7 @@
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/Option.map.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
@@ -6412,6 +6438,7 @@
     "EQ" : {
       "families" : [
         "v5/authored/EQ_of_SigmaProp.json",
+        "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Conditional_access_to_registers.json",
@@ -7612,12 +7639,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2006,
+    "accepts" : 2008,
     "distinct_methods" : 129,
     "distinct_ops" : 77,
-    "entries" : 2199,
-    "files" : 164,
-    "rejects" : 193,
+    "entries" : 2203,
+    "files" : 165,
+    "rejects" : 195,
     "unwalked" : 1
   }
 }

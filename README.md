@@ -43,10 +43,10 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,199 entries across 164 vector files**: 2,026 produced by
+- ✅ **A blessed eval corpus — 2,203 entries across 165 vector files**: 2,026 produced by
   the JVM reference interpreter (`sigma-state`) from its own language specification, plus
-  173 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,822 entries — the cumulative v5/mainnet method surface)
+  177 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
+  (1,826 entries — the cumulative v5/mainnet method surface)
   and **v6** (377 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
@@ -64,13 +64,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   `x.R9[AvlTree].get` evaluates correctly in every conformer), fixed same-arc.
   Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is green
   on everything it has converged on (eval + wire + transaction, value *and* cost — every
-  earlier routed divergence is fixed in the fork) **except the 10 genuine divergences the
-  2026-06-07 context/accessor batch surfaced**, all routed: the Box u64 signed-view ×6
+  earlier routed divergence is fixed in the fork) **except the 12 genuine divergences
+  surfaced so far**, all routed: the Box u64 signed-view ×6
   (JVM surfaces signed Longs via unbounded `getULong`; sigma-rust rejects at `try_from`
   hydration), `CONTEXT.headers` (a `[Header; 10]` model can't express the contract's
-  empty-headers pin), `Header.stateRoot`/`powOnetimePk` type-and-default surfaces, and
+  empty-headers pin), `Header.stateRoot`/`powOnetimePk` type-and-default surfaces,
   `AvlTree.insertOrUpdate#bad-proof` (JVM → None; sigma-rust errors at verifier
-  construction) — while plain upstream `develop` misses 10 v5 values the fork already
+  construction), and the SigmaProp EQ conjecture-mismatch throw arm ×2 (JVM's guarded
+  comparer throws where sigma-rust returns `false` — a fork both independent ports
+  carried; ergots fixed it in their F3, sigma-rust's is routed) — while plain upstream
+  `develop` misses 10 v5 values the fork already
   fixed, plus the v6 surface. A 🪨 is the suite doing its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is

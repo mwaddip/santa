@@ -144,24 +144,27 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,199 entries across 164 files**
+corpus at scale**, since grown by authored gap-fillers: **2,203 entries across 165 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-173/45), version-split into **v5** (1,822 — the cumulative v5/mainnet surface) and **v6**
+177/46), version-split into **v5** (1,826 — the cumulative v5/mainnet surface) and **v6**
 (377 — the v6 new-feature surface); a JSON-Schema gate validates all
-164. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+165. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
 develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
 eni fork is green on everything the fork has converged on — eval + wire + transaction, value
 *and* cost (latest convergences: the DC dead-branch production-cost re-bless, `Box.getReg`
-method-id 7→19, the HOF FunDef/currying findings) — **except the 10 genuine divergences the
-2026-06-07 context/accessor batch surfaced and routed**: the Box u64 signed-view ×6 (JVM's
+method-id 7→19, the HOF FunDef/currying findings) — **except the 12 genuine divergences
+surfaced and routed**: the Box u64 signed-view ×6 (JVM's
 unbounded `getULong` surfaces signed Longs; sigma-rust rejects at `try_from` hydration),
 `CONTEXT.headers` (structural: a `[Header; 10]` model cannot express the pinned empty
 headers), `Header.stateRoot` (AvlTree vs Coll[Byte] type surface) + `Header.powOnetimePk`
-(generator-default vs zero-bytes), and `AvlTree.insertOrUpdate#bad-proof` (JVM digest-inspect
-→ None; sigma-rust errors at verifier construction). Upstream `develop` still misses 10 v5
+(generator-default vs zero-bytes), `AvlTree.insertOrUpdate#bad-proof` (JVM digest-inspect
+→ None; sigma-rust errors at verifier construction), and the SigmaProp EQ
+conjecture-mismatch throw arm ×2 (JVM's guarded comparer throws on conjecture-left vs
+different-variant-right; sigma-rust returns `false` — the same fork ergots fixed in
+their F3, independently present in both sigma-rust branches). Upstream `develop` still misses 10 v5
 values the fork fixed, plus the v6 surface — the loop surfacing genuine cross-impl
 divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
