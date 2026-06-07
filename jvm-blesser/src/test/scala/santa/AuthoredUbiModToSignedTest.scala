@@ -103,7 +103,7 @@ class AuthoredUbiModToSignedTest extends munit.FunSuite {
     assertEquals(cost("toSigned#max-ok"), 15L, "toSigned#max-ok cost")
   }
 
-  test("ANCHOR: exactly 2 distinct tree hex strings (one mod tree per-entry; one toSigned tree per-entry, but the trees with same operands share hex)") {
+  test("ANCHOR: exactly 7 distinct tree hex strings (one mod tree per-entry; one toSigned tree per-entry, but the trees with same operands share hex)") {
     val allEntries =
       vectors(AuthoredUbiModToSigned.Op).hcursor
         .downField("entries").as[Seq[io.circe.Json]].toOption.get ++
@@ -112,7 +112,7 @@ class AuthoredUbiModToSignedTest extends munit.FunSuite {
     val trees = allEntries
       .map(_.hcursor.get[String]("tree_bytes_hex").toOption.get)
       .distinct
-    // 5 mod entries each have distinct operands → up to 4 distinct mod trees
+    // 4 mod entries each have distinct operands → up to 4 distinct mod trees
     // (mod#basic and mod#div-by-zero share receiver 17 but differ in arg, so differ;
     //  mod#wrap, mod#m-gt-a also distinct); toSigned entries share toSignedTree(pow255)
     // between toSigned#ge-2^255 reject and none of the accepts (toSigned#small and
