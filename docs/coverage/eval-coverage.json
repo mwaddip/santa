@@ -1,5 +1,35 @@
 {
   "families" : {
+    "v5/authored/AvlTree.bad_proof_bytes.json" : {
+      "accepts" : 3,
+      "entries" : 5,
+      "methods" : [
+        "100:10 AvlTree.get",
+        "100:12 AvlTree.insert",
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.bad_proof_bytes",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.contains.json" : {
       "accepts" : 2,
       "entries" : 2,
@@ -16,6 +46,65 @@
       "tree_shapes" : [
         {
           "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.degenerate_edges.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "100:11 AvlTree.getMany",
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove"
+      ],
+      "op" : "AvlTree.degenerate_edges",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.empty_ops_valid_proof.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove"
+      ],
+      "op" : "AvlTree.empty_ops_valid_proof",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
           "constant_segregation" : true,
           "has_deserialize" : false,
           "has_size" : true,
@@ -133,6 +222,97 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/AvlTree.keyLength_wrapped_negative.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:3 AvlTree.keyLength"
+      ],
+      "op" : "AvlTree.keyLength_wrapped_negative",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.negative_keylength_tree.json" : {
+      "accepts" : 3,
+      "entries" : 5,
+      "methods" : [
+        "100:10 AvlTree.get",
+        "100:12 AvlTree.insert",
+        "100:14 AvlTree.remove",
+        "100:3 AvlTree.keyLength",
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.negative_keylength_tree",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.per_op_failure.json" : {
+      "accepts" : 10,
+      "entries" : 20,
+      "methods" : [
+        "100:10 AvlTree.get",
+        "100:11 AvlTree.getMany",
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove",
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.per_op_failure",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 10,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 10,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.proof_adversarial.json" : {
       "accepts" : 0,
       "entries" : 2,
@@ -186,6 +366,31 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/AvlTree.unsupported_eval_nodes.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "AvlTree.unsupported_eval_nodes",
+      "ops" : [
+        "ConstantPlaceholder",
+        "TreeLookup"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.update.json" : {
       "accepts" : 2,
       "entries" : 2,
@@ -204,6 +409,33 @@
       "tree_shapes" : [
         {
           "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AvlTree.updateDigest_any_length.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "100:1 AvlTree.digest",
+        "100:15 AvlTree.updateDigest"
+      ],
+      "op" : "AvlTree.updateDigest_any_length",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
           "constant_segregation" : true,
           "has_deserialize" : false,
           "has_size" : true,
@@ -3258,6 +3490,88 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v6/authored/AvlTree.bad_proof_bytes_v6.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:12 AvlTree.insert"
+      ],
+      "op" : "AvlTree.bad_proof_bytes_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.degenerate_edges_v6.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:12 AvlTree.insert"
+      ],
+      "op" : "AvlTree.degenerate_edges_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.empty_ops_valid_proof_v6.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:16 AvlTree.insertOrUpdate"
+      ],
+      "op" : "AvlTree.empty_ops_valid_proof_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/AvlTree.insertOrUpdate.json" : {
       "accepts" : 4,
       "entries" : 4,
@@ -3308,6 +3622,89 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.negative_keylength_tree_v6.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "100:12 AvlTree.insert"
+      ],
+      "op" : "AvlTree.negative_keylength_tree_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.per_op_failure_v6.json" : {
+      "accepts" : 8,
+      "entries" : 8,
+      "methods" : [
+        "100:12 AvlTree.insert",
+        "100:16 AvlTree.insertOrUpdate"
+      ],
+      "op" : "AvlTree.per_op_failure_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.unsupported_eval_nodes_v6.json" : {
+      "accepts" : 0,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "AvlTree.unsupported_eval_nodes_v6",
+      "ops" : [
+        "ConstantPlaceholder",
+        "CreateAvlTree",
+        "TreeLookup"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
           "tree_version" : 3
         }
       ],
@@ -5362,14 +5759,18 @@
   "method_index" : {
     "100:1" : {
       "families" : [
+        "v5/authored/AvlTree.updateDigest_any_length.json",
         "v5/spec/AvlTree_properties_equivalence.json"
       ],
       "name" : "AvlTree.digest"
     },
     "100:10" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.get.json",
         "v5/authored/AvlTree.get_proof_ladder.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.proof_adversarial.json",
         "v5/authored/AvlTree.wrong_tree_proof.json"
       ],
@@ -5377,21 +5778,35 @@
     },
     "100:11" : {
       "families" : [
+        "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.getMany.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.wrong_tree_proof.json"
       ],
       "name" : "AvlTree.getMany"
     },
     "100:12" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
+        "v5/authored/AvlTree.degenerate_edges.json",
+        "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
-        "v6/authored/AvlTree.insert_wrong_tree.json"
+        "v6/authored/AvlTree.bad_proof_bytes_v6.json",
+        "v6/authored/AvlTree.degenerate_edges_v6.json",
+        "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.negative_keylength_tree_v6.json",
+        "v6/authored/AvlTree.per_op_failure_v6.json"
       ],
       "name" : "AvlTree.insert"
     },
     "100:13" : {
       "families" : [
+        "v5/authored/AvlTree.degenerate_edges.json",
+        "v5/authored/AvlTree.empty_ops_valid_proof.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json"
       ],
@@ -5399,6 +5814,10 @@
     },
     "100:14" : {
       "families" : [
+        "v5/authored/AvlTree.degenerate_edges.json",
+        "v5/authored/AvlTree.empty_ops_valid_proof.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.wrong_tree_proof.json"
       ],
@@ -5406,13 +5825,16 @@
     },
     "100:15" : {
       "families" : [
+        "v5/authored/AvlTree.updateDigest_any_length.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json"
       ],
       "name" : "AvlTree.updateDigest"
     },
     "100:16" : {
       "families" : [
-        "v6/authored/AvlTree.insertOrUpdate.json"
+        "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
+        "v6/authored/AvlTree.insertOrUpdate.json",
+        "v6/authored/AvlTree.per_op_failure_v6.json"
       ],
       "name" : "AvlTree.insertOrUpdate"
     },
@@ -5424,6 +5846,8 @@
     },
     "100:3" : {
       "families" : [
+        "v5/authored/AvlTree.keyLength_wrapped_negative.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/spec/AvlTree_properties_equivalence.json"
       ],
       "name" : "AvlTree.keyLength"
@@ -5460,7 +5884,10 @@
     },
     "100:9" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.wrong_tree_proof.json"
       ],
       "name" : "AvlTree.contains"
@@ -6550,16 +6977,26 @@
     },
     "ConcreteCollection" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
+        "v5/authored/AvlTree.degenerate_edges.json",
+        "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.getMany.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/AvlTree.bad_proof_bytes_v6.json",
+        "v6/authored/AvlTree.degenerate_edges_v6.json",
+        "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.negative_keylength_tree_v6.json",
+        "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
@@ -6578,14 +7015,22 @@
     },
     "ConstantPlaceholder" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
+        "v5/authored/AvlTree.degenerate_edges.json",
+        "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.get.json",
         "v5/authored/AvlTree.getMany.json",
         "v5/authored/AvlTree.get_proof_ladder.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.keyLength_wrapped_negative.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.proof_adversarial.json",
         "v5/authored/AvlTree.remove.json",
+        "v5/authored/AvlTree.unsupported_eval_nodes.json",
         "v5/authored/AvlTree.update.json",
+        "v5/authored/AvlTree.updateDigest_any_length.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -6609,8 +7054,14 @@
         "v5/spec/Tuple_size_method_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/AvlTree.bad_proof_bytes_v6.json",
+        "v6/authored/AvlTree.degenerate_edges_v6.json",
+        "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.negative_keylength_tree_v6.json",
+        "v6/authored/AvlTree.per_op_failure_v6.json",
+        "v6/authored/AvlTree.unsupported_eval_nodes_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
@@ -6647,6 +7098,14 @@
       ],
       "op_codes" : [
         "0xfe"
+      ]
+    },
+    "CreateAvlTree" : {
+      "families" : [
+        "v6/authored/AvlTree.unsupported_eval_nodes_v6.json"
+      ],
+      "op_codes" : [
+        "0xb6"
       ]
     },
     "CreateProveDHTuple" : {
@@ -7279,14 +7738,21 @@
     },
     "MethodCall" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
+        "v5/authored/AvlTree.degenerate_edges.json",
+        "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.get.json",
         "v5/authored/AvlTree.getMany.json",
         "v5/authored/AvlTree.get_proof_ladder.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.keyLength_wrapped_negative.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.proof_adversarial.json",
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
+        "v5/authored/AvlTree.updateDigest_any_length.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -7308,8 +7774,13 @@
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/AvlTree.bad_proof_bytes_v6.json",
+        "v6/authored/AvlTree.degenerate_edges_v6.json",
+        "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.negative_keylength_tree_v6.json",
+        "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Context.getVarFromInput.json",
@@ -7707,9 +8178,21 @@
         "0x74"
       ]
     },
+    "TreeLookup" : {
+      "families" : [
+        "v5/authored/AvlTree.unsupported_eval_nodes.json",
+        "v6/authored/AvlTree.unsupported_eval_nodes_v6.json"
+      ],
+      "op_codes" : [
+        "0xb7"
+      ]
+    },
     "Tuple" : {
       "families" : [
+        "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
@@ -7718,8 +8201,11 @@
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/AvlTree.bad_proof_bytes_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.negative_keylength_tree_v6.json",
+        "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/spec/higher_order_lambdas.json"
       ],
       "op_codes" : [
@@ -7931,12 +8417,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2025,
+    "accepts" : 2065,
     "distinct_methods" : 129,
-    "distinct_ops" : 77,
-    "entries" : 2225,
-    "files" : 173,
-    "rejects" : 200,
+    "distinct_ops" : 79,
+    "entries" : 2282,
+    "files" : 187,
+    "rejects" : 217,
     "unwalked" : 1
   }
 }

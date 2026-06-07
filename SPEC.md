@@ -144,25 +144,30 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,225 entries across 173 files**
+corpus at scale**, since grown by authored gap-fillers: **2,282 entries across 187 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-199/54), version-split into **v5** (1,837 — the cumulative v5/mainnet surface) and **v6**
-(388 — the v6 new-feature surface); a JSON-Schema gate validates all
-173. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+256/68), version-split into **v5** (1,880 — the cumulative v5/mainnet surface) and **v6**
+(402 — the v6 new-feature surface); a JSON-Schema gate validates all
+187. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way
 is discovered, not declared (currently Rudolph · Dasher · Blitzen develop & eni · Comet). **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
-eni fork is **FULLY GREEN at `a4ee7442` (2026-06-07): red_total 0 across the whole canonical
-surface** — eval value *and* cost (all 2,225 entries), wire 213/213, transaction 4/4 valid +
-4/4 cost. The road there was the loop working as designed, divergences surfaced → routed →
-converged in rounds: the Box u64 signed-view ×6 (unbounded `getULong` mirror), the
-`Header.stateRoot`/`powOnetimePk` surfaces, `AvlTree.insertOrUpdate#bad-proof`, the SigmaProp
-EQ conjecture-throw comparer arm ×2 (@ `de6331cb`), the `CONTEXT.headers` structural model
-(fixed `[Header; 10]` → `BoundedVec<Header, 0, 10>` + a standalone `last_block_utxo_root` —
+eni fork **reached red_total 0 at `a4ee7442` (2026-06-07)** across the then-canonical surface
+(eval value *and* cost, wire 213/213, transaction 4/4 valid + 4/4 cost) — the suite's first
+fully-green independent conformer. The road there was the loop working as designed, divergences
+surfaced → routed → converged in rounds: the Box u64 signed-view ×6 (unbounded `getULong`
+mirror), the `Header.stateRoot`/`powOnetimePk` surfaces, `AvlTree.insertOrUpdate#bad-proof`, the
+SigmaProp EQ conjecture-throw comparer arm ×2 (@ `de6331cb`), the `CONTEXT.headers` structural
+model (fixed `[Header; 10]` → `BoundedVec<Header, 0, 10>` + a standalone `last_block_utxo_root` —
 the genesis-window finding, `docs/findings/sigma-rust-fixed-header-window.md`), and the
 AvlTree wrong-tree-proof per-method row (contains→false / update,remove→None / the #908
-insert version gate — which also exposed remove's op-results-ignored `cfor` semantics).
+insert version gate — which also exposed remove's op-results-ignored `cfor` semantics). The
+**F4 AvlTree degenerate-edge round (2026-06-07)** then grew the corpus by 57 vectors (ergots'
+asks + sigma-rust's twins) that surfaced **21 new eni divergences** — 5 classes: bad-proof-bytes /
+negative-keyLength-tree / wrong-value-length **panics**, `updateDigest` non-33-byte **over-reject**,
+and `TreeLookup` eval **over-accept** (a consensus-split; ergots converges on the last two) —
+routed to sigma-rust: the loop surfacing the next round of genuine divergences.
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
