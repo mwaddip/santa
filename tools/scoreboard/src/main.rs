@@ -191,6 +191,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
         body.push_str("</tr>\n");
     }
 
+    let details = coal_details(results);
     let escaped_git_ref = html_escape(git_ref);
     format!(
         r#"<!doctype html>
@@ -219,6 +220,14 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  .legend .sw.na {{ background: #f7f7f7; }}
  .legend .sw.coverage {{ background: #e8eaf6; }}
  .legend .hint {{ color: #666; margin-top: .5rem; }}
+ h2 {{ font-size: 1.15rem; margin-top: 2rem; }}
+ details.coal-details {{ margin: .5rem 0; border: 1px solid #e5c9c9; border-radius: 4px; padding: .35rem .8rem; background: #fffafa; }}
+ details.coal-details summary {{ cursor: pointer; }}
+ details.coal-details h3.slice-h {{ font-family: ui-monospace, monospace; font-size: .85rem; margin: .6rem 0 .15rem; }}
+ details.coal-details ul {{ margin: .15rem 0 .6rem; padding-left: 1.4rem; }}
+ details.coal-details li {{ font-size: .85rem; }}
+ details.coal-details .dim {{ color: #a33; }}
+ details.coal-details .note {{ color: #666; }}
 </style></head><body>
 <h1>SANTA conformance scoreboard</h1>
 <p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.</p>
@@ -229,6 +238,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <tbody>
 {body}</tbody>
 </table>
+{details}
 <div class="legend">
 <div><span class="sw nice"></span><b>green</b> — value + cost pass (wire: round-trip-ok)</div>
 <div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
@@ -240,6 +250,72 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
 "#
+    )
+}
+
+/// Per-runner collapsible coal-detail lists, rendered below the matrix. One `<details>`
+/// per runner that carries ANY red entries — DEFAULT COLLAPSED (no `open` attribute):
+/// the totals stay the page, the instances are opt-in. Inside each block the instances
+/// are grouped by slice; a line is `op / entry [dim]` plus the note's first line when
+/// the runner recorded one (same brevity convention as the cell tooltips). The count in
+/// the summary equals the badge's red tally (not-implemented included — the details are
+/// the full red list, coverage/roadmap dims visibly labelled rather than filtered).
+fn coal_details(results: &Value) -> String {
+    let coal_icon = "\u{1faa8}"; // 🪨
+    let runners = results.get("runners").and_then(|r| r.as_array()).cloned().unwrap_or_default();
+    let empty = serde_json::Map::new();
+    let mut blocks = String::new();
+    for r in &runners {
+        let name = r.get("name").and_then(|n| n.as_str()).unwrap_or("?");
+        let slices = r.get("slices").and_then(|s| s.as_object()).unwrap_or(&empty);
+        let mut total = 0usize;
+        let mut groups: Vec<(String, Vec<String>)> = Vec::new();
+        for (sk, slice) in slices.iter().collect::<BTreeMap<_, _>>() {
+            let red_arr = slice.get("red").and_then(|x| x.as_array()).cloned().unwrap_or_default();
+            if red_arr.is_empty() {
+                continue;
+            }
+            let mut lines = Vec::new();
+            for e in &red_arr {
+                let op = e.get("op").and_then(|v| v.as_str()).unwrap_or("?");
+                let entry = e.get("entry").and_then(|v| v.as_str()).unwrap_or("?");
+                let dim = e.get("dim").and_then(|v| v.as_str()).unwrap_or("?");
+                let mut line = format!(
+                    "<code>{} / {}</code> <span class=\"dim\">[{}]</span>",
+                    html_escape(op), html_escape(entry), html_escape(dim)
+                );
+                if let Some(note) = e.get("note").and_then(|v| v.as_str()) {
+                    let brief = note.lines().next().unwrap_or(note);
+                    line.push_str(&format!(" <span class=\"note\">\u{2014} {}</span>", html_escape(brief)));
+                }
+                lines.push(format!("<li>{line}</li>"));
+            }
+            total += red_arr.len();
+            groups.push((sk.clone(), lines));
+        }
+        if total == 0 {
+            continue; // fully-green (or out-of-scope) libraries get no block at all
+        }
+        let control = if CONTROL_RUNNERS.contains(&name) { " <em>(control)</em>" } else { "" };
+        blocks.push_str(&format!(
+            "<details class=\"coal-details\"><summary>{coal_icon} <b>{}</b>{control} \u{2014} {total} coal</summary>\n",
+            html_escape(name)
+        ));
+        for (sk, lines) in groups {
+            blocks.push_str(&format!(
+                "<h3 class=\"slice-h\">{}</h3>\n<ul>\n{}\n</ul>\n",
+                html_escape(&sk),
+                lines.join("\n")
+            ));
+        }
+        blocks.push_str("</details>\n");
+    }
+    if blocks.is_empty() {
+        return String::new(); // a fully-green grid renders no section at all
+    }
+    format!(
+        "<h2>Coal details</h2>\n<p class=\"meta\">Every red instance behind the matrix counts, \
+grouped by library \u{2014} collapsed by default, click a library to expand.</p>\n{blocks}"
     )
 }
 
@@ -357,6 +433,54 @@ mod tests {
         assert!(!html.contains("unrepr")); // unrepresentable removed end-to-end
         assert!(html.contains("abc123"));                  // the stamped ref
         assert!(html.contains("\u{2014}"));                // — (na cell / null-impl source)
+    }
+
+    // ── Coal-details section (per-library collapsible red lists) ───────────────────────────────
+
+    #[test]
+    fn coal_details_one_collapsed_block_per_coal_library() {
+        let html = dashboard(&sample(), "abc123");
+        // section present, with both coal-bearing libraries
+        assert!(html.contains("<h2>Coal details</h2>"));
+        assert!(html.contains("<b>blitzen-eni</b> \u{2014} 3 coal"),
+            "blitzen-eni block must carry its red total");
+        assert!(html.contains("<b>blitzen-develop</b> \u{2014} 1 coal"),
+            "blitzen-develop block must carry its red total");
+        // exactly the two coal libraries get blocks — green ones none
+        assert_eq!(html.matches("<details class=\"coal-details\">").count(), 2,
+            "only coal-bearing libraries get a details block");
+        assert!(!html.contains("<b>dasher</b> \u{2014}"), "green dasher must have no block");
+        // DEFAULT COLLAPSED: plain <details>, never <details open>
+        assert!(!html.contains("<details open"), "details must default collapsed");
+        // grouped by slice, instances carry op / entry [dim]
+        assert!(html.contains("<h3 class=\"slice-h\">eval/v6/authored</h3>"));
+        assert!(html.contains("<code>x / a</code> <span class=\"dim\">[cost]</span>"));
+        assert!(html.contains("<span class=\"dim\">[panicked]</span>"));
+    }
+
+    #[test]
+    fn coal_details_renders_note_first_line() {
+        let html = dashboard(&tx_fixture(), "test");
+        assert!(html.contains("<span class=\"note\">\u{2014} Verifier error: AtLeast bound</span>"),
+            "a red entry's note must render (first line) in the details list");
+        // dasher's all-not-impl tx reds still count + list (visibly labelled, not filtered)
+        assert!(html.contains("<b>dasher</b> \u{2014} 4 coal"));
+        assert!(html.contains("<span class=\"dim\">[not-implemented]</span>"));
+    }
+
+    #[test]
+    fn coal_details_absent_on_fully_green_grid() {
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "rudolph", "mark": "nice", "red_total": 0, "impl": null,
+              "slices": { "eval/v5/spec": {"value_nice":1,"value_total":1,"cost_nice":1,"cost_graded":1,"reject_nice":0,"reject_total":0,"red":[]} } }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(!html.contains("Coal details"), "a green grid must render no details section");
+        assert!(!html.contains("<details class=\"coal-details\">"),
+            "no details element on a green grid (the CSS selector alone may remain)");
     }
 
     #[test]
