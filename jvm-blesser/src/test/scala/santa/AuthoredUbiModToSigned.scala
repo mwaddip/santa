@@ -2,7 +2,7 @@ package santa
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Authored `UnsignedBigInt.mod` + `UnsignedBigInt.toSigned` vectors
-// (v6/authored) — sigma-rust tx-cost request P9:18/P9:19.
+// (v6/authored) — sigma-rust tx-cost request 9:18 / 9:19.
 //
 // `mod` (methodId=18, JitCost=20): a.mod(b) → a % b (unsigned modulo, no
 //   domain truncation — div-by-zero is a hard reject at eval time).
@@ -13,6 +13,8 @@ package santa
 // Construction: closed MethodCall trees, V3-gated (SUnsignedBigIntMethods),
 // serialized inside VersionContext.withVersions(3, 3) exactly as
 // AuthoredUbiArith does. Entry input = ignored dummy Int at var 1.
+//
+// Stages TWO vector files: accepts + domain rejects — both must land in vectors/.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import scorex.util.encode.Base16
@@ -20,7 +22,7 @@ import scorex.util.encode.Base16
 import io.circe.Json
 
 import sigma.VersionContext
-import sigma.ast.{ErgoTree, MethodCall, SBigInt, SType, SUnsignedBigInt,
+import sigma.ast.{ErgoTree, MethodCall, SBigInt, SUnsignedBigInt,
   SUnsignedBigIntMethods, UnsignedBigIntConstant, Value}
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.data.CUnsignedBigInt
@@ -40,9 +42,6 @@ object AuthoredUbiModToSigned {
 
   private def ubiv(b: java.math.BigInteger): Value[SUnsignedBigInt.type] =
     UnsignedBigIntConstant(CUnsignedBigInt(b))
-
-  private def ubis(s: String): Value[SUnsignedBigInt.type] =
-    UnsignedBigIntConstant(new java.math.BigInteger(s))
 
   /** Closed `a.mod(b)` tree — both operands constant; serialized at v6 via the
     * lenient (non-SigmaProp-root) encoder. Returns tree hex string. */
