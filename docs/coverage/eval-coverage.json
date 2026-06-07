@@ -273,6 +273,71 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Context.preHeader_accessors.json" : {
+      "accepts" : 7,
+      "entries" : 7,
+      "methods" : [
+        "101:3 Context.preHeader",
+        "105:1 PreHeader.version",
+        "105:2 PreHeader.parentId",
+        "105:3 PreHeader.timestamp",
+        "105:4 PreHeader.nBits",
+        "105:5 PreHeader.height",
+        "105:6 PreHeader.minerPk",
+        "105:7 PreHeader.votes"
+      ],
+      "op" : "Context.preHeader_accessors",
+      "ops" : [
+        "Context$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Context.properties.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:10 Context.minerPubKey",
+        "101:2 Context.headers",
+        "101:8 Context.selfBoxIndex",
+        "101:9 Context.LastBlockUtxoRootHash"
+      ],
+      "op" : "Context.properties",
+      "ops" : [
+        "Context$",
+        "LastBlockUtxoRootHash$",
+        "MethodCall",
+        "MinerPubkey$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/EQ_of_SigmaProp.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -4983,12 +5048,48 @@
       ],
       "name" : "AvlTree.contains"
     },
+    "101:1" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "name" : "Context.dataInputs"
+    },
+    "101:10" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "name" : "Context.minerPubKey"
+    },
     "101:12" : {
       "families" : [
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json"
       ],
       "name" : "Context.getVarFromInput"
+    },
+    "101:2" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "name" : "Context.headers"
+    },
+    "101:3" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "Context.preHeader"
+    },
+    "101:8" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "name" : "Context.selfBoxIndex"
+    },
+    "101:9" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "name" : "Context.LastBlockUtxoRootHash"
     },
     "104:1" : {
       "families" : [
@@ -5085,6 +5186,48 @@
         "v6/authored/Header.property_accessors.json"
       ],
       "name" : "Header.height"
+    },
+    "105:1" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.version"
+    },
+    "105:2" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.parentId"
+    },
+    "105:3" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.timestamp"
+    },
+    "105:4" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.nBits"
+    },
+    "105:5" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.height"
+    },
+    "105:6" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.minerPk"
+    },
+    "105:7" : {
+      "families" : [
+        "v5/authored/Context.preHeader_accessors.json"
+      ],
+      "name" : "PreHeader.votes"
     },
     "106:1" : {
       "families" : [
@@ -6026,6 +6169,8 @@
     },
     "Context$" : {
       "families" : [
+        "v5/authored/Context.preHeader_accessors.json",
+        "v5/authored/Context.properties.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json"
       ],
@@ -6605,6 +6750,14 @@
         "0x8f"
       ]
     },
+    "LastBlockUtxoRootHash$" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "op_codes" : [
+        "0xa6"
+      ]
+    },
     "LogicalNot" : {
       "families" : [
         "v5/spec/LogicalNot_equivalence.json",
@@ -6646,6 +6799,8 @@
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Context.preHeader_accessors.json",
+        "v5/authored/Context.properties.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.flatMap_equivalence.json",
@@ -6710,6 +6865,14 @@
       "op_codes" : [
         "0xdb",
         "0xdc"
+      ]
+    },
+    "MinerPubkey$" : {
+      "families" : [
+        "v5/authored/Context.properties.json"
+      ],
+      "op_codes" : [
+        "0xac"
       ]
     },
     "MultiplyGroup" : {
@@ -7252,11 +7415,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 1978,
-    "distinct_methods" : 110,
-    "distinct_ops" : 75,
-    "entries" : 2169,
-    "files" : 157,
+    "accepts" : 1990,
+    "distinct_methods" : 123,
+    "distinct_ops" : 77,
+    "entries" : 2181,
+    "files" : 159,
     "rejects" : 191,
     "unwalked" : 1
   }
