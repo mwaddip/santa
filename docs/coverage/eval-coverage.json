@@ -3147,6 +3147,34 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v6/authored/AvlTree.insertOrUpdate.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+        "100:16 AvlTree.insertOrUpdate"
+      ],
+      "op" : "AvlTree.insertOrUpdate",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Box.getReg_adversarial.json" : {
       "accepts" : 1,
       "entries" : 3,
@@ -5113,6 +5141,12 @@
       ],
       "name" : "AvlTree.updateDigest"
     },
+    "100:16" : {
+      "families" : [
+        "v6/authored/AvlTree.insertOrUpdate.json"
+      ],
+      "name" : "AvlTree.insertOrUpdate"
+    },
     "100:2" : {
       "families" : [
         "v5/spec/AvlTree_properties_equivalence.json"
@@ -6244,6 +6278,7 @@
         "v5/authored/AvlTree.update.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
@@ -6290,6 +6325,7 @@
         "v5/spec/Tuple_size_method_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
@@ -6970,6 +7006,7 @@
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Context.getVarFromInput.json",
@@ -7367,6 +7404,7 @@
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/spec/higher_order_lambdas.json"
       ],
       "op_codes" : [
@@ -7574,11 +7612,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2002,
-    "distinct_methods" : 128,
+    "accepts" : 2006,
+    "distinct_methods" : 129,
     "distinct_ops" : 77,
-    "entries" : 2195,
-    "files" : 163,
+    "entries" : 2199,
+    "files" : 164,
     "rejects" : 193,
     "unwalked" : 1
   }
