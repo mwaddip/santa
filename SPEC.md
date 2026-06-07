@@ -153,19 +153,18 @@ corpus at scale**, since grown by authored gap-fillers: **2,225 entries across 1
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs a **5-way** (Rudolph · Dasher · Blitzen
 develop & eni · Comet) over `runners/*/`. **Dasher (ergots) is fully green on the v5 spec corpus — 1,757 / 1,757** (the 52 healed AvlTree-typed entries initially surfaced a SANTA harness encode gap — the result-encode bridges lacked an AvlTree arm; Advanced_Box_test `x.R9[AvlTree].get` evaluates correctly in every conformer — fixed same-arc). **Blitzen** (`sigma-rust`) via the
-eni fork is green on everything the fork has converged on — eval + wire + transaction, value
-*and* cost (latest convergences @ eni `2dbac146`: the Box u64 signed-view ×6 now parses
-unbounded — JVM `getULong` mirror, signed view at eval — plus `Header.stateRoot`/`powOnetimePk`
-type-and-default surfaces and `AvlTree.insertOrUpdate#bad-proof` digest-inspect, the nine
-2026-06-07 context/accessor divergences resolved in one round; the SigmaProp EQ
-conjecture-mismatch throw arm ×2 converged @ `de6331cb`, mirroring the JVM's guarded
-comparer) — **leaving exactly 1 genuine red**:
-`CONTEXT.headers` (structural: a fixed `[Header; 10]` model cannot express the pinned empty
-headers — the JVM's `Coll[Header]` is variable-length, which also makes sigma-rust pad the
-genesis-window header set, a real but narrow consensus divergence; see
-`docs/findings/sigma-rust-fixed-header-window.md`). Upstream `develop` still misses 10 v5
-values the fork fixed, plus the v6 surface — the loop surfacing genuine cross-impl
-divergences, recorded, routed, and converging. The runner contract
+eni fork is **FULLY GREEN at `a4ee7442` (2026-06-07): red_total 0 across the whole canonical
+surface** — eval value *and* cost (all 2,225 entries), wire 213/213, transaction 4/4 valid +
+4/4 cost. The road there was the loop working as designed, divergences surfaced → routed →
+converged in rounds: the Box u64 signed-view ×6 (unbounded `getULong` mirror), the
+`Header.stateRoot`/`powOnetimePk` surfaces, `AvlTree.insertOrUpdate#bad-proof`, the SigmaProp
+EQ conjecture-throw comparer arm ×2 (@ `de6331cb`), the `CONTEXT.headers` structural model
+(fixed `[Header; 10]` → `BoundedVec<Header, 0, 10>` + a standalone `last_block_utxo_root` —
+the genesis-window finding, `docs/findings/sigma-rust-fixed-header-window.md`), and the
+AvlTree wrong-tree-proof per-method row (contains→false / update,remove→None / the #908
+insert version gate — which also exposed remove's op-results-ignored `cfor` semantics).
+Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
+the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
 The **wire tier is opened** — `santa-wire/v1` byte-round-trip vectors (`Box` + `SigmaBoolean`,
 JVM-canonicalized from ergots' `fixture-gen`) are blessed and schema-gated, and its first finding
