@@ -66,12 +66,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   on everything it has converged on (eval + wire + transaction, value *and* cost — every
   earlier routed divergence is fixed in the fork; the nine 2026-06-07 context/accessor
   divergences — Box u64 signed-view ×6, `Header.stateRoot`/`powOnetimePk`,
-  `AvlTree.insertOrUpdate#bad-proof` — all converged in one round @ `2dbac146`)
-  **leaving 3 genuine reds**: `CONTEXT.headers` (a `[Header; 10]` model can't express the
-  contract's empty-headers pin — a recorded model-fact, wontfix) and the SigmaProp EQ
-  conjecture-mismatch throw arm ×2 (JVM's guarded comparer throws where sigma-rust returns
-  `false` — a fork both independent ports carried; ergots fixed it in their F3,
-  sigma-rust's is freshly routed) — while plain upstream
+  `AvlTree.insertOrUpdate#bad-proof` — all converged in one round @ `2dbac146`; the
+  SigmaProp EQ conjecture-mismatch throw arm ×2 converged @ `de6331cb`)
+  **leaving exactly 1 genuine red**: `CONTEXT.headers` (a fixed `[Header; 10]` model can't
+  express the JVM's variable-length `Coll[Header]` — which also makes the rust node pad the
+  genesis-window header set; a real-but-narrow consensus divergence, see
+  `docs/findings/sigma-rust-fixed-header-window.md`) — while plain upstream
   `develop` misses the v5 values the fork already
   fixed, plus the v6 surface. A 🪨 is the suite doing its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))

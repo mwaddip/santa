@@ -157,12 +157,13 @@ eni fork is green on everything the fork has converged on — eval + wire + tran
 *and* cost (latest convergences @ eni `2dbac146`: the Box u64 signed-view ×6 now parses
 unbounded — JVM `getULong` mirror, signed view at eval — plus `Header.stateRoot`/`powOnetimePk`
 type-and-default surfaces and `AvlTree.insertOrUpdate#bad-proof` digest-inspect, the nine
-2026-06-07 context/accessor divergences resolved in one round) — **leaving 3 genuine reds**:
-`CONTEXT.headers` (structural: a `[Header; 10]` model cannot express the pinned empty
-headers — a recorded model-fact, wontfix) and the SigmaProp EQ conjecture-mismatch throw
-arm ×2 (JVM's guarded comparer throws on conjecture-left vs different-variant-right;
-sigma-rust returns `false` — the same fork ergots fixed in their F3, independently present
-in both sigma-rust branches, freshly routed). Upstream `develop` still misses 10 v5
+2026-06-07 context/accessor divergences resolved in one round; the SigmaProp EQ
+conjecture-mismatch throw arm ×2 converged @ `de6331cb`, mirroring the JVM's guarded
+comparer) — **leaving exactly 1 genuine red**:
+`CONTEXT.headers` (structural: a fixed `[Header; 10]` model cannot express the pinned empty
+headers — the JVM's `Coll[Header]` is variable-length, which also makes sigma-rust pad the
+genesis-window header set, a real but narrow consensus divergence; see
+`docs/findings/sigma-rust-fixed-header-window.md`). Upstream `develop` still misses 10 v5
 values the fork fixed, plus the v6 surface — the loop surfacing genuine cross-impl
 divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
