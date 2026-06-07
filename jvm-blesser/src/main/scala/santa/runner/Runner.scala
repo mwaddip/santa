@@ -8,9 +8,10 @@ import santa.{EvalCore, WireCanonicalize}
 
 /** JVM reference runner — Rudolph.
   *
-  * Consumes a `santa-eval` or `santa-wire` vector and emits, per entry, its ACTUAL —
-  * eval `{ value, cost, error }` or wire `{ bytes_hex, error }` — JSON keyed by entry
-  * `name`. Each entry is processed under the version the vector records.
+  * Consumes a `santa-eval`, `santa-wire`, or `santa-transaction` vector and emits, per
+  * entry, its ACTUAL — eval `{ value, cost, error }`, wire `{ bytes_hex, error }`, or tx
+  * `{ valid, cost, error }` — JSON keyed by entry `name`. Each entry is processed under
+  * the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
   *   - `santa-eval/v4` → EvalCore.evalWithSelfRegistersAndVar1 (SELF box registers + var 1 = index)
@@ -18,12 +19,39 @@ import santa.{EvalCore, WireCanonicalize}
   *   - `santa-eval/v2` → EvalCore.evalApplied (reads the entry's `input` binding)
   *   - `santa-eval/v1` → EvalCore.evalEntry   (closed tree, no input)
   *   - `santa-wire/v1` → WireCanonicalize.canonicalize (parse + reserialize, round-trip)
+  *   - `santa-transaction/v1` → TxEngine.txEntry (validateStateful) when this build
+  *     carries the gated tx engine (SANTA_TX_BLESSER=1 + a publishLocal'd ergo-core);
+  *     otherwise every tx entry is a faithful `not-implemented` (this build has no tx
+  *     engine — a capability fact, not an excuse).
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
   * With an output path it writes the actuals; without, it prints them to stdout.
   */
 object Runner {
+
+  /** Reflection seam to the gated [[santa.runner.TxEngine]] (compiled only under
+    * SANTA_TX_BLESSER — its sources import ergo-core, which ungated builds don't carry,
+    * so a static reference here would not compile). Absent ⇒ the not-implemented arm. */
+  private lazy val txEntryFn: Option[Json => (String, Json)] =
+    scala.util.Try {
+      val clazz  = Class.forName("santa.runner.TxEngine$")
+      val module = clazz.getField("MODULE$").get(null)
+      val m      = clazz.getMethod("txEntry", classOf[Json])
+      (e: Json) => m.invoke(module, e).asInstanceOf[(String, Json)]
+    }.toOption
+
+  /** Grade one transaction-tier entry — real verdicts via the gated engine, or the
+    * faithful `not-implemented` outcome on a build without it. */
+  def txEntry(e: Json): (String, Json) = txEntryFn match {
+    case Some(f) => f(e)
+    case None =>
+      val name = e.hcursor.get[String]("name").toOption.getOrElse("?")
+      name -> Json.obj(
+        "valid" -> Json.Null,
+        "cost"  -> Json.Null,
+        "error" -> Json.fromString("not-implemented"))
+  }
 
   /** Evaluate one vector entry and return the actuals JSON. */
   def evalEntry(schema: String, e: Json): (String, Json) = {
@@ -122,7 +150,9 @@ object Runner {
     val schema  = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
     val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
     val isWire  = schema.startsWith("santa-wire/")
-    val pairs   = entries.toVector.map(e => if (isWire) wireEntry(e) else evalEntry(schema, e))
+    val isTx    = schema.startsWith("santa-transaction/")
+    val pairs   = entries.toVector.map(e =>
+      if (isTx) txEntry(e) else if (isWire) wireEntry(e) else evalEntry(schema, e))
     val out     = Json.obj(pairs: _*).spaces2
     outPath match {
       case Some(p) =>

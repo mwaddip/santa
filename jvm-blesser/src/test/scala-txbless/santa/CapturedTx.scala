@@ -2,12 +2,12 @@ package santa
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CapturedTx — assemble + bless the 4 captured tx-tier seeds (docs/findings/) into
-// `santa-transaction/v1` vector envelopes, driving the JVM oracle TxValidate (which
+// `santa-transaction/v1` vector envelopes, driving the JVM oracle TxEngine (which
 // wraps ergo-core `ErgoTransaction.validateStateful`).
 //
 // One vector file per seed → target/tx-vectors/<slug>.json (Task 2.4 copies these into
 // vectors/transaction/v6/captured/). The tx / inputBoxes / dataInputBoxes JSON are the
-// node-API JSON objects read verbatim from the captured files — TxValidate decodes the
+// node-API JSON objects read verbatim from the captured files — TxEngine decodes the
 // SAME JSON via ApiCodecs (Decoder[ErgoTransaction] / Decoder[ErgoBox]), so the vector
 // payload and the oracle's input are identical by construction.
 //
@@ -28,7 +28,7 @@ package santa
 // `blockTxs` handles both.
 //
 // ── FAIL-LOUD-on-valid:false ────────────────────────────────────────────────────
-// Captured history is by definition valid (these txs are on-chain). If TxValidate returns
+// Captured history is by definition valid (these txs are on-chain). If TxEngine returns
 // valid==false for a captured seed, that is a capture/recipe bug (wrong box, wrong order,
 // wrong height/version) — never a legitimate vector. We sys.error, we do not emit it.
 // The tx_path_guard (tools/validate) independently enforces captured ⇒ valid:true.
@@ -137,7 +137,7 @@ object CapturedTx {
     val dataInputBoxes = boxIds(tx, "dataInputs").map(id => resolve("dataInput", id))
 
     // ── drive the oracle ─────────────────────────────────────────────────────────
-    val verdict = TxValidate.validate(tx, inputBoxes, dataInputBoxes, seed.height, Activated)
+    val verdict = santa.runner.TxEngine.validate(tx, inputBoxes, dataInputBoxes, seed.height, Activated)
     if (!verdict.valid)
       sys.error(s"CapturedTx[${seed.slug}]: oracle REJECTED a captured (on-chain) tx — this is a " +
         s"capture/recipe bug, not a vector. reason=${verdict.reason.getOrElse("<none>")}")

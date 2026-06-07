@@ -25,10 +25,33 @@ jobs:
         with:
           version: 2026.5.18
           install: false                 # no root config by design; each wrapper/santa-run does `mise install`
+      # ── ergo-core (tx-tier oracle dep) ──────────────────────────────────────────
+      # Not on Maven: publishLocal'd from the upstream node at the pinned tag — the same
+      # artifacts the local blesser uses (ergo-node-build is that tag, verified clean).
+      # Cached by tag; a hit skips the node build entirely. SANTA_TX_BLESSER=1 then
+      # compiles rudolph's transaction arm, giving the tx slice its control row in the
+      # canonical grid (an ergo-core-less build degrades to not-implemented instead).
+      - name: cache ergo-core publishLocal artifacts
+        id: ergo-core
+        uses: actions/cache@v4
+        with:
+          path: ~/.ivy2/local/org.ergoplatform
+          key: ergo-core-v6.0.2.1
+      - name: publish ergo-core @ v6.0.2.1
+        if: steps.ergo-core.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch v6.0.2.1 https://github.com/ergoplatform/ergo.git /tmp/ergo
+          mise trust runners/rudolph/mise.toml
+          mise --cd runners/rudolph install
+          cd /tmp/ergo
+          mise --cd "$GITHUB_WORKSPACE/runners/rudolph" exec -- \
+            sbt -batch avldb/publishLocal ergoWallet/publishLocal ergoCore/publishLocal
       - name: schema gate
         run: ./validate
       - name: conformance grid
         run: ./conform
+        env:
+          SANTA_TX_BLESSER: "1"
       - name: grid summary (the dynamic N-way)
         run: |
           jq -r '.runners

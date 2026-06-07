@@ -9,9 +9,12 @@
 ThisBuild / scalaVersion := "2.12.20"
 ThisBuild / organization := "io.santa"
 
-// Tx-tier blesser: ergo-core is NOT on Maven; publishLocal'd from ergo-node-build@v6.0.2.1.
-// Maintainer-only + path-gated — set SANTA_TX_BLESSER=1 to compile the tx blesser + bless.
-// Unset (incl. CI): the dep and the santa/txbless sources are excluded; eval/wire/rudolph build untouched.
+// Tx-tier engine: ergo-core is NOT on Maven; publishLocal'd from ergoplatform/ergo@v6.0.2.1
+// (locally from the ergo-node-build clone; in CI by the conform workflow's publish step).
+// SANTA_TX_BLESSER=1 compiles the tx engine (rudolph's transaction arm + the blesser).
+// Unset: the dep and both gated source dirs are excluded — eval/wire build untouched, and
+// rudolph's tx arm degrades to a faithful `not-implemented` (the Runner finds the engine
+// by reflection). The gate is a build-capability switch, not a maintainer-only fence.
 val txBlesserEnabled = sys.env.get("SANTA_TX_BLESSER").exists(v => v == "1" || v.equalsIgnoreCase("true"))
 
 lazy val jvmBlesser = (project in file("."))
@@ -19,7 +22,7 @@ lazy val jvmBlesser = (project in file("."))
     name := "santa-jvm-blesser",
     // Resolvers for ergo-core's transitive deps: the node pulls leveldbjni-all from a
     // GitLab Maven registry, and some deps live on Sonatype. Only needed when the tx
-    // blesser is enabled; excluded unconditionally so CI never resolves ergo-core.
+    // engine is enabled; excluded otherwise so ungated builds resolve nothing extra.
     resolvers ++= (if (txBlesserEnabled) Seq(
       "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/",
       "Repo for leveldbjni-all" at "https://gitlab.com/api/v4/projects/61211221/packages/maven"
@@ -53,15 +56,19 @@ lazy val jvmBlesser = (project in file("."))
       // shrinking the captured corpus. Pinned to sigma-state 6.0.3's own pprint.
       "com.lihaoyi"       %% "pprint"                  % "0.6.3"   % Test
     ),
-    // Tx-tier blesser: ergo-core (+ ergo-wallet for ErgoInterpreter; avldb transitively)
-    // publishLocal'd at 6.0.2.1 from ergo-node-build@v6.0.2.1 — NOT on Maven.
-    // Drives ErgoTransaction.validateStateful to bless captured tx vectors.
-    // Excluded when SANTA_TX_BLESSER is unset so CI never attempts to resolve ergo-core.
+    // Tx-tier engine: ergo-core (+ ergo-wallet for ErgoInterpreter; avldb transitively)
+    // publishLocal'd at 6.0.2.1 — NOT on Maven. Drives ErgoTransaction.validateStateful:
+    // main scope (the Runner's transaction arm, santa.runner.TxEngine) with the blesser
+    // riding the same gate in test scope. Excluded when SANTA_TX_BLESSER is unset so an
+    // ergo-core-less build still compiles everything else.
     libraryDependencies ++= (if (txBlesserEnabled) Seq(
-      "org.ergoplatform"  %% "ergo-core"               % "6.0.2.1" % Test,
-      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.2.1" % Test
+      "org.ergoplatform"  %% "ergo-core"               % "6.0.2.1",
+      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.2.1"
     ) else Seq.empty),
-    // The tx-blesser sources (which import ergo-core) only compile when enabled.
+    // The gated sources (which import ergo-core) only compile when enabled:
+    // main scala-tx = the runner engine; test scala-txbless = the captured-tx blesser.
+    Compile / unmanagedSourceDirectories ++= (if (txBlesserEnabled)
+      Seq((Compile / sourceDirectory).value / "scala-tx") else Seq.empty),
     Test / unmanagedSourceDirectories ++= (if (txBlesserEnabled)
       Seq((Test / sourceDirectory).value / "scala-txbless") else Seq.empty),
     // JDK 17 + Scala 2.12: pre-open java.base in case sigma's crypto path

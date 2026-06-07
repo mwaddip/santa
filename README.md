@@ -136,10 +136,13 @@ README.md          this file
 
 ## Re-blessing transaction vectors (maintainer only)
 
-The transaction blesser is env-gated and **never runs in CI** — committed vectors are
-the reproducible artifact. To re-bless (e.g. to add new seeds):
+The transaction *blesser* is env-gated and never runs in CI — committed vectors are the
+reproducible artifact. (The same gate also compiles rudolph's transaction **grading** arm:
+the conform CI publishes ergo-core itself and sets `SANTA_TX_BLESSER=1`, so the canonical
+grid carries the tx control row; a build without ergo-core degrades that arm to
+`not-implemented`.) To re-bless (e.g. to add new seeds):
 
-1. Clone [`ergo-node-build`](https://github.com/mwaddip/ergo-node-build) at tag `v6.0.2.1`.
+1. Clone [`ergoplatform/ergo`](https://github.com/ergoplatform/ergo) at tag `v6.0.2.1`.
 2. From that clone: `sbt "avldb/publishLocal" "ergoWallet/publishLocal" "ergoCore/publishLocal"` — publishes `ergo-core 6.0.2.1` to `~/.ivy2/local`.
 3. From `jvm-blesser/`: `SANTA_TX_BLESSER=1 sbt -batch "testOnly santa.CapturedTxTest"` — stages blessed JSON under `jvm-blesser/target/tx-vectors/`.
 4. Copy the staged files into `vectors/transaction/v6/captured/` and commit.

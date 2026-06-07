@@ -177,8 +177,10 @@ Two provenances, distinguished by the `source` prefix on each entry:
 
 **Re-blessing.** Producing actuals requires no oracle dependency (§3) — a runner needs only
 its own implementation. Re-producing the committed vectors requires the blesser:
-`SANTA_TX_BLESSER=1 sbt test` inside `jvm-blesser/` with a locally `publishLocal`'d
-ergo-core 6.0.2.1 (maintainer-only; not in CI). The README carries the full prerequisite.
+`SANTA_TX_BLESSER=1 sbt test` inside `jvm-blesser/` with a `publishLocal`'d ergo-core
+6.0.2.1 (locally from an `ergoplatform/ergo@v6.0.2.1` clone; the conform CI workflow
+publishes the same artifacts itself, cached by tag). The README carries the full
+prerequisite.
 
 **Never-panic invariant.** The runner wraps each entry; a would-be crash is caught and
 surfaces as `panicked` + `note`, and the run continues. An implementation crash is faithfully
@@ -188,7 +190,7 @@ recorded as coal, not silently swallowed.
 
 | Conformer | Stance | Detail |
 |---|---|---|
-| **rudolph** | out-of-scope (grey) | Does not declare `transaction` in `tiers` (`runner.json`). Oracle-tautological (its own `validateStateful` call would trivially always match) + would drag ergo-core into CI. |
+| **rudolph** | control (build-gated) | Declares `transaction`; the tx arm (`santa.runner.TxEngine`, reached by reflection) exists only in builds carrying ergo-core (`SANTA_TX_BLESSER=1` — local maintainer machines and the conform CI, which publishes ergo-core itself). As verification it is oracle-tautological; its value is the HARNESS CONTROL — the same role rudolph plays for eval — so the tx staging/grading pipeline has a row that must be green. A build without ergo-core emits a faithful `not-implemented` per entry (blue coverage cell): a capability fact about that build, not an excuse. |
 | **comet** | out-of-scope (grey) | Does not declare `transaction` in `tiers` (`runner.json`). Fleet is a tx-building/serialization SDK with no verifier: it cannot script-verify a signed input (its only adjacent surface is prover-side reduce+sign of *unsigned* txs, delegated to sigmastate-js — sigma's artifact, not Fleet code) and has no stateful aggregate. Not a growth ledger — validation is outside Fleet's design scope, so grey, not not-impl. |
 | **blitzen-eni** | full (`cost: true`) | sigma-rust @ ergo-node-integration (`jit-cost` feature). Produces `valid` + `cost`. Costed accept divergences are expected — this is the deliverable. |
 | **blitzen-develop** | value-only (`cost: false`) | sigma-rust @ upstream develop. Produces `valid` only; `cost: null` unconditionally. Each of the 4 current seeds is red with its upstream bug. |
@@ -219,7 +221,7 @@ Current 5-way result:
   - `powhit-return-type-28474`: `powHit` return-type / `SFunc` parse bug — sigma-rust fails to
     parse the ergotree's `SFunc` condition type.
 - **dasher**: 4/4 not-implemented (blue coverage cells; growth ledger).
-- **rudolph**: not in the tx slice (out-of-scope grey).
+- **rudolph**: `valid 4/4 · cost 4/4` — the control row (ergo-core-gated build; see §7).
 - **comet**: not in the tx slice (out-of-scope grey; wire-only — see §7).
 
 This block is easy to update as the corpus grows or runners evolve.
