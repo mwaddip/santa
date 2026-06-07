@@ -141,12 +141,15 @@ divergences were harness artifacts, not library findings); blessed values for
 - **Totality & never-panic.** Every input entry yields exactly one outcome — success,
   `errored`, `not-implemented`, or `panicked`. A runner never silently
   drops or omits an entry, and **no single entry may abort the file.** An entry that fails in
-  a *recognized* way (`errored`) is a normal outcome; any other failure the runner does **not**
-  classify — a malformed vector, an internal error, or the implementation's own codec/representation
-  failure on a value it cannot hold — is **caught and surfaced as `panicked`** (coal, message in
-  `note`), never propagated as a process-aborting error. `panicked` is therefore not presumed rare:
-  it is the faithful landing for any such throw. Surfacing it as a visible divergence beats both
-  silently absorbing it and aborting the whole run.
+  a *recognized* way (`errored`) is a normal outcome — and that includes the implementation
+  **refusing input material the oracle blessed**: a clean parse/`try_from` rejection of an
+  input constant (e.g. a box value outside the impl's type bounds) is the implementation's
+  own verdict, surfaced as `errored` and graded as the divergence it is, never softened into
+  a runner-failure class. Any other failure the runner does **not** classify — a malformed
+  vector, an internal error, an uncaught throw — is **caught and surfaced as `panicked`**
+  (coal, message in `note`), never propagated as a process-aborting error. `panicked` is
+  therefore not presumed rare: it is the faithful landing for any such throw. Surfacing it as
+  a visible divergence beats both silently absorbing it and aborting the whole run.
 - **Faithful outcomes — the runner never excuses the implementation.** A runner reports the
   implementation's *actual* behavior; it never authors a classification that softens a divergence on
   the implementation's behalf. An implementation's own failure — including failing to represent or
