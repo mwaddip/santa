@@ -389,6 +389,36 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Option.map.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "36:7 SOption.map"
+      ],
+      "op" : "Option.map",
+      "ops" : [
+        "+",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/atLeast_with_a_degenerate_bound.json" : {
       "accepts" : 7,
       "entries" : 7,
@@ -5505,6 +5535,12 @@
       ],
       "name" : "Byte.bitwiseOr"
     },
+    "36:7" : {
+      "families" : [
+        "v5/authored/Option.map.json"
+      ],
+      "name" : "SOption.map"
+    },
     "3:10" : {
       "families" : [
         "v6/spec/Short_6.0_methods.json"
@@ -5875,6 +5911,7 @@
     },
     "+" : {
       "families" : [
+        "v5/authored/Option.map.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_method_equivalence.json",
@@ -6236,6 +6273,7 @@
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
+        "v5/authored/Option.map.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Coll.exists_equivalence.json",
@@ -6468,6 +6506,7 @@
     },
     "FuncValue" : {
       "families" : [
+        "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -6643,6 +6682,7 @@
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp.json",
+        "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -6914,6 +6954,7 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
+        "v5/authored/Option.map.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.flatMap_equivalence.json",
@@ -7376,6 +7417,7 @@
     },
     "ValUse" : {
       "families" : [
+        "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -7532,11 +7574,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 1999,
-    "distinct_methods" : 127,
+    "accepts" : 2002,
+    "distinct_methods" : 128,
     "distinct_ops" : 77,
-    "entries" : 2192,
-    "files" : 162,
+    "entries" : 2195,
+    "files" : 163,
     "rejects" : 193,
     "unwalked" : 1
   }
