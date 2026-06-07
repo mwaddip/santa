@@ -7,10 +7,11 @@ import sigma.ast._
 
 /** Context property + CONTEXT.preHeader accessor vectors (v5/authored).
   *
-  * These are CLOSED trees evaluated over the CONTRACT dummy context — the context every
-  * runner constructs identically. Dummy context values:
-  *   - preHeader: version=0, parentId=empty Coll[Byte], timestamp=3L, nBits=0L,
-  *                height=0, minerPk=group generator, votes=empty Coll[Byte]
+  * These are CLOSED trees evaluated over the CONTRACT dummy context — the canonical
+  * eval context every runner constructs identically (runner-contract.md §2):
+  *   - preHeader: version=activated+1 (=3 at v5), parentId=32 zero bytes, timestamp=3L,
+  *                nBits=0L, height=0, minerPk=group generator, votes=3 zero bytes
+  *     (parentId/votes at chain wire widths so fixed-size models represent the pin)
   *   - selfBoxIndex=0, lastBlockUtxoRoot=AvlTreeData.dummy,
   *     minerPubKey=generator (33-byte SEC1), dataInputs=empty, headers=empty
   *
