@@ -176,6 +176,29 @@ divergences were harness artifacts, not library findings); blessed values for
   abstaining on a vector it *does* run.
 - **No oracle dependency.** Producing actuals requires only the vector plus the runner's
   own implementation — no JVM, no network, no access to the blesser.
+- **Build identity — declared dependency overrides.** A conformer-under-test is its
+  implementation *plus its resolved dependency graph*, not the library in the abstract. Where a
+  runner's build redirects a behavior-bearing dependency away from its published/upstream default
+  — a fork, a `git`/`path` dep, a `[patch.crates-io]` redirect — that override is part of the
+  runner's **declared identity** and MUST be visible, so a nice/coal cell names *what was actually
+  built* and stays reproducible. No new mechanism is needed: each runner dir is a self-contained
+  build and its manifest (`Cargo.toml`, `package.json`, …) already **is** the declaration — the
+  override surface is the manifest itself. Two runners over the same library but different override
+  sets are **distinct conformance subjects** and may legitimately grade differently on the same
+  vectors; the board surfaces each runner's active overrides (dependency · source · rev) so the
+  distinction is on the record. Absent any override, a runner builds against **published/upstream
+  defaults** — the bare-library subject, which surfaces the most divergence and is the sensible
+  default. An override is pinned and declared by *rev*, because a fork bundles whatever that rev
+  carries: *operational* changes (a fork needed to build or run at all, often consensus-inert at a
+  given tier — e.g. ergo-node-rust pins `ergo_avltree_rust` to a `git` fork rev for a DB-backed
+  AVL store via `VersionedAVLStorage::flush` + a persistence-capable Resolver, leaving in-memory
+  proof-verification semantics — and so eval grades — identical to upstream) **and** any
+  behavior-bearing changes riding the same rev (that same fork also carries a `contains`-resolution
+  fix). A behavior-bearing override is a real conformance fact **about that build**, never a way to
+  turn coal green: you declare the patch and let the cell reflect the patched subject — the same
+  ethos by which divergences are surfaced, not pinned. This invariant is **cross-tier** (it governs
+  every tier's runner); it bites hardest at the **block tier**, where the node conformer *is*
+  "sigma-rust + its persistence-fork dependency stack" and the cell must say so. Added 2026-06-07.
 
 ## 4. Canonical value encoding (`SValue`)
 
