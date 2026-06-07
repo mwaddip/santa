@@ -48,8 +48,8 @@ object AuthoredGlobalSomeNone {
     Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
   }
 
-  // INVESTIGATE NOTE: SGlobalMethods exposes someMethod/noneMethod ONLY within
-  // VersionContext.withVersions(3, 3). The VersionContext wrap covers method lookup +
+  // SGlobalMethods' method list is version-context-dependent; getMethodByName("some") throws
+  // outside withVersions(3,3). The VersionContext wrap covers method lookup +
   // tree construction + serialization to ensure the constants are encoded at v6.
 
   private lazy val (someIntTree, noneIntTree, someIsDefTree, noneIsDefTree) =
@@ -59,21 +59,21 @@ object AuthoredGlobalSomeNone {
 
       // Global.some[Int](5) → Option(5)
       val someInt: Value[SOption[SInt.type]] =
-        MethodCall(
+        MethodCall.typed[Value[SOption[SInt.type]]](
           Global,
           someMethod,
           IndexedSeq(IntConstant(5)),
           Map(STypeVar("T") -> SInt)
-        ).asInstanceOf[Value[SOption[SInt.type]]]
+        )
 
       // Global.none[Int]() → None — PropertyCall-shaped (no args), explicit T in type map
       val noneInt: Value[SOption[SInt.type]] =
-        MethodCall(
+        MethodCall.typed[Value[SOption[SInt.type]]](
           Global,
           noneMethod,
           IndexedSeq.empty,
           Map(STypeVar("T") -> SInt)
-        ).asInstanceOf[Value[SOption[SInt.type]]]
+        )
 
       // Global.some[Int](5).isDefined → true
       val someIsDef: Value[sigma.ast.SBoolean.type] =

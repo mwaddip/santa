@@ -141,13 +141,12 @@ class AuthoredGlobalSomeNoneTest extends munit.FunSuite {
   }
 
   // ── cost + tree pin anchors ────────────────────────────────────────────────
-  // Cost breakdown (JitCost):
-  //   some#int:       5 (some) + 4 (MethodCall dispatch) + 1 (IntConstant) + ? = 15
-  //   none#int:       5 (none) + 4 (MethodCall dispatch)                    + ? = 14
-  //   some#isDefined: above + 10 (OptionIsDefined) + 1 (dispatch overhead)  = 25
-  //   none#isDefined: above + 10 (OptionIsDefined) + 1 (dispatch overhead)  = 24
-  // The four trees differ by a byte (arg presence: IntConstant(5) vs no-arg,
-  // OptionIsDefined wrapper present vs absent). ΔcostIsDef = 10+0 per entry.
+  // Cost breakdown (verified vs sigma-state 6.0.3 sources):
+  //   some#int  = Global access JitCost(5) + MethodCall dispatch JitCost(4) + someMethod FixedCost JitCost(5) + ConstantPlaceholder JitCost(1) = 15
+  //   none#int  = 5 + 4 + 5 = 14 (no segregated constant — the Δ1 IS the ConstantPlaceholder)
+  //   isDefined arms add exactly OptionIsDefined FixedCost JitCost(10): 25 / 24
+  // The isDefined pairs differ from their some/none base by a single byte (0xe6 opCode prefix);
+  // some↔none pairs differ by ~5 bytes (the serialized constant section for IntConstant(5)).
   private val costAnchors: Map[String, Long] = Map(
     "some#int"       -> 15L,
     "none#int"       -> 14L,
