@@ -33,7 +33,7 @@ jobs:
       # canonical grid (an ergo-core-less build degrades to not-implemented instead).
       - name: cache ergo-core publishLocal artifacts
         id: ergo-core
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.ivy2/local/org.ergoplatform
           key: ergo-core-v6.0.2.1
