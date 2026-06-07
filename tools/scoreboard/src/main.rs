@@ -224,8 +224,10 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  details.coal-details {{ margin: .5rem 0; border: 1px solid #e5c9c9; border-radius: 4px; padding: .35rem .8rem; background: #fffafa; }}
  details.coal-details summary {{ cursor: pointer; }}
  details.coal-details h3.slice-h {{ font-family: ui-monospace, monospace; font-size: .85rem; margin: .6rem 0 .15rem; }}
- details.coal-details ul {{ margin: .15rem 0 .6rem; padding-left: 1.4rem; }}
- details.coal-details li {{ font-size: .85rem; }}
+ details.coal-details table.coal-table {{ border-collapse: collapse; margin: .25rem 0 .75rem; }}
+ details.coal-details table.coal-table th, details.coal-details table.coal-table td {{ border: 1px solid #e0caca; padding: .2rem .5rem; font-size: .82rem; text-align: left; vertical-align: top; }}
+ details.coal-details table.coal-table th {{ background: #f9eded; font-weight: 600; }}
+ details.coal-details table.coal-table code {{ word-break: break-all; }}
  details.coal-details .dim {{ color: #a33; }}
  details.coal-details .note {{ color: #666; }}
 </style></head><body>
@@ -253,13 +255,16 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
     )
 }
 
-/// Per-runner collapsible coal-detail lists, rendered below the matrix. One `<details>`
+/// Per-runner collapsible coal-detail tables, rendered below the matrix. One `<details>`
 /// per runner that carries ANY red entries — DEFAULT COLLAPSED (no `open` attribute):
 /// the totals stay the page, the instances are opt-in. Inside each block the instances
-/// are grouped by slice; a line is `op / entry [dim]` plus the note's first line when
-/// the runner recorded one (same brevity convention as the cell tooltips). The count in
-/// the summary equals the badge's red tally (not-implemented included — the details are
-/// the full red list, coverage/roadmap dims visibly labelled rather than filtered).
+/// are grouped by slice into a 4-column table: vector/entry (+dim; the entry's script —
+/// when conform recorded one — as the hover title) | expected | result | message (the
+/// note's first line, same brevity convention as the cell tooltips). The expected/got
+/// briefs are pre-rendered by conform at grading time; entries from an older
+/// results.json (without them) render empty cells. The count in the summary equals the
+/// badge's red tally (not-implemented included — the details are the full red list,
+/// coverage/roadmap dims visibly labelled rather than filtered).
 fn coal_details(results: &Value) -> String {
     let coal_icon = "\u{1faa8}"; // 🪨
     let runners = results.get("runners").and_then(|r| r.as_array()).cloned().unwrap_or_default();
@@ -275,23 +280,30 @@ fn coal_details(results: &Value) -> String {
             if red_arr.is_empty() {
                 continue;
             }
-            let mut lines = Vec::new();
+            let mut rows = Vec::new();
             for e in &red_arr {
-                let op = e.get("op").and_then(|v| v.as_str()).unwrap_or("?");
-                let entry = e.get("entry").and_then(|v| v.as_str()).unwrap_or("?");
-                let dim = e.get("dim").and_then(|v| v.as_str()).unwrap_or("?");
-                let mut line = format!(
-                    "<code>{} / {}</code> <span class=\"dim\">[{}]</span>",
-                    html_escape(op), html_escape(entry), html_escape(dim)
-                );
-                if let Some(note) = e.get("note").and_then(|v| v.as_str()) {
-                    let brief = note.lines().next().unwrap_or(note);
-                    line.push_str(&format!(" <span class=\"note\">\u{2014} {}</span>", html_escape(brief)));
-                }
-                lines.push(format!("<li>{line}</li>"));
+                let s = |f: &str| e.get(f).and_then(|v| v.as_str()).unwrap_or("");
+                let (op, entry, dim) = (s("op"), s("entry"), s("dim"));
+                let title = match e.get("script").and_then(|v| v.as_str()) {
+                    Some(sc) => format!(" title=\"{}\"", html_escape(sc)),
+                    None => String::new(),
+                };
+                let message = e.get("note").and_then(|v| v.as_str())
+                    .map(|n| n.lines().next().unwrap_or(n))
+                    .unwrap_or("");
+                rows.push(format!(
+                    "<tr><td{title}><code>{} / {}</code> <span class=\"dim\">[{}]</span></td>\
+<td><code>{}</code></td><td><code>{}</code></td><td class=\"note\">{}</td></tr>",
+                    html_escape(if op.is_empty() { "?" } else { op }),
+                    html_escape(if entry.is_empty() { "?" } else { entry }),
+                    html_escape(if dim.is_empty() { "?" } else { dim }),
+                    html_escape(s("expected")),
+                    html_escape(s("got")),
+                    html_escape(message)
+                ));
             }
             total += red_arr.len();
-            groups.push((sk.clone(), lines));
+            groups.push((sk.clone(), rows));
         }
         if total == 0 {
             continue; // fully-green (or out-of-scope) libraries get no block at all
@@ -301,11 +313,12 @@ fn coal_details(results: &Value) -> String {
             "<details class=\"coal-details\"><summary>{coal_icon} <b>{}</b>{control} \u{2014} {total} coal</summary>\n",
             html_escape(name)
         ));
-        for (sk, lines) in groups {
+        for (sk, rows) in groups {
             blocks.push_str(&format!(
-                "<h3 class=\"slice-h\">{}</h3>\n<ul>\n{}\n</ul>\n",
+                "<h3 class=\"slice-h\">{}</h3>\n<table class=\"coal-table\">\n\
+<tr><th>vector / entry</th><th>expected</th><th>result</th><th>message</th></tr>\n{}\n</table>\n",
                 html_escape(&sk),
-                lines.join("\n")
+                rows.join("\n")
             ));
         }
         blocks.push_str("</details>\n");
@@ -315,7 +328,8 @@ fn coal_details(results: &Value) -> String {
     }
     format!(
         "<h2>Coal details</h2>\n<p class=\"meta\">Every red instance behind the matrix counts, \
-grouped by library \u{2014} collapsed by default, click a library to expand.</p>\n{blocks}"
+grouped by library \u{2014} collapsed by default, click a library to expand. Hover a \
+vector name for its script.</p>\n{blocks}"
     )
 }
 
@@ -452,17 +466,29 @@ mod tests {
         assert!(!html.contains("<b>dasher</b> \u{2014}"), "green dasher must have no block");
         // DEFAULT COLLAPSED: plain <details>, never <details open>
         assert!(!html.contains("<details open"), "details must default collapsed");
-        // grouped by slice, instances carry op / entry [dim]
+        // grouped by slice, instances carry op / entry [dim] in the table's name column
         assert!(html.contains("<h3 class=\"slice-h\">eval/v6/authored</h3>"));
         assert!(html.contains("<code>x / a</code> <span class=\"dim\">[cost]</span>"));
         assert!(html.contains("<span class=\"dim\">[panicked]</span>"));
+        // the 4-column table shape
+        assert!(html.contains("<th>vector / entry</th><th>expected</th><th>result</th><th>message</th>"));
     }
 
     #[test]
-    fn coal_details_renders_note_first_line() {
+    fn coal_details_renders_columns_note_and_script_title() {
         let html = dashboard(&tx_fixture(), "test");
-        assert!(html.contains("<span class=\"note\">\u{2014} Verifier error: AtLeast bound</span>"),
-            "a red entry's note must render (first line) in the details list");
+        // note's first line lands in the message column
+        assert!(html.contains("<td class=\"note\">Verifier error: AtLeast bound</td>"),
+            "a red entry's note must render (first line) in the message column");
+        // expected/got briefs (conform-enriched) land in their columns
+        assert!(html.contains("<td><code>valid true</code></td><td><code>valid false @ cost null</code></td>"),
+            "expected/got briefs must render as columns");
+        // a recorded script becomes the name cell's hover title
+        assert!(html.contains("title=\"{ sigmaProp(...) }\""),
+            "the entry's script must render as the name cell title");
+        // entries without expected/got (older results.json) render empty cells, not a crash
+        assert!(html.contains("<td><code></code></td><td><code></code></td>"),
+            "absent briefs must render as empty cells");
         // dasher's all-not-impl tx reds still count + list (visibly labelled, not filtered)
         assert!(html.contains("<b>dasher</b> \u{2014} 4 coal"));
         assert!(html.contains("<span class=\"dim\">[not-implemented]</span>"));
@@ -540,7 +566,8 @@ mod tests {
                 "cost_graded": 0, "cost_nice": 0, "cost_coal": 0,
                 "not_impl": 0, "panicked": 0,
                 "red": [
-                  {"dim":"valid","entry":"atleast-degenerate-bound-184137","note":"Verifier error: AtLeast bound","op":"atleast-degenerate-bound-184137"},
+                  {"dim":"valid","entry":"atleast-degenerate-bound-184137","note":"Verifier error: AtLeast bound","op":"atleast-degenerate-bound-184137",
+                   "expected":"valid true","got":"valid false @ cost null","script":"{ sigmaProp(...) }"},
                   {"dim":"valid","entry":"bigint-downcast-2666","note":"Verifier error: cannot downcast BigInt","op":"bigint-downcast-2666"},
                   {"dim":"valid","entry":"deserialize-context-111927","note":"Verifier error: context extension var 0","op":"deserialize-context-111927"},
                   {"dim":"valid","entry":"powhit-return-type-28474","note":"Verifier error: invalid condition tpe","op":"powhit-return-type-28474"}

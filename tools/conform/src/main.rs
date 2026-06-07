@@ -285,6 +285,70 @@ impl Counts {
     }
 }
 
+/// Compact one-line rendering of a JSON value for red-entry detail cells, truncated
+/// (char-safe) with an ellipsis — value JSONs can be huge (Coll items, headers).
+fn brief(v: &Value, max: usize) -> String {
+    let s = match v {
+        Value::String(s) => s.clone(),
+        other => other.to_string(),
+    };
+    if s.chars().count() > max {
+        let mut out: String = s.chars().take(max).collect();
+        out.push('\u{2026}');
+        out
+    } else {
+        s
+    }
+}
+
+/// The expected side of one red entry, by tier: eval "value @ cost" (or the expected
+/// error tag), wire "roundtrip <bytes…>", tx "valid <v> @ cost <c>".
+fn expected_brief(e: &Value, is_wire: bool, is_tx: bool) -> String {
+    let exp = &e["expected"];
+    if is_wire {
+        format!("roundtrip {}", brief(&e["bytes_hex"], 48))
+    } else if is_tx {
+        format!("valid {} @ cost {}", exp["valid"], exp["cost"])
+    } else if let Some(err) = exp["error"].as_str() {
+        err.to_string()
+    } else {
+        format!("{} @ cost {}", brief(&exp["value"], 96), exp["cost"])
+    }
+}
+
+/// The actual side, by tier; an error outcome renders as its tag (the note travels
+/// separately), a missing actual loudly as such.
+fn got_brief(actual: &Value, is_wire: bool, is_tx: bool) -> String {
+    if actual.is_null() {
+        return "(no actual emitted)".to_string();
+    }
+    if let Some(err) = actual["error"].as_str() {
+        return err.to_string();
+    }
+    if is_wire {
+        brief(&actual["bytes_hex"], 48)
+    } else if is_tx {
+        format!("valid {} @ cost {}", actual["valid"], actual["cost"])
+    } else {
+        format!("{} @ cost {}", brief(&actual["value"], 96), actual["cost"])
+    }
+}
+
+/// One red-entry detail: op/entry/dim + the expected/got briefs (the scoreboard's
+/// coal-table columns) + optional note and the vector entry's script (description).
+fn red_detail(op: &str, name: &str, dim: &str, expected: String, got: String,
+              note: Option<Value>, script: Option<&str>) -> Value {
+    let mut d = json!({"op": op, "entry": name, "dim": dim,
+                       "expected": expected, "got": got});
+    if let Some(n) = note {
+        d["note"] = n;
+    }
+    if let Some(s) = script {
+        d["script"] = json!(s);
+    }
+    d
+}
+
 /// actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): counts + red}, slice keys
 /// ordered (BTreeMap), entries in vector order — matching conform.py's sorted iteration.
 fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> BTreeMap<(String, String, String), Counts> {
@@ -301,6 +365,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
+            let script = e["script"].as_str();
             let g = if is_wire {
                 grade_wire(&actual, e)
             } else if is_tx {
@@ -311,14 +376,16 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
             match g["kind"].as_str() {
                 Some("panicked") => {
                     c.panicked += 1;
-                    c.red.push(json!({"op": op, "entry": name, "dim": "panicked",
-                        "note": actual.get("note").cloned().unwrap_or(Value::Null)}));
+                    c.red.push(red_detail(&op, name, "panicked",
+                        expected_brief(e, is_wire, is_tx), "panicked".to_string(),
+                        Some(actual.get("note").cloned().unwrap_or(Value::Null)), script));
                 }
                 Some("coverage") => {
                     // not-implemented is the only coverage tag (unrepresentable was removed end-to-end).
                     let tag = g["tag"].as_str().unwrap();
                     c.not_impl += 1;
-                    c.red.push(json!({"op": op, "entry": name, "dim": tag}));
+                    c.red.push(red_detail(&op, name, tag,
+                        expected_brief(e, is_wire, is_tx), tag.to_string(), None, script));
                 }
                 Some("reject") => {
                     c.reject_total += 1;
@@ -326,7 +393,8 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         c.reject_nice += 1;
                     } else {
                         c.reject_coal += 1;
-                        c.red.push(json!({"op": op, "entry": name, "dim": "reject"}));
+                        c.red.push(red_detail(&op, name, "reject",
+                            "errored".to_string(), got_brief(&actual, is_wire, is_tx), None, script));
                     }
                 }
                 Some("roundtrip") => {
@@ -335,7 +403,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         c.roundtrip_nice += 1;
                     } else {
                         c.roundtrip_coal += 1;
-                        c.red.push(json!({"op": op, "entry": name, "dim": "roundtrip"}));
+                        c.red.push(red_detail(&op, name, "roundtrip",
+                            expected_brief(e, is_wire, is_tx), got_brief(&actual, is_wire, is_tx),
+                            None, script));
                     }
                 }
                 Some("transaction") => {
@@ -347,11 +417,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         c.tx_valid_coal += 1;
                         // Surface the actual's "reason" string as note when present (reject diagnostic).
                         let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
-                        let mut detail = json!({"op": op, "entry": name, "dim": "valid"});
-                        if let Some(n) = note {
-                            detail["note"] = n;
-                        }
-                        c.red.push(detail);
+                        c.red.push(red_detail(&op, name, "valid",
+                            format!("valid {}", e["expected"]["valid"]),
+                            got_brief(&actual, false, true), note, script));
                     }
                     if g["cost"] != "n/a" {
                         c.cost_graded += 1;
@@ -359,7 +427,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                             c.cost_nice += 1;
                         } else {
                             c.cost_coal += 1;
-                            c.red.push(json!({"op": op, "entry": name, "dim": "cost"}));
+                            c.red.push(red_detail(&op, name, "cost",
+                                format!("cost {}", e["expected"]["cost"]),
+                                format!("cost {}", actual["cost"]), None, script));
                         }
                     }
                 }
@@ -369,7 +439,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         c.value_nice += 1;
                     } else {
                         c.value_coal += 1;
-                        c.red.push(json!({"op": op, "entry": name, "dim": "value"}));
+                        c.red.push(red_detail(&op, name, "value",
+                            expected_brief(e, false, false), got_brief(&actual, false, false),
+                            None, script));
                     }
                     if g["cost"] != "n/a" {
                         c.cost_graded += 1;
@@ -377,7 +449,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                             c.cost_nice += 1;
                         } else {
                             c.cost_coal += 1;
-                            c.red.push(json!({"op": op, "entry": name, "dim": "cost"}));
+                            c.red.push(red_detail(&op, name, "cost",
+                                format!("cost {}", e["expected"]["cost"]),
+                                format!("cost {}", actual["cost"]), None, script));
                         }
                     }
                 }
