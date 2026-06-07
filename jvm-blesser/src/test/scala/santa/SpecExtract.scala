@@ -253,7 +253,15 @@ object SpecExtract {
     * wire-encodable at the target version would be unusable by every conformer; since
     * we control authored inputs, that is a fail-loud authoring bug, not a silent skip. */
   def authoredEntry(op: String, script: String, treeBytesHex: String, name: String,
-                    inputJson: Json, activated: Byte): Json = {
+                    inputJson: Json, activated: Byte): Json =
+    authoredEntryV(op, script, treeBytesHex, name, inputJson, activated, activated.toInt)
+
+  /** As [[authoredEntry]] but with an explicit `ergoTree` version (the tree-header
+    * version), for wire forms whose header differs from `activated` — e.g. a raw
+    * ErgoTree-v0 hand-crafted tree evaluated at activated 2. */
+  def authoredEntryV(op: String, script: String, treeBytesHex: String, name: String,
+                     inputJson: Json, activated: Byte, ergoTree: Int): Json = {
+    val etv = ergoTree
     val decoded =
       try EvalCore.decodeInputConstant(inputJson)
       catch { case t: Throwable =>
@@ -273,7 +281,7 @@ object SpecExtract {
       "tree_bytes_hex" -> Json.fromString(treeBytesHex),
       "input"          -> inputJson,
       "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
-                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+                                   "ergoTree"  -> Json.fromInt(etv)),
       "expected"       -> Json.obj("value" -> valueJson,
                                    "cost"  -> Json.fromLong(cost),
                                    "error" -> Json.Null))
@@ -283,7 +291,13 @@ object SpecExtract {
     * Same input gates, but REQUIRES SANTA's eval to FAIL (rejected for the right reason); a
     * success is a loud authoring bug. Emits the coarse reject shape (value/cost null, errored). */
   def authoredRejectEntry(op: String, script: String, treeBytesHex: String, name: String,
-                          inputJson: Json, activated: Byte): Json = {
+                          inputJson: Json, activated: Byte): Json =
+    authoredRejectEntryV(op, script, treeBytesHex, name, inputJson, activated, activated.toInt)
+
+  /** As [[authoredRejectEntry]] but with an explicit `ergoTree` version (see [[authoredEntryV]]). */
+  def authoredRejectEntryV(op: String, script: String, treeBytesHex: String, name: String,
+                           inputJson: Json, activated: Byte, ergoTree: Int): Json = {
+    val etv = ergoTree
     val decoded =
       try EvalCore.decodeInputConstant(inputJson)
       catch { case t: Throwable =>
@@ -303,7 +317,7 @@ object SpecExtract {
       "tree_bytes_hex" -> Json.fromString(treeBytesHex),
       "input"          -> inputJson,
       "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
-                                   "ergoTree"  -> Json.fromInt(activated.toInt)),
+                                   "ergoTree"  -> Json.fromInt(etv)),
       "expected"       -> Json.obj("value" -> Json.Null,
                                    "cost"  -> Json.Null,
                                    "error" -> Json.fromString("errored")))

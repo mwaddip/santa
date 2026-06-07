@@ -1,5 +1,31 @@
 {
   "families" : {
+    "v5/authored/ArithOp.numeric_kind_mismatch.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "ArithOp.numeric_kind_mismatch",
+      "ops" : [
+        "+",
+        "Const",
+        "Upcast"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.bad_proof_bytes.json" : {
       "accepts" : 3,
       "entries" : 5,
@@ -757,6 +783,31 @@
           "has_size" : true,
           "rejects" : 0,
           "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Tuple.non_pair_arity3.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "Tuple.non_pair_arity3",
+      "ops" : [
+        "Const",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
         }
       ],
       "unwalked" : 0,
@@ -6646,6 +6697,7 @@
     },
     "+" : {
       "families" : [
+        "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/Option.map.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -7007,6 +7059,8 @@
     },
     "Const" : {
       "families" : [
+        "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/Tuple.non_pair_arity3.json",
         "v6/spec/decode-point.json"
       ],
       "op_codes" : [
@@ -8196,6 +8250,7 @@
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
+        "v5/authored/Tuple.non_pair_arity3.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Int_methods_equivalence.json",
@@ -8214,6 +8269,7 @@
     },
     "Upcast" : {
       "families" : [
+        "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_method_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -8417,12 +8473,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2065,
+    "accepts" : 2066,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2282,
-    "files" : 187,
-    "rejects" : 217,
+    "entries" : 2284,
+    "files" : 189,
+    "rejects" : 218,
     "unwalked" : 1
   }
 }

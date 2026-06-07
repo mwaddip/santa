@@ -91,6 +91,8 @@ envelope cost relative to sigma-state 6.0.3. Recorded here as a success story.
 - sigma-rust: **rejects** → `bin-op-kind-mismatch`.
 - sigma-rust is *stricter*; the JVM silently coerces the Int/Long mismatch. (Decode the
   tree to confirm the exact operands before filing — the `3` result is worth understanding.)
+- **RESOLVED** — sigma-rust `99a6cfeb` (2026-05-31) now coerces mismatched-numeric operands to
+  the wider type, matching the JVM. Verified in the eni HEAD ancestry 2026-06-07.
 
 **`tuple` / `tuple_triple_bool_byte_short`** — tree `0086030101020703a413`
 (decoded by the JVM as `Tuple(TrueLeaf, ConstantNode(7, SByte), ConstantNode(1234, SShort))`)
@@ -100,6 +102,8 @@ envelope cost relative to sigma-state 6.0.3. Recorded here as a success story.
 - Structural: sigma-rust supports flat N-ary tuples; sigma-state represents tuples as
   nested pairs and rejects a flat arity-3 `Tuple` node. (Highest-confidence divergence —
   the JVM rejection is explicit.)
+- **RESOLVED** — sigma-rust `45b901a0` (2026-05-31) now rejects non-pair tuples at eval to match
+  sigma-state. Verified in the eni HEAD ancestry 2026-06-07.
 
 ## Status
 - **Cost divergences** (`and_empty`, `coll_bool_constants_3`, `calc_blake2b256_empty`):
@@ -107,4 +111,14 @@ envelope cost relative to sigma-state 6.0.3. Recorded here as a success story.
 - **SigmaProp equality cost** (`EQ of SigmaProp`, authored 2026-06-03): **OPEN** — both ergots and
   sigma-rust undercharge flat-53 vs the JVM's structural 224/740/398; sigma-rust fix forthcoming. See above.
 - **Behavioral divergences** (`plus_kind_mismatch_int_long`, `tuple_triple_bool_byte_short`):
-  **OPEN** — not yet filed as sigma-rust PRs. Revisit once the eval tier stabilizes further.
+  **RESOLVED** — both fixed in sigma-rust on 2026-05-31 (ancestors of the eni HEAD):
+  `plus_kind_mismatch_int_long` via `99a6cfeb` ("coerce mismatched-numeric arithmetic operands
+  to the wider type" — `bin_op.rs`/`upcast.rs`); `tuple_triple_bool_byte_short` via `45b901a0`
+  ("reject non-pair tuples at eval to match sigma-state consensus"). Verified 2026-06-07 against
+  the eni tip. **Now pinned as regression vectors** (2026-06-07):
+  `vectors/eval/v5/authored/ArithOp.numeric_kind_mismatch.json` (→ `Long 3`, cost 35) and
+  `Tuple.non_pair_arity3.json` (→ errored), `{activated 2, ergoTree 0}`. Grading on commit:
+  **eni green** (fix confirmed + guarded); **develop red on both** (PR lag — recovers on merge);
+  **dasher (ergots) red on `Tuple.non_pair_arity3`** — a NEW divergence: ergots also accepts a
+  flat arity-3 tuple where the JVM rejects (over-accept), to route. ergots coerces mismatched
+  arith correctly (green on the arith pin).
