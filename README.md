@@ -43,11 +43,11 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,143 entries across 155 vector files**: 2,026 produced by
+- ✅ **A blessed eval corpus — 2,199 entries across 164 vector files**: 2,026 produced by
   the JVM reference interpreter (`sigma-state`) from its own language specification, plus
-  117 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,798 entries — the cumulative v5/mainnet method surface)
-  and **v6** (345 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
+  173 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
+  (1,822 entries — the cumulative v5/mainnet method surface)
+  and **v6** (377 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
@@ -62,14 +62,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   the v5 spec corpus (1,757 / 1,757)** — the 52 healed AvlTree-typed entries initially
   surfaced a SANTA harness encode gap (the result-encode bridges lacked an AvlTree arm;
   `x.R9[AvlTree].get` evaluates correctly in every conformer), fixed same-arc.
-  Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is
-  **fully green suite-wide**: eval + wire + transaction, value *and* cost. Every
-  divergence the suite surfaced is fixed in the fork — latest the deserialize-bearing
-  pair blessed at production substituted-constant cost per the contract rule (eni's eval
-  harness charged the lazy form; routed and fixed fork-side the same day), after the
-  `Box.getReg` method-id and HOF FunDef/currying findings — while plain upstream `develop`
-  misses 10 v5 values the fork already fixed, plus the v6 surface. A 🪨 is the suite doing
-  its job, never silenced.
+  Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is green
+  on everything it has converged on (eval + wire + transaction, value *and* cost — every
+  earlier routed divergence is fixed in the fork) **except the 10 genuine divergences the
+  2026-06-07 context/accessor batch surfaced**, all routed: the Box u64 signed-view ×6
+  (JVM surfaces signed Longs via unbounded `getULong`; sigma-rust rejects at `try_from`
+  hydration), `CONTEXT.headers` (a `[Header; 10]` model can't express the contract's
+  empty-headers pin), `Header.stateRoot`/`powOnetimePk` type-and-default surfaces, and
+  `AvlTree.insertOrUpdate#bad-proof` (JVM → None; sigma-rust errors at verifier
+  construction) — while plain upstream `develop` misses 10 v5 values the fork already
+  fixed, plus the v6 surface. A 🪨 is the suite doing its job, never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
   **total**: it emits one faithful outcome for *every* entry — value + cost on success,
