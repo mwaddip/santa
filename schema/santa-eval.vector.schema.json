@@ -228,7 +228,10 @@
         {
           "properties": {
             "kind": { "const": "Int" },
-            "value": { "type": "integer", "minimum": -2147483648, "maximum": 2147483647 }
+            "value": {
+              "$comment": "Range deliberately NOT bounded to int32. svalue is shared by the vector (expected) and actuals schemas; ACTUALS must be able to faithfully record an out-of-canonical-range divergence (e.g. a runner whose `>>> 0` yields a u32 like 2147483649 where the JVM wraps to a negative int32) so it grades as a value-coal rather than failing schema validation — runner-contract.md §3 'faithful outcomes / make the harness total'. EXPECTED stays canonical int32 by blesser construction (Scala Int; re-verified by EvalConformanceTest). The Int-as-number / Long-as-string asymmetry (§4) is unchanged — Int is still a bare JSON number.",
+              "type": "integer"
+            }
           },
           "required": ["kind", "value"],
           "additionalProperties": false

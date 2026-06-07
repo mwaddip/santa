@@ -235,6 +235,15 @@ number** and **Long values as strings**.
 appear in a committed vector** — the blesser refuses to bake an un-modeled kind (it
 skips-and-reports instead), so a runner never needs to encode one.
 
+**Canonical vs faithful range.** The numeric bounds above (Byte −128..127, Int 32-bit, …)
+describe the **canonical** encoding — what a *correct* value looks like, and what a committed
+`expected` always is (blesser-guaranteed). An **actual** may legitimately fall outside the
+canonical range when that *is* the divergence: e.g. a runner whose `>>> 0` yields a u32
+`2147483649` where the JVM wraps to a negative int32. Per §3 (faithful outcomes), the harness
+must be able to **represent** that, so the actuals schema does not bound `Int` to int32 — the
+divergence records and grades as a value-coal rather than failing schema validation. Expected
+stays strictly canonical.
+
 ### SType tags (the type side, used in `elem`)
 `{"tag":"SBoolean"}`, `SByte`, `SShort`, `SInt`, `SLong`, `SBigInt`, `SUnsignedBigInt`,
 `SGroupElement`, `SSigmaProp`, `SBox`, `SHeader`, `SPreHeader`, `SAvlTree`, `SUnit`, `SAny`; and the
