@@ -414,6 +414,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json" : {
+      "accepts" : 2,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "EQ of nested SigmaProp conjecture mismatch",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "EQ",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Option.map.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -6301,6 +6328,7 @@
         "v5/authored/AvlTree.insert.json",
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
+        "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
@@ -6334,6 +6362,7 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
+        "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/Option.map.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/spec/BinXor_logical_XOR_test.json",
@@ -6440,6 +6469,7 @@
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
+        "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
@@ -7426,6 +7456,7 @@
       "families" : [
         "v5/authored/AvlTree.insert.json",
         "v5/authored/AvlTree.update.json",
+        "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Int_methods_equivalence.json",
@@ -7639,12 +7670,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2008,
+    "accepts" : 2010,
     "distinct_methods" : 129,
     "distinct_ops" : 77,
-    "entries" : 2203,
-    "files" : 165,
-    "rejects" : 195,
+    "entries" : 2207,
+    "files" : 166,
+    "rejects" : 197,
     "unwalked" : 1
   }
 }

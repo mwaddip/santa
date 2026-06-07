@@ -12,8 +12,9 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
 
   test("EQ of SigmaProp authored; each entry well-formed (== ⇒ Boolean true, cost > 0)") {
     assertEquals(vectors.keySet,
-      Set(AuthoredSigmaPropEq.Op, AuthoredSigmaPropEq.OpUnequal, AuthoredSigmaPropEq.OpConjecture),
-      "extract() must emit exactly the three EQ ops")
+      Set(AuthoredSigmaPropEq.Op, AuthoredSigmaPropEq.OpUnequal, AuthoredSigmaPropEq.OpConjecture,
+          AuthoredSigmaPropEq.OpNested),
+      "extract() must emit exactly the four EQ ops")
     val env = vectors("EQ of SigmaProp").hcursor
     assertEquals(env.get[String]("schema").toOption, Some("santa-eval/v2"))
     assertEquals(env.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.3"))
@@ -68,6 +69,8 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
       "staging vector EQ_of_SigmaProp_unequal.json was not written")
     assert(java.nio.file.Files.exists(outDir.resolve("EQ_of_SigmaProp_conjecture_mismatch.json")),
       "staging vector EQ_of_SigmaProp_conjecture_mismatch.json was not written")
+    assert(java.nio.file.Files.exists(outDir.resolve("EQ_of_nested_SigmaProp_conjecture_mismatch.json")),
+      "staging vector EQ_of_nested_SigmaProp_conjecture_mismatch.json was not written")
   }
 
   // ── regression baseline: exact blessed costs + tree + the String-eq verdict, locked after
@@ -162,6 +165,30 @@ class AuthoredSigmaPropEqTest extends munit.FunSuite {
       val c = byName(name).downField("expected")
       assertEquals(c.downField("value").get[Boolean]("value").toOption, Some(false), s"$name is false")
       assertEquals(c.get[Long]("cost").toOption, Some(4L), s"$name cost drifted")
+      assert(c.downField("error").focus.exists(_.isNull), s"$name must not error")
+    }
+  }
+
+  // ── nested op: the conjecture asymmetry descending through Coll/Tuple (sigma-rust's
+  //    develop-only gap). Conjecture-left-nested THROWS (the descent reaches
+  //    equalSigmaBoolean's guard fall-through); leaf-left-nested returns false. The throw
+  //    entries are the regression pin for a port whose container compare doesn't descend.
+  test("nested op: 2 container throws (errored) + 2 leaf-left-nested falses") {
+    val entries = vectors(AuthoredSigmaPropEq.OpNested).hcursor
+      .downField("entries").as[List[io.circe.Json]].fold(e => fail(s"entries: $e"), identity)
+    assertEquals(entries.flatMap(_.hcursor.get[String]("name").toOption),
+      List("coll-cand-vs-dlog#0", "coll-dlog-vs-cand#1", "tuple-cand-vs-dlog#2", "tuple-dlog-vs-cand#3"))
+    val byName = entries.map(e => e.hcursor.get[String]("name").toOption.get -> e.hcursor).toMap
+
+    Seq("coll-cand-vs-dlog#0", "tuple-cand-vs-dlog#2").foreach { name =>
+      val c = byName(name).downField("expected")
+      assertEquals(c.get[String]("error").toOption, Some("errored"), s"$name must throw")
+      assert(c.downField("value").focus.exists(_.isNull), s"$name value must be null")
+    }
+    Seq("coll-dlog-vs-cand#1", "tuple-dlog-vs-cand#3").foreach { name =>
+      val c = byName(name).downField("expected")
+      assertEquals(c.downField("value").get[Boolean]("value").toOption, Some(false), s"$name is false")
+      assert(c.get[Long]("cost").toOption.exists(_ > 0), s"$name cost must be positive")
       assert(c.downField("error").focus.exists(_.isNull), s"$name must not error")
     }
   }

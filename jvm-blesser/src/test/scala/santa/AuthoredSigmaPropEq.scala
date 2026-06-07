@@ -29,7 +29,7 @@ import scorex.util.encode.Base16
 import io.circe.Json
 
 import sigma.VersionContext
-import sigma.ast.{EQ, ErgoTree, GetVar, OptionGet, SOption, SSigmaProp, SString, SType, SigmaPropConstant}
+import sigma.ast.{ConcreteCollection, EQ, ErgoTree, GetVar, OptionGet, SOption, SSigmaProp, SString, SType, SigmaPropConstant, TrueLeaf, Tuple, Value}
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.{CryptoConstants, EcPointType}
 import sigma.data.{CAND, CSigmaProp, CTHRESHOLD, ProveDHTuple, ProveDlog, SigmaBoolean, TrivialProp}
@@ -45,6 +45,7 @@ object AuthoredSigmaPropEq {
   val Op           = "EQ of SigmaProp"
   val OpUnequal    = "EQ of SigmaProp unequal"
   val OpConjecture = "EQ of SigmaProp conjecture mismatch"
+  val OpNested     = "EQ of nested SigmaProp conjecture mismatch"
 
   /** `getVar[T](1).get == getVar[T](1).get`, serialized at v5. The input is bound to context
     * var 1 by EvalCore.evalApplied; reading it (twice, as two independent context reads) and
@@ -143,6 +144,58 @@ object AuthoredSigmaPropEq {
     }
   }
 
+  /** Closed `EQ` over a one-element `Coll[SigmaProp]` at v5 — the nested-descent family.
+    * `DataValueComparer.equalDataValues`'s Coll arm (case 2) has no SigmaProp `EQ_COA`
+    * descriptor, so it falls to the generic `equalColls` loop → element-wise
+    * `equalDataValues` → the SigmaProp arm → `equalSigmaBoolean`. The direct family's
+    * argument-order asymmetry therefore reappears one level down: a conjecture-LEFT element
+    * throws, a leaf-LEFT element returns false. */
+  private def collTree(a: SigmaBoolean, b: SigmaBoolean): String =
+    VersionContext.withVersions(V2, V2) {
+      def mkColl(sb: SigmaBoolean): Value[SType] =
+        ConcreteCollection(IndexedSeq(SigmaPropConstant(CSigmaProp(sb))), SSigmaProp).asInstanceOf[Value[SType]]
+      val root: Value[SType] = EQ(mkColl(a), mkColl(b))
+      val header: HeaderType = ErgoTree.setSizeBit(ErgoTree.headerWithVersion(ZeroHeader, V2))
+      Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    }
+
+  /** Closed `EQ` over a `(SigmaProp, Boolean)` Tuple at v5 — the Tuple-descent twin.
+    * `equalDataValues`'s Tuple arm (case 3) recurses component-wise via `equalDataValues`,
+    * so the SigmaProp component reaches `equalSigmaBoolean` with the same asymmetry. */
+  private def tupleTree(a: SigmaBoolean, b: SigmaBoolean): String =
+    VersionContext.withVersions(V2, V2) {
+      def mkTup(sb: SigmaBoolean): Value[SType] =
+        Tuple(IndexedSeq[Value[SType]](SigmaPropConstant(CSigmaProp(sb)).asInstanceOf[Value[SType]], TrueLeaf))
+          .asInstanceOf[Value[SType]]
+      val root: Value[SType] = EQ(mkTup(a), mkTup(b))
+      val header: HeaderType = ErgoTree.setSizeBit(ErgoTree.headerWithVersion(ZeroHeader, V2))
+      Base16.encode(sigma.santa.LenientErgoTree.serialize(header, root))
+    }
+
+  /** Four nested-container entries pinning the conjecture-mismatch descent through `Coll`
+    * and `Tuple` (sigma-rust's develop-only-gap flag: their direct EQ fix doesn't descend
+    * into containers, where SigmaProps still compare via derive-PartialEq → `false` instead
+    * of throwing). Conjecture-left-nested THROWS (reject), leaf-left-nested returns false
+    * (accept) — the direct family's asymmetry, one level down. Spike-verified on the oracle:
+    * the colls/tuples are single-element + same-length so the comparer reaches the element
+    * compare (no length short-circuit). Expected board effect: green on eni (its Coll/Tuple
+    * recursion already throws) · red on develop (the descent gap). Option descends identically
+    * (`equalDataValues(opt.get, …)`, case 7) but isn't cleanly constructible as a constant —
+    * omitted, same class. */
+  private def nestedConjectureEntries: Seq[Json] = {
+    val dlogA  = ProveDlog(gen)
+    val candAB = CAND(Seq(dlogA, ProveDlog(gen2)))
+    val specs = Seq(
+      ("coll-cand-vs-dlog#0",  collTree(candAB, dlogA),  true,  "{ Coll[SigmaProp](pkA && pkB) == Coll[SigmaProp](pkA) }"),
+      ("coll-dlog-vs-cand#1",  collTree(dlogA, candAB),  false, "{ Coll[SigmaProp](pkA) == Coll[SigmaProp](pkA && pkB) }"),
+      ("tuple-cand-vs-dlog#2", tupleTree(candAB, dlogA), true,  "{ (pkA && pkB, true) == (pkA, true) }"),
+      ("tuple-dlog-vs-cand#3", tupleTree(dlogA, candAB), false, "{ (pkA, true) == (pkA && pkB, true) }"))
+    specs.map { case (name, hex, isReject, script) =>
+      if (isReject) SpecExtract.authoredRejectEntry(OpNested, script, hex, name, dummyInput, V2)
+      else          SpecExtract.authoredEntry(OpNested, script, hex, name, dummyInput, V2)
+    }
+  }
+
   /** op -> v2 envelope: one `==` tree, one entry per SigmaProp shape. */
   def extract(): Map[String, Json] = {
     val (script, treeHex) = eqSelfTree("SigmaProp", SSigmaProp)
@@ -156,7 +209,8 @@ object AuthoredSigmaPropEq {
     Map(
       Op           -> SpecExtract.authoredEnvelope(Op, entries, Source),
       OpUnequal    -> SpecExtract.authoredEnvelope(OpUnequal, unequalEntries, Source),
-      OpConjecture -> SpecExtract.authoredEnvelope(OpConjecture, conjectureEntries, Source))
+      OpConjecture -> SpecExtract.authoredEnvelope(OpConjecture, conjectureEntries, Source),
+      OpNested     -> SpecExtract.authoredEnvelope(OpNested, nestedConjectureEntries, Source))
   }
 
   /** String-equality reachability probe (the prompt's secondary ask). SString has a
