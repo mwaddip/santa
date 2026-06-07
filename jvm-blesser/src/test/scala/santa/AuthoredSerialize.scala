@@ -28,12 +28,13 @@ import io.circe.Json
 
 import org.ergoplatform.ErgoBox
 
-import sigma.{AvlTreeRType, BigIntRType, BoxRType, Colls, GroupElementRType, HeaderRType, IntType,
-  SigmaPropRType, UnsignedBigIntRType, VersionContext, collRType}
-import sigma.ast.{ErgoTree, IntConstant}
+import sigma.{AnyType, AvlTreeRType, BigIntRType, BoxRType, Colls, GroupElementRType, HeaderRType,
+  IntType, SigmaPropRType, UnsignedBigIntRType, VersionContext, collRType}
+import sigma.ast.{Constant, ErgoTree, EvaluatedValue, IntConstant, SByte, SInt, SType, STuple, Tuple}
 import sigma.ast.ErgoTree.{HeaderType, ZeroHeader}
 import sigma.crypto.{CryptoConstants, EcPointType}
-import sigma.data.{AvlTreeData, AvlTreeFlags, ProveDlog, RType, SigmaBoolean}
+import sigma.data.{AvlTreeData, AvlTreeFlags, CAND, COR, CTHRESHOLD, Digest32Coll, ProveDlog, RType,
+  SigmaBoolean}
 import sigma.serialization.{GroupElementSerializer, SigmaSerializer}
 
 import sigma.LanguageSpecificationV6
@@ -137,6 +138,62 @@ object AuthoredSerialize {
   /** serialize[Box] input for a box carrying `regJson` in R4. */
   private def r4Box(regJson: Json): Json = boxJson(boxWithR4Hex(regJson))
 
+  // ── serialize-cost batch (pins for sigma-rust's 13 bare-writer-site fix) ───────
+  // Each family isolates one now-charged write event: the >4-arity generic-tuple
+  // type count byte · SigmaBoolean conjunction child/k u16 counts · token id+amount
+  // · the legacy EXPR-form (ValueSerializer) tuple register vs its constant twin.
+
+  private def minBox: ErgoBox =
+    ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(MinBoxHex).get))
+
+  /** Generic constant builder (the EvalCore.mkConstant idiom — the cast must happen
+    * under a fixed `S` for the path-dependent `WrappedType` to unify). */
+  private def mkConst[S <: SType](value: Any, tpe: S): Constant[S] =
+    Constant(value.asInstanceOf[S#WrappedType], tpe)
+
+  /** Minimal box with R4 = `reg` (constant- or expr-form EvaluatedValue). */
+  private def regBoxHex(reg: EvaluatedValue[_ <: SType]): String = {
+    val b = minBox
+    val regs: ErgoBox.AdditionalRegisters = Map(ErgoBox.R4 -> reg)
+    Base16.encode(ErgoBox.sigmaSerializer.toBytes(new ErgoBox(b.value, b.ergoTree,
+      b.additionalTokens, regs, b.transactionId, b.index, b.creationHeight)))
+  }
+
+  /** Box whose R4 holds an N-tuple-of-SByte CONSTANT (constant-form register).
+    * Arity ≤4 rides dedicated tuple type codes; ≥5 takes the generic tuple type
+    * code + count byte — the arity boundary the 4-vs-5 pair pins (site 1). */
+  private def byteTupleBoxHex(arity: Int): String = {
+    val items = Colls.fromArray(Array.tabulate[Any](arity)(i => (i + 1).toByte))(AnyType)
+    val tpe   = STuple(IndexedSeq.fill(arity)(SByte: SType))
+    regBoxHex(mkConst(items, tpe))
+  }
+
+  /** Box carrying n distinct tokens (id = 32×(7+i) bytes, amount 42+i); otherwise
+    * the minimal box, so the lone delta is the token id + amount writes. */
+  private def tokenBoxHex(n: Int): String = {
+    val b = minBox
+    val tokens = Colls.fromArray(Array.tabulate(n)(i =>
+      (Digest32Coll @@ Colls.fromArray(Array.fill(32)((7 + i).toByte)), 42L + i)))
+    Base16.encode(ErgoBox.sigmaSerializer.toBytes(new ErgoBox(b.value, b.ergoTree,
+      tokens, Map.empty, b.transactionId, b.index, b.creationHeight)))
+  }
+
+  /** The legacy-register pair: R4 = the SAME (1, 2) Int pair, once as the EXPR-form
+    * `Tuple` node (ValueSerializer opcode + count byte — `EvaluatedValue` exactly so
+    * it "can be in a register", values.scala:779) and once as the constant twin. */
+  private def pairRegBoxHex(exprForm: Boolean): String =
+    regBoxHex(
+      if (exprForm) Tuple(Vector(IntConstant(1), IntConstant(2)))
+      else mkConst((1, 2), STuple(SInt, SInt)))
+
+  // Conjunctions over DISTINCT dlogs (g, g²): CAND/COR write a child-count u16,
+  // CTHRESHOLD writes k + count u16s — the +3-each sites.
+  private val gen2: EcPointType =
+    CryptoConstants.dlogGroup.exponentiate(gen, java.math.BigInteger.valueOf(2))
+  private def sbJson(sb: SigmaBoolean): Json =
+    Json.obj("kind" -> Json.fromString("SigmaProp"),
+             "raw_hex" -> Json.fromString(Base16.encode(SigmaBoolean.serializer.toBytes(sb))))
+
   // The corpus's v6 header fixture (Header_new_methods) — a structurally-complete header.
   // serialize is version-agnostic in its put sequence (HeaderWithoutPowSerializer writes the
   // same fields for v2 and v3; only the version byte value differs), so this fully exercises
@@ -204,7 +261,22 @@ object AuthoredSerialize {
             "Some(2^200)" -> optionJson(bigIntJson(twoPow200)))),
       target(tap, "Global.serialize[(Box, Int)]", RType.pairRType(BoxRType, IntType),
         Seq("(minimal,0)" -> tupleJson(boxJson(MinBoxHex), intJson(0)),
-            "(withR4,42)"  -> tupleJson(boxJson(RichBoxHex), intJson(42))))
+            "(withR4,42)"  -> tupleJson(boxJson(RichBoxHex), intJson(42)))),
+      // ── serialize-cost batch: pins for sigma-rust's 13 bare-writer-site fix ──
+      target(tap, "Global.serialize[SigmaProp] conjectures", SigmaPropRType,
+        Seq("CAND(dlog,dlog)"           -> sbJson(CAND(Seq(ProveDlog(gen), ProveDlog(gen2)))),
+            "COR(dlog,dlog)"            -> sbJson(COR(Seq(ProveDlog(gen), ProveDlog(gen2)))),
+            "CTHRESHOLD(2,[dlog,dlog])" -> sbJson(CTHRESHOLD(2, Seq(ProveDlog(gen), ProveDlog(gen2)))))),
+      target(tap, "Global.serialize[Box] tuple arity", BoxRType,
+        Seq("R4=4-tuple-bytes" -> boxJson(byteTupleBoxHex(4)),
+            "R4=5-tuple-bytes" -> boxJson(byteTupleBoxHex(5)))),
+      target(tap, "Global.serialize[Box] tokens", BoxRType,
+        Seq("tokens=0" -> boxJson(MinBoxHex),
+            "tokens=1" -> boxJson(tokenBoxHex(1)),
+            "tokens=2" -> boxJson(tokenBoxHex(2)))),
+      target(tap, "Global.serialize[Box] tuple expr register", BoxRType,
+        Seq("R4=const-pair"      -> boxJson(pairRegBoxHex(exprForm = false)),
+            "R4=tuple-expr-pair" -> boxJson(pairRegBoxHex(exprForm = true))))
     ).toMap
   }
 

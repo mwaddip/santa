@@ -14,7 +14,10 @@ class AuthoredSerializeTest extends munit.FunSuite {
     "Global.serialize[UnsignedBigInt]", "Global.serialize[AvlTree]",
     "Global.serialize[Box]", "Global.serialize[Header]",
     "Global.serialize[Coll[GroupElement]]", "Global.serialize[Option[BigInt]]",
-    "Global.serialize[(Box, Int)]")
+    "Global.serialize[(Box, Int)]",
+    // the serialize-cost batch (sigma-rust 13-site fix pins)
+    "Global.serialize[SigmaProp] conjectures", "Global.serialize[Box] tuple arity",
+    "Global.serialize[Box] tokens", "Global.serialize[Box] tuple expr register")
 
   test("all delegated/composite serialize ops authored, each well-formed") {
     assertEquals(vectors.keySet, expectedOps,
@@ -82,7 +85,16 @@ class AuthoredSerializeTest extends munit.FunSuite {
     "Global.serialize[Header]"             -> Seq("specFixture#0" -> 333L),
     "Global.serialize[Coll[GroupElement]]" -> Seq("empty#0" -> 92L, "one#1" -> 128L, "two#2" -> 164L),
     "Global.serialize[Option[BigInt]]"     -> Seq("Some(0)#0" -> 97L, "Some(2^200)#1" -> 122L),
-    "Global.serialize[(Box, Int)]"         -> Seq("(minimal,0)#0" -> 142L, "(withR4,42)#1" -> 146L))
+    "Global.serialize[(Box, Int)]"         -> Seq("(minimal,0)#0" -> 142L, "(withR4,42)#1" -> 146L),
+    // the serialize-cost batch (deltas asserted separately; absolutes locked from first bless)
+    "Global.serialize[SigmaProp] conjectures" -> Seq(
+      "CAND(dlog,dlog)#0" -> 167L, "COR(dlog,dlog)#1" -> 167L, "CTHRESHOLD(2,[dlog,dlog])#2" -> 170L),
+    "Global.serialize[Box] tuple arity" -> Seq(
+      "R4=4-tuple-bytes#0" -> 148L, "R4=5-tuple-bytes#1" -> 151L),
+    "Global.serialize[Box] tokens" -> Seq(
+      "tokens=0#0" -> 139L, "tokens=1#1" -> 177L, "tokens=2#2" -> 215L),
+    "Global.serialize[Box] tuple expr register" -> Seq(
+      "R4=const-pair#0" -> 146L, "R4=tuple-expr-pair#1" -> 149L))
 
   test("blessed costs match the recorded baseline") {
     expectedCosts.foreach { case (op, expected) =>
@@ -97,6 +109,40 @@ class AuthoredSerializeTest extends munit.FunSuite {
           s"$op[$name] cost drifted")
       }
     }
+  }
+
+  // ── serialize-cost batch: the per-site DELTAS are the pins (sigma-rust's
+  //    formula-derived regression numbers, cross-checked against the oracle).
+  //    A delta drift means a writer event appeared/vanished — investigate.
+  private def costOf(op: String, name: String): Long = {
+    val entries = vectors(op).hcursor.downField("entries").as[List[io.circe.Json]]
+      .fold(e => fail(s"$op entries: $e"), identity)
+    entries.find(_.hcursor.get[String]("name").toOption.contains(name))
+      .getOrElse(fail(s"$op: no entry '$name'"))
+      .hcursor.downField("expected").get[Long]("cost").toOption
+      .getOrElse(fail(s"$op[$name] has no cost"))
+  }
+
+  test("serialize-cost batch deltas: arity count byte · token id+amount · expr-form · threshold k") {
+    val arity = "Global.serialize[Box] tuple arity"
+    assertEquals(costOf(arity, "R4=5-tuple-bytes#1") - costOf(arity, "R4=4-tuple-bytes#0"), 3L,
+      "5-tuple vs 4-tuple register (generic-tuple count byte boundary)")
+
+    val tokens = "Global.serialize[Box] tokens"
+    assertEquals(costOf(tokens, "tokens=1#1") - costOf(tokens, "tokens=0#0"), 38L,
+      "one token over none (+35 id, +3 amount)")
+    assertEquals(costOf(tokens, "tokens=2#2") - costOf(tokens, "tokens=1#1"), 38L,
+      "second token (same writes again)")
+
+    val pair = "Global.serialize[Box] tuple expr register"
+    assertEquals(costOf(pair, "R4=tuple-expr-pair#1") - costOf(pair, "R4=const-pair#0"), 3L,
+      "legacy expr-form tuple register over its constant twin")
+
+    val conj = "Global.serialize[SigmaProp] conjectures"
+    assertEquals(costOf(conj, "CTHRESHOLD(2,[dlog,dlog])#2") - costOf(conj, "CAND(dlog,dlog)#0"), 3L,
+      "CTHRESHOLD k u16 over CAND (same children)")
+    assertEquals(costOf(conj, "COR(dlog,dlog)#1"), costOf(conj, "CAND(dlog,dlog)#0"),
+      "COR and CAND charge identically (same write sequence)")
   }
 
   test("GroupElement serialize tree + value anchored (deep regression)") {

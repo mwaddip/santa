@@ -3639,6 +3639,99 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.serialize_Box_tokens.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Box] tokens",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Box_tuple_arity.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Box] tuple arity",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_Box_tuple_expr_register.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[Box] tuple expr register",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Global.serialize_Coll_GroupElement.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -3784,6 +3877,37 @@
       "tree_shapes" : [
         {
           "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_SigmaProp_conjectures.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize[SigmaProp] conjectures",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
           "constant_segregation" : true,
           "has_deserialize" : false,
           "has_size" : true,
@@ -5539,11 +5663,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_Byte.json",
@@ -6251,11 +6379,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
@@ -6789,11 +6921,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
@@ -6968,11 +7104,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Header.property_accessors.json",
         "v6/spec/BigInt.toUnsigned.json",
@@ -7021,11 +7161,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.some_none.json",
         "v6/spec/Global.decodeNbits.json",
@@ -7176,11 +7320,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
@@ -7367,11 +7515,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Header.property_accessors.json",
         "v6/spec/BigInt.toUnsigned.json",
@@ -7708,11 +7860,15 @@
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
+        "v6/authored/Global.serialize_Box_tokens.json",
+        "v6/authored/Global.serialize_Box_tuple_arity.json",
+        "v6/authored/Global.serialize_Box_tuple_expr_register.json",
         "v6/authored/Global.serialize_Coll_GroupElement.json",
         "v6/authored/Global.serialize_GroupElement.json",
         "v6/authored/Global.serialize_Header.json",
         "v6/authored/Global.serialize_Option_BigInt.json",
         "v6/authored/Global.serialize_SigmaProp.json",
+        "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
@@ -7775,11 +7931,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2015,
+    "accepts" : 2025,
     "distinct_methods" : 129,
     "distinct_ops" : 77,
-    "entries" : 2215,
-    "files" : 169,
+    "entries" : 2225,
+    "files" : 173,
     "rejects" : 200,
     "unwalked" : 1
   }
