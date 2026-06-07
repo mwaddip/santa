@@ -180,12 +180,12 @@ const SECP256K1_GENERATOR = hexToBytes(
 function dummyPreHeader(activated: number): PreHeader {
   return {
     version: activated + 1,       // contract pin: activated+1, NOT 0
-    parentId: new Uint8Array(0),  // empty Coll[Byte]
+    parentId: new Uint8Array(32), // contract pin: 32 zero bytes (chain wire width)
     timestamp: 3n,                // Long 3
     nBits: 0,                     // Long 0 (u32 stored as JS number — within safe range)
     height: 0,                    // Int 0
     minerPk: SECP256K1_GENERATOR, // 33-byte SEC1 generator
-    votes: new Uint8Array(0),     // empty Coll[Byte]
+    votes: new Uint8Array(3),     // contract pin: 3 zero bytes (chain wire width)
   }
 }
 
