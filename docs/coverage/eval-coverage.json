@@ -273,6 +273,32 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Box.sub_min_value.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "Box.sub_min_value",
+      "ops" : [
+        "ExtractAmount",
+        "GetVar",
+        "OptionGet"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Context.preHeader_accessors.json" : {
       "accepts" : 7,
       "entries" : 7,
@@ -6505,6 +6531,7 @@
     "ExtractAmount" : {
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Box.sub_min_value.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll.filter_equivalence.json",
@@ -6774,6 +6801,7 @@
     "GetVar" : {
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Box.sub_min_value.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
@@ -7171,6 +7199,7 @@
     "OptionGet" : {
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Box.sub_min_value.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -7670,11 +7699,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2010,
+    "accepts" : 2011,
     "distinct_methods" : 129,
     "distinct_ops" : 77,
-    "entries" : 2207,
-    "files" : 166,
+    "entries" : 2208,
+    "files" : 167,
     "rejects" : 197,
     "unwalked" : 1
   }
