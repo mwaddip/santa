@@ -4,7 +4,7 @@ package santa
   *
   * map#some              : input Int 5  (var 1 bound)  → Option(Int 6)
   * map#identity-shape    : input Int 41 (var 1 bound)  → Option(Int 42)
-  * map#none-via-absent-var: input Int 5 (var 1 bound), tree reads var 99 (absent) → None or reject
+  * map#none-via-absent-var: input Int 5 (var 1 bound), tree reads var 99 (absent) → None (cost 39)
   *
   * Exact value/cost/tree anchors are locked below after the first observed bless.
   * A change means the JVM cost model or method implementation moved — INVESTIGATE,
@@ -154,12 +154,13 @@ class AuthoredOptionMapTest extends munit.FunSuite {
   // ── ANCHOR: cost + tree hex pins (oracle-blessed) ────────────────────────────
   // Costs from first bless (sigma-state 6.0.3):
   //   map#some / map#identity-shape: 65
-  //     GetVar(10) + MethodCall dispatch(4) + FuncValue create(5) +
-  //     MapMethod FixedCost(20) + ValUse(5) + IntConstant(1) + Plus(10) = 55? +
-  //     option path overhead = 65 (probe and bless agree)
+  //     GetVar(10) + MethodCall dispatch(4) + FuncValue creation(5) + MapMethod FixedCost(20)
+  //     + AddToEnvironment(5, the lambda-arg binding) + ValUse(5) + ConstantPlaceholder(1)
+  //     + Plus on SInt (TypeBasedCost 15) = 65
   //   map#none-via-absent-var: 39 (absent-var short-circuits before the lambda runs)
-  //     GetVar(10) + MethodCall dispatch(4) + FuncValue create(5) +
+  //     GetVar(10) + MethodCall dispatch(4) + FuncValue creation(5) +
   //     MapMethod FixedCost(20) = 39 (lambda body NOT evaluated for None receiver)
+  //   Δ26 = AddToEnvironment(5) + ValUse(5) + ConstantPlaceholder(1) + Plus(15)
   // Both var-1 trees are identical hex (same tree, different input);
   // var-99 tree differs only in the var-id byte (0x63 vs 0x01 in the GetVar encoding).
   private val costAnchors: Map[String, Long] = Map(

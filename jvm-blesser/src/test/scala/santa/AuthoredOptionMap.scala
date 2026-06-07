@@ -8,11 +8,12 @@ package santa
 // (the only way to pass a lambda in a closed ErgoTree).
 //
 // MapMethod (methodId=7): SFunc(Array(ThisType, SFunc(tT, tR)), SOption(tR), Array(paramT, paramR))
-//   FixedCost(JitCost(20)) — probe-blessed cost breakdown:
-//     GetVar   JitCost(10) + MethodCall dispatch JitCost(4) +
-//     MapMethod JitCost(20) + Plus JitCost(10) + GetVar lookup JitCost(10) +
-//     ValUse JitCost(5) + IntConstant JitCost(1) +
-//     FuncValue creation JitCost(5) = 65 total (probe-verified)
+//   FixedCost(JitCost(20)) — Cost 65, verified vs sigma-state 6.0.3 sources:
+//     GetVar(10) + MethodCall dispatch(4) + FuncValue creation(5) + MapMethod FixedCost(20)
+//     + AddToEnvironment(5, the lambda-arg binding) + ValUse(5) + ConstantPlaceholder(1)
+//     + Plus on SInt (TypeBasedCost 15) = 65
+//   The None arm (39) short-circuits before the lambda runs: 10+4+5+20 — no env-bind,
+//   no body. The Δ26 = AddToEnvironment(5) + ValUse(5) + CP(1) + Plus(15).
 //
 // Construction:
 //   receiver = GetVar(1.toByte, SInt)      — the Option[Int] at context var 1
@@ -24,9 +25,7 @@ package santa
 // 3 entries, single op / single output file (Option.map.json):
 //   map#some           — GetVar(1): input Int 5  → Option(6)  (cost 65)
 //   map#identity-shape — GetVar(1): input Int 41 → Option(42) (cost 65; pins operand-independence)
-//   map#none-via-absent-var — GetVar(99): input Int 5 (at var 1, unread) → oracle decides:
-//     • None (Option{null}) ← authoredEntry with null inner
-//     • error              ← authoredRejectEntry (if oracle throws on absent var)
+//   map#none-via-absent-var — GetVar(99): input Int 5 (at var 1, unread) → None (Option{null})
 // ─────────────────────────────────────────────────────────────────────────────
 
 import io.circe.Json
@@ -68,9 +67,13 @@ object AuthoredOptionMap {
     hex(mc)
   }
 
+  // Absent-var id: any id not bound in the context. 99 is far outside the test inputs
+  // (which bind var 1), so GetVar(99, SInt) reliably returns None at eval time.
+  private val AbsentVarId: Byte = 99
+
   // Memoized tree hexes — computed once, pinned by ANCHOR tests.
   private lazy val var1Tree: String  = mapTree(1.toByte)
-  private lazy val var99Tree: String = mapTree(99.toByte)
+  private lazy val var99Tree: String = mapTree(AbsentVarId)
 
   private def intInput(n: Int): Json =
     Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(n))
@@ -81,23 +84,13 @@ object AuthoredOptionMap {
     val some42 = SpecExtract.authoredEntry(Op, "{ (x: Option[Int]) => x.map({(y: Int) => y + 1}) }",
       var1Tree, "map#identity-shape", intInput(41), V2)
 
-    // absent-var entry: bind Int 5 at var 1 (unused), tree reads GetVar(99, SInt) → None at eval.
-    // authoredEntry calls evalApplied which runs the JVM oracle.
-    // If the oracle returns None (Option{null}) → stays authoredEntry.
-    // If the oracle throws → we must use authoredRejectEntry.
-    // authoredEntry will sys.error if the oracle errors; we catch that to fall back.
+    // absent-var entry: bind Int 5 at var 1 (unused), tree reads GetVar(AbsentVarId, SInt) → None.
+    // Oracle-blessed (sigma-state 6.0.3): returns Option{null} (None), cost 39.
+    // If a future JVM version changes this behaviour the ANCHOR tests below will fire — investigate.
     val absentEntry: Json =
-      try {
-        SpecExtract.authoredEntry(Op,
-          "{ Option.map over an absent context var }",
-          var99Tree, "map#none-via-absent-var", intInput(5), V2)
-      } catch {
-        case t: Throwable if t.getMessage != null && t.getMessage.contains("apply-eval failed") =>
-          // Oracle threw on absent var — author as reject.
-          SpecExtract.authoredRejectEntry(Op,
-            "{ Option.map over an absent context var }",
-            var99Tree, "map#none-via-absent-var", intInput(5), V2)
-      }
+      SpecExtract.authoredEntry(Op,
+        "{ Option.map over an absent context var }",
+        var99Tree, "map#none-via-absent-var", intInput(5), V2)
 
     val entries = Seq(some5, some42, absentEntry)
     Map(Op -> SpecExtract.authoredEnvelope(Op, entries, Source))
