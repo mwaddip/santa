@@ -241,6 +241,38 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Box.signed_view_u64.json" : {
+      "accepts" : 9,
+      "entries" : 9,
+      "methods" : [
+        "99:8 Box.tokens"
+      ],
+      "op" : "Box.signed_view_u64",
+      "ops" : [
+        "ByIndex",
+        "ConstantPlaceholder",
+        "ExtractAmount",
+        "ExtractRegisterAs",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/EQ_of_SigmaProp.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -5479,6 +5511,7 @@
     },
     "99:8" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Box_properties_equivalence.json"
       ],
       "name" : "Box.tokens"
@@ -5872,6 +5905,7 @@
     },
     "ByIndex" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Coll_apply_method_equivalence.json",
         "v5/spec/Coll_getOrElse_method_equivalence.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
@@ -5948,6 +5982,7 @@
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
+        "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/spec/BinXor_logical_XOR_test.json",
@@ -6081,6 +6116,7 @@
     },
     "ExtractAmount" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll.filter_equivalence.json",
@@ -6124,6 +6160,7 @@
     },
     "ExtractRegisterAs" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/spec/Box_properties_equivalence_new_features.json"
@@ -6347,6 +6384,7 @@
     },
     "GetVar" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -6607,6 +6645,7 @@
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
+        "v5/authored/Box.signed_view_u64.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.flatMap_equivalence.json",
@@ -6717,6 +6756,7 @@
     },
     "OptionGet" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -6873,6 +6913,7 @@
     },
     "SelectField" : {
       "families" : [
+        "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/BigInt_LE_GE.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
@@ -7211,11 +7252,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 1969,
+    "accepts" : 1978,
     "distinct_methods" : 110,
     "distinct_ops" : 75,
-    "entries" : 2160,
-    "files" : 156,
+    "entries" : 2169,
+    "files" : 157,
     "rejects" : 191,
     "unwalked" : 1
   }
