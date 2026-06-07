@@ -50,6 +50,7 @@ class AuthoredBoxSignedViewTest extends munit.FunSuite {
 
     // Nominal control values — must be the expected positive numbers.
     assertEquals(longVal("b.value#nominal"),        "1000000", "value#nominal")
+    assertEquals(longVal("b.R0#nominal"),           "1000000", "R0#nominal")
     assertEquals(longVal("b.tokens(0)._2#nominal"), "42",      "tokens#nominal")
 
     // The signed-view assertion: u64 carriers in [2^63,2^64) become negative signed Longs.
@@ -67,6 +68,24 @@ class AuthoredBoxSignedViewTest extends munit.FunSuite {
     val trees   = entries.flatMap(_.hcursor.get[String]("tree_bytes_hex").toOption).distinct
     assertEquals(trees.size, 3,
       s"expected 3 distinct trees (value/R0/tokens), got ${trees.size}: $trees")
+  }
+
+  // ── tree-hex anchors ──────────────────────────────────────────────────────
+  // Tree hex is locked once observed — a drift means the tree shape or serializer moved:
+  // INVESTIGATE, not blindly accept.
+
+  private def treeHexOf(name: String): String = {
+    val entries = vectors(AuthoredBoxSignedView.Op).hcursor.downField("entries").values.get.toVector
+    entries.find(_.hcursor.get[String]("name").toOption.contains(name))
+      .getOrElse(fail(s"entry '$name' not found"))
+      .hcursor.get[String]("tree_bytes_hex").toOption
+      .getOrElse(fail(s"'$name' has no tree_bytes_hex"))
+  }
+
+  test("tree-hex anchors: one representative per surface, locked from first bless") {
+    assertEquals(treeHexOf("b.value#nominal"),        "1a0600c1e4e30163")
+    assertEquals(treeHexOf("b.R0#nominal"),           "1a0900e4c6e4e301630005")
+    assertEquals(treeHexOf("b.tokens(0)._2#nominal"), "1a100104008cb2db6308e4e3016373000002")
   }
 
   // ── cost anchors ──────────────────────────────────────────────────────────

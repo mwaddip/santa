@@ -35,6 +35,10 @@ object AuthoredBoxSignedView {
 
   private val txId = bytesToId(Array.fill(32)(0: Byte))
 
+  // carrier-box value for ALL entries: must clear sigma-rust's BoxValue::MIN_RAW (10800)
+  // so only the pinned field diverges
+  private val CarrierValue = 1000000L
+
   private def boxWith(value: Long, tokenAmount: Option[Long]): org.ergoplatform.ErgoBox =
     tokenAmount match {
       case Some(a) =>
@@ -55,6 +59,7 @@ object AuthoredBoxSignedView {
              "bytes_hex" -> Json.fromString(Base16.encode(w.toBytes)))
   }
 
+  // no VersionContext wrap needed: no version-gated constants; the oracle round-trip at activated=2 proves the serialization. Wrap if you add version-gated constants.
   private def hex(root: sigma.ast.syntax.SValue): String =
     Base16.encode(sigma.santa.LenientErgoTree.serialize(treeHeaderV2, root))
 
@@ -75,18 +80,15 @@ object AuthoredBoxSignedView {
     val min63  = java.lang.Long.MIN_VALUE       // 2^63 as u64 → Long.MinValue signed view
     val u64max = -1L                            // 2^64-1 as u64 → Long(-1) signed view
     val entries = Seq(
-      ("b.value#nominal", valueTree, boxWith(1000000L, None), "{ (b: Box) => b.value }"),
+      ("b.value#nominal", valueTree, boxWith(CarrierValue, None), "{ (b: Box) => b.value }"),
       ("b.value#2^63",    valueTree, boxWith(min63, None),    "{ (b: Box) => b.value }"),
       ("b.value#u64-max", valueTree, boxWith(u64max, None),   "{ (b: Box) => b.value }"),
-      ("b.R0#nominal",    r0Tree,    boxWith(1000000L, None), "{ (b: Box) => b.R0[Long].get }"),
+      ("b.R0#nominal",    r0Tree,    boxWith(CarrierValue, None), "{ (b: Box) => b.R0[Long].get }"),
       ("b.R0#2^63",       r0Tree,    boxWith(min63, None),    "{ (b: Box) => b.R0[Long].get }"),
       ("b.R0#u64-max",    r0Tree,    boxWith(u64max, None),   "{ (b: Box) => b.R0[Long].get }"),
-      // token boxes carry value 1000000L (not 1L): sigma-rust's BoxValue::MIN_RAW (10800)
-      // would reject the carrier box at hydration and red the NOMINAL entry too,
-      // polluting the u64-amount isolation (the divergence under pin is the token AMOUNT).
-      ("b.tokens(0)._2#nominal", tokensTree, boxWith(1000000L, Some(42L)),    "{ (b: Box) => b.tokens(0)._2 }"),
-      ("b.tokens(0)._2#2^63",    tokensTree, boxWith(1000000L, Some(min63)),  "{ (b: Box) => b.tokens(0)._2 }"),
-      ("b.tokens(0)._2#u64-max", tokensTree, boxWith(1000000L, Some(u64max)), "{ (b: Box) => b.tokens(0)._2 }")
+      ("b.tokens(0)._2#nominal", tokensTree, boxWith(CarrierValue, Some(42L)),    "{ (b: Box) => b.tokens(0)._2 }"),
+      ("b.tokens(0)._2#2^63",    tokensTree, boxWith(CarrierValue, Some(min63)),  "{ (b: Box) => b.tokens(0)._2 }"),
+      ("b.tokens(0)._2#u64-max", tokensTree, boxWith(CarrierValue, Some(u64max)), "{ (b: Box) => b.tokens(0)._2 }")
     ).map { case (name, tree, box, script) =>
       SpecExtract.authoredEntry(Op, script, tree, name, boxInput(box), V2)
     }
