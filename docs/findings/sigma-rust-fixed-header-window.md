@@ -87,3 +87,22 @@ Full parity for the *truly empty* case (height 1 / the synthetic context) additi
 a standalone `last_block_utxo_root` context field (the JVM has one; sigma-rust folded it into
 `headers[0]`) — but height 1 is node-guarded (no standard txs) and out of scope for the
 real genesis-window fix.
+
+## Status — FIXED on fork-eni (2026-06-07)
+
+Shipped as routed, plus the "out of scope" tail: eni `de6331cb → 7834d2f9` lands
+`Context.headers: BoundedVec<Header, 0, 10>` (`7834d2f9`) **and** the standalone
+`Context.last_block_utxo_root: AvlTreeData` (`d0497722`) — the latter turned out
+load-bearing because the corpus pins `CONTEXT.headers#dummy` (empty) and
+`CONTEXT.LastBlockUtxoRootHash#dummy` (dummy tree) against the same canonical
+context; only the JVM's two-field shape satisfies the pair. The prior green on the
+root vector was accidental (the test template's Arbitrary hardcodes a zero
+state-root). SDK `ErgoStateContext.headers` = `BoundedVec<Header, 1, 10>`;
+wasm/python/C constructors relax `== 10` to `1..=10`.
+
+SANTA re-grade @ eni `7834d2f9` (santa `4828b37`, blitzen adapter `d5f2a2e`):
+`CONTEXT.headers#dummy` + `CONTEXT.LastBlockUtxoRootHash#dummy` both green
+(honestly), zero regression across eval/wire/tx. The develop PR opens on this
+green per the sigma-rust session's hold. Downstream: the ergo-node-rust
+pad-the-oldest workaround (`build_headers_array`, node `3a726ffc`) can now be
+dropped — routed separately.
