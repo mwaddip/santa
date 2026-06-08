@@ -464,9 +464,14 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                     } else {
                         c.block_valid_coal += 1;
                         let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
+                        // Block actuals carry {valid, cost} (like tx) — render that shape, not
+                        // the eval `value @ cost` fallback. error tag renders as itself.
+                        let got = match actual["error"].as_str() {
+                            Some(err) => err.to_string(),
+                            None => format!("valid {} @ cost {}", actual["valid"], actual["cost"]),
+                        };
                         c.red.push(red_detail(&op, name, "valid",
-                            format!("valid {}", e["expected"]["valid"]),
-                            got_brief(&actual, false, false), note, script));
+                            format!("valid {}", e["expected"]["valid"]), got, note, script));
                     }
                     // post_digest dim: skipped when "n/a" (reject vectors, or valid failed).
                     if g["post_digest"] != "n/a" {
