@@ -1,27 +1,36 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-block.actuals.schema.json",
-  "title": "santa-block actuals file (one object: entry name -> result)",
+  "title": "SANTA block-tier actuals",
+  "description": "A runner's output for one block vector: each entry name -> { valid, post_digest, cost, error, reason?, note? }. valid is non-null IFF error is null (the runner produced a verdict); any non-null error forces valid, post_digest, and cost to null. valid:false is a normal value (clean rejection), distinct from error:errored. Reason is a diagnostic note, never graded.",
   "type": "object",
-  "additionalProperties": {
-    "type": "object",
-    "required": ["valid", "post_digest", "cost", "error"],
-    "properties": {
-      "valid": { "type": ["boolean", "null"] },
-      "post_digest": { "type": ["string", "null"] },
-      "cost": { "type": ["integer", "null"] },
-      "error": { "enum": [null, "errored", "not-implemented", "panicked"] },
-      "note": { "type": "string" }
-    },
-    "allOf": [
-      { "if": { "properties": { "error": { "const": null } } },
-        "then": { "properties": { "valid": { "type": "boolean" } } } },
-      { "if": { "properties": { "error": { "enum": ["errored", "not-implemented", "panicked"] } } },
-        "then": { "properties": { "valid": { "const": null },
-                                  "post_digest": { "const": null },
-                                  "cost": { "const": null } } } },
-      { "if": { "properties": { "error": { "const": "panicked" } } },
-        "then": { "required": ["note"] } }
-    ]
+  "minProperties": 1,
+  "additionalProperties": { "$ref": "#/$defs/result" },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "required": ["valid", "post_digest", "cost", "error"],
+      "additionalProperties": false,
+      "properties": {
+        "valid": { "oneOf": [ { "type": "boolean" }, { "type": "null" } ] },
+        "post_digest": { "oneOf": [ { "type": "string", "pattern": "^[0-9a-f]{66}$" }, { "type": "null" } ] },
+        "cost": { "oneOf": [ { "type": "integer", "minimum": 0 }, { "type": "null" } ] },
+        "error": { "enum": [null, "errored", "not-implemented", "panicked"] },
+        "reason": { "type": "string", "description": "Rejecting/erroring impl's reason string. Diagnostic only — not graded." },
+        "note": { "type": "string", "description": "Panic message/class. Present iff error == 'panicked'; forbidden otherwise." }
+      },
+      "allOf": [
+        { "$comment": "error null => valid non-null (a verdict); any non-null error => valid, post_digest, cost all null.",
+          "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
+          "then": { "not": { "properties": { "valid": { "type": "null" } } } },
+          "else": { "properties": { "valid": { "type": "null" },
+                                    "post_digest": { "type": "null" },
+                                    "cost": { "type": "null" } } } },
+        { "$comment": "note present iff error is 'panicked'.",
+          "if": { "properties": { "error": { "const": "panicked" } }, "required": ["error"] },
+          "then": { "required": ["note"] },
+          "else": { "not": { "required": ["note"] } } }
+      ]
+    }
   }
 }

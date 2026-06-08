@@ -42,6 +42,9 @@
             "type": "object",
             "required": ["header", "blockTransactions", "extension", "adProofs"],
             "properties": {
+              "header": { "type": "object" },
+              "blockTransactions": { "type": "object" },
+              "extension": { "type": "object" },
               "adProofs": {
                 "type": "object",
                 "required": ["proofBytes"],
