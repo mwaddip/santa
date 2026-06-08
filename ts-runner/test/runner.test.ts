@@ -158,11 +158,13 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
   })
 
   it('an unrecognized failure becomes `panicked` (note carries the message) and the run continues', () => {
-    // Never-panic invariant (runner-contract §3): a parse/codec failure the runner does NOT
-    // recognize as unsupported-type or a repr-limit must NOT abort the file — it becomes the
-    // `panicked` outcome (coal, message in `note`), and later entries still grade. Empty tree
-    // bytes make parseTree throw ErgoTreeParseError('empty ErgoTree bytes', code 'empty') —
-    // code is NOT 'unsupported-type', so it falls through to runEntry's panic-net.
+    // Never-panic invariant (runner-contract §3): a failure the runner does NOT recognize as
+    // a library verdict must NOT abort the file — it becomes the `panicked` outcome (coal,
+    // message in `note`), and later entries still grade. Empty tree bytes make parseTree throw
+    // ErgoTreeParseError('empty ErgoTree bytes', code 'empty') — the one degenerate "no tree
+    // to parse" code (only a malformed vector produces it), which is denylisted from the
+    // parse-refusal→errored mapping and so falls through to runEntry's panic-net. (Real
+    // validation rejects — rule-1012, body-size-overflow, … — map to `errored`, not here.)
     const vec = {
       schema: 'santa-eval/v2', op: 'malformed', blessed_by: 'x', source: 's',
       entries: [

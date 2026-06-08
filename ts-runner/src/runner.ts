@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import {
   parseTree, evaluateWith, makeContext, EvalError,
-  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, type SType,
+  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, ErgoTreeParseError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
@@ -76,18 +76,26 @@ export function runEntry(schema: string, e: Entry): Result {
 function runEntryInner(schema: string, e: Entry): Result {
   const treeVersion = e.version.ergoTree
 
-  // [0] parseTree — ergots' TYPED parse refusal (SValueParseError, e.g. the SOption
-  //     DATA-constant tree-version gate) is the library deciding the TREE is invalid —
-  //     a faithful reject ⇒ `errored` (contract §3 Refused→errored; mirrors the
+  // [0] parseTree — ergots' TYPED parse refusals are the library deciding the TREE is
+  //     invalid — a faithful reject ⇒ `errored` (contract §3 Refused→errored; mirrors the
   //     eval-stage EvalError arm below and the blitzen input-refusal precedent). The
-  //     corpus deliberately carries version-gated reject trees, so the old "any parse
-  //     failure is a harness bug" assumption no longer holds at this stage. Any OTHER
-  //     parse throw is still a bridge bug and falls to runEntry's panic-net (⇒ panicked).
+  //     corpus deliberately carries version-gated/malformed reject trees, so the old "any
+  //     parse failure is a harness bug" assumption no longer holds at this stage:
+  //       - SValueParseError    — e.g. the SOption DATA-constant tree-version gate.
+  //       - ErgoTreeParseError  — the library's verdict on REAL tree bytes it rejects on a
+  //         rule (rule-1012 header-version-requires-size, body-size-overflow, oversized,
+  //         trailing-bytes, too-many-constants, subst-*). EXCEPT code 'empty' (no tree to
+  //         parse) — only a malformed vector produces that, so it stays an unrecognized
+  //         failure ⇒ panic-net (surfaced loudly, not silently called a library reject).
+  //     Any OTHER parse throw is still a bridge bug and falls to runEntry's panic-net.
   let tree: ReturnType<typeof parseTree>
   try {
     tree = parseTree(hexToBytes(e.tree_bytes_hex))
   } catch (err) {
     if (err instanceof SValueParseError) return { value: null, cost: null, error: 'errored' }
+    if (err instanceof ErgoTreeParseError && err.code !== 'empty') {
+      return { value: null, cost: null, error: 'errored' }
+    }
     throw err
   }
 
