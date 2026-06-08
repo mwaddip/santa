@@ -76,10 +76,20 @@ export function runEntry(schema: string, e: Entry): Result {
 function runEntryInner(schema: string, e: Entry): Result {
   const treeVersion = e.version.ergoTree
 
-  // [0] parseTree — ANY parse failure falls through to runEntry's panic-net (⇒ panicked),
-  //     NOT errored. (The bridge is type-total over the corpus since UnsignedBigInt landed;
-  //     a future type gap reintroduces a not-implemented arm keyed to a live signal.)
-  const tree = parseTree(hexToBytes(e.tree_bytes_hex))
+  // [0] parseTree — ergots' TYPED parse refusal (SValueParseError, e.g. the SOption
+  //     DATA-constant tree-version gate) is the library deciding the TREE is invalid —
+  //     a faithful reject ⇒ `errored` (contract §3 Refused→errored; mirrors the
+  //     eval-stage EvalError arm below and the blitzen input-refusal precedent). The
+  //     corpus deliberately carries version-gated reject trees, so the old "any parse
+  //     failure is a harness bug" assumption no longer holds at this stage. Any OTHER
+  //     parse throw is still a bridge bug and falls to runEntry's panic-net (⇒ panicked).
+  let tree: ReturnType<typeof parseTree>
+  try {
+    tree = parseTree(hexToBytes(e.tree_bytes_hex))
+  } catch (err) {
+    if (err instanceof SValueParseError) return { value: null, cost: null, error: 'errored' }
+    throw err
+  }
 
   // [1] decode + bind the entry's context per its envelope (rudolph Runner.scala dispatch):
   //       v2: single `input` → var 1 in SELF's ContextExtension (EvalCore.evalApplied);
