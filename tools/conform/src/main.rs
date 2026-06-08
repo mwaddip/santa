@@ -2,7 +2,7 @@
 //! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
 //! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
 //! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
-use santa_check::{grade, grade_transaction, grade_wire};
+use santa_check::{grade, grade_block, grade_transaction, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -231,12 +231,20 @@ struct Counts {
     tx_valid_total: u64,
     tx_valid_nice: u64,
     tx_valid_coal: u64,
+    // block tier: dedicated valid + post_digest dims;
+    // cost dim reuses cost_graded/cost_nice/cost_coal (shared concept across tiers).
+    block_valid_total: u64,
+    block_valid_nice: u64,
+    block_valid_coal: u64,
+    post_digest_total: u64,
+    post_digest_nice: u64,
+    post_digest_coal: u64,
     red: Vec<Value>,
 }
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal
+        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal
     }
     fn to_json(&self) -> Value {
         json!({
@@ -247,6 +255,8 @@ impl Counts {
             "panicked": self.panicked,
             "roundtrip_total": self.roundtrip_total, "roundtrip_nice": self.roundtrip_nice, "roundtrip_coal": self.roundtrip_coal,
             "tx_valid_total": self.tx_valid_total, "tx_valid_nice": self.tx_valid_nice, "tx_valid_coal": self.tx_valid_coal,
+            "block_valid_total": self.block_valid_total, "block_valid_nice": self.block_valid_nice, "block_valid_coal": self.block_valid_coal,
+            "post_digest_total": self.post_digest_total, "post_digest_nice": self.post_digest_nice, "post_digest_coal": self.post_digest_coal,
             "red": self.red,
         })
     }
@@ -274,6 +284,16 @@ impl Counts {
         // transaction slices: valid dim first, then cost (cost reuses the shared cost counters).
         if self.tx_valid_total > 0 {
             bits.push(format!("valid {}/{}", self.tx_valid_nice, self.tx_valid_total));
+        }
+        // block slices: valid · digest · cost (cost reuses shared cost counters).
+        if self.block_valid_total > 0 {
+            bits.push(format!("valid {}/{}", self.block_valid_nice, self.block_valid_total));
+            if self.block_valid_coal > 0 {
+                bits.push(format!("{} val-coal", self.block_valid_coal));
+            }
+            if self.post_digest_total > 0 {
+                bits.push(format!("digest {}/{}", self.post_digest_nice, self.post_digest_total));
+            }
         }
         if self.cost_graded > 0 {
             bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
@@ -362,6 +382,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         let schema = vec["schema"].as_str().unwrap_or("");
         let is_wire = schema.starts_with("santa-wire/");
         let is_tx = schema.starts_with("santa-transaction/");
+        let is_block = schema.starts_with("santa-block/");
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
@@ -370,6 +391,8 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                 grade_wire(&actual, e)
             } else if is_tx {
                 grade_transaction(&actual, &e["expected"])
+            } else if is_block {
+                grade_block(&actual, &e["expected"])
             } else {
                 grade(&actual, &e["expected"], claims_cost)
             };
@@ -421,6 +444,44 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                             format!("valid {}", e["expected"]["valid"]),
                             got_brief(&actual, false, true), note, script));
                     }
+                    if g["cost"] != "n/a" {
+                        c.cost_graded += 1;
+                        if g["cost"] == "nice" {
+                            c.cost_nice += 1;
+                        } else {
+                            c.cost_coal += 1;
+                            c.red.push(red_detail(&op, name, "cost",
+                                format!("cost {}", e["expected"]["cost"]),
+                                format!("cost {}", actual["cost"]), None, script));
+                        }
+                    }
+                }
+                Some("block") => {
+                    // valid dim: always graded.
+                    c.block_valid_total += 1;
+                    if g["valid"] == "nice" {
+                        c.block_valid_nice += 1;
+                    } else {
+                        c.block_valid_coal += 1;
+                        let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
+                        c.red.push(red_detail(&op, name, "valid",
+                            format!("valid {}", e["expected"]["valid"]),
+                            got_brief(&actual, false, false), note, script));
+                    }
+                    // post_digest dim: skipped when "n/a" (reject vectors, or valid failed).
+                    if g["post_digest"] != "n/a" {
+                        c.post_digest_total += 1;
+                        if g["post_digest"] == "nice" {
+                            c.post_digest_nice += 1;
+                        } else {
+                            c.post_digest_coal += 1;
+                            c.red.push(red_detail(&op, name, "post_digest",
+                                format!("post_digest {}", brief(&e["expected"]["post_digest"], 64)),
+                                format!("post_digest {}", brief(&actual["post_digest"], 64)),
+                                None, script));
+                        }
+                    }
+                    // cost dim: skipped when "n/a"; reuses shared cost counters (same concept as tx/eval).
                     if g["cost"] != "n/a" {
                         c.cost_graded += 1;
                         if g["cost"] == "nice" {
