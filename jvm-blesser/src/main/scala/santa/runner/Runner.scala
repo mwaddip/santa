@@ -23,6 +23,8 @@ import santa.{EvalCore, WireCanonicalize}
   *     carries the gated tx engine (SANTA_TX_BLESSER=1 + a publishLocal'd ergo-core);
   *     otherwise every tx entry is a faithful `not-implemented` (this build has no tx
   *     engine — a capability fact, not an excuse).
+  *   - `santa-block/v1` → BlockEngine.blockEntry (threaded validateStateful + post-state
+  *     digest) under the same gate; otherwise a faithful `not-implemented`.
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
@@ -51,6 +53,30 @@ object Runner {
         "valid" -> Json.Null,
         "cost"  -> Json.Null,
         "error" -> Json.fromString("not-implemented"))
+  }
+
+  /** Reflection seam to the gated [[santa.runner.BlockEngine]] (same SANTA_TX_BLESSER
+    * gate as TxEngine — ergo-core composition; a static reference would not compile in an
+    * ungated build). Absent ⇒ the not-implemented arm. */
+  private lazy val blockEntryFn: Option[Json => (String, Json)] =
+    scala.util.Try {
+      val clazz  = Class.forName("santa.runner.BlockEngine$")
+      val module = clazz.getField("MODULE$").get(null)
+      val m      = clazz.getMethod("blockEntry", classOf[Json])
+      (e: Json) => m.invoke(module, e).asInstanceOf[(String, Json)]
+    }.toOption
+
+  /** Grade one block-tier entry — real verdicts via the gated engine, or the faithful
+    * `not-implemented` outcome on a build without it. */
+  def blockEntry(e: Json): (String, Json) = blockEntryFn match {
+    case Some(f) => f(e)
+    case None =>
+      val name = e.hcursor.get[String]("name").toOption.getOrElse("?")
+      name -> Json.obj(
+        "valid"       -> Json.Null,
+        "post_digest" -> Json.Null,
+        "cost"        -> Json.Null,
+        "error"       -> Json.fromString("not-implemented"))
   }
 
   /** Evaluate one vector entry and return the actuals JSON. */
@@ -151,8 +177,10 @@ object Runner {
     val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
     val isWire  = schema.startsWith("santa-wire/")
     val isTx    = schema.startsWith("santa-transaction/")
+    val isBlock = schema.startsWith("santa-block/")
     val pairs   = entries.toVector.map(e =>
-      if (isTx) txEntry(e) else if (isWire) wireEntry(e) else evalEntry(schema, e))
+      if (isTx) txEntry(e) else if (isBlock) blockEntry(e)
+      else if (isWire) wireEntry(e) else evalEntry(schema, e))
     val out     = Json.obj(pairs: _*).spaces2
     outPath match {
       case Some(p) =>
