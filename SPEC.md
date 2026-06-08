@@ -173,7 +173,10 @@ Err-not-panic fix (`5033d0e`) + source-compatible `AVLTree::new` (`a4a2aa7`) + e
 updateDigest fix, pulled in by **blitzen-eni's declared `[patch.crates-io]` override** (the
 contract-§3 build-identity invariant's first live runner instance — sigma-rust eni's own manifests
 stay on crates.io; the runner manifest declares the fork, `Cargo.lock` pins the rev) — eni
-21 → 5: four cost-coals on the degenerate paths + the `option-tag-02` over-reject, re-routed.
+21 → 5: four cost-coals on the degenerate paths + the `option-tag-02` over-reject, re-routed —
+and closed same-day: the reconstruct-fail costing seam (`treeHeight` 0 when reconstruction can't
+start) + the nonzero-Option-tag parser landed (eni `033a0ead`), **eni red 0** — the suite's second
+full-green convergence, now under the declared fork override.
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
