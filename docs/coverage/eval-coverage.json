@@ -708,6 +708,32 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/EQ.non_pair_tuple_operand.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "EQ.non_pair_tuple_operand",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/EQ_of_SigmaProp.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -856,6 +882,65 @@
       "unwalked" : 1,
       "version" : "v5"
     },
+    "v5/authored/SelectField.non_pair.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "SelectField.non_pair",
+      "ops" : [
+        "Const",
+        "SelectField"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Tuple.checkType_unsupported.json" : {
+      "accepts" : 0,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Tuple.checkType_unsupported",
+      "ops" : [
+        "Const",
+        "ConstantPlaceholder",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Tuple.non_pair_arity3.json" : {
       "accepts" : 0,
       "entries" : 1,
@@ -901,6 +986,32 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/substConstants_version_source_outer_v2.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "substConstants:version_source_outer_v2",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
           "tree_version" : 2
         }
       ],
@@ -4683,6 +4794,36 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Rule1012_header_size_bit.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "Rule1012:header_size_bit",
+      "ops" : [
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+      ],
+      "unwalked" : 1,
+      "version" : "v6"
+    },
+    "v6/authored/Rule1019_check_v6_type.json" : {
+      "accepts" : 0,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "Rule1019:check_v6_type",
+      "ops" : [
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+      ],
+      "unwalked" : 1,
+      "version" : "v6"
+    },
     "v6/authored/SOption.nonzero_data_tag.json" : {
       "accepts" : 1,
       "entries" : 1,
@@ -4809,6 +4950,32 @@
       "tree_shapes" : [
         {
           "accepts" : 8,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/substConstants_version_source_outer_v3.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+      ],
+      "op" : "substConstants:version_source_outer_v3",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
           "constant_segregation" : true,
           "has_deserialize" : false,
           "has_size" : true,
@@ -7136,6 +7303,7 @@
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
+        "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/AvlTree.bad_proof_bytes_v6.json",
         "v6/authored/AvlTree.degenerate_edges_v6.json",
@@ -7146,6 +7314,7 @@
         "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/substConstants_version_source_outer_v3.json",
         "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
       ],
       "op_codes" : [
@@ -7155,6 +7324,8 @@
     "Const" : {
       "families" : [
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/SelectField.non_pair.json",
+        "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v6/spec/decode-point.json"
       ],
@@ -7185,11 +7356,14 @@
         "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/Option.map.json",
+        "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
+        "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll.filter_equivalence.json",
@@ -7231,6 +7405,7 @@
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
+        "v6/authored/substConstants_version_source_outer_v3.json",
         "v6/spec/Coll_getOrElse_with_lazy_default.json",
         "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json",
         "v6/spec/Global.powHit.json",
@@ -7307,6 +7482,7 @@
     },
     "EQ" : {
       "families" : [
+        "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
@@ -8209,6 +8385,7 @@
     "SelectField" : {
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/SelectField.non_pair.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/BigInt_LE_GE.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
@@ -8325,7 +8502,9 @@
     },
     "SubstConstants" : {
       "families" : [
+        "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/substConstants_version_source_outer_v3.json",
         "v6/spec/Fix_substConstants_in_v6.0_for_ErgoTree_version_0.json"
       ],
       "op_codes" : [
@@ -8349,7 +8528,9 @@
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
+        "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -8573,12 +8754,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2069,
+    "accepts" : 2070,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2288,
-    "files" : 193,
-    "rejects" : 219,
-    "unwalked" : 2
+    "entries" : 2296,
+    "files" : 200,
+    "rejects" : 226,
+    "unwalked" : 4
   }
 }
