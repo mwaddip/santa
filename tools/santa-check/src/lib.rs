@@ -182,6 +182,84 @@ pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
     }
 }
 
+/// §6 block-tier verdict: three independent dimensions — `valid` (always graded), `post_digest`
+/// (graded only on the accept arm when valid is nice), and `cost` (graded only on the accept arm
+/// when BOTH sides declare one, independently of post_digest). Coverage/panicked precede all grading.
+///
+/// Precedence:
+/// 1. `panicked` → coal unconditionally (before expected check).
+/// 2. `not-implemented` → coverage (NOT coal).
+/// 3. Accept vector (`expected.valid == true`):
+///    - `actual.error == null && actual.valid == true` → valid=nice; else → valid=valid (coal).
+///    - post_digest graded iff valid=nice: nice when actual.post_digest == expected.post_digest
+///      (both non-null), else coal marker "post_digest"; n/a when valid isn't nice.
+///    - Cost graded iff valid=nice AND post_digest=nice AND both sides declare cost (non-null):
+///      nice|cost depending on structural equality; n/a otherwise. Chains valid → post_digest → cost.
+/// 4. Reject vector (`expected.valid == false`):
+///    - `actual.valid == false && actual.error == null` → valid=nice (clean rejection).
+///    - `actual.error == "errored"` → valid=valid (coal). BY DESIGN mirrors the tx tier:
+///      the block tier explicitly separates clean-reject (valid:false, error:null) from
+///      failed-verdict (error:errored, valid:null).
+///    - `actual.valid == true` → coal.
+///    - post_digest and cost are both n/a on reject vectors.
+///
+/// Returns a verdict object in the same vocabulary as `grade_transaction` and `grade_wire`:
+/// - `{"kind": "panicked"}`
+/// - `{"kind": "coverage", "tag": "not-implemented"}`
+/// - `{"kind": "block", "valid": "nice"|"valid", "post_digest": "nice"|"post_digest"|"n/a", "cost": "nice"|"cost"|"n/a"}`
+pub fn grade_block(actual: &Value, expected: &Value) -> Value {
+    if err_is(actual, "panicked") {
+        return json!({"kind": "panicked"});
+    }
+    if err_is(actual, "not-implemented") {
+        return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+
+    let expected_valid = expected
+        .get("valid")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+
+    if expected_valid {
+        // Accept vector: need actual.error == null && actual.valid == true.
+        let actual_clean = actual.get("error").map_or(true, Value::is_null);
+        let actual_valid = actual.get("valid").and_then(Value::as_bool).unwrap_or(false);
+        let valid = if actual_clean && actual_valid { "nice" } else { "valid" };
+
+        // post_digest graded only when valid is nice.
+        let digest = if valid != "nice" {
+            "n/a"
+        } else {
+            let exp_digest = expected.get("post_digest").filter(|v| !v.is_null());
+            let act_digest = actual.get("post_digest").filter(|v| !v.is_null());
+            match (exp_digest, act_digest) {
+                (Some(e), Some(a)) if structural_equal(e, a) => "nice",
+                _ => "post_digest",
+            }
+        };
+
+        // Cost graded only when valid=nice, post_digest=nice, and both sides declare it (non-null).
+        // Chains valid → post_digest → cost: a failing upstream dimension suppresses the downstream ones.
+        let expected_cost = expected.get("cost").filter(|v| !v.is_null());
+        let actual_cost = actual.get("cost").filter(|v| !v.is_null());
+        let cost = match (valid, digest, expected_cost, actual_cost) {
+            ("nice", "nice", Some(ec), Some(ac)) => {
+                if structural_equal(ec, ac) { "nice" } else { "cost" }
+            }
+            _ => "n/a",
+        };
+
+        json!({"kind": "block", "valid": valid, "post_digest": digest, "cost": cost})
+    } else {
+        // Reject vector: only a clean valid:false (error:null) → nice; anything else → coal.
+        // Cost and post_digest are not graded on reject vectors.
+        let actual_valid_false = actual.get("error").map_or(true, Value::is_null)
+            && actual.get("valid").and_then(Value::as_bool) == Some(false);
+        let valid = if actual_valid_false { "nice" } else { "valid" };
+        json!({"kind": "block", "valid": valid, "post_digest": "n/a", "cost": "n/a"})
+    }
+}
+
 #[cfg(test)]
 mod tx_tests {
     use super::*;

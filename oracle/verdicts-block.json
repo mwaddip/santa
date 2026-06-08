@@ -1,0 +1,76 @@
+{
+  "schema": "santa-oracle-block/v1",
+  "description": "Block-tier verdict meta-vectors: (actual, expected) -> grade_block verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the block-tier grading from grade_block: independent valid + post_digest + cost dimensions; panicked and not-implemented reuse the shared vocabulary. Notable: reject + errored is coal (valid=value) — BY DESIGN mirrors the tx-tier reject arm: the block tier explicitly separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null). post_digest and cost graded only on the accept arm when valid is nice.",
+  "cases": [
+    {"name": "accept-all-nice",
+     "description": "Accept vector: valid:true, post_digest matches, cost matches -> all three dims nice.",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "error": null},
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "nice"}},
+
+    {"name": "accept-valid-coal",
+     "description": "Accept vector: conformer returned valid:false — valid dim is coal, post_digest and cost both n/a.",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": false, "post_digest": null, "cost": null, "error": null},
+     "verdict":  {"kind": "block", "valid": "valid", "post_digest": "n/a", "cost": "n/a"}},
+
+    {"name": "accept-digest-coal",
+     "description": "Accept vector: valid nice, but post_digest mismatch -> digest coal, cost n/a (digest failed).",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": true,  "post_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                                  "cost": 12500, "error": null},
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "post_digest", "cost": "n/a"}},
+
+    {"name": "accept-cost-coal",
+     "description": "Accept vector: valid nice, post_digest matches, cost mismatch -> cost coal.",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 9999,  "error": null},
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "cost"}},
+
+    {"name": "accept-cost-unclaimed",
+     "description": "Accept vector: valid nice, post_digest nice, but actual.cost is null -> cost n/a (not graded when either side null).",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": null,  "error": null},
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "n/a"}},
+
+    {"name": "reject-nice",
+     "description": "Reject vector: expected valid:false, actual valid:false error:null -> valid nice, post_digest n/a, cost n/a.",
+     "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
+     "actual":   {"valid": false, "post_digest": null, "cost": null, "error": null, "reason": "script evaluation error"},
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "n/a", "cost": "n/a"}},
+
+    {"name": "reject-errored-coal",
+     "description": "BY DESIGN: errored on a reject vector is coal, not a clean rejection. Block tier mirrors tx tier: clean-reject = valid:false error:null; failed-verdict = error:errored valid:null.",
+     "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
+     "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "errored"},
+     "verdict":  {"kind": "block", "valid": "valid", "post_digest": "n/a", "cost": "n/a"}},
+
+    {"name": "not-implemented",
+     "description": "Not-implemented: coverage verdict, not coal.",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "not-implemented"},
+     "verdict":  {"kind": "coverage", "tag": "not-implemented"}},
+
+    {"name": "panicked",
+     "description": "Panicked actual: coal unconditionally before any expected check.",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d5",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "panicked", "note": "block validation panic"},
+     "verdict":  {"kind": "panicked"}},
+
+    {"name": "panicked-on-reject-still-coal",
+     "description": "Panicked on a reject vector: coal unconditionally (a crash is not a clean rejection).",
+     "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
+     "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "panicked", "note": "panic in reject path"},
+     "verdict":  {"kind": "panicked"}}
+  ]
+}

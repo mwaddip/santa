@@ -1,6 +1,6 @@
 //! Prove santa-check reproduces the SANTA verdict-oracle (../../oracle/*.json) — §6 made executable,
 //! the same contract tools/test_oracle.py holds compare.py to. Both must agree on every verdict.
-use santa_check::{grade, grade_transaction, grade_wire};
+use santa_check::{grade, grade_block, grade_transaction, grade_wire};
 use serde_json::Value;
 use std::{fs, path::Path};
 
@@ -21,6 +21,7 @@ fn reproduces_verdict_oracle() {
             let got = match schema {
                 "santa-oracle-wire/v1" => grade_wire(&c["actual"], &c["expected"]),
                 "santa-oracle-transaction/v1" => grade_transaction(&c["actual"], &c["expected"]),
+                "santa-oracle-block/v1" => grade_block(&c["actual"], &c["expected"]),
                 "santa-oracle/v1" => grade(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap()),
                 _ => panic!("unknown oracle schema: {schema:?} in {}", p.display()),
             };
