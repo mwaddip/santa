@@ -106,12 +106,20 @@ object CapturedTx {
     val block   = parseFile(s"$seedDir/block-${seed.height}.json")
     val txs     = blockTxs(block)
 
-    // (1) index every box-*.json by the box's OWN boxId field.
+    // (1) index every node-API-shaped box-*.json by the box's OWN boxId field.
+    // Multiple box-JSON shapes now coexist in the same findings dirs (block-tier
+    // captures added box-<id16>.json in indexer shape and box-<id16>-bytes.json).
+    // TxEngine decodes only the node-API shape (which carries an `assets` field);
+    // the indexer-shaped and raw-bytes files serve the block tier and must be
+    // excluded here to avoid a decode failure at DownField(assets).
     val dir = new java.io.File(seedDir)
     val boxFiles = Option(dir.listFiles).getOrElse(Array.empty[java.io.File])
-      .filter(f => f.getName.startsWith("box-") && f.getName.endsWith(".json"))
-    val byFile: Map[String, Json] = boxFiles.map { f =>
-      val j = parseFile(f.getPath); boxIdOf(j) -> j
+      .filter(f => f.getName.startsWith("box-") && f.getName.endsWith(".json")
+                && !f.getName.endsWith("-bytes.json"))
+    val byFile: Map[String, Json] = boxFiles.flatMap { f =>
+      val j = parseFile(f.getPath)
+      // Keep only node-API-shaped boxes (have an `assets` field); skip indexer shape.
+      if (j.hcursor.downField("assets").succeeded) Some(boxIdOf(j) -> j) else None
     }.toMap
 
     // (2) index every in-block output by boxId (the in-block fallback, e.g. powhit 1d746ebe).
