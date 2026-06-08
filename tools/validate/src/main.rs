@@ -88,6 +88,15 @@ fn main() -> ExitCode {
         jsonschema::validator_for(&tx_act_schema).expect("transaction actuals schema invalid");
     println!("[meta] transaction vector + actuals schemas: built (valid Draft 2020-12)");
 
+    // Block tier (santa-block/v1): independent schemas, no cross-ref.
+    let block_vec_schema = load(&schema_dir.join("santa-block.vector.schema.json"));
+    let block_act_schema = load(&schema_dir.join("santa-block.actuals.schema.json"));
+    let block_vec_validator =
+        jsonschema::validator_for(&block_vec_schema).expect("block vector schema invalid");
+    let block_act_validator =
+        jsonschema::validator_for(&block_act_schema).expect("block actuals schema invalid");
+    println!("[meta] block vector + actuals schemas: built (valid Draft 2020-12)");
+
     // 2. Every committed vector validates against the vector schema.
     let files = json_files(&root.join("vectors").join("eval"));
     println!("\n[corpus] validating {} committed vectors:", files.len());
@@ -151,6 +160,27 @@ fn main() -> ExitCode {
     println!("[transaction corpus] {tok}/{} valid", tx_files.len());
     errs += tx_path_guard(&root, &tx_files);
     errs += transaction_actuals_guards(&tx_act_validator);
+
+    // Block corpus: validate every committed block vector against the block vector schema.
+    let block_files = json_files(&root.join("vectors").join("block"));
+    println!("\n[block corpus] validating {} committed block vectors:", block_files.len());
+    let mut bok = 0;
+    for f in &block_files {
+        let doc = load(f);
+        let errors: Vec<_> = block_vec_validator.iter_errors(&doc).collect();
+        if errors.is_empty() {
+            bok += 1;
+        } else {
+            errs += 1;
+            println!("  FAIL {}", f.file_name().unwrap().to_string_lossy());
+            for e in errors.iter().take(4) {
+                println!("      {}", truncate(&e.to_string(), 180));
+            }
+        }
+    }
+    println!("[block corpus] {bok}/{} valid", block_files.len());
+    errs += block_path_guard(&root, &block_files);
+    errs += block_actuals_guards(&block_act_validator);
 
     println!(
         "\n=== {} ===",
@@ -398,6 +428,180 @@ fn transaction_actuals_guards(v: &Validator) -> u32 {
         ("note on non-panicked rejected", json!({"t#0": {"valid": null, "cost": null, "error": "errored", "note": "x"}}), false),
     ];
     println!("\n[transaction actuals] asymmetry guards:");
+    let mut bad: u32 = 0;
+    for (label, doc, want) in checks {
+        let got = v.is_valid(doc);
+        let good = got == *want;
+        if !good {
+            bad += 1;
+        }
+        println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
+    }
+    bad
+}
+
+/// Block taxonomy path <-> in-data envelope guard. tier "block" => schema "santa-block/";
+/// version v6 => activated 3; provenance captured => every entry source starts with "testnet:"
+/// AND expected.valid == true; provenance authored => every entry source starts with "santa:".
+/// accept arm (valid:true): post_digest non-null AND cost non-null AND reason null.
+/// reject arm (valid:false): post_digest null AND cost null AND reason non-null string.
+/// block.adProofs.proofBytes must be a non-empty string on every entry.
+fn block_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
+    let version_activated = |v: &str| match v {
+        "v6" => Some(3i64),
+        _ => None,
+    };
+    println!("\n[block catalogue] path <-> envelope guard:");
+    let vroot = root.join("vectors");
+    let mut g: u32 = 0;
+    for f in files {
+        let rel = f.strip_prefix(&vroot).unwrap();
+        let parts: Vec<String> = rel
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned())
+            .collect();
+        if parts.len() != 4 {
+            g += 1;
+            println!("  [WRONG] {}: not <tier>/<version>/<provenance>/<op>.json", rel.display());
+            continue;
+        }
+        let (tier, version, prov) = (&parts[0], &parts[1], &parts[2]);
+        let doc = load(f);
+        let schema = doc.get("schema").and_then(Value::as_str).unwrap_or("");
+        if tier != "block" || !schema.starts_with("santa-block/") {
+            g += 1;
+            println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
+        }
+        // version -> activated: unknown version fires [WRONG] unconditionally (mirrors wire/tx).
+        let want = version_activated(version);
+        let off: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| e["version"]["activated"].as_i64() != want)
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if want.is_none() || !off.is_empty() {
+            let head = &off[..off.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+        }
+        // Provenance: captured => source starts with "testnet:" AND expected.valid == true.
+        // authored => source starts with "santa:".
+        // Any other provenance is unknown: report each offending entry.
+        let bad_src: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let src = e["source"].as_str().unwrap_or("");
+                        match prov.as_str() {
+                            "captured" => {
+                                let wrong_src = !src.starts_with("testnet:");
+                                let wrong_valid = e["expected"]["valid"].as_bool() != Some(true);
+                                wrong_src || wrong_valid
+                            }
+                            "authored" => !src.starts_with("santa:"),
+                            _ => true,
+                        }
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_src.is_empty() {
+            let head = &bad_src[..bad_src.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: provenance {prov:?} but entry source/expected disagree: {head:?}", rel.display());
+        }
+        // accept arm (valid:true): post_digest non-null AND cost non-null AND reason null.
+        // reject arm (valid:false): post_digest null AND cost null AND reason non-null string.
+        let bad_shape: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let exp = &e["expected"];
+                        match exp["valid"].as_bool() {
+                            Some(true) => {
+                                exp["post_digest"].is_null()
+                                    || exp["cost"].is_null()
+                                    || !exp["reason"].is_null()
+                            }
+                            Some(false) => {
+                                !exp["post_digest"].is_null()
+                                    || !exp["cost"].is_null()
+                                    || exp["reason"].as_str().is_none()
+                            }
+                            None => false, // schema already rejects this
+                        }
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_shape.is_empty() {
+            let head = &bad_shape[..bad_shape.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: expected arm shape violation: {head:?}", rel.display());
+        }
+        // block.adProofs.proofBytes must be a non-empty string on every entry.
+        let bad_proof: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let proof_bytes = e["block"]["adProofs"]["proofBytes"].as_str();
+                        proof_bytes.map_or(true, |s| s.is_empty())
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_proof.is_empty() {
+            let head = &bad_proof[..bad_proof.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: block.adProofs.proofBytes missing or empty: {head:?}", rel.display());
+        }
+    }
+    if g == 0 {
+        println!("  [OK] all {} block paths agree with their envelopes", files.len());
+    } else {
+        println!("  {g} block path/envelope mismatch(es)");
+    }
+    g
+}
+
+/// Block actuals asymmetry guards: error null => valid non-null (verdict present);
+/// any non-null error => valid, post_digest, cost all null; panicked carries note.
+fn block_actuals_guards(v: &Validator) -> u32 {
+    let checks: &[(&str, Value, bool)] = &[
+        // valid cases
+        ("accepted", json!({"block__0": {"valid": true, "post_digest": "0000000000000000000000000000000000000000000000000000000000000000ab", "cost": 1200, "error": null}}), true),
+        ("rejected", json!({"block__0": {"valid": false, "post_digest": null, "cost": null, "error": null}}), true),
+        ("rejected with reason", json!({"block__0": {"valid": false, "post_digest": null, "cost": null, "error": null, "reason": "invalid tx"}}), true),
+        ("errored", json!({"block__0": {"valid": null, "post_digest": null, "cost": null, "error": "errored"}}), true),
+        ("not-implemented", json!({"block__0": {"valid": null, "post_digest": null, "cost": null, "error": "not-implemented"}}), true),
+        ("panicked carries note", json!({"block__0": {"valid": null, "post_digest": null, "cost": null, "error": "panicked", "note": "boom"}}), true),
+        // invalid: error null AND valid null (no verdict)
+        ("error null + valid null rejected", json!({"block__0": {"valid": null, "post_digest": null, "cost": null, "error": null}}), false),
+        // invalid: non-null error AND non-null valid
+        ("errored + valid non-null rejected", json!({"block__0": {"valid": false, "post_digest": null, "cost": null, "error": "errored"}}), false),
+        ("panicked + valid non-null rejected", json!({"block__0": {"valid": true, "post_digest": null, "cost": null, "error": "panicked", "note": "b"}}), false),
+        // invalid: error non-null AND post_digest non-null
+        ("errored + post_digest non-null rejected", json!({"block__0": {"valid": null, "post_digest": "0000000000000000000000000000000000000000000000000000000000000000ab", "cost": null, "error": "errored"}}), false),
+        // invalid: error non-null AND cost non-null
+        ("errored + cost non-null rejected", json!({"block__0": {"valid": null, "post_digest": null, "cost": 500, "error": "errored"}}), false),
+        // invalid: cost as string
+        ("string cost rejected", json!({"block__0": {"valid": true, "post_digest": "0000000000000000000000000000000000000000000000000000000000000000ab", "cost": "1200", "error": null}}), false),
+        // invalid: panicked without note
+        ("panicked without note rejected", json!({"block__0": {"valid": null, "post_digest": null, "cost": null, "error": "panicked"}}), false),
+        // invalid: note on non-panicked
+        ("note on non-panicked rejected", json!({"block__0": {"valid": null, "post_digest": null, "cost": null, "error": "errored", "note": "x"}}), false),
+    ];
+    println!("\n[block actuals] asymmetry guards:");
     let mut bad: u32 = 0;
     for (label, doc, want) in checks {
         let got = v.is_valid(doc);
