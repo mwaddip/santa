@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-block.actuals.schema.json",
+  "title": "santa-block actuals file (one object: entry name -> result)",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "required": ["valid", "post_digest", "cost", "error"],
+    "properties": {
+      "valid": { "type": ["boolean", "null"] },
+      "post_digest": { "type": ["string", "null"] },
+      "cost": { "type": ["integer", "null"] },
+      "error": { "enum": [null, "errored", "not-implemented", "panicked"] },
+      "note": { "type": "string" }
+    },
+    "allOf": [
+      { "if": { "properties": { "error": { "const": null } } },
+        "then": { "properties": { "valid": { "type": "boolean" } } } },
+      { "if": { "properties": { "error": { "enum": ["errored", "not-implemented", "panicked"] } } },
+        "then": { "properties": { "valid": { "const": null },
+                                  "post_digest": { "const": null },
+                                  "cost": { "const": null } } } },
+      { "if": { "properties": { "error": { "const": "panicked" } } },
+        "then": { "required": ["note"] } }
+    ]
+  }
+}
