@@ -144,7 +144,7 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,288 entries across 193 files**
+corpus at scale**, since grown by authored gap-fillers: **2,296 entries across 200 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
 262/74), version-split into **v5** (1,885 — the cumulative v5/mainnet surface) and **v6**
 (403 — the v6 new-feature surface); a JSON-Schema gate validates all
