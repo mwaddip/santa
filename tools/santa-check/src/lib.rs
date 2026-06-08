@@ -182,9 +182,10 @@ pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
     }
 }
 
-/// §6 block-tier verdict: three independent dimensions — `valid` (always graded), `post_digest`
+/// §6 block-tier verdict: three chained dimensions — `valid` (always graded), `post_digest`
 /// (graded only on the accept arm when valid is nice), and `cost` (graded only on the accept arm
-/// when BOTH sides declare one, independently of post_digest). Coverage/panicked precede all grading.
+/// when valid=nice AND post_digest=nice AND both sides declare one — the tx tier's valid-gate,
+/// extended one level). Coverage/panicked precede all grading.
 ///
 /// Precedence:
 /// 1. `panicked` → coal unconditionally (before expected check).
