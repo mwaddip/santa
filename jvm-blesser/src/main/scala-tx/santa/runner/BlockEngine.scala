@@ -55,6 +55,11 @@ object BlockEngine extends ApiCodecs {
       id -> b
     }.toMap
     val createdOutputs: Map[String, ErgoBox] = txs.flatMap(_.outputs).map(o => hex(o.id) -> o).toMap
+    // NOT the panic net: this sys.error is raised inside the per-tx for-comprehension's
+    // Try, so a missing box becomes that tx's Failure → Verdict(valid=false) — mirroring
+    // the node, where checkBoxExistence failure invalidates the block (txBoxesToSpend).
+    // The same Try also captures a Parameters table missing a key the context reads
+    // lazily (e.g. 123/BlockVersion) — also a clean reject, not a panic.
     def resolveBox(id: Array[Byte]): ErgoBox = {
       val k = hex(id)
       createdOutputs.get(k).orElse(byBytes.get(k))
@@ -72,9 +77,15 @@ object BlockEngine extends ApiCodecs {
     implicit val verifier: ErgoInterpreter = ErgoInterpreter(params)
 
     // The execTransactions model: stateless then stateful, threaded accumulated cost.
+    // A while loop (not Vector.takeWhile, whose predicate is evaluated STRICTLY over the
+    // whole vector up front) mirrors the node's `cfor(_ < len && costResult.isValid)`
+    // gate: the FIRST failing tx stops the loop, so the reason names the first failure
+    // and no tx ever runs in a post-failure state the node would never reach.
     var acc = 0L
     var failure: Option[String] = None
-    txs.zipWithIndex.takeWhile(_ => failure.isEmpty).foreach { case (tx, i) =>
+    var i = 0
+    while (i < txs.length && failure.isEmpty) {
+      val tx = txs(i)
       val step: Try[Long] = for {
         _ <- tx.validateStateless().result.toTry
         toSpend = tx.inputs.map(in => resolveBox(in.boxId)).toIndexedSeq
@@ -83,8 +94,9 @@ object BlockEngine extends ApiCodecs {
       } yield newAcc
       step match {
         case Success(newAcc) => acc = newAcc
-        case Failure(e)      => failure = Some(s"tx[$i]: ${e.getClass.getSimpleName}: ${e.getMessage}")
+        case Failure(e)      => failure = Some(s"tx[$i]: ${e.getClass.getName}: ${e.getMessage}")
       }
+      i += 1
     }
 
     failure match {
@@ -105,7 +117,13 @@ object BlockEngine extends ApiCodecs {
       val headers = c.downField("headers").focus.flatMap(_.asArray).getOrElse(Vector.empty)
       val table = c.downField("parameters").downField("table").focus
         .flatMap(_.asObject).getOrElse(sys.error(s"'$name': missing parameters.table"))
-        .toMap.map { case (k, v) => k.toInt -> v.as[Int].fold(e => sys.error(s"param $k: $e"), identity) }
+        .toMap.map { case (k, v) =>
+          val id = k.toInt
+          // Real Parameters ids live in 1..9 and 120..124 — all < 128. Guard the Byte
+          // conversion so a hand-authored id > 127 panics loudly instead of wrapping.
+          require(id >= 0 && id <= 127, s"param id $id outside Byte range [0,127]")
+          id -> v.as[Int].fold(e => sys.error(s"param $k: $e"), identity)
+        }
       val boxes = c.downField("boxes").focus.flatMap(_.asArray).getOrElse(Vector.empty).map { b =>
         val id = b.hcursor.get[String]("boxId").fold(e => sys.error(s"box id: $e"), identity)
         val bs = scorex.util.encode.Base16.decode(
