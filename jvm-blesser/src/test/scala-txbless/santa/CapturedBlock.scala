@@ -5,10 +5,12 @@ package santa
 // `santa-block/v1` vector envelopes, driving the JVM oracle BlockEngine (which
 // wraps ergo-core `ErgoState.execTransactions`).
 //
-// One vector file per seed → target/block-vectors/<slug>.json (proof-complete),
-// or target/block-vectors-PROOFLESS/<slug>.json (adProofs null / empty proofBytes).
-// Block 2666 ships today in PROOFLESS quarantine; it moves to the live path only
-// once the ADProofs file lands.
+// One vector file per seed → target/block-vectors/<slug>.json. Seeds read the
+// proof-complete `block-<h>-full.json` captures (real proofBytes, node-verified
+// blake2b256(proofBytes) == header.adProofsRoot); the engine's proofs arm verifies
+// them again at bless time (ADProofs.verify replaying the state changes from
+// parent_digest to header.stateRoot). A proofless capture cannot bless: the engine
+// rejects it, which trips the FAIL-LOUD gate below.
 //
 // ── Parameter table extraction ────────────────────────────────────────────────
 // Parameters come from the epoch-boundary block (the last block at height
@@ -19,12 +21,6 @@ package santa
 // This path is verified at bless-time: table("4") == 1000000 (maxBlockCost),
 // table("123") == 4 (blockVersion). Falls back: if parseExtension throws, we
 // report the exception and re-raise (never fabricate).
-//
-// ── PROOFLESS quarantine ──────────────────────────────────────────────────────
-// If adProofs is null or proofBytes is absent/empty, the vector is written to
-// target/block-vectors-PROOFLESS/ and a loud banner is printed. No file ever
-// moves from PROOFLESS to block-vectors/ automatically — that requires a manual
-// re-bless with the completed proof data.
 //
 // ── FAIL-LOUD-on-valid:false ──────────────────────────────────────────────────
 // Captured history is by definition valid (these blocks are on-chain). If
@@ -55,8 +51,14 @@ object CapturedBlock {
     * whose extension carries the in-force system parameters. */
   private final case class BlockSeed(slug: String, dir: String, height: Int, epochBoundary: Int)
 
+  // powhit-return-type-28474 is EXCLUDED: no canonical proof exists yet — the rust
+  // AVL prover serializes its lone data-input Lookup non-canonically (verifies, but
+  // blake2b256 != adProofsRoot; see docs/findings/testnet-powhit-return-type/
+  // ADPROOF-FINDING.md). It joins when a JVM-sourced canonical proof lands.
   private val Seeds: Seq[BlockSeed] = Seq(
-    BlockSeed("bigint-downcast-2666", "testnet-bigint-downcast-v3", 2666, 2560))
+    BlockSeed("bigint-downcast-2666", "testnet-bigint-downcast-v3", 2666, 2560),
+    BlockSeed("deserialize-context-111927", "testnet-deserialize-context", 111927, 111872),
+    BlockSeed("atleast-degenerate-bound-184137", "testnet-atleast-degenerate-bound", 184137, 184064))
 
   // ── file / JSON helpers ────────────────────────────────────────────────────
 
@@ -155,27 +157,14 @@ object CapturedBlock {
     entries.sortBy(_._1).map(_._2).toVector
   }
 
-  // ── proofless detection ────────────────────────────────────────────────────
-
-  /** Returns true if the block is proof-complete (adProofs non-null with a
-    * non-empty proofBytes string). */
-  private def isProofComplete(blockJson: Json): Boolean = {
-    val adProofs = blockJson.hcursor.downField("adProofs").focus
-    adProofs match {
-      case None => false
-      case Some(j) if j.isNull => false
-      case Some(j) =>
-        j.hcursor.get[String]("proofBytes").fold(_ => false, s => s.nonEmpty)
-    }
-  }
-
   // ── per-seed assembly ──────────────────────────────────────────────────────
 
-  /** Read one seed, bless it, and return (slug, isQuarantined, envelope Json).
-    * FAIL LOUD on oracle valid==false (captured ⇒ valid; a reject = recipe bug). */
-  private def blessSeed(seed: BlockSeed): (String, Boolean, Json) = {
+  /** Read one seed, bless it, and return (slug, envelope Json).
+    * FAIL LOUD on oracle valid==false (captured ⇒ valid; a reject = recipe bug —
+    * including a proofless/tampered capture, which the engine's proofs arm rejects). */
+  private def blessSeed(seed: BlockSeed): (String, Json) = {
     val seedDir  = s"$FindingsDir/${seed.dir}"
-    val block    = parseFile(s"$seedDir/block-${seed.height}.json")
+    val block    = parseFile(s"$seedDir/block-${seed.height}-full.json")
     val epochBlk = parseFile(s"$seedDir/epoch-block-${seed.epochBoundary}.json")
 
     val (headerWindow, parentDigest) = headersWindow(seedDir, seed.height)
@@ -191,7 +180,7 @@ object CapturedBlock {
     }
 
     // ── drive the oracle ─────────────────────────────────────────────────────
-    val verdict = santa.runner.BlockEngine.validate(block, headerWindow, tableScala, boxesBytes)
+    val verdict = santa.runner.BlockEngine.validate(block, headerWindow, tableScala, boxesBytes, parentDigest)
     if (!verdict.valid)
       sys.error(s"CapturedBlock[${seed.slug}]: oracle REJECTED a captured (on-chain) block — " +
         s"this is a capture/recipe bug, not a vector. reason=${verdict.reason.getOrElse("<none>")}")
@@ -225,40 +214,29 @@ object CapturedBlock {
       "blessed_by" -> Json.fromString(BlessedBy),
       "entries"    -> Json.arr(entry))
 
-    val quarantined = !isProofComplete(block)
-    (seed.slug, quarantined, envelope)
+    (seed.slug, envelope)
   }
 
   // ── public API ─────────────────────────────────────────────────────────────
 
-  /** Bless all seeds. Returns Seq of (slug, isQuarantined, envelope). Order follows Seeds. */
-  def blessAll(): Seq[(String, Boolean, Json)] =
+  /** Bless all seeds. Returns Seq of (slug, envelope). Order follows Seeds. */
+  def blessAll(): Seq[(String, Json)] =
     Seeds.map(blessSeed)
 
-  /** Persist blessed vectors. Proof-complete → target/block-vectors/<slug>.json.
-    * Proofless → target/block-vectors-PROOFLESS/<slug>.json with a loud banner.
+  /** Persist blessed vectors → target/block-vectors/<slug>.json.
     * Fails loud on slug collision (would silently drop an entry). */
-  def writeVectors(results: Seq[(String, Boolean, Json)], baseDir: java.nio.file.Path): Unit = {
+  def writeVectors(results: Seq[(String, Json)], baseDir: java.nio.file.Path): Unit = {
     val slugs = results.map(_._1)
     val collisions = slugs.groupBy(identity).filter(_._2.size > 1).keys
     if (collisions.nonEmpty)
       sys.error("CapturedBlock.writeVectors: slug collision would silently drop entries — " +
         collisions.mkString(", "))
 
-    val liveDir  = baseDir.resolve("block-vectors")
-    val proofDir = baseDir.resolve("block-vectors-PROOFLESS")
-
-    results.foreach { case (slug, quarantined, json) =>
-      if (quarantined) {
-        java.nio.file.Files.createDirectories(proofDir)
-        val path = proofDir.resolve(s"$slug.json")
-        java.nio.file.Files.write(path, json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
-        println(s"PROOFS PENDING: $slug staged to quarantine (never moves toward vectors/) → $path")
-      } else {
-        java.nio.file.Files.createDirectories(liveDir)
-        val path = liveDir.resolve(s"$slug.json")
-        java.nio.file.Files.write(path, json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
-      }
+    val liveDir = baseDir.resolve("block-vectors")
+    results.foreach { case (slug, json) =>
+      java.nio.file.Files.createDirectories(liveDir)
+      val path = liveDir.resolve(s"$slug.json")
+      java.nio.file.Files.write(path, json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
     }
   }
 }

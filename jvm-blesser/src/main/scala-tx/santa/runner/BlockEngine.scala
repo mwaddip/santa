@@ -4,24 +4,30 @@ import scala.util.{Failure, Success, Try}
 import io.circe.Json
 import org.ergoplatform.ErgoBox
 import org.ergoplatform.http.api.ApiCodecs
-import org.ergoplatform.modifiers.history.CPreHeader
+import org.ergoplatform.modifiers.history.{ADProofs, CPreHeader}
 import org.ergoplatform.modifiers.history.header.Header
 import org.ergoplatform.modifiers.mempool.ErgoTransaction
+import org.ergoplatform.modifiers.state.StateChanges
 import org.ergoplatform.nodeView.state.{UpcomingStateContext, VotingData}
 import org.ergoplatform.settings.{ChainSettings, ChainSettingsReader, ErgoValidationSettings,
   ErgoValidationSettingsUpdate, Parameters}
 import org.ergoplatform.wallet.interpreter.ErgoInterpreter
+import scorex.crypto.authds.avltree.batch.{Insert, Lookup, Remove}
+import scorex.crypto.authds.{ADDigest, ADValue, SerializedAdProof}
+import scorex.util.{ModifierId, bytesToId}
 
 /** The gated block-tier engine: ergo-core composition reproducing the node-module
   * `ErgoState.execTransactions` semantics (equivalence-anchored on block 2666 — see the
   * block-tier spec §4). Same gate + reflection seam as TxEngine: an ergo-core-less build
   * degrades the runner's block arm to not-implemented.
   *
-  * v1 scope (pre-proofs): valid = threaded stateless+stateful over all txs; cost = the
-  * accumulated total; post_digest = ECHOED from the vector's own block header (the
-  * control-row tautology, declared — the ADProofs-verified computed digest lands with
-  * the proofs arm). Reject mutations of classes the loop sees (cost, version, per-tx)
-  * reject here; proof/digest classes need the proofs arm.
+  * Scope (proofs arm): valid = threaded stateless+stateful over all txs AND
+  * `ADProofs.verify` replaying the block's state changes (the reproduced node-module
+  * `ErgoState.stateChanges` derivation) from parent_digest to the header's stateRoot;
+  * cost = the accumulated total; post_digest = the proof-computed digest (verify checks
+  * it equals header.stateRoot — computed-and-checked, no longer echoed). Ordering note:
+  * the cost loop runs first, proofs second — single-fault mutations are unaffected; a
+  * doubly-bad block reports its cost/script reason.
   */
 object BlockEngine extends ApiCodecs {
   // FILE path (not classpath), shared with TxEngine — santa-run forks sbt from
@@ -34,7 +40,7 @@ object BlockEngine extends ApiCodecs {
   private def hex(b: Array[Byte]): String = scorex.util.encode.Base16.encode(b)
 
   def validate(blockJson: Json, headersJson: Vector[Json], paramsTable: Map[Int, Int],
-               boxesBytes: Vector[(String, Array[Byte])]): Verdict = {
+               boxesBytes: Vector[(String, Array[Byte])], parentDigestHex: String): Verdict = {
     implicit val chainSettings: ChainSettings =
       ChainSettingsReader.read(ChainConf).getOrElse(sys.error(s"chain settings: $ChainConf"))
 
@@ -102,8 +108,55 @@ object BlockEngine extends ApiCodecs {
     failure match {
       case Some(reason) => Verdict(valid = false, postDigest = None, cost = None, reason = Some(reason))
       case None =>
-        val postDigest = blockJson.hcursor.downField("header").get[String]("stateRoot").toOption
-        Verdict(valid = true, postDigest = postDigest, cost = Some(acc), reason = None)
+        // ── proofs arm ─────────────────────────────────────────────────────────
+        // Failures here are clean rejects (valid:false + reason), mirroring the node
+        // where stateChanges/proof verification failure invalidates the block.
+        val proofsCheck: Try[Unit] = Try {
+          val proofHex = blockJson.hcursor.downField("adProofs").get[String]("proofBytes")
+            .getOrElse(sys.error("adProofs missing/null — proof-complete capture required"))
+          val proofBytes = SerializedAdProof @@ scorex.util.encode.Base16.decode(proofHex)
+            .getOrElse(sys.error("adProofs.proofBytes: hex decode failed"))
+          val parentDigest = ADDigest @@ scorex.util.encode.Base16.decode(parentDigestHex)
+            .getOrElse(sys.error("parent_digest: hex decode failed"))
+          require(parentDigest.length == 33, s"parent_digest must be 33 bytes, got ${parentDigest.length}")
+
+          // ErgoState.boxChanges reproduced (node-module, not reachable from ergo-core):
+          // per-tx inputs→Remove / outputs→Insert, in-block create-then-spend collapsed
+          // (an input matching a pending Insert cancels it instead of becoming a Remove);
+          // TreeMap keying by ModifierId = the consensus operation ordering. Lookups =
+          // dataInputs in tx order (ErgoState.stateChanges). StateChanges.operations
+          // replays toLookup ++ toRemove ++ toAppend.
+          val toInsert = scala.collection.mutable.TreeMap.empty[ModifierId, Insert]
+          val toRemove = scala.collection.mutable.TreeMap.empty[ModifierId, Remove]
+          txs.foreach { tx =>
+            tx.inputs.foreach { in =>
+              val k = bytesToId(in.boxId)
+              toInsert.remove(k) match {
+                case None =>
+                  if (toRemove.put(k, Remove(in.boxId)).nonEmpty)
+                    sys.error(s"tx ${tx.id} double-spends input $k")
+                case _ => () // created-then-spent in this block: drops out entirely
+              }
+            }
+            tx.outputs.foreach(o => toInsert += bytesToId(o.id) -> Insert(o.id, ADValue @@ o.bytes))
+          }
+          val toLookup = txs.flatMap(_.dataInputs).map(d => Lookup(d.boxId))
+          val changes  = StateChanges(toRemove.values.toVector, toInsert.values.toVector, toLookup.toVector)
+
+          ADProofs(header.id, proofBytes)
+            .verify(changes, parentDigest, header.stateRoot)
+            .fold(e => sys.error(s"ADProofs.verify: ${e.getMessage}"), _ => ())
+        }
+        proofsCheck match {
+          case Failure(e) =>
+            Verdict(valid = false, postDigest = None, cost = None,
+              reason = Some(s"proofs: ${e.getMessage}"))
+          case Success(()) =>
+            // verify checked the proof-computed digest equals header.stateRoot, so the
+            // emitted post_digest is computed-and-checked.
+            Verdict(valid = true, postDigest = Some(hex(header.stateRoot)),
+              cost = Some(acc), reason = None)
+        }
     }
   }
 
@@ -131,7 +184,9 @@ object BlockEngine extends ApiCodecs {
           .getOrElse(sys.error(s"box $id: hex decode failed"))
         id -> bs
       }
-      val v = validate(block, headers, table, boxes)
+      val parentDigest = c.get[String]("parent_digest")
+        .fold(e => sys.error(s"'$name': missing parent_digest: $e"), identity)
+      val v = validate(block, headers, table, boxes, parentDigest)
       val base = Json.obj(
         "valid"       -> Json.fromBoolean(v.valid),
         "post_digest" -> v.postDigest.map(Json.fromString).getOrElse(Json.Null),

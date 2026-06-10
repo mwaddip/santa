@@ -1,13 +1,14 @@
 package santa
 
-/** Bless + baseline-lock the captured block-tier seeds (Task 7 keystone).
+/** Bless + baseline-lock the captured block-tier seeds (proofs arm).
   *
   * Run under SANTA_TX_BLESSER=1; cwd = jvm-blesser/ (forked test JVM).
   *
-  * Block 2666 is today in PROOFLESS quarantine (adProofs: null in the capture).
-  * The blesser emits to target/block-vectors-PROOFLESS/ and prints a loud banner.
-  * Once the proof file lands, re-bless with the completed capture; the file then
-  * moves to target/block-vectors/ and this test is updated to assert the live path.
+  * All seeds read proof-complete `block-<h>-full.json` captures; the engine verifies
+  * the ADProofs at bless time (replay parent_digest → header.stateRoot), so every
+  * post_digest below is computed-and-checked, not echoed. powhit-return-type-28474
+  * is absent until a canonical (JVM-sourced) proof exists — see
+  * docs/findings/testnet-powhit-return-type/ADPROOF-FINDING.md.
   *
   * FAIL-LOUD guarantee: if blessAll() itself fails (valid:false, capture gap,
   * file-not-found, parse-error) it throws before any test body runs — the whole
@@ -15,19 +16,25 @@ package santa
 class CapturedBlockTest extends munit.FunSuite {
 
   /** Run once per suite; lazy so a blessAll failure surfaces as a test error. */
-  lazy val blessed: Seq[(String, Boolean, io.circe.Json)] = CapturedBlock.blessAll()
+  lazy val blessed: Seq[(String, io.circe.Json)] = CapturedBlock.blessAll()
 
-  private val Slug2666 = "bigint-downcast-2666"
+  /** Per-seed pins: blessed cost (bless-then-pin) + post_digest (the block's own
+    * header stateRoot — the proofs arm verified the replayed digest equals it).
+    * 2666's 39379 is the triple-anchored keystone (spike + equivalence anchor +
+    * tx-tier input-0 bracket); a drift here = stop and investigate. */
+  private val Pins: Map[String, (Long, String)] = Map(
+    "bigint-downcast-2666" ->
+      ((39379L, "40e3b4b002b7abe56c8da96442bcd042c60c031ca8a5abd4cb288f9b97524dfa0d")),
+    "deserialize-context-111927" ->
+      ((170876L, "fa677bf827e52292ed376f4c0c3e958627e58f29f2349f9a5193b6f3391cd91515")),
+    "atleast-degenerate-bound-184137" ->
+      ((40020L, "05a3795297ca43c7476330b9b06cd24dc159568b95d6bf55a4234721d39c426216")))
 
   // ── helpers ───────────────────────────────────────────────────────────────
 
-  private def result(slug: String): (Boolean, io.circe.Json) =
-    blessed.find(_._1 == slug)
-      .map { case (_, q, j) => q -> j }
+  private def envelope(slug: String): io.circe.Json =
+    blessed.find(_._1 == slug).map(_._2)
       .getOrElse(fail(s"slug '$slug' not found in blessed output"))
-
-  private def envelope(slug: String): io.circe.Json = result(slug)._2
-  private def quarantined(slug: String): Boolean    = result(slug)._1
 
   private def entry(slug: String): io.circe.ACursor = {
     val entries = envelope(slug).hcursor.downField("entries").focus
@@ -37,101 +44,71 @@ class CapturedBlockTest extends munit.FunSuite {
     entries.head.hcursor
   }
 
-  // ── structural assertions ─────────────────────────────────────────────────
+  // ── seed-set integrity ────────────────────────────────────────────────────
 
-  test("bigint-downcast-2666: envelope is santa-block/v1") {
-    assertEquals(
-      envelope(Slug2666).hcursor.get[String]("schema").toOption,
-      Some("santa-block/v1"),
-      s"$Slug2666: schema field")
+  test("blessed seed set matches the pin table exactly") {
+    assertEquals(blessed.map(_._1).toSet, Pins.keySet,
+      "seed list and pin table diverged — add/remove pins together with seeds")
   }
 
-  test("bigint-downcast-2666: op prefix is block:") {
-    val op = envelope(Slug2666).hcursor.get[String]("op").toOption.getOrElse("")
-    assert(op.startsWith("block:"), s"op must start with 'block:' got: $op")
-  }
+  // ── per-seed assertions ───────────────────────────────────────────────────
 
-  // ── keystone cost anchor: triple-anchored 39379 ───────────────────────────
+  Pins.foreach { case (slug, (pinnedCost, pinnedDigest)) =>
 
-  test("bigint-downcast-2666 cost == 39379 (triple-anchored keystone)") {
-    val cost = entry(Slug2666).downField("expected").get[Long]("cost")
-      .fold(e => fail(s"cost field missing: $e"), identity)
-    assertEquals(cost, 39379L,
-      s"keystone cost mismatch — triple-anchored at 39379; got $cost; stop and investigate")
-  }
+    test(s"$slug: envelope is santa-block/v1 with block: op") {
+      assertEquals(envelope(slug).hcursor.get[String]("schema").toOption,
+        Some("santa-block/v1"), s"$slug: schema field")
+      val op = envelope(slug).hcursor.get[String]("op").toOption.getOrElse("")
+      assert(op.startsWith("block:"), s"$slug: op must start with 'block:' got: $op")
+    }
 
-  // ── post_digest anchor ────────────────────────────────────────────────────
+    test(s"$slug: valid=true, reason=null") {
+      assertEquals(entry(slug).downField("expected").get[Boolean]("valid").toOption,
+        Some(true), s"$slug: valid must be true")
+      assertEquals(entry(slug).downField("expected").downField("reason").focus.map(_.isNull),
+        Some(true), s"$slug: reason must be null")
+    }
 
-  test("bigint-downcast-2666 post_digest matches block stateRoot") {
-    val got = entry(Slug2666).downField("expected").get[String]("post_digest")
-      .fold(e => fail(s"post_digest field missing: $e"), identity)
-    assertEquals(got,
-      "40e3b4b002b7abe56c8da96442bcd042c60c031ca8a5abd4cb288f9b97524dfa0d",
-      s"post_digest mismatch")
-  }
+    test(s"$slug: cost pin") {
+      val cost = entry(slug).downField("expected").get[Long]("cost")
+        .fold(e => fail(s"$slug: cost field missing: $e"), identity)
+      assertEquals(cost, pinnedCost,
+        s"$slug: blessed cost drifted from the pin; stop and investigate")
+    }
 
-  // ── valid + reason ────────────────────────────────────────────────────────
+    test(s"$slug: post_digest pin (computed-and-checked vs header stateRoot)") {
+      val got = entry(slug).downField("expected").get[String]("post_digest")
+        .fold(e => fail(s"$slug: post_digest field missing: $e"), identity)
+      assertEquals(got, pinnedDigest, s"$slug: post_digest mismatch")
+    }
 
-  test("bigint-downcast-2666: valid=true, reason=null") {
-    assertEquals(
-      entry(Slug2666).downField("expected").get[Boolean]("valid").toOption,
-      Some(true),
-      s"$Slug2666: valid must be true")
-    assertEquals(
-      entry(Slug2666).downField("expected").downField("reason").focus.map(_.isNull),
-      Some(true),
-      s"$Slug2666: reason must be null")
-  }
+    test(s"$slug: activated=3, ergoTree=3") {
+      assertEquals(entry(slug).downField("version").get[Int]("activated").toOption,
+        Some(3), s"$slug: activated must be 3")
+      assertEquals(entry(slug).downField("version").get[Int]("ergoTree").toOption,
+        Some(3), s"$slug: ergoTree must be 3")
+    }
 
-  // ── version ───────────────────────────────────────────────────────────────
-
-  test("bigint-downcast-2666: activated=3, ergoTree=3") {
-    assertEquals(
-      entry(Slug2666).downField("version").get[Int]("activated").toOption,
-      Some(3),
-      s"$Slug2666: activated must be 3")
-    assertEquals(
-      entry(Slug2666).downField("version").get[Int]("ergoTree").toOption,
-      Some(3),
-      s"$Slug2666: ergoTree must be 3")
-  }
-
-  // ── parameters cross-check ────────────────────────────────────────────────
-
-  test("bigint-downcast-2666: parameters table cross-check (maxBlockCost + blockVersion)") {
-    val tableC = entry(Slug2666).downField("parameters").downField("table")
-    // table("4") == 1000000 (maxBlockCost)
-    assertEquals(
-      tableC.get[Int]("4").toOption,
-      Some(1000000),
-      s"$Slug2666: table[4] (maxBlockCost) must be 1000000")
-    // table("123") == 4 (blockVersion)
-    assertEquals(
-      tableC.get[Int]("123").toOption,
-      Some(4),
-      s"$Slug2666: table[123] (blockVersion) must be 4")
-  }
-
-  // ── PROOFLESS quarantine assertion ────────────────────────────────────────
-
-  test("bigint-downcast-2666: staged to PROOFLESS quarantine dir (adProofs null)") {
-    assert(quarantined(Slug2666),
-      s"$Slug2666 should be quarantined (adProofs is null in the capture)")
+    test(s"$slug: parameters table cross-check (maxBlockCost + blockVersion)") {
+      val tableC = entry(slug).downField("parameters").downField("table")
+      assertEquals(tableC.get[Int]("4").toOption, Some(1000000),
+        s"$slug: table[4] (maxBlockCost) must be 1000000")
+      assertEquals(tableC.get[Int]("123").toOption, Some(4),
+        s"$slug: table[123] (blockVersion) must be 4")
+    }
   }
 
   // ── summary + vector write + file presence ───────────────────────────────
-  // writeVectors and the staging-file assertions live in ONE test so the file
-  // is guaranteed to exist before we check for it (munit runs tests in order,
-  // but only within the same test body can we ensure write-then-read sequencing).
+  // writeVectors and the staging-file assertions live in ONE test so the files
+  // are guaranteed to exist before we check for them.
 
-  test("summary + write staging vectors + quarantine file check") {
+  test("summary + write staging vectors + live-path file check") {
     val sb = new StringBuilder("\n========== CapturedBlock blessed seeds ==========\n")
-    blessed.foreach { case (slug, q, json) =>
+    blessed.foreach { case (slug, _) =>
       val ec    = entry(slug)
       val cost  = ec.downField("expected").get[Long]("cost").toOption.map(_.toString).getOrElse("ERROR")
       val valid = ec.downField("expected").get[Boolean]("valid").toOption.map(_.toString).getOrElse("ERROR")
-      val qFlag = if (q) " [PROOFLESS-QUARANTINE]" else ""
-      sb.append(s"  $slug: valid=$valid cost=$cost$qFlag\n")
+      sb.append(s"  $slug: valid=$valid cost=$cost\n")
     }
     sb.append("=================================================\n")
     println(sb.toString)
@@ -139,22 +116,19 @@ class CapturedBlockTest extends munit.FunSuite {
     val baseDir = java.nio.file.Paths.get("target")
     CapturedBlock.writeVectors(blessed, baseDir)
 
-    // 2666 is quarantined — assert the quarantine dir, not the live dir.
-    val proofDir = baseDir.resolve("block-vectors-PROOFLESS")
-    val outFile  = proofDir.resolve(s"$Slug2666.json")
-    assert(java.nio.file.Files.exists(outFile),
-      s"$Slug2666 quarantine vector file not written to $proofDir")
-
-    // Parse the written file and check its schema.
-    val raw = {
-      val src = scala.io.Source.fromFile(outFile.toFile)
-      try src.mkString finally src.close()
+    val liveDir = baseDir.resolve("block-vectors")
+    Pins.keys.foreach { slug =>
+      val outFile = liveDir.resolve(s"$slug.json")
+      assert(java.nio.file.Files.exists(outFile),
+        s"$slug vector file not written to $liveDir")
+      val raw = {
+        val src = scala.io.Source.fromFile(outFile.toFile)
+        try src.mkString finally src.close()
+      }
+      val parsed = io.circe.parser.parse(raw)
+        .fold(e => fail(s"$slug staged file is not valid JSON: $e"), identity)
+      assertEquals(parsed.hcursor.get[String]("schema").toOption,
+        Some("santa-block/v1"), s"$slug staged file: schema must be santa-block/v1")
     }
-    val parsed = io.circe.parser.parse(raw)
-      .fold(e => fail(s"$Slug2666 quarantine file is not valid JSON: $e"), identity)
-    assertEquals(
-      parsed.hcursor.get[String]("schema").toOption,
-      Some("santa-block/v1"),
-      s"$Slug2666 quarantine file: schema must be santa-block/v1")
   }
 }
