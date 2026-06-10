@@ -145,11 +145,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,322 entries across 206 files**
+corpus at scale**, since grown by authored gap-fillers: **2,334 entries across 208 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-296/87), version-split into **v5** (1,911 — the cumulative v5/mainnet surface) and **v6**
+308/89), version-split into **v5** (1,923 — the cumulative v5/mainnet surface) and **v6**
 (411 — the v6 new-feature surface); a JSON-Schema gate validates all
-206. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+208. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way
@@ -205,6 +205,12 @@ true — container identity on normalized values, not retained slices), while ar
 everywhere — passes those but fails every **value-basis** arm (no curve validation, no identity
 normalization, byte-equality on GE; 8 cells), and dasher reds the six cells its in-flight batch-4
 GE-ingress fix targets (no curve-validate at parse, no normalize-on-serialize, value-basis box EQ).
+The batch's tail rounds: the **Coll-HOF per-element cost ladder** (map/filter/exists/forall/fold at
+n=2 and n=4 — two points pin each arm's per-element slope, ADD_TO_ENV included) landed **green on
+every conformer** — a board-wide agreement pin — while the **Context op-forms** (the bare 0xa6/0xac
+wire forms of properties the corpus had only exercised as PropertyCalls — which also COST differently:
+op-form 15 vs PropertyCall 20) instantly caught sigma-rust (both branches) unable to parse 0xa6 and
+dasher panicking on it, with arkadianet alone handling the full opcode table.
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).

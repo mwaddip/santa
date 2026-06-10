@@ -700,6 +700,66 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Coll.hof_per_element_env.json" : {
+      "accepts" : 10,
+      "entries" : 10,
+      "methods" : [
+      ],
+      "op" : "Coll.hof_per_element_env",
+      "ops" : [
+        "+",
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "Exists",
+        "Filter",
+        "Fold",
+        "ForAll",
+        "FuncValue",
+        "GT",
+        "MapCollection",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Context.op_forms.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Context.op_forms",
+      "ops" : [
+        "LastBlockUtxoRootHash$",
+        "MinerPubkey$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Context.preHeader_accessors.json" : {
       "accepts" : 7,
       "entries" : 7,
@@ -7137,6 +7197,7 @@
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/spec/BigInt_methods_equivalence.json",
@@ -7484,6 +7545,7 @@
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
@@ -7542,6 +7604,7 @@
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
@@ -7695,6 +7758,7 @@
     },
     "Exists" : {
       "families" : [
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json"
@@ -7780,6 +7844,7 @@
     },
     "Filter" : {
       "families" : [
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/Coll.filter_equivalence.json",
         "v5/spec/Coll_filter.json",
         "v5/spec/Coll_filter_with_nested_If.json",
@@ -7791,6 +7856,7 @@
     },
     "Fold" : {
       "families" : [
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/Coll_fold_method_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
         "v5/spec/nested_loops_map_inside_fold.json"
@@ -7801,6 +7867,7 @@
     },
     "ForAll" : {
       "families" : [
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/Coll.forall_equivalence.json",
         "v5/spec/Coll_forall_with_nested_If.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json"
@@ -7812,6 +7879,7 @@
     "FuncValue" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
@@ -7970,6 +8038,7 @@
     },
     "GT" : {
       "families" : [
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
         "v5/spec/Byte_LT_GT_NEQ.json",
         "v5/spec/Coll.exists_equivalence.json",
@@ -8228,6 +8297,7 @@
     },
     "LastBlockUtxoRootHash$" : {
       "families" : [
+        "v5/authored/Context.op_forms.json",
         "v5/authored/Context.properties.json"
       ],
       "op_codes" : [
@@ -8253,6 +8323,7 @@
     },
     "MapCollection" : {
       "families" : [
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/Coll_map_method_equivalence.json",
         "v5/spec/Coll_map_with_nested_if.json",
         "v5/spec/nested_loops_map_inside_fold.json",
@@ -8372,6 +8443,7 @@
     },
     "MinerPubkey$" : {
       "families" : [
+        "v5/authored/Context.op_forms.json",
         "v5/authored/Context.properties.json"
       ],
       "op_codes" : [
@@ -8587,6 +8659,7 @@
     "SelectField" : {
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/SelectField.non_pair.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -8798,6 +8871,7 @@
     "ValUse" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
@@ -8960,11 +9034,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2086,
+    "accepts" : 2098,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2322,
-    "files" : 206,
+    "entries" : 2334,
+    "files" : 208,
     "rejects" : 236,
     "unwalked" : 6
   }
