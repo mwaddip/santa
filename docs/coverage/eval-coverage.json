@@ -1027,6 +1027,32 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/atLeast.children_cap.json" : {
+      "accepts" : 3,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "atLeast.children_cap",
+      "ops" : [
+        "AtLeast",
+        "ConcreteCollection",
+        "ConstantPlaceholder"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 2,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/atLeast_with_a_degenerate_bound.json" : {
       "accepts" : 7,
       "entries" : 7,
@@ -7238,6 +7264,7 @@
     },
     "AtLeast" : {
       "families" : [
+        "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json"
       ],
       "op_codes" : [
@@ -7369,6 +7396,7 @@
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
+        "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
@@ -7431,6 +7459,7 @@
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/authored/Tuple.checkType_unsupported.json",
+        "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/BinXor_logical_XOR_test.json",
@@ -8830,12 +8859,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2072,
+    "accepts" : 2075,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2303,
-    "files" : 202,
-    "rejects" : 231,
+    "entries" : 2308,
+    "files" : 203,
+    "rejects" : 233,
     "unwalked" : 4
   }
 }

@@ -145,11 +145,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,303 entries across 202 files**
+corpus at scale**, since grown by authored gap-fillers: **2,308 entries across 203 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-277/83), version-split into **v5** (1,897 — the cumulative v5/mainnet surface) and **v6**
+282/84), version-split into **v5** (1,902 — the cumulative v5/mainnet surface) and **v6**
 (406 — the v6 new-feature surface); a JSON-Schema gate validates all
-202. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+203. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way
@@ -187,7 +187,14 @@ creation, even when the lambda is never applied), but sigma-rust (both branches)
 arkadianet/ergo all **evaluate non-unary lambdas to completion** (`(x,y)=>x+y` applied → 7 where
 the JVM errors) — a fresh over-accept class on all three independent Rust conformers (eni 0 → 3);
 the application-arity arm and the lazy-`If`-skip accept guard (the reject is eval-time, not
-parse-time) hold green everywhere.
+parse-time) hold green everywhere. sigma-rust closed it same-day (eni `28bc8920`, gate at the
+single `Value::Lambda` construction site) — **the fourth full-green convergence, the fastest
+loop yet**. The **atLeast children-cap pins (ergots' Ask 15, same day)** then split the board on
+a different axis: the JVM checks the 255-children cap BEFORE `AtLeast.reduce`'s degenerates
+(`atLeast(0, 256 props)` errors, never TrueProp), and every conformer went red on a *different*
+arm — eni over-accepts the ordering pin (its cap sits in the non-degenerate path only), develop
+over-rejects the `bound>n`-at-the-boundary FalseProp arm, dasher and vixen lack the cap entirely
+(both over-accept the 256-children rejects; ergots' fix lands their current batch).
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).

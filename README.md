@@ -46,10 +46,10 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,303 entries across 202 vector files**: 2,026 produced by
+- ✅ **A blessed eval corpus — 2,308 entries across 203 vector files**: 2,026 produced by
   the JVM reference interpreter (`sigma-state`) from its own language specification, plus
-  277 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,897 entries — the cumulative v5/mainnet method surface)
+  282 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
+  (1,902 entries — the cumulative v5/mainnet method surface)
   and **v6** (406 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
@@ -64,13 +64,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green
   across the entire eval tier** (every v5+v6 spec+authored slice, value, cost, and reject —
   2026-06-10); its remaining reds are roadmap not-impls (the growth ledger). Blitzen-eni
-  (`sigma-rust`'s `ergo-node-integration` fork) has converged to **red 0 three times**
+  (`sigma-rust`'s `ergo-node-integration` fork) has converged to **red 0 four times**
   (eval + wire + transaction, value *and* cost) — each time a new authored round surfaced
-  the next genuine divergence class, routed it, and the fork closed it. The newest round
-  (the SFunc-arity witnesses, 2026-06-10): the JVM rejects non-unary lambdas eagerly at
-  closure creation, but sigma-rust (both branches) *and* arkadianet/ergo all **evaluate
-  multi-arg lambdas to completion** — one authored family catching the same over-accept
-  class in three independent Rust implementations. Plain upstream `develop` misses the
+  the next genuine divergence class, routed it, and the fork closed it. The two newest
+  rounds (both 2026-06-10): the **SFunc-arity witnesses** — the JVM rejects non-unary
+  lambdas eagerly at closure creation, but sigma-rust (both branches) *and*
+  arkadianet/ergo all **evaluated multi-arg lambdas to completion**; one authored family,
+  the same over-accept class in three independent Rust implementations, fixed in eni the
+  same day (the fourth convergence) — and the **atLeast children-cap pins**, where every
+  conformer went red on a *different* arm (eni: cap checked after the bound≤0 degenerate;
+  develop: bound>n over-reject at the cap boundary). Plain upstream `develop` misses the
   values the fork already fixed, plus the v6 surface. A 🪨 is the suite doing its job,
   never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
