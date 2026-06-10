@@ -615,6 +615,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Box.eq_id_basis.json" : {
+      "accepts" : 3,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Box.eq_id_basis",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ",
+        "ExtractRegisterAs",
+        "OptionGet"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Box.signed_view_u64.json" : {
       "accepts" : 9,
       "entries" : 9,
@@ -896,6 +923,34 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/GroupElement.canonical_bytes.json" : {
+      "accepts" : 4,
+      "entries" : 6,
+      "methods" : [
+        "7:2 GroupElement.getEncoded"
+      ],
+      "op" : "GroupElement.canonical_bytes",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ",
+        "If",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 2,
       "version" : "v5"
     },
     "v5/authored/Option.map.json" : {
@@ -4167,6 +4222,36 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.deserializeTo_Header_id_basis.json" : {
+      "accepts" : 4,
+      "entries" : 5,
+      "methods" : [
+        "104:11 Header.minerPk",
+        "106:4 SigmaDslBuilder.deserializeTo",
+        "7:2 GroupElement.getEncoded"
+      ],
+      "op" : "Global.deserializeTo_Header_id_basis",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ",
+        "Global$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Global.powHit_feeding_Coll_HOF.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -6349,6 +6434,7 @@
     },
     "104:11" : {
       "families" : [
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Header.property_accessors.json"
       ],
       "name" : "Header.minerPk"
@@ -6513,6 +6599,7 @@
     },
     "106:4" : {
       "families" : [
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/spec/Global.deserializeTo_group_element.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json"
@@ -6886,9 +6973,11 @@
     },
     "7:2" : {
       "families" : [
+        "v5/authored/GroupElement.canonical_bytes.json",
         "v5/spec/Coll_flatMap_method_equivalence.json",
         "v5/spec/GroupElement.getEncoded_equivalence.json",
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/spec/Global.deserializeTo_group_element.json"
       ],
       "name" : "GroupElement.getEncoded"
@@ -7451,12 +7540,14 @@
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/FuncValue.non_unary_arity.json",
+        "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/Option.map.json",
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/atLeast.children_cap.json",
@@ -7489,6 +7580,7 @@
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
@@ -7580,15 +7672,18 @@
     },
     "EQ" : {
       "families" : [
+        "v5/authored/Box.eq_id_basis.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
+        "v5/authored/GroupElement.canonical_bytes.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/spec/Global.deserializeTo_group_element.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_deserialize_roundtrip_BigInt.json",
@@ -7664,6 +7759,7 @@
     },
     "ExtractRegisterAs" : {
       "families" : [
+        "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
@@ -8042,6 +8138,7 @@
     "Global$" : {
       "families" : [
         "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
@@ -8088,6 +8185,7 @@
     "If" : {
       "families" : [
         "v5/authored/FuncValue.non_unary_arity.json",
+        "v5/authored/GroupElement.canonical_bytes.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v5/spec/Coll_filter_with_nested_If.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -8189,6 +8287,7 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
+        "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/Option.map.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/Box_properties_equivalence.json",
@@ -8216,6 +8315,7 @@
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
@@ -8322,6 +8422,7 @@
     },
     "OptionGet" : {
       "families" : [
+        "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.sub_min_value.json",
         "v5/authored/EQ_of_SigmaProp.json",
@@ -8859,12 +8960,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2075,
+    "accepts" : 2086,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2308,
-    "files" : 203,
-    "rejects" : 233,
-    "unwalked" : 4
+    "entries" : 2322,
+    "files" : 206,
+    "rejects" : 236,
+    "unwalked" : 6
   }
 }

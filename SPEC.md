@@ -145,11 +145,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,308 entries across 203 files**
+corpus at scale**, since grown by authored gap-fillers: **2,322 entries across 206 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-282/84), version-split into **v5** (1,902 — the cumulative v5/mainnet surface) and **v6**
-(406 — the v6 new-feature surface); a JSON-Schema gate validates all
-203. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+296/87), version-split into **v5** (1,911 — the cumulative v5/mainnet surface) and **v6**
+(411 — the v6 new-feature surface); a JSON-Schema gate validates all
+206. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way
@@ -194,7 +194,17 @@ a different axis: the JVM checks the 255-children cap BEFORE `AtLeast.reduce`'s 
 (`atLeast(0, 256 props)` errors, never TrueProp), and every conformer went red on a *different*
 arm — eni over-accepts the ordering pin (its cap sits in the non-degenerate path only), develop
 over-rejects the `bound>n`-at-the-boundary FalseProp arm, dasher and vixen lack the cap entirely
-(both over-accept the 256-children rejects; ergots' fix lands their current batch).
+(both over-accept the 256-children rejects; ergots' fix lands their current batch). The **GE
+canonical-bytes round (Ask 16, same day)** — three families pinning `GroupElementSerializer`
+semantics (invalid points fail at deserialize even in dead branches; a `0x00`-lead "garbage
+identity" parses with bytes 1..32 discarded and re-serializes canonically) and the **byte-vs-value
+identity bases** (box/header twins differing only in a register/minerPk ENCODING: ids differ ⇒
+container EQ false, while the decoded points compare equal) — split four conformers along exactly
+those bases: sigma-rust (both branches) over-EQs the **byte basis** (box and header twins compare
+true — container identity on normalized values, not retained slices), while arkadianet — byte-based
+everywhere — passes those but fails every **value-basis** arm (no curve validation, no identity
+normalization, byte-equality on GE; 8 cells), and dasher reds the six cells its in-flight batch-4
+GE-ingress fix targets (no curve-validate at parse, no normalize-on-serialize, value-basis box EQ).
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).
