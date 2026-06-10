@@ -145,11 +145,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,334 entries across 208 files**
+corpus at scale**, since grown by authored gap-fillers: **2,340 entries across 209 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-308/89), version-split into **v5** (1,923 — the cumulative v5/mainnet surface) and **v6**
+314/90), version-split into **v5** (1,929 — the cumulative v5/mainnet surface) and **v6**
 (411 — the v6 new-feature surface); a JSON-Schema gate validates all
-208. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+209. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way

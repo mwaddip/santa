@@ -615,6 +615,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Box.bytes_byte_basis.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+      ],
+      "op" : "Box.bytes_byte_basis",
+      "ops" : [
+        "ConstantPlaceholder",
+        "ExtractBytes",
+        "ExtractBytesWithNoRef",
+        "ExtractId"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Box.eq_id_basis.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -7602,6 +7629,7 @@
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/Box.bytes_byte_basis.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Coll.hof_per_element_env.json",
@@ -7791,6 +7819,7 @@
     },
     "ExtractBytes" : {
       "families" : [
+        "v5/authored/Box.bytes_byte_basis.json",
         "v5/spec/Box_properties_equivalence.json"
       ],
       "op_codes" : [
@@ -7799,6 +7828,7 @@
     },
     "ExtractBytesWithNoRef" : {
       "families" : [
+        "v5/authored/Box.bytes_byte_basis.json",
         "v5/spec/Box_properties_equivalence.json"
       ],
       "op_codes" : [
@@ -7815,6 +7845,7 @@
     },
     "ExtractId" : {
       "families" : [
+        "v5/authored/Box.bytes_byte_basis.json",
         "v5/spec/Box_properties_equivalence.json"
       ],
       "op_codes" : [
@@ -9034,11 +9065,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2098,
+    "accepts" : 2104,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2334,
-    "files" : 208,
+    "entries" : 2340,
+    "files" : 209,
     "rejects" : 236,
     "unwalked" : 6
   }
