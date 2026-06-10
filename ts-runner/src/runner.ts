@@ -127,7 +127,17 @@ function runEntryInner(schema: string, e: Entry): Result {
     inputs: [selfBoxBase] as ErgoBox[],  // [SELF]; selfBoxIndex 0 via reference-equality indexOf
     outputs: [] as ErgoBox[],
     dataInputs: [] as ErgoBox[],
-    headers: [],                          // contract pin: empty; 101:9 reads headers[0] → errored (ergots diverges from JVM here — a zero header whose stateRoot is 33 zero bytes WOULD reproduce AvlTreeData.dummy through that synthesis, but the contract pins headers empty)
+    headers: [],                          // contract pin: empty
+    // Contract pin (§2): lastBlockUtxoRoot = the dummy AvlTree (33 zero-byte digest,
+    // all ops allowed, keyLength 32, no value-length). An INDEPENDENT context field —
+    // ergots' 101:9 handler reads it directly (their F5 batch 2), never derived from
+    // headers[0].stateRoot, so the empty headers pin above stays compatible.
+    lastBlockUtxoRootHash: {
+      digest: new Uint8Array(33),
+      treeFlags: 0b111,
+      keyLength: 32,
+      valueLengthOpt: null,
+    },
   }
 
   let ctx
@@ -161,17 +171,32 @@ function runEntryInner(schema: string, e: Entry): Result {
 
   // [2] eval ⇒ [3] encode ⇒ [4] capture.
   //     EvalError 'method-not-implemented' ⇒ not-implemented (ergots lacks this op/method —
-  //     the impl's own faithful signal); any other EvalError ⇒ errored; a non-EvalError throw
-  //     (including an encode gap) ⇒ runEntry's panic-net (panicked).
+  //     the impl's own faithful signal), EXCEPT the oracle-unbound carve-out below; any other
+  //     EvalError ⇒ errored; a non-EvalError throw (including an encode gap) ⇒ runEntry's
+  //     panic-net (panicked).
   try {
     const out = evaluateWith(tree, ctx)
     return { value: encodeSValue(out, treeVersion), cost: ctx.jitCost, error: null }
   } catch (err) {
-    if (err instanceof EvalError && err.code === 'method-not-implemented') return NOT_IMPL
+    if (err instanceof EvalError && err.code === 'method-not-implemented') {
+      return ORACLE_UNBOUND.test(err.message)
+        ? { value: null, cost: null, error: 'errored' }
+        : NOT_IMPL
+    }
     if (err instanceof EvalError) return { value: null, cost: null, error: 'errored' }
     throw err
   }
 }
+
+/** MethodCall ids the CANONICAL ORACLE itself cannot eval: the JVM registers them (so
+ *  trees parse) but binds no eval handler — a reflection-throw at EVERY version (P7a,
+ *  source-confirmed against sigma-state's commonBoxMethods). A registry miss on these
+ *  is the library CORRECTLY rejecting what the JVM also rejects — `errored`, a
+ *  conformant verdict — NOT a coverage gap, so it must not land in the
+ *  not-implemented growth ledger. Members: Box.getReg-as-MethodCall (99:7).
+ *  Matched against ergots' single dispatcher-miss throw site, whose message template
+ *  is `method not implemented: typeId=<t>, methodId=<m>`. */
+const ORACLE_UNBOUND = /\btypeId=99, methodId=7\b/
 
 /** SANTA `{<varId 0-255>: SValue}` map → an ergots ContextExtension. Keys are the unsigned
  *  wire byte on both sides (the 101:12 handler normalizes its signed Byte operand to this
