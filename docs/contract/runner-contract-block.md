@@ -113,6 +113,12 @@ proves the grader against it.
   not the retarget schedule — the window is too shallow to recompute difficulty. A block
   with self-consistent PoW but a wrong difficulty would not be caught; that class needs a
   deeper-window format revision (the `v1` → `v2` growth mechanism, as in eval and tx).
+- **Stepped-boundary exclusion (same class).** At an epoch boundary the JVM derives the
+  new parameters from the pre-state params + the epoch's accumulated votes; a boundary
+  where votes actually STEP a parameter would need the epoch's vote history — deeper than
+  the ≤10-header window. `santa-block/v1` boundaries are therefore vote-neutral
+  (calculated == pre-state == the handed table); stepped boundaries are `v2`-growth
+  material alongside the retarget class.
 - **PoW seals the header.** Autolykos hashes the header bytes, so *any* header-field
   tamper (stateRoot, transactionsRoot, version, …) invalidates PoW before the named
   subsystem check is reached on a PoW-checking conformer. Mutation authors target the
@@ -193,12 +199,14 @@ blockVersion 4 — a validator must derive the boundary check from the handed pr
 params, not the block's self-declared extension (the JVM rejects via `exBlockVersion`,
 and `exMatchParameters` would fire too: written ≠ calculated).
 
-**Board:** rudolph (control) `captured: valid 4/4 · digest 4/4 · cost 4/4` +
-`authored: valid 6/6`. donner `captured 4/4·4/4·4/4` + `authored 5/6` — it ACCEPTS
-version-gate (sources the boundary check from the block's extension rather than the
-handed pre-state params; routed). vixen (arkadianet/ergo) `captured 4/4·4/4·3/4` +
-`authored 5/6` — same version-gate accept, plus its 111927 cost divergence (169202 vs
-blessed 170876), the tier's first independent-conformer cost finding; theirs to take.
+**Board:** rudolph (control) and donner both `captured: valid 4/4 · digest 4/4 ·
+cost 4/4` + `authored: valid 6/6` — donner's initial version-gate accept (it sourced
+the boundary check from the block's extension rather than the handed pre-state params)
+was routed and fixed same-day (enr `380941a` hands the vector table as
+`expected_boundary_params`, the node's own sync wiring; its reject reason is the
+`exMatchParameters` twin — verdict identical, reason diagnostic-only). vixen
+(arkadianet/ergo) `captured 4/4·4/4·3/4` + `authored 5/6` — the version-gate accept
+plus its 111927 cost divergence (169202 vs blessed 170876); theirs to take.
 
 ## 9. Worked example
 
