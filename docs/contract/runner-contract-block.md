@@ -37,8 +37,9 @@ schema is `santa-block/v1` and whose entries each carry the full determination s
   height H−1). Genesis-window entries (fewer than 10) are legal.
 - **`parameters.table`** — the in-force `parametersTable` (id-string → int) read from the
   governing epoch-boundary block's extension. Carried explicitly so the vector is
-  self-contained AND mutable (the cheapest cost mutation shrinks `maxBlockCost` here; the
-  version-gate mutation shrinks `123`/blockVersion).
+  self-contained AND mutable (the cheapest cost mutation shrinks `maxBlockCost` here; a
+  version-gate mutation shrinks `123`/blockVersion — meaningful only on an
+  epoch-boundary donor, see §5).
 - **`block`** — the full node-API block: `header`, `blockTransactions`, `extension`,
   `adProofs` with non-empty `proofBytes` (schema-required — nothing proofless is a vector).
 - **`boxes`** — raw serialized bytes (`{boxId, bytes}`, hash-self-verifying) of every
@@ -124,11 +125,18 @@ proves the grader against it.
   valid-but-non-canonical proofs for data-input lookups
   ([`ADPROOF-FINDING.md`](../findings/testnet-powhit-return-type/ADPROOF-FINDING.md)) —
   the reason seed 28474 is not yet a vector.
+- **The version gate fires only at epoch boundaries.** The JVM compares the parameters'
+  declared blockVersion to `header.version` only inside `processExtension`, which runs iff
+  `header.votingStarts(votingEpochLength)` (`ErgoStateContext.scala:246`); mid-epoch the
+  node never makes the comparison. Conformers must mirror exactly that — an unconditional
+  check is stricter than consensus (a donner-surfaced, JVM-verified finding: the oracle's
+  own first composition had this bug, and the original mid-epoch version-gate mutation
+  blessed a reject the real chain would not produce).
 - **JVM oracle recipe (compact).** Gated `BlockEngine` (ergo-core composition,
   equivalence-anchored against the node-module `ErgoState.execTransactions` on block 2666):
-  header/section tier (`exBlockVersion` params-vs-header · `hdrPoW`
-  `powScheme.validate` · `bsCorrespondsToHeader` transactionsRoot + proofs-section
-  digest) → per-tx `validateStateless`/`validateStateful` with threaded accumulated cost
+  header/section tier (`exBlockVersion` params-vs-header at epoch boundaries only ·
+  `hdrPoW` `powScheme.validate` · `bsCorrespondsToHeader` transactionsRoot +
+  proofs-section digest) → per-tx `validateStateless`/`validateStateful` with threaded accumulated cost
   (first failure stops, node `cfor` semantics) → `ADProofs.verify` replaying the
   reproduced `ErgoState.stateChanges` (TreeMap-ordered Remove/Insert with in-block
   create-then-spend collapse; dataInput Lookups in tx order; operations =
@@ -159,7 +167,7 @@ build and gates the tx **and** block engines alike).
 | Conformer | Stance | Detail |
 |---|---|---|
 | **rudolph** | control (build-gated) | Declares `block`; `santa.runner.BlockEngine` reached by reflection, exists only in ergo-core-bearing builds (maintainer machines + conform CI). Oracle-tautological as verification; its value is the harness control row. Ungated builds emit faithful `not-implemented`. |
-| **donner** | full — the tier's real conformer | ergo-node-rust's `validation` crate over its digest-state seam (`DigestValidator::from_state` + `BlockValidator::apply_state`). Runner spec routed (`prompts/rust-node-donner-runner.md`); mounts as `runners/donner` when delivered. Build-identity (§3 of the core contract): its manifest declares its sigma-rust/avltree pin stack. |
+| **donner** | full — the tier's real conformer (`cost: true`) | ergo-node-rust's `validation` crate over its digest-state seam (`DigestValidator::from_state` + `BlockValidator::apply_state`), mounted as the `runners/donner` submodule (santa-donner repo; `impl` clones ergo-node-rust). enr surfaces block cost and enforces the maxBlockCost sum. Build-identity (§3 of the core contract): the runner's Cargo manifest declares the sigma-rust rev + ergo_avltree_rust fork pin stack. |
 | **blitzen-eni / develop** | out-of-scope (grey) | sigma-rust verifies transactions given inputs but applies no blocks — no block-application surface to conform. Not a growth ledger: block application is the node's layer, not the library's. |
 | **dasher** | out-of-scope (grey) | ergots likewise has no block-application surface today. Becomes a growth ledger only if/when ergots declares the tier. |
 | **comet** | out-of-scope (grey) | Fleet is wire-only. |
@@ -173,12 +181,18 @@ ADProofs-verified `parent_digest → header.stateRoot` at bless time.
 rust-regenerated proof verifies but is non-canonical for the data-input Lookup (the
 ADPROOF-FINDING). Joins when a JVM UTXO source regenerates it or the fork fix lands.
 
-**Authored (6):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
-`txs-reorder` · `pow-solution-flip` · `version-gate` — spec §7 classes over the 2666
-donor, JVM-confirmed reasons.
+**Authored (5):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
+`txs-reorder` · `pow-solution-flip` — spec §7 classes over the 2666 donor,
+JVM-confirmed reasons. **`version-gate` is retired pending an epoch-boundary
+re-donor** (the §5 finding: 2666 is mid-epoch, so the mutation encoded
+stricter-than-consensus semantics; it returns over a boundary-block capture where
+`exBlockVersion` genuinely fires on-chain).
 
-**Board:** rudolph (control) `captured: valid 3/3 · digest 3/3 · cost 3/3` +
-`authored: valid 6/6`. donner pending delivery.
+**Board:** rudolph (control) and donner both `captured: valid 3/3 · digest 3/3 ·
+cost 3/3` + `authored: valid 5/5`; vixen (arkadianet/ergo, block arm since its
+`9823cbc`) `captured: valid 3/3 · digest 3/3 · cost 2/3` + `authored: valid 5/5` —
+its 111927 cost (169202 vs blessed 170876) is the tier's first independent-conformer
+divergence, theirs to take.
 
 ## 9. Worked example
 
@@ -204,8 +218,9 @@ donor, JVM-confirmed reasons.
 // → {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "nice"}
 
 // reject arm (authored mutation), clean reject:
-{ "version-gate": { "valid": false, "post_digest": null, "cost": null, "error": null,
-    "reason": "exBlockVersion: parameters blockVersion 3 != header.version 4" } }
+{ "params-shrink-maxBlockCost": { "valid": false, "post_digest": null, "cost": null,
+    "error": null,
+    "reason": "tx[0]: org.ergoplatform.validation.MalformedModifierError: Accumulated cost of block transactions should not exceed <maxBlockCost>. 23c73fb1…: initial cost" } }
 // → {"kind": "block", "valid": "nice", "post_digest": "n/a", "cost": "n/a"}
 
 // a digest-state conformer that ignored parent_digest or skipped the adProofsRoot

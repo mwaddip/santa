@@ -84,11 +84,17 @@ object BlockEngine extends ApiCodecs {
 
     // ── header/section tier (node order: version → PoW → section digests) ─────
     // exBlockVersion (ergo-core ErgoStateContext.scala:222): the in-force parameters'
-    // declared blockVersion must equal the header's version byte. Checked BEFORE PoW
-    // so a version flip reads as the version-gate violation it is (a v2-PoW solution
-    // re-interpreted under v1 rules would otherwise fail as "Incorrect points").
+    // declared blockVersion must equal the header's version byte — but ONLY at
+    // epoch-boundary blocks: the node's check lives inside processExtension, which
+    // appendFullBlock invokes iff header.votingStarts(votingEpochLength)
+    // (ErgoStateContext.scala:246). Mid-epoch the JVM never compares them (the
+    // unconditional check this replaces was stricter than consensus — a
+    // donner-surfaced finding, JVM-verified). At a boundary, checked BEFORE PoW so a
+    // version-gate violation reads as the version reason, not the downstream v1-PoW
+    // misinterpretation ("Incorrect points").
     val headerSectionFailure: Option[String] =
-      (paramsTable.get(123) match {
+      (if (!header.votingStarts(chainSettings.voting.votingLength)) None
+       else paramsTable.get(123) match {
         case None => Some("exBlockVersion: parameters table lacks id 123 (blockVersion)")
         case Some(bv) if bv != header.version.toInt =>
           Some(s"exBlockVersion: parameters blockVersion $bv != header.version ${header.version}")

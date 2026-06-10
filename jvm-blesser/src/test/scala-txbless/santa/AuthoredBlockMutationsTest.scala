@@ -13,9 +13,11 @@ class AuthoredBlockMutationsTest extends munit.FunSuite {
   /** Run once per suite; lazy so a blessAll failure surfaces as a test error. */
   lazy val blessed: Seq[(String, io.circe.Json)] = AuthoredBlockMutations.blessAll()
 
+  // version-gate is retired pending the epoch-boundary re-donor (exBlockVersion
+  // fires only at epochStarts — see AuthoredBlockMutations' class-6 note).
   private val Classes = Seq(
     "params-shrink-maxBlockCost", "stateroot-flip", "adproof-tamper",
-    "txs-reorder", "pow-solution-flip", "version-gate")
+    "txs-reorder", "pow-solution-flip")
 
   // ── helpers ───────────────────────────────────────────────────────────────
 

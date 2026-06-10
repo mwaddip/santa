@@ -82,8 +82,13 @@ object AuthoredBlockMutations {
   //    PoW-LESS digest-native conformers hit instead; either way: must-reject.
   //  - class 4 mutates the SECTION (tx reorder), not the sealed commitment, so
   //    the section-digest check itself fires (PoW intact).
-  //  - class 6 mutates the handed PARAMETERS (epoch says v3, header claims v4),
-  //    so the version gate itself fires (PoW intact).
+  //
+  // Class 6 (version-gate) is RETIRED pending a boundary re-donor: exBlockVersion
+  // fires only at epoch-boundary blocks (processExtension gated on epochStarts,
+  // ErgoStateContext.scala:246 — a donner-surfaced, JVM-verified finding), and 2666
+  // is mid-epoch, so the mutation encoded stricter-than-consensus semantics. It
+  // returns as a params.table["123"] shrink over an epoch-boundary donor (capture
+  // requested from the node session) where the gate genuinely fires on-chain.
 
   private val Mutations: Seq[Mutation] = Seq(
     // 1. shrink maxBlockCost below the block's real cost (39379) → aggregation reject
@@ -100,10 +105,7 @@ object AuthoredBlockMutations {
     Mutation("txs-reorder", "transactionsRoot mismatch", swapFirstTwoTxs),
     // 5. corrupt the Autolykos solution nonce → PoW invalid (the intended PoW probe)
     Mutation("pow-solution-flip", "hdrPoW",
-      e => updateHexIn(e, Seq("block", "header", "powSolutions", "n"), flipMidByte)),
-    // 6. shrink the epoch's declared blockVersion below the header's → version gate
-    Mutation("version-gate", "exBlockVersion",
-      e => setIn(e, Seq("parameters", "table", "123"), Json.fromInt(3))))
+      e => updateHexIn(e, Seq("block", "header", "powSolutions", "n"), flipMidByte)))
 
   // ── donor loading ───────────────────────────────────────────────────────────
 

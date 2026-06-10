@@ -113,14 +113,19 @@ genuine cross-implementation divergences — which is exactly its job. What runs
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
   `cost`. **3 captured testnet seeds** (block 2666 cost 39379 — the triple-anchored
-  keystone · 111927 · 184137), ADProofs-verified at bless time, **+ 6 authored mutation
-  classes** over the 2666 donor, each JVM-confirmed to reject for its intended reason.
+  keystone · 111927 · 184137), ADProofs-verified at bless time, **+ 5 authored mutation
+  classes** over the 2666 donor, each JVM-confirmed to reject for its intended reason
+  (a sixth, version-gate, retired by a donner-surfaced finding: the JVM's version
+  check fires only at epoch boundaries — it returns over a boundary-block donor).
   The 4th seed (28474) awaits a canonical proof — the rust AVL prover emits a
   valid-but-non-canonical proof for data-input lookups, a latent serve-side consensus
   bug recorded in
   [`ADPROOF-FINDING.md`](docs/findings/testnet-powhit-return-type/ADPROOF-FINDING.md).
-  Conformers: **Rudolph control** `3/3·3/3·3/3 + 6/6` · **donner** (ergo-node-rust)
-  routed, pending · libraries grey (block application is the node's layer). Contract:
+  Conformers: **Rudolph control** `3/3·3/3·3/3 + 5/5` · **donner** (ergo-node-rust's
+  digest-state seam) **live** — building it surfaced + fixed two real enr consensus
+  bugs before mounting · **vixen** (arkadianet/ergo) grading too — its debut surfaced
+  a real block-cost divergence · other libraries grey (block application is the
+  node's layer). Contract:
   [`docs/contract/runner-contract-block.md`](docs/contract/runner-contract-block.md).
 
 Still greenfield, and where help is most wanted (see below):
