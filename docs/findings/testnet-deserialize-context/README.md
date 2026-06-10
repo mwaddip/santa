@@ -74,3 +74,6 @@ Spending-box ErgoTree (V3; first byte `0x1b`):
 ```
 1b9402090564040004000400020004000e20a6d4fa307b654dcf31ce07e2462c1be5ca7c5dcc35c1363a0eff62d0b3b9ed3704040e208437796cc1821f8e89272a5d24a0055a80a5eef6ba4e172bca5e905e11e1bf72d804d6017ea305d6029ae4c6a707057300d60393c5a7c5b2a4730100d604b2a5730200958f72017202d801d605b2db6501fe730300ea02d1ededededaee4c67205041ad901060e937206cbe5e3000e8301027304938cb2db63087205730500017306720393c2a7c2720493b1a47307d40800d801d605c1a7d1ededed93cbc2720473089683050193c17204720593e4c672040464e4c6a7046493e4c672040504e4c6a7050493e4c672040606e4c6a7060693e4c672040705720592720172027203
 ```
+- block-tier capture (today set): headers-111917-111926, 26 external boxes, epoch-block-111872 (params in force at 111927). Full block with ADProofs: pending digest side-sync.
+- box-<id16>-bytes.json per external box: raw serialized box bytes (id-verifiable; true content creationHeight per the 2026-06-08 amendment).
+- block-111927-full.json: real proofBytes, blake2b256==adProofsRoot VERIFIED; regenerated locally from rust UTXO state (genesis replay — no testnet peer keeps ADProofs).
