@@ -20,14 +20,19 @@ import io.circe.parser.parse
 
 object AuthoredBlockMutations {
 
-  private val DonorPath = "../vectors/block/v6/captured/bigint-downcast-2666.json"
-  private val DonorSlug = "bigint-downcast-2666"
+  private val MidEpochDonor = "bigint-downcast-2666"
+  private val BoundaryDonor = "epoch-boundary-2560"
   private val BlessedBy = "jvm:ergo-core-6.0.2.1-execTransactions-model"
 
+  private def donorPath(slug: String) = s"../vectors/block/v6/captured/$slug.json"
+
   /** One mutation class: vector name + the marker the engine's reject reason must
-    * contain (the recipe-intent check) + the entry transform. */
+    * contain (the recipe-intent check) + the entry transform + the captured donor
+    * it mutates (mid-epoch 2666 by default; version-gate needs the boundary donor —
+    * the gate only fires at epochStarts). */
   private final case class Mutation(name: String, reasonMustContain: String,
-                                    mutate: Json => Json)
+                                    mutate: Json => Json,
+                                    donorSlug: String = MidEpochDonor)
 
   // ── hex tampering helpers (length-preserving, stay lowercase hex) ──────────
 
@@ -83,12 +88,11 @@ object AuthoredBlockMutations {
   //  - class 4 mutates the SECTION (tx reorder), not the sealed commitment, so
   //    the section-digest check itself fires (PoW intact).
   //
-  // Class 6 (version-gate) is RETIRED pending a boundary re-donor: exBlockVersion
-  // fires only at epoch-boundary blocks (processExtension gated on epochStarts,
-  // ErgoStateContext.scala:246 — a donner-surfaced, JVM-verified finding), and 2666
-  // is mid-epoch, so the mutation encoded stricter-than-consensus semantics. It
-  // returns as a params.table["123"] shrink over an epoch-boundary donor (capture
-  // requested from the node session) where the gate genuinely fires on-chain.
+  // Class 6 (version-gate) rides the BOUNDARY donor: exBlockVersion fires only at
+  // epoch-boundary blocks (processExtension gated on epochStarts,
+  // ErgoStateContext.scala:246 — a donner-surfaced, JVM-verified finding). Its first
+  // authoring over mid-epoch 2666 encoded stricter-than-consensus semantics and was
+  // retired; over 2560 (2560 % 128 == 0) the gate genuinely fires on-chain.
 
   private val Mutations: Seq[Mutation] = Seq(
     // 1. shrink maxBlockCost below the block's real cost (39379) → aggregation reject
@@ -105,27 +109,34 @@ object AuthoredBlockMutations {
     Mutation("txs-reorder", "transactionsRoot mismatch", swapFirstTwoTxs),
     // 5. corrupt the Autolykos solution nonce → PoW invalid (the intended PoW probe)
     Mutation("pow-solution-flip", "hdrPoW",
-      e => updateHexIn(e, Seq("block", "header", "powSolutions", "n"), flipMidByte)))
+      e => updateHexIn(e, Seq("block", "header", "powSolutions", "n"), flipMidByte)),
+    // 6. shrink the epoch's declared blockVersion below the header's → version gate
+    //    (boundary donor — the only place the JVM makes this comparison)
+    Mutation("version-gate", "exBlockVersion",
+      e => setIn(e, Seq("parameters", "table", "123"), Json.fromInt(3)),
+      donorSlug = BoundaryDonor))
 
   // ── donor loading ───────────────────────────────────────────────────────────
 
-  private def donorEntry(): Json = {
-    val src = scala.io.Source.fromFile(DonorPath)
+  private def donorEntry(slug: String): Json = {
+    val src = scala.io.Source.fromFile(donorPath(slug))
     val raw = try src.mkString finally src.close()
-    val env = parse(raw).fold(e => sys.error(s"AuthoredBlockMutations: parse donor: $e"), identity)
+    val env = parse(raw).fold(e => sys.error(s"AuthoredBlockMutations: parse donor $slug: $e"), identity)
     env.hcursor.downField("entries").focus.flatMap(_.asArray).flatMap(_.headOption)
-      .getOrElse(sys.error("AuthoredBlockMutations: donor has no entries[0]"))
+      .getOrElse(sys.error(s"AuthoredBlockMutations: donor $slug has no entries[0]"))
   }
 
   // ── per-class bless ─────────────────────────────────────────────────────────
 
-  /** Mutate the donor, drive the runner path, confirm the reject + reason class,
-    * and return (name, envelope) with the recorded reason as expected.reason. */
-  private def blessMutation(donor: Json, m: Mutation): (String, Json) = {
+  /** Mutate the class' donor, drive the runner path, confirm the reject + reason
+    * class, and return (name, envelope) with the recorded reason as expected.reason. */
+  private def blessMutation(donors: Map[String, Json], m: Mutation): (String, Json) = {
+    val donor = donors.getOrElse(m.donorSlug,
+      sys.error(s"AuthoredBlockMutations[${m.name}]: donor ${m.donorSlug} not loaded"))
     val mutated = m.mutate(donor)
     val named = setIn(
       setIn(mutated, Seq("name"), Json.fromString(m.name)),
-      Seq("source"), Json.fromString(s"santa:mutation:${m.name}:over:$DonorSlug"))
+      Seq("source"), Json.fromString(s"santa:mutation:${m.name}:over:${m.donorSlug}"))
 
     val (_, actuals) = santa.runner.BlockEngine.blockEntry(named)
     val ac = actuals.hcursor
@@ -161,10 +172,10 @@ object AuthoredBlockMutations {
 
   // ── public API ──────────────────────────────────────────────────────────────
 
-  /** Bless all mutation classes over the donor. Order follows Mutations. */
+  /** Bless all mutation classes, each over its declared donor. Order follows Mutations. */
   def blessAll(): Seq[(String, Json)] = {
-    val donor = donorEntry()
-    Mutations.map(m => blessMutation(donor, m))
+    val donors = Mutations.map(_.donorSlug).distinct.map(s => s -> donorEntry(s)).toMap
+    Mutations.map(m => blessMutation(donors, m))
   }
 
   /** Persist blessed mutation vectors → target/block-mutations/<class>.json.

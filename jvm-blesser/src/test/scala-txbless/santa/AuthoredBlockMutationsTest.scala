@@ -13,11 +13,14 @@ class AuthoredBlockMutationsTest extends munit.FunSuite {
   /** Run once per suite; lazy so a blessAll failure surfaces as a test error. */
   lazy val blessed: Seq[(String, io.circe.Json)] = AuthoredBlockMutations.blessAll()
 
-  // version-gate is retired pending the epoch-boundary re-donor (exBlockVersion
-  // fires only at epochStarts — see AuthoredBlockMutations' class-6 note).
   private val Classes = Seq(
     "params-shrink-maxBlockCost", "stateroot-flip", "adproof-tamper",
-    "txs-reorder", "pow-solution-flip")
+    "txs-reorder", "pow-solution-flip", "version-gate")
+
+  /** Per-class donor (the source-string assertion below): version-gate rides the
+    * epoch-boundary donor — exBlockVersion fires only at epochStarts. */
+  private def donorOf(name: String): String =
+    if (name == "version-gate") "epoch-boundary-2560" else "bigint-downcast-2666"
 
   // ── helpers ───────────────────────────────────────────────────────────────
 
@@ -64,7 +67,7 @@ class AuthoredBlockMutationsTest extends munit.FunSuite {
 
     test(s"$name: authored provenance source (santa:mutation:…:over:donor)") {
       val source = entry(name).get[String]("source").getOrElse(fail(s"$name: source missing"))
-      assertEquals(source, s"santa:mutation:$name:over:bigint-downcast-2666")
+      assertEquals(source, s"santa:mutation:$name:over:${donorOf(name)}")
     }
 
     test(s"$name: version carried from donor (activated=3, ergoTree=3)") {

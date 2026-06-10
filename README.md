@@ -112,11 +112,13 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
-  `cost`. **3 captured testnet seeds** (block 2666 cost 39379 — the triple-anchored
-  keystone · 111927 · 184137), ADProofs-verified at bless time, **+ 5 authored mutation
-  classes** over the 2666 donor, each JVM-confirmed to reject for its intended reason
-  (a sixth, version-gate, retired by a donner-surfaced finding: the JVM's version
-  check fires only at epoch boundaries — it returns over a boundary-block donor).
+  `cost`. **4 captured testnet seeds** (block 2666 cost 39379 — the triple-anchored
+  keystone · 111927 · 184137 · the epoch-boundary donor 2560), ADProofs-verified at
+  bless time, **+ 6 authored mutation classes**, each JVM-confirmed to reject for its
+  intended reason (version-gate rides the boundary donor — a donner-surfaced finding
+  established the JVM's version check fires only at epoch boundaries; its re-authored
+  form immediately caught both independent conformers trusting the block's
+  self-declared extension over the handed pre-state params).
   The 4th seed (28474) awaits a canonical proof — the rust AVL prover emits a
   valid-but-non-canonical proof for data-input lookups, a latent serve-side consensus
   bug recorded in

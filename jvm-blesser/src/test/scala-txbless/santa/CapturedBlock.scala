@@ -55,10 +55,17 @@ object CapturedBlock {
   // AVL prover serializes its lone data-input Lookup non-canonically (verifies, but
   // blake2b256 != adProofsRoot; see docs/findings/testnet-powhit-return-type/
   // ADPROOF-FINDING.md). It joins when a JVM-sourced canonical proof lands.
+  //
+  // epoch-boundary-2560 is capture material, not a divergence seed: the only seed at
+  // an epoch boundary (2560 % 128 == 0), so its accept arm exercises the epochStarts
+  // path — the version gate actually RUNS and passes (catches over-strict gating) —
+  // and it donates the version-gate mutation, the one class only meaningful at a
+  // boundary. In-force params for validating it come from the PREVIOUS boundary, 2432.
   private val Seeds: Seq[BlockSeed] = Seq(
     BlockSeed("bigint-downcast-2666", "testnet-bigint-downcast-v3", 2666, 2560),
     BlockSeed("deserialize-context-111927", "testnet-deserialize-context", 111927, 111872),
-    BlockSeed("atleast-degenerate-bound-184137", "testnet-atleast-degenerate-bound", 184137, 184064))
+    BlockSeed("atleast-degenerate-bound-184137", "testnet-atleast-degenerate-bound", 184137, 184064),
+    BlockSeed("epoch-boundary-2560", "testnet-epoch-boundary-2560", 2560, 2432))
 
   // ── file / JSON helpers ────────────────────────────────────────────────────
 

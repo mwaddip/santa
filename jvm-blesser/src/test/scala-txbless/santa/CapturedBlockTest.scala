@@ -28,7 +28,9 @@ class CapturedBlockTest extends munit.FunSuite {
     "deserialize-context-111927" ->
       ((170876L, "fa677bf827e52292ed376f4c0c3e958627e58f29f2349f9a5193b6f3391cd91515")),
     "atleast-degenerate-bound-184137" ->
-      ((40020L, "05a3795297ca43c7476330b9b06cd24dc159568b95d6bf55a4234721d39c426216")))
+      ((40020L, "05a3795297ca43c7476330b9b06cd24dc159568b95d6bf55a4234721d39c426216")),
+    "epoch-boundary-2560" ->
+      ((12344L, "74d3edb8613ffe4f5729d13685d72a7af1eae4746e23e827ed518683063c58bb0d")))
 
   // ── helpers ───────────────────────────────────────────────────────────────
 

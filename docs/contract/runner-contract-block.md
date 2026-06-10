@@ -174,25 +174,31 @@ build and gates the tx **and** block engines alike).
 
 ## 8. Status
 
-**Captured (3):** `bigint-downcast-2666` (cost 39379 — the triple-anchored keystone) ·
-`deserialize-context-111927` (170876) · `atleast-degenerate-bound-184137` (40020), each
-ADProofs-verified `parent_digest → header.stateRoot` at bless time.
+**Captured (4):** `bigint-downcast-2666` (cost 39379 — the triple-anchored keystone) ·
+`deserialize-context-111927` (170876) · `atleast-degenerate-bound-184137` (40020) ·
+`epoch-boundary-2560` (12344 — capture material, not a divergence seed: the only
+boundary-height seed, so its accept arm exercises the epochStarts path and it donates
+the version-gate mutation), each ADProofs-verified `parent_digest → header.stateRoot`
+at bless time.
 **Pending:** `powhit-return-type-28474` — blocked on a canonical (JVM-sourced) proof; the
 rust-regenerated proof verifies but is non-canonical for the data-input Lookup (the
 ADPROOF-FINDING). Joins when a JVM UTXO source regenerates it or the fork fix lands.
 
-**Authored (5):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
-`txs-reorder` · `pow-solution-flip` — spec §7 classes over the 2666 donor,
-JVM-confirmed reasons. **`version-gate` is retired pending an epoch-boundary
-re-donor** (the §5 finding: 2666 is mid-epoch, so the mutation encoded
-stricter-than-consensus semantics; it returns over a boundary-block capture where
-`exBlockVersion` genuinely fires on-chain).
+**Authored (6):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
+`txs-reorder` · `pow-solution-flip` over the 2666 donor + **`version-gate` over the
+epoch-boundary-2560 donor** (its first, mid-epoch authoring was retired by the §5
+finding; over a boundary the gate genuinely fires on-chain). The mutation shrinks the
+HANDED `parameters.table["123"]` while the block's own extension still packs
+blockVersion 4 — a validator must derive the boundary check from the handed pre-state
+params, not the block's self-declared extension (the JVM rejects via `exBlockVersion`,
+and `exMatchParameters` would fire too: written ≠ calculated).
 
-**Board:** rudolph (control) and donner both `captured: valid 3/3 · digest 3/3 ·
-cost 3/3` + `authored: valid 5/5`; vixen (arkadianet/ergo, block arm since its
-`9823cbc`) `captured: valid 3/3 · digest 3/3 · cost 2/3` + `authored: valid 5/5` —
-its 111927 cost (169202 vs blessed 170876) is the tier's first independent-conformer
-divergence, theirs to take.
+**Board:** rudolph (control) `captured: valid 4/4 · digest 4/4 · cost 4/4` +
+`authored: valid 6/6`. donner `captured 4/4·4/4·4/4` + `authored 5/6` — it ACCEPTS
+version-gate (sources the boundary check from the block's extension rather than the
+handed pre-state params; routed). vixen (arkadianet/ergo) `captured 4/4·4/4·3/4` +
+`authored 5/6` — same version-gate accept, plus its 111927 cost divergence (169202 vs
+blessed 170876), the tier's first independent-conformer cost finding; theirs to take.
 
 ## 9. Worked example
 
