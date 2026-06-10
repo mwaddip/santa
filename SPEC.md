@@ -145,11 +145,11 @@ consensus implementations.
 ## Status
 
 Phase 1 delivered — the eval loop runs green end-to-end. Phase 2 delivered the **eval
-corpus at scale**, since grown by authored gap-fillers: **2,296 entries across 200 files**
+corpus at scale**, since grown by authored gap-fillers: **2,303 entries across 202 files**
 (**spec** 2,026/119 blessed by `sigma-state` from its language specification + **authored**
-262/74), version-split into **v5** (1,885 — the cumulative v5/mainnet surface) and **v6**
-(403 — the v6 new-feature surface); a JSON-Schema gate validates all
-193. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
+277/83), version-split into **v5** (1,897 — the cumulative v5/mainnet surface) and **v6**
+(406 — the v6 new-feature surface); a JSON-Schema gate validates all
+202. A standing **coverage manifest** (`docs/coverage/eval-coverage.json`,
 `santa-coverage/v1`) maps per-family ops / `(typeId, methodId)` methods / arms / tree
 shapes, read off each entry's deserialized tree and suite-gated current — the
 registry-diff surface for conformers. The conformer layer is live: `./conform` runs the **full grid** over `runners/*/` — the N-way
@@ -177,7 +177,17 @@ stay on crates.io; the runner manifest declares the fork, `Cargo.lock` pins the 
 21 → 5: four cost-coals on the degenerate paths + the `option-tag-02` over-reject, re-routed —
 and closed same-day: the reconstruct-fail costing seam (`treeHeight` 0 when reconstruction can't
 start) + the nonzero-Option-tag parser landed (eni `033a0ead`), **eni red 0** — the suite's second
-full-green convergence, now under the declared fork override.
+full-green convergence, now under the declared fork override. The **F5 checkType/ingress round
+(2026-06-08→10)** repeated the cycle — 7 authored witnesses surfaced 5 eni divergences (checkType
+×2, a bidirectional substConstants version-source bug, rule-1012) which sigma-rust closed at
+`25fdbcbd` → **eni red 0 again, the third full-green convergence (2026-06-10)**. The **SFunc-arity
+witnesses (ergots' Ask 11, 2026-06-10)** then opened the next round: the JVM supports only unary
+functions at eval (`FuncValue.eval`/`Apply.eval` reject `args.length ≠ 1` — eagerly, at closure
+creation, even when the lambda is never applied), but sigma-rust (both branches) and
+arkadianet/ergo all **evaluate non-unary lambdas to completion** (`(x,y)=>x+y` applied → 7 where
+the JVM errors) — a fresh over-accept class on all three independent Rust conformers (eni 0 → 3);
+the application-arity arm and the lazy-`If`-skip accept guard (the reject is eval-time, not
+parse-time) hold green everywhere.
 Upstream `develop` still misses the fork's fixes pending PR merges, plus the v6 surface —
 the loop surfacing genuine cross-impl divergences, recorded, routed, and converging. The runner contract
 holds a faithful per-entry outcome model (no abstention — scope is an input-side selection).

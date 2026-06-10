@@ -46,10 +46,10 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,296 entries across 200 vector files**: 2,026 produced by
+- ✅ **A blessed eval corpus — 2,303 entries across 202 vector files**: 2,026 produced by
   the JVM reference interpreter (`sigma-state`) from its own language specification, plus
-  270 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,890 entries — the cumulative v5/mainnet method surface)
+  277 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
+  (1,897 entries — the cumulative v5/mainnet method surface)
   and **v6** (406 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
@@ -61,22 +61,18 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   `ergo-node-integration` fork (`--features jit-cost`), and **Comet** (the pure-TS
   **Fleet SDK** — wire tier only). Each is graded against the
   JVM-blessed `expected` — the runner is SANTA's; the implementation under test is a dependency.
-- ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green on
-  the v5 spec corpus (1,757 / 1,757)** — the 52 healed AvlTree-typed entries initially
-  surfaced a SANTA harness encode gap (the result-encode bridges lacked an AvlTree arm;
-  `x.R9[AvlTree].get` evaluates correctly in every conformer), fixed same-arc.
-  Blitzen shows the suite working — `sigma-rust`'s `ergo-node-integration` fork is green
-  on everything it has converged on (eval + wire + transaction, value *and* cost — every
-  earlier routed divergence is fixed in the fork; the nine 2026-06-07 context/accessor
-  divergences — Box u64 signed-view ×6, `Header.stateRoot`/`powOnetimePk`,
-  `AvlTree.insertOrUpdate#bad-proof` — all converged in one round @ `2dbac146`; the
-  SigmaProp EQ conjecture-mismatch throw arm ×2 converged @ `de6331cb`)
-  **leaving exactly 1 genuine red**: `CONTEXT.headers` (a fixed `[Header; 10]` model can't
-  express the JVM's variable-length `Coll[Header]` — which also makes the rust node pad the
-  genesis-window header set; a real-but-narrow consensus divergence, see
-  `docs/findings/sigma-rust-fixed-header-window.md`) — while plain upstream
-  `develop` misses the v5 values the fork already
-  fixed, plus the v6 surface. A 🪨 is the suite doing its job, never silenced.
+- ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green
+  across the entire eval tier** (every v5+v6 spec+authored slice, value, cost, and reject —
+  2026-06-10); its remaining reds are roadmap not-impls (the growth ledger). Blitzen-eni
+  (`sigma-rust`'s `ergo-node-integration` fork) has converged to **red 0 three times**
+  (eval + wire + transaction, value *and* cost) — each time a new authored round surfaced
+  the next genuine divergence class, routed it, and the fork closed it. The newest round
+  (the SFunc-arity witnesses, 2026-06-10): the JVM rejects non-unary lambdas eagerly at
+  closure creation, but sigma-rust (both branches) *and* arkadianet/ergo all **evaluate
+  multi-arg lambdas to completion** — one authored family catching the same over-accept
+  class in three independent Rust implementations. Plain upstream `develop` misses the
+  values the fork already fixed, plus the v6 surface. A 🪨 is the suite doing its job,
+  never silenced.
 - ✅ **A frozen runner contract** ([`docs/contract/runner-contract.md`](docs/contract/runner-contract.md))
   + a JVM blesser, the JVM reference runner (*Rudolph*), and a harness. A runner is
   **total**: it emits one faithful outcome for *every* entry — value + cost on success,

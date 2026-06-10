@@ -1,5 +1,35 @@
 {
   "families" : {
+    "v5/authored/Apply.non_unary_arity.json" : {
+      "accepts" : 1,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Apply.non_unary_arity",
+      "ops" : [
+        "+",
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 2,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/ArithOp.numeric_kind_mismatch.json" : {
       "accepts" : 1,
       "entries" : 1,
@@ -832,6 +862,37 @@
           "has_size" : true,
           "rejects" : 2,
           "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/FuncValue.non_unary_arity.json" : {
+      "accepts" : 1,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "FuncValue.non_unary_arity",
+      "ops" : [
+        "+",
+        "Apply",
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "If",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 3,
+          "tree_version" : 0
         }
       ],
       "unwalked" : 0,
@@ -6959,7 +7020,9 @@
     },
     "+" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -7031,6 +7094,8 @@
     },
     "Apply" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -7209,6 +7274,8 @@
     },
     "BlockValue" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -7335,6 +7402,7 @@
     },
     "ConstantPlaceholder" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
         "v5/authored/AvlTree.degenerate_edges.json",
@@ -7360,6 +7428,7 @@
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
@@ -7617,6 +7686,8 @@
     },
     "FuncValue" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -7987,6 +8058,7 @@
     },
     "If" : {
       "families" : [
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v5/spec/Coll_filter_with_nested_If.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -8566,6 +8638,8 @@
     },
     "ValDef" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -8593,6 +8667,8 @@
     },
     "ValUse" : {
       "families" : [
+        "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -8754,12 +8830,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2070,
+    "accepts" : 2072,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2296,
-    "files" : 200,
-    "rejects" : 226,
+    "entries" : 2303,
+    "files" : 202,
+    "rejects" : 231,
     "unwalked" : 4
   }
 }
