@@ -4,7 +4,7 @@ import scala.util.{Failure, Success, Try}
 import io.circe.Json
 import org.ergoplatform.ErgoBox
 import org.ergoplatform.http.api.ApiCodecs
-import org.ergoplatform.modifiers.history.{ADProofs, CPreHeader}
+import org.ergoplatform.modifiers.history.{ADProofs, BlockTransactions, CPreHeader}
 import org.ergoplatform.modifiers.history.header.Header
 import org.ergoplatform.modifiers.mempool.ErgoTransaction
 import org.ergoplatform.modifiers.state.StateChanges
@@ -82,13 +82,36 @@ object BlockEngine extends ApiCodecs {
       params, ErgoValidationSettings.initial, VotingData.empty)
     implicit val verifier: ErgoInterpreter = ErgoInterpreter(params)
 
+    // ── header/section tier (node order: version → PoW → section digests) ─────
+    // exBlockVersion (ergo-core ErgoStateContext.scala:222): the in-force parameters'
+    // declared blockVersion must equal the header's version byte. Checked BEFORE PoW
+    // so a version flip reads as the version-gate violation it is (a v2-PoW solution
+    // re-interpreted under v1 rules would otherwise fail as "Incorrect points").
+    val headerSectionFailure: Option[String] =
+      (paramsTable.get(123) match {
+        case None => Some("exBlockVersion: parameters table lacks id 123 (blockVersion)")
+        case Some(bv) if bv != header.version.toInt =>
+          Some(s"exBlockVersion: parameters blockVersion $bv != header.version ${header.version}")
+        case _ => None
+      })
+        .orElse(chainSettings.powScheme.validate(header).failed.toOption
+          .map(e => s"hdrPoW: ${e.getMessage}"))
+        .orElse {
+          val computed = BlockTransactions.transactionsRoot(txs, header.version)
+          if (!java.util.Arrays.equals(computed, header.transactionsRoot))
+            Some(s"bsCorrespondsToHeader: transactionsRoot mismatch " +
+              s"(computed ${hex(computed)} != header ${hex(header.transactionsRoot)})")
+          else None
+        }
+
     // The execTransactions model: stateless then stateful, threaded accumulated cost.
     // A while loop (not Vector.takeWhile, whose predicate is evaluated STRICTLY over the
     // whole vector up front) mirrors the node's `cfor(_ < len && costResult.isValid)`
     // gate: the FIRST failing tx stops the loop, so the reason names the first failure
     // and no tx ever runs in a post-failure state the node would never reach.
+    // A header/section-tier failure pre-loads `failure`, skipping the loop entirely.
     var acc = 0L
-    var failure: Option[String] = None
+    var failure: Option[String] = headerSectionFailure
     var i = 0
     while (i < txs.length && failure.isEmpty) {
       val tx = txs(i)
@@ -119,6 +142,15 @@ object BlockEngine extends ApiCodecs {
           val parentDigest = ADDigest @@ scorex.util.encode.Base16.decode(parentDigestHex)
             .getOrElse(sys.error("parent_digest: hex decode failed"))
           require(parentDigest.length == 33, s"parent_digest must be 33 bytes, got ${parentDigest.length}")
+
+          // bsCorrespondsToHeader for the proofs section: the bytes must BE the
+          // committed section (blake2b256 == header.adProofsRoot), not merely replay
+          // correctly — a valid-but-non-canonical proof is a consensus reject (the
+          // live 28474 finding class; see testnet-powhit-return-type/ADPROOF-FINDING.md).
+          val proofDigest = ADProofs.proofDigest(proofBytes)
+          if (!java.util.Arrays.equals(proofDigest, header.ADProofsRoot))
+            sys.error(s"bsCorrespondsToHeader: blake2b256(proofBytes) ${hex(proofDigest)} " +
+              s"!= header.adProofsRoot ${hex(header.ADProofsRoot)}")
 
           // ErgoState.boxChanges reproduced (node-module, not reachable from ergo-core):
           // per-tx inputs→Remove / outputs→Insert, in-block create-then-spend collapsed
