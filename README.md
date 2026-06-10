@@ -36,7 +36,10 @@ Four tiers:
 - **Transaction tier** — library-decidable tx validity given full inputs (script-verify
   + conservation / tokens / min-value / cost). No full node required; blessed by
   `ergo-core validateStateful`.
-- **Block tier** — `block H → valid? / state-root`. Run by full *nodes*.
+- **Block tier** — digest-state block validity: parent state digest + ≤10 headers +
+  parameters + a full block *with ADProofs* → `valid?` + computed post-digest + cost.
+  Library-decidable (Ergo's stateless-validation design — no UTXO DB, no sync); run by
+  digest-capable validators (ergo-node-rust's `validation` seam, the gated JVM engine).
 
 ## Status
 
@@ -98,21 +101,34 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   [`docs/contract/runner-contract-wire.md`](docs/contract/runner-contract-wire.md).
 - ✅ **Transaction tier live** — `santa-transaction/v1` schema; **4 captured vectors**
   (`vectors/transaction/v6/captured/`), each JVM-blessed via `ergo-core 6.0.2.1
-  validateStateful`. Conformer stances: **Rudolph out** (oracle-tautological + keeps
-  ergo-core out of CI) · **Blitzen-eni `valid 4/4 · cost 4/4` byte-exact** (the initial
-  bless surfaced 3 genuine cost divergences — decomposed, routed, fixed in the fork,
-  re-graded exact: the tier's first divergence→fix→convergence loop) ·
+  validateStateful`. Conformer stances: **Rudolph control** (gated `TxEngine`; the
+  conform CI publishes ergo-core itself, cached by tag) · **Blitzen-eni `valid 4/4 ·
+  cost 4/4` byte-exact** (the initial bless surfaced 3 genuine cost divergences —
+  decomposed, routed, fixed in the fork, re-graded exact: the tier's first
+  divergence→fix→convergence loop) ·
   **Blitzen-develop `valid 0/4`** (upstream bugs; the bigint-downcast
   seed exposes the tree-version bug eval cannot catch) · **Dasher `4 not-implemented`**
   (growth ledger) · **Comet out-of-scope** (wire-only; Fleet has no verifier). Contract:
   [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
+- ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
+  ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
+  `cost`. **3 captured testnet seeds** (block 2666 cost 39379 — the triple-anchored
+  keystone · 111927 · 184137), ADProofs-verified at bless time, **+ 6 authored mutation
+  classes** over the 2666 donor, each JVM-confirmed to reject for its intended reason.
+  The 4th seed (28474) awaits a canonical proof — the rust AVL prover emits a
+  valid-but-non-canonical proof for data-input lookups, a latent serve-side consensus
+  bug recorded in
+  [`ADPROOF-FINDING.md`](docs/findings/testnet-powhit-return-type/ADPROOF-FINDING.md).
+  Conformers: **Rudolph control** `3/3·3/3·3/3 + 6/6` · **donner** (ergo-node-rust)
+  routed, pending · libraries grey (block application is the node's layer). Contract:
+  [`docs/contract/runner-contract-block.md`](docs/contract/runner-contract-block.md).
 
 Still greenfield, and where help is most wanted (see below):
 
-- the **block tier** (chain-blessed block vectors) and the tx-tier **authored reject arm**;
-- more **independent runners** — the full nodes (`sigma-rust` is now wired, as Blitzen);
-- the **reject arm** — authored negative / mutation vectors (rejected *for the right
-  reason*); and a full CI gate.
+- the tx-tier **authored reject arm**; more captured block seeds (incl. 28474's
+  canonical proof);
+- more **independent runners** — donner (ergo-node-rust, block tier) is routed and
+  pending; alt impls welcome at every tier.
 
 ## Layout
 
