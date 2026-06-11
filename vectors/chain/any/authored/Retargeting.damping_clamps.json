@@ -1,0 +1,621 @@
+{
+  "schema" : "santa-chain/v1",
+  "blessed_by" : "jvm:ergo-core-6.0.2.1-chain-model",
+  "entries" : [
+    {
+      "name" : "retargeting-flat-control",
+      "source" : "santa:damping_clamps:flat-control",
+      "kind" : "retargeting",
+      "settings" : {
+        "epoch_length" : 128,
+        "use_last_epochs" : 8,
+        "block_interval_ms" : 45000,
+        "initial_nbits" : 16842752,
+        "eip37_activation_height" : 1,
+        "eip37_epoch_length" : 128
+      },
+      "payload" : {
+        "target_height" : 393601,
+        "anchor_headers" : [
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781063957902,
+            "nBits" : 83934920,
+            "height" : 392576,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781069717902,
+            "nBits" : 83934920,
+            "height" : 392704,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781075477902,
+            "nBits" : 83934920,
+            "height" : 392832,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781081237902,
+            "nBits" : 83934920,
+            "height" : 392960,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781086997902,
+            "nBits" : 83934920,
+            "height" : 393088,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781092757902,
+            "nBits" : 83934920,
+            "height" : 393216,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781098517902,
+            "nBits" : 83934920,
+            "height" : 393344,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781104277902,
+            "nBits" : 83934920,
+            "height" : 393472,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781110037902,
+            "nBits" : 83934920,
+            "height" : 393600,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          }
+        ]
+      },
+      "expected" : {
+        "nbits" : 83934920
+      },
+      "diagnostic" : {
+        "difficulty" : "3200778240",
+        "note" : "control: 9 anchors at constant nBits, every epoch exactly on the desired interval (128 × 45000 ms) — a flat chain retargets to itself"
+      }
+    },
+    {
+      "name" : "retargeting-fast-chain-clamps-up",
+      "source" : "santa:damping_clamps:fast-chain-clamps-up",
+      "kind" : "retargeting",
+      "settings" : {
+        "epoch_length" : 128,
+        "use_last_epochs" : 8,
+        "block_interval_ms" : 45000,
+        "initial_nbits" : 16842752,
+        "eip37_activation_height" : 1,
+        "eip37_epoch_length" : 128
+      },
+      "payload" : {
+        "target_height" : 393601,
+        "anchor_headers" : [
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781063957902,
+            "nBits" : 83934920,
+            "height" : 392576,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781064533902,
+            "nBits" : 83934920,
+            "height" : 392704,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781065109902,
+            "nBits" : 83934920,
+            "height" : 392832,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781065685902,
+            "nBits" : 83934920,
+            "height" : 392960,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781066261902,
+            "nBits" : 83934920,
+            "height" : 393088,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781066837902,
+            "nBits" : 83934920,
+            "height" : 393216,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781067413902,
+            "nBits" : 83934920,
+            "height" : 393344,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781067989902,
+            "nBits" : 83934920,
+            "height" : 393472,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781068565902,
+            "nBits" : 83934920,
+            "height" : 393600,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          }
+        ]
+      },
+      "expected" : {
+        "nbits" : 83959340
+      },
+      "diagnostic" : {
+        "difficulty" : "4801167360",
+        "note" : "epochs compressed 10× — the EIP-37 1.5× upper damping clamp binds: the generator test proves oracle(10×) == oracle(100×) (same nbits for different compressions ⇒ the clamp, not the ratio, decides)"
+      }
+    },
+    {
+      "name" : "retargeting-slow-chain-clamps-down",
+      "source" : "santa:damping_clamps:slow-chain-clamps-down",
+      "kind" : "retargeting",
+      "settings" : {
+        "epoch_length" : 128,
+        "use_last_epochs" : 8,
+        "block_interval_ms" : 45000,
+        "initial_nbits" : 16842752,
+        "eip37_activation_height" : 1,
+        "eip37_epoch_length" : 128
+      },
+      "payload" : {
+        "target_height" : 393601,
+        "anchor_headers" : [
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781063957902,
+            "nBits" : 83934920,
+            "height" : 392576,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781121557902,
+            "nBits" : 83934920,
+            "height" : 392704,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781179157902,
+            "nBits" : 83934920,
+            "height" : 392832,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781236757902,
+            "nBits" : 83934920,
+            "height" : 392960,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781294357902,
+            "nBits" : 83934920,
+            "height" : 393088,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781351957902,
+            "nBits" : 83934920,
+            "height" : 393216,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781409557902,
+            "nBits" : 83934920,
+            "height" : 393344,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781467157902,
+            "nBits" : 83934920,
+            "height" : 393472,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          },
+          {
+            "version" : 4,
+            "id" : "58aeb4d9c0d524429b69f051404fa9a5212a4cf1ac6104237f0ac682560d91d1",
+            "parentId" : "3c04743ad35b8b325fcabef519282e57fd93a565364459a9092584105890d93e",
+            "adProofsRoot" : "9df9a3630b0bbb9ce231a23fe2061255d76289eac26e5658fe0a221b79b37bb6",
+            "stateRoot" : "bc5b771aba73bbeff0538713b3b36679c9a6e6e32350584d3a7d19fba3c2a2ab17",
+            "transactionsRoot" : "4423b7fa3f431b63fd3f94eeec87bc9a539ed436da6d56e89e8fbdc377d5e798",
+            "timestamp" : 1781524757902,
+            "nBits" : 83934920,
+            "height" : 393600,
+            "extensionHash" : "f6d071a73d658328162abab3e05e0020a1e3903310d73df4eee9c368972d9c55",
+            "powSolutions" : {
+              "pk" : "026dafe2c31eae56c4fe7b4bce249d453b2716522c0eda920d7a62036bcc85b422",
+              "w" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+              "n" : "7009bbca85f4aca3",
+              "d" : null
+            },
+            "votes" : "000000",
+            "unparsedBytes" : ""
+          }
+        ]
+      },
+      "expected" : {
+        "nbits" : 73360384
+      },
+      "diagnostic" : {
+        "difficulty" : "1600389120",
+        "note" : "epochs stretched 10× — the EIP-37 0.5× lower damping clamp binds: the generator test proves oracle(10×) == oracle(100×)"
+      }
+    }
+  ]
+}
