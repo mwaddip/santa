@@ -88,9 +88,11 @@ debugging — graders never read it. Retargeting convention: `{difficulty: <deci
 string>}`, the decoded difficulty behind the expected `nbits`. Voting entries may carry
 notes (e.g. `epoch_note`).
 
-The v1 corpus is **accept-shaped**: `expected` has no reject arm and no `error` field —
-every vector expects a computed value. (Reject-shaped chain vectors would be a format
-revision, the `v1` → `v2` growth mechanism as in the other tiers.)
+The v1 corpus is **accept-shaped** for retargeting and the bulk of voting vectors: `expected`
+carries computed values. Voting adds a reject arm in v1 (`expected.error: "errored"` — see
+below); retargeting has no reject arm (no known JVM-throw class at the pure-retarget seam
+over schema-valid anchors). Broader reject-shaped expansion across kinds would be a format
+revision, the `v1` → `v2` growth mechanism as in the other tiers.
 
 ### `kind: "retargeting"`
 
@@ -190,6 +192,19 @@ revision, the `v1` → `v2` growth mechanism as in the other tiers.)
   Parameters.scala:82-86), so the pair is the verdict — the **full** post-epoch table
   (pinned by design: full verdict, not just moved params), not a delta.
 
+**The reject form (voting only, v1):** `expected` MAY instead be `{"error": "errored"}` —
+no value keys. A reject vector pins an input the JVM itself THROWS on (throw parity:
+"if the JVM is hostile, so are we" — a divergence here is a block one node accepts and
+another rejects). The three authored classes in v1: a table carrying 122 without 121
+(`votes` forces `parametersTable(121)`, Parameters.scala:108 — `NoSuchElementException`),
+approved votes for a table-absent id (`updateParams` reads `parametersTable(paramIdAbs)`,
+Parameters.scala:167), and a proposed update disabling a MANDATORY rule
+(`ErgoValidationSettingsUpdate`'s require, ErgoValidationSettingsUpdate.scala:48 — fires
+at extension parse). The reject reason is diagnostic-only (`diagnostic.oracle_note`
+carries the JVM throw text; never graded, never cross-matched). Retargeting stays
+accept-only in v1 — no known JVM-throw class at the pure-retarget seam over
+schema-valid anchors.
+
 **`activated_update` / `proposed_update` encoding (pinned):** the value is the **canonical
 lower-case serializer hex** of the `ErgoValidationSettingsUpdate` —
 `ErgoValidationSettingsUpdateSerializer.toBytes`, Base16 (the serializer at
@@ -216,9 +231,12 @@ The shared invariants carry over: **total per-entry outcomes, no abstention** �
 entry handed to a runner produces exactly one of the four rows; the kind's value fields
 are non-null iff `error` is null; `note` with `panicked` is the caught-panic message,
 mirroring the other tiers' panic envelope (`note` MAY accompany `errored` as a non-graded
-diagnostic; v1's corpus is accept-shaped so errored rows are expected to be rare). With
-an accept-shaped v1 corpus `errored` always grades coal — it exists so a runner never has
-to lie or die, not as a gradable verdict.
+diagnostic). On accept vectors `errored` grades coal; on reject vectors
+(`expected.error == "errored"`, voting only) `errored` is the graded NICE outcome —
+the runner's consensus seam rejected the inputs exactly as the JVM does. `panicked` is
+NEVER the expected outcome, reject vectors included: throw parity means CATCHING and
+classifying the rejection, not crashing (a conformer whose chain arm dies on hostile
+input is red by design).
 
 `activated_update` in actuals follows the same pinned encoding as §2: canonical serializer
 hex, `"0000"` for the empty update, never `""` — a conformer that emits `""` for
@@ -242,7 +260,16 @@ coverage verdict (the growth-ledger stance); then one graded dimension, **`value
   `expected.parameters` (table compared key-by-key; key order irrelevant) AND
   `actual.activated_update` string-equals `expected.activated_update` (the canonical hex —
   `"0000"` ≠ `""` by construction).
-- `errored` where a value is expected is coal (the whole v1 corpus expects values).
+- **voting reject vectors** (`expected.error == "errored"`): nice iff
+  `actual.error == "errored"`. A produced value where the JVM throws is coal; `panicked`
+  is coal by the standing precedence (it never reaches the value dimension).
+  `not-implemented` stays the blue coverage verdict per the precedence above.
+  (This deliberately INVERTS the block tier's reject arm, where `errored` is coal —
+  block models rejection as a first-class `valid:false` verdict, so `errored` there is
+  a failed verdict; chain has no clean-reject verdict slot — the JVM THROWS on these
+  inputs, and faithful parity surfaces the throw as `errored`.)
+- `errored` where a value is expected is coal (accept vectors are the corpus bulk; the
+  reject arm above is the one place `errored` grades nice).
 - An unknown `kind` in a graded run is coal — never a silent pass.
 
 `diagnostic` is never graded — the grader does not read it. The verdict object is
@@ -306,9 +333,16 @@ The universal provenance set, sparse per tier — chain plans three:
   source yet); v1 ships without it.
 - **`authored`** — `source: "santa:<family>:<case>"` — the edge families captured history
   rarely shows: voting threshold edges
-  (exactly-half vs half-plus-one; the 90% soft-fork boundary), the chain-start window
-  clamp, param step limits, the forced-v2 override window, retargeting damping clamps
-  (0.5× / 1.5× both hit), flat-difficulty controls.
+  (exactly-half vs half-plus-one; the 90% soft-fork boundary; id-9 steppability), the
+  chain-start window clamp, the soft-fork-round lifecycle (handed-121/122 state,
+  spike-proven ≡ chain-accumulated: round start / accumulation / wait identity /
+  failed-cleanup + restart / activation incl. the v3→v4 id-9 insertion and its rule-409
+  suppression / post-activation cleanup + same-boundary restart — every restart pins the
+  snapshot semantics: guards read the ORIGINAL table, fresh 121 is always 0), the zombie
+  class (approval flipping between checkpoints: survive→fail-activation→late-cleanup
+  without a version bump; the stuck terminal state where no round can ever start again),
+  hostile tables (the §2 reject classes), param step limits, the forced-v2 override
+  window, retargeting damping clamps (0.5× / 1.5× both hit), flat-difficulty controls.
   Synthetic deterministic inputs, but **every expected value is oracle-emitted** via the
   gated engine — hand-computed expectations are forbidden; generators assert oracle-output
   *properties* instead.
