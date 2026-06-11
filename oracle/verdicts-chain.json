@@ -1,0 +1,202 @@
+{
+  "schema": "santa-oracle-chain/v1",
+  "description": "Chain-tier verdict meta-vectors: (actual, entry) -> grade_chain verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the chain-tier grading from grade_chain (contract \u00a74): value-only tier \u2014 single `value` dimension; panicked and not-implemented reuse the shared vocabulary. Precedence: panicked \u2192 coal unconditionally; not-implemented \u2192 coverage; then value grading by kind. retargeting: exact nbits match; voting: parameters deep-equal AND activated_update string-equal. errored where a value is expected is coal. Unknown kind is coal \u2014 never a silent pass.",
+  "cases": [
+    {
+      "name": "retargeting-nice",
+      "description": "Retargeting: actual nbits matches expected nbits, error null \u2192 value nice.",
+      "entry": {
+        "kind": "retargeting",
+        "expected": {
+          "nbits": 84150434
+        }
+      },
+      "actual": {
+        "nbits": 84150434,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "nice"
+      }
+    },
+    {
+      "name": "retargeting-nbits-coal",
+      "description": "Retargeting: nbits mismatch \u2192 value coal.",
+      "entry": {
+        "kind": "retargeting",
+        "expected": {
+          "nbits": 84150434
+        }
+      },
+      "actual": {
+        "nbits": 84128203,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    },
+    {
+      "name": "retargeting-errored-coal",
+      "description": "Retargeting: error:errored where a value is expected \u2192 coal. v1 corpus is accept-shaped so errored is always red.",
+      "entry": {
+        "kind": "retargeting",
+        "expected": {
+          "nbits": 84150434
+        }
+      },
+      "actual": {
+        "nbits": null,
+        "error": "errored"
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    },
+    {
+      "name": "voting-nice",
+      "description": "Voting: parameters deep-equal AND activated_update string-equal \u2192 value nice.",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "parameters": {
+            "table": {
+              "1": 1250000,
+              "123": 4
+            }
+          },
+          "activated_update": "0000"
+        }
+      },
+      "actual": {
+        "parameters": {
+          "table": {
+            "1": 1250000,
+            "123": 4
+          }
+        },
+        "activated_update": "0000",
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "nice"
+      }
+    },
+    {
+      "name": "voting-table-coal",
+      "description": "Voting: parameters mismatch (one value differs) \u2192 value coal.",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "parameters": {
+            "table": {
+              "1": 1250000,
+              "123": 4
+            }
+          },
+          "activated_update": "0000"
+        }
+      },
+      "actual": {
+        "parameters": {
+          "table": {
+            "1": 1250001,
+            "123": 4
+          }
+        },
+        "activated_update": "0000",
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    },
+    {
+      "name": "voting-update-coal",
+      "description": "Voting: table matches but activated_update differs (non-empty vs empty) \u2192 value coal. Graded by string equality: '0000' \u2260 '02d701990300'.",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "parameters": {
+            "table": {
+              "1": 1250000
+            }
+          },
+          "activated_update": "0000"
+        }
+      },
+      "actual": {
+        "parameters": {
+          "table": {
+            "1": 1250000
+          }
+        },
+        "activated_update": "02d701990300",
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    },
+    {
+      "name": "not-implemented",
+      "description": "Not-implemented: coverage verdict, not coal.",
+      "entry": {
+        "kind": "retargeting",
+        "expected": {
+          "nbits": 84150434
+        }
+      },
+      "actual": {
+        "nbits": null,
+        "error": "not-implemented"
+      },
+      "verdict": {
+        "kind": "coverage",
+        "tag": "not-implemented"
+      }
+    },
+    {
+      "name": "panicked",
+      "description": "Panicked actual: coal unconditionally before any expected check.",
+      "entry": {
+        "kind": "retargeting",
+        "expected": {
+          "nbits": 84150434
+        }
+      },
+      "actual": {
+        "nbits": null,
+        "error": "panicked",
+        "note": "overflow in difficulty calculation"
+      },
+      "verdict": {
+        "kind": "panicked"
+      }
+    },
+    {
+      "name": "unknown-kind-coal",
+      "description": "Unknown kind in a graded run is coal \u2014 never a silent pass (contract \u00a74).",
+      "entry": {
+        "kind": "future-kind",
+        "expected": {
+          "nbits": 1
+        }
+      },
+      "actual": {
+        "nbits": 1,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    }
+  ]
+}

@@ -261,6 +261,109 @@ pub fn grade_block(actual: &Value, expected: &Value) -> Value {
     }
 }
 
+/// Chain tier (value-only): one graded dimension per entry — `nbits` exact for
+/// retargeting; `parameters` deep-equal AND `activated_update` exact for voting.
+/// `diagnostic` (vector-side) is never read here. Outcome envelope mirrors the
+/// other tiers: coverage (not-implemented) / panicked / {"kind":"chain","value":...}.
+///
+/// Precedence (contract §4): panicked → coal unconditionally; not-implemented → coverage;
+/// then value grading — retargeting: exact nbits match; voting: parameters deep-equal AND
+/// activated_update string-equal. errored where a value is expected is coal. Unknown kind
+/// is coal — never a silent pass.
+pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
+    if err_is(actual, "panicked") {
+        return json!({"kind": "panicked"});
+    }
+    if err_is(actual, "not-implemented") {
+        return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+    let expected = &entry["expected"];
+    let nice = match entry["kind"].as_str() {
+        Some("retargeting") => {
+            actual["error"].is_null() && actual["nbits"] == expected["nbits"]
+        }
+        Some("voting") => {
+            actual["error"].is_null()
+                && structural_equal(&actual["parameters"], &expected["parameters"])
+                && actual["activated_update"] == expected["activated_update"]
+        }
+        _ => false, // unknown kind in a graded run = red, never a silent pass
+    };
+    json!({"kind": "chain", "value": if nice { "nice" } else { "value" }})
+}
+
+#[cfg(test)]
+mod chain_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn grade_chain_retargeting_nice() {
+        let e = json!({"kind": "retargeting", "expected": {"nbits": 83972072}});
+        let a = json!({"nbits": 83972072, "error": null});
+        let g = grade_chain(&a, &e);
+        assert_eq!(g["kind"], "chain");
+        assert_eq!(g["value"], "nice");
+    }
+
+    #[test]
+    fn grade_chain_retargeting_mismatch_is_value_coal() {
+        let e = json!({"kind": "retargeting", "expected": {"nbits": 83972072}});
+        let a = json!({"nbits": 83972073, "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "value");
+    }
+
+    #[test]
+    fn grade_chain_voting_compares_table_and_update() {
+        // "0000" = the canonical serialized EMPTY ErgoValidationSettingsUpdate (contract §2 pin).
+        let e = json!({"kind": "voting",
+            "expected": {"parameters": {"table": {"1": 1250, "123": 4}}, "activated_update": "0000"}});
+        let nice = json!({"parameters": {"table": {"1": 1250, "123": 4}},
+            "activated_update": "0000", "error": null});
+        let coal = json!({"parameters": {"table": {"1": 1251, "123": 4}},
+            "activated_update": "0000", "error": null});
+        assert_eq!(grade_chain(&nice, &e)["value"], "nice");
+        assert_eq!(grade_chain(&coal, &e)["value"], "value");
+    }
+
+    #[test]
+    fn grade_chain_voting_update_mismatch_is_value_coal() {
+        // activated_update differs, but table matches -> must be "value"
+        let e = json!({"kind": "voting",
+            "expected": {"parameters": {"table": {"1": 1250}}, "activated_update": "0000"}});
+        let a = json!({"parameters": {"table": {"1": 1250}},
+            "activated_update": "02d701990300", "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "value");
+    }
+
+    #[test]
+    fn grade_chain_not_implemented_and_panicked() {
+        let e = json!({"kind": "retargeting", "expected": {"nbits": 1}});
+        let ni = json!({"nbits": null, "error": "not-implemented"});
+        let pk = json!({"nbits": null, "error": "panicked", "note": "boom"});
+        let er = json!({"nbits": null, "error": "errored"});
+        assert_eq!(grade_chain(&ni, &e)["kind"], "coverage");
+        assert_eq!(grade_chain(&pk, &e)["kind"], "panicked");
+        assert_eq!(grade_chain(&er, &e)["value"], "value"); // errored where success expected = red
+    }
+
+    #[test]
+    fn grade_chain_retargeting_missing_nbits_with_null_error_is_value_coal() {
+        // null nbits with error:null (errored path but error field is null) → value coal, not panic
+        let e = json!({"kind": "retargeting", "expected": {"nbits": 83972072}});
+        let a = json!({"nbits": null, "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "value");
+    }
+
+    #[test]
+    fn grade_chain_unknown_kind_is_value_coal() {
+        // Unknown kind in a graded run is coal — never a silent pass (contract §4)
+        let e = json!({"kind": "unknown-future-kind", "expected": {"nbits": 1}});
+        let a = json!({"nbits": 1, "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "value");
+    }
+}
+
 #[cfg(test)]
 mod tx_tests {
     use super::*;
