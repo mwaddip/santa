@@ -162,10 +162,8 @@ object ChainEngine extends ApiCodecs {
     // the canonical serializer (findings Pin 4: parseBytesTry; Parameters.scala:256-257).
     val proposedHex = p.get[String]("proposed_update")
       .fold(err => sys.error(s"payload.proposed_update: $err"), identity)
-    val proposedUpdate = ErgoValidationSettingsUpdateSerializer
-      .parseBytesTry(scorex.util.encode.Base16.decode(proposedHex)
-        .getOrElse(sys.error("proposed_update: hex decode failed")))
-      .fold(err => sys.error(s"proposed_update parse: $err"), identity)
+    val proposedBytes = scorex.util.encode.Base16.decode(proposedHex)
+      .getOrElse(sys.error("proposed_update: hex decode failed"))
 
     // Tally mirroring ErgoStateContext.process (findings Pin 3 + the spike-proven form):
     // the seed is stream[0]'s votes iff stream[0] IS the previous boundary
@@ -197,22 +195,42 @@ object ChainEngine extends ApiCodecs {
     // safe; the node's application.conf value is used.
     val votingSettings = VotingSettings(votingLength, softForkEpochs, activationEpochs,
       v2ActivationHeight, "6f98d5000000")
-    // The pair IS the verdict (findings Pin 4, Parameters.scala:82-86; the call form is
-    // the spike-proven one, epochVotes via tally.epochVotes.toSeq).
-    val (next, activated) = currentParams.update(
-      boundaryHeight, forkVote, tally.epochVotes.toSeq, proposedUpdate, votingSettings)
-    // Canonical serializer hex (findings Pin 4: toBytes, Parameters.scala:225) —
-    // lower-case Base16; the EMPTY update is "0000", never "" (contract §2).
-    val activatedHex = scorex.util.encode.Base16.encode(
-      ErgoValidationSettingsUpdateSerializer.toBytes(activated))
 
-    // Stringified-int keys sorted numerically, mirroring how BlockEngine reads them.
-    val tableJson = Json.obj(next.parametersTable.toSeq.sortBy(_._1.toInt)
-      .map { case (k, v) => k.toInt.toString -> Json.fromInt(v) }: _*)
-    Json.obj(
-      "parameters"       -> Json.obj("table" -> tableJson),
-      "activated_update" -> Json.fromString(activatedHex),
-      "error"            -> Json.Null) // §3: voting shape
+    // ── The consensus seam (contract §2 reject form / §3): everything the JVM itself
+    // rejects about these INPUTS throws here — the proposed-update parse (extension
+    // validation: mandatory rules may not be disabled) and Parameters.update (hostile
+    // tables: 122-without-121 forcing `votes`, approved votes for table-absent ids).
+    // A throw is the JVM's verdict on the inputs → errored envelope (note = the throw),
+    // never panicked. Decode/setup failures above stay panicked; the encode below is
+    // OUTSIDE the seam (not a verdict on the inputs — an encode throw is a harness bug
+    // and must stay panicked, like the sibling engines).
+    val verdict: Either[Throwable, (Parameters, ErgoValidationSettingsUpdate)] =
+      try {
+        val proposedUpdate = ErgoValidationSettingsUpdateSerializer
+          .parseBytesTry(proposedBytes)
+          .fold(err => throw err, identity)
+        Right(currentParams.update(
+          boundaryHeight, forkVote, tally.epochVotes.toSeq, proposedUpdate, votingSettings))
+      } catch {
+        case scala.util.control.NonFatal(t) => Left(t)
+      }
+
+    verdict match {
+      case Left(t) =>
+        Json.obj(
+          "parameters" -> Json.Null, "activated_update" -> Json.Null,
+          "error" -> Json.fromString("errored"),
+          "note"  -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}"))
+      case Right((next, activated)) =>
+        val activatedHex = scorex.util.encode.Base16.encode(
+          ErgoValidationSettingsUpdateSerializer.toBytes(activated))
+        val tableJson = Json.obj(next.parametersTable.toSeq.sortBy(_._1.toInt)
+          .map { case (k, v) => k.toInt.toString -> Json.fromInt(v) }: _*)
+        Json.obj(
+          "parameters"       -> Json.obj("table" -> tableJson),
+          "activated_update" -> Json.fromString(activatedHex),
+          "error"            -> Json.Null) // §3: voting shape
+    }
   }
 
   // ── decode helpers ─────────────────────────────────────────────────────────

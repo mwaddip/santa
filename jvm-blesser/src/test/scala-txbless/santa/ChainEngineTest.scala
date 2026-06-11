@@ -53,4 +53,41 @@ class ChainEngineTest extends FunSuite {
     val (_, actual) = ChainEngine.chainEntry(entry)
     assert(actual.hcursor.downField("nbits").focus.forall(_.isNull))
   }
+
+  test("hostile table (122 without 121) lands as ERRORED, not panicked (contract §3 reject)") {
+    val entry = parse("""{
+      "name": "hostile-no-121", "kind": "voting",
+      "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32},
+      "payload": {
+        "boundary_height": 2688,
+        "current_parameters": {"table": {"1": 1250000, "122": 2560, "123": 4}},
+        "vote_stream": [{"height": 2560, "votes": "780000"}],
+        "boundary_votes": "000000",
+        "proposed_update": "0000"
+      }
+    }""").toOption.get
+    val (_, actual) = ChainEngine.chainEntry(entry)
+    assertEquals(actual.hcursor.get[String]("error").toOption, Some("errored"))
+    assert(actual.hcursor.get[String]("note").toOption.exists(_.contains("121")))
+    assert(actual.hcursor.downField("parameters").focus.exists(_.isNull))
+    assert(actual.hcursor.downField("activated_update").focus.exists(_.isNull))
+  }
+
+  test("mandatory-rule proposed update (disable 102) lands as ERRORED at the seam") {
+    // proposed_update 016600 = disable [0x66 = rule 102] (txManyInputs, mandatory)
+    val entry = parse("""{
+      "name": "hostile-mandatory-rule", "kind": "voting",
+      "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32},
+      "payload": {
+        "boundary_height": 2560,
+        "current_parameters": {"table": {"1": 1250000, "123": 4}},
+        "vote_stream": [],
+        "boundary_votes": "000000",
+        "proposed_update": "016600"
+      }
+    }""").toOption.get
+    val (_, actual) = ChainEngine.chainEntry(entry)
+    assertEquals(actual.hcursor.get[String]("error").toOption, Some("errored"))
+    assert(actual.hcursor.get[String]("note").toOption.exists(_.contains("may not be disabled")))
+  }
 }
