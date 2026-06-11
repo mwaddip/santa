@@ -8,10 +8,12 @@ import santa.{EvalCore, WireCanonicalize}
 
 /** JVM reference runner — Rudolph.
   *
-  * Consumes a `santa-eval`, `santa-wire`, or `santa-transaction` vector and emits, per
-  * entry, its ACTUAL — eval `{ value, cost, error }`, wire `{ bytes_hex, error }`, or tx
-  * `{ valid, cost, error }` — JSON keyed by entry `name`. Each entry is processed under
-  * the version the vector records.
+  * Consumes a `santa-eval`, `santa-wire`, `santa-transaction`, `santa-block`, or
+  * `santa-chain` vector and emits, per entry, its ACTUAL — eval `{ value, cost, error }`,
+  * wire `{ bytes_hex, error }`, tx `{ valid, cost, error }`, block `{ valid, post_digest,
+  * cost, error }`, or chain (per-kind: `{ nbits, error }` / `{ parameters,
+  * activated_update, error }`) — JSON keyed by entry `name`. Each entry is processed
+  * under the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
   *   - `santa-eval/v4` → EvalCore.evalWithSelfRegistersAndVar1 (SELF box registers + var 1 = index)
@@ -25,6 +27,8 @@ import santa.{EvalCore, WireCanonicalize}
   *     engine — a capability fact, not an excuse).
   *   - `santa-block/v1` → BlockEngine.blockEntry (threaded validateStateful + post-state
   *     digest) under the same gate; otherwise a faithful `not-implemented`.
+  *   - `santa-chain/v1` → ChainEngine.chainEntry (DifficultyAdjustment /
+  *     Parameters.update) under the same gate; otherwise a faithful `not-implemented`.
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
@@ -77,6 +81,29 @@ object Runner {
         "post_digest" -> Json.Null,
         "cost"        -> Json.Null,
         "error"       -> Json.fromString("not-implemented"))
+  }
+
+  /** Reflection seam to the gated [[santa.runner.ChainEngine]] (same SANTA_TX_BLESSER
+    * gate — ergo-core composition). Absent ⇒ the not-implemented arm. */
+  private lazy val chainEntryFn: Option[Json => (String, Json)] =
+    scala.util.Try {
+      val clazz  = Class.forName("santa.runner.ChainEngine$")
+      val module = clazz.getField("MODULE$").get(null)
+      val m      = clazz.getMethod("chainEntry", classOf[Json])
+      (e: Json) => m.invoke(module, e).asInstanceOf[(String, Json)]
+    }.toOption
+
+  /** Grade one chain-tier entry — real verdicts via the gated engine, or the faithful
+    * `not-implemented` outcome on a build without it. */
+  def chainEntry(e: Json): (String, Json) = chainEntryFn match {
+    case Some(f) => f(e)
+    case None =>
+      val name = e.hcursor.get[String]("name").toOption.getOrElse("?")
+      name -> Json.obj(
+        "nbits"            -> Json.Null,
+        "parameters"       -> Json.Null,
+        "activated_update" -> Json.Null,
+        "error"            -> Json.fromString("not-implemented"))
   }
 
   /** Evaluate one vector entry and return the actuals JSON. */
@@ -178,8 +205,9 @@ object Runner {
     val isWire  = schema.startsWith("santa-wire/")
     val isTx    = schema.startsWith("santa-transaction/")
     val isBlock = schema.startsWith("santa-block/")
+    val isChain = schema.startsWith("santa-chain/")
     val pairs   = entries.toVector.map(e =>
-      if (isTx) txEntry(e) else if (isBlock) blockEntry(e)
+      if (isTx) txEntry(e) else if (isBlock) blockEntry(e) else if (isChain) chainEntry(e)
       else if (isWire) wireEntry(e) else evalEntry(schema, e))
     val out     = Json.obj(pairs: _*).spaces2
     outPath match {
