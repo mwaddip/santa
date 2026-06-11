@@ -61,13 +61,17 @@ fn version_index(v: &str) -> Option<usize> {
     VERSIONS.iter().position(|x| *x == v)
 }
 
-/// Keep vectors where tier in declared tiers AND version <= declared (cumulative).
+/// Keep vectors where tier in declared tiers AND (version == "any" OR version <= declared cumulative).
+/// The "any" label is a vector-only concept meaning "applicable regardless of protocol version;
+/// always selected for runners mounting the tier". A runner manifest declaring version: "any" stays
+/// an error — only vectors carry the label.
 fn select<'a>(vectors: &'a [Vec5], version: &str, tiers: &[String]) -> Vec<&'a Vec5> {
     let vmax = version_index(version)
         .unwrap_or_else(|| die(format!("unknown manifest version {version:?}; known: {VERSIONS:?}")));
     vectors
         .iter()
-        .filter(|v| tiers.iter().any(|t| t == &v.1) && version_index(&v.2).is_some_and(|i| i <= vmax))
+        .filter(|v| tiers.iter().any(|t| t == &v.1)
+            && (v.2 == "any" || version_index(&v.2).is_some_and(|i| i <= vmax)))
         .collect()
 }
 
@@ -893,6 +897,19 @@ mod tests {
         assert_eq!(c.panicked, 1);
         assert_eq!(c.tx_valid_total, 0); // not-impl and panicked don't touch tx_valid counters
         assert_eq!(c.red_total(), 2);
+    }
+
+    #[test]
+    fn select_any_version_always_matches_for_mounted_tier() {
+        let vs = vec![
+            ("chain/any/captured/R.json".into(), "chain".into(), "any".into(), "captured".into(), "R".into()),
+            ("chain/v6/captured/V.json".into(), "chain".into(), "v6".into(), "captured".into(), "V".into()),
+            ("eval/v5/spec/E.json".into(), "eval".into(), "v5".into(), "spec".into(), "E".into()),
+        ];
+        // a v5 runner mounting chain still gets the `any` vector (and not the v6 one)
+        let picked = select(&vs, "v5", &["chain".into()]);
+        let rels: Vec<&str> = picked.iter().map(|v| v.0.as_str()).collect();
+        assert_eq!(rels, vec!["chain/any/captured/R.json"]);
     }
 
     #[test]
