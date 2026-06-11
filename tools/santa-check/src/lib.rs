@@ -65,7 +65,7 @@ pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
         return json!({"kind": "reject", "verdict": v});
     }
     // accept vector — independent value + cost verdicts
-    let actual_ok = actual.get("error").map_or(true, Value::is_null);
+    let actual_ok = actual.get("error").is_none_or(Value::is_null);
     let value = if actual_ok
         && structural_equal(
             actual.get("value").unwrap_or(&Value::Null),
@@ -104,7 +104,7 @@ pub fn grade_wire(actual: &Value, expected: &Value) -> Value {
     if err_is(actual, "not-implemented") {
         return json!({"kind": "coverage", "tag": "not-implemented"});
     }
-    let ok = actual.get("error").map_or(true, Value::is_null)
+    let ok = actual.get("error").is_none_or(Value::is_null)
         && hex_eq(actual.get("bytes_hex"), expected.get("bytes_hex"));
     json!({"kind": "roundtrip", "verdict": if ok { "nice" } else { "differ" }})
 }
@@ -153,7 +153,7 @@ pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
 
     if expected_valid {
         // Accept vector: need actual.error == null && actual.valid == true.
-        let actual_clean = actual.get("error").map_or(true, Value::is_null);
+        let actual_clean = actual.get("error").is_none_or(Value::is_null);
         let actual_valid = actual.get("valid").and_then(Value::as_bool).unwrap_or(false);
         let valid = if actual_clean && actual_valid { "nice" } else { "value" };
 
@@ -175,7 +175,7 @@ pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
         // (valid:false) from failed-verdict (errored, i.e. valid:null).
         // Cost is not graded on reject vectors.
         let actual_valid_false =
-            actual.get("error").map_or(true, Value::is_null)
+            actual.get("error").is_none_or(Value::is_null)
             && actual.get("valid").and_then(Value::as_bool) == Some(false);
         let valid = if actual_valid_false { "nice" } else { "value" };
         json!({"kind": "transaction", "valid": valid, "cost": "n/a"})
@@ -223,7 +223,7 @@ pub fn grade_block(actual: &Value, expected: &Value) -> Value {
 
     if expected_valid {
         // Accept vector: need actual.error == null && actual.valid == true.
-        let actual_clean = actual.get("error").map_or(true, Value::is_null);
+        let actual_clean = actual.get("error").is_none_or(Value::is_null);
         let actual_valid = actual.get("valid").and_then(Value::as_bool).unwrap_or(false);
         let valid = if actual_clean && actual_valid { "nice" } else { "valid" };
 
@@ -254,7 +254,7 @@ pub fn grade_block(actual: &Value, expected: &Value) -> Value {
     } else {
         // Reject vector: only a clean valid:false (error:null) → nice; anything else → coal.
         // Cost and post_digest are not graded on reject vectors.
-        let actual_valid_false = actual.get("error").map_or(true, Value::is_null)
+        let actual_valid_false = actual.get("error").is_none_or(Value::is_null)
             && actual.get("valid").and_then(Value::as_bool) == Some(false);
         let valid = if actual_valid_false { "nice" } else { "valid" };
         json!({"kind": "block", "valid": valid, "post_digest": "n/a", "cost": "n/a"})
