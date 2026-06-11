@@ -2,7 +2,7 @@
 //! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
 //! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
 //! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
-use santa_check::{grade, grade_block, grade_transaction, grade_wire};
+use santa_check::{grade, grade_block, grade_chain, grade_transaction, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -243,12 +243,17 @@ struct Counts {
     post_digest_total: u64,
     post_digest_nice: u64,
     post_digest_coal: u64,
+    // chain tier: single value dimension (nbits for retargeting; parameters+activated_update for voting).
+    // cost is not-applicable for chain — cost flag and shared cost counters are irrelevant here.
+    chain_value_total: u64,
+    chain_value_nice: u64,
+    chain_value_coal: u64,
     red: Vec<Value>,
 }
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal
+        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal + self.chain_value_coal
     }
     fn to_json(&self) -> Value {
         json!({
@@ -261,6 +266,7 @@ impl Counts {
             "tx_valid_total": self.tx_valid_total, "tx_valid_nice": self.tx_valid_nice, "tx_valid_coal": self.tx_valid_coal,
             "block_valid_total": self.block_valid_total, "block_valid_nice": self.block_valid_nice, "block_valid_coal": self.block_valid_coal,
             "post_digest_total": self.post_digest_total, "post_digest_nice": self.post_digest_nice, "post_digest_coal": self.post_digest_coal,
+            "chain_value_total": self.chain_value_total, "chain_value_nice": self.chain_value_nice, "chain_value_coal": self.chain_value_coal,
             "red": self.red,
         })
     }
@@ -299,6 +305,13 @@ impl Counts {
                 bits.push(format!("digest {}/{}", self.post_digest_nice, self.post_digest_total));
             }
         }
+        // chain slices: a single value dimension (nbits / parameters+update).
+        if self.chain_value_total > 0 {
+            bits.push(format!("value {}/{}", self.chain_value_nice, self.chain_value_total));
+            if self.chain_value_coal > 0 {
+                bits.push(format!("{} val-coal", self.chain_value_coal));
+            }
+        }
         if self.cost_graded > 0 {
             bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
         }
@@ -326,13 +339,21 @@ fn brief(v: &Value, max: usize) -> String {
 }
 
 /// The expected side of one red entry, by tier: eval "value @ cost" (or the expected
-/// error tag), wire "roundtrip <bytes…>", tx "valid <v> @ cost <c>".
-fn expected_brief(e: &Value, is_wire: bool, is_tx: bool) -> String {
+/// error tag), wire "roundtrip <bytes…>", tx "valid <v> @ cost <c>",
+/// chain per-kind phrase (nbits / parameters+update).
+fn expected_brief(e: &Value, is_wire: bool, is_tx: bool, is_chain: bool) -> String {
     let exp = &e["expected"];
     if is_wire {
         format!("roundtrip {}", brief(&e["bytes_hex"], 48))
     } else if is_tx {
         format!("valid {} @ cost {}", exp["valid"], exp["cost"])
+    } else if is_chain {
+        match e["kind"].as_str() {
+            Some("retargeting") => format!("nbits {}", exp["nbits"]),
+            Some("voting") => format!("parameters {} @ update {}",
+                brief(&exp["parameters"]["table"], 96), exp["activated_update"]),
+            _ => format!("chain {}", brief(exp, 96)),
+        }
     } else if let Some(err) = exp["error"].as_str() {
         err.to_string()
     } else {
@@ -387,6 +408,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         let is_wire = schema.starts_with("santa-wire/");
         let is_tx = schema.starts_with("santa-transaction/");
         let is_block = schema.starts_with("santa-block/");
+        let is_chain = schema.starts_with("santa-chain/");
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
@@ -397,6 +419,8 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                 grade_transaction(&actual, &e["expected"])
             } else if is_block {
                 grade_block(&actual, &e["expected"])
+            } else if is_chain {
+                grade_chain(&actual, e)
             } else {
                 grade(&actual, &e["expected"], claims_cost)
             };
@@ -404,7 +428,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                 Some("panicked") => {
                     c.panicked += 1;
                     c.red.push(red_detail(&op, name, "panicked",
-                        expected_brief(e, is_wire, is_tx), "panicked".to_string(),
+                        expected_brief(e, is_wire, is_tx, is_chain), "panicked".to_string(),
                         Some(actual.get("note").cloned().unwrap_or(Value::Null)), script));
                 }
                 Some("coverage") => {
@@ -412,7 +436,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                     let tag = g["tag"].as_str().unwrap();
                     c.not_impl += 1;
                     c.red.push(red_detail(&op, name, tag,
-                        expected_brief(e, is_wire, is_tx), tag.to_string(), None, script));
+                        expected_brief(e, is_wire, is_tx, is_chain), tag.to_string(), None, script));
                 }
                 Some("reject") => {
                     c.reject_total += 1;
@@ -431,7 +455,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                     } else {
                         c.roundtrip_coal += 1;
                         c.red.push(red_detail(&op, name, "roundtrip",
-                            expected_brief(e, is_wire, is_tx), got_brief(&actual, is_wire, is_tx),
+                            expected_brief(e, is_wire, is_tx, is_chain), got_brief(&actual, is_wire, is_tx),
                             None, script));
                     }
                 }
@@ -503,6 +527,28 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         }
                     }
                 }
+                Some("chain") => {
+                    // Single value dimension; cost is not-applicable for chain.
+                    c.chain_value_total += 1;
+                    if g["value"] == "nice" {
+                        c.chain_value_nice += 1;
+                    } else {
+                        c.chain_value_coal += 1;
+                        let note = actual.get("note").filter(|v| !v.is_null()).cloned();
+                        let expected = expected_brief(e, false, false, true);
+                        let got = match actual["error"].as_str() {
+                            Some(err) => err.to_string(),
+                            None => match e["kind"].as_str() {
+                                Some("retargeting") => format!("nbits {}", actual["nbits"]),
+                                Some("voting") => format!("parameters {} @ update {}",
+                                    brief(&actual["parameters"]["table"], 96), actual["activated_update"]),
+                                _ => brief(&actual, 96),
+                            },
+                        };
+                        c.red.push(red_detail(&op, name, "value",
+                            expected, got, note, script));
+                    }
+                }
                 _ => {
                     c.value_total += 1;
                     if g["value"] == "nice" {
@@ -510,7 +556,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                     } else {
                         c.value_coal += 1;
                         c.red.push(red_detail(&op, name, "value",
-                            expected_brief(e, false, false), got_brief(&actual, false, false),
+                            expected_brief(e, false, false, false), got_brief(&actual, false, false),
                             None, script));
                     }
                     if g["cost"] != "n/a" {
@@ -598,6 +644,7 @@ fn main() -> ExitCode {
 mod tests {
     use super::{parse_relpath, resolve_impl, select, Vec5};
     use std::fs;
+    use std::path::PathBuf;
     use std::process::Command;
 
     fn sample() -> Vec<Vec5> {
@@ -943,5 +990,105 @@ mod tests {
         assert_eq!(c2.roundtrip_coal, 1);
         assert_eq!(c2.red_total(), 1);
         assert_eq!(c2.red[0]["dim"], "roundtrip");
+    }
+
+    // ── chain tally tests ────────────────────────────────────────────────────
+
+    /// Write a minimal santa-chain/v1 retargeting vector file under a temp vectors/ tree.
+    /// Returns (tmp_root PathBuf, relpath, slice_key). Caller must drop tmp_root last.
+    fn chain_vector_temp(nbits: u64, tag: &str) -> (PathBuf, String, (String, String, String)) {
+        let tmp = std::env::temp_dir()
+            .join(format!("santa-chain-tally-test-{}-{}-{}", std::process::id(), tag, nbits));
+        let rel = "chain/any/captured/Retargeting.testnet.json";
+        let vec_dir = tmp.join("vectors/chain/any/captured");
+        fs::create_dir_all(&vec_dir).unwrap();
+        let vec_json = serde_json::json!({
+            "schema": "santa-chain/v1",
+            "op": "chain:test:synthetic",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "retargeting-test",
+                "source": "testnet:test@1",
+                "kind": "retargeting",
+                "settings": { "epoch_length": 128, "use_last_epochs": 8,
+                               "block_interval_ms": 45000, "initial_nbits": 16842752 },
+                "payload": { "target_height": 129, "anchor_headers": [] },
+                "expected": { "nbits": nbits }
+            }]
+        });
+        fs::write(tmp.join("vectors").join(rel), serde_json::to_string(&vec_json).unwrap()).unwrap();
+        let key = ("chain".to_string(), "any".to_string(), "captured".to_string());
+        (tmp, rel.to_string(), key)
+    }
+
+    #[test]
+    fn tally_chain_all_nice_green_slice() {
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let nbits: u64 = 84150434;
+        let (tmp, rel, key) = chain_vector_temp(nbits, "green");
+        let mut actuals = BTreeMap::new();
+        actuals.insert(rel, json!({"retargeting-test": {"nbits": nbits, "error": null}}));
+        let slices = super::tally(&actuals, false, &tmp);
+        let c = &slices[&key];
+        assert_eq!(c.chain_value_total, 1);
+        assert_eq!(c.chain_value_nice, 1);
+        assert_eq!(c.chain_value_coal, 0);
+        assert_eq!(c.red_total(), 0);
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    #[test]
+    fn tally_chain_mismatch_records_red_with_brief() {
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let nbits: u64 = 84150434;
+        let (tmp, rel, key) = chain_vector_temp(nbits, "mismatch");
+        let mut actuals = BTreeMap::new();
+        // off by one — mismatches the expected nbits
+        actuals.insert(rel, json!({"retargeting-test": {"nbits": nbits + 1, "error": null}}));
+        let slices = super::tally(&actuals, false, &tmp);
+        let c = &slices[&key];
+        assert_eq!(c.chain_value_total, 1);
+        assert_eq!(c.chain_value_coal, 1);
+        assert_eq!(c.red_total(), 1);
+        assert_eq!(c.red[0]["dim"], "value");
+        assert_eq!(c.red[0]["entry"], "retargeting-test");
+        // expected field is a per-kind phrase — "nbits <N>" — must contain the expected nbits
+        let exp_str = c.red[0]["expected"].as_str().unwrap_or("");
+        assert!(exp_str.contains("nbits"),
+            "expected brief should contain 'nbits', got: {exp_str}");
+        assert!(exp_str.contains(&nbits.to_string()),
+            "expected brief should contain {nbits}, got: {exp_str}");
+        // got field is a per-kind phrase — "nbits <N>" — must contain the wrong (actual) nbits
+        let got_str = c.red[0]["got"].as_str().unwrap_or("");
+        let wrong_nbits = nbits + 1;
+        assert!(got_str.contains("nbits"),
+            "got brief should contain 'nbits', got: {got_str}");
+        assert!(got_str.contains(&wrong_nbits.to_string()),
+            "got brief should contain {wrong_nbits}, got: {got_str}");
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    #[test]
+    fn tally_chain_not_impl_counts_coverage() {
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let nbits: u64 = 84150434;
+        let (tmp, rel, key) = chain_vector_temp(nbits, "notimpl");
+        let mut actuals = BTreeMap::new();
+        actuals.insert(rel, json!({
+            "retargeting-test": {
+                "nbits": null, "parameters": null, "activated_update": null,
+                "error": "not-implemented"
+            }
+        }));
+        let slices = super::tally(&actuals, false, &tmp);
+        let c = &slices[&key];
+        assert_eq!(c.not_impl, 1);
+        assert_eq!(c.chain_value_total, 0);
+        assert_eq!(c.chain_value_nice, 0);
+        assert_eq!(c.chain_value_coal, 0);
+        let _ = fs::remove_dir_all(&tmp);
     }
 }
