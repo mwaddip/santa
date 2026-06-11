@@ -128,18 +128,20 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   a real block-cost divergence · other libraries grey (block application is the
   node's layer). Contract:
   [`docs/contract/runner-contract-block.md`](docs/contract/runner-contract-block.md).
-- ✅ **Chain tier live** — `santa-chain/v1`; **5 files / 10 entries** across two
+- ✅ **Chain tier live** — `santa-chain/v1`; **9 files / 33 entries** across two
   families: **retargeting** (difficulty arithmetic) + **parameter-voting** (v6
-  governance math). Value-only (no cost dimension). Provenance split: `any/captured`
-  (2 — testnet-anchored retargeting points) · `any/authored` (3 — difficulty-damping
-  clamp edges, EIP-37 arm settings-driven) · `v6/captured` (1 — testnet epoch-boundary
-  voting point) · `v6/authored` (4 — param-change threshold edges + voting-window clamp).
-  Conformers: **Rudolph control** 10/10 (all 4 chain slices green) · **donner LIVE
-  10/10** — the routing round surfaced the seeded-tally semantics as a real consensus
-  bug on enr's live boundary path plus three further JVM-exactness divergences, all
-  fixed before the first graded run (enr `9ccc6e7`) · **vixen LIVE 10/10** (both kinds,
-  same-day mount; their tally walker was natively seeded) · blitzen nipopow-at-most
-  deferred · dasher ledger. Contract:
+  governance math). Value-only (no cost dimension). The voting `v6/authored` slice
+  carries a reject arm (`expected.error: "errored"`, contract §2). Provenance split:
+  `any/captured` (2 — testnet-anchored retargeting points) · `any/authored` (3 —
+  difficulty-damping clamp edges, EIP-37 arm settings-driven) · `v6/captured` (1 —
+  testnet epoch-boundary voting point) · `v6/authored` (27 — threshold edges (4) +
+  voting-window clamp (1) + soft-fork round lifecycle (7) + activation basis/edge/id-9
+  insertion/sigma-rule/cleanup (8) + zombie checkpoint-flips (4) + hostile-reject
+  classes (3)).
+  Conformers: **Rudolph control** 33/33 (all chain slices green) · **donner LIVE**
+  (8/27 chain/v6/authored — 19 new-batch reds are findings) · **vixen LIVE** (21/27 —
+  6 new-batch reds are findings) · blitzen nipopow-at-most deferred · dasher ledger.
+  Contract:
   [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).
 
 Still greenfield, and where help is most wanted (see below):

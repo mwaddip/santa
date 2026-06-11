@@ -66,7 +66,7 @@ counted in the arms but contribute no ops/shapes.
 
 ## Chain tier coverage
 
-**5 files / 10 entries.** Value-only (no cost dimension at this tier). Two families:
+**9 files / 33 entries.** Value-only (no cost dimension at this tier). Two families: retargeting + parameter voting. The voting `v6/authored` slice also carries a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
 
 ### Retargeting (difficulty arithmetic; dir version `any`)
 
@@ -82,8 +82,12 @@ Gaps: a mainnet EIP-37-era captured window (needs a mainnet header source; autho
 | File | Provenance | Entries | Notes |
 |---|---|---|---|
 | `v6/captured/Voting.testnet_epoch_2560.json` | captured | 1 | Real epoch boundary 2560 (identity epoch — table equality is the pin); engine table FAIL-LOUD-equal to `parseExtension` of the on-chain boundary extension |
-| `v6/authored/Voting.threshold_edges.json` | authored | 3 | `half` (64 of 128 votes incl. the seed — strict `>` means NO step) · `half-plus-one` (65 → exactly id 1 steps) · `softfork-below-threshold` (fork votes without an in-progress round count for nothing; blockVersion holds, activated `"0000"`) |
+| `v6/authored/Voting.threshold_edges.json` | authored | 4 | `half` (64 of 128 votes incl. the seed — strict `>` means NO step) · `half-plus-one` (65 → exactly id 1 steps) · `softfork-below-threshold` (fork votes without an in-progress round count for nothing; blockVersion holds, activated `"0000"`) · `id-9-steppable` (id 9 steps when voted, SEEDED tally + "0000" pins the activation snapshot) |
 | `v6/authored/Voting.window_clamp.json` | authored | 1 | Chain-start window clamp: boundary 128, window `[1,127]`, stream[0] is not the previous boundary ⇒ EMPTY seed ⇒ unseeded votes drop, identity table |
+| `v6/authored/Voting.softfork_round.json` | authored | 7 | Round lifecycle snapshots: `softfork-round-start` (121 inserted, tally zeroed) · `softfork-round-accumulate` (mid-round header cast) · `softfork-round-last-accumulate` (final collecting epoch) · `softfork-round-wait-identity` (identity pass during wait phase S+4096→S+8192) · `softfork-round-failed-cleanup` (S+4224 branch — NOT approved, 121/122 cleared) · `softfork-round-failed-restart` (round resets to new startingHeight after failed cleanup) · `softfork-round-midround-forkvote-noop` (fork-vote mid-round is a no-op) |
+| `v6/authored/Voting.softfork_activation.json` | authored | 8 | Activation basis yes/no · id-9 insertion at activation · 409-disable suppression · testnet-proposal suppression · sigma-rule pass-through · cleanup (removes 121/122) · cleanup-restart (new round starts immediately after cleanup) |
+| `v6/authored/Voting.softfork_zombie.json` | authored | 4 | Zombie checkpoint-flips: `softfork-zombie-survive` (S+4224 approval saves round, S+8192 fails — 121/122 persist past activation height) · `softfork-zombie-no-activation` (follow-on: no activation fires) · `softfork-zombie-late-cleanup` (S+8320 approval fires successful-voting cleanup, but blockVersion was never bumped) · `softfork-zombie-stuck` (all checkpoints exhausted with no cleanup — 121/122 permanent, no new round ever possible); see [`docs/findings/chain-softfork-zombie-liveness.md`](../findings/chain-softfork-zombie-liveness.md) |
+| `v6/authored/Voting.hostile_tables.json` | authored | 3 | Reject classes: `hostile-122-without-121` (122 present but 121 absent → errored) · `hostile-unknown-id-approved` (approved vote for unknown parameter id → errored) · `hostile-mandatory-rule-update` (mandatory-rule update field violates parse invariant → errored) |
 
 Gap: no v5 voting family yet (the committed scenarios are v6-era tables; the version label is a selection threshold, see the contract §2).
 
