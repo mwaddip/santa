@@ -62,7 +62,30 @@ counted in the arms but contribute no ops/shapes.
 - **Embedded script bytes are data**, not walked: a tree passed to `substConstants`
   as a `Coll[Byte]` argument contributes nothing to `ops` — its shape must be read
   from the entry itself (constant bytes), not the manifest.
-- Eval tier only. Wire/transaction coverage is small enough to read directly.
+- Eval tier only. Wire/transaction/chain coverage is small enough to read directly.
+
+## Chain tier coverage
+
+**5 files / 10 entries.** Value-only (no cost dimension at this tier). Two families:
+
+### Retargeting (difficulty arithmetic; dir version `any`)
+
+| File | Provenance | Entries | Notes |
+|---|---|---|---|
+| `any/captured/Retargeting.testnet_points.json` | captured | 2 | Real testnet recalculation points (targets 393601 / 393473, classic arm) — engine output FAIL-LOUD-equal to the on-chain headers' nBits |
+| `any/authored/Retargeting.damping_clamps.json` | authored | 3 | `flat-control` (a flat chain retargets to itself) · `fast-chain-clamps-up` (1.5× cap binds) · `slow-chain-clamps-down` (0.5× floor binds). The clamps live only in `eip37Calculate`, so these entries carry `eip37_activation_height`/`eip37_epoch_length` — the settings-driven EIP-37 dispatch is exercised; classic-arm unclampedness is pinned generator-side (EVIDENCE test, not a vector) |
+
+Gaps: a mainnet EIP-37-era captured window (needs a mainnet header source; authored entries cover the arm's math) · the nipopow kind (probed GO at design time, deferred to its own round).
+
+### Parameter voting (v6 governance math; dir version `v6`)
+
+| File | Provenance | Entries | Notes |
+|---|---|---|---|
+| `v6/captured/Voting.testnet_epoch_2560.json` | captured | 1 | Real epoch boundary 2560 (identity epoch — table equality is the pin); engine table FAIL-LOUD-equal to `parseExtension` of the on-chain boundary extension |
+| `v6/authored/Voting.threshold_edges.json` | authored | 3 | `half` (64 of 128 votes incl. the seed — strict `>` means NO step) · `half-plus-one` (65 → exactly id 1 steps) · `softfork-below-threshold` (fork votes without an in-progress round count for nothing; blockVersion holds, activated `"0000"`) |
+| `v6/authored/Voting.window_clamp.json` | authored | 1 | Chain-start window clamp: boundary 128, window `[1,127]`, stream[0] is not the previous boundary ⇒ EMPTY seed ⇒ unseeded votes drop, identity table |
+
+Gap: no v5 voting family yet (the committed scenarios are v6-era tables; the version label is a selection threshold, see the contract §2).
 
 ## Regenerating
 

@@ -128,6 +128,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   a real block-cost divergence · other libraries grey (block application is the
   node's layer). Contract:
   [`docs/contract/runner-contract-block.md`](docs/contract/runner-contract-block.md).
+- ✅ **Chain tier live** — `santa-chain/v1`; **5 files / 10 entries** across two
+  families: **retargeting** (difficulty arithmetic) + **parameter-voting** (v6
+  governance math). Value-only (no cost dimension). Provenance split: `any/captured`
+  (2 — testnet-anchored retargeting points) · `any/authored` (3 — difficulty-damping
+  clamp edges, EIP-37 arm settings-driven) · `v6/captured` (1 — testnet epoch-boundary
+  voting point) · `v6/authored` (4 — param-change threshold edges + voting-window clamp).
+  Conformers: **Rudolph control** 10/10 (all 4 chain slices green) · all others
+  unchanged (no chain arm declared); donner (ergo-node-rust) is the natural first
+  independent conformer — routing pending; blitzen nipopow-at-most deferred. Contract:
+  [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).
 
 Still greenfield, and where help is most wanted (see below):
 
