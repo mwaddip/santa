@@ -138,8 +138,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   voting-window clamp (1) + soft-fork round lifecycle (7) + activation basis/edge/id-9
   insertion/sigma-rule/cleanup (8) + zombie checkpoint-flips (4) + hostile-reject
   classes (3)).
-  Conformers: **Rudolph control** 33/33 (all chain slices green) · **donner LIVE**
-  (8/27 chain/v6/authored — 19 new-batch reds are findings) · **vixen LIVE** (21/27 —
+  Conformers: **Rudolph control** 40/40 (all chain slices green) · **donner LIVE**
+  (10/34 chain/v6/authored — the reds are donner's 121/122 decode, fix in flight) · **vixen LIVE** (27/34 —
   6 new-batch reds are findings) · blitzen nipopow-at-most deferred · dasher ledger.
   Contract:
   [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).

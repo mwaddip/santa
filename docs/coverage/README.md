@@ -66,7 +66,7 @@ counted in the arms but contribute no ops/shapes.
 
 ## Chain tier coverage
 
-**9 files / 33 entries.** Value-only (no cost dimension at this tier). Two families: retargeting + parameter voting. The voting `v6/authored` slice also carries a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
+**11 files / 40 entries.** Value-only (no cost dimension at this tier). Two families: retargeting + parameter voting. The voting `v6/authored` slice also carries a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
 
 ### Retargeting (difficulty arithmetic; dir version `any`)
 
@@ -88,6 +88,8 @@ Gaps: a mainnet EIP-37-era captured window (needs a mainnet header source; autho
 | `v6/authored/Voting.softfork_activation.json` | authored | 8 | Activation basis yes/no · id-9 insertion at activation · 409-disable suppression · testnet-proposal suppression · sigma-rule pass-through · cleanup (removes 121/122) · cleanup-restart (new round starts immediately after cleanup) |
 | `v6/authored/Voting.softfork_zombie.json` | authored | 4 | Zombie checkpoint-flips: `softfork-zombie-survive` (S+4224 approval saves round, S+8192 fails — 121/122 persist past activation height) · `softfork-zombie-no-activation` (follow-on: no activation fires) · `softfork-zombie-late-cleanup` (S+8320 approval fires successful-voting cleanup, but blockVersion was never bumped) · `softfork-zombie-stuck` (all checkpoints exhausted with no cleanup — 121/122 permanent, no new round ever possible); see [`docs/findings/chain-softfork-zombie-liveness.md`](../findings/chain-softfork-zombie-liveness.md) |
 | `v6/authored/Voting.hostile_tables.json` | authored | 3 | Reject classes: `hostile-122-without-121` (122 present but 121 absent → errored) · `hostile-unknown-id-approved` (approved vote for unknown parameter id → errored) · `hostile-mandatory-rule-update` (mandatory-rule update field violates parse invariant → errored) |
+| `v6/authored/Voting.lifecycle_leniency.json` | authored | 4 | enr cross-read asks A/B/E: `leniency-122-without-121-nonforce` (the LAZY-votes inverse of the hostile — orphan 122 passes through at a non-force boundary, ordinary step still applies) · `inert-121-without-122` (orphan 121 verbatim pass-through) · `overwrite-121-without-122-forkvote` (restart overwrites the orphan: 122=T, 121=0) · `wrap-int-votes-collected` (Int.MaxValue collected + 1 closing vote WRAPS negative ⇒ fail-cleanup; saturating impls keep the counters) |
+| `v6/authored/Voting.tally_order.json` | authored | 3 | enr cross-read ask C — the tally is an ordered Array, duplicates kept; updateParams steps from the post-fork SNAPSHOT: `tally-order-updown`/`-downup` (contradictory ±1 seed slots, on-chain-unreachable/legality-upstream — last-write-wins flips the step direction with slot order) · `tally-dup-120-first-entry` (duplicated 120 seed: votesInPrevEpoch reads the FIRST entry, not the sum — straddled at a checkpoint, the lifecycle outcome discriminates) |
 
 Gap: no v5 voting family yet (the committed scenarios are v6-era tables; the version label is a selection threshold, see the contract §2).
 

@@ -205,6 +205,29 @@ carries the JVM throw text; never graded, never cross-matched). Retargeting stay
 accept-only in v1 — no known JVM-throw class at the pure-retarget seam over
 schema-valid anchors.
 
+Two layering notes (enr's lifecycle cross-read, 2026-06-12). (1) The mandatory-rule
+reject pins the DESERIALIZER layer — correct for this tier (bytes that cannot
+deserialize cannot exist as `Parameters.update` input) — but IN-BAND the JVM does not
+reject such a block: `Parameters.parseExtension` swallows a failed 124-field parse to
+the empty update (`.toOption.getOrElse(empty)`, Parameters.scala:382-386). A live
+wrapper may strict-parse-then-swallow for two-layer parity; only the pure seam rejects.
+Pinning the in-band inertness would be a block-tier vector class, not this kind's.
+(2) The 122-without-121 throw is LAZY (`lazy val votes`) — it fires only at boundaries
+that FORCE `votes` (the accumulate window and the three checkpoint heights, after their
+height conjuncts match); at any other boundary the orphan table passes through
+un-thrown. Both arms are pinned: `hostile-122-without-121` (a force site) and
+`leniency-122-without-121-nonforce` (the pass-through with an ordinary step proving the
+pipeline ran).
+
+**Authored `proposed_update` payloads are rules-only for now** (statusUpdates count 0):
+sigma's `RuleStatusSerializer` has no Rust port yet, so conformers strict-parse the
+rules section and the statusUpdates COUNT but pass `count > 0` entries unvalidated —
+malformed-statusUpdates reject vectors would red against them by design until the port
+lands (sigma-rust scope). Also recorded: in-table UNKNOWN ids are legal JVM chain state
+(`Map[Byte, Int]`; steppable via the `getOrElse` defaults, Parameters.scala:168-170)
+but unrepresentable in closed-enum conformer seams — authoring such vectors requires a
+coordinated heads-up first (enr would need a seam representation change).
+
 **`activated_update` / `proposed_update` encoding (pinned):** the value is the **canonical
 lower-case serializer hex** of the `ErgoValidationSettingsUpdate` —
 `ErgoValidationSettingsUpdateSerializer.toBytes`, Base16 (the serializer at
