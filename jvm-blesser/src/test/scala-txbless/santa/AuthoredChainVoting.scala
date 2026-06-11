@@ -95,9 +95,16 @@ object AuthoredChainVoting {
       boundary = 2560,
       voters = (2432 to 2471).toSet, votesHex = "780000",
       note = "seed 2432 (1) + 39 mid-epoch = 40 SoftFork(120) votes — far below the " +
-        "90% line (> 128*32*9/10 = 33177 over 32 epochs); the boundary header itself " +
+        "90% line (> 128*32*9/10 = 3686 over the 32-epoch window); the boundary header itself " +
         "does NOT fork-vote (boundary_votes 000000 ⇒ forkVote=false), so no soft-fork " +
         "voting starts: blockVersion holds and nothing activates"),
+    VCase(ThresholdEdgesPath, "voting-id9-step", "santa:threshold_edges:id9-step",
+      boundary = 2560,
+      voters = (2432 to 2497).toSet, votesHex = "090000",
+      note = "seed 2432 (1) + 65 mid-epoch = 66 votes for id 9 (SubblocksPerBlockIncrease, " +
+        "the v6-born param): changeApproved (strict > 64) steps it 30 → 31 " +
+        "(SubblocksPerBlockStep = 1); everything else holds. id 9 IS steppable via votes " +
+        "— enr guard-rail: their old 1..=8 ordinary-step guard made it unsteppable"),
     VCase(WindowClampPath, "voting-window-clamp-chain-start", "santa:window_clamp:chain-start",
       boundary = 128,
       // No seed is POSSIBLE: T − L = 0 and heights start at 1, so the clamped

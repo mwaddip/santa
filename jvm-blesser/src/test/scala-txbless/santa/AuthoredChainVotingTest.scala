@@ -67,11 +67,11 @@ class AuthoredChainVotingTest extends munit.FunSuite {
 
   // ── corpus shape ──────────────────────────────────────────────────────────
 
-  test("blessAll returns exactly the two committed authored voting files (3 + 1 entries)") {
+  test("blessAll returns exactly the two committed authored voting files (4 + 1 entries)") {
     assertEquals(blessed.map(_._1), Seq(ThresholdEdgesPath, WindowClampPath))
     assertEquals(entries(ThresholdEdgesPath).map(_.hcursor.get[String]("name").toOption.get),
       Vector("voting-threshold-half", "voting-threshold-half-plus-one",
-             "voting-softfork-below-threshold"))
+             "voting-softfork-below-threshold", "voting-id9-step"))
     assertEquals(entries(WindowClampPath).map(_.hcursor.get[String]("name").toOption.get),
       Vector("voting-window-clamp-chain-start"))
   }
@@ -91,6 +91,7 @@ class AuthoredChainVotingTest extends munit.FunSuite {
       (ThresholdEdgesPath, "voting-threshold-half"),
       (ThresholdEdgesPath, "voting-threshold-half-plus-one"),
       (ThresholdEdgesPath, "voting-softfork-below-threshold"),
+      (ThresholdEdgesPath, "voting-id9-step"),
       (WindowClampPath,    "voting-window-clamp-chain-start"))
     all.foreach { case (rel, name) =>
       val e = entry(rel, name)
@@ -118,6 +119,8 @@ class AuthoredChainVotingTest extends munit.FunSuite {
       Some("santa:threshold_edges:half-plus-one"))
     assertEquals(entry(ThresholdEdgesPath, "voting-softfork-below-threshold").get[String]("source").toOption,
       Some("santa:threshold_edges:softfork-below-threshold"))
+    assertEquals(entry(ThresholdEdgesPath, "voting-id9-step").get[String]("source").toOption,
+      Some("santa:threshold_edges:id9-step"))
     assertEquals(entry(WindowClampPath, "voting-window-clamp-chain-start").get[String]("source").toOption,
       Some("santa:window_clamp:chain-start"))
   }
@@ -149,7 +152,16 @@ class AuthoredChainVotingTest extends munit.FunSuite {
     assertEquals(st.map(_._1), (2432 until 2560).toVector)
     assertEquals(st.head, (2432, "780000"), "the seed votes SoftFork so id 120 exists in the tally")
     assertEquals(st.count(_._2 == "780000"), 40,
-      "40 votes — far below the 90% soft-fork line (> 128*32*9/10 = 33177 over 32 epochs)")
+      "40 votes — far below the 90% soft-fork line (> 128*32*9/10 = 3686 over the 32-epoch window)")
+  }
+
+  test("input: id9-step = seed + 65 mid-epoch = 66 id-9 votes; first at height 2432") {
+    val st = streamOf(entry(ThresholdEdgesPath, "voting-id9-step"), "id9-step")
+    assertEquals(st.map(_._1), (2432 until 2560).toVector, "window must be [2432, 2559] ascending")
+    assertEquals(st.head, (2432, "090000"),
+      "stream[0] IS the previous boundary and MUST vote id 9 — it seeds the tally slot")
+    assertEquals(st.count(_._2 == "090000"), 66, "66 votes — strict > 64 so changeApproved")
+    assertEquals(st.collect { case (h, v) if v != "090000" => v }.distinct, Vector("000000"))
   }
 
   test("input: chain-start window clamps to [1,127]; NO seed possible; 110 id-1 votes") {
@@ -195,6 +207,18 @@ class AuthoredChainVotingTest extends munit.FunSuite {
     assertEquals(activatedOf(e, "softfork"), "0000",
       "no activation — the rest of the table (121/122 counters or not) is whatever the " +
       "oracle emits, byte-pinned in the vector")
+  }
+
+  test("PROPERTY id9-step: 66 votes steps id 9 UP, nothing else moves, no activation") {
+    val e = entry(ThresholdEdgesPath, "voting-id9-step")
+    val cur = inputTableOf(e, "id9-step")
+    val got = expectedTableOf(e, "id9-step")
+    assertEquals(got.keySet, cur.keySet, "no ids may appear or vanish")
+    val moved = got.keySet.filter(k => got(k) != cur(k))
+    assertEquals(moved, Set("9"), "the table must differ EXACTLY at id 9")
+    assertEquals(got("9"), cur("9") + 1,
+      s"id 9 steps +1 (SubblocksPerBlockStep = 1): ${cur("9")} → ${got("9")}")
+    assertEquals(activatedOf(e, "id9-step"), "0000")
   }
 
   test("PROPERTY chain-start clamp: table unchanged though 110 headers voted id 1") {
