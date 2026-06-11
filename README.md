@@ -134,9 +134,11 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   (2 — testnet-anchored retargeting points) · `any/authored` (3 — difficulty-damping
   clamp edges, EIP-37 arm settings-driven) · `v6/captured` (1 — testnet epoch-boundary
   voting point) · `v6/authored` (4 — param-change threshold edges + voting-window clamp).
-  Conformers: **Rudolph control** 10/10 (all 4 chain slices green) · all others
-  unchanged (no chain arm declared); donner (ergo-node-rust) is the natural first
-  independent conformer — routing pending; blitzen nipopow-at-most deferred. Contract:
+  Conformers: **Rudolph control** 10/10 (all 4 chain slices green) · **donner LIVE
+  10/10** — the routing round surfaced the seeded-tally semantics as a real consensus
+  bug on enr's live boundary path plus three further JVM-exactness divergences, all
+  fixed before the first graded run (enr `9ccc6e7`) · blitzen nipopow-at-most deferred ·
+  dasher/vixen ledger/offered. Contract:
   [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).
 
 Still greenfield, and where help is most wanted (see below):

@@ -327,7 +327,7 @@ build and gates the tx, block, **and chain** engines alike).
 | Conformer | Stance | Detail |
 |---|---|---|
 | **rudolph** | control (build-gated), all kinds | Declares `chain`; `santa.runner.ChainEngine` reached by reflection, exists only in ergo-core-bearing builds (the same `SANTA_TX_BLESSER` gate + seam as Tx/BlockEngine). Oracle-tautological as verification; its value is the harness control row. Ungated builds emit faithful `not-implemented`. |
-| **donner** | voting + retargeting — the tier's real conformer | **enr's own code**, spike-verified: `chain/src/difficulty.rs` (pure cores `calculate`/`eip37_calculate`/`interpolate` over `&[&Header]` + config) and `chain/src/voting.rs` + `chain/src/chain.rs` (`tally_votes`, `apply_soft_fork_lifecycle` — pure). Its santa-run arm calls the pure cores with settings **from the entry**, never from `ChainConfig::testnet()`. enr has no existing isolated harness — that is the routed ask (routing prompt pending; on their ship the manifest flips `tiers` to `["block", "chain"]`). nipopow is NOT donner's: enr's nipopow is a thin wrapper over sigma-rust's `ergo-nipopow` crate — the kind belongs to the library that owns the code. |
+| **donner** | voting + retargeting — the tier's real conformer, **LIVE** | **enr's own code**: `chain/src/difficulty.rs` (pure cores `calculate`/`eip37_calculate`/`interpolate`/`normalize_to_n_bits` over `&[&Header]` + config) and `chain/src/voting.rs` (`tally_votes_seeded`, `compute_boundary_parameters(...) → (Parameters, activated_update)` — the pure seams enr exposed for the chain arm; the earlier `tally_votes` plain counter and chain-side `apply_soft_fork_lifecycle` are RETIRED — the routing round surfaced the plain counter as a live consensus bug on enr's boundary path, fixed at enr `9ccc6e7` together with three further JVM-exactness finds: approval counts = closing-epoch-120 PLUS collected, lifecycle reads an original-table snapshot, approved-vote-for-unknown-id errors like the JVM, id 9 steppable). Its santa-run arm calls the seams with settings **from the entry**, never from `ChainConfig::testnet()`. Mounted at santa-donner `aaca7cf` (`tiers: ["block", "chain"]`). nipopow is NOT donner's: enr's nipopow is a thin wrapper over sigma-rust's `ergo-nipopow` crate — the kind belongs to the library that owns the code. |
 | **blitzen-eni / develop** | nipopow at most — out of v1 | No node layer ⇒ voting/retargeting out-of-scope (grey, not a growth ledger: those are the node's functions, not the library's). If/when the nipopow kind ships (probed GO, future plan), it mounts here. |
 | **dasher** | growth ledger | ergots' end goal is a node built on top of it — chain is roadmap; declares the tier with `not-implemented` entries when they choose (the not-impl ledger stance, as in eval/tx). |
 | **vixen** | offered all kinds | Independent top-to-bottom impl — we test all their tiers; their call (ping with this contract). |
@@ -353,9 +353,10 @@ and spike-verified against chain history (2026-06-11, testnet node at fullHeight
   (MATCH).
 
 Authored families (threshold edges, window clamp, damping clamps) and the rudolph control
-row land with the same build series; the donner routing prompt is pending (written and
-routed after the corpus lands). nipopow: GO decision recorded, deferred to a follow-up
-plan. Mainnet EIP-37 window: parked (§6).
+row landed with the same build series; donner's chain arm shipped same-day off the routing
+prompt (santa-donner `aaca7cf` / enr `9ccc6e7` — see §7 for what the round surfaced and
+fixed). nipopow: GO decision recorded, deferred to a follow-up plan. Mainnet EIP-37
+window: parked (§6).
 
 ## 9. Worked example
 
