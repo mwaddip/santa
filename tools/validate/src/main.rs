@@ -1475,4 +1475,87 @@ mod tests {
         // The test verifies: no panic (test completes), and bad > 0 (fires [WRONG]).
         assert!(bad > 0, "epoch_length=0 must fire [WRONG] without panicking");
     }
+
+    #[test]
+    fn chain_voting_reject_form_expected_passes() {
+        let v = chain_vec_validator();
+        let doc = serde_json::json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "jvm:ergo-core-6.0.2.1-chain-model",
+            "entries": [{
+                "name": "hostile-122-without-121",
+                "source": "santa:hostile_tables:no-121",
+                "kind": "voting",
+                "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32},
+                "payload": {
+                    "boundary_height": 2688,
+                    "current_parameters": {"table": {"1": 1250000, "122": 2560, "123": 4}},
+                    "vote_stream": [{"height": 2560, "votes": "780000"}],
+                    "boundary_votes": "000000",
+                    "proposed_update": "0000"
+                },
+                "expected": {"error": "errored"},
+                "diagnostic": {"note": "x", "oracle_note": "java.util.NoSuchElementException: key not found: 121"}
+            }]
+        });
+        assert!(v.is_valid(&doc), "voting reject-form expected must validate");
+    }
+
+    #[test]
+    fn chain_voting_reject_form_with_value_keys_fails() {
+        let v = chain_vec_validator();
+        let mut doc = serde_json::json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "jvm:ergo-core-6.0.2.1-chain-model",
+            "entries": [{
+                "name": "bad",
+                "source": "santa:hostile_tables:bad",
+                "kind": "voting",
+                "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32},
+                "payload": {
+                    "boundary_height": 2688,
+                    "current_parameters": {"table": {"1": 1}},
+                    "vote_stream": [],
+                    "boundary_votes": "000000",
+                    "proposed_update": "0000"
+                },
+                "expected": {"error": "errored", "activated_update": "0000"}
+            }]
+        });
+        assert!(!v.is_valid(&doc), "error + value keys together must fail the oneOf");
+        // and a retargeting reject form must fail (accept-only kind):
+        doc["entries"][0]["kind"] = serde_json::json!("retargeting");
+        doc["entries"][0]["settings"] = serde_json::json!({
+            "epoch_length": 128, "use_last_epochs": 8, "block_interval_ms": 120000, "initial_nbits": 16842752});
+        doc["entries"][0]["payload"] = serde_json::json!({
+            "target_height": 129, "anchor_headers": [{}]});
+        doc["entries"][0]["expected"] = serde_json::json!({"error": "errored"});
+        assert!(!v.is_valid(&doc), "retargeting must stay accept-only");
+    }
+
+    #[test]
+    fn chain_voting_reject_form_only_errored_token() {
+        let v = chain_vec_validator();
+        let mut doc = serde_json::json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "jvm:ergo-core-6.0.2.1-chain-model",
+            "entries": [{
+                "name": "bad-token",
+                "source": "santa:hostile_tables:bad-token",
+                "kind": "voting",
+                "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32},
+                "payload": {
+                    "boundary_height": 2688,
+                    "current_parameters": {"table": {"1": 1}},
+                    "vote_stream": [],
+                    "boundary_votes": "000000",
+                    "proposed_update": "0000"
+                },
+                "expected": {"error": "panicked"}
+            }]
+        });
+        assert!(!v.is_valid(&doc), "panicked is never a blessable expected (const errored)");
+        doc["entries"][0]["expected"] = serde_json::json!({});
+        assert!(!v.is_valid(&doc), "empty expected matches neither oneOf branch");
+    }
 }

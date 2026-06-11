@@ -41,6 +41,14 @@
       "minimum": 0,
       "maximum": 4294967295
     },
+    "expected_reject": {
+      "type": "object",
+      "required": ["error"],
+      "additionalProperties": false,
+      "properties": {
+        "error": { "const": "errored" }
+      }
+    },
     "entry": {
       "type": "object",
       "required": ["name", "source", "kind", "settings", "payload", "expected"],
@@ -140,13 +148,18 @@
                 }
               },
               "expected": {
-                "type": "object",
-                "required": ["parameters", "activated_update"],
-                "additionalProperties": false,
-                "properties": {
-                  "parameters": { "$ref": "#/$defs/parameters_table" },
-                  "activated_update": { "$ref": "#/$defs/update_hex" }
-                }
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": ["parameters", "activated_update"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "parameters": { "$ref": "#/$defs/parameters_table" },
+                      "activated_update": { "$ref": "#/$defs/update_hex" }
+                    }
+                  },
+                  { "$ref": "#/$defs/expected_reject" }
+                ]
               }
             }
           }
