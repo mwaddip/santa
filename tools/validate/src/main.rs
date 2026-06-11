@@ -585,7 +585,7 @@ fn block_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
                 es.iter()
                     .filter(|e| {
                         let proof_bytes = e["block"]["adProofs"]["proofBytes"].as_str();
-                        proof_bytes.map_or(true, |s| s.is_empty())
+                        proof_bytes.is_none_or(|s| s.is_empty())
                     })
                     .filter_map(|e| e["name"].as_str())
                     .collect()
