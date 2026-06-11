@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-chain.actuals.schema.json",
+  "title": "santa-chain actuals (one runner output file)",
+  "description": "A runner's output for one chain vector: each entry name -> per-kind result. Retargeting: { nbits, error, note? }; voting: { parameters, activated_update, error, note? }. The union shape (other kind's value keys present-and-null) is legal; graders read only the entry's kind's own fields. `note` may accompany both `panicked` (required, carries the caught-panic message) and `errored` (optional, diagnostic). Normative companion to docs/contract/runner-contract-chain.md §3.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": { "$ref": "#/$defs/result" },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "required": ["error"],
+      "additionalProperties": false,
+      "properties": {
+        "nbits": {
+          "oneOf": [ { "type": "integer" }, { "type": "null" } ],
+          "description": "Required-difficulty result for retargeting kind (non-null iff error is null)."
+        },
+        "parameters": {
+          "oneOf": [ { "type": "object" }, { "type": "null" } ],
+          "description": "Full post-epoch parameters table for voting kind (non-null iff error is null)."
+        },
+        "activated_update": {
+          "oneOf": [ { "type": "string" }, { "type": "null" } ],
+          "description": "Canonical serializer hex of the activated ErgoValidationSettingsUpdate; \"0000\" for no activation (non-null iff error is null AND kind is voting; null when error is null AND kind is retargeting)."
+        },
+        "error": {
+          "enum": ["not-implemented", "errored", "panicked", null],
+          "description": "Null when a verdict was produced; otherwise the failure mode."
+        },
+        "note": {
+          "type": "string",
+          "description": "Panic message when error==\"panicked\" (required); optional diagnostic when error==\"errored\". Never graded."
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "error null => at least one kind value field non-null (retargeting: nbits non-null; voting: BOTH parameters AND activated_update non-null). The union shape (other kind fields present-and-null) is still legal.",
+          "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
+          "then": {
+            "anyOf": [
+              { "required": ["nbits"], "not": { "properties": { "nbits": { "type": "null" } } } },
+              { "required": ["parameters", "activated_update"], "properties": { "parameters": { "type": "object" }, "activated_update": { "type": "string" } } }
+            ]
+          }
+        },
+        {
+          "$comment": "error non-null => all value fields (nbits, parameters, activated_update) must be null when present.",
+          "if": { "not": { "properties": { "error": { "type": "null" } }, "required": ["error"] } },
+          "then": {
+            "properties": {
+              "nbits": { "type": "null" },
+              "parameters": { "type": "null" },
+              "activated_update": { "type": "null" }
+            }
+          }
+        },
+        {
+          "$comment": "error == panicked => note required; error == null or 'not-implemented' => note forbidden (contract §3: note is absent for success and not-implemented rows). errored may carry note (optional diagnostic).",
+          "if": { "properties": { "error": { "const": "panicked" } }, "required": ["error"] },
+          "then": { "required": ["note"] },
+          "else": {
+            "if": {
+              "anyOf": [
+                { "properties": { "error": { "type": "null" } }, "required": ["error"] },
+                { "properties": { "error": { "const": "not-implemented" } }, "required": ["error"] }
+              ]
+            },
+            "then": { "not": { "required": ["note"] } }
+          }
+        }
+      ]
+    }
+  }
+}

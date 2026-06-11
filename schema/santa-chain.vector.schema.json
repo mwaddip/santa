@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-chain.vector.schema.json",
+  "title": "santa-chain/v1 vector file",
+  "description": "A committed conformance vector for the chain tier (santa-chain/v1): header-chain consensus functions (retargeting: anchor headers -> nBits; voting: epoch vote stream -> next Parameters + activated update). Normative companion to docs/contract/runner-contract-chain.md.",
+  "type": "object",
+  "required": ["schema", "blessed_by", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "santa-chain/v1" },
+    "op": { "type": "string", "minLength": 1 },
+    "blessed_by": { "type": "string", "minLength": 1 },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "parameters_table": {
+      "type": "object",
+      "required": ["table"],
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        }
+      }
+    },
+    "votes_hex6": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{6}$"
+    },
+    "update_hex": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{2})+$"
+    },
+    "nbits": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "entry": {
+      "type": "object",
+      "required": ["name", "source", "kind", "settings", "payload", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "name":       { "type": "string", "minLength": 1 },
+        "source":     { "type": "string", "minLength": 1 },
+        "kind":       { "enum": ["retargeting", "voting"] },
+        "settings":   { "type": "object" },
+        "payload":    { "type": "object" },
+        "expected":   { "type": "object" },
+        "diagnostic": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "retargeting" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "settings": {
+                "type": "object",
+                "required": ["epoch_length", "use_last_epochs", "block_interval_ms", "initial_nbits"],
+                "additionalProperties": false,
+                "properties": {
+                  "epoch_length":            { "type": "integer", "minimum": 1 },
+                  "use_last_epochs":         { "type": "integer", "minimum": 1 },
+                  "block_interval_ms":       { "type": "integer", "minimum": 1 },
+                  "initial_nbits":           { "$ref": "#/$defs/nbits" },
+                  "eip37_activation_height": { "type": "integer", "minimum": 1 },
+                  "eip37_epoch_length":      { "type": "integer", "minimum": 1 }
+                },
+                "dependentRequired": {
+                  "eip37_activation_height": ["eip37_epoch_length"],
+                  "eip37_epoch_length": ["eip37_activation_height"]
+                }
+              },
+              "payload": {
+                "type": "object",
+                "required": ["target_height", "anchor_headers"],
+                "additionalProperties": false,
+                "properties": {
+                  "target_height": { "type": "integer", "minimum": 1 },
+                  "anchor_headers": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 9,
+                    "items": { "type": "object" }
+                  }
+                }
+              },
+              "expected": {
+                "type": "object",
+                "required": ["nbits"],
+                "additionalProperties": false,
+                "properties": {
+                  "nbits": { "$ref": "#/$defs/nbits" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "voting" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "settings": {
+                "type": "object",
+                "required": ["voting_length", "soft_fork_epochs", "activation_epochs"],
+                "additionalProperties": false,
+                "properties": {
+                  "voting_length":               { "type": "integer", "minimum": 1 },
+                  "soft_fork_epochs":            { "type": "integer", "minimum": 1 },
+                  "activation_epochs":           { "type": "integer", "minimum": 1 },
+                  "version2_activation_height":  { "type": "integer", "minimum": 0 }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "required": ["boundary_height", "current_parameters", "vote_stream", "boundary_votes", "proposed_update"],
+                "additionalProperties": false,
+                "properties": {
+                  "boundary_height": { "type": "integer", "minimum": 1 },
+                  "boundary_votes": { "$ref": "#/$defs/votes_hex6" },
+                  "current_parameters": { "$ref": "#/$defs/parameters_table" },
+                  "vote_stream": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["height", "votes"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "height": { "type": "integer", "minimum": 1 },
+                        "votes":  { "$ref": "#/$defs/votes_hex6" }
+                      }
+                    }
+                  },
+                  "proposed_update": { "$ref": "#/$defs/update_hex" }
+                }
+              },
+              "expected": {
+                "type": "object",
+                "required": ["parameters", "activated_update"],
+                "additionalProperties": false,
+                "properties": {
+                  "parameters": { "$ref": "#/$defs/parameters_table" },
+                  "activated_update": { "$ref": "#/$defs/update_hex" }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

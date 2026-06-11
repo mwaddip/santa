@@ -97,6 +97,15 @@ fn main() -> ExitCode {
         jsonschema::validator_for(&block_act_schema).expect("block actuals schema invalid");
     println!("[meta] block vector + actuals schemas: built (valid Draft 2020-12)");
 
+    // Chain tier (santa-chain/v1): independent schemas, no cross-ref.
+    let chain_vec_schema = load(&schema_dir.join("santa-chain.vector.schema.json"));
+    let chain_act_schema = load(&schema_dir.join("santa-chain.actuals.schema.json"));
+    let chain_vec_validator =
+        jsonschema::validator_for(&chain_vec_schema).expect("chain vector schema invalid");
+    let chain_act_validator =
+        jsonschema::validator_for(&chain_act_schema).expect("chain actuals schema invalid");
+    println!("[meta] chain vector + actuals schemas: built (valid Draft 2020-12)");
+
     // 2. Every committed vector validates against the vector schema.
     let files = json_files(&root.join("vectors").join("eval"));
     println!("\n[corpus] validating {} committed vectors:", files.len());
@@ -181,6 +190,28 @@ fn main() -> ExitCode {
     println!("[block corpus] {bok}/{} valid", block_files.len());
     errs += block_path_guard(&root, &block_files);
     errs += block_actuals_guards(&block_act_validator);
+
+    // Chain corpus: validate every committed chain vector against the chain vector schema.
+    // vectors/chain/ may not exist yet (empty corpus) — json_files handles missing dirs gracefully.
+    let chain_files = json_files(&root.join("vectors").join("chain"));
+    println!("\n[chain corpus] validating {} committed chain vectors:", chain_files.len());
+    let mut chok = 0;
+    for f in &chain_files {
+        let doc = load(f);
+        let errors: Vec<_> = chain_vec_validator.iter_errors(&doc).collect();
+        if errors.is_empty() {
+            chok += 1;
+        } else {
+            errs += 1;
+            println!("  FAIL {}", f.file_name().unwrap().to_string_lossy());
+            for e in errors.iter().take(4) {
+                println!("      {}", truncate(&e.to_string(), 180));
+            }
+        }
+    }
+    println!("[chain corpus] {chok}/{} valid", chain_files.len());
+    errs += chain_path_guard(&root, &chain_files);
+    errs += chain_actuals_guards(&chain_act_validator);
 
     println!(
         "\n=== {} ===",
@@ -614,6 +645,210 @@ fn block_actuals_guards(v: &Validator) -> u32 {
     bad
 }
 
+/// Chain taxonomy path <-> in-data envelope guard. tier "chain" => schema "santa-chain/";
+/// version ∈ {"v5","v6","any"} (retargeting ⇒ "any"; voting ⇒ "v5"|"v6"); provenance ∈
+/// {spec, authored, vendored, captured}. Per-entry kind must be in {retargeting, voting}.
+/// Recalculation-point rule: retargeting entry's target_height must satisfy
+///   (T - 1) % L == 0
+/// where L = eip37_epoch_length if both eip37 settings are present and T >= eip37_activation_height,
+/// else epoch_length.
+fn chain_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
+    let valid_versions: &[&str] = &["v5", "v6", "any"];
+    let valid_provenances: &[&str] = &["spec", "authored", "vendored", "captured"];
+    println!("\n[chain catalogue] path <-> envelope guard:");
+    let vroot = root.join("vectors");
+    let mut g: u32 = 0;
+    for f in files {
+        let rel = f.strip_prefix(&vroot).unwrap();
+        let parts: Vec<String> = rel
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned())
+            .collect();
+        if parts.len() != 4 {
+            g += 1;
+            println!("  [WRONG] {}: not <tier>/<version>/<provenance>/<file>.json", rel.display());
+            continue;
+        }
+        let (tier, version, prov) = (&parts[0], &parts[1], &parts[2]);
+
+        // Tier must be "chain" and schema must start with "santa-chain/".
+        let doc = load(f);
+        let schema = doc.get("schema").and_then(Value::as_str).unwrap_or("");
+        if tier != "chain" || !schema.starts_with("santa-chain/") {
+            g += 1;
+            println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
+        }
+
+        // Version must be in the known set.
+        if !valid_versions.contains(&version.as_str()) {
+            g += 1;
+            println!("  [WRONG] {}: unknown version label {version:?} (expected v5|v6|any)", rel.display());
+        }
+
+        // Provenance must be in the known set.
+        if !valid_provenances.contains(&prov.as_str()) {
+            g += 1;
+            println!("  [WRONG] {}: unknown provenance {prov:?} (expected spec|authored|vendored|captured)", rel.display());
+        }
+
+        // Provenance source agreement.
+        let bad_src: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let src = e["source"].as_str().unwrap_or("");
+                        match prov.as_str() {
+                            "captured" => !src.starts_with("testnet:"),
+                            "authored" => !src.starts_with("santa:"),
+                            // contract §6: no source convention pinned for spec provenance in v1; accept any non-empty source.
+                            "spec" => src.is_empty(),
+                            "vendored" => false, // vendored sources are unconstrained
+                            _ => false,
+                        }
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_src.is_empty() {
+            let head = &bad_src[..bad_src.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: provenance {prov:?} but entry source(s) disagree: {head:?}", rel.display());
+        }
+
+        // Per-entry kind and kind↔version sanity.
+        let entries = doc["entries"].as_array();
+        let bad_kind: Vec<String> = entries
+            .map(|es| {
+                es.iter()
+                    .filter_map(|e| {
+                        let kind = e["kind"].as_str().unwrap_or("");
+                        let name = e["name"].as_str().unwrap_or("(unnamed)");
+                        match kind {
+                            "retargeting" => {
+                                // retargeting ⇒ version must be "any"
+                                if version != "any" {
+                                    Some(format!("{name} (retargeting requires version=any, got {version})"))
+                                } else {
+                                    None
+                                }
+                            }
+                            "voting" => {
+                                // voting ⇒ version must be "v5" or "v6"
+                                if version != "v5" && version != "v6" {
+                                    Some(format!("{name} (voting requires version=v5|v6, got {version})"))
+                                } else {
+                                    None
+                                }
+                            }
+                            other => {
+                                Some(format!("{name} (unknown kind {other:?})"))
+                            }
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_kind.is_empty() {
+            let head = &bad_kind[..bad_kind.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: kind/version violation(s): {head:?}", rel.display());
+        }
+
+        // Recalculation-point rule: for each retargeting entry,
+        // (target_height - 1) % governing_epoch_length == 0.
+        let bad_recalc: Vec<String> = entries
+            .map(|es| {
+                es.iter()
+                    .filter_map(|e| {
+                        if e["kind"].as_str() != Some("retargeting") {
+                            return None;
+                        }
+                        let name = e["name"].as_str().unwrap_or("(unnamed)");
+                        let t = e["payload"]["target_height"].as_i64()?;
+                        let settings = &e["settings"];
+                        let epoch_length = settings["epoch_length"].as_i64()?;
+                        // Governing epoch length: use eip37_epoch_length when both eip37 settings
+                        // are present AND target_height >= eip37_activation_height.
+                        let governing_l = if let (Some(eip37_act), Some(eip37_l)) = (
+                            settings["eip37_activation_height"].as_i64(),
+                            settings["eip37_epoch_length"].as_i64(),
+                        ) {
+                            if t >= eip37_act { eip37_l } else { epoch_length }
+                        } else {
+                            epoch_length
+                        };
+                        if governing_l <= 0 {
+                            Some(format!("{name} (governing epoch_length={governing_l} is zero/negative — schema-invalid)"))
+                        } else if (t - 1) % governing_l != 0 {
+                            Some(format!("{name} (target_height={t}, (T-1)%{governing_l}={} != 0)", (t - 1) % governing_l))
+                        } else {
+                            None
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_recalc.is_empty() {
+            let head = &bad_recalc[..bad_recalc.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: recalculation-point violation(s): {head:?}", rel.display());
+        }
+    }
+    if g == 0 {
+        println!("  [OK] all {} chain paths agree with their envelopes", files.len());
+    } else {
+        println!("  {g} chain path/envelope mismatch(es)");
+    }
+    g
+}
+
+/// Chain actuals asymmetry guards: retargeting ok carries nbits + null error; voting ok carries
+/// parameters + activated_update + null error; error non-null => kind-value fields null.
+fn chain_actuals_guards(v: &Validator) -> u32 {
+    let checks: &[(&str, Value, bool)] = &[
+        // Retargeting: valid verdict
+        ("retargeting-ok", json!({"r#0": {"nbits": 84150434, "error": null}}), true),
+        // Voting: valid verdict
+        ("voting-ok", json!({"v#0": {"parameters": {"table": {"1": 1000000}}, "activated_update": "0000", "error": null}}), true),
+        // Union shape: other kind's fields present-and-null is legal
+        ("union-retargeting", json!({"r#0": {"nbits": 84150434, "parameters": null, "activated_update": null, "error": null}}), true),
+        ("union-voting", json!({"v#0": {"nbits": null, "parameters": {"table": {}}, "activated_update": "0000", "error": null}}), true),
+        // Error modes
+        ("errored", json!({"r#0": {"nbits": null, "error": "errored"}}), true),
+        ("not-implemented", json!({"r#0": {"nbits": null, "error": "not-implemented"}}), true),
+        ("panicked carries note", json!({"r#0": {"nbits": null, "error": "panicked", "note": "boom"}}), true),
+        // note on errored is explicitly allowed (contract §3)
+        ("note on errored is allowed", json!({"r#0": {"nbits": null, "error": "errored", "note": "decode failed: bad bytes"}}), true),
+        // voting ok with null activated_update rejected (both parameters AND activated_update required non-null for voting verdict)
+        ("voting ok w/ null activated_update rejected", json!({"v#0": {"parameters": {"table": {}}, "activated_update": null, "error": null}}), false),
+        // unknown error value rejected
+        ("unknown error value rejected", json!({"r#0": {"nbits": null, "error": "unknown-error"}}), false),
+        // nbits as string rejected
+        ("nbits as string rejected", json!({"r#0": {"nbits": "84150434", "error": null}}), false),
+        // parameters as non-object rejected
+        ("parameters as string rejected", json!({"v#0": {"parameters": "invalid", "activated_update": "0000", "error": null}}), false),
+        // extra unknown field rejected
+        ("extra field rejected", json!({"r#0": {"nbits": 84150434, "error": null, "cost": 99}}), false),
+        // note forbidden on success (contract §3: note absent for success row)
+        ("note on success rejected", json!({"r#0": {"nbits": 84150434, "error": null, "note": "extra"}}), false),
+        // note forbidden on not-implemented (contract §3: note absent for not-implemented row)
+        ("note on not-implemented rejected", json!({"r#0": {"nbits": null, "error": "not-implemented", "note": "x"}}), false),
+    ];
+    println!("\n[chain actuals] asymmetry guards:");
+    let mut bad: u32 = 0;
+    for (label, doc, want) in checks {
+        let got = v.is_valid(doc);
+        let good = got == *want;
+        if !good {
+            bad += 1;
+        }
+        println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
+    }
+    bad
+}
+
 /// Transaction taxonomy path <-> in-data envelope guard. tier "transaction" => schema
 /// "santa-transaction/v1"; version v6 => activated 3; provenance captured => every entry
 /// source starts with "testnet:" AND expected.valid == true; provenance authored => every
@@ -820,5 +1055,424 @@ mod tests {
         // Clean up regardless.
         let _ = fs::remove_dir_all(&tmp);
         assert!(bad > 0, "unknown version directory v7 must fire at least one [WRONG]");
+    }
+
+    // ── Chain tier tests ─────────────────────────────────────────────────────────
+
+    fn chain_vec_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-chain.vector.schema.json"));
+        jsonschema::validator_for(&schema).expect("chain vector schema invalid")
+    }
+
+    /// Minimal well-formed retargeting vector (filed under chain/any/captured/).
+    fn minimal_retargeting_vector() -> Value {
+        json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "retargeting-test-001",
+                "source": "testnet:testnet-retarget@393601",
+                "kind": "retargeting",
+                "settings": {
+                    "epoch_length": 128,
+                    "use_last_epochs": 8,
+                    "block_interval_ms": 45000,
+                    "initial_nbits": 16842752
+                },
+                "payload": {
+                    "target_height": 393601,
+                    "anchor_headers": [
+                        { "height": 393473, "nBits": 84128203, "timestamp": 1781000000000i64, "parentId": "0000000000000000000000000000000000000000000000000000000000000000aa" }
+                    ]
+                },
+                "expected": { "nbits": 84150434 }
+            }]
+        })
+    }
+
+    /// A well-formed retargeting vector validates against the chain schema AND chain_path_guard
+    /// returns 0 when filed under chain/any/captured/.
+    #[test]
+    fn chain_vector_well_formed_passes() {
+        let v = chain_vec_validator();
+        let doc = minimal_retargeting_vector();
+        assert!(v.is_valid(&doc), "well-formed chain retargeting vector should pass schema");
+
+        let tmp = std::env::temp_dir().join(format!("santa-chain-test-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let fpath = vdir.join("Retargeting.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(bad, 0, "well-formed retargeting under chain/any/captured/ must have 0 path-guard failures");
+    }
+
+    /// chain_path_guard fires [WRONG] for an unknown version label (e.g. v9).
+    #[test]
+    fn chain_path_guard_bad_version_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-badver-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("v9").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = minimal_retargeting_vector();
+        let fpath = vdir.join("Retargeting.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "version v9 must fire at least one [WRONG]");
+    }
+
+    /// chain_path_guard accepts the "any" version label without complaint.
+    #[test]
+    fn chain_path_guard_any_is_legal() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-any-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = minimal_retargeting_vector();
+        let fpath = vdir.join("Retargeting.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(bad, 0, "version 'any' must be accepted without [WRONG]");
+    }
+
+    /// chain_path_guard fires [WRONG] for an unknown kind (e.g. "mining").
+    #[test]
+    fn chain_path_guard_unknown_kind_fires_wrong() {
+        let v = chain_vec_validator();
+        let doc = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "bad-kind",
+                "source": "testnet:x",
+                "kind": "mining",
+                "settings": {},
+                "payload": {},
+                "expected": {}
+            }]
+        });
+        // Schema itself should reject "mining" kind.
+        assert!(!v.is_valid(&doc), "kind:mining must fail schema validation");
+
+        // AND: chain_path_guard's `other =>` arm (~:746-748) must fire [WRONG] when the guard
+        // is handed a "mining" entry — so break-the-arm stays visibly red.
+        let tmp = std::env::temp_dir().join(format!("santa-chain-badkind-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let fpath = vdir.join("Mining.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "kind:mining must fire at least one [WRONG] in chain_path_guard (other=> arm covered)");
+    }
+
+    /// kind↔version sanity: voting entry under "any" fires [WRONG].
+    #[test]
+    fn chain_path_guard_kind_version_sanity() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-kvsanity-{}", std::process::id()));
+        // voting under "any" must fire WRONG
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "voting-under-any",
+                "source": "testnet:x",
+                "kind": "voting",
+                "settings": { "voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32 },
+                "payload": {
+                    "boundary_height": 256,
+                    "current_parameters": { "table": { "1": 1000000 } },
+                    "vote_stream": [],
+                    "boundary_votes": "000000",
+                    "proposed_update": "0000"
+                },
+                "expected": {
+                    "parameters": { "table": { "1": 1000000 } },
+                    "activated_update": "0000"
+                }
+            }]
+        });
+        let fpath = vdir.join("Voting.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "voting under 'any' must fire [WRONG] (kind↔version sanity)");
+    }
+
+    /// Voting accept arm: a well-formed voting entry under chain/v5/captured/ passes chain_path_guard (bad==0).
+    #[test]
+    fn chain_path_guard_voting_under_v5_passes() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-v5voting-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("v5").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "voting-under-v5",
+                "source": "testnet:x",
+                "kind": "voting",
+                "settings": { "voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32 },
+                "payload": {
+                    "boundary_height": 256,
+                    "current_parameters": { "table": { "1": 1000000 } },
+                    "vote_stream": [],
+                    "boundary_votes": "000000",
+                    "proposed_update": "0000"
+                },
+                "expected": {
+                    "parameters": { "table": { "1": 1000000 } },
+                    "activated_update": "0000"
+                }
+            }]
+        });
+        let fpath = vdir.join("Voting.v5.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(bad, 0, "voting under chain/v5/captured/ must PASS chain_path_guard (bad==0)");
+    }
+
+    /// recalculation-point rule: a retargeting entry whose target_height is NOT a recalculation
+    /// point fires [WRONG].
+    #[test]
+    fn chain_path_guard_midepoch_target_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-midepoch-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        // epoch_length=128 => recalc when (T-1)%128==0, i.e. T=129,257,...
+        // target_height=393602 => (393602-1)%128 = 393601%128 = 1 != 0 => NOT a recalc point
+        let doc = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "midepoch-target",
+                "source": "testnet:x",
+                "kind": "retargeting",
+                "settings": {
+                    "epoch_length": 128,
+                    "use_last_epochs": 8,
+                    "block_interval_ms": 45000,
+                    "initial_nbits": 16842752
+                },
+                "payload": {
+                    "target_height": 393602,
+                    "anchor_headers": [
+                        { "height": 393473, "nBits": 84128203, "timestamp": 1781000000000i64, "parentId": "0000000000000000000000000000000000000000000000000000000000000000aa" }
+                    ]
+                },
+                "expected": { "nbits": 84150434 }
+            }]
+        });
+        let fpath = vdir.join("Retargeting.midepoch.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "mid-epoch target_height must fire [WRONG] (recalculation-point rule)");
+    }
+
+    /// chain_actuals_guards returns 0 failures against the real schema.
+    #[test]
+    fn chain_actuals_guards_all_pass() {
+        let schema = load(&schema_dir().join("santa-chain.actuals.schema.json"));
+        let v = jsonschema::validator_for(&schema).expect("chain actuals schema invalid");
+        let bad = chain_actuals_guards(&v);
+        assert_eq!(bad, 0, "chain_actuals_guards should report 0 failures");
+    }
+
+    fn chain_act_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-chain.actuals.schema.json"));
+        jsonschema::validator_for(&schema).expect("chain actuals schema invalid")
+    }
+
+    /// Actuals: panicked without note must be rejected (contract §3: note required with panicked).
+    #[test]
+    fn chain_actuals_panicked_without_note_rejected() {
+        let v = chain_act_validator();
+        let doc = json!({"r#0": {"nbits": null, "error": "panicked"}});
+        assert!(!v.is_valid(&doc), "panicked without note must be rejected by chain actuals schema");
+    }
+
+    /// Actuals: value field non-null with non-null error must be rejected (contract §3: value null iff error non-null).
+    #[test]
+    fn chain_actuals_value_with_error_rejected() {
+        let v = chain_act_validator();
+        // nbits non-null while error is "errored"
+        let doc = json!({"r#0": {"nbits": 84150434, "error": "errored"}});
+        assert!(!v.is_valid(&doc), "nbits non-null with error:errored must be rejected by chain actuals schema");
+        // parameters non-null while error is "not-implemented"
+        let doc2 = json!({"v#0": {"parameters": {"table": {"1": 1000000}}, "activated_update": "0000", "error": "not-implemented"}});
+        assert!(!v.is_valid(&doc2), "parameters/activated_update non-null with error:not-implemented must be rejected");
+    }
+
+    /// Actuals: empty file (zero entries) must be rejected (contract §3: minProperties 1).
+    #[test]
+    fn chain_actuals_empty_file_rejected() {
+        let v = chain_act_validator();
+        let doc = json!({});
+        assert!(!v.is_valid(&doc), "empty actuals file must be rejected (minProperties 1)");
+    }
+
+    /// EIP-37 L-branch guard: eip37 pair present, T >= eip37_activation_height, (T-1) % eip37_epoch_length == 0
+    /// but (T-1) % epoch_length != 0 => PASSES (eip37 L governs).
+    /// Mirrored case below activation => WRONG (eip37 arm not active, classic L governs and (T-1)%L != 0).
+    #[test]
+    fn chain_path_guard_eip37_governing_length() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-eip37-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+
+        // Constants: T=844929, eip37_activation_height=844673, eip37_epoch_length=128, epoch_length=1024.
+        // (T-1)=844928: 844928=128·6601 ⇒ eip37-L hit (eip37 arm governs since T≥844673).
+        // 844928%1024=128 ≠ 0 ⇒ classic-L miss (not a classic recalculation point).
+        let doc_governs = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "eip37-governs",
+                "source": "testnet:x",
+                "kind": "retargeting",
+                "settings": {
+                    "epoch_length": 1024,
+                    "use_last_epochs": 8,
+                    "block_interval_ms": 120000,
+                    "initial_nbits": 16842752,
+                    "eip37_activation_height": 844673,
+                    "eip37_epoch_length": 128
+                },
+                "payload": {
+                    "target_height": 844929,
+                    "anchor_headers": [
+                        { "height": 844801, "nBits": 83934920, "timestamp": 1781063957902i64, "parentId": "0000000000000000000000000000000000000000000000000000000000000000aa" }
+                    ]
+                },
+                "expected": { "nbits": 84150434 }
+            }]
+        });
+        let fpath = vdir.join("Retargeting.eip37.json");
+        fs::write(&fpath, serde_json::to_string(&doc_governs).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(bad, 0, "eip37 arm governs: (T-1)%eip37_epoch_length==0 must PASS chain_path_guard");
+
+        // Case 2: below activation — eip37 arm does NOT govern; classic epoch_length applies.
+        // T = 844929 same target but now T < eip37_activation_height: change activation to 900000.
+        // (844929-1) % 1024 = 128 != 0 => NOT a classic recalc point => must fire WRONG.
+        let tmp2 = std::env::temp_dir().join(format!("santa-chain-eip37b-{}", std::process::id()));
+        let vdir2 = tmp2.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir2).expect("create temp dir");
+        let doc_below = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "eip37-below-activation",
+                "source": "testnet:x",
+                "kind": "retargeting",
+                "settings": {
+                    "epoch_length": 1024,
+                    "use_last_epochs": 8,
+                    "block_interval_ms": 120000,
+                    "initial_nbits": 16842752,
+                    "eip37_activation_height": 900000,
+                    "eip37_epoch_length": 128
+                },
+                "payload": {
+                    "target_height": 844929,
+                    "anchor_headers": [
+                        { "height": 843905, "nBits": 83934920, "timestamp": 1781063957902i64, "parentId": "0000000000000000000000000000000000000000000000000000000000000000aa" }
+                    ]
+                },
+                "expected": { "nbits": 84150434 }
+            }]
+        });
+        let fpath2 = vdir2.join("Retargeting.eip37below.json");
+        fs::write(&fpath2, serde_json::to_string(&doc_below).unwrap()).expect("write temp vector");
+        let bad2 = chain_path_guard(&tmp2, &[fpath2]);
+        let _ = fs::remove_dir_all(&tmp2);
+        assert!(bad2 > 0, "eip37 below activation: classic epoch_length governs, (T-1)%epoch_length!=0 must fire [WRONG]");
+
+        // Case 3: T == eip37_activation_height exactly (the boundary itself). eip37 arm governs
+        // since T >= activation_height; (T-1)%eip37_epoch_length == 0 must PASS.
+        // T=844929, act=844929, eip37_l=128, epoch_l=1024: same arithmetic as case 1.
+        let tmp3 = std::env::temp_dir().join(format!("santa-chain-eip37c-{}", std::process::id()));
+        let vdir3 = tmp3.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir3).expect("create temp dir");
+        let doc_exact = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "eip37-exact-boundary",
+                "source": "testnet:x",
+                "kind": "retargeting",
+                "settings": {
+                    "epoch_length": 1024,
+                    "use_last_epochs": 8,
+                    "block_interval_ms": 120000,
+                    "initial_nbits": 16842752,
+                    "eip37_activation_height": 844929,
+                    "eip37_epoch_length": 128
+                },
+                "payload": {
+                    "target_height": 844929,
+                    "anchor_headers": [
+                        { "height": 844801, "nBits": 83934920, "timestamp": 1781063957902i64, "parentId": "0000000000000000000000000000000000000000000000000000000000000000aa" }
+                    ]
+                },
+                "expected": { "nbits": 84150434 }
+            }]
+        });
+        let fpath3 = vdir3.join("Retargeting.eip37exact.json");
+        fs::write(&fpath3, serde_json::to_string(&doc_exact).unwrap()).expect("write temp vector");
+        let bad3 = chain_path_guard(&tmp3, &[fpath3]);
+        let _ = fs::remove_dir_all(&tmp3);
+        assert_eq!(bad3, 0, "T == eip37_activation_height: eip37 arm governs, (T-1)%eip37_epoch_length==0 must PASS");
+    }
+
+    /// Guard zero-division hardening: governing L == 0 fires [WRONG], never panics.
+    /// (epoch_length = 0 is schema-invalid and won't appear in committed vectors, but the
+    /// guard must not panic if handed such input — it must print [WRONG] and return non-zero.)
+    #[test]
+    fn chain_path_guard_zero_epoch_length_fires_wrong_not_panic() {
+        let tmp = std::env::temp_dir().join(format!("santa-chain-zerol-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        // Construct a JSON bypassing the schema (write raw) with epoch_length = 0.
+        // The guard reads settings["epoch_length"].as_i64() — if it returns 0 we'd divide by zero.
+        // The vector schema rejects minimum:1, so this can't come from a blessed vector — but the
+        // guard must not panic on such input regardless.
+        let raw = r#"{
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "zero-epoch",
+                "source": "testnet:x",
+                "kind": "retargeting",
+                "settings": {
+                    "epoch_length": 0,
+                    "use_last_epochs": 8,
+                    "block_interval_ms": 45000,
+                    "initial_nbits": 16842752
+                },
+                "payload": {
+                    "target_height": 1,
+                    "anchor_headers": [
+                        { "height": 1, "nBits": 16842752, "timestamp": 1000000000000, "parentId": "0000000000000000000000000000000000000000000000000000000000000000aa" }
+                    ]
+                },
+                "expected": { "nbits": 16842752 }
+            }]
+        }"#;
+        let fpath = vdir.join("Retargeting.zero.json");
+        fs::write(&fpath, raw).expect("write temp vector");
+        // This must not panic — it should just return > 0 (fires [WRONG] or skips via None from as_i64()).
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        // epoch_length=0: settings["epoch_length"].as_i64() returns Some(0).
+        // governing_l will be 0. (t-1) % 0 would panic in Rust. The guard must handle this.
+        // The test verifies: no panic (test completes), and bad > 0 (fires [WRONG]).
+        assert!(bad > 0, "epoch_length=0 must fire [WRONG] without panicking");
     }
 }
