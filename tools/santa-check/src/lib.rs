@@ -268,8 +268,9 @@ pub fn grade_block(actual: &Value, expected: &Value) -> Value {
 ///
 /// Precedence (contract §4): panicked → coal unconditionally; not-implemented → coverage;
 /// then value grading — retargeting: exact nbits match; voting: parameters deep-equal AND
-/// activated_update string-equal. errored where a value is expected is coal. Unknown kind
-/// is coal — never a silent pass.
+/// activated_update string-equal. errored where a value is expected is coal. On voting
+/// reject vectors (`expected.error == "errored"`) errored is the graded nice outcome.
+/// Unknown kind is coal — never a silent pass.
 pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
@@ -283,9 +284,16 @@ pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
             actual["error"].is_null() && actual["nbits"] == expected["nbits"]
         }
         Some("voting") => {
-            actual["error"].is_null()
-                && structural_equal(&actual["parameters"], &expected["parameters"])
-                && actual["activated_update"] == expected["activated_update"]
+            // Reject vector (contract §4): expected.error == "errored" → nice iff the
+            // runner's consensus seam rejected the inputs (errored envelope). A produced
+            // value where the JVM throws is coal; panicked never reaches here (precedence).
+            if expected["error"] == "errored" {
+                actual["error"] == "errored"
+            } else {
+                actual["error"].is_null()
+                    && structural_equal(&actual["parameters"], &expected["parameters"])
+                    && actual["activated_update"] == expected["activated_update"]
+            }
         }
         _ => false, // unknown kind in a graded run = red, never a silent pass
     };
@@ -361,6 +369,30 @@ mod chain_tests {
         let e = json!({"kind": "unknown-future-kind", "expected": {"nbits": 1}});
         let a = json!({"nbits": 1, "error": null});
         assert_eq!(grade_chain(&a, &e)["value"], "value");
+    }
+
+    #[test]
+    fn grade_chain_voting_reject_errored_is_nice() {
+        let e = json!({"kind": "voting", "expected": {"error": "errored"}});
+        let a = json!({"parameters": null, "activated_update": null,
+            "error": "errored", "note": "java.util.NoSuchElementException: key not found: 121"});
+        assert_eq!(grade_chain(&a, &e)["value"], "nice");
+    }
+
+    #[test]
+    fn grade_chain_voting_reject_value_is_coal() {
+        let e = json!({"kind": "voting", "expected": {"error": "errored"}});
+        let a = json!({"parameters": {"table": {"1": 1}}, "activated_update": "0000", "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "value");
+    }
+
+    #[test]
+    fn grade_chain_voting_reject_panicked_stays_panicked_coal() {
+        // precedence: panicked → coal before the reject check ever runs (contract §3:
+        // throw parity = catching + classifying, never crashing).
+        let e = json!({"kind": "voting", "expected": {"error": "errored"}});
+        let a = json!({"parameters": null, "activated_update": null, "error": "panicked", "note": "boom"});
+        assert_eq!(grade_chain(&a, &e)["kind"], "panicked");
     }
 }
 

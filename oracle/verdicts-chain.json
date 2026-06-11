@@ -1,6 +1,6 @@
 {
   "schema": "santa-oracle-chain/v1",
-  "description": "Chain-tier verdict meta-vectors: (actual, entry) -> grade_chain verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the chain-tier grading from grade_chain (contract \u00a74): value-only tier \u2014 single `value` dimension; panicked and not-implemented reuse the shared vocabulary. Precedence: panicked \u2192 coal unconditionally; not-implemented \u2192 coverage; then value grading by kind. retargeting: exact nbits match; voting: parameters deep-equal AND activated_update string-equal. errored where a value is expected is coal. Unknown kind is coal \u2014 never a silent pass.",
+  "description": "Chain-tier verdict meta-vectors: (actual, entry) -> grade_chain verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the chain-tier grading from grade_chain (contract \u00a74): value-only tier \u2014 single `value` dimension; panicked and not-implemented reuse the shared vocabulary. Precedence: panicked \u2192 coal unconditionally; not-implemented \u2192 coverage; then value grading by kind. retargeting: exact nbits match; voting: parameters deep-equal AND activated_update string-equal. errored where a value is expected is coal. Unknown kind is coal \u2014 never a silent pass. On voting reject vectors (expected.error == 'errored') errored is the graded nice outcome; panicked still precedes everything.",
   "cases": [
     {
       "name": "retargeting-nice",
@@ -196,6 +196,83 @@
       "verdict": {
         "kind": "chain",
         "value": "value"
+      }
+    },
+    {
+      "name": "voting-reject-errored-nice",
+      "description": "Voting reject vector (expected.error errored): the runner's errored envelope is the graded NICE outcome (JVM throw parity, contract \u00a72 reject form).",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "error": "errored"
+        }
+      },
+      "actual": {
+        "parameters": null,
+        "activated_update": null,
+        "error": "errored",
+        "note": "java.util.NoSuchElementException: key not found: 121"
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "nice"
+      }
+    },
+    {
+      "name": "voting-reject-value-coal",
+      "description": "Voting reject vector: a produced value where the JVM throws is coal.",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "error": "errored"
+        }
+      },
+      "actual": {
+        "parameters": { "table": { "1": 1250000 } },
+        "activated_update": "0000",
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    },
+    {
+      "name": "voting-reject-panicked-coal",
+      "description": "Voting reject vector: panicked precedes the reject check \u2014 throw parity means catching + classifying, never crashing.",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "error": "errored"
+        }
+      },
+      "actual": {
+        "parameters": null,
+        "activated_update": null,
+        "error": "panicked",
+        "note": "uncaught"
+      },
+      "verdict": {
+        "kind": "panicked"
+      }
+    },
+    {
+      "name": "voting-reject-not-implemented-coverage",
+      "description": "Voting reject vector: not-implemented still grades coverage (the growth-ledger stance holds on reject vectors).",
+      "entry": {
+        "kind": "voting",
+        "expected": {
+          "error": "errored"
+        }
+      },
+      "actual": {
+        "parameters": null,
+        "activated_update": null,
+        "error": "not-implemented"
+      },
+      "verdict": {
+        "kind": "coverage",
+        "tag": "not-implemented"
       }
     }
   ]
