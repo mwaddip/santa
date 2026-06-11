@@ -11,7 +11,8 @@ import org.ergoplatform.validation.ValidationRules
 import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
 import sigma.data.{CAvlTree, CBigInt, CBox, CHeader, CSigmaProp, CUnsignedBigInt, SigmaBoolean}
 import sigma.ast.{
-  AvlTreeConstant, BigIntConstant, BooleanConstant, BoxConstant, ByteConstant, CollectionConstant, Constant,
+  AvlTreeConstant, BigIntConstant, BooleanConstant, BoxConstant, ByteArrayConstant, ByteConstant,
+  CollectionConstant, Constant,
   ErgoTree, EvaluatedValue, GroupElementConstant, HeaderConstant, IntConstant, JitCost,
   LongConstant, SAvlTree, SBigInt, SBoolean, SBox, SByte, SCollection, SGroupElement, SHeader, SInt,
   SLong, SOption, SPreHeader, SShort, SSigmaProp, SType, SUnsignedBigInt, ShortConstant,
@@ -313,6 +314,17 @@ object EvalCore {
           .fold(e => sys.error(s"decodeInputConstant Coll: missing items: $e"), identity)
         val elemSType = stypeFromJson(elemJson)
         decodeColl(elemSType, itemsJson)
+
+      case "Coll[Byte]" =>
+        // Compact byte-collection form (runner contract §2 input encoding): semantically
+        // identical to {"kind":"Coll","elem":{"tag":"SByte"},"items":[Byte...]} — exists
+        // because per-item JSON is ~35× the payload for large byte blobs (the SBox
+        // token-window family carries >4KB box bytes as context input).
+        val hex = cur.downField("value_hex").as[String]
+          .fold(e => sys.error(s"decodeInputConstant Coll[Byte]: missing value_hex: $e"), identity)
+        val bytes = Base16.decode(hex)
+          .getOrElse(sys.error("decodeInputConstant Coll[Byte]: value_hex decode failed"))
+        ByteArrayConstant(Colls.fromArray(bytes))
 
       case "Tuple" =>
         val itemsJson = cur.downField("items").as[List[Json]]

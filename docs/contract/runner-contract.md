@@ -228,6 +228,7 @@ these shapes. The asymmetries are deliberate — mirror them exactly.
 | Header | `{"kind":"Header","bytes_hex":"<hex>"}` | `ErgoHeader.sigmaSerializer` bytes (incl. PoW), lower-case hex |
 | AvlTree | `{"kind":"AvlTree","bytes_hex":"<hex>"}` | `AvlTreeData.serializer` bytes (digest+flags+keyLength+optValueLen), lower-case hex |
 | Coll | `{"kind":"Coll","elem":<SType>,"items":[<SValue>,…]}` | `elem` = element SType tag; `items` positional |
+| Coll[Byte] | `{"kind":"Coll[Byte]","value_hex":"<hex>"}` | the COMPACT byte-collection form, semantically identical to `Coll`/`SByte` per-item — added for large payloads (per-item JSON is ~35× the bytes; the SBox token-window family carries >4KB box bytes as context input). INPUT-side only: results still encode as `Coll` (the JVM's `valueToJson` is unchanged), and a vector MAY keep using per-item `Coll` for byte collections — both decode identically. |
 | Tuple | `{"kind":"Tuple","items":[<SValue>,…]}` | ≥2 items, positional. Today's corpus is all pairs; the encoding admits higher arity (sigma-state has arity-3+ tuples). |
 | Option | `{"kind":"Option","value":<SValue> \| null}` | `null` = `None`; otherwise the inner SValue |
 

@@ -727,6 +727,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Box.token_window_const.json" : {
+      "accepts" : 1,
+      "entries" : 1,
+      "methods" : [
+        "99:8 Box.tokens"
+      ],
+      "op" : "Box.token_window_const",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Coll.hof_per_element_env.json" : {
       "accepts" : 10,
       "entries" : 10,
@@ -4309,6 +4336,36 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.deserializeTo_Box_token_window.json" : {
+      "accepts" : 3,
+      "entries" : 5,
+      "methods" : [
+        "106:4 SigmaDslBuilder.deserializeTo",
+        "99:8 Box.tokens"
+      ],
+      "op" : "Global.deserializeTo_Box_token_window",
+      "ops" : [
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Global.deserializeTo_Header_id_basis.json" : {
       "accepts" : 4,
       "entries" : 5,
@@ -6686,6 +6743,7 @@
     },
     "106:4" : {
       "families" : [
+        "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/spec/Global.deserializeTo_group_element.json",
         "v6/spec/Global.deserializeTo_header.json",
@@ -7097,7 +7155,9 @@
     "99:8" : {
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
-        "v5/spec/Box_properties_equivalence.json"
+        "v5/authored/Box.token_window_const.json",
+        "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/Global.deserializeTo_Box_token_window.json"
       ],
       "name" : "Box.tokens"
     },
@@ -7632,6 +7692,7 @@
         "v5/authored/Box.bytes_byte_basis.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Box.token_window_const.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
@@ -8183,6 +8244,7 @@
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
@@ -8238,6 +8300,7 @@
     "Global$" : {
       "families" : [
         "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
@@ -8387,6 +8450,7 @@
         "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Box.token_window_const.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
         "v5/authored/GroupElement.canonical_bytes.json",
@@ -8417,6 +8481,7 @@
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
@@ -8617,6 +8682,7 @@
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
@@ -8790,7 +8856,9 @@
     },
     "SizeOf" : {
       "families" : [
+        "v5/authored/Box.token_window_const.json",
         "v5/spec/Coll.size_equivalence.json",
+        "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json"
       ],
       "op_codes" : [
@@ -9065,12 +9133,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2104,
+    "accepts" : 2108,
     "distinct_methods" : 129,
     "distinct_ops" : 79,
-    "entries" : 2340,
-    "files" : 209,
-    "rejects" : 236,
+    "entries" : 2346,
+    "files" : 211,
+    "rejects" : 238,
     "unwalked" : 6
   }
 }

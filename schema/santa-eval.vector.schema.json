@@ -311,6 +311,14 @@
         },
         {
           "properties": {
+            "kind": { "const": "Coll[Byte]" },
+            "value_hex": { "$ref": "#/$defs/hex" }
+          },
+          "required": ["kind", "value_hex"],
+          "additionalProperties": false
+        },
+        {
+          "properties": {
             "kind": { "const": "Tuple" },
             "items": {
               "type": "array",

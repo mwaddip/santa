@@ -36,6 +36,17 @@ export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
       const items = (j['items'] as JsonObj[]).map((i) => decodeSValue(i, treeVersion).value)
       return { value: { kind: 'Coll', elem, items }, tpe: { tag: 'SColl', elem } }
     }
+    case 'Coll[Byte]': {
+      // compact byte-collection form (runner contract §2): value_hex, semantically
+      // identical to Coll/SByte per-item — exists for large byte payloads (the SBox
+      // token-window family carries >4KB box bytes as context input)
+      const bytes = hexToBytes(j['value_hex'] as string)
+      const items = Array.from(bytes, (b) => ({ kind: 'Byte', value: b > 127 ? b - 256 : b }) as SValue)
+      return {
+        value: { kind: 'Coll', elem: { tag: 'SByte' }, items },
+        tpe: { tag: 'SColl', elem: { tag: 'SByte' } },
+      }
+    }
     case 'Tuple': {
       const decoded = (j['items'] as JsonObj[]).map((i) => decodeSValue(i, treeVersion))
       return {
