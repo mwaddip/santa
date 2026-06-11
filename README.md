@@ -137,8 +137,9 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   Conformers: **Rudolph control** 10/10 (all 4 chain slices green) · **donner LIVE
   10/10** — the routing round surfaced the seeded-tally semantics as a real consensus
   bug on enr's live boundary path plus three further JVM-exactness divergences, all
-  fixed before the first graded run (enr `9ccc6e7`) · blitzen nipopow-at-most deferred ·
-  dasher/vixen ledger/offered. Contract:
+  fixed before the first graded run (enr `9ccc6e7`) · **vixen LIVE 10/10** (both kinds,
+  same-day mount; their tally walker was natively seeded) · blitzen nipopow-at-most
+  deferred · dasher ledger. Contract:
   [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).
 
 Still greenfield, and where help is most wanted (see below):
