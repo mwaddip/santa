@@ -130,6 +130,8 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                     // the slice path. Build the matching tooltip; wire is never amber (it has no cost).
                     let is_wire = sk.starts_with("wire/");
                     let is_tx = sk.starts_with("transaction/");
+                    let is_block = sk.starts_with("block/");
+                    let is_chain = sk.starts_with("chain/");
                     let title = if is_wire {
                         let mut t = format!("roundtrip {}/{}", g("roundtrip_nice"), g("roundtrip_total"));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
@@ -157,6 +159,18 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                             }
                         }
                         t
+                    } else if is_block {
+                        // Block tier: valid + optional not-impl/panicked gaps.
+                        let mut t = format!("valid {}/{}", g("block_valid_nice"), g("block_valid_total"));
+                        if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
+                        if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        t
+                    } else if is_chain {
+                        // Chain tier: single value dimension (cost is n/a) + optional not-impl/panicked gaps.
+                        let mut t = format!("value {}/{}", g("chain_value_nice"), g("chain_value_total"));
+                        if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
+                        if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        t
                     } else {
                         format!(
                             "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} panicked {}",
@@ -164,10 +178,11 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                             g("reject_nice"), g("reject_total"), g("panicked")
                         )
                     };
-                    // For tx slices: if every red entry is dim="not-implemented" it is a coverage/roadmap
-                    // cell (the impl doesn't support this tier yet), not a genuine divergence. Render with
-                    // the not-impl count and a distinct style rather than as a red coal cell.
-                    let all_not_impl = is_tx && red > 0
+                    // For tx/block/chain slices: if every red entry is dim="not-implemented" it is a
+                    // coverage/roadmap cell (the impl doesn't support this tier yet), not a genuine
+                    // divergence. Render with the not-impl count and a distinct style rather than as a
+                    // red coal cell.
+                    let all_not_impl = (is_tx || is_block || is_chain) && red > 0
                         && red_arr.iter().all(|e| e.get("dim").and_then(|v| v.as_str()) == Some("not-implemented"));
                     if all_not_impl {
                         body.push_str(&format!(
@@ -247,7 +262,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
 <div><span class="sw coverage"></span><b>blue</b> — not-impl (roadmap; no verdict yet)</div>
-<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, or tx valid / cost.</div>
+<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, or chain value.</div>
 </div>
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
@@ -679,6 +694,123 @@ mod tests {
         // We can't assert per-runner position directly, but at least two na cells exist
         let na_count = html.matches("class=\"na\"").count();
         assert!(na_count >= 2, "rudolph+comet must both get grey na cells for the tx row, found {na_count}");
+    }
+
+    // ── Block + Chain tier cell tests ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn block_tooltip_shows_valid_counts() {
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "rudolph", "mark": "nice", "red_total": 0, "impl": null,
+              "slices": { "block/v6/captured": {
+                "block_valid_total": 3, "block_valid_nice": 3, "block_valid_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        // clean block cell must be green with valid N/M tooltip
+        assert!(html.contains("class=\"nice\" title=\"valid 3/3\""),
+            "clean block cell must be green with valid N/M tooltip");
+    }
+
+    #[test]
+    fn block_all_not_impl_is_coverage_cell_not_coal() {
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "donner", "mark": "coal", "red_total": 2,
+              "slices": { "block/v6/authored": {
+                "block_valid_total": 0, "block_valid_nice": 0, "block_valid_coal": 0,
+                "not_impl": 2, "panicked": 0,
+                "red": [
+                  {"dim":"not-implemented","entry":"a","op":"a"},
+                  {"dim":"not-implemented","entry":"b","op":"b"}
+                ]
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("class=\"coverage\""),
+            "all-not-impl block slice must render as coverage cell");
+        assert!(html.contains("not-impl 2"),
+            "coverage cell must show not-impl count");
+    }
+
+    #[test]
+    fn chain_tooltip_shows_value_counts() {
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "rudolph", "mark": "nice", "red_total": 0, "impl": null,
+              "slices": { "chain/v6/authored": {
+                "chain_value_total": 4, "chain_value_nice": 4, "chain_value_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        // clean chain cell must be green with value N/M tooltip (not value_nice / value_total)
+        assert!(html.contains("class=\"nice\" title=\"value 4/4\""),
+            "clean chain cell must be green with value N/M tooltip");
+        // must not fall through to the eval-shaped fallback (which would read value_total=0)
+        assert!(!html.contains("value 4/4 \u{b7} cost"),
+            "chain tooltip must not include cost dimension");
+    }
+
+    #[test]
+    fn chain_value_coal_is_red_cell() {
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "some-runner", "mark": "coal", "red_total": 1,
+              "slices": { "chain/any/authored": {
+                "chain_value_total": 3, "chain_value_nice": 2, "chain_value_coal": 1,
+                "not_impl": 0, "panicked": 0,
+                "red": [{"dim":"value","entry":"foo","op":"bar"}]
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("class=\"coal\" title=\"value 2/3\""),
+            "chain cell with coal must be red with value N/M tooltip");
+        assert!(html.contains("\u{1faa8} 1"),
+            "chain coal cell must show coal icon and count 1");
+    }
+
+    #[test]
+    fn chain_all_not_impl_is_coverage_cell_not_coal() {
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "dasher", "mark": "coal", "red_total": 5,
+              "slices": { "chain/any/authored": {
+                "chain_value_total": 0, "chain_value_nice": 0, "chain_value_coal": 0,
+                "not_impl": 5, "panicked": 0,
+                "red": [
+                  {"dim":"not-implemented","entry":"a","op":"a"},
+                  {"dim":"not-implemented","entry":"b","op":"b"},
+                  {"dim":"not-implemented","entry":"c","op":"c"},
+                  {"dim":"not-implemented","entry":"d","op":"d"},
+                  {"dim":"not-implemented","entry":"e","op":"e"}
+                ]
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("class=\"coverage\""),
+            "all-not-impl chain slice must render as coverage cell, not coal");
+        assert!(html.contains("not-impl 5"),
+            "coverage cell must show not-impl count");
+        assert!(html.contains("class=\"coverage\" title=\"value 0/0 \u{b7} not-impl 5\""),
+            "coverage cell must carry the not-impl tooltip");
     }
 
     #[test]
