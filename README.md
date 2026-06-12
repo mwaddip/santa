@@ -128,19 +128,22 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   a real block-cost divergence · other libraries grey (block application is the
   node's layer). Contract:
   [`docs/contract/runner-contract-block.md`](docs/contract/runner-contract-block.md).
-- ✅ **Chain tier live** — `santa-chain/v1`; **9 files / 33 entries** across two
+- ✅ **Chain tier live** — `santa-chain/v1`; **13 files / 52 entries** across three
   families: **retargeting** (difficulty arithmetic) + **parameter-voting** (v6
-  governance math). Value-only (no cost dimension). The voting `v6/authored` slice
-  carries a reject arm (`expected.error: "errored"`, contract §2). Provenance split:
+  governance math) + **fork-vote gate** (v6 soft-fork activation guard). Value-only
+  (no cost dimension). The voting and fork-vote-gate `v6/authored` slices carry a
+  reject arm (`expected.error: "errored"`, contract §2). Provenance split:
   `any/captured` (2 — testnet-anchored retargeting points) · `any/authored` (3 —
   difficulty-damping clamp edges, EIP-37 arm settings-driven) · `v6/captured` (1 —
-  testnet epoch-boundary voting point) · `v6/authored` (27 — threshold edges (4) +
+  testnet epoch-boundary voting point) · `v6/authored` (46 — threshold edges (4) +
   voting-window clamp (1) + soft-fork round lifecycle (7) + activation basis/edge/id-9
   insertion/sigma-rule/cleanup (8) + zombie checkpoint-flips (4) + hostile-reject
-  classes (3)).
-  Conformers: **Rudolph control** 40/40 (all chain slices green) · **donner LIVE**
-  (10/34 chain/v6/authored — the reds are donner's 121/122 decode, fix in flight) · **vixen LIVE** (27/34 —
-  6 new-batch reds are findings) · blitzen nipopow-at-most deferred · dasher ledger.
+  classes (3) + lifecycle leniency (4) + tally order (3) + fork-vote gate window
+  edges (8) + fork-vote gate preconditions (4)).
+  Conformers: **Rudolph control** 52/52 (all chain slices green) · **donner LIVE**
+  52/52 green — including the new fork-vote gate family 12/12 · **vixen LIVE** (27/34
+  chain/v6/authored — 7 pre-existing Voting reds are findings, fork_vote_gate 12
+  entries not yet mounted = their ledger) · blitzen nipopow-at-most deferred · dasher ledger.
   Contract:
   [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).
 

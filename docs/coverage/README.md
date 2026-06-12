@@ -66,7 +66,7 @@ counted in the arms but contribute no ops/shapes.
 
 ## Chain tier coverage
 
-**11 files / 40 entries.** Value-only (no cost dimension at this tier). Two families: retargeting + parameter voting. The voting `v6/authored` slice also carries a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
+**13 files / 52 entries.** Value-only (no cost dimension at this tier). Three families: retargeting + parameter voting + fork-vote gate. The voting and fork-vote-gate `v6/authored` slices also carry a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
 
 ### Retargeting (difficulty arithmetic; dir version `any`)
 
@@ -92,6 +92,13 @@ Gaps: a mainnet EIP-37-era captured window (needs a mainnet header source; autho
 | `v6/authored/Voting.tally_order.json` | authored | 3 | enr cross-read ask C — the tally is an ordered Array, duplicates kept; updateParams steps from the post-fork SNAPSHOT: `tally-order-updown`/`-downup` (contradictory ±1 seed slots, on-chain-unreachable/legality-upstream — last-write-wins flips the step direction with slot order) · `tally-dup-120-first-entry` (duplicated 120 seed: votesInPrevEpoch reads the FIRST entry, not the sum — straddled at a checkpoint, the lifecycle outcome discriminates) |
 
 Gap: no v5 voting family yet (the committed scenarios are v6-era tables; the version label is a selection threshold, see the contract §2).
+
+### Fork-vote gate (v6 soft-fork activation guard; dir version `v6`)
+
+| File | Provenance | Entries | Notes |
+|---|---|---|---|
+| `v6/authored/ForkVoteGate.window_edges.json` | authored | 8 | Window-edge cases incl. the 3686→3687 height-flip (gate open during voting, closed outside) + during-voting leniency (pending-round header blocked at gate-after-activation but passes during the vote window). Covers pass/reject at every state-machine boundary. |
+| `v6/authored/ForkVoteGate.preconditions.json` | authored | 4 | Precondition gates: the 120-gating contract (non-120 id passes; 122-without-121 is blocked at the gate before the table), read-order pair (preconditions checked before window), eager-`.get` reject (absent mandatory field errors before any gate logic). |
 
 ## Regenerating
 
