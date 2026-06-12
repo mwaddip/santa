@@ -726,10 +726,10 @@ fn chain_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
                         let kind = e["kind"].as_str().unwrap_or("");
                         let name = e["name"].as_str().unwrap_or("(unnamed)");
                         match kind {
-                            "retargeting" => {
-                                // retargeting ⇒ version must be "any"
+                            "retargeting" | "header_votes" => {
+                                // retargeting / header_votes ⇒ version must be "any"
                                 if version != "any" {
-                                    Some(format!("{name} (retargeting requires version=any, got {version})"))
+                                    Some(format!("{name} ({kind} requires version=any, got {version})"))
                                 } else {
                                     None
                                 }

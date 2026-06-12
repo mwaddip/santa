@@ -26,7 +26,7 @@
         },
         "valid": {
           "oneOf": [ { "type": "boolean" }, { "type": "null" } ],
-          "description": "Gate decision for fork_vote_gate kind (non-null iff error is null AND kind is fork_vote_gate; null for all other kinds)."
+          "description": "Gate decision for fork_vote_gate and header_votes kinds (non-null iff error is null AND kind is fork_vote_gate or header_votes; null for all other kinds)."
         },
         "error": {
           "enum": ["not-implemented", "errored", "panicked", null],
@@ -39,7 +39,7 @@
       },
       "allOf": [
         {
-          "$comment": "error null => at least one kind value field non-null (retargeting: nbits non-null; voting: BOTH parameters AND activated_update non-null; fork_vote_gate: valid non-null). The union shape (other kind fields present-and-null) is still legal.",
+          "$comment": "error null => at least one kind value field non-null (retargeting: nbits non-null; voting: BOTH parameters AND activated_update non-null; fork_vote_gate or header_votes: valid non-null). The union shape (other kind fields present-and-null) is still legal.",
           "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
           "then": {
             "anyOf": [

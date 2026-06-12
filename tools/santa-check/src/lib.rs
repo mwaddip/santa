@@ -265,13 +265,15 @@ pub fn grade_block(actual: &Value, expected: &Value) -> Value {
 /// retargeting; `parameters` deep-equal AND `activated_update` exact for voting;
 /// `fork_vote_gate`: boolean verdict equality (valid:false = a first-class clean prohibition);
 /// its reject arm mirrors voting's (errored is the graded nice outcome on reject vectors).
-/// `diagnostic` (vector-side) is never read here. Outcome envelope mirrors the
+/// `header_votes`: boolean verdict equality, two-outcome only (no reject arm — errored is
+/// always coal). `diagnostic` (vector-side) is never read here. Outcome envelope mirrors the
 /// other tiers: coverage (not-implemented) / panicked / {"kind":"chain","value":...}.
 ///
 /// Precedence (contract §4): panicked → coal unconditionally; not-implemented → coverage;
 /// then value grading — retargeting: exact nbits match; voting: parameters deep-equal AND
 /// activated_update string-equal; fork_vote_gate: boolean verdict equality (reject arm mirrors
-/// voting). errored where a value is expected is coal. On voting and fork_vote_gate reject
+/// voting); header_votes: boolean verdict equality, no reject arm (errored always coal).
+/// errored where a value is expected is coal. On voting and fork_vote_gate reject
 /// vectors (`expected.error == "errored"`) errored is the graded nice outcome.
 /// Unknown kind is coal — never a silent pass.
 pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
@@ -306,6 +308,13 @@ pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
             } else {
                 actual["error"].is_null() && actual["valid"] == expected["valid"]
             }
+        }
+        Some("header_votes") => {
+            // Two-outcome only (contract §4): no reject arm exists for this kind.
+            // nice iff actual.error == null AND actual.valid == expected.valid.
+            // An errored actual on any header_votes entry is coal — falls out naturally
+            // since actual["error"] would be non-null.
+            actual["error"].is_null() && actual["valid"] == expected["valid"]
         }
         _ => false, // unknown kind in a graded run = red, never a silent pass
     };
@@ -431,6 +440,32 @@ mod chain_tests {
         assert_eq!(grade_chain(&nice, &e)["value"], "nice");
         let coal = json!({"valid": false, "error": null}); // consensus-equivalent in-band, red by design
         assert_eq!(grade_chain(&coal, &e)["value"], "value");
+    }
+
+    // ── header_votes ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn grade_chain_header_votes_valid_true_nice() {
+        // expected valid:true + matching actual → nice
+        let e = json!({"kind": "header_votes", "expected": {"valid": true}});
+        let a = json!({"valid": true, "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "nice");
+    }
+
+    #[test]
+    fn grade_chain_header_votes_valid_false_nice() {
+        // expected valid:false + matching actual → nice (a reject is a normal graded value)
+        let e = json!({"kind": "header_votes", "expected": {"valid": false}});
+        let a = json!({"valid": false, "error": null});
+        assert_eq!(grade_chain(&a, &e)["value"], "nice");
+    }
+
+    #[test]
+    fn grade_chain_header_votes_errored_actual_is_coal() {
+        // {error:"errored"} actual where {valid:...} is expected → coal (no errored arm for this kind)
+        let e = json!({"kind": "header_votes", "expected": {"valid": true}});
+        let a = json!({"valid": null, "error": "errored"});
+        assert_eq!(grade_chain(&a, &e)["value"], "value");
     }
 }
 

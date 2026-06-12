@@ -56,7 +56,7 @@
       "properties": {
         "name":       { "type": "string", "minLength": 1 },
         "source":     { "type": "string", "minLength": 1 },
-        "kind":       { "enum": ["retargeting", "voting", "fork_vote_gate"] },
+        "kind":       { "enum": ["retargeting", "voting", "fork_vote_gate", "header_votes"] },
         "settings":   { "type": "object" },
         "payload":    { "type": "object" },
         "expected":   { "type": "object" },
@@ -199,6 +199,38 @@
                   },
                   { "$ref": "#/$defs/expected_reject" }
                 ]
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "header_votes" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "settings": {
+                "type": "object",
+                "required": ["voting_length", "soft_fork_epochs", "activation_epochs", "version2_activation_height"],
+                "additionalProperties": false,
+                "properties": {
+                  "voting_length":               { "type": "integer", "minimum": 1 },
+                  "soft_fork_epochs":            { "type": "integer", "minimum": 1 },
+                  "activation_epochs":           { "type": "integer", "minimum": 1 },
+                  "version2_activation_height":  { "type": "integer", "minimum": 0 }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "required": ["votes"],
+                "additionalProperties": false,
+                "properties": {
+                  "votes": { "$ref": "#/$defs/votes_hex6" }
+                }
+              },
+              "expected": {
+                "type": "object",
+                "required": ["valid"],
+                "additionalProperties": false,
+                "properties": { "valid": { "type": "boolean" } }
               }
             }
           }
