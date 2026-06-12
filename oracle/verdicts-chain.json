@@ -1,6 +1,6 @@
 {
   "schema": "santa-oracle-chain/v1",
-  "description": "Chain-tier verdict meta-vectors: (actual, entry) -> grade_chain verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the chain-tier grading from grade_chain (contract \u00a74): value-only tier \u2014 single `value` dimension; panicked and not-implemented reuse the shared vocabulary. Precedence: panicked \u2192 coal unconditionally; not-implemented \u2192 coverage; then value grading by kind. retargeting: exact nbits match; voting: parameters deep-equal AND activated_update string-equal. errored where a value is expected is coal. Unknown kind is coal \u2014 never a silent pass. On voting reject vectors (expected.error == 'errored') errored is the graded nice outcome; panicked still precedes everything.",
+  "description": "Chain-tier verdict meta-vectors: (actual, entry) -> grade_chain verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the chain-tier grading from grade_chain (contract \u00a74): value-only tier \u2014 single `value` dimension; panicked and not-implemented reuse the shared vocabulary. Precedence: panicked \u2192 coal unconditionally; not-implemented \u2192 coverage; then value grading by kind. retargeting: exact nbits match; voting: parameters deep-equal AND activated_update string-equal. errored where a value is expected is coal. Unknown kind is coal \u2014 never a silent pass. On voting reject vectors (expected.error == 'errored') errored is the graded nice outcome; panicked still precedes everything. fork_vote_gate grades boolean verdict equality (valid:false = a first-class clean prohibition); its reject arm mirrors voting's.",
   "cases": [
     {
       "name": "retargeting-nice",
@@ -273,6 +273,97 @@
       "verdict": {
         "kind": "coverage",
         "tag": "not-implemented"
+      }
+    },
+    {
+      "name": "gate-pass-nice",
+      "description": "fork_vote_gate: pass expected, pass emitted - nice.",
+      "entry": {
+        "kind": "fork_vote_gate",
+        "expected": {
+          "valid": true
+        }
+      },
+      "actual": {
+        "valid": true,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "nice"
+      }
+    },
+    {
+      "name": "gate-prohibition-nice",
+      "description": "fork_vote_gate: the rule-407 prohibition is a CLEAN verdict - valid:false expected and emitted - nice.",
+      "entry": {
+        "kind": "fork_vote_gate",
+        "expected": {
+          "valid": false
+        }
+      },
+      "actual": {
+        "valid": false,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "nice"
+      }
+    },
+    {
+      "name": "gate-valid-mismatch-coal",
+      "description": "fork_vote_gate: verdict flip (pass where prohibition expected) - coal.",
+      "entry": {
+        "kind": "fork_vote_gate",
+        "expected": {
+          "valid": false
+        }
+      },
+      "actual": {
+        "valid": true,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
+      }
+    },
+    {
+      "name": "gate-reject-errored-nice",
+      "description": "fork_vote_gate reject vector (the eager .get class): errored is the graded nice outcome.",
+      "entry": {
+        "kind": "fork_vote_gate",
+        "expected": {
+          "error": "errored"
+        }
+      },
+      "actual": {
+        "valid": null,
+        "error": "errored",
+        "note": "java.util.NoSuchElementException: None.get"
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "nice"
+      }
+    },
+    {
+      "name": "gate-reject-clean-prohibition-coal",
+      "description": "fork_vote_gate reject vector: a conformer folding the missing-121 throw into valid:false is consensus-equivalent in-band but red by design (contract S2 - the split pins mechanics finer than the JVM observable).",
+      "entry": {
+        "kind": "fork_vote_gate",
+        "expected": {
+          "error": "errored"
+        }
+      },
+      "actual": {
+        "valid": false,
+        "error": null
+      },
+      "verdict": {
+        "kind": "chain",
+        "value": "value"
       }
     }
   ]
