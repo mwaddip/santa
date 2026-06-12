@@ -32,15 +32,17 @@ object ChainEngine extends ApiCodecs {
     val name = c.get[String]("name").toOption.getOrElse("?")
     try {
       val out = c.get[String]("kind").toOption match {
-        case Some("retargeting") => retarget(e)
-        case Some("voting")      => vote(e)
-        case other               => sys.error(s"unknown chain kind: $other")
+        case Some("retargeting")   => retarget(e)
+        case Some("voting")        => vote(e)
+        case Some("fork_vote_gate") => forkVoteGate(e)
+        case other                 => sys.error(s"unknown chain kind: $other")
       }
       name -> out
     } catch {
       case scala.util.control.NonFatal(t) =>
         name -> Json.obj(
           "nbits" -> Json.Null, "parameters" -> Json.Null, "activated_update" -> Json.Null,
+          "valid" -> Json.Null,
           "error" -> Json.fromString("panicked"),
           "note"  -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}"))
     }
@@ -135,16 +137,7 @@ object ChainEngine extends ApiCodecs {
     require(boundaryHeight > 0 && boundaryHeight % votingLength == 0,
       s"boundary_height $boundaryHeight is not an epoch boundary for voting_length $votingLength")
 
-    // Parameters.parametersTable is Map[Byte, Int] — vector carries string keys.
-    // Real ids live in 1..9 and 120..124 — all < 128. Guard the Byte conversion so a
-    // hand-authored id > 127 panics loudly instead of wrapping (BlockEngine's guard).
-    val table: Map[Byte, Int] = p.downField("current_parameters").downField("table").focus
-      .flatMap(_.asObject).getOrElse(sys.error("payload.current_parameters.table: missing"))
-      .toMap.map { case (k, v) =>
-        val id = k.toInt
-        require(id >= 0 && id <= 127, s"param id $id outside Byte range [0,127]")
-        id.toByte -> v.as[Int].fold(err => sys.error(s"param $k: $err"), identity)
-      }
+    val table: Map[Byte, Int] = decodeTable(p)
 
     val stream: Vector[(Int, Array[Byte])] = p.downField("vote_stream").focus
       .flatMap(_.asArray).getOrElse(sys.error("payload.vote_stream: missing or not an array"))
@@ -233,7 +226,84 @@ object ChainEngine extends ApiCodecs {
     }
   }
 
+  /** `kind: "fork_vote_gate"` — ErgoStateContext.checkForkVote (rule 407) MIRRORED
+    * over public API (the method is protected; ForkVoteGateSpike proved the mirror ≡
+    * the real method via reflection across a 30-row window grid). Three outcomes:
+    * valid:true (pass — incl. no-120-in-votes, no-round, outside both windows),
+    * valid:false (the CLEAN rule-407 prohibition), errored (the eager
+    * softForkVotesCollected.get on a 122-without-121 table — contract §2: the split
+    * pins finer than the JVM block-acceptance observable). The 120 precondition is
+    * the JVM call site's `if (forkVote)`, folded in — and it PRECEDES the gate's
+    * table reads, so non-120 votes pass over any decodable table.
+    * Parity-grid skeleton (re-derivable after the spike's deletion; testnet
+    * settings 128/32/32, S = table[122] = 2560 ⇒ finishing 6656 · finishing+L
+    * 6784 · afterActivation 10880): not-approved (3686) prohibits exactly
+    * [6656, 6784); approved (3687) prohibits [6656, 10880); no-round passes at
+    * every height; 122-without-121 errors at every height once votes carry 120. */
+  private def forkVoteGate(e: Json): Json = {
+    val s = e.hcursor.downField("settings")
+    val votingLength     = reqInt(s, "voting_length")
+    val softForkEpochs   = reqInt(s, "soft_fork_epochs")
+    val activationEpochs = reqInt(s, "activation_epochs")
+    // present-but-unread (contract §2: settings uniformity with the voting kind)
+    reqInt(s, "version2_activation_height")
+
+    val p = e.hcursor.downField("payload")
+    val height = reqInt(p, "height")
+    require(height >= 1, s"height $height must be >= 1")
+    val headerVotes = votesBytes(p.get[String]("header_votes")
+      .fold(err => sys.error(s"payload.header_votes: $err"), identity), "header_votes")
+    val table = decodeTable(p)
+
+    val forkVote = headerVotes.filter(_ != Parameters.NoParameter).contains(Parameters.SoftFork)
+    def verdict(valid: Boolean): Json = Json.obj(
+      "valid" -> Json.fromBoolean(valid), "error" -> Json.Null)
+
+    if (!forkVote) verdict(true)
+    else {
+      val params = new Parameters(height, table, ErgoValidationSettingsUpdate.empty)
+      params.softForkStartingHeight match {
+        case None => verdict(true)
+        case Some(start) =>
+          // ── the consensus seam: the eager collected read is the gate's one throw
+          // class (NoSuchElementException on 122-without-121) → errored, never
+          // panicked. The window arithmetic below it is total. (Int-wraps on hostile
+          // settings — out of scope per the floor-only schema; settings stay sane).
+          try {
+            val collected = params.softForkVotesCollected.get
+            val finishing = start + votingLength * softForkEpochs
+            val afterAct  = finishing + votingLength * (activationEpochs + 1)
+            val approved  = VotingSettings(votingLength, softForkEpochs, activationEpochs,
+              0, "6f98d5000000").softForkApproved(collected)
+            val prohibited =
+              (height >= finishing && height < finishing + votingLength && !approved) ||
+              (height >= finishing && height < afterAct && approved)
+            verdict(!prohibited)
+          } catch {
+            case scala.util.control.NonFatal(t) =>
+              Json.obj(
+                "valid" -> Json.Null,
+                "error" -> Json.fromString("errored"),
+                "note"  -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}"))
+          }
+      }
+    }
+  }
+
   // ── decode helpers ─────────────────────────────────────────────────────────
+
+  /** parameters_table decode shared by voting + fork_vote_gate: string keys →
+    * Map[Byte, Int]. Real ids live in 1..9 and 120..124 — all < 128. Guard the Byte
+    * conversion so a hand-authored id > 127 panics loudly instead of wrapping
+    * (BlockEngine's guard). */
+  private def decodeTable(p: ACursor): Map[Byte, Int] =
+    p.downField("current_parameters").downField("table").focus
+      .flatMap(_.asObject).getOrElse(sys.error("payload.current_parameters.table: missing"))
+      .toMap.map { case (k, v) =>
+        val id = k.toInt
+        require(id >= 0 && id <= 127, s"param id $id outside Byte range [0,127]")
+        id.toByte -> v.as[Int].fold(err => sys.error(s"param $k: $err"), identity)
+      }
 
   private def reqInt(c: ACursor, k: String): Int =
     c.get[Int](k).fold(err => sys.error(s"$k: $err"), identity)

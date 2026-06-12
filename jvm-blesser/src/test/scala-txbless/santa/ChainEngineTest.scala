@@ -90,4 +90,38 @@ class ChainEngineTest extends FunSuite {
     assertEquals(actual.hcursor.get[String]("error").toOption, Some("errored"))
     assert(actual.hcursor.get[String]("note").toOption.exists(_.contains("may not be disabled")))
   }
+
+  test("fork_vote_gate: prohibition is a CLEAN valid:false; pass is valid:true") {
+    def gate(height: Int, collected: Int): io.circe.Json = parse(s"""{
+      "name": "g", "kind": "fork_vote_gate",
+      "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32, "version2_activation_height": 417792},
+      "payload": {
+        "height": $height, "header_votes": "780000",
+        "current_parameters": {"table": {"1": 1250000, "121": $collected, "122": 2560, "123": 4}}
+      }
+    }""").toOption.get
+    val (_, prohibited) = ChainEngine.chainEntry(gate(6656, 3686))
+    assertEquals(prohibited.hcursor.get[Boolean]("valid").toOption, Some(false))
+    assert(prohibited.hcursor.downField("error").focus.exists(_.isNull))
+    val (_, pass) = ChainEngine.chainEntry(gate(6784, 3686)) // not-approved arm ended
+    assertEquals(pass.hcursor.get[Boolean]("valid").toOption, Some(true))
+    val (_, flipped) = ChainEngine.chainEntry(gate(6784, 3687)) // approved arm still open (3687 = first count clearing 9/10 of L·ve = 3686.4)
+    assertEquals(flipped.hcursor.get[Boolean]("valid").toOption, Some(false))
+  }
+
+  test("fork_vote_gate: the 120-precondition precedes the table read; missing-121 is errored only under 120") {
+    def gate(votes: String): io.circe.Json = parse(s"""{
+      "name": "g", "kind": "fork_vote_gate",
+      "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32, "version2_activation_height": 417792},
+      "payload": {
+        "height": 6656, "header_votes": "$votes",
+        "current_parameters": {"table": {"1": 1250000, "122": 2560, "123": 4}}
+      }
+    }""").toOption.get
+    val (_, nonFork) = ChainEngine.chainEntry(gate("010000")) // no 120: gate never runs
+    assertEquals(nonFork.hcursor.get[Boolean]("valid").toOption, Some(true))
+    val (_, hostile) = ChainEngine.chainEntry(gate("780000")) // 120: the eager .get fires
+    assertEquals(hostile.hcursor.get[String]("error").toOption, Some("errored"))
+    assert(hostile.hcursor.get[String]("note").toOption.exists(_.contains("None.get")))
+  }
 }
