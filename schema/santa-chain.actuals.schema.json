@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-chain.actuals.schema.json",
   "title": "santa-chain actuals (one runner output file)",
-  "description": "A runner's output for one chain vector: each entry name -> per-kind result. Retargeting: { nbits, error, note? }; voting: { parameters, activated_update, error, note? }. The union shape (other kind's value keys present-and-null) is legal; graders read only the entry's kind's own fields. `note` may accompany both `panicked` (required, carries the caught-panic message) and `errored` (optional, diagnostic). Normative companion to docs/contract/runner-contract-chain.md §3.",
+  "description": "A runner's output for one chain vector: each entry name -> per-kind result. Retargeting: { nbits, error, note? }; voting: { parameters, activated_update, error, note? }; fork_vote_gate: { valid, error, note? }. The union shape (other kind's value keys present-and-null) is legal; graders read only the entry's kind's own fields. `note` may accompany both `panicked` (required, carries the caught-panic message) and `errored` (optional, diagnostic). Normative companion to docs/contract/runner-contract-chain.md §3.",
   "type": "object",
   "minProperties": 1,
   "additionalProperties": { "$ref": "#/$defs/result" },
@@ -24,6 +24,10 @@
           "oneOf": [ { "type": "string" }, { "type": "null" } ],
           "description": "Canonical serializer hex of the activated ErgoValidationSettingsUpdate; \"0000\" for no activation (non-null iff error is null AND kind is voting; null when error is null AND kind is retargeting)."
         },
+        "valid": {
+          "oneOf": [ { "type": "boolean" }, { "type": "null" } ],
+          "description": "Gate decision for fork_vote_gate kind (non-null iff error is null AND kind is fork_vote_gate; null for all other kinds)."
+        },
         "error": {
           "enum": ["not-implemented", "errored", "panicked", null],
           "description": "Null when a verdict was produced; otherwise the failure mode."
@@ -35,23 +39,25 @@
       },
       "allOf": [
         {
-          "$comment": "error null => at least one kind value field non-null (retargeting: nbits non-null; voting: BOTH parameters AND activated_update non-null). The union shape (other kind fields present-and-null) is still legal.",
+          "$comment": "error null => at least one kind value field non-null (retargeting: nbits non-null; voting: BOTH parameters AND activated_update non-null; fork_vote_gate: valid non-null). The union shape (other kind fields present-and-null) is still legal.",
           "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
           "then": {
             "anyOf": [
               { "required": ["nbits"], "not": { "properties": { "nbits": { "type": "null" } } } },
-              { "required": ["parameters", "activated_update"], "properties": { "parameters": { "type": "object" }, "activated_update": { "type": "string" } } }
+              { "required": ["parameters", "activated_update"], "properties": { "parameters": { "type": "object" }, "activated_update": { "type": "string" } } },
+              { "required": ["valid"], "not": { "properties": { "valid": { "type": "null" } } } }
             ]
           }
         },
         {
-          "$comment": "error non-null => all value fields (nbits, parameters, activated_update) must be null when present.",
+          "$comment": "error non-null => all value fields (nbits, parameters, activated_update, valid) must be null when present.",
           "if": { "not": { "properties": { "error": { "type": "null" } }, "required": ["error"] } },
           "then": {
             "properties": {
               "nbits": { "type": "null" },
               "parameters": { "type": "null" },
-              "activated_update": { "type": "null" }
+              "activated_update": { "type": "null" },
+              "valid": { "type": "null" }
             }
           }
         },

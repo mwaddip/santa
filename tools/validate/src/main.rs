@@ -734,10 +734,10 @@ fn chain_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
                                     None
                                 }
                             }
-                            "voting" => {
-                                // voting ⇒ version must be "v5" or "v6"
+                            "voting" | "fork_vote_gate" => {
+                                // voting / fork_vote_gate ⇒ version must be "v5" or "v6"
                                 if version != "v5" && version != "v6" {
-                                    Some(format!("{name} (voting requires version=v5|v6, got {version})"))
+                                    Some(format!("{name} ({kind} requires version=v5|v6, got {version})"))
                                 } else {
                                     None
                                 }
@@ -1202,6 +1202,42 @@ mod tests {
         assert!(bad > 0, "voting under 'any' must fire [WRONG] (kind↔version sanity)");
     }
 
+    /// kind↔version sanity: fork_vote_gate under "any" fires [WRONG]; under "v6" passes.
+    #[test]
+    fn chain_path_guard_fork_vote_gate_kind_version_sanity() {
+        // fork_vote_gate under "any" must fire WRONG
+        let tmp = std::env::temp_dir().join(format!("santa-chain-gate-kvsanity-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("chain").join("any").join("authored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "gate-under-any",
+                "source": "santa:fork_vote_gate:test",
+                "kind": "fork_vote_gate",
+                "settings": { "voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32, "version2_activation_height": 417792 },
+                "payload": { "height": 6655, "header_votes": "780000", "current_parameters": { "table": { "1": 1250000 } } },
+                "expected": { "valid": true }
+            }]
+        });
+        let fpath = vdir.join("Gate.any.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = chain_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "fork_vote_gate under 'any' must fire [WRONG] (kind↔version sanity)");
+
+        // fork_vote_gate under "v6" must pass
+        let tmp2 = std::env::temp_dir().join(format!("santa-chain-gate-v6-{}", std::process::id()));
+        let vdir2 = tmp2.join("vectors").join("chain").join("v6").join("authored");
+        fs::create_dir_all(&vdir2).expect("create temp dir");
+        let fpath2 = vdir2.join("Gate.v6.json");
+        fs::write(&fpath2, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad2 = chain_path_guard(&tmp2, &[fpath2]);
+        let _ = fs::remove_dir_all(&tmp2);
+        assert_eq!(bad2, 0, "fork_vote_gate under chain/v6/authored/ must PASS chain_path_guard");
+    }
+
     /// Voting accept arm: a well-formed voting entry under chain/v5/captured/ passes chain_path_guard (bad==0).
     #[test]
     fn chain_path_guard_voting_under_v5_passes() {
@@ -1499,6 +1535,40 @@ mod tests {
             }]
         });
         assert!(v.is_valid(&doc), "voting reject-form expected must validate");
+    }
+
+    #[test]
+    fn chain_fork_vote_gate_forms() {
+        let v = chain_vec_validator();
+        let mut doc = serde_json::json!({
+            "schema": "santa-chain/v1",
+            "blessed_by": "jvm:ergo-core-6.0.2.1-chain-model",
+            "entries": [{
+                "name": "gate-pass",
+                "source": "santa:fork_vote_gate:pass",
+                "kind": "fork_vote_gate",
+                "settings": {"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32, "version2_activation_height": 417792},
+                "payload": {
+                    "height": 6655,
+                    "header_votes": "780000",
+                    "current_parameters": {"table": {"1": 1250000, "121": 3686, "122": 2560, "123": 4}}
+                },
+                "expected": {"valid": true}
+            }]
+        });
+        assert!(v.is_valid(&doc), "gate accept form (valid bool) must validate");
+        doc["entries"][0]["expected"] = serde_json::json!({"valid": false});
+        assert!(v.is_valid(&doc), "valid:false is a first-class clean verdict");
+        doc["entries"][0]["expected"] = serde_json::json!({"error": "errored"});
+        assert!(v.is_valid(&doc), "the reject form applies to the gate kind too");
+        // settings must carry all four fields for this kind (uniformity, enr ask):
+        doc["entries"][0]["expected"] = serde_json::json!({"valid": true});
+        doc["entries"][0]["settings"] = serde_json::json!({"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32});
+        assert!(!v.is_valid(&doc), "version2_activation_height is REQUIRED on gate entries");
+        // boundary-free heights are legal (mid-epoch is the point) — but 0 is not:
+        doc["entries"][0]["settings"] = serde_json::json!({"voting_length": 128, "soft_fork_epochs": 32, "activation_epochs": 32, "version2_activation_height": 417792});
+        doc["entries"][0]["payload"]["height"] = serde_json::json!(0);
+        assert!(!v.is_valid(&doc), "height >= 1");
     }
 
     #[test]
