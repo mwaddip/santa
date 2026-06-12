@@ -1,0 +1,151 @@
+{
+  "schema" : "santa-chain/v1",
+  "blessed_by" : "jvm:ergo-core-6.0.2.1-chain-model",
+  "entries" : [
+    {
+      "name" : "gate-no-round-pass",
+      "source" : "santa:fork_vote_gate:no-round-pass",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6656,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "no round in progress (122 absent): the gate's outer guard short-circuits — a fork-voting header passes at a height that WOULD be prohibited mid-round."
+      }
+    },
+    {
+      "name" : "gate-non-120-pass",
+      "source" : "santa:fork_vote_gate:non-120-pass",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6656,
+        "header_votes" : "010000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3687,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "the gate is 120-GATED (the JVM call site's `if (forkVote)`): a header voting only ordinary ids passes INSIDE a prohibited window."
+      }
+    },
+    {
+      "name" : "gate-precondition-precedes-table",
+      "source" : "santa:fork_vote_gate:precondition-precedes-table",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6656,
+        "header_votes" : "010000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "the 120 precondition PRECEDES the table read: 122-without-121 (the hostile table) + NON-120 votes → pass, the eager .get never runs. The reject twin below proves the read order from the other side."
+      }
+    },
+    {
+      "name" : "gate-hostile-122-without-121",
+      "source" : "santa:fork_vote_gate:hostile-122-without-121",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6656,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "error" : "errored"
+      },
+      "diagnostic" : {
+        "note" : "122-without-121 + 120 votes: softForkVotesCollected.get is EAGER — NoSuchElementException at ANY height once the round-open guard passes (ErgoStateContext.scala:161; rule-407 wrapper in-band). The deliberate contrast pair to the voting kind's lazy leniency: the SAME orphan-122 table passes through `leniency-122-without-121-nonforce` at a non-force boundary and is fatal here. Contract §2: this split pins FINER than the JVM block-acceptance observable.",
+        "oracle_note" : "java.util.NoSuchElementException: None.get"
+      }
+    }
+  ]
+}

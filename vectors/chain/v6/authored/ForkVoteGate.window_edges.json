@@ -1,0 +1,302 @@
+{
+  "schema" : "santa-chain/v1",
+  "blessed_by" : "jvm:ergo-core-6.0.2.1-chain-model",
+  "entries" : [
+    {
+      "name" : "gate-during-voting-pass",
+      "source" : "santa:fork_vote_gate:during-voting-pass",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6655,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3686,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "finishing−1 (6655): fork-voting DURING the voting window is LEGAL — both reject arms require h ≥ finishing. The gate's most important leniency: an impl prohibiting from the round's start over-rejects every mid-round 120 vote."
+      }
+    },
+    {
+      "name" : "gate-finishing-prohibited-notapproved",
+      "source" : "santa:fork_vote_gate:finishing-prohibited-notapproved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6656,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3686,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "finishing (6656), collected 3686 (NOT approved — strict > 3686 fails): prohibited — the not-approved arm [finishing, finishing+L)."
+      }
+    },
+    {
+      "name" : "gate-lastepoch-prohibited-notapproved",
+      "source" : "santa:fork_vote_gate:lastepoch-prohibited-notapproved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6783,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3686,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "finishing+L−1 (6783), not approved: the not-approved arm's last prohibited height."
+      }
+    },
+    {
+      "name" : "gate-window-end-pass-notapproved",
+      "source" : "santa:fork_vote_gate:window-end-pass-notapproved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6784,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3686,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "finishing+L (6784), not approved: the one-epoch arm has ENDED — pass. The SAME height with collected 3687 is prohibited (the twin below): the verdict flip across [finishing+L, afterActivation) IS the collected-only operand threshold pin."
+      }
+    },
+    {
+      "name" : "gate-finishing-prohibited-approved",
+      "source" : "santa:fork_vote_gate:finishing-prohibited-approved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6656,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3687,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "finishing (6656), collected 3687 (approved): prohibited — the approved arm [finishing, finishing + L·(ae+1)) opens at the same height."
+      }
+    },
+    {
+      "name" : "gate-flip-prohibited-approved",
+      "source" : "santa:fork_vote_gate:flip-prohibited-approved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 6784,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3687,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "finishing+L (6784), approved: PROHIBITED where the 3686 twin passes — the operand threshold (table[121] alone, strict > 128·32·9/10 = 3686) read through the window-length flip."
+      }
+    },
+    {
+      "name" : "gate-lastwait-prohibited-approved",
+      "source" : "santa:fork_vote_gate:lastwait-prohibited-approved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 10879,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3687,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "afterActivation−1 (10879), approved: the approved arm's last prohibited height — 33 epochs of prohibition [finishing, finishing + L·(ae+1))."
+      }
+    },
+    {
+      "name" : "gate-after-activation-pass-approved",
+      "source" : "santa:fork_vote_gate:after-activation-pass-approved",
+      "kind" : "fork_vote_gate",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "height" : 10880,
+        "header_votes" : "780000",
+        "current_parameters" : {
+          "table" : {
+            "1" : 1250000,
+            "2" : 360,
+            "3" : 524288,
+            "4" : 1000000,
+            "5" : 100,
+            "6" : 2000,
+            "7" : 100,
+            "8" : 100,
+            "9" : 30,
+            "121" : 3687,
+            "122" : 2560,
+            "123" : 4
+          }
+        }
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "afterActivation (10880), approved: the window has ENDED — fork-voting is legal again (the next round's territory)."
+      }
+    }
+  ]
+}
