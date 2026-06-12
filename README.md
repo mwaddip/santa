@@ -128,7 +128,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   a real block-cost divergence · other libraries grey (block application is the
   node's layer). Contract:
   [`docs/contract/runner-contract-block.md`](docs/contract/runner-contract-block.md).
-- ✅ **Chain tier live** — `santa-chain/v1`; **13 files / 52 entries** across three
+- ✅ **Chain tier live** — `santa-chain/v1`; **14 files / 61 entries** across three
   families: **retargeting** (difficulty arithmetic) + **parameter-voting** (v6
   governance math) + **fork-vote gate** (v6 soft-fork activation guard). Value-only
   (no cost dimension). The voting and fork-vote-gate `v6/authored` slices carry a
