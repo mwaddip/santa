@@ -18,7 +18,7 @@
 
 A **chain runner** decides **header-chain-decidable consensus functions**: pure functions
 over a header sequence (or a structure derived from one) — no UTXO state, no transactions,
-no ADProofs. Three kinds in v1:
+no ADProofs. Four kinds in v1:
 
 - **`retargeting`** — the required difficulty (`nBits`) for a target height, computed from
   epoch-spaced anchor headers. Fork-critical: a node computing wrong required difficulty
@@ -31,6 +31,10 @@ no ADProofs. Three kinds in v1:
   (`ErgoStateContext.checkForkVote`, rule 407, ErgoStateContext.scala:156-168): pins whether
   a header is forbidden from carrying a fork-vote based on its height relative to an
   in-progress round's finishing window.
+- **`header_votes`** — per-header validation of the 3-byte `header.votes` field
+  (`ErgoStateContext.validateVotes`, rules 212–215, ErgoStateContext.scala:329-346): checks
+  that the vote bytes are structurally legal — no excess non-soft-fork votes, no duplicates,
+  no contradictory pairs. Version-independent (`any`), like retargeting.
 
 The tier series is organized by **input shape**, and this is the missing rung: eval takes
 an ErgoTree + context, wire takes bytes, transaction takes a tx + all its input boxes,
@@ -81,7 +85,7 @@ strings in chain vectors and actuals are lower-case Base16 (`votes`, `boundary_v
   tier** — conform's `version≤` selection treats it as match-all, and the validate guard
   admits the label. Only *vectors* get the label; a runner manifest declaring
   `version: "any"` stays an error. Kind↔version sanity is guard-enforced: retargeting ⇒
-  `any`; voting ⇒ `v5`|`v6`.
+  `any`; voting ⇒ `v5`|`v6`; fork_vote_gate ⇒ `v6`; header_votes ⇒ `any`.
 
 The version label is a selection threshold (the minimum protocol version a runner must
 implement to be graded on the vector), not scenario dating — a v6-labelled voting vector
@@ -94,9 +98,10 @@ notes (e.g. `epoch_note`).
 
 The v1 corpus is **accept-shaped** for retargeting and the bulk of voting vectors: `expected`
 carries computed values. Voting and fork_vote_gate add reject arms in v1 (`expected.error: "errored"` — see
-below); retargeting has no reject arm (no known JVM-throw class at the pure-retarget seam
-over schema-valid anchors). Broader reject-shaped expansion across kinds would be a format
-revision, the `v1` → `v2` growth mechanism as in the other tiers.
+below); retargeting and header_votes have no reject arm (retargeting: no known JVM-throw
+class at the pure-retarget seam over schema-valid anchors; header_votes: pure byte checks
+that cannot throw). Broader reject-shaped expansion across kinds would be
+a format revision, the `v1` → `v2` growth mechanism as in the other tiers.
 
 ### `kind: "retargeting"`
 
@@ -266,13 +271,66 @@ observable (clean prohibition vs exception-on-hostile-state), the same stance as
 panicked/errored distinction: a conformer folding the missing-121 throw into `valid: false`
 is consensus-equivalent in-band but red by design here.
 
+### `kind: "header_votes"` (the fourth kind, v1.3)
+
+**`header_votes` entries** pin `ErgoStateContext.validateVotes` (rules 212–215,
+ErgoStateContext.scala:329-346) — the per-header structural check of the 3-byte
+`header.votes` field. **Settings:** the FULL voting block (`voting_length`,
+`soft_fork_epochs`, `activation_epochs`, `version2_activation_height`) — present but UNREAD
+by the seam (uniformity with fork_vote_gate; conformer settings decoders stay shared). The
+seam takes only the raw vote bytes. **Payload:** `{"votes": "<6 hex chars>"}` — the 3 vote
+bytes only. This is simpler than fork_vote_gate (which also carries `height` and
+`current_parameters`): `validateVotes` needs nothing but the bytes.
+
+The method computes `votes = header.votes.filter(_ != Parameters.NoParameter)` (the
+0-filtered slice; only this slice is checked) and then enforces three rules — a count guard (212) and two per-element
+iteration checks (213, 214):
+
+- **212 `hdrVotesNumber`** (`mayBeDisabled = true`): `votes.count(_ != Parameters.SoftFork)
+  <= Parameters.ParamVotesCount` — equivalently, at most **2 non-120 entries** in the
+  0-filtered slice. `SoftFork` (120) and `NoParameter` (0, already filtered) do NOT count
+  against the limit; a header carrying `[120,120,0]` satisfies 212. (Rule is `mayBeDisabled
+  = true` at ValidationRules.scala:141, unlike 213 and 214 which are `mayBeDisabled =
+  false`. This distinction is documentation-only for v1 vectors — the seam runs all three
+  unconditionally; the disable path is not exercised.)
+- **213 `hdrVotesDuplicates`** (`mayBeDisabled = false`): each entry in the 0-filtered
+  `votes` appears exactly once. **Asymmetry with rule 212:** 120 (`SoftFork`) is free for
+  the *count* but is NOT exempt here — a doubled `[120,120,0]` has `votes = [120,120]`
+  after filtering and trips 213 and rejects. Only `NoParameter` (0) is removed before these
+  checks; nothing else is.
+- **214 `hdrVotesContradictory`** (`mayBeDisabled = false`): for each `v` in the
+  0-filtered `votes`, `(-v).toByte` must not also appear. The `reverseVotes` array is
+  computed over the SAME 0-filtered slice as the duplicate check. **Edge: `0x80` (−128 as
+  i8) is its own negation** — `(-0x80).toByte == 0x80` in Scala's byte arithmetic — so a
+  lone `[0x80,0,0]` self-contradicts and rejects on rule 214.
+- **215 `hdrVotesUnknown`** — **DEFERRED / out of scope.** The rule fires only when
+  `epochStarts` (height-dependent, ErgoStateContext.scala:331: `header.votingStarts(
+  votingSettings.votingLength)`), making it stateful/height-dependent, and it is
+  `mayBeDisabled = true` (ValidationRules.scala:150). donner defers it pending dynamic
+  rule-status tracking. **Do not author a 215 arm in v1.** If it is ever authored, it must
+  be flagged first — the defer is a deliberate design decision, not an oversight.
+
+**Version dir: `any/`.** `validateVotes` is version-independent: the three active rules
+have no era-gate, and the `any` label carries the same semantics as for retargeting —
+always selected for runners mounting the tier.
+
+**`expected` is two-outcome only: `{"valid": true}` or `{"valid": false}`.** There is NO
+errored arm for this kind. Pure byte checks over a 3-byte array cannot throw — the three
+active rules are all range/membership checks with no eager table reads and no
+`require`/`get` calls that could generate exceptions. **Contrast with fork_vote_gate**,
+which has an errored arm precisely because its seam performs an eager `table[121].get` that
+throws on a 122-without-121 table; `header_votes` has no such access. A conformer that
+emits `errored` on a `header_votes` entry is graded coal on an accept vector and coal on a
+reject vector (there is no `expected.error == "errored"` class for this kind).
+
 ## 3. Actuals shape
 
 The runner emits one result object per entry (keyed by `name`), validated against
 `schema/santa-chain.actuals.schema.json`. The verdict shape is per-kind — retargeting
 `{nbits, error, note?}`, voting `{parameters: {table}, activated_update, error, note?}`,
-fork_vote_gate `{valid, error, note?}` — and the union shape (other kinds' value keys
-present-and-null) is legal: graders read only the entry's kind's own fields.
+fork_vote_gate `{valid, error, note?}`, header_votes `{valid, error, note?}` — and the
+union shape (other kinds' value keys present-and-null) is legal: graders read only the
+entry's kind's own fields.
 
 | Outcome | kind's value fields | `error` | `note` |
 |---|---|---|---|
@@ -327,6 +385,10 @@ coverage verdict (the growth-ledger stance); then one graded dimension, **`value
   prohibition as nice). Reject vectors (`expected.error == "errored"`) grade exactly as
   the voting reject arm: nice iff `actual.error == "errored"`; `panicked` stays coal by
   precedence.
+- **header_votes:** nice iff `actual.error == null` AND `actual.valid == expected.valid`
+  (boolean equality — identical to fork_vote_gate's accept-vector rule). **No reject
+  vectors exist for this kind** (§2 header_votes): there is no `expected.error ==
+  "errored"` class; `errored` from a conformer on any header_votes entry is coal.
 - `errored` where a value is expected is coal (accept vectors are the corpus bulk; the
   reject arm above is the one place `errored` grades nice).
 - An unknown `kind` in a graded run is coal — never a silent pass.
@@ -370,6 +432,11 @@ template. The per-kind read-sets (spike-pinned):
   `version2ActivationHeight` (optional in the entry; absent ⇒ 0, §2) — all from the entry
   (`VotingSettings.version2ActivationDifficultyHex` is never read by `update`; any
   template value is safe).
+- **fork_vote_gate** reads `votingLength`, `softForkEpochs`, `activationEpochs` from the
+  entry; `version2ActivationHeight` is present-but-unread (uniformity with voting, §2).
+- **header_votes** reads **nothing** from entry settings — the seam operates on the 3 vote
+  bytes only; the settings block is present-but-unread in full (§2 uniformity). Any
+  template value is safe for all four fields.
 
 **Per-entry isolation** carries over from the other tiers: every entry is computed by
 pure-function calls over the entry alone — entries are self-contained and unordered, and
@@ -424,10 +491,10 @@ build and gates the tx, block, **and chain** engines alike).
 | Conformer | Stance | Detail |
 |---|---|---|
 | **rudolph** | control (build-gated), all kinds | Declares `chain`; `santa.runner.ChainEngine` reached by reflection, exists only in ergo-core-bearing builds (the same `SANTA_TX_BLESSER` gate + seam as Tx/BlockEngine). Oracle-tautological as verification; its value is the harness control row. Ungated builds emit faithful `not-implemented`. |
-| **donner** | voting + retargeting + fork_vote_gate — the tier's real conformer, **LIVE** | **enr's own code**: `chain/src/difficulty.rs` (pure cores `calculate`/`eip37_calculate`/`interpolate`/`normalize_to_n_bits` over `&[&Header]` + config) and `chain/src/voting.rs` (`tally_votes_seeded` — returning the **ordered `Vec<(i8, u32)>`** since enr `2c24e08`: seed-slot order, duplicates kept, find-first 120; it replaced a `HashMap` whose per-instance iteration order made order-sensitive grades a per-run coin flip, exactly what the `Voting.tally_order` vectors pin — and `compute_boundary_parameters(...) → (Parameters, activated_update)` (since enr `611219f`/donner `5712d1b` the activated update returns as the parsed VALUE — statuses retained — and the arm encodes it via enr's fallible `encode_validation_settings_update`, the canonical serializer port that Errs exactly where the JVM `putUShort(ruleId − 1000)` require-fails ⇒ errored envelope; it replaced an input-byte ECHO that the `Voting.status_updates` canonicalization arms caught — invisible on canonical input, where echo ≡ re-serialize) — the pure seams enr exposed for the chain arm; the earlier `tally_votes` plain counter and chain-side `apply_soft_fork_lifecycle` are RETIRED — the routing round surfaced the plain counter as a live consensus bug on enr's boundary path, fixed at enr `9ccc6e7` together with three further JVM-exactness finds: approval counts = closing-epoch-120 PLUS collected, lifecycle reads an original-table snapshot, approved-vote-for-unknown-id errors like the JVM, id 9 steppable). Its santa-run arm calls the seams with settings **from the entry**, never from `ChainConfig::testnet()`. Mounted at santa-donner `aaca7cf` (`tiers: ["block", "chain"]`). nipopow is NOT donner's: enr's nipopow is a thin wrapper over sigma-rust's `ergo-nipopow` crate — the kind belongs to the library that owns the code. fork_vote_gate arm MOUNTED at santa-donner 03e5443 against enr's `voting::check_fork_vote` tri-state seam (enr 2c24e08 — the gate is also live in their node header paths: `validate_child` / `no_pow` / `reorg`) — mounted ahead of the families, graded the moment they land. |
-| **blitzen-eni / develop** | nipopow at most — out of v1 | No node layer ⇒ voting/retargeting out-of-scope (grey, not a growth ledger: those are the node's functions, not the library's). If/when the nipopow kind ships (probed GO, future plan), it mounts here — and at vixen, whose NiPoPoW is an own implementation (`ergo-validation/src/popow/`: prove, verifier, `best_arg`, interlinks, batch-merkle — no sigma-rust wrapper); weigh both in the kind's design. |
+| **donner** | voting + retargeting + fork_vote_gate + header_votes — the tier's real conformer, **LIVE** | **enr's own code**: `chain/src/difficulty.rs` (pure cores `calculate`/`eip37_calculate`/`interpolate`/`normalize_to_n_bits` over `&[&Header]` + config) and `chain/src/voting.rs` (`tally_votes_seeded` — returning the **ordered `Vec<(i8, u32)>`** since enr `2c24e08`: seed-slot order, duplicates kept, find-first 120; it replaced a `HashMap` whose per-instance iteration order made order-sensitive grades a per-run coin flip, exactly what the `Voting.tally_order` vectors pin — and `compute_boundary_parameters(...) → (Parameters, activated_update)` (since enr `611219f`/donner `5712d1b` the activated update returns as the parsed VALUE — statuses retained — and the arm encodes it via enr's fallible `encode_validation_settings_update`, the canonical serializer port that Errs exactly where the JVM `putUShort(ruleId − 1000)` require-fails ⇒ errored envelope; it replaced an input-byte ECHO that the `Voting.status_updates` canonicalization arms caught — invisible on canonical input, where echo ≡ re-serialize) — the pure seams enr exposed for the chain arm; the earlier `tally_votes` plain counter and chain-side `apply_soft_fork_lifecycle` are RETIRED — the routing round surfaced the plain counter as a live consensus bug on enr's boundary path, fixed at enr `9ccc6e7` together with three further JVM-exactness finds: approval counts = closing-epoch-120 PLUS collected, lifecycle reads an original-table snapshot, approved-vote-for-unknown-id errors like the JVM, id 9 steppable). Its santa-run arm calls the seams with settings **from the entry**, never from `ChainConfig::testnet()`. Mounted at santa-donner `aaca7cf` (`tiers: ["block", "chain"]`). nipopow is NOT donner's: enr's nipopow is a thin wrapper over sigma-rust's `ergo-nipopow` crate — the kind belongs to the library that owns the code. fork_vote_gate arm MOUNTED at santa-donner 03e5443 against enr's `voting::check_fork_vote` tri-state seam (enr 2c24e08 — the gate is also live in their node header paths: `validate_child` / `no_pow` / `reorg`) — mounted ahead of the families, graded the moment they land. header_votes arm MOUNTED ahead of vectors against enr's `voting::check_header_votes([u8;3]) → Result<(), ChainError>` seam (enr `3378fa2`) — graded the moment vectors land. |
+| **blitzen-eni / develop** | nipopow at most — out of v1 | No node layer ⇒ voting/retargeting/header_votes out-of-scope (grey, not a growth ledger: those are the node's functions, not the library's). If/when the nipopow kind ships (probed GO, future plan), it mounts here — and at vixen, whose NiPoPoW is an own implementation (`ergo-validation/src/popow/`: prove, verifier, `best_arg`, interlinks, batch-merkle — no sigma-rust wrapper); weigh both in the kind's design. |
 | **dasher** | growth ledger | ergots' end goal is a node built on top of it — chain is roadmap; declares the tier with `not-implemented` entries when they choose (the not-impl ledger stance, as in eval/tx). |
-| **vixen** | retargeting + voting — **LIVE** | Independent top-to-bottom impl, mounted same-day off the routing prompt (santa-vixen `80d4473` / arkadianet `fa97cfc`): retargeting via `ergo_crypto::difficulty::next_n_bits` with per-entry `DifficultyParams` (eip37 pair as `Option`s from settings); voting via `compute_epoch_votes` (natively seeded-tally semantics) + `compute_next_params` returning the JVM pair. §5 honored with one recorded impl caveat: arkadianet hardcodes `use_last_epochs = 8` as a consensus constant (not threaded from the entry) — every v1 vector carries 8; a future ≠8 vector would faithfully grade arkadianet's 8. fork_vote_gate: not yet probed — their equivalent surface unknown; the kind grades not-implemented/panicked on their runner until they mount (routing probe queued). |
+| **vixen** | retargeting + voting — **LIVE** | Independent top-to-bottom impl, mounted same-day off the routing prompt (santa-vixen `80d4473` / arkadianet `fa97cfc`): retargeting via `ergo_crypto::difficulty::next_n_bits` with per-entry `DifficultyParams` (eip37 pair as `Option`s from settings); voting via `compute_epoch_votes` (natively seeded-tally semantics) + `compute_next_params` returning the JVM pair. §5 honored with one recorded impl caveat: arkadianet hardcodes `use_last_epochs = 8` as a consensus constant (not threaded from the entry) — every v1 vector carries 8; a future ≠8 vector would faithfully grade arkadianet's 8. fork_vote_gate: not yet probed — their equivalent surface unknown; the kind grades not-implemented/panicked on their runner until they mount (routing probe queued). header_votes: not yet probed — no arm; grades not-implemented until mounted. |
 | **comet** | out-of-scope (grey) | Fleet is wire-only. |
 
 ## 8. Status
