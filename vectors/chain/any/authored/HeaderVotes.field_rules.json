@@ -1,0 +1,166 @@
+{
+  "schema" : "santa-chain/v1",
+  "blessed_by" : "jvm:ergo-core-6.0.2.1-chain-model",
+  "entries" : [
+    {
+      "name" : "count-three-nonfork-reject",
+      "source" : "santa:header_votes:count-three-nonfork-reject",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "010203"
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "rule 212 hdrVotesNumber: votes [1,2,3] — 3 non-120 entries > 2; 120 is free for the count (not present here) but the 3 ordinary ids alone exceed the limit."
+      }
+    },
+    {
+      "name" : "count-two-nonfork-pass",
+      "source" : "santa:header_votes:count-two-nonfork-pass",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "010278"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "rule 212: votes [1,2,120] — only 2 non-120 entries (≤ 2); the soft-fork id 120 (0x78) is free for the count, so 2 non-120 passes."
+      }
+    },
+    {
+      "name" : "count-one-nonfork-pass",
+      "source" : "santa:header_votes:count-one-nonfork-pass",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "010000"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "rule 212: votes [1,0,0] — the two 0s (NoParameter) are filtered before all checks, leaving [1]; 1 non-120 ≤ 2 — passes."
+      }
+    },
+    {
+      "name" : "dup-ordinary-reject",
+      "source" : "santa:header_votes:dup-ordinary-reject",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "010100"
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "rule 213 hdrVotesDuplicates: votes [1,1,0] — after 0-filtering, [1,1]; id 1 appears twice — duplicate rejected."
+      }
+    },
+    {
+      "name" : "dup-softfork-reject",
+      "source" : "santa:header_votes:dup-softfork-reject",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "787800"
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "rule 213: votes [120,120,0] — the 120-asymmetry: 120 is FREE for the 212 count but NOT exempt from the 213 dup check; [120,120] after 0-filtering — duplicate rejected."
+      }
+    },
+    {
+      "name" : "softfork-plus-two-distinct-pass",
+      "source" : "santa:header_votes:softfork-plus-two-distinct-pass",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "780102"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "corollary of the 120-asymmetry: votes [120,1,2] — 120 free for the 212 count (2 non-120 ≤ 2), 1 and 2 are distinct (213), no negation pair (214); the realistic maximum passes all three."
+      }
+    },
+    {
+      "name" : "contradictory-reject",
+      "source" : "santa:header_votes:contradictory-reject",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "01ff00"
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "rule 214 hdrVotesContradictory: votes [1,255,0] — after 0-filtering [1,0xFF]; 0xFF = −1 as signed i8, and −(1) = −1 = 0xFF: id 1 and its negation are both present — contradictory rejected."
+      }
+    },
+    {
+      "name" : "self-negation-0x80-reject",
+      "source" : "santa:header_votes:self-negation-0x80-reject",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "800000"
+      },
+      "expected" : {
+        "valid" : false
+      },
+      "diagnostic" : {
+        "note" : "rule 214: votes [0x80,0,0] — after 0-filtering [0x80 = −128 as signed i8]; (−(−128)).toByte = (128).toByte = −128 = 0x80 — id 128 is its own negation (i8 overflow), so it self-contradicts and is rejected."
+      }
+    }
+  ]
+}

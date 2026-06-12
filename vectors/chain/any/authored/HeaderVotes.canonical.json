@@ -1,0 +1,86 @@
+{
+  "schema" : "santa-chain/v1",
+  "blessed_by" : "jvm:ergo-core-6.0.2.1-chain-model",
+  "entries" : [
+    {
+      "name" : "abstain-empty",
+      "source" : "santa:header_votes:abstain-empty",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "000000"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "votes [0,0,0] — all NoParameter; after 0-filtering the vote array is empty; 212 (0 non-120 ≤ 2), 213 (no dups), 214 (no contradictions) all trivially hold. A header that casts no vote."
+      }
+    },
+    {
+      "name" : "lone-softfork-vote",
+      "source" : "santa:header_votes:lone-softfork-vote",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "780000"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "votes [120,0,0] — after 0-filtering [120]; 0 non-120 ids ≤ 2 (212); no dups (213); no contradictions (214). A header voting only for the pending soft fork."
+      }
+    },
+    {
+      "name" : "two-ordinary-votes",
+      "source" : "santa:header_votes:two-ordinary-votes",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "040300"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "votes [4,3,0] — after 0-filtering [4,3]; 2 non-120 ≤ 2 (212); no dups (213); 4 and 3 are not negations of each other in i8 (214). A header voting for two distinct ordinary parameters."
+      }
+    },
+    {
+      "name" : "softfork-plus-two-ordinary",
+      "source" : "santa:header_votes:softfork-plus-two-ordinary",
+      "kind" : "header_votes",
+      "settings" : {
+        "voting_length" : 128,
+        "soft_fork_epochs" : 32,
+        "activation_epochs" : 32,
+        "version2_activation_height" : 417792
+      },
+      "payload" : {
+        "votes" : "780403"
+      },
+      "expected" : {
+        "valid" : true
+      },
+      "diagnostic" : {
+        "note" : "votes [120,4,3] — the realistic maximum: soft-fork vote (120) free for the 212 count + 2 distinct ordinary ids; 2 non-120 ≤ 2 (212); 120, 4, 3 all distinct (213); no negation pair (214). The full vote."
+      }
+    }
+  ]
+}
