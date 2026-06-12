@@ -66,7 +66,7 @@ counted in the arms but contribute no ops/shapes.
 
 ## Chain tier coverage
 
-**14 files / 61 entries.** Value-only (no cost dimension at this tier). Three families: retargeting + parameter voting + fork-vote gate. The voting and fork-vote-gate `v6/authored` slices also carry a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
+**16 files / 73 entries.** Value-only (no cost dimension at this tier). Four families: retargeting + parameter voting + fork-vote gate + header votes. The voting and fork-vote-gate `v6/authored` slices also carry a **reject arm** (`expected.error: "errored"`, contract §2) covering hostile input classes.
 
 ### Retargeting (difficulty arithmetic; dir version `any`)
 
@@ -100,6 +100,13 @@ Gap: no v5 voting family yet (the committed scenarios are v6-era tables; the ver
 |---|---|---|---|
 | `v6/authored/ForkVoteGate.window_edges.json` | authored | 8 | Window-edge cases incl. the 3686→3687 height-flip (gate open during voting, closed outside) + during-voting leniency (pending-round header blocked at gate-after-activation but passes during the vote window). Covers pass/reject at every state-machine boundary. |
 | `v6/authored/ForkVoteGate.preconditions.json` | authored | 4 | Precondition gates: the 120-gating contract (non-120 id passes; 122-without-121 is blocked at the gate before the table), read-order pair (preconditions checked before window), eager-`.get` reject (absent mandatory field errors before any gate logic). |
+
+### Header votes (vote-field validity; dir version `any`)
+
+| File | Provenance | Entries | Notes |
+|---|---|---|---|
+| `any/authored/HeaderVotes.field_rules.json` | authored | 8 | Rule 212/213/214 edges: `count-three-nonfork-reject` (3 non-120 ids > 2; fail) · `count-two-nonfork-pass` (2 non-120 + 120; 120 is free for the count) · `count-one-nonfork-pass` (1 non-120 after 0-filtering) · `dup-ordinary-reject` (id 1 appears twice) · `dup-softfork-reject` (120-asymmetry: 120 is free for the 212 count but NOT exempt from the 213 dup check; [120,120] is duplicate-rejected) · `softfork-plus-two-distinct-pass` (corollary: [120,1,2] passes all three) · `contradictory-reject` (votes [1,0xFF]: id 1 and its i8 negation 0xFF both present) · `self-negation-0x80-reject` (−(−128).toByte wraps to −128 = 0x80: 0x80 is its own negation). |
+| `any/authored/HeaderVotes.canonical.json` | authored | 4 | Real header shapes that must pass all three rules: `abstain-empty` ([0,0,0] — no votes cast, all rules trivially hold) · `lone-softfork-vote` ([120,0,0] — only soft-fork id, 0 non-120 count) · `two-ordinary-votes` ([4,3,0] — 2 distinct non-120 ids, no negation pair) · `softfork-plus-two-ordinary` ([120,4,3] — the realistic maximum: soft-fork + 2 distinct ordinary). |
 
 ## Regenerating
 
