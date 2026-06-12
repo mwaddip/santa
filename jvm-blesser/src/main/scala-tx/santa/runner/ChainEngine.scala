@@ -35,6 +35,7 @@ object ChainEngine extends ApiCodecs {
         case Some("retargeting")   => retarget(e)
         case Some("voting")        => vote(e)
         case Some("fork_vote_gate") => forkVoteGate(e)
+        case Some("header_votes")  => headerVotes(e)
         case other                 => sys.error(s"unknown chain kind: $other")
       }
       name -> out
@@ -288,6 +289,60 @@ object ChainEngine extends ApiCodecs {
           }
       }
     }
+  }
+
+  /** `kind: "header_votes"` — ErgoStateContext.validateVotes (rules 212–214,
+    * ErgoStateContext.scala:329-346) MIRRORED over the raw 3-byte vote field
+    * (HeaderVotesSpike proved the mirror ≡ the real `private def validateVotes`
+    * via reflection across a 12-row grid). TWO outcomes only — valid:true (all
+    * three pass) / valid:false (any fails); NO errored arm: pure byte logic over a
+    * 3-byte array cannot throw (no eager table read, no `.get`, unlike fork_vote_gate).
+    *
+    * The seam reads ONLY payload.votes; settings are present-but-unread (contract §2
+    * uniformity with the voting/fork_vote_gate kinds; shared conformer decoders). The
+    * three rules run over `votes = field.filter(_ != 0)` (the 0-filtered slice):
+    *   212 hdrVotesNumber:      votes.count(_ != 120) <= 2   (120 free for the COUNT)
+    *   213 hdrVotesDuplicates:  each v in votes appears exactly once (120 NOT exempt —
+    *                            the asymmetry with 212; only 0 is removed pre-check)
+    *   214 hdrVotesContradictory: reverseVotes = votes.map(v => (-v).toByte); no v has
+    *                            its negation present. SIGNED i8 arith — 0x80 (−128) is
+    *                            its own negation, so [0x80,0,0] self-contradicts.
+    * Rule 215 (hdrVotesUnknown) is OUT OF SCOPE — it fires only at epoch starts
+    * (height-dependent) and is deferred (contract §2 header_votes); no 215 arm here. The shared
+    * helper `checkHeaderVotes` is the exact byte logic HeaderVotesSpike proves against
+    * the real method at a NON-epoch-start height (215 dormant ⇒ verdict == 212∧213∧214).
+    *
+    * Parity grid (re-derivable after the spike's deletion): [1,2,3]→false (212),
+    * [1,2,120]→true, [1,0,0]→true, [1,1,0]→false (213), [120,120,0]→false (213
+    * 120-dup asymmetry), [120,1,2]→true (120-count corollary), [1,0xFF,0]→false (214,
+    * 0xFF=−1 contradicts 1), [0x80,0,0]→false (214 self-negation), [4,3,0]→true,
+    * [0,0,0]→true, [120,0,0]→true, [120,4,3]→true. */
+  private def headerVotes(e: Json): Json = {
+    val s = e.hcursor.downField("settings")
+    // present-but-unread (contract §2: settings uniformity with the voting kinds)
+    reqInt(s, "voting_length"); reqInt(s, "soft_fork_epochs")
+    reqInt(s, "activation_epochs"); reqInt(s, "version2_activation_height")
+
+    val p = e.hcursor.downField("payload")
+    val votes = votesBytes(p.get[String]("votes")
+      .fold(err => sys.error(s"payload.votes: $err"), identity), "votes")
+
+    // §3: header_votes shape — two-outcome, NO errored arm (the byte logic is total).
+    Json.obj("valid" -> Json.fromBoolean(checkHeaderVotes(votes)), "error" -> Json.Null)
+  }
+
+  /** The exact ErgoStateContext.validateVotes byte logic for rules 212–214, factored
+    * so HeaderVotesSpike exercises THIS code against the real method (the tally-mirror
+    * precedent). Signed-byte semantics throughout: `(-v).toByte` negation so 0x80
+    * self-negates; 0 (NoParameter) filtered before all three checks; 120 (SoftFork)
+    * free for the 212 count but NOT exempt from the 213 dup check. */
+  def checkHeaderVotes(field: Array[Byte]): Boolean = {
+    val votes: Array[Byte] = field.filter(_ != Parameters.NoParameter)
+    val reverseVotes: Array[Byte] = votes.map(v => (-v).toByte)
+    val rule212 = votes.count(_ != Parameters.SoftFork) <= Parameters.ParamVotesCount
+    val rule213 = votes.forall(v => votes.count(_ == v) == 1)
+    val rule214 = votes.forall(v => !reverseVotes.contains(v))
+    rule212 && rule213 && rule214
   }
 
   // ── decode helpers ─────────────────────────────────────────────────────────
