@@ -138,6 +138,13 @@ object Runner {
           val inputJson = c.downField("input").focus
             .getOrElse(sys.error(s"missing input field in v2 entry '${name}'"))
           EvalCore.evalApplied(hex, inputJson, activated)
+        case "santa-eval/v5" =>
+          // Top-level self ContextExtension {key (0..255) -> SValue}; a key >= 128 crashes
+          // toSigmaContext (EvalCore catches -> Left -> errored). The key-domain divergence.
+          val extensionJson: Map[Int, io.circe.Json] = c.downField("extension").focus
+            .flatMap(_.asObject).map(_.toMap.map { case (k, v) => k.toInt -> v })
+            .getOrElse(sys.error(s"missing/invalid extension in v5 entry '$name'"))
+          EvalCore.evalWithTopExtension(hex, extensionJson, activated)
         case _ =>
           EvalCore.evalEntry(hex, activated)
       }

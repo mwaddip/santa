@@ -415,6 +415,62 @@ object SpecExtract {
       "source"     -> Json.fromString(source),
       "entries"    -> Json.arr(entries: _*))
 
+  // ── santa-eval/v5: top-level self ContextExtension with an arbitrary key (the key-domain seam) ────
+  // The SELF box's top-level ContextExtension is the source toSigmaContext builds the contextVars
+  // array from. A key >= 0x80 (signed-negative Byte) crashes context construction; ergots/sigma-rust
+  // treat keys as unsigned 0..255 and accept. The entry carries `extension` = {key (0..255) -> SValue}.
+
+  private def extensionJsonObj(extensionJson: Map[Int, Json]): Json =
+    Json.obj(extensionJson.toSeq.sortBy(_._1).map { case (k, j) => k.toString -> j }: _*)
+
+  /** Author one santa-eval/v5 ACCEPT entry: the SELF box's top-level ContextExtension is
+    * `extensionJson` ({key 0..255 -> SValue JSON}). JVM blesses value+cost via evalWithTopExtension.
+    * Fails loud if eval rejects (a key >= 128 crashes toSigmaContext -> use authoredV5RejectEntry). */
+  def authoredV5Entry(op: String, script: String, treeBytesHex: String, name: String,
+      extensionJson: Map[Int, Json], activated: Byte, ergoTree: Int): Json = {
+    val (_, outcome) = EvalCore.evalWithTopExtension(treeBytesHex, extensionJson, activated)
+    val (valueJson, cost) = outcome match {
+      case Right(vc) => vc
+      case Left(err) => sys.error(s"authoredV5Entry: eval failed for '$op' ($script): $err")
+    }
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "extension"      -> extensionJsonObj(extensionJson),
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(ergoTree)),
+      "expected"       -> Json.obj("value" -> valueJson, "cost" -> Json.fromLong(cost), "error" -> Json.Null))
+  }
+
+  /** Author one santa-eval/v5 REJECT entry — REQUIRES eval to FAIL (the key >= 128 toSigmaContext
+    * crash). A success is a loud authoring bug. Emits the coarse reject shape (value/cost null, errored). */
+  def authoredV5RejectEntry(op: String, script: String, treeBytesHex: String, name: String,
+      extensionJson: Map[Int, Json], activated: Byte, ergoTree: Int): Json = {
+    val (_, outcome) = EvalCore.evalWithTopExtension(treeBytesHex, extensionJson, activated)
+    outcome match {
+      case Left(_)   => // expected: context construction rejects (the JVM's verdict on the input)
+      case Right(vc) => sys.error(s"authoredV5RejectEntry: expected REJECT but '$op' ($script) succeeded: $vc")
+    }
+    Json.obj(
+      "name"           -> Json.fromString(name),
+      "script"         -> Json.fromString(script),
+      "tree_bytes_hex" -> Json.fromString(treeBytesHex),
+      "extension"      -> extensionJsonObj(extensionJson),
+      "version"        -> Json.obj("activated" -> Json.fromInt(activated.toInt),
+                                   "ergoTree"  -> Json.fromInt(ergoTree)),
+      "expected"       -> Json.obj("value" -> Json.Null, "cost" -> Json.Null,
+                                   "error" -> Json.fromString("errored")))
+  }
+
+  def authoredV5Envelope(op: String, entries: Seq[Json], source: String): Json =
+    Json.obj(
+      "schema"     -> Json.fromString("santa-eval/v5"),
+      "op"         -> Json.fromString(op),
+      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.3"),
+      "source"     -> Json.fromString(source),
+      "entries"    -> Json.arr(entries: _*))
+
   /** Encode captured cases into an ExtractResult: group by op; quarantine any op whose
     * property threw mid-capture (its Capture list may be truncated, so it must never
     * ship); encode the rest via `toEntry` (Opaque/unsupported-kind cases are skipped

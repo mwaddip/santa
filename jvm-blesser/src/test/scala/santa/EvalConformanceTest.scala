@@ -94,6 +94,11 @@ class EvalConformanceTest extends munit.FunSuite {
           EvalCore.evalApplied(treeHex, inputJson, activated)
         case "santa-eval/v1" =>
           EvalCore.evalEntry(treeHex, activated)
+        case "santa-eval/v5" =>
+          val extensionJson: Map[Int, Json] = ec.downField("extension").focus
+            .flatMap(_.asObject).map(_.toMap.map { case (k, v) => k.toInt -> v })
+            .getOrElse(sys.error(s"missing/invalid extension in $op/$name"))
+          EvalCore.evalWithTopExtension(treeHex, extensionJson, activated)
         case other =>
           sys.error(s"EvalConformanceTest: unknown schema '$other' in $path")
       }

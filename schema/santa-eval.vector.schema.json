@@ -2,14 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-eval.vector.schema.json",
   "title": "SANTA eval-tier vector",
-  "description": "A committed conformance vector for the eval tier (santa-eval/v1 closed-tree, santa-eval/v2 input-carrying). Normative companion to docs/contract/runner-contract.md.",
+  "description": "A committed conformance vector for the eval tier (v1 closed-tree · v2 input · v3 per-input extensions · v4 SELF registers + var1 · v5 top-level ContextExtension key-domain). Normative companion to docs/contract/runner-contract.md.",
   "type": "object",
   "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
   "properties": {
     "schema": {
       "description": "Tier + version discriminator.",
-      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3", "santa-eval/v4"]
+      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3", "santa-eval/v4", "santa-eval/v5"]
     },
     "op": {
       "description": "The operation / property name this vector covers.",
@@ -84,6 +84,21 @@
       }
     },
     {
+      "$comment": "santa-eval/v5 carries `source`; every entry has `extension` (the top-level self ContextExtension, key -> SValue) and none of input/inputs/selfRegisters.",
+      "if": { "properties": { "schema": { "const": "santa-eval/v5" } }, "required": ["schema"] },
+      "then": {
+        "required": ["source"],
+        "properties": { "entries": { "items": {
+          "required": ["extension"],
+          "allOf": [
+            { "not": { "required": ["input"] } },
+            { "not": { "required": ["inputs"] } },
+            { "not": { "required": ["selfRegisters"] } }
+          ]
+        } } }
+      }
+    },
+    {
       "$comment": "santa-eval/v1 entries carry neither `input` nor `inputs`.",
       "if": { "properties": { "schema": { "const": "santa-eval/v1" } }, "required": ["schema"] },
       "then": {
@@ -137,6 +152,12 @@
               }
             }
           }
+        },
+        "extension": {
+          "description": "santa-eval/v5: the SELF box's TOP-LEVEL ContextExtension (the source toSigmaContext builds the contextVars array from), keyed by the unsigned wire byte 0..255. A key >= 128 is a signed-negative Byte that crashes context construction before any bytecode.",
+          "type": "object",
+          "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
+          "additionalProperties": { "$ref": "#/$defs/svalue" }
         },
         "version": { "$ref": "#/$defs/version" },
         "expected": { "$ref": "#/$defs/expected" }

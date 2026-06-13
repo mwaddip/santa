@@ -708,4 +708,66 @@ object EvalCore {
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
       } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
     } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
+
+  // ── Context with a custom TOP-LEVEL self extension (santa-eval/v5, the ContextExtension key domain) ──
+
+  /** Dummy context whose top-level `extension` (the SELF box's spending extension — the source
+    * `toSigmaContext` builds the `contextVars` array from, `ErgoLikeContext.scala:140-146`) is the
+    * given {key -> value} map. A key >= 0x80 decodes to a signed-negative `Byte`, so the array
+    * (`new Array(maxKey+1)`, then `res(id)=v`) throws at construction — `NegativeArraySizeException`
+    * (max key) or `ArrayIndexOutOfBoundsException` (id == -1) — BEFORE any bytecode. Parallel to
+    * `contextWithVar1`, but the key is the variable (not hardcoded 1). */
+  private def contextWithTopExtension(tree: ErgoTree, activatedVersion: Byte,
+      extension: Map[Byte, EvaluatedValue[_ <: SType]]): ErgoLikeContext = {
+    val selfBox = new ErgoBox(
+      value = 1000000L,
+      ergoTree = tree,
+      transactionId = bytesToId(Array.fill(32)(0: Byte)),
+      index = 0.toShort,
+      creationHeight = 0
+    )
+    new ErgoLikeContext(
+      lastBlockUtxoRoot = AvlTreeData.dummy,
+      headers = Colls.emptyColl[Header],
+      preHeader = dummyPreHeader(0, activatedVersion),
+      dataBoxes = IndexedSeq.empty,
+      boxesToSpend = IndexedSeq(selfBox),
+      spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
+      selfIndex = 0,
+      extension = ContextExtension(extension),
+      validationSettings = ValidationRules.currentSettings,
+      costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
+      initCost = 0L,
+      activatedScriptVersion = activatedVersion
+    ).withErgoTreeVersion(tree.version)
+  }
+
+  /** Eval a tree against a context whose top-level self extension is `extensionJson`, a
+    * {key (0..255, the unsigned wire byte) -> SValue JSON} map. The key is taken `.toByte` — so a
+    * key >= 128 is a signed-negative `Byte` and crashes `toSigmaContext` (caught here as the JVM's
+    * verdict on the input -> `Left`, which the runner renders `errored`). This is the
+    * ContextExtension key-domain divergence: ergots/sigma-rust represent keys as unsigned 0..255 and
+    * ACCEPT where the JVM rejects-by-crashing. Parallel to evalApplied (same (treeVer, Either) shape). */
+  def evalWithTopExtension(treeBytesHex: String, extensionJson: Map[Int, Json],
+                           activated: Byte): (Byte, Either[String, (Json, Long)]) =
+    try {
+      val bytes   = Base16.decode(treeBytesHex).get
+      val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
+      val treeVer = tree.version
+      try {
+        val extension: Map[Byte, EvaluatedValue[_ <: SType]] =
+          extensionJson.map { case (k, j) => k.toByte -> decodeInputConstant(j) }
+        val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
+          val ctx = contextWithTopExtension(tree, activated, extension)
+          val acc = new CostAccumulator(
+            initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
+            costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
+          val (v, _blockCost) = CErgoTreeEvaluator.eval(
+            ctx.toSigmaContext(), acc, tree.constants,
+            tree.toProposition(replaceConstants = productionReplaceConstants(tree)), DefaultEvalSettings)
+          (v, acc.totalCost.value)
+        }
+        (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
+      } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
+    } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
 }

@@ -820,6 +820,32 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Context.extension_key_domain.json" : {
+      "accepts" : 2,
+      "entries" : 3,
+      "methods" : [
+      ],
+      "op" : "Context.extension_key_domain",
+      "ops" : [
+        "BoolToSigmaProp",
+        "ConstantPlaceholder",
+        "GetVar"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Context.op_forms.json" : {
       "accepts" : 2,
       "entries" : 2,
@@ -7633,6 +7659,7 @@
     },
     "BoolToSigmaProp" : {
       "families" : [
+        "v5/authored/Context.extension_key_domain.json",
         "v5/spec/and_sigma_equivalence.json",
         "v5/spec/or_sigma_equivalence.json",
         "v5/spec/sigmaProp_equivalence.json",
@@ -7762,6 +7789,7 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
         "v5/authored/EQ_of_SigmaProp_unequal.json",
@@ -8222,6 +8250,7 @@
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.sub_min_value.json",
+        "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/Option.map.json",
         "v5/spec/Advanced_Box_test.json",
@@ -9202,12 +9231,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2114,
+    "accepts" : 2116,
     "distinct_methods" : 135,
     "distinct_ops" : 79,
-    "entries" : 2352,
-    "files" : 212,
-    "rejects" : 238,
+    "entries" : 2355,
+    "files" : 213,
+    "rejects" : 239,
     "unwalked" : 6
   }
 }

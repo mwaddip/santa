@@ -86,7 +86,7 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 | `preHeader.minerPk` / `minerPubKey` | the secp256k1 group generator (`0279be66…f81798`) |
 | `preHeader.votes` | 3 zero bytes (chain-faithful width — `Votes` is fixed-size in byte-oriented models) |
 | `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (33-byte all-zero digest = 32-byte root hash + height byte; flags 0x07 = all operations allowed; keyLength 32; no value-length — serialized `00`×33 `07 20 00`) |
-| extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions) |
+| extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions; `santa-eval/v5` a full top-level self extension keyed 0..255 — a key ≥ 0x80 is a signed-negative `Byte` that crashes `toSigmaContext` before eval) |
 
 *Version note:* the JVM carries `activatedScriptVersion` as its own context field and
 treats `preHeader.version` as data, while sigma-rust DERIVES script activation from the
@@ -111,7 +111,12 @@ divergences were harness artifacts, not library findings); blessed values for
   (§4); a `santa-eval/v1` entry has none (closed tree). A `santa-eval/v4` entry is v2's
   single-input form plus a per-entry `selfRegisters` object (R4–R9 SValue map, applied to
   the SELF box's additional registers); minted for dynamic-register-read vectors
-  (Box.getReg MethodCall).
+  (Box.getReg MethodCall). A `santa-eval/v5` entry carries an `extension` object — the SELF
+  box's TOP-LEVEL ContextExtension keyed by the unsigned wire byte 0..255 (no `input`) —
+  minted for the ContextExtension key-domain seam: a key ≥ 0x80 decodes to a signed-negative
+  `Byte` and crashes `toSigmaContext` (`NegativeArraySizeException`) before any bytecode, so the
+  spend FAILS (`errored`); implementations that treat keys as unsigned 0..255 ACCEPT — a
+  consensus-fork divergence that the extension being attacker-supplied makes mainnet-reachable.
 - **Version is an input.** The runner evaluates each entry under the entry's declared
   `(activated, ergoTree)` versions — it does not choose or assume a version.
 
