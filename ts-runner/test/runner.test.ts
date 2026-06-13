@@ -157,6 +157,33 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     }
   })
 
+  it('v5: extension builds the SELF top-level ContextExtension (even empty) — isolation arm is None, not errored', () => {
+    // v5 = the SELF box's TOP-LEVEL ContextExtension ({<varId 0-255>: SValue}) —
+    // EvalCore.evalWithTopExtension. Pre-fix the bare `else` arm built NO extension, so a faithful
+    // empty extension was ABSENT → ergots' GetVar defensive 'context-field-missing' guard fired →
+    // 'errored' on getvar-0x80-absent-none (which should be a clean None). Building the extension
+    // (even empty) via decodeExtension is the fix — symmetric to the v3/v4 bare-arm gaps above.
+    // (ergots verified this isolation arm is THEIR-correct via core; the errored was our adapter.)
+    const fixture = JSON.parse(
+      readFileSync(path.resolve(here, '../../vectors/eval/v5/authored/Context.extension_key_domain.json'), 'utf8'),
+    ) as Parameters<typeof runVector>[0] & {
+      entries: { name: string; expected: { value: unknown; cost: number | null; error: string | null } }[]
+    }
+    const actuals = runVector(fixture)
+    expect(Object.keys(actuals)).toEqual(fixture.entries.map((e) => e.name)) // totality
+
+    // isolation arm — the harness-gap pin: empty extension built → GetVar(absent) = None@10 (was 'errored').
+    expect(actuals['getvar-0x80-absent-none#2']).toEqual({ value: { kind: 'Option', value: null }, cost: 10, error: null })
+    // boundary arm — key 0x7f present, context builds, {true} evals → SigmaProp@16.
+    expect(actuals['key-0x7f-present-accept#1']).toEqual({ value: { kind: 'SigmaProp', raw_hex: 'd3' }, cost: 16, error: null })
+    // reject arm — the REAL consensus-fork divergence (graded red by ./conform, NOT blessed-equal here):
+    // ergots treats key 0x80 as unsigned 128 and ACCEPTS where the JVM crashes toSigmaContext (expected
+    // 'errored'). Pin ergots' actual ACCEPT so the divergence is faithful (key 128 now truly present).
+    const reject = actuals['key-0x80-present-errored#0'] as { value: { kind?: string }; error: string | null }
+    expect(reject.error).toBeNull()
+    expect(reject.value.kind).toBe('SigmaProp')
+  })
+
   it('an unrecognized failure becomes `panicked` (note carries the message) and the run continues', () => {
     // Never-panic invariant (runner-contract §3): a failure the runner does NOT recognize as
     // a library verdict must NOT abort the file — it becomes the `panicked` outcome (coal,

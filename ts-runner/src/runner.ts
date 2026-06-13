@@ -24,6 +24,9 @@ interface Entry {
   inputs?: { extension: { [varId: string]: SValueJson } }[]
   /** v4: SELF's additional registers (`{"4".."9": SValue}` — R4-R9). */
   selfRegisters?: { [regId: string]: SValueJson }
+  /** v5: the SELF box's TOP-LEVEL ContextExtension (`{<varId 0-255>: SValue}`) —
+   *  EvalCore.evalWithTopExtension. Built unconditionally (empty allowed). */
+  extension?: { [varId: string]: SValueJson }
   version: { activated: number; ergoTree: number }
 }
 interface Vector { schema: string; entries: Entry[] }
@@ -165,6 +168,15 @@ function runEntryInner(schema: string, e: Entry): Result {
       inputs: [selfBoxWithRegs],
       extension: { values: { 1: { tpe, value } } },
     })
+  } else if (schema === 'santa-eval/v5') {
+    if (!e.extension) throw new Error(`missing extension in v5 entry '${e.name}'`)
+    // v5: the SELF box's top-level ContextExtension carries keys 0..255
+    // (EvalCore.evalWithTopExtension). Build it ALWAYS (even empty) — a faithful context carries an
+    // empty extension; omitting it trips ergots' defensive 'context-field-missing' guard on a
+    // GetVar(absent) that should be None. ergots/sigma-rust treat keys as unsigned 0..255, so a key
+    // ≥ 0x80 builds fine here and the spend ACCEPTS — the consensus fork vs the JVM, whose signed-Byte
+    // `new Array(maxKey+1)` crashes toSigmaContext (the reject arm's divergence, graded red by conform).
+    ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion) })
   } else {
     ctx = makeContext(ctxBase)
   }
