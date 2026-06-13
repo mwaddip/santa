@@ -615,6 +615,37 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Box.accessor_method_form.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+        "99:1 Box.value",
+        "99:2 Box.propositionBytes",
+        "99:3 Box.bytes",
+        "99:4 Box.bytesWithoutRef",
+        "99:5 Box.id",
+        "99:6 Box.creationInfo"
+      ],
+      "op" : "Box.accessor_method_form",
+      "ops" : [
+        "ConstantPlaceholder",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Box.bytes_byte_basis.json" : {
       "accepts" : 6,
       "entries" : 6,
@@ -7140,11 +7171,47 @@
       ],
       "name" : "GroupElement.expUnsigned"
     },
+    "99:1" : {
+      "families" : [
+        "v5/authored/Box.accessor_method_form.json"
+      ],
+      "name" : "Box.value"
+    },
     "99:19" : {
       "families" : [
         "v6/authored/Box.getReg_dynamic_index.json"
       ],
       "name" : "Box.getReg"
+    },
+    "99:2" : {
+      "families" : [
+        "v5/authored/Box.accessor_method_form.json"
+      ],
+      "name" : "Box.propositionBytes"
+    },
+    "99:3" : {
+      "families" : [
+        "v5/authored/Box.accessor_method_form.json"
+      ],
+      "name" : "Box.bytes"
+    },
+    "99:4" : {
+      "families" : [
+        "v5/authored/Box.accessor_method_form.json"
+      ],
+      "name" : "Box.bytesWithoutRef"
+    },
+    "99:5" : {
+      "families" : [
+        "v5/authored/Box.accessor_method_form.json"
+      ],
+      "name" : "Box.id"
+    },
+    "99:6" : {
+      "families" : [
+        "v5/authored/Box.accessor_method_form.json"
+      ],
+      "name" : "Box.creationInfo"
     },
     "99:7" : {
       "families" : [
@@ -7689,6 +7756,7 @@
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/Box.accessor_method_form.json",
         "v5/authored/Box.bytes_byte_basis.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -8449,6 +8517,7 @@
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
         "v5/authored/AvlTree.valueLengthOpt_wrapped_negative.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/Box.accessor_method_form.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Context.preHeader_accessors.json",
@@ -9133,11 +9202,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2108,
-    "distinct_methods" : 129,
+    "accepts" : 2114,
+    "distinct_methods" : 135,
     "distinct_ops" : 79,
-    "entries" : 2346,
-    "files" : 211,
+    "entries" : 2352,
+    "files" : 212,
     "rejects" : 238,
     "unwalked" : 6
   }
