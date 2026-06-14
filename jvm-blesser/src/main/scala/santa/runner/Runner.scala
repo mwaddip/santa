@@ -4,7 +4,7 @@ import io.circe.Json
 
 import sigma.ast.{EvaluatedValue, SType}
 
-import santa.{EvalCore, WireCanonicalize}
+import santa.{EvalCore, WalkerOracle, WireCanonicalize}
 
 /** JVM reference runner — Rudolph.
   *
@@ -145,6 +145,11 @@ object Runner {
             .flatMap(_.asObject).map(_.toMap.map { case (k, v) => k.toInt -> v })
             .getOrElse(sys.error(s"missing/invalid extension in v5 entry '$name'"))
           EvalCore.evalWithTopExtension(hex, extensionJson, activated)
+        case "santa-eval/v6-fullctx" =>
+          // Full-context eval: reuse the walker oracle's envelope parser (parses context.* and calls
+          // EvalCore.evalFullContext). The entry IS the envelope (tree_bytes_hex + version + context).
+          // Returns (treeVer, outcome) like the other arms; treeVer is discarded by `val (_, outcome)`.
+          WalkerOracle.evalEnvelope(e)
         case _ =>
           EvalCore.evalEntry(hex, activated)
       }

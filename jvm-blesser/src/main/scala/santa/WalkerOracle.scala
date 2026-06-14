@@ -9,17 +9,15 @@ import java.util.concurrent.Executors
 
 /** Walker JVM-oracle (walker-jvm-oracle-santa.md, Plan 3): bless a `santa-eval/v6-fullctx`
   * envelope against the REAL reconstructed context (`EvalCore.evalFullContext`). The
-  * `blessEnvelope` core is the envelope-JSON adapter; `OracleService` is the persistent
-  * HTTP service the walker calls per-tx (batchable per block). */
+  * `evalEnvelope` / `blessEnvelope` core is the envelope-JSON adapter; `OracleService` is
+  * the persistent HTTP service the walker calls per-tx (batchable per block). */
 object WalkerOracle {
 
-  /** Bless one envelope → result JSON `{tree_version, value, cost, error, reason?}`.
-    *
-    * `value`+`cost`+`error` are exactly the envelope's `expected` shape: on success
-    * `error` is null with the typed value + raw JIT cost; on failure `error` is "errored"
-    * with a diagnostic `reason` (and value/cost null). `tree_version` is the parsed
-    * ErgoTree version. Never throws — a malformed envelope surfaces as errored. */
-  def blessEnvelope(env: Json): Json =
+  /** Parse a santa-eval/v6-fullctx envelope (entry) and evaluate against the reconstructed full
+    * context. Returns (treeVersion, Either[errClass, (valueJson, cost)]) — the same shape the other
+    * EvalCore.evalXxx methods return, so rudolph's Runner can dispatch to it directly. Envelope-parse
+    * failures map to Left(errClass) (errored), never thrown. */
+  def evalEnvelope(env: Json): (Int, Either[String, (Json, Long)]) =
     try {
       val c = env.hcursor
       val tree = c.downField("tree_bytes_hex").as[String].getOrElse(sys.error("missing tree_bytes_hex"))
@@ -47,18 +45,28 @@ object WalkerOracle {
       val (treeVer, res) = EvalCore.evalFullContext(
         tree, selfIndex, inputsHex, hexes("data_inputs"), hexes("outputs"),
         hexes("headers"), preHeaderHex, inputExtensions, lastRootHex, activated)
-      val base = Json.obj("tree_version" -> Json.fromInt(treeVer.toInt))
-      res match {
-        case Right((value, cost)) =>
-          base.deepMerge(Json.obj("value" -> value, "cost" -> Json.fromLong(cost), "error" -> Json.Null))
-        case Left(err) =>
-          base.deepMerge(Json.obj("value" -> Json.Null, "cost" -> Json.Null,
-            "error" -> Json.fromString("errored"), "reason" -> Json.fromString(err)))
-      }
+      (treeVer.toInt, res)
     } catch {
-      case t: Throwable => Json.obj("value" -> Json.Null, "cost" -> Json.Null,
-        "error" -> Json.fromString("errored"), "reason" -> Json.fromString(EvalCore.errClass(t)))
+      case t: Throwable => (0, Left(EvalCore.errClass(t)))
     }
+
+  /** Bless one envelope → result JSON `{tree_version, value, cost, error, reason?}` (the HTTP/oracle shape).
+    *
+    * `value`+`cost`+`error` are exactly the envelope's `expected` shape: on success
+    * `error` is null with the typed value + raw JIT cost; on failure `error` is "errored"
+    * with a diagnostic `reason` (and value/cost null). `tree_version` is the parsed
+    * ErgoTree version (0 on parse error). Never throws — a malformed envelope surfaces as errored. */
+  def blessEnvelope(env: Json): Json = {
+    val (treeVer, res) = evalEnvelope(env)
+    val base = Json.obj("tree_version" -> Json.fromInt(treeVer))
+    res match {
+      case Right((value, cost)) =>
+        base.deepMerge(Json.obj("value" -> value, "cost" -> Json.fromLong(cost), "error" -> Json.Null))
+      case Left(err) =>
+        base.deepMerge(Json.obj("value" -> Json.Null, "cost" -> Json.Null,
+          "error" -> Json.fromString("errored"), "reason" -> Json.fromString(err)))
+    }
+  }
 
   /** Bless a batch (a block's worth of txs) → JSON array of results, input order preserved. */
   def blessBatch(envs: List[Json]): Json = Json.arr(envs.map(blessEnvelope): _*)
