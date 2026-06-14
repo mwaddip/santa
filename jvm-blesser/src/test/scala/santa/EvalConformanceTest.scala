@@ -99,6 +99,10 @@ class EvalConformanceTest extends munit.FunSuite {
             .flatMap(_.asObject).map(_.toMap.map { case (k, v) => k.toInt -> v })
             .getOrElse(sys.error(s"missing/invalid extension in $op/$name"))
           EvalCore.evalWithTopExtension(treeHex, extensionJson, activated)
+        case "santa-eval/v6-fullctx" =>
+          // Full-context eval — reuse the walker oracle's envelope parser (same path as
+          // runner/Runner.evalEntry's v6-fullctx arm: parse context.* + EvalCore.evalFullContext).
+          WalkerOracle.evalEnvelope(entry)
         case other =>
           sys.error(s"EvalConformanceTest: unknown schema '$other' in $path")
       }
