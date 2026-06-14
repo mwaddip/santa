@@ -1253,6 +1253,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/ValDef.id_int_max_bound.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "ValDef.id_int_max_bound",
+      "ops" : [
+        "BlockValue",
+        "ConstantPlaceholder",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 1,
+      "version" : "v5"
+    },
     "v5/authored/atLeast.children_cap.json" : {
       "accepts" : 3,
       "entries" : 5,
@@ -4453,6 +4480,34 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.none_pre_v3_dead_branch.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+        "106:10 SigmaDslBuilder.none"
+      ],
+      "op" : "Global.none_pre_v3_dead_branch",
+      "ops" : [
+        "ConstantPlaceholder",
+        "Global$",
+        "If",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 1,
+      "version" : "v6"
+    },
     "v6/authored/Global.powHit_feeding_Coll_HOF.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -6768,6 +6823,7 @@
     },
     "106:10" : {
       "families" : [
+        "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.some_none.json"
       ],
       "name" : "SigmaDslBuilder.none"
@@ -7633,6 +7689,7 @@
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/FuncValue.non_unary_arity.json",
+        "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -7798,6 +7855,7 @@
         "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/Option.map.json",
         "v5/authored/Tuple.checkType_unsupported.json",
+        "v5/authored/ValDef.id_int_max_bound.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
@@ -7829,6 +7887,7 @@
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
@@ -8399,6 +8458,7 @@
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
@@ -8453,7 +8513,8 @@
         "v5/spec/Coll_map_with_nested_if.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/Box.getReg_adversarial.json",
-        "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json"
+        "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
+        "v6/authored/Global.none_pre_v3_dead_branch.json"
       ],
       "op_codes" : [
         "0x95"
@@ -8581,6 +8642,7 @@
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
@@ -9040,6 +9102,7 @@
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/FuncValue.non_unary_arity.json",
+        "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -9071,6 +9134,7 @@
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
+        "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -9231,12 +9295,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2116,
+    "accepts" : 2118,
     "distinct_methods" : 135,
     "distinct_ops" : 79,
-    "entries" : 2355,
-    "files" : 213,
-    "rejects" : 239,
-    "unwalked" : 6
+    "entries" : 2359,
+    "files" : 215,
+    "rejects" : 241,
+    "unwalked" : 8
   }
 }
