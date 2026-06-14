@@ -1,0 +1,1013 @@
+{
+  "schema" : "santa-eval/v6-fullctx",
+  "op" : "fullctx.h318040-089df53dc16b",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "testnet:ce4627f3aec9810c93ddb49ad8d1fc3ca4b986147faf7cc7c71442a432a5530c@318040",
+  "entries" : [
+    {
+      "name" : "h318040-089df53dc16b#in0",
+      "tree_bytes_hex" : "1bf9083204000402040205feffffffffffffffff0105feffffffffffffffff010400040005000402040004020580dac4090e203781e589d6b6f9558426f09babf047a51dad5951ca3ef2f82e2dbeb8d72c6fe405000402040004000400050005000500050005000500040004000404050004d00f04020500040004d00f04040500040005000402041005000502010004040500050005020501050001000580dac409d829d601b2a5730000d602e4c6a70611d603db63087201d604db6308a7d605b27203730100d606b27204730200d6078c720601d608e4c6a70505d6099973037208d60a99997304e4c6720105057209d60bc17201d60ce4c672010711d60db2720c730500d60ec1a7d60fe4c6a70711d610b2720f730600d61199720e7210d6129999720b720d7211d6139172127307d6148c720602d615b2720f730800d6169972147215d6177e721606d6187e721206d619b27202730900d61a8c720502d61bb2720c730a00d61c9999721a721b7216d61d7e721106d61e99720d7210d61f99721b7215d6207ee4e3000204d6217e721c06d6227e720a06d6237e720906d6249c72187223d6259c72217223d626e4c6a70464d62795917210730bedaea5d9012763edededed93cbc27227730c93c17227721095927215730dd801d629db63087227eded93b17229730e938cb27229730f00017207938cb2722973100002721593b1db63087227731193db64017226db6401e4c672270464937208e4c672270505ed93720d731293721b7313ed93721e731493721f7315d628e4c672010464d629d901290eb0a57316d9012b41639a8c722b01b0db63088c722b027317d9012d414d0ed802d62f8c722d02d6308c722d0195938c722f0172299a72308c722f027230d1edededededed93c27201c2a7937202e4c67201061193b27203731800b27204731900938c720501720793b17203731a9593720a731b957213d801d62a7e731c06ededed929c9c721772187e7219069c7ef0721c069a9c721d722a7e9c7212721906937e721e069d9c7eb27202731d00067e99720b720e06722a93721f731e937220731fd801d62a7e732006ededed929c9c721d72217e7219069c7ef07212069a9c7217722a7e9c721c721906937e721f069d9c7eb27202732100067e99721a721406722a93721e7322937220732395ed721391721c7324959372207325d804d62ac5a7d62be4e3013c0e0ed62c8c722b02d62d7c722cededededed7227907222a19d7224721d9d7225721793722a8c722b0193db6401e4dc640c72260283013c0e0e722be4e3020edb640172289683030193b1722c732693722d720a91722d732793da722901722a7328732995937220732ad801d62ae4e3010eededededed7227ed9272249c7222721d9272259c7222721793dad9012b0eb0a4732bd9012d41639a8c722d01b0db63088c722d02732cd9012f414d0ed802d6318c722f02d6328c722f0195938c723101722b9a72328c723102723201722a732d939c732e720a7ce4dc640a722602722ae4e3020e93db6401e4dc640e72260283010e722ae4e3030edb6401722893da722901722a732f733091720b7331",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc031bf9083204000402040205feffffffffffffffff0105feffffffffffffffff010400040005000402040004020580dac4090e203781e589d6b6f9558426f09babf047a51dad5951ca3ef2f82e2dbeb8d72c6fe405000402040004000400050005000500050005000500040004000404050004d00f04020500040004d00f04040500040005000402041005000502010004040500050005020501050001000580dac409d829d601b2a5730000d602e4c6a70611d603db63087201d604db6308a7d605b27203730100d606b27204730200d6078c720601d608e4c6a70505d6099973037208d60a99997304e4c6720105057209d60bc17201d60ce4c672010711d60db2720c730500d60ec1a7d60fe4c6a70711d610b2720f730600d61199720e7210d6129999720b720d7211d6139172127307d6148c720602d615b2720f730800d6169972147215d6177e721606d6187e721206d619b27202730900d61a8c720502d61bb2720c730a00d61c9999721a721b7216d61d7e721106d61e99720d7210d61f99721b7215d6207ee4e3000204d6217e721c06d6227e720a06d6237e720906d6249c72187223d6259c72217223d626e4c6a70464d62795917210730bedaea5d9012763edededed93cbc27227730c93c17227721095927215730dd801d629db63087227eded93b17229730e938cb27229730f00017207938cb2722973100002721593b1db63087227731193db64017226db6401e4c672270464937208e4c672270505ed93720d731293721b7313ed93721e731493721f7315d628e4c672010464d629d901290eb0a57316d9012b41639a8c722b01b0db63088c722b027317d9012d414d0ed802d62f8c722d02d6308c722d0195938c722f0172299a72308c722f027230d1edededededed93c27201c2a7937202e4c67201061193b27203731800b27204731900938c720501720793b17203731a9593720a731b957213d801d62a7e731c06ededed929c9c721772187e7219069c7ef0721c069a9c721d722a7e9c7212721906937e721e069d9c7eb27202731d00067e99720b720e06722a93721f731e937220731fd801d62a7e732006ededed929c9c721d72217e7219069c7ef07212069a9c7217722a7e9c721c721906937e721f069d9c7eb27202732100067e99721a721406722a93721e7322937220732395ed721391721c7324959372207325d804d62ac5a7d62be4e3013c0e0ed62c8c722b02d62d7c722cededededed7227907222a19d7224721d9d7225721793722a8c722b0193db6401e4dc640c72260283013c0e0e722be4e3020edb640172289683030193b1722c732693722d720a91722d732793da722901722a7328732995937220732ad801d62ae4e3010eededededed7227ed9272249c7222721d9272259c7222721793dad9012b0eb0a4732bd9012d41639a8c722d01b0db63088c722d02732cd9012f414d0ed802d6318c722f02d6328c722f0195938c723101722b9a72328c723102723201722a732d939c732e720a7ce4dc640a722602722ae4e3020e93db6401e4dc640e72260283010e722ae4e3030edb6401722893da722901722a732f733091720b7331d2b413023e80f3d0b85a3b66558bd14b1db36b38320948b8b4de8c27cdf3f38a86f53980014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8ae80704644ec61f485b98eb87153f7c57db4f5ecd75556fddbc403b41acf8441fde8e16090007200005aef0ffffffffffffff011103ac02ac02ac02110200009ace8cf9665b1c9656b62f4f4ee0e0b855b530e8691b63a78471b8fd136f8f7d00",
+          "80e99adaf9a2020008cd02856c5e4eb4b915005dccb8e0f42bed1777cae48565be13a77cbf31e3c93f4515d2b413014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8a87ed3c009ace8cf9665b1c9656b62f4f4ee0e0b855b530e8691b63a78471b8fd136f8f7d02"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "80a8d6b9071bf9083204000402040205feffffffffffffffff0105feffffffffffffffff010400040005000402040004020580dac4090e203781e589d6b6f9558426f09babf047a51dad5951ca3ef2f82e2dbeb8d72c6fe405000402040004000400050005000500050005000500040004000404050004d00f04020500040004d00f04040500040005000402041005000502010004040500050005020501050001000580dac409d829d601b2a5730000d602e4c6a70611d603db63087201d604db6308a7d605b27203730100d606b27204730200d6078c720601d608e4c6a70505d6099973037208d60a99997304e4c6720105057209d60bc17201d60ce4c672010711d60db2720c730500d60ec1a7d60fe4c6a70711d610b2720f730600d61199720e7210d6129999720b720d7211d6139172127307d6148c720602d615b2720f730800d6169972147215d6177e721606d6187e721206d619b27202730900d61a8c720502d61bb2720c730a00d61c9999721a721b7216d61d7e721106d61e99720d7210d61f99721b7215d6207ee4e3000204d6217e721c06d6227e720a06d6237e720906d6249c72187223d6259c72217223d626e4c6a70464d62795917210730bedaea5d9012763edededed93cbc27227730c93c17227721095927215730dd801d629db63087227eded93b17229730e938cb27229730f00017207938cb2722973100002721593b1db63087227731193db64017226db6401e4c672270464937208e4c672270505ed93720d731293721b7313ed93721e731493721f7315d628e4c672010464d629d901290eb0a57316d9012b41639a8c722b01b0db63088c722b027317d9012d414d0ed802d62f8c722d02d6308c722d0195938c722f0172299a72308c722f027230d1edededededed93c27201c2a7937202e4c67201061193b27203731800b27204731900938c720501720793b17203731a9593720a731b957213d801d62a7e731c06ededed929c9c721772187e7219069c7ef0721c069a9c721d722a7e9c7212721906937e721e069d9c7eb27202731d00067e99720b720e06722a93721f731e937220731fd801d62a7e732006ededed929c9c721d72217e7219069c7ef07212069a9c7217722a7e9c721c721906937e721f069d9c7eb27202732100067e99721a721406722a93721e7322937220732395ed721391721c7324959372207325d804d62ac5a7d62be4e3013c0e0ed62c8c722b02d62d7c722cededededed7227907222a19d7224721d9d7225721793722a8c722b0193db6401e4dc640c72260283013c0e0e722be4e3020edb640172289683030193b1722c732693722d720a91722d732793da722901722a7328732995937220732ad801d62ae4e3010eededededed7227ed9272249c7222721d9272259c7222721793dad9012b0eb0a4732bd9012d41639a8c722d01b0db63088c722d02732cd9012f414d0ed802d6318c722f02d6328c722f0195938c723101722b9a72328c723102723201722a732d939c732e720a7ce4dc640a722602722ae4e3020e93db6401e4dc640e72260283010e722ae4e3030edb6401722893da722901722a732f733091720b7331d6b413023e80f3d0b85a3b66558bd14b1db36b38320948b8b4de8c27cdf3f38a86f53980014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8ad00f0464969b340da0e7482594b7bfd29982914f4e22b9947fa3fee6d294981d7ab313f80107200005dee0ffffffffffffff011103ac02ac02ac0211020000ce4627f3aec9810c93ddb49ad8d1fc3ca4b986147faf7cc7c71442a432a5530c00",
+          "c0843d0008cd02856c5e4eb4b915005dccb8e0f42bed1777cae48565be13a77cbf31e3c93f4515d6b41301bf229548787901490b0ac0f7d9ac5bfa144e8b2503d38b66503647f19b03218c01030e0d50726f766973696f6e204e46540e8e017b4c503a203365383066336430623835613362363635353862643134623164623336623338333230393438623862346465386332376364663366333861383666353339383020284552472f4c4954292c20696e69744552473a20313030303030303030302c20696e69744c49543a20313030302c206c69713a313030302c206865696768743a203331383033387d0e0130ce4627f3aec9810c93ddb49ad8d1fc3ca4b986147faf7cc7c71442a432a5530c01",
+          "c0843d1005040004000e36100204a00b08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ea02d192a39a8cc7a701730073011001020402d19683030193a38cc7b2a57300000193c2b2a57301007473027303830108cdeeac93b1a57304d6b4130000ce4627f3aec9810c93ddb49ad8d1fc3ca4b986147faf7cc7c71442a432a5530c02",
+          "80ccb5fcf5a2020008cd02856c5e4eb4b915005dccb8e0f42bed1777cae48565be13a77cbf31e3c93f4515d6b413014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8a9fe53c00ce4627f3aec9810c93ddb49ad8d1fc3ca4b986147faf7cc7c71442a432a5530c03"
+        ],
+        "headers" : [
+          "04f515c8b62efbe54eda18784c5b4390feb38b4380c0cd7387cda3423c87ea946a27259382a4b76c042f629aae8bf75fc4d17434249432cecd226d4be800bb3650515f119e6e26aa6b58ee2d0f68adb85ea199c8d334acb66374a152df8e0a5fa0b000840d7d1b123fa510c2d1f5adfa14458d43237123cc7b22ddd07b287deb6817c4d3b78bde336c8c6a0bd01f9eceab3927121dd46cbd2ac894606f18db92ce89527031cd675e05011841d7b4130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffba3048011292",
+          "04d11cb842d6e691736b96fd49deea982f62f86ee52e7952d43e63803d0d66e68074445f78e53bb3b8e87ecab599a2b0d1ae991ec10adb4a78fffb5f917af28f69ab1342b49caa79036a19cb8c75f68b9b0b6fab3452239695e5f6b23c2f019430c2c3fe88d65d861f2f4eb626072edb921bd7ec9482b1d1eef6de261064012c2217e892b68bde336aee3b016862a39b75d42d4c281af3a406886de3929edb11f63648711841fa6e05011841d6b4130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3380286b06f05caa9",
+          "04e452a14ffab5784e1c25cb181352eaf6d35d4c89d93636898b003ed271b86ac31fbe47c9951628afdeb46ced7c8f2b99c29bf4f60d66b04a0481b72dc9837aca304c6f0e8fde2eb64fbd5eb0bf32ee56f97efc088429ab023bac0df00992266f556263fa306e068025c0044faab1ba4326852bc9312bfef3fcc960cd534391af17b68ab58bde335bf2b6314224f870254b47709f835de01253a10e43666b478832b8fccb0cefaa05011841d5b4130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3380286af08761f2d",
+          "049e51609379b41b167f92be708fffebb4f25a3a1a6e49a1d87a8621215b7cbf7a59640a331b29f3e0901cfbe5d48919d56530b4ea10d01269f34c2e4b295e693e996ed1f41fe1b5b135c6b67bc4df881de3317f7efa0234fd92d10e4031c205a916d7e18c323ad5cff350ce3eb82f9acac3cb08f9d8be851cec1501678d69fcd817b4e2ae8bde335bf2b6314224f870254b47709f835de01253a10e43666b478832b8fccb0cefaa05011841d4b4130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3380286aea42ac701",
+          "049f74cbdab3dd467f61fe8ae54ccae4d67143ee0cee06e45e26743fc4ca338ccd5cfdc907afcb7cd9da0cf8c0ab6fd85324877dff688e317dd5b19a8622c243816b67de0a829da53dfaa52e9cb02ef6335ee3e6982e3f416aeec41499b4f57d63ebc9dee2c8c6a3d0281005e62902d0772a48906dca23819d86602d967228954517e3c8a58bde335bf2b6314224f870254b47709f835de01253a10e43666b478832b8fccb0cefaa05011841d3b4130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffba36aeb93be6",
+          "0470c5d5e21b77fa90f2edc1f07bcfd5b915e801a633f222c177e91ac8c5cf138c7e68ee24a5d5b588c9092cef215fa0cb925f1e66f0e9df763f7392b2e4a4217f30d4e1393f9dcf33a22910db52d5ceaa7db972af22cff8ed99feb1a62c702a42442f5cb2a5953009bdaa7d12ea88f5af1a995eb10248d36ef947b2d479a2714a17b1b8a58bde335bf2b6314224f870254b47709f835de01253a10e43666b478832b8fccb0cefaa05011841d2b4130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3380286a0c4e15ea3",
+          "047b77ace683c3359947c0fad7c3e49b54d15e141f165a9fd32ff907037b22c26569c0f52d7b693926e599e0e636fffb76b7b598aa9e68d5f0a6cd944aefc725fd29dd80bfad4bf44e3a965b55db37808d6e4f8105064dde82cdc605082208242db49d4852cb026b001205176591c8312bf857059c942af350e919303045c5e1de179ffe9f8bde3390dd52bc2c9257851babe5d7d6bb31c7d9bf554c8589d8cfce0eb6b9a051140f05011841d1b4130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3380286a04b235e25",
+          "04cbed5486b8e60fd36fc6d61b68208c5cc3b500b792c87009dccc673b8893f7ecd8c6e736b6674ba31263b572dda3f843dfe1a8c647dd3d6593319b858ef4edf24720bfd4fb7e1d1ac263532c5c6f66429f35c0c28dba2337abfa1d9146ecd0bf80d1e23fd66d95df7da62aaed48a5903e862e07535aa6b8ec706e6c64bb1773617f5bc9a8bde3390dd52bc2c9257851babe5d7d6bb31c7d9bf554c8589d8cfce0eb6b9a051140f05011841d0b4130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b33802869a37d20d23",
+          "041d22607977662fc101b07cf8c117157f06443d25a1af5da4eadf49c5266bb4d6c1efa45097a6274689e02435e03785eb1ed172cbbcda12b1228815dbd0a986f909ea2214c1cc421f8a9e308f657fbf64d0c18789276a52d31052ea7906200a85e9cd24b580deb3329f6a07719fc9e7b5c2323e1984538e93e757fe3d0899f79f17d8cd988bde3390dd52bc2c9257851babe5d7d6bb31c7d9bf554c8589d8cfce0eb6b9a051140f05011841cfb4130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffba415ec2d5df",
+          "044254b95336ff6e2522b8cb580ee6a047bbedd74a425641ef81525a14beee1d0e88768f0fb7d025162357423501ecd7024f0173f6b1ee5c99d4faa1455fc34a1ce0a611ebd33375c677b9beab2a2d2f9ac7a3e743a1e200f1ed7dbade222a3e982e702d9c94ffab530805286629ad48d9bc052edfafa8d35b790b0ad81f1e14d717b788968bde337fc2229d0cd8729a5f3733904939b29b91b4b6472e9ea0d920c6dd5ed512c3d305011841ceb4130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffba428178f211"
+        ],
+        "pre_header_hex" : "0429241ea9b34f08bab199fda4746dee5f5144bb75e0f199d5196a0063d2d76ea9a4e4bd8bde33c1b08428d8b41303847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3000000",
+        "height" : 318040,
+        "extension" : {
+          "0" : {
+            "kind" : "Byte",
+            "value" : 1
+          },
+          "1" : {
+            "kind" : "Tuple",
+            "items" : [
+              {
+                "kind" : "Coll",
+                "elem" : {
+                  "tag" : "SByte"
+                },
+                "items" : [
+                  {
+                    "kind" : "Byte",
+                    "value" : -65
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 34
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -107
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 72
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 120
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 121
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 1
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 73
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 11
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 10
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -64
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -9
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -39
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -84
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 91
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -6
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 20
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 78
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -117
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 37
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 3
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -45
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -117
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 102
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 80
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 54
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 71
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -15
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -101
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 3
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 33
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -116
+                  }
+                ]
+              },
+              {
+                "kind" : "Coll",
+                "elem" : {
+                  "tag" : "SByte"
+                },
+                "items" : [
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 3
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -24
+                  }
+                ]
+              }
+            ]
+          },
+          "2" : {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 2
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 4
+              }
+            ]
+          }
+        },
+        "input_extensions" : [
+          {
+            "0" : {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            "1" : {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Coll",
+                  "elem" : {
+                    "tag" : "SByte"
+                  },
+                  "items" : [
+                    {
+                      "kind" : "Byte",
+                      "value" : -65
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 34
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -107
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 72
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 120
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 121
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 1
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 73
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 11
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 10
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -64
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -9
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -39
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -84
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 91
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -6
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 20
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 78
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -117
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 37
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 3
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -45
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -117
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 102
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 80
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 54
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 71
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -15
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -101
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 3
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 33
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -116
+                    }
+                  ]
+                },
+                {
+                  "kind" : "Coll",
+                  "elem" : {
+                    "tag" : "SByte"
+                  },
+                  "items" : [
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 3
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -24
+                    }
+                  ]
+                }
+              ]
+            },
+            "2" : {
+              "kind" : "Coll",
+              "elem" : {
+                "tag" : "SByte"
+              },
+              "items" : [
+                {
+                  "kind" : "Byte",
+                  "value" : 2
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 4
+                }
+              ]
+            }
+          },
+          {
+            
+          }
+        ]
+      },
+      "provenance" : {
+        "height" : 318040,
+        "tx_id" : "ce4627f3aec9810c93ddb49ad8d1fc3ca4b986147faf7cc7c71442a432a5530c",
+        "input_index" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 4045,
+        "error" : null
+      }
+    }
+  ]
+}

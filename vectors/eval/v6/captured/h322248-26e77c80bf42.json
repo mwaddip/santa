@@ -1,0 +1,1012 @@
+{
+  "schema" : "santa-eval/v6-fullctx",
+  "op" : "fullctx.h322248-26e77c80bf42",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "testnet:51e081e49411efd870563bfbb68afc89a47ad6f984a1715c0c77415cc291c3cf@322248",
+  "entries" : [
+    {
+      "name" : "h322248-26e77c80bf42#in0",
+      "tree_bytes_hex" : "1b980a4204000402040204000402050005000400040205feffffffffffffffff0105feffffffffffffffff0105000400050004000400040404060500050004020500040404020402040005000e203781e589d6b6f9558426f09babf047a51dad5951ca3ef2f82e2dbeb8d72c6fe4040204000502050005000500050005000100050004a09c0104020500040004a09c0104040500040005000402050005000500041005000502010004040500050005000500050005020501050001000580dac409d82bd601b2a5730000d602e4c6a70611d603db63087201d604db6308a7d605b27203730100d606b27204730200d6078c720601d6087ee4e3000204d609e4c6a70711d60ab27209730300d60bb27209730400d60cc17201d60dc1a7d60e99720c720dd60f8c720502d6108c720602d61199720f7210d612d901120eb0a57305d9011441639a8c721401b0db63088c7214027306d90116414d0ed802d6188c721602d6198c72160195938c72180172129a72198c7218027219d613e4c6a70464d614e4c6a70505d615e4c672010711d616b27215730700d617b27215730800d6189973097214d6199999730ae4c6720105057218d61a99720d720ad61b9999720c7216721ad61c997210720bd61d9999720f7217721cd61e91721b730bd61f7e721c06d6207e721b06d621b27202730c00d6227e721a06d623997216720ad624997217720bd6257e721d06d6267e721906d6277e721806d6289c72207227d6299c72257227d62a93720a730dd62be4c672010464d1edededededed93c27201c2a7937202e4c67201061193b27203730e00b27204730f00938c720501720793b17203731095937208731195ec91720a731291720b7313d802d62cb2a5731400d62ddb6308722c96830a01ed92c1722c720a93720ef0720a9591720b7315d801d62edb6308722cededed93b1722e7316938cb2722e731700017207938cb2722e73180002720b937211f0720bed93b1db6308722c7319937211731a93cbc2722c731bed92b1722d731c938cb2722d731d0001c5a793da721201c5a7731e93e4c6722c04647213937214e4c6722c050593e4c6722c06117209ed937216731f9372177320eded937219732193721b732293721d7323732495937219732595721ed801d62c7e732606ededed929c9c721f72207e7221069c7ef0721d069a9c7222722c7e9c721b722106937e7223069d9c7eb27202732700067e720e06722c93722473289372087329d801d62c7e732a06ededed929c9c722272257e7221069c7ef0721b069a9c721f722c7e9c721d722106937e7224069d9c7eb27202732b00067e721106722c937223732c937208732d95ed721e91721d732e95937208732fd804d62cc5a7d62de4e3013c0e0ed62e8c722d02d62f7c722eedededededededed722a93720b733093722373319372247332907226a19d722872229d7229721f93722c8c722d0193db6401e4dc640c72130283013c0e0e722de4e3020edb6401722b9683030193b1722e733393722f721991722f733493da721201722c73357336959372087337d801d62ce4e3010eedededededededed722a93720b73389372237339937224733aed9272289c722672229272299c7226721f93dad9012d0eb0a4733bd9012f41639a8c722f01b0db63088c722f02733cd90131414d0ed802d6338c723102d6348c72310195938c723301722d9a72348c723302723401722c733d939c733e72197ce4dc640a721302722ce4e3020e93db6401e4dc640e72130283010e722ce4e3030edb6401722b93da721201722c733f734091720c7341",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc031b980a4204000402040204000402050005000400040205feffffffffffffffff0105feffffffffffffffff0105000400050004000400040404060500050004020500040404020402040005000e203781e589d6b6f9558426f09babf047a51dad5951ca3ef2f82e2dbeb8d72c6fe4040204000502050005000500050005000100050004a09c0104020500040004a09c0104040500040005000402050005000500041005000502010004040500050005000500050005020501050001000580dac409d82bd601b2a5730000d602e4c6a70611d603db63087201d604db6308a7d605b27203730100d606b27204730200d6078c720601d6087ee4e3000204d609e4c6a70711d60ab27209730300d60bb27209730400d60cc17201d60dc1a7d60e99720c720dd60f8c720502d6108c720602d61199720f7210d612d901120eb0a57305d9011441639a8c721401b0db63088c7214027306d90116414d0ed802d6188c721602d6198c72160195938c72180172129a72198c7218027219d613e4c6a70464d614e4c6a70505d615e4c672010711d616b27215730700d617b27215730800d6189973097214d6199999730ae4c6720105057218d61a99720d720ad61b9999720c7216721ad61c997210720bd61d9999720f7217721cd61e91721b730bd61f7e721c06d6207e721b06d621b27202730c00d6227e721a06d623997216720ad624997217720bd6257e721d06d6267e721906d6277e721806d6289c72207227d6299c72257227d62a93720a730dd62be4c672010464d1edededededed93c27201c2a7937202e4c67201061193b27203730e00b27204730f00938c720501720793b17203731095937208731195ec91720a731291720b7313d802d62cb2a5731400d62ddb6308722c96830a01ed92c1722c720a93720ef0720a9591720b7315d801d62edb6308722cededed93b1722e7316938cb2722e731700017207938cb2722e73180002720b937211f0720bed93b1db6308722c7319937211731a93cbc2722c731bed92b1722d731c938cb2722d731d0001c5a793da721201c5a7731e93e4c6722c04647213937214e4c6722c050593e4c6722c06117209ed937216731f9372177320eded937219732193721b732293721d7323732495937219732595721ed801d62c7e732606ededed929c9c721f72207e7221069c7ef0721d069a9c7222722c7e9c721b722106937e7223069d9c7eb27202732700067e720e06722c93722473289372087329d801d62c7e732a06ededed929c9c722272257e7221069c7ef0721b069a9c721f722c7e9c721d722106937e7224069d9c7eb27202732b00067e721106722c937223732c937208732d95ed721e91721d732e95937208732fd804d62cc5a7d62de4e3013c0e0ed62e8c722d02d62f7c722eedededededededed722a93720b733093722373319372247332907226a19d722872229d7229721f93722c8c722d0193db6401e4dc640c72130283013c0e0e722de4e3020edb6401722b9683030193b1722e733393722f721991722f733493da721201722c73357336959372087337d801d62ce4e3010eedededededededed722a93720b73389372237339937224733aed9272289c722672229272299c7226721f93dad9012d0eb0a4733bd9012f41639a8c722f01b0db63088c722f02733cd90131414d0ed802d6338c723102d6348c72310195938c723301722d9a72348c723302723401722c733d939c733e72197ce4dc640a721302722ce4e3020e93db6401e4dc640e72130283010e722ce4e3030edb6401722b93da721201722c733f734091720c7341c1d513025dd5c55b4c518149be5255b6b58c35fbb453d0923562383060d2b0c87373e76c014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8aa08d0604644ec61f485b98eb87153f7c57db4f5ecd75556fddbc403b41acf8441fde8e16090007200005aef0ffffffffffffff0111031e1e1e11020000a75cf81b0189bc0b1f8aa122a57cde48bc4da3c12f19241437273d0bd43bf38200",
+          "809de5dd030008cd0281dcc97683d140b4538cb99c0ed168ed01667b6e0d6d1f505d4ee9ec5198bc8dc6d513014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8aa08d0600e643f57470c8e5e8a6707c27b87f7880c35e40aa28e6114097a956f09da433f900"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "80a8d6b9071b980a4204000402040204000402050005000400040205feffffffffffffffff0105feffffffffffffffff0105000400050004000400040404060500050004020500040404020402040005000e203781e589d6b6f9558426f09babf047a51dad5951ca3ef2f82e2dbeb8d72c6fe4040204000502050005000500050005000100050004a09c0104020500040004a09c0104040500040005000402050005000500041005000502010004040500050005000500050005020501050001000580dac409d82bd601b2a5730000d602e4c6a70611d603db63087201d604db6308a7d605b27203730100d606b27204730200d6078c720601d6087ee4e3000204d609e4c6a70711d60ab27209730300d60bb27209730400d60cc17201d60dc1a7d60e99720c720dd60f8c720502d6108c720602d61199720f7210d612d901120eb0a57305d9011441639a8c721401b0db63088c7214027306d90116414d0ed802d6188c721602d6198c72160195938c72180172129a72198c7218027219d613e4c6a70464d614e4c6a70505d615e4c672010711d616b27215730700d617b27215730800d6189973097214d6199999730ae4c6720105057218d61a99720d720ad61b9999720c7216721ad61c997210720bd61d9999720f7217721cd61e91721b730bd61f7e721c06d6207e721b06d621b27202730c00d6227e721a06d623997216720ad624997217720bd6257e721d06d6267e721906d6277e721806d6289c72207227d6299c72257227d62a93720a730dd62be4c672010464d1edededededed93c27201c2a7937202e4c67201061193b27203730e00b27204730f00938c720501720793b17203731095937208731195ec91720a731291720b7313d802d62cb2a5731400d62ddb6308722c96830a01ed92c1722c720a93720ef0720a9591720b7315d801d62edb6308722cededed93b1722e7316938cb2722e731700017207938cb2722e73180002720b937211f0720bed93b1db6308722c7319937211731a93cbc2722c731bed92b1722d731c938cb2722d731d0001c5a793da721201c5a7731e93e4c6722c04647213937214e4c6722c050593e4c6722c06117209ed937216731f9372177320eded937219732193721b732293721d7323732495937219732595721ed801d62c7e732606ededed929c9c721f72207e7221069c7ef0721d069a9c7222722c7e9c721b722106937e7223069d9c7eb27202732700067e720e06722c93722473289372087329d801d62c7e732a06ededed929c9c722272257e7221069c7ef0721b069a9c721f722c7e9c721d722106937e7224069d9c7eb27202732b00067e721106722c937223732c937208732d95ed721e91721d732e95937208732fd804d62cc5a7d62de4e3013c0e0ed62e8c722d02d62f7c722eedededededededed722a93720b733093722373319372247332907226a19d722872229d7229721f93722c8c722d0193db6401e4dc640c72130283013c0e0e722de4e3020edb6401722b9683030193b1722e733393722f721991722f733493da721201722c73357336959372087337d801d62ce4e3010eedededededededed722a93720b73389372237339937224733aed9272289c722672229272299c7226721f93dad9012d0eb0a4733bd9012f41639a8c722f01b0db63088c722f02733cd90131414d0ed802d6338c723102d6348c72310195938c723301722d9a72348c723302723401722c733d939c733e72197ce4dc640a721302722ce4e3020e93db6401e4dc640e72130283010e722ce4e3030edb6401722b93da721201722c733f734091720c7341c6d513025dd5c55b4c518149be5255b6b58c35fbb453d0923562383060d2b0c87373e76c014f2ad850df6d8006af630a84201d57696e3ba9b3b3b49e1f865ff6051dbbcd8ac09a0c04647418d84a163b166679f1c5626df0a6065e053eaff52fbb6fbdd4178fcffe50850107200005dee0ffffffffffffff0111031e1e1e1102000051e081e49411efd870563bfbb68afc89a47ad6f984a1715c0c77415cc291c3cf00",
+          "c0843d0008cd0281dcc97683d140b4538cb99c0ed168ed01667b6e0d6d1f505d4ee9ec5198bc8dc6d51301be381266debbaebe8306d414f9c14e623083b7a4846753da0b6f01ceeb1ccfe401030e0d50726f766973696f6e204e46540ea7017b4c503a203564643563353562346335313831343962653532353562366235386333356662623435336430393233353632333833303630643262306338373337336537366320284552472f4c4954292c20696e69744552473a20313030303030303030302c20696e69744c49543a203130303030302c206c69714465706f73697465643a313030302c20746f74616c4c69713a32303030206865696768743a203332323234367d0e013051e081e49411efd870563bfbb68afc89a47ad6f984a1715c0c77415cc291c3cf01",
+          "c0843d1005040004000e36100204a00b08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ea02d192a39a8cc7a701730073011001020402d19683030193a38cc7b2a57300000193c2b2a57301007473027303830108cdeeac93b1a57304c6d513000051e081e49411efd870563bfbb68afc89a47ad6f984a1715c0c77415cc291c3cf02"
+        ],
+        "headers" : [
+          "04d29295dcbaf49980a3e1f75e72153da79560106aa96ab4c0fa4f3cfcdd3806b17d81a94f50aa75d21dbb730bf9293c985c92e973570664bbc90063527c6330923570b8b1b2fd602261cb4dae5b73815c36fe930c7209863ee501913cdae391728d890f4106db1c8d629979bd516fc534661527473d1c024867278c10639accff178ada94e6de339ac6961bb76410b37b38c6f56e06cb562d43667e4f45acc80e52c570aa841ae70500e164c7d5130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b33802ac4c0e3584ac",
+          "04ba0d675821bcbdece605b78cf4e3ab9673d24c9b9ded8a1fea5c7488b2a10b2f93f9b9f872893ac25ad19047d23a615680d5f5883e0f6d1818d72af4dd213d3200b20b9c39f4231c22d3a6f1c40bea09e4174764323af443e0a80793cf2f1b3a49c4ffe365b5f41ecd49a56ed97aaaec800270674afa9c05264511c2a153fd7e17b0c08ee6de339ac6961bb76410b37b38c6f56e06cb562d43667e4f45acc80e52c570aa841ae70500e164c6d5130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b33802ac4a1ef06c73",
+          "04de30c2561a75ee9981ed8e10180dcec772c23fa3d179b1790eae6fdb906189332ceeb5f05d8477a54a2886a742e02eb61da138c0440379940d67f954dbabcc2dd42e44aed97591bfe8f9ec1287a03402ff62212576c311c8f373df2e84b0e65263ad2668944e60c7381b293116eaee5ca0b5798ac00ffa2b88704f5033572bde17ba848ee6de339ac6961bb76410b37b38c6f56e06cb562d43667e4f45acc80e52c570aa841ae70500e164c5d5130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b33802ac443d565586",
+          "04b3a52d90f07d7c8a74b406a6f02ab822411010947c1b78f6d0ee60869811ac163facbf92e328211231d737b595b32d9587dca7be260aa28c561b14446205eb7791db6b88e8a3c7bf288990dbcacd43ea1fea46ad8dd33da4cce2c8963892a6e2385e24cbf5d2748200c010c3ef77909c20046fc134999e2a965fa7908b6d491417cda58de6de339ac6961bb76410b37b38c6f56e06cb562d43667e4f45acc80e52c570aa841ae70500e164c4d5130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b33802ac44fb3c444b",
+          "04d0f6d3a8194a7d99ee54414a16a6e4fe0505b8e454eb7fce39b05af1dc69e95162730fb7e276bc58b58bbeb1dd60bfc5b779ac8425d92591d2c8dab7477d1b33dfb2cfb72145fec0f6171645cecfd9f0eb3efe40fe5a95bd04bec951425eb2b3b3ccc793dcdc0221a4cab5c98fd71645cefe77e4cd734ebc64d0fa0a5349c3b617bca288e6de339ac6961bb76410b37b38c6f56e06cb562d43667e4f45acc80e52c570aa841ae70500e164c3d5130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffa5490c1f2437",
+          "04366db51dce9dec23af59698da4a2d298fea855e0ae5e325e638d65ca00be43f36047e9452524007bf068ce691df4f26a4b4a4a49efa3a296cb1ca5f036fce8e14584e89ff07a2ba196a07aee357a5cadf245ab7cfe58ff5d01911b21bb8bc4c38d6f7d54bf7997022700acf9cf70bf40fcb25b5c3f95f18b269c23e6028708e717eac386e6de338258168d1a985fd07f2f8974108e23c6eafce9470ea0fdf9e9160942b3a140af0500e164c2d5130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffa54c3ccfdcca",
+          "0431cd7bfc347c3e9838345c99d5cf686d9b31eda28400cc23a92e5590fc685872f196475458e38d7477d800ca80d87cb66e7eb07b5a1d104388fc193eac9bee27e9d068f477fcdce1b3c2145638d414aad6dfaa4453711af2e62a38267efba3130b2398a458688887335143845e1abfd6eeb6991311cfd5b58ecd46cfd97dcbae17b2e384e6de338258168d1a985fd07f2f8974108e23c6eafce9470ea0fdf9e9160942b3a140af0500e164c1d5130000000003847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b33802ac3d2f916ce5",
+          "0466c43cd0f20bdec74e0788462b91b99e053ca317b5474f325b1b31cd148b4d13e418466f38cee75999356173876b91cfd13426429b3932e5248a5dc3292d84662f56992743685e2d8080bb8a24424ad169bf9dce6e32b486fd4a4e2ee0c800afc0f4a0ac7dc73868b1925b6962e29efb10f19246f65120b55d7e12668fe935351783e082e6de337f5f8263d03938aedb629871732eeec2b0ceb0db452a36f6a32efdfd2a6a2f850500e164c0d5130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffa54e8b990ada",
+          "04f9ba4b889a66c9fb91ebd651ae8b5dfd420da2070af3edb2d04b2ec5a4ffc7d2ee27769c2727001f76b7a7d6523792e37f8fb598cba7a27ee4066920240868ecff05e2d2950298814b30bd1d74a6e1b97f358aeb44d1be341f9cf49954e2ed9d18560084ff31129eb4bf86b4c3a3948f9146f1a4affd7d88c7fa4545ef18999317acea81e6de3375fdb57f7829dc6f7d09697b3d49db20af6595fc56431ebf2d2d854a9d18d5520500e164bfd5130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffa54fd44eb991",
+          "043f75fe86500097ae972bfa4144edc81f9fd27003c258c8101219e46b0ad5c4d7344083dffd59203cbe268e9ede947799289983c4dadf833225f027f14965d25f441b2cd3cdd05461d9d8ab3d20702a895c4fdb556f3bce84499a94d51194e91e5ce632440979e5ac874ead9fb849413d3fd209456470bf7ffda35bb9a02aade617ae91ffe5de33e9def08fe9e16839a87522a06a7225e68a787a1c56bad02892cd2e7dbe5242c10500e164bed5130000000003ae3e7a05f7535d40d084c589c0110fa5cc75ce9a6cfd68b5ec1b2dd9519930db77ffa54f7df89da4"
+        ],
+        "pre_header_hex" : "045c300ce6b67d599e579f91028b3613c0378f37154c0b55b300df12706c18b668e0f596e6de33e4c28328c8d51303847df53b8f7f3f5002245414d8499ec07eebc8708dabbd65ff551c45aee9d5b3000000",
+        "height" : 322248,
+        "extension" : {
+          "0" : {
+            "kind" : "Byte",
+            "value" : 1
+          },
+          "1" : {
+            "kind" : "Tuple",
+            "items" : [
+              {
+                "kind" : "Coll",
+                "elem" : {
+                  "tag" : "SByte"
+                },
+                "items" : [
+                  {
+                    "kind" : "Byte",
+                    "value" : -66
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 56
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 18
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 102
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -34
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -69
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -82
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -66
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -125
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 6
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -44
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 20
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -7
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -63
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 78
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 98
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 48
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -125
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -73
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -92
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -124
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 103
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 83
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -38
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 11
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 111
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 1
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -50
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -21
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 28
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -49
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -28
+                  }
+                ]
+              },
+              {
+                "kind" : "Coll",
+                "elem" : {
+                  "tag" : "SByte"
+                },
+                "items" : [
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 0
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : 3
+                  },
+                  {
+                    "kind" : "Byte",
+                    "value" : -24
+                  }
+                ]
+              }
+            ]
+          },
+          "2" : {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 2
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              },
+              {
+                "kind" : "Byte",
+                "value" : 4
+              }
+            ]
+          }
+        },
+        "input_extensions" : [
+          {
+            "0" : {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            "1" : {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Coll",
+                  "elem" : {
+                    "tag" : "SByte"
+                  },
+                  "items" : [
+                    {
+                      "kind" : "Byte",
+                      "value" : -66
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 56
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 18
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 102
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -34
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -69
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -82
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -66
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -125
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 6
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -44
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 20
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -7
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -63
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 78
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 98
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 48
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -125
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -73
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -92
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -124
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 103
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 83
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -38
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 11
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 111
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 1
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -50
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -21
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 28
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -49
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -28
+                    }
+                  ]
+                },
+                {
+                  "kind" : "Coll",
+                  "elem" : {
+                    "tag" : "SByte"
+                  },
+                  "items" : [
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 0
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : 3
+                    },
+                    {
+                      "kind" : "Byte",
+                      "value" : -24
+                    }
+                  ]
+                }
+              ]
+            },
+            "2" : {
+              "kind" : "Coll",
+              "elem" : {
+                "tag" : "SByte"
+              },
+              "items" : [
+                {
+                  "kind" : "Byte",
+                  "value" : 2
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : -1
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 0
+                },
+                {
+                  "kind" : "Byte",
+                  "value" : 4
+                }
+              ]
+            }
+          },
+          {
+            
+          }
+        ]
+      },
+      "provenance" : {
+        "height" : 322248,
+        "tx_id" : "51e081e49411efd870563bfbb68afc89a47ad6f984a1715c0c77415cc291c3cf",
+        "input_index" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 3971,
+        "error" : null
+      }
+    }
+  ]
+}
