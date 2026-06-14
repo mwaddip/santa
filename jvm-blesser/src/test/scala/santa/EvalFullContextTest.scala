@@ -89,6 +89,16 @@ class EvalFullContextTest extends munit.FunSuite {
     assertEquals(collOfByteHex(evalSurface(ExtractBytes(Self))), inputsHex(0))
   }
 
+  // lastBlockUtxoRoot derivation (option b, ergots 2026-06-14): AvlTreeData{digest =
+  // parent header stateRoot, flags 0x07, keyLength 32, valueLengthOpt None}. Confirms my
+  // serialization is byte-identical to ergots' avlTreeFromDigest golden.
+  test("lastBlockUtxoRoot derivation reproduces the ergots byte golden") {
+    val stateRoot = scorex.crypto.authds.ADDigest @@ Array.fill(33)(1.toByte)
+    val hex = Base16.encode(sigma.data.AvlTreeData.serializer.toBytes(EvalCore.avlTreeFromStateRoot(stateRoot)))
+    assertEquals(hex,
+      "010101010101010101010101010101010101010101010101010101010101010101072000")
+  }
+
   private def collOfByteHex(j: Json): String = {
     val items = j.hcursor.downField("items").as[List[Json]].getOrElse(Nil)
     Base16.encode(items.map(_.hcursor.downField("value").as[Int].getOrElse(0).toByte).toArray)

@@ -1,5 +1,6 @@
 package santa
 
+import scorex.crypto.authds.ADDigest
 import scorex.util.bytesToId
 import scorex.util.encode.Base16
 
@@ -19,7 +20,7 @@ import sigma.ast.{
   SigmaPropConstant, StringConstant, STuple, UnsignedBigIntConstant
 }
 import sigma.crypto.CryptoConstants
-import sigma.data.AvlTreeData
+import sigma.data.{AvlTreeData, AvlTreeFlags}
 import sigma.interpreter.{ContextExtension, ProverResult}
 import sigma.serialization.{DataSerializer, GroupElementSerializer, SigmaSerializer}
 import sigma.util.Extensions.EcpOps
@@ -783,19 +784,20 @@ object EvalCore {
   // bytes) — the F5 batch-4 id basis (req 2). preHeader.version is the REAL block
   // version decoded from pre_header_hex (NOT the dummy path's activated+1 convention).
   //
-  // ⚠ OPEN CONTRACT ITEM (flagged to ergots 2026-06-14): the envelope carries no
-  // lastBlockUtxoRoot (the AvlTreeData behind CONTEXT.LastBlockUtxoRootHash). Passed
-  // here as an Option; None falls back to AvlTreeData.dummy, which is WRONG for any tree
-  // that reads LastBlockUtxoRootHash. Until the envelope carries it (or we derive it from
-  // a header stateRoot), such trees must not be blessed through this path.
+  // lastBlockUtxoRoot (CONTEXT.LastBlockUtxoRootHash): the envelope carries no explicit
+  // field — RESOLVED (ergots 2026-06-14, option b) by deriving it from the parent header's
+  // stateRoot: AvlTreeData{digest = headers[0].stateRoot, flags 0x07 (all ops), keyLength
+  // 32, valueLengthOpt None} — the dummy's shape with the real parent digest. Drift-free
+  // (both sides derive from headers[0].stateRoot + fixed params). An explicit
+  // lastBlockUtxoRootHex (option a) still overrides if ever needed.
 
   private def parseBox(hex: String): ErgoBox =
     ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(hex).get))
 
-  private def parseHeaderColl(hexes: Seq[String]): Coll[Header] =
-    Colls.fromArray(hexes.map { h =>
-      (new CHeader(ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(h).get))): Header)
-    }.toArray)
+  /** Derive lastBlockUtxoRoot from a parent header's 33-byte stateRoot (option b).
+    * Byte golden: stateRoot 01×33 → serialized AvlTreeData `<01×33>072000`. */
+  def avlTreeFromStateRoot(stateRoot: ADDigest): AvlTreeData =
+    AvlTreeData(Colls.fromArray(stateRoot), AvlTreeFlags.AllOperationsAllowed, keyLength = 32, valueLengthOpt = None)
 
   private def preHeaderFromHex(hex: String): PreHeader = {
     val f = PreHeaderCodec.decode(Base16.decode(hex).get)
@@ -859,11 +861,17 @@ object EvalCore {
           s"selfIndex $selfIndex out of range for ${inputs.length} inputs")
         val dataInputs = dataInputsHex.map(parseBox).toIndexedSeq
         val outputs    = outputsHex.map(parseBox).toIndexedSeq
-        val headers    = parseHeaderColl(headersHex)
+        val ergoHeaders = headersHex.map(h =>
+          ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(h).get))).toIndexedSeq
+        val headers    = Colls.fromArray(ergoHeaders.map(h => (new CHeader(h): Header)).toArray)
         val preHeader  = preHeaderFromHex(preHeaderHex)
+        // lastBlockUtxoRoot: explicit hex (option a) wins; else derive from the parent
+        // header's stateRoot (option b — ergots 2026-06-14); else dummy (empty headers,
+        // which shouldn't occur for v6 — trees are post-activation, h >> 10).
         val lastRoot   = lastBlockUtxoRootHex
           .map(h => AvlTreeData.serializer.parse(SigmaSerializer.startReader(Base16.decode(h).get)))
-          .getOrElse(AvlTreeData.dummy)
+          .getOrElse(if (ergoHeaders.nonEmpty) avlTreeFromStateRoot(ergoHeaders.head.stateRoot)
+                     else AvlTreeData.dummy)
         val selfExt    = ContextExtension(
           extensionJson.map { case (k, j) => k.toByte -> decodeInputConstant(j) })
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
