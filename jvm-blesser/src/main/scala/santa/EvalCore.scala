@@ -815,12 +815,13 @@ object EvalCore {
       tree: ErgoTree, activated: Byte, selfIndex: Int,
       inputs: IndexedSeq[ErgoBox], dataInputs: IndexedSeq[ErgoBox],
       outputs: IndexedSeq[ErgoBox], headers: Coll[Header], preHeader: PreHeader,
-      lastBlockUtxoRoot: AvlTreeData, selfExtension: ContextExtension): ErgoLikeContext = {
-    // Each spending input → Input(boxId, proof); the SELF input carries the envelope's
-    // ContextExtension, the rest are empty (the envelope models the SELF extension only).
+      lastBlockUtxoRoot: AvlTreeData, inputExtensions: Seq[ContextExtension]): ErgoLikeContext = {
+    // Each spending input carries ITS OWN ContextExtension — getVarFromInput(i, var) reads
+    // input i's (SContext methodId 12). The top-level context.extension (bare getVar) is the
+    // SELF input's. Missing entries default to empty.
     val txInputs = inputs.indices.map { i =>
-      val ext = if (i == selfIndex) selfExtension else ContextExtension.empty
-      Input(inputs(i).id, new ProverResult(Array.emptyByteArray, ext))
+      Input(inputs(i).id, new ProverResult(Array.emptyByteArray,
+        inputExtensions.lift(i).getOrElse(ContextExtension.empty)))
     }.toIndexedSeq
     val txDataInputs = dataInputs.map(b => DataInput(b.id))
     // ErgoBox <: ErgoBoxCandidate; the tx recomputes output ids from its (proof-free) id —
@@ -834,7 +835,7 @@ object EvalCore {
       boxesToSpend = inputs,
       spendingTransaction = new ErgoLikeTransaction(txInputs, txDataInputs, outCandidates),
       selfIndex = selfIndex,
-      extension = selfExtension,
+      extension = inputExtensions.lift(selfIndex).getOrElse(ContextExtension.empty),
       validationSettings = ValidationRules.currentSettings,
       costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
       initCost = 0L,
@@ -844,12 +845,15 @@ object EvalCore {
 
   /** Eval a tree against the REAL reconstructed context from the walker envelope.
     * Same (treeVersion, Either[(valueJson, cost), err]) shape as the other eval* entries.
-    * `lastBlockUtxoRootHex` is the optional AvlTreeData hex (see the OPEN CONTRACT ITEM). */
+    * `inputExtensionsJson` is one {varId -> SValue JSON} map per input (indexed by input
+    * position): input i's map is input i's ContextExtension (read by getVarFromInput(i, var)),
+    * and the SELF input's (`selfIndex`) is also the top-level context.extension (bare getVar).
+    * `lastBlockUtxoRootHex` is the optional AvlTreeData hex (else derived from headers[0]). */
   def evalFullContext(
       treeBytesHex: String, selfIndex: Int,
       inputsHex: Seq[String], dataInputsHex: Seq[String], outputsHex: Seq[String],
       headersHex: Seq[String], preHeaderHex: String,
-      extensionJson: Map[Int, Json], lastBlockUtxoRootHex: Option[String],
+      inputExtensionsJson: Seq[Map[Int, Json]], lastBlockUtxoRootHex: Option[String],
       activated: Byte): (Byte, Either[String, (Json, Long)]) =
     try {
       val bytes   = Base16.decode(treeBytesHex).get
@@ -872,11 +876,11 @@ object EvalCore {
           .map(h => AvlTreeData.serializer.parse(SigmaSerializer.startReader(Base16.decode(h).get)))
           .getOrElse(if (ergoHeaders.nonEmpty) avlTreeFromStateRoot(ergoHeaders.head.stateRoot)
                      else AvlTreeData.dummy)
-        val selfExt    = ContextExtension(
-          extensionJson.map { case (k, j) => k.toByte -> decodeInputConstant(j) })
+        val inputExts  = inputExtensionsJson.map(m =>
+          ContextExtension(m.map { case (k, j) => k.toByte -> decodeInputConstant(j) }))
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
           val ctx = fullContext(tree, activated, selfIndex, inputs, dataInputs, outputs,
-            headers, preHeader, lastRoot, selfExt)
+            headers, preHeader, lastRoot, inputExts)
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))

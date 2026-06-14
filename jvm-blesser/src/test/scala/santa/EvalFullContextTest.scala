@@ -54,11 +54,14 @@ class EvalFullContextTest extends munit.FunSuite {
     timestamp = 9999999999999999L, nBits = 486604799L, height = 12345,
     minerPk = Array(0x02.toByte) ++ Array.fill(32)(0xaa.toByte), votes = Array(0, 0, 0).map(_.toByte)))
   private val extensionJson: Map[Int, Json] = Map(5 -> EvalCore.valueToJson(77))
+  // Per-input extensions: input 0 (SELF) = {5:77}, input 1 = empty. The seam binds each
+  // input's extension; the SELF (selfIndex) one is also the top-level context.extension.
+  private val inputExtensions: Seq[Map[Int, Json]] = Seq(extensionJson, Map.empty[Int, Json])
 
   private def evalSurface(root: SValue): Json = {
     val (_, res) = EvalCore.evalFullContext(
       treeHex(root), selfIndex = 0, inputsHex, dataInputsHex, outputsHex,
-      headersHex = Seq.empty, preHeaderHex, extensionJson,
+      headersHex = Seq.empty, preHeaderHex, inputExtensions,
       lastBlockUtxoRootHex = None, activated = V6)
     res.fold(err => fail(s"eval errored: $err"), { case (json, _cost) => json })
   }
@@ -148,7 +151,7 @@ class EvalFullContextTest extends munit.FunSuite {
       minerPk = Array(0x02.toByte) ++ Array.fill(32)(0xaa.toByte), votes = Array(0, 0, 0).map(_.toByte)))
     val (_, res) = EvalCore.evalFullContext(
       treeHex(Height), selfIndex = 0, inputsHex, dataInputsHex, outputsHex,
-      headersHex = Seq(realHeaderHex), consistentPreHeader, extensionJson,
+      headersHex = Seq(realHeaderHex), consistentPreHeader, inputExtensions,
       lastBlockUtxoRootHex = None, activated = V6)
     assertEquals(res.map(_._1.noSpaces), Right("""{"kind":"Int","value":12345}"""))
   }
@@ -157,6 +160,25 @@ class EvalFullContextTest extends munit.FunSuite {
     val hex = Base16.encode(sigma.data.AvlTreeData.serializer.toBytes(
       EvalCore.avlTreeFromStateRoot(realHeader.stateRoot)))
     assertEquals(hex, Base16.encode(realHeader.stateRoot) + "072000")
+  }
+
+  // getVarFromInput(i, var) reads input i's extension (SContext methodId 12) — the test
+  // case #1 pattern (a NON-SELF input's var). Input 1 carries var 11 = true; the tree reads
+  // it and OptionGet -> true. This is exactly the capability the per-input axis unblocks.
+  test("getVarFromInput reads a NON-SELF input's extension (test case #1 pattern)") {
+    // getVarFromInput[Boolean](1, 11) → SOption[Boolean] (Some(true) here, since input 1
+    // carries var 11). Serialized directly (no OptionGet), so the result is the Option.
+    val gvfiTree = VersionContext.withVersions(V6, V6) {
+      Base16.encode(sigma.santa.LenientErgoTree.serialize(treeHeaderV6,
+        MethodCall(Context, SContextMethods.getVarFromInputMethod,
+          IndexedSeq(ShortConstant(1), ByteConstant(11)), Map(SType.tT -> SBoolean))))
+    }
+    val perInput = Seq(extensionJson, Map(11 -> EvalCore.valueToJson(true)))
+    val (_, res) = EvalCore.evalFullContext(
+      gvfiTree, selfIndex = 0, inputsHex, dataInputsHex, outputsHex,
+      headersHex = Seq.empty, preHeaderHex, perInput, lastBlockUtxoRootHex = None, activated = V6)
+    assertEquals(res.map(_._1.noSpaces),
+      Right("""{"kind":"Option","value":{"kind":"Boolean","value":true}}"""))
   }
 
   private def collOfByteHex(j: Json): String = {

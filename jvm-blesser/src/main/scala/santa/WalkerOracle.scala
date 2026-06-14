@@ -29,14 +29,24 @@ object WalkerOracle {
       val selfIndex = ctx.downField("self_index").as[Int].getOrElse(sys.error("missing context.self_index"))
       def hexes(field: String): Seq[String] = ctx.downField(field).as[List[String]].getOrElse(Nil)
       val preHeaderHex = ctx.downField("pre_header_hex").as[String].getOrElse(sys.error("missing pre_header_hex"))
-      val extension: Map[Int, Json] = ctx.downField("extension").as[Map[String, Json]]
-        .getOrElse(Map.empty).map { case (k, v) => k.toInt -> v }
+      val inputsHex = hexes("inputs")
+      // Per-input extensions (authoritative when present): input_extensions[i] = input i's
+      // ContextExtension (read by getVarFromInput(i, var)); the SELF input's is also the
+      // top-level context.extension. Legacy fallback: a SELF-only `extension` at selfIndex.
+      val inputExtensions: Seq[Map[Int, Json]] =
+        ctx.downField("input_extensions").as[List[Map[String, Json]]].toOption match {
+          case Some(list) => list.map(_.map { case (k, v) => k.toInt -> v })
+          case None =>
+            val selfExt = ctx.downField("extension").as[Map[String, Json]]
+              .getOrElse(Map.empty).map { case (k, v) => k.toInt -> v }
+            inputsHex.indices.map(i => if (i == selfIndex) selfExt else Map.empty[Int, Json])
+        }
       // option-a override: an explicit lastBlockUtxoRoot wins; else evalFullContext derives
       // it from headers[0].stateRoot (option b).
       val lastRootHex = ctx.downField("last_block_utxo_root_hex").as[String].toOption
       val (treeVer, res) = EvalCore.evalFullContext(
-        tree, selfIndex, hexes("inputs"), hexes("data_inputs"), hexes("outputs"),
-        hexes("headers"), preHeaderHex, extension, lastRootHex, activated)
+        tree, selfIndex, inputsHex, hexes("data_inputs"), hexes("outputs"),
+        hexes("headers"), preHeaderHex, inputExtensions, lastRootHex, activated)
       val base = Json.obj("tree_version" -> Json.fromInt(treeVer.toInt))
       res match {
         case Right((value, cost)) =>
