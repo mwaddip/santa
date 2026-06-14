@@ -2,14 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-eval.vector.schema.json",
   "title": "SANTA eval-tier vector",
-  "description": "A committed conformance vector for the eval tier (v1 closed-tree · v2 input · v3 per-input extensions · v4 SELF registers + var1 · v5 top-level ContextExtension key-domain). Normative companion to docs/contract/runner-contract.md.",
+  "description": "A committed conformance vector for the eval tier (v1 closed-tree · v2 input · v3 per-input extensions · v4 SELF registers + var1 · v5 top-level ContextExtension key-domain · v6-fullctx full-context envelope). Normative companion to docs/contract/runner-contract.md.",
   "type": "object",
   "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
   "properties": {
     "schema": {
       "description": "Tier + version discriminator.",
-      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3", "santa-eval/v4", "santa-eval/v5"]
+      "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3", "santa-eval/v4", "santa-eval/v5", "santa-eval/v6-fullctx"]
     },
     "op": {
       "description": "The operation / property name this vector covers.",
@@ -99,6 +99,22 @@
       }
     },
     {
+      "$comment": "santa-eval/v6-fullctx carries `source`; every entry has a full `context` envelope and none of input/inputs/selfRegisters/extension (the extension lives inside context).",
+      "if": { "properties": { "schema": { "const": "santa-eval/v6-fullctx" } }, "required": ["schema"] },
+      "then": {
+        "required": ["source"],
+        "properties": { "entries": { "items": {
+          "required": ["context"],
+          "allOf": [
+            { "not": { "required": ["input"] } },
+            { "not": { "required": ["inputs"] } },
+            { "not": { "required": ["selfRegisters"] } },
+            { "not": { "required": ["extension"] } }
+          ]
+        } } }
+      }
+    },
+    {
       "$comment": "santa-eval/v1 entries carry neither `input` nor `inputs`.",
       "if": { "properties": { "schema": { "const": "santa-eval/v1" } }, "required": ["schema"] },
       "then": {
@@ -159,8 +175,48 @@
           "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
           "additionalProperties": { "$ref": "#/$defs/svalue" }
         },
+        "context": { "$ref": "#/$defs/fullCtx" },
+        "provenance": {
+          "description": "santa-eval/v6-fullctx: capture origin (informational, not graded).",
+          "type": "object",
+          "additionalProperties": true
+        },
         "version": { "$ref": "#/$defs/version" },
         "expected": { "$ref": "#/$defs/expected" }
+      }
+    },
+    "fullCtx": {
+      "description": "santa-eval/v6-fullctx: the full ErgoLikeContext envelope reconstructed by EvalCore.evalFullContext. Boxes/headers are lower-case hex of their canonical serializations; pre_header_hex is the PreHeader sub-encoding.",
+      "type": "object",
+      "required": ["self_index", "inputs", "data_inputs", "outputs", "headers", "pre_header_hex", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "self_index": { "type": "integer", "minimum": 0 },
+        "inputs": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "minItems": 1 },
+        "data_inputs": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
+        "outputs": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
+        "headers": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
+        "pre_header_hex": { "$ref": "#/$defs/hex" },
+        "height": { "type": "integer", "minimum": 0 },
+        "extension": {
+          "description": "Legacy SELF-only top-level extension (fallback when input_extensions absent), key 0..255 -> SValue.",
+          "type": "object",
+          "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
+          "additionalProperties": { "$ref": "#/$defs/svalue" }
+        },
+        "input_extensions": {
+          "description": "Per-input ContextExtensions in input order (authoritative when present); index i = input i's extension.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
+            "additionalProperties": { "$ref": "#/$defs/svalue" }
+          }
+        },
+        "last_block_utxo_root_hex": {
+          "description": "Optional explicit lastBlockUtxoRoot override; absent => derived from headers[0].stateRoot.",
+          "$ref": "#/$defs/hex"
+        }
       }
     },
     "version": {
