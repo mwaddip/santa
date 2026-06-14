@@ -5,7 +5,7 @@ import scorex.util.encode.Base16
 
 import io.circe.Json
 
-import org.ergoplatform.{ErgoBox, ErgoHeader, ErgoLikeContext, ErgoLikeTransaction, Input}
+import org.ergoplatform.{DataInput, ErgoBox, ErgoBoxCandidate, ErgoHeader, ErgoLikeContext, ErgoLikeTransaction, Input}
 import org.ergoplatform.validation.ValidationRules
 
 import sigma.{Coll, Colls, Evaluation, GroupElement, Header, PreHeader, VersionContext}
@@ -759,6 +759,116 @@ object EvalCore {
           extensionJson.map { case (k, j) => k.toByte -> decodeInputConstant(j) }
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
           val ctx = contextWithTopExtension(tree, activated, extension)
+          val acc = new CostAccumulator(
+            initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
+            costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
+          val (v, _blockCost) = CErgoTreeEvaluator.eval(
+            ctx.toSigmaContext(), acc, tree.constants,
+            tree.toProposition(replaceConstants = productionReplaceConstants(tree)), DefaultEvalSettings)
+          (v, acc.totalCost.value)
+        }
+        (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
+      } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
+    } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
+
+  // ── Full real context (santa-eval/v6-fullctx — the walker JVM oracle) ───────────
+  //
+  // The SECOND ErgoLikeContext construction path beside dummyContext: reconstruct the
+  // REAL spending context from the walker envelope (prompts/walker-jvm-oracle-santa.md)
+  // and eval the tree against it, so a harvested tree reads its true INPUTS / OUTPUTS /
+  // dataInputs / HEIGHT / headers / preHeader / extension.
+  //
+  // Boxes parse-and-HOLD their input bytes (ErgoBox.sigmaSerializer.parse caches the
+  // slice in `_bytes`), so a non-canonical on-chain box's id stays Blake2b256(exact
+  // bytes) — the F5 batch-4 id basis (req 2). preHeader.version is the REAL block
+  // version decoded from pre_header_hex (NOT the dummy path's activated+1 convention).
+  //
+  // ⚠ OPEN CONTRACT ITEM (flagged to ergots 2026-06-14): the envelope carries no
+  // lastBlockUtxoRoot (the AvlTreeData behind CONTEXT.LastBlockUtxoRootHash). Passed
+  // here as an Option; None falls back to AvlTreeData.dummy, which is WRONG for any tree
+  // that reads LastBlockUtxoRootHash. Until the envelope carries it (or we derive it from
+  // a header stateRoot), such trees must not be blessed through this path.
+
+  private def parseBox(hex: String): ErgoBox =
+    ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(hex).get))
+
+  private def parseHeaderColl(hexes: Seq[String]): Coll[Header] =
+    Colls.fromArray(hexes.map { h =>
+      (new CHeader(ErgoHeader.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(h).get))): Header)
+    }.toArray)
+
+  private def preHeaderFromHex(hex: String): PreHeader = {
+    val f = PreHeaderCodec.decode(Base16.decode(hex).get)
+    CPreHeader(
+      version   = f.version,
+      parentId  = Colls.fromArray(f.parentId),
+      timestamp = f.timestamp,
+      nBits     = f.nBits,
+      height    = f.height,
+      minerPk   = GroupElementSerializer.parse(SigmaSerializer.startReader(f.minerPk)).toGroupElement,
+      votes     = Colls.fromArray(f.votes))
+  }
+
+  private def fullContext(
+      tree: ErgoTree, activated: Byte, selfIndex: Int,
+      inputs: IndexedSeq[ErgoBox], dataInputs: IndexedSeq[ErgoBox],
+      outputs: IndexedSeq[ErgoBox], headers: Coll[Header], preHeader: PreHeader,
+      lastBlockUtxoRoot: AvlTreeData, selfExtension: ContextExtension): ErgoLikeContext = {
+    // Each spending input → Input(boxId, proof); the SELF input carries the envelope's
+    // ContextExtension, the rest are empty (the envelope models the SELF extension only).
+    val txInputs = inputs.indices.map { i =>
+      val ext = if (i == selfIndex) selfExtension else ContextExtension.empty
+      Input(inputs(i).id, new ProverResult(Array.emptyByteArray, ext))
+    }.toIndexedSeq
+    val txDataInputs = dataInputs.map(b => DataInput(b.id))
+    // ErgoBox <: ErgoBoxCandidate; the tx recomputes output ids from its (proof-free) id —
+    // verified to match the parsed boxes' ids in EvalFullContextTest.
+    val outCandidates: IndexedSeq[ErgoBoxCandidate] = outputs.map(b => b: ErgoBoxCandidate)
+    new ErgoLikeContext(
+      lastBlockUtxoRoot = lastBlockUtxoRoot,
+      headers = headers,
+      preHeader = preHeader,
+      dataBoxes = dataInputs,
+      boxesToSpend = inputs,
+      spendingTransaction = new ErgoLikeTransaction(txInputs, txDataInputs, outCandidates),
+      selfIndex = selfIndex,
+      extension = selfExtension,
+      validationSettings = ValidationRules.currentSettings,
+      costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
+      initCost = 0L,
+      activatedScriptVersion = activated
+    ).withErgoTreeVersion(tree.version)
+  }
+
+  /** Eval a tree against the REAL reconstructed context from the walker envelope.
+    * Same (treeVersion, Either[(valueJson, cost), err]) shape as the other eval* entries.
+    * `lastBlockUtxoRootHex` is the optional AvlTreeData hex (see the OPEN CONTRACT ITEM). */
+  def evalFullContext(
+      treeBytesHex: String, selfIndex: Int,
+      inputsHex: Seq[String], dataInputsHex: Seq[String], outputsHex: Seq[String],
+      headersHex: Seq[String], preHeaderHex: String,
+      extensionJson: Map[Int, Json], lastBlockUtxoRootHex: Option[String],
+      activated: Byte): (Byte, Either[String, (Json, Long)]) =
+    try {
+      val bytes   = Base16.decode(treeBytesHex).get
+      val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
+      val treeVer = tree.version
+      try {
+        val inputs = inputsHex.map(parseBox).toIndexedSeq
+        require(selfIndex >= 0 && selfIndex < inputs.length,
+          s"selfIndex $selfIndex out of range for ${inputs.length} inputs")
+        val dataInputs = dataInputsHex.map(parseBox).toIndexedSeq
+        val outputs    = outputsHex.map(parseBox).toIndexedSeq
+        val headers    = parseHeaderColl(headersHex)
+        val preHeader  = preHeaderFromHex(preHeaderHex)
+        val lastRoot   = lastBlockUtxoRootHex
+          .map(h => AvlTreeData.serializer.parse(SigmaSerializer.startReader(Base16.decode(h).get)))
+          .getOrElse(AvlTreeData.dummy)
+        val selfExt    = ContextExtension(
+          extensionJson.map { case (k, j) => k.toByte -> decodeInputConstant(j) })
+        val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
+          val ctx = fullContext(tree, activated, selfIndex, inputs, dataInputs, outputs,
+            headers, preHeader, lastRoot, selfExt)
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
