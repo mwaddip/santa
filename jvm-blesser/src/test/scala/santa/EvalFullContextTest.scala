@@ -99,6 +99,29 @@ class EvalFullContextTest extends munit.FunSuite {
       "010101010101010101010101010101010101010101010101010101010101010101072000")
   }
 
+  // The oracle's envelope-JSON adapter: build a v6-fullctx envelope from the known
+  // pieces and bless it end-to-end (the shape the HTTP service receives per request).
+  test("WalkerOracle.blessEnvelope evals a v6-fullctx envelope end-to-end") {
+    val envelope = Json.obj(
+      "schema" -> Json.fromString("santa-eval/v6-fullctx"),
+      "name" -> Json.fromString("height-fullctx"),
+      "version" -> Json.obj("activated" -> Json.fromInt(V6.toInt), "ergoTree" -> Json.fromInt(V6.toInt)),
+      "tree_bytes_hex" -> Json.fromString(treeHex(Height)),
+      "context" -> Json.obj(
+        "self_index" -> Json.fromInt(0),
+        "inputs" -> Json.arr(inputsHex.map(Json.fromString): _*),
+        "data_inputs" -> Json.arr(dataInputsHex.map(Json.fromString): _*),
+        "outputs" -> Json.arr(outputsHex.map(Json.fromString): _*),
+        "headers" -> Json.arr(),
+        "pre_header_hex" -> Json.fromString(preHeaderHex),
+        "height" -> Json.fromInt(12345),
+        "extension" -> Json.obj("5" -> EvalCore.valueToJson(77))))
+    val result = WalkerOracle.blessEnvelope(envelope)
+    assertEquals(result.hcursor.downField("error").focus, Some(Json.Null))
+    assertEquals(result.hcursor.downField("value").focus.map(_.noSpaces),
+      Some("""{"kind":"Int","value":12345}"""))
+  }
+
   private def collOfByteHex(j: Json): String = {
     val items = j.hcursor.downField("items").as[List[Json]].getOrElse(Nil)
     Base16.encode(items.map(_.hcursor.downField("value").as[Int].getOrElse(0).toByte).toArray)
