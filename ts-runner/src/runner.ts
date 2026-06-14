@@ -177,6 +177,13 @@ function runEntryInner(schema: string, e: Entry): Result {
     // ≥ 0x80 builds fine here and the spend ACCEPTS — the consensus fork vs the JVM, whose signed-Byte
     // `new Array(maxKey+1)` crashes toSigmaContext (the reject arm's divergence, graded red by conform).
     ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion) })
+  } else if (schema === 'santa-eval/v6-fullctx') {
+    // Full-context eval (santa-eval/v6-fullctx envelope: entries carry a `context` object with
+    // real headers, data-inputs, outputs, etc.). The ergots walker codec that wires this in lives
+    // in a deferred future increment; routing it here now so entries grade as COVERAGE (the
+    // not-implemented growth ledger) instead of falling to the bare else with an empty context
+    // and producing false divergences.
+    return NOT_IMPL
   } else {
     ctx = makeContext(ctxBase)
   }
