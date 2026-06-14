@@ -122,6 +122,43 @@ class EvalFullContextTest extends munit.FunSuite {
       Some("""{"kind":"Int","value":12345}"""))
   }
 
+  // Hardening for the first REAL envelope: every real envelope carries a non-empty
+  // header window, and lastBlockUtxoRoot derives from headers[0].stateRoot. A valid
+  // upstream header (v2 mainnet fixture; CONTEXT.headers holds any version).
+  private val realHeaderHex =
+    "02ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f5900" +
+      "7294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f" +
+      "807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c000197" +
+      "80f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c002" +
+      "40000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c" +
+      "0000000000003105"
+
+  private lazy val realHeader =
+    org.ergoplatform.ErgoHeader.sigmaSerializer.parse(
+      sigma.serialization.SigmaSerializer.startReader(Base16.decode(realHeaderHex).get))
+
+  test("non-empty headers parse and flow into eval (chain-consistent real-header window)") {
+    // sigma-state's ErgoLikeContext requires preHeader.parentId == headers[0].id (the
+    // parent link) — a real envelope satisfies this inherently. Build a consistent
+    // preHeader for the fixture so the non-empty-header path exercises eval, not the
+    // consistency guard.
+    val consistentPreHeader = PreHeaderCodec.encodeHex(PreHeaderCodec.Fields(
+      version = 3.toByte, parentId = realHeader.id.toArray,
+      timestamp = 9999999999999999L, nBits = 486604799L, height = 12345,
+      minerPk = Array(0x02.toByte) ++ Array.fill(32)(0xaa.toByte), votes = Array(0, 0, 0).map(_.toByte)))
+    val (_, res) = EvalCore.evalFullContext(
+      treeHex(Height), selfIndex = 0, inputsHex, dataInputsHex, outputsHex,
+      headersHex = Seq(realHeaderHex), consistentPreHeader, extensionJson,
+      lastBlockUtxoRootHex = None, activated = V6)
+    assertEquals(res.map(_._1.noSpaces), Right("""{"kind":"Int","value":12345}"""))
+  }
+
+  test("lastBlockUtxoRoot derivation reads a REAL header stateRoot") {
+    val hex = Base16.encode(sigma.data.AvlTreeData.serializer.toBytes(
+      EvalCore.avlTreeFromStateRoot(realHeader.stateRoot)))
+    assertEquals(hex, Base16.encode(realHeader.stateRoot) + "072000")
+  }
+
   private def collOfByteHex(j: Json): String = {
     val items = j.hcursor.downField("items").as[List[Json]].getOrElse(Nil)
     Base16.encode(items.map(_.hcursor.downField("value").as[Int].getOrElse(0).toByte).toArray)
