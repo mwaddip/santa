@@ -102,6 +102,36 @@ context-surface vectors exposed that each adapter had improvised this context (t
 divergences were harness artifacts, not library findings); blessed values for
 `Context.*`/`preHeader.*` families assume this table. Drift gates: the pin is mirrored in EvalCore, each runner adapter, and the test anchors — a mirror that drifts goes red on the `Context.*`/`preHeader.*` families (EvalConformanceTest re-bless on the blesser side, `./conform` on the runner side).
 
+**`santa-eval/v6-fullctx` — real reconstructed context (not the pinned dummy).** Entries
+in this schema carry a full `context` envelope; the JVM control reconstructs a REAL
+`ErgoLikeContext` via `EvalCore.evalFullContext` rather than `EvalCore.dummyContext`. The
+reconstruction rules, which every conforming implementation of this schema must mirror:
+
+- **Boxes** (`inputs`, `data_inputs`, `outputs`) are parsed from their canonical
+  `ErgoBox` bytes and **held as-is** (retained-bytes identity — box id =
+  `Blake2b256(the exact input bytes)`, not a re-serialization). Non-canonical on-chain
+  boxes (Option tags >0x01, identity GroupElements, etc.) have ids derived from their
+  retained bytes; a round-trip canonicalization produces a divergent id.
+- **`preHeader.version`** is read from `pre_header_hex` using the PreHeader sub-encoding
+  (a pure unsigned-LEB128 codec, NOT the consensus header serializer — the PreHeader has
+  no standalone `sigmaSerialize`). The `activated + 1` pin of the dummy context is
+  **not** applied on this path; the real block version from the envelope is used directly.
+- **`lastBlockUtxoRoot`** is derived from `headers[0].stateRoot` as
+  `AvlTreeData{ digest = headers[0].stateRoot (33 bytes), flags = 0x07 (all ops),
+  keyLength = 32, valueLengthOpt = None }` — serialized `<stateRoot 33B> 07 20 00`.
+  If the entry carries `context.last_block_utxo_root_hex`, that field overrides the
+  derived value. (The derivation is deterministic and matches ergots'
+  `avlTreeFromDigest(headers[0].stateRoot)` — no drift by construction.)
+- **Per-input ContextExtensions** come from `context.input_extensions[i]` and are
+  accessed via `getVarFromInput(i, key)`. The top-level `context.extension` is the
+  SELF-input's extension and serves as a legacy single-input fallback; runners
+  implementing the full schema use `input_extensions` for all inputs.
+- **Consistency constraint:** `preHeader.parentId == headers[0].id`. Real harvested
+  envelopes satisfy this inherently (the spending block's preHeader references its
+  parent, which is `headers[0]`); the control surface-verifies it.
+
+The envelope contract is specified in `prompts/walker-jvm-oracle-santa.md` (2026-06-14).
+
 ## 3. Preconditions, postconditions, invariants
 
 ### Preconditions (a runner may assume)
@@ -117,6 +147,14 @@ divergences were harness artifacts, not library findings); blessed values for
   `Byte` and crashes `toSigmaContext` (`NegativeArraySizeException`) before any bytecode, so the
   spend FAILS (`errored`); implementations that treat keys as unsigned 0..255 ACCEPT — a
   consensus-fork divergence that the extension being attacker-supplied makes mainnet-reachable.
+  A `santa-eval/v6-fullctx` entry carries a `context` object —
+  `{ self_index, inputs[], data_inputs[], outputs[], headers[], pre_header_hex, height,
+  extension, input_extensions[] }` — where boxes and headers are lower-case hex of their
+  canonical serializations, and NONE of the top-level `input` / `inputs` / `selfRegisters`
+  / `extension` fields used by v1–v5 appear at the entry level (SELF is identified by
+  `self_index`; per-input extensions live in `context.input_extensions`). Unlike v1–v5,
+  which evaluate under the pinned dummy context, the control reconstructs a REAL
+  `ErgoLikeContext` from this envelope via `EvalCore.evalFullContext` (see §2).
 - **Version is an input.** The runner evaluates each entry under the entry's declared
   `(activated, ergoTree)` versions — it does not choose or assume a version.
 
