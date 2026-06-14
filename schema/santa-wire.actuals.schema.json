@@ -14,8 +14,12 @@
       "properties": {
         "bytes_hex": { "oneOf": [ { "$ref": "#/$defs/hex" }, { "type": "null" } ] },
         "error": {
-          "description": "null = round-tripped to bytes; 'errored' = parse/reserialize threw; 'not-implemented' = no serializer for this kind; 'panicked' = an uncaught internal error, caught so the run continues (always coal, message in 'note'). A serializer's own failure on a value is errored/panicked — never a separate 'excuse' tag the harness authors on its behalf.",
+          "description": "null = round-tripped to bytes; 'errored' = parse/reserialize threw (the codec's message in 'reason'); 'not-implemented' = no serializer for this kind; 'panicked' = an uncaught internal error, caught so the run continues (always coal, message in 'note'). A serializer's own failure on a value is errored/panicked — never a separate 'excuse' tag the harness authors on its behalf.",
           "enum": [null, "errored", "not-implemented", "panicked"]
+        },
+        "reason": {
+          "description": "Rejecting/erroring impl's reason string (e.g. the codec's message on 'errored'). Diagnostic only — not graded.",
+          "type": "string"
         },
         "note": {
           "description": "Panic message/class. Present iff error == 'panicked'; forbidden otherwise.",

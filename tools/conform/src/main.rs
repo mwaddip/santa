@@ -456,7 +456,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         c.roundtrip_coal += 1;
                         c.red.push(red_detail(&op, name, "roundtrip",
                             expected_brief(e, is_wire, is_tx, is_chain), got_brief(&actual, is_wire, is_tx),
-                            None, script));
+                            actual.get("reason").cloned(), script));
                     }
                 }
                 Some("transaction") => {

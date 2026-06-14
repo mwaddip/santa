@@ -412,6 +412,7 @@ fn wire_actuals_guards(v: &Validator) -> u32 {
     let checks: &[(&str, Value, bool)] = &[
         ("roundtrip-ok", json!({"e#0": {"bytes_hex": "c0843d", "error": null}}), true),
         ("errored", json!({"e#0": {"bytes_hex": null, "error": "errored"}}), true),
+        ("errored carries reason", json!({"e#0": {"bytes_hex": null, "error": "errored", "reason": "codec: bad bytes"}}), true),
         ("not-implemented", json!({"e#0": {"bytes_hex": null, "error": "not-implemented"}}), true),
         ("ok w/ null bytes rejected", json!({"e#0": {"bytes_hex": null, "error": null}}), false),
         ("errored w/ bytes rejected", json!({"e#0": {"bytes_hex": "c0", "error": "errored"}}), false),

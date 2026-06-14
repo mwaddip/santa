@@ -41,8 +41,9 @@ Mirrors the eval totality model (`runner-contract.md` §3) with `value`+`cost` r
 single `bytes_hex` — **the wire tier has no cost dimension.**
 
 - **Success:** `{ "bytes_hex": "<reserialization>", "error": null }`.
-- **Failure (recognized):** `{ "bytes_hex": null, "error": "errored" }` — the serializer's
-  parse/reserialize threw (it rejected bytes the JVM blessed — a real divergence).
+- **Failure (recognized):** `{ "bytes_hex": null, "error": "errored", "reason": "<message>" }` —
+  the serializer's parse/reserialize threw (it rejected bytes the JVM blessed — a real
+  divergence). `reason` carries the codec's own message (diagnostic, never graded; optional).
 - **Not-implemented:** `{ "bytes_hex": null, "error": "not-implemented" }` — the runner has
   no serializer reachable for this `kind`.
 - **Panicked:** `{ "bytes_hex": null, "error": "panicked", "note": "<message>" }` — any
@@ -50,7 +51,8 @@ single `bytes_hex` — **the wire tier has no cost dimension.**
   implementation's **own** failure to hold/represent a value. Graded coal **unconditionally**.
 
 `error` null ⇔ `bytes_hex` present (the asymmetry the actuals schema pins); `note` present
-iff `error == "panicked"`. A wire conformer is inherently **cost-less** — it declares
+iff `error == "panicked"`; `reason` is an optional diagnostic on any non-success outcome
+(typically `errored`), never graded. A wire conformer is inherently **cost-less** — it declares
 `tiers: ["wire"]` and `cost` is not a wire concept.
 
 ## 3. Grading — the single `roundtrip` verdict

@@ -107,7 +107,7 @@ companion (`docs/contract/runner-contract-wire.md`). It mirrors the eval
 contract's totality model with `value`+`cost` replaced by a single `bytes_hex`:
 
 - **Success:** `{ "bytes_hex": "<reserialization>", "error": null }`.
-- **Failure (recognized):** `{ "bytes_hex": null, "error": "errored" }` — parse/reserialize threw.
+- **Failure (recognized):** `{ "bytes_hex": null, "error": "errored", "reason": "<message>" }` — parse/reserialize threw; `reason` carries the codec's message (optional diagnostic, never graded).
 - **Not-implemented:** `{ "bytes_hex": null, "error": "not-implemented" }` — no serializer for this `kind`.
 - **Panicked:** `{ "bytes_hex": null, "error": "panicked", "note": "<message>" }` — any other uncaught
   throw, caught so the run continues (always coal). A serializer's **own** failure on a value it cannot
