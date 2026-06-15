@@ -5410,6 +5410,34 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/STypeVar.name_utf8_leniency.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "STypeVar.name_utf8_leniency",
+      "ops" : [
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/UnsignedBigInt.mod_toSigned.json" : {
       "accepts" : 5,
       "entries" : 5,
@@ -11972,6 +12000,7 @@
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/STypeVar.name_length_bound.json",
+        "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -12478,6 +12507,7 @@
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/SOption.nonzero_data_tag.json",
         "v6/authored/STypeVar.name_length_bound.json",
+        "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
@@ -13205,6 +13235,7 @@
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/STypeVar.name_length_bound.json",
+        "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112379-8c12d3f6ce28.json",
@@ -15080,6 +15111,7 @@
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/STypeVar.name_length_bound.json",
+        "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15259,6 +15291,7 @@
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/STypeVar.name_length_bound.json",
+        "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15386,11 +15419,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2194,
+    "accepts" : 2199,
     "distinct_methods" : 135,
     "distinct_ops" : 83,
-    "entries" : 2436,
-    "files" : 282,
+    "entries" : 2441,
+    "files" : 283,
     "rejects" : 242,
     "unwalked" : 9
   }
