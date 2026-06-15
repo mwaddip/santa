@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import {
   parseTree, evaluateWith, makeContext, EvalError,
-  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, ErgoTreeParseError, type SType,
+  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, ErgoTreeParseError, ExprParseError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
@@ -90,6 +90,8 @@ function runEntryInner(schema: string, e: Entry): Result {
   //         trailing-bytes, too-many-constants, subst-*). EXCEPT code 'empty' (no tree to
   //         parse) — only a malformed vector produces that, so it stays an unrecognized
   //         failure ⇒ panic-net (surfaced loudly, not silently called a library reject).
+  //       - ExprParseError      — a body/expression-level parse refusal (e.g. FunDef nTpeArgs
+  //         count > 127, the JVM signed-byte size read; ergots root-exported the class for this).
   //     Any OTHER parse throw is still a bridge bug and falls to runEntry's panic-net.
   let tree: ReturnType<typeof parseTree>
   try {
@@ -99,6 +101,7 @@ function runEntryInner(schema: string, e: Entry): Result {
     if (err instanceof ErgoTreeParseError && err.code !== 'empty') {
       return { value: null, cost: null, error: 'errored' }
     }
+    if (err instanceof ExprParseError) return { value: null, cost: null, error: 'errored' }
     throw err
   }
 
