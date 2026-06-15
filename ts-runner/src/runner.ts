@@ -6,7 +6,7 @@ import {
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
-import { ByteReader, ByteWriter } from '@ergots/scorex'
+import { ByteReader, ByteWriter, parseHeader, ReaderError } from '@ergots/scorex'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
 import { hexToBytes, bytesToHex } from './hex'
@@ -27,6 +27,11 @@ interface Entry {
   /** v5: the SELF box's TOP-LEVEL ContextExtension (`{<varId 0-255>: SValue}`) —
    *  EvalCore.evalWithTopExtension. Built unconditionally (empty allowed). */
   extension?: { [varId: string]: SValueJson }
+  /** v6-fullctx: a REAL reconstructed context (boxes/headers/pre-header/per-input
+   *  extensions) instead of the pinned dummy — see FullCtxEnvelope + buildFullCtxOpts.
+   *  Mutually exclusive with the v1–v5 top-level input/inputs/selfRegisters/extension
+   *  fields (SELF is identified by `context.self_index`; contract §3). */
+  context?: FullCtxEnvelope
   version: { activated: number; ergoTree: number }
 }
 interface Vector { schema: string; entries: Entry[] }
@@ -181,12 +186,20 @@ function runEntryInner(schema: string, e: Entry): Result {
     // `new Array(maxKey+1)` crashes toSigmaContext (the reject arm's divergence, graded red by conform).
     ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion) })
   } else if (schema === 'santa-eval/v6-fullctx') {
-    // Full-context eval (santa-eval/v6-fullctx envelope: entries carry a `context` object with
-    // real headers, data-inputs, outputs, etc.). The ergots walker codec that wires this in lives
-    // in a deferred future increment; routing it here now so entries grade as COVERAGE (the
-    // not-implemented growth ledger) instead of falling to the bare else with an empty context
-    // and producing false divergences.
-    return NOT_IMPL
+    if (!e.context) throw new Error(`missing context in v6-fullctx entry '${e.name}'`)
+    // Reconstruct the REAL ErgoLikeContext from the envelope (contract §2): real boxes (held
+    // as-is for retained-bytes id), headers, the pre-header decoded from pre_header_hex (the
+    // real block version, NOT activated+1), lastBlockUtxoRoot from headers[0].stateRoot, and
+    // per-input extensions. A library refusal of oracle-blessed consensus bytes throws
+    // FullCtxRefused ⇒ `errored` (the divergence it is); an envelope defect throws plain ⇒
+    // runEntry's panic-net ⇒ `panicked` (the runner's own failure). Mirrors the blitzen-eni /
+    // EvalCore.evalFullContext reconstruction and its Refused/Malformed split.
+    try {
+      ctx = makeContext(buildFullCtxOpts(e.context, tree, treeVersion))
+    } catch (err) {
+      if (err instanceof FullCtxRefused) return { value: null, cost: null, error: 'errored' }
+      throw err
+    }
   } else {
     ctx = makeContext(ctxBase)
   }
@@ -288,6 +301,174 @@ function dummySelfBox(regs: { [regId: string]: SValueJson }, treeBytes: Uint8Arr
     creationHeight: 0,
     txId: new Uint8Array(32),
     index: 0,
+  }
+}
+
+// ---- santa-eval/v6-fullctx full-context reconstruction (runner-contract §2) ----
+// A v6-fullctx entry carries a real `context` envelope; the runner rebuilds the actual
+// ErgoLikeContext ergots evaluates under (vs the pinned dummy of v1–v5). Mirrors the JVM
+// authority (EvalCore.evalFullContext) and the blitzen-eni consumer byte-for-byte.
+
+/** The v6-fullctx `context` envelope (contract §3): boxes/headers are lower-case hex of
+ *  their canonical serializations; per-input extensions are the {varId: SValue} JSON form
+ *  (as v3/v5). SELF is `inputs[self_index]`. */
+interface FullCtxEnvelope {
+  self_index: number
+  inputs: string[]
+  data_inputs: string[]
+  outputs: string[]
+  headers: string[]
+  pre_header_hex: string
+  height: number
+  /** SELF's legacy single-input extension — redundant with input_extensions[self_index],
+   *  which is authoritative (the control reads the SELF extension from there). Unused here. */
+  extension?: { [varId: string]: SValueJson }
+  input_extensions?: { [varId: string]: SValueJson }[]
+  /** Optional explicit AvlTreeData hex; overrides the headers[0].stateRoot derivation. */
+  last_block_utxo_root_hex?: string
+}
+
+/** A v6-fullctx reconstruction refusal: ergots cannot parse oracle-blessed consensus
+ *  material (a box/header/pre-header the JVM accepted) ⇒ surfaced as `errored`, the real
+ *  divergence it is (blitzen-eni's FullCtxError::Refused). Envelope defects (missing field,
+ *  bad hex, self_index out of range) instead throw a plain Error ⇒ runEntry's panic-net ⇒
+ *  `panicked` (the runner's own failure; FullCtxError::Malformed). */
+class FullCtxRefused extends Error {}
+
+/** Reads one unsigned-LEB128 (VLQ) value as a BigInt; returns [value, nextOffset]. Plain
+ *  unsigned LEB128 — NOT sigma-state's ZigZag putLong — mirroring jvm-blesser
+ *  PreHeaderCodec.readVlqU (the pre_header_hex sub-encoding; timestamps exceed 2^53). */
+function readVlqU(bytes: Uint8Array, offset: number): [bigint, number] {
+  let result = 0n
+  let shift = 0n
+  let pos = offset
+  for (;;) {
+    if (pos >= bytes.length) throw new Error(`VLQ truncated at offset ${pos}`)
+    if (shift >= 64n) throw new Error('VLQ overflows 64 bits')
+    const b = bytes[pos]
+    pos += 1
+    result |= BigInt(b & 0x7f) << shift
+    if ((b & 0x80) === 0) break
+    shift += 7n
+  }
+  return [result, pos]
+}
+
+/** Decode the pre_header_hex sub-encoding → an ergots PreHeader. Field order + widths
+ *  (jvm-blesser PreHeaderCodec): version[1] ‖ parentId[32] ‖ VLQ timestamp(u64) ‖
+ *  VLQ nBits(u32) ‖ VLQ height(u32) ‖ minerPk[33] (raw SEC1) ‖ votes[3]. The REAL block
+ *  version is used directly — the v1–v5 `activated + 1` dummy pin is NOT applied here
+ *  (contract §2). Throws on truncation (the caller maps it to FullCtxRefused). */
+function decodePreHeader(bytes: Uint8Array): PreHeader {
+  let pos = 0
+  const version = bytes[pos]; pos += 1
+  const parentId = bytes.slice(pos, pos + 32); pos += 32
+  if (parentId.length !== 32) throw new Error('preHeader parentId truncated')
+  const [timestamp, p1] = readVlqU(bytes, pos); pos = p1
+  const [nBits, p2] = readVlqU(bytes, pos); pos = p2
+  const [height, p3] = readVlqU(bytes, pos); pos = p3
+  const minerPk = bytes.slice(pos, pos + 33); pos += 33
+  if (minerPk.length !== 33) throw new Error('preHeader minerPk truncated')
+  const votes = bytes.slice(pos, pos + 3); pos += 3
+  if (votes.length !== 3) throw new Error('preHeader votes truncated')
+  return {
+    version,
+    parentId,
+    timestamp,                 // bigint (u64 carrier; ergots holds it as-is)
+    nBits: Number(nBits),      // u32 → number
+    height: Number(height),    // u32 → number
+    minerPk,                   // raw 33-byte SEC1 (ergots holds bytes, parses lazily on read)
+    votes,
+  }
+}
+
+/** Build ergots EvalOpts from a v6-fullctx envelope (the reconstruction rules of contract
+ *  §2). Library refusals of consensus bytes throw FullCtxRefused (→ errored); envelope
+ *  defects throw plain Error (→ panicked). */
+function buildFullCtxOpts(
+  c: FullCtxEnvelope, tree: ReturnType<typeof parseTree>, treeVersion: number,
+): Parameters<typeof makeContext>[0] {
+  // Parse a hex-array box field (inputs / data_inputs / outputs). Bad hex / wrong shape is
+  // an envelope defect (Malformed ⇒ panicked); a codec rejection of valid-hex bytes the JVM
+  // accepted is a real divergence (FullCtxRefused ⇒ errored).
+  const parseBoxList = (key: string, arr: unknown): ErgoBox[] => {
+    if (!Array.isArray(arr)) throw new Error(`context.${key} missing or not an array`)
+    return arr.map((h, i) => {
+      if (typeof h !== 'string') throw new Error(`context.${key}[${i}] not a string`)
+      let bytes: Uint8Array
+      try { bytes = hexToBytes(h) } catch { throw new Error(`context.${key}[${i}] bad hex`) }
+      try {
+        const sv = parseSValue({ tag: 'SBox' }, treeVersion, new ByteReader(bytes))
+        return (sv as { kind: 'Box'; value: ErgoBox }).value
+      } catch (err) {
+        if (err instanceof SValueParseError) throw new FullCtxRefused(`context.${key}[${i}]: ${err.message}`)
+        throw err
+      }
+    })
+  }
+
+  const inputs = parseBoxList('inputs', c.inputs)
+  const dataInputs = parseBoxList('data_inputs', c.data_inputs)
+  const outputs = parseBoxList('outputs', c.outputs)
+
+  if (typeof c.self_index !== 'number' || c.self_index < 0 || c.self_index >= inputs.length)
+    throw new Error(`context.self_index ${c.self_index} out of range for ${inputs.length} inputs`)
+  // SELF MUST be the SAME object reference as inputs[self_index] — ergots derives
+  // selfBoxIndex via reference-equality indexOf (see the v2 arm).
+  const selfBox = inputs[c.self_index]
+
+  if (!Array.isArray(c.headers)) throw new Error('context.headers missing or not an array')
+  const headers = c.headers.map((h, i) => {
+    if (typeof h !== 'string') throw new Error(`context.headers[${i}] not a string`)
+    let bytes: Uint8Array
+    try { bytes = hexToBytes(h) } catch { throw new Error(`context.headers[${i}] bad hex`) }
+    try {
+      return parseHeader(new ByteReader(bytes))
+    } catch (err) {
+      if (err instanceof ReaderError) throw new FullCtxRefused(`context.headers[${i}]: ${err.message}`)
+      throw err
+    }
+  })
+
+  if (typeof c.pre_header_hex !== 'string') throw new Error('context.pre_header_hex missing')
+  let phBytes: Uint8Array
+  try { phBytes = hexToBytes(c.pre_header_hex) } catch { throw new Error('context.pre_header_hex bad hex') }
+  let preHeader: PreHeader
+  try {
+    preHeader = decodePreHeader(phBytes)
+  } catch (err) {
+    throw new FullCtxRefused(`pre_header decode: ${err instanceof Error ? err.message : String(err)}`)
+  }
+
+  // lastBlockUtxoRoot: an explicit hex digest overrides; else derive from headers[0].stateRoot
+  // (33B) with the dummy's fixed params (flags 0x07 = all ops, keyLength 32, no value-length).
+  let digest: Uint8Array
+  if (typeof c.last_block_utxo_root_hex === 'string') {
+    try { digest = hexToBytes(c.last_block_utxo_root_hex) } catch { throw new Error('context.last_block_utxo_root_hex bad hex') }
+  } else if (headers.length > 0) {
+    digest = headers[0].stateRoot
+  } else {
+    throw new Error('context: no headers and no last_block_utxo_root_hex')
+  }
+
+  // Per-input ContextExtensions (read by getVarFromInput by index); the SELF input's is also
+  // the top-level context.extension (bare getVar), per EvalCore.fullContext.
+  const inputExtensions = (c.input_extensions ?? []).map((ext) => decodeExtension(ext, treeVersion))
+  const extension = inputExtensions[c.self_index] ?? { values: {} }
+
+  return {
+    treeVersion,
+    constants: tree.constants,
+    height: preHeader.height,   // GlobalVars.Height; the JVM's HEIGHT is preHeader.height
+    selfBox,
+    inputs,
+    outputs,
+    dataInputs,
+    preHeader,
+    headers,
+    extension,
+    inputExtensions,
+    lastBlockUtxoRootHash: { digest, treeFlags: 0b111, keyLength: 32, valueLengthOpt: null },
   }
 }
 

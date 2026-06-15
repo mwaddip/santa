@@ -176,12 +176,10 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     expect(actuals['getvar-0x80-absent-none#2']).toEqual({ value: { kind: 'Option', value: null }, cost: 10, error: null })
     // boundary arm — key 0x7f present, context builds, {true} evals → SigmaProp@16.
     expect(actuals['key-0x7f-present-accept#1']).toEqual({ value: { kind: 'SigmaProp', raw_hex: 'd3' }, cost: 16, error: null })
-    // reject arm — the REAL consensus-fork divergence (graded red by ./conform, NOT blessed-equal here):
-    // ergots treats key 0x80 as unsigned 128 and ACCEPTS where the JVM crashes toSigmaContext (expected
-    // 'errored'). Pin ergots' actual ACCEPT so the divergence is faithful (key 128 now truly present).
-    const reject = actuals['key-0x80-present-errored#0'] as { value: { kind?: string }; error: string | null }
-    expect(reject.error).toBeNull()
-    expect(reject.value.kind).toBe('SigmaProp')
+    // reject arm — CONVERGED: ergots (master @ 5a3ea95) now REJECTS key 0x80 → errored, matching the
+    // JVM (which crashes toSigmaContext on the signed-negative key). The former consensus-fork
+    // divergence is CLOSED — blessed-equal (errored), so ./conform grades dasher GREEN on this arm.
+    expect(actuals['key-0x80-present-errored#0']).toEqual({ value: null, cost: null, error: 'errored' })
   })
 
   it('an unrecognized failure becomes `panicked` (note carries the message) and the run continues', () => {
