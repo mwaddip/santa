@@ -1,0 +1,50 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Header.version_unparsedbytes_gate",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "santa:authored-header-version-signedness",
+  "entries" : [
+    {
+      "name" : "version-0x7f-reads-unparsedbytes#0",
+      "script" : "{ (h: Header) => h.minerPk }  // version byte 0x7f: signed getByte() = 127 > 1 -> reads unparsedBytes, solution at its real offset. CONTROL: ergots/sigma-rust read 0x7f unsigned = 127 > 1 too -> they AGREE here.",
+      "tree_bytes_hex" : "1b0800db680be4e30168",
+      "input" : {
+        "kind" : "Header",
+        "bytes_hex" : "7fac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "03bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c"
+        },
+        "cost" : 39,
+        "error" : null
+      }
+    },
+    {
+      "name" : "version-0x80-skips-unparsedbytes#1",
+      "script" : "{ (h: Header) => h.minerPk }  // version byte 0x80: signed getByte() = -128 <= 1 -> SKIPS unparsedBytes (HeaderWithoutPow gates `version > 1`), AutolykosSolution shifts earlier -> a DIFFERENT minerPk (here Ecp INF). ergots/sigma-rust read 0x80 unsigned = 128 > 1 -> consume unparsedBytes -> the real minerPk -> DIVERGE (ask 21).",
+      "tree_bytes_hex" : "1b0800db680be4e30168",
+      "input" : {
+        "kind" : "Header",
+        "bytes_hex" : "80ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "cost" : 39,
+        "error" : null
+      }
+    }
+  ]
+}

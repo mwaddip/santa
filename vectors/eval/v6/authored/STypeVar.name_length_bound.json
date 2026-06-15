@@ -1,0 +1,50 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "STypeVar.name_length_bound",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "santa:authored-stypevar-name-length",
+  "entries" : [
+    {
+      "name" : "name-length-0-accept#0",
+      "script" : "{ val f[T] = {(x: T) => x}; 5 }  // STypeVar name length 0 (T = empty): JVM TypeSerializer reads nameLength via UNSIGNED getUByte (unbounded) -> STypeVar(\"\") accepts -> Int 5. ergots/sigma-rust enforced BoundedVec[1,254] and OVER-REJECTED length 0 (ask 23).",
+      "tree_bytes_hex" : "1b1301040ad801d701016700d90102670072027300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 5
+        },
+        "cost" : 13,
+        "error" : null
+      }
+    },
+    {
+      "name" : "name-length-255-accept#1",
+      "script" : "{ val f[T] = {(x: T) => x}; 5 }  // STypeVar name length 255 (T = 255 chars): getUByte accepts the u8 max -> Int 5. ergots/sigma-rust OVER-REJECTED 255 (BoundedVec upper bound 254). Length 256 is serialize-side unrepresentable (no deserializable input) -> not vectored.",
+      "tree_bytes_hex" : "1b910401040ad801d7010167ff616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161d9010267ff61616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616172027300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 5
+        },
+        "cost" : 13,
+        "error" : null
+      }
+    }
+  ]
+}

@@ -4471,6 +4471,34 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/FunDef.nTpeArgs_count_bound.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "FunDef.nTpeArgs_count_bound",
+      "ops" : [
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 1,
+      "version" : "v6"
+    },
     "v6/authored/Global.deserializeTo_Box_token_window.json" : {
       "accepts" : 3,
       "entries" : 5,
@@ -5273,6 +5301,33 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Header.version_unparsedbytes_gate.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "104:11 Header.minerPk"
+      ],
+      "op" : "Header.version_unparsedbytes_gate",
+      "ops" : [
+        "GetVar",
+        "MethodCall",
+        "OptionGet"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Rule1012_header_size_bit.json" : {
       "accepts" : 0,
       "entries" : 1,
@@ -5317,6 +5372,34 @@
       "tree_shapes" : [
         {
           "accepts" : 1,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/STypeVar.name_length_bound.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "STypeVar.name_length_bound",
+      "ops" : [
+        "BlockValue",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
           "constant_segregation" : true,
           "has_deserialize" : false,
           "has_size" : true,
@@ -10505,7 +10588,8 @@
     "104:11" : {
       "families" : [
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
-        "v6/authored/Header.property_accessors.json"
+        "v6/authored/Header.property_accessors.json",
+        "v6/authored/Header.version_unparsedbytes_gate.json"
       ],
       "name" : "Header.minerPk"
     },
@@ -11882,10 +11966,12 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/STypeVar.name_length_bound.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -12378,6 +12464,7 @@
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
+        "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
@@ -12390,6 +12477,7 @@
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/SOption.nonzero_data_tag.json",
+        "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
@@ -13097,6 +13185,7 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
@@ -13115,6 +13204,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/STypeVar.name_length_bound.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112379-8c12d3f6ce28.json",
@@ -13424,6 +13514,7 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Header.property_accessors.json",
+        "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -13949,6 +14040,7 @@
         "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/Header.property_accessors.json",
+        "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -14235,6 +14327,7 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Header.property_accessors.json",
+        "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -14981,10 +15074,12 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/STypeVar.name_length_bound.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15144,6 +15239,7 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
@@ -15162,6 +15258,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/STypeVar.name_length_bound.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15289,12 +15386,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2189,
+    "accepts" : 2194,
     "distinct_methods" : 135,
     "distinct_ops" : 83,
-    "entries" : 2430,
-    "files" : 279,
-    "rejects" : 241,
-    "unwalked" : 8
+    "entries" : 2436,
+    "files" : 282,
+    "rejects" : 242,
+    "unwalked" : 9
   }
 }
