@@ -785,6 +785,57 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Coll.eq_compared_count_coa.json" : {
+      "accepts" : 5,
+      "entries" : 5,
+      "methods" : [
+      ],
+      "op" : "Coll.eq_compared_count_coa",
+      "ops" : [
+        "ConstantPlaceholder",
+        "EQ"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.eq_compared_count_generic.json" : {
+      "accepts" : 4,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "Coll.eq_compared_count_generic",
+      "ops" : [
+        "ConcreteCollection",
+        "ConstantPlaceholder",
+        "EQ"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Coll.hof_per_element_env.json" : {
       "accepts" : 10,
       "entries" : 10,
@@ -12162,6 +12213,7 @@
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/Coll.eq_compared_count_generic.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/atLeast.children_cap.json",
@@ -12283,6 +12335,8 @@
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
+        "v5/authored/Coll.eq_compared_count_coa.json",
+        "v5/authored/Coll.eq_compared_count_generic.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
@@ -12501,6 +12555,8 @@
     "EQ" : {
       "families" : [
         "v5/authored/Box.eq_id_basis.json",
+        "v5/authored/Coll.eq_compared_count_coa.json",
+        "v5/authored/Coll.eq_compared_count_generic.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/EQ_of_SigmaProp_conjecture_mismatch.json",
@@ -15233,11 +15289,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2180,
+    "accepts" : 2189,
     "distinct_methods" : 135,
     "distinct_ops" : 83,
-    "entries" : 2421,
-    "files" : 277,
+    "entries" : 2430,
+    "files" : 279,
     "rejects" : 241,
     "unwalked" : 8
   }

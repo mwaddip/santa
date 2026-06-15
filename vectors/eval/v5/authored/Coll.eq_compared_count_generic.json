@@ -1,0 +1,92 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.eq_compared_count_generic",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "source" : "santa:authored-coll-eq-cost",
+  "entries" : [
+    {
+      "name" : "equal-len8#0",
+      "script" : "{ Coll[Coll[Byte]](8) == equal } outer compares all 8, true",
+      "tree_bytes_hex" : "1a58100e01000e01010e01020e01030e01040e01050e01060e01070e01000e01010e01020e01030e01040e01050e01060e01079383080e7300730173027303730473057306730783080e73087309730a730b730c730d730e730f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 227,
+        "error" : null
+      }
+    },
+    {
+      "name" : "mismatch-at-0#1",
+      "script" : "{ Coll[Coll[Byte]] eq; differ at outer index 0 } outer compares 1, false",
+      "tree_bytes_hex" : "1a58100e01000e01010e01020e01030e01040e01050e01060e01070e01ff0e01010e01020e01030e01040e01050e01060e01079383080e7300730173027303730473057306730783080e73087309730a730b730c730d730e730f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "mismatch-at-3#2",
+      "script" : "{ Coll[Coll[Byte]] eq; differ at outer index 3 } outer compares 4, false",
+      "tree_bytes_hex" : "1a58100e01000e01010e01020e01030e01040e01050e01060e01070e01000e01010e01020e01fc0e01040e01050e01060e01079383080e7300730173027303730473057306730783080e73087309730a730b730c730d730e730f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 147,
+        "error" : null
+      }
+    },
+    {
+      "name" : "mismatch-at-7#3",
+      "script" : "{ Coll[Coll[Byte]] eq; differ at outer index 7 } outer compares 8, false",
+      "tree_bytes_hex" : "1a58100e01000e01010e01020e01030e01040e01050e01060e01070e01000e01010e01020e01030e01040e01050e01060e01f89383080e7300730173027303730473057306730783080e73087309730a730b730c730d730e730f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 227,
+        "error" : null
+      }
+    }
+  ]
+}
