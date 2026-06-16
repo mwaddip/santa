@@ -57,4 +57,16 @@ class WireCanonicalizeTest extends munit.FunSuite {
       println(s"[wire] Constant $hex jvm=$once agree=${once == hex}")
     }
   }
+
+  test("ErgoTree: structural re-serialize re-encodes a lossy-decoded STypeVar name (non-identity)") {
+    // eda080 = a UTF-16 surrogate (ill-formed UTF-8) STypeVar name. The JVM lossy-decodes it to
+    // U+FFFD and STRUCTURALLY re-encodes to efbfbd (1) — NOT the cached ErgoTree.bytes echo of the
+    // raw input. (Rust from_utf8_lossy would give 3; that fork is the deliverable.)
+    val input    = "1b1901040ad801d701016703eda080d901026703eda08072027300"
+    val expected = "1b1901040ad801d701016703efbfbdd901026703efbfbd72027300"
+    val once = WireCanonicalize.canonicalize("ErgoTree", input, 3, 3)
+    assertEquals(once, expected, "ErgoTree structural canonical must re-encode the name to efbfbd")
+    assertNotEquals(once, input, "must be non-identity (raw eda080 is not the canonical)")
+    assertEquals(WireCanonicalize.canonicalize("ErgoTree", once, 3, 3), once, "canonical is a fixpoint")
+  }
 }
