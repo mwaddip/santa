@@ -201,6 +201,11 @@ the wire reject/mutation arm (malformed bytes a real parser must reject — an e
 
 ## Out of scope / Deferred
 
+- **Non-identity round-trip + `ErgoTree` kind — SHIPPED** (`docs/specs/wire-roundtrip-nonidentity.md`):
+  an optional `expected_bytes_hex` (the JVM-canonical output when it differs from the input) + a
+  structural `ErgoTree` kind. First use: the STypeVar UTF-8 byte-exactness fork. The round-trip-to-self
+  spine is unchanged — identity is the default when `expected_bytes_hex` is absent.
+
 - **`structural-assert` variant** (`santa-wire/v2`): parse → emit a canonical, language-agnostic
   structural form (box/tree/tx/header as JSON) → compare. Catches misparse-that-round-trips; needs a
   new cross-language structural contract. Additive — `santa-wire/v1` round-trip stays.

@@ -19,9 +19,11 @@ Same `run(vector) → actuals` shape as eval (`runner-contract.md` §1), with th
 
 - A **wire vector** is a committed JSON file under [`/vectors/wire`](../../vectors/wire/):
   an envelope (`schema: "santa-wire/v1"`, `op`, `blessed_by`, `entries`) carrying a list of
-  `entries`. Each entry is `{ name, kind, source, bytes_hex, version }` — **there is no
-  `expected` field.** The blessed expected *is the entry's own `bytes_hex`* (round-trip to
-  self): the JVM-canonical bytes for that object. `source` is **per entry** (not the
+  `entries`. Each entry is `{ name, kind, source, bytes_hex, version }` with an **optional
+  `expected_bytes_hex`**. When absent, the blessed expected *is the entry's own `bytes_hex`*
+  (round-trip to self): the JVM-canonical bytes for that object. When present (a **non-identity
+  round-trip**), the runner is still fed `bytes_hex` as input, but the grade compares its output
+  against `expected_bytes_hex` — the JVM-canonical bytes, which differ from the (non-canonical) input. `source` is **per entry** (not the
   envelope), so one slice — e.g. `Box` — can hold vectors vendored from several frameworks
   (ergots + Fleet), each tagged with its origin; the provenance dir follows (framework source
   ⇒ `vendored`, `testnet:`/`santa:` ⇒ `authored`).
@@ -91,8 +93,11 @@ Unchanged from `runner-contract.md` §3:
 ## 5. Kind dispatch & the honest limitation
 
 - **`kind`** selects the serializer the runner dispatches on — the initial set is
-  `{ Constant, Box, Transaction, Header, SigmaBoolean }`, extensible. A `kind` the runner
-  does not serialize is `not-implemented` (§2), never a silent skip.
+  `{ Constant, Box, Transaction, Header, SigmaBoolean, ErgoTree }`, extensible. A `kind` the runner
+  does not serialize is `not-implemented` (§2), never a silent skip. An **`ErgoTree`-kind round-trip
+  MUST re-serialize the parsed tree from structure**, not emit a cached/preserved copy of the input
+  bytes (the JVM's `ErgoTree.bytes` echo, sigma-rust's template-bytes cache) — else it does not
+  exercise the type/name re-encode the kind exists to test (e.g. the STypeVar UTF-8 surrogate fork).
 - **Echo-cheat blind spot (named, not hidden).** Round-trip-to-self cannot observe the
   intermediate structure, so a runner that returns its input unparsed passes every vector.
   This is accepted: a conformer's author *wants* to surface their own serializer's bugs, and
