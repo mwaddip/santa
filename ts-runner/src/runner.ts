@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import {
-  parseTree, evaluateWith, makeContext, EvalError,
-  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, ErgoTreeParseError, ExprParseError, type SType,
+  parseTree, serializeTree, evaluateWith, makeContext, EvalError,
+  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, ErgoTreeParseError, ErgoTreeSerializeError, ExprParseError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
@@ -561,6 +561,24 @@ function runWireEntryInner(e: WireEntry): WireResult {
         return { bytes_hex: bytesToHex(w.toBytes()), error: null }
       } catch (err) {
         if (err instanceof SValueParseError || err instanceof SValueSerializeError) {
+          return { bytes_hex: null, error: 'errored' }
+        }
+        throw err
+      }
+    }
+    case 'ErgoTree': {
+      // Structural ErgoTree round-trip: parse to a tree, re-serialize FROM structure. ergots'
+      // serializeTree re-encodes (header → size → constants → body via serializeExpr), NOT a
+      // cached-bytes echo — the structural round-trip the kind requires (runner-contract-wire.md §5).
+      // parseTree is lenient on the root (our witnesses eval to Int 5, not a SigmaProp). A typed
+      // ErgoTree codec rejection is `errored`; an untyped throw (e.g. ergots' strict-UTF-8 decode of
+      // an ill-formed STypeVar name — the divergence this vector pins) falls to the panic-net.
+      const bytes = hexToBytes(e.bytes_hex)
+      try {
+        const tree = parseTree(bytes)
+        return { bytes_hex: bytesToHex(serializeTree(tree)), error: null }
+      } catch (err) {
+        if (err instanceof ErgoTreeParseError || err instanceof ErgoTreeSerializeError) {
           return { bytes_hex: null, error: 'errored' }
         }
         throw err

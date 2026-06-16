@@ -67,9 +67,14 @@ An un-fixed Rust impl emits `…6709 efbfbd efbfbd efbfbd …` for `eda080` (≠
 
 ## Open / routed
 
-- **ergots (dasher)**: no structural `ErgoTree` wire arm yet → honest `not-implemented`. Routed
-  (`prompts/`) to add a structural arm (re-encode, not echo) and adopt the JVM-exact U+FFFD
-  substitution. Until then the divergence is latent (not-impl), not graded red.
+- **ergots (dasher)** — **arm LANDED** (SANTA `ts-runner/src/runner.ts`, structural
+  `parseTree`→`serializeTree` — ergots' `serializeTree` re-encodes from structure, not an echo),
+  grades **5/5 `panicked`**. ergots strict-UTF-8-rejects every ill-formed type-var name and throws an
+  *untyped* error, so the harness classifies it `panicked` (the [[new-schema-adapter-arm-or-false-divergence]]
+  classification gap — the same shape as the eval STypeVar accept arm, where dasher is also panicked).
+  It flips to `errored` if ergots types the reject, or green once ergots adopts the JVM's lossy U+FFFD
+  collapse + structural re-encode. The runner arm is SANTA's (done); the node fix is the ergots
+  session's (routed `prompts/ergots-wire-ergotree-roundtrip.md`).
 - **arkadianet (vixen)** — **arm LANDED** (`d5e41e4`), grades **5/5 `errored`** (a real, faithful
   divergence, not a coverage gap). The fork is a step *earlier* than the JVM-1-vs-Rust-3 count:
   arkadianet's `ergo-ser` decodes STypeVar names with **strict `String::from_utf8`** (`sigma_type.rs`)

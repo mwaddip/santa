@@ -47,4 +47,19 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
       expect(actuals[e.name]).toEqual({ bytes_hex: null, error: 'not-implemented' })
     }
   })
+
+  it('ErgoTree: the structural round-trip engages — a faithful divergence on the ill-formed STypeVar names', () => {
+    const vec = loadVector('v6/authored/STypeVar.name_utf8_roundtrip.json')
+    const actuals = runWireVector(vec)
+    expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
+    // The arm engages (never not-implemented). ergots strict-UTF-8-rejects every ill-formed type-var
+    // name and throws an UNTYPED error, so the harness classifies it `panicked` (the classification
+    // gap — same shape as the eval STypeVar arm). It flips to `errored` if ergots types the reject, or
+    // green once ergots adopts the JVM's lossy U+FFFD collapse. The node fix is the ergots session's;
+    // the runner arm is SANTA's. Update this assertion when ergots converges.
+    for (const e of vec.entries) {
+      expect(actuals[e.name].bytes_hex).toBeNull()
+      expect(actuals[e.name].error).toBe('panicked')
+    }
+  })
 })
