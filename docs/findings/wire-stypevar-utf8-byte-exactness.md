@@ -67,9 +67,21 @@ An un-fixed Rust impl emits `…6709 efbfbd efbfbd efbfbd …` for `eda080` (≠
 
 ## Open / routed
 
-- **ergots (dasher)** and **arkadianet (vixen)**: no structural `ErgoTree` wire arm yet → honest
-  `not-implemented`. Routed (`prompts/`) to add a structural arm (re-encode, not echo) and adopt the
-  JVM-exact U+FFFD substitution. Until then the divergence is latent (not-impl), not graded red.
+- **ergots (dasher)**: no structural `ErgoTree` wire arm yet → honest `not-implemented`. Routed
+  (`prompts/`) to add a structural arm (re-encode, not echo) and adopt the JVM-exact U+FFFD
+  substitution. Until then the divergence is latent (not-impl), not graded red.
+- **arkadianet (vixen)** — **arm LANDED** (`d5e41e4`), grades **5/5 `errored`** (a real, faithful
+  divergence, not a coverage gap). The fork is a step *earlier* than the JVM-1-vs-Rust-3 count:
+  arkadianet's `ergo-ser` decodes STypeVar names with **strict `String::from_utf8`** (`sigma_type.rs`)
+  — it does not lossy-decode at all, so it **rejects** every ill-formed name (`ff`/`e2 82`/`c0 80`/
+  `ed a0 80`/`61 ff 62`) where the JVM lossy-accepts + canonicalizes. The node fix (lossy-decode with
+  the JVM collapse count) is arkadianet's; vixen flips green with zero runner change when it ships. Per
+  [[conformance-divergences-are-the-deliverable]] the runner working is ours (re-pinned `d5e41e4`); the
+  red is theirs — surfaced, not tracked. *Adjacent (flagged by the vixen session, not asserted):*
+  arkadianet's `unparsed_soft_fork_tree` (`ergo_tree.rs:197`) re-serializes a `Const(true)` placeholder
+  + empty constants when wrapping a size-flagged tree whose body fails to parse, where Scala "preserves
+  the full declared-size bytes" — consensus-reachability untraced (the boxId still hashes the original
+  bytes; the open question is eval/spend of a wrapped box). A possible separate finding, out of scope here.
 - **upstream `sigma-rust#develop`** (blitzen-develop): lacks `sigma_parse_bytes_lenient` (a fork-only
   conformance addition, `16878aed`) → cannot host the arm → not-impl, by design.
 
