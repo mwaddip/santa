@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-wire.vector.schema.json",
   "title": "SANTA wire-tier vector",
-  "description": "A committed conformance vector for the wire tier (santa-wire/v1, byte round-trip). The blessed expected is the entry's own bytes_hex (round-trip to self). Normative companion to docs/specs/wire-tier.md.",
+  "description": "A committed conformance vector for the wire tier (santa-wire/v1, byte round-trip). The blessed expected is the entry's own bytes_hex (round-trip to self) UNLESS the entry carries expected_bytes_hex (a non-identity round-trip: JVM-canonical output differs from input). Normative companion to docs/specs/wire-tier.md + docs/specs/wire-roundtrip-nonidentity.md.",
   "type": "object",
   "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
@@ -21,7 +21,7 @@
         "name": { "type": "string", "minLength": 1 },
         "kind": {
           "description": "Serializer selector the runner dispatches on.",
-          "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean"]
+          "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree"]
         },
         "source": {
           "description": "Candidate origin for THIS entry (e.g. fleet:serializer/_test-vectors, ergots:fixture-gen/wire, testnet:capture@<range>). Per-entry so one slice (e.g. Box) can hold vectors vendored from several frameworks. Provenance dir follows: framework source => vendored; testnet:/santa: => authored.",
@@ -29,6 +29,10 @@
         },
         "description": { "type": "string" },
         "bytes_hex": { "$ref": "#/$defs/hex" },
+        "expected_bytes_hex": {
+          "description": "OPTIONAL. The blessed JVM-canonical output when it differs from the input bytes_hex (a non-identity round-trip, e.g. a structural ErgoTree re-serialize that re-encodes a lossy-decoded STypeVar name). Absent => round-trip-to-self (the input IS the expected). See docs/specs/wire-roundtrip-nonidentity.md.",
+          "$ref": "#/$defs/hex"
+        },
         "version": { "$ref": "#/$defs/version" }
       }
     },
