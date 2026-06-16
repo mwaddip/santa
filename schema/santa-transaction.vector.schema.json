@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-transaction.vector.schema.json",
   "title": "SANTA transaction-tier vector",
-  "description": "A committed conformance vector for the transaction tier (santa-transaction/v1): a captured/authored tx + its referenced boxes + minimal context, with the JVM-blessed {valid, cost, reason}. Normative companion to docs/contract/runner-contract-transaction.md.",
+  "description": "A committed conformance vector for the transaction tier (santa-transaction/v1): a captured/authored tx + its referenced boxes + the provided block context, all as sigma-serialized BYTES (the consensus-unambiguous form — it preserves context-extension wire order, which a JSON object key-reorders), with the JVM-blessed {valid, cost, reason}. Normative companion to docs/contract/runner-contract-transaction.md.",
   "type": "object",
   "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
@@ -15,7 +15,8 @@
   "$defs": {
     "entry": {
       "type": "object",
-      "required": ["name", "source", "tx", "inputBoxes", "dataInputBoxes", "context", "version", "expected"],
+      "required": ["name", "source", "tx_bytes_hex", "input_boxes_hex", "data_input_boxes_hex",
+                   "headers_hex", "preHeader", "parameters", "context", "version", "expected"],
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string", "minLength": 1 },
@@ -24,9 +25,37 @@
           "type": "string", "minLength": 1
         },
         "description": { "type": "string" },
-        "tx": { "type": "object", "description": "The signed transaction, node-API JSON (id, inputs[].spendingProof, dataInputs, outputs)." },
-        "inputBoxes": { "type": "array", "items": { "type": "object" }, "minItems": 1, "description": "Full ErgoBox JSON per input, ordered to match tx.inputs." },
-        "dataInputBoxes": { "type": "array", "items": { "type": "object" }, "description": "Full ErgoBox JSON per data-input (may be empty)." },
+        "tx_bytes_hex": { "$ref": "#/$defs/hex", "description": "The signed transaction, canonical sigma bytes (parseTransaction input)." },
+        "input_boxes_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "minItems": 1, "description": "Spent input boxes as ErgoBox bytes, in tx-input order." },
+        "data_input_boxes_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "description": "Data-input boxes as ErgoBox bytes (may be empty)." },
+        "headers_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "description": "The last (up to 10) headers, NEWEST-first, as scorex bytes." },
+        "preHeader": {
+          "type": "object", "required": ["version", "parentId", "timestamp", "nBits", "height", "minerPk", "votes"],
+          "additionalProperties": false,
+          "properties": {
+            "version":   { "type": "integer", "minimum": 0, "maximum": 127 },
+            "parentId":  { "$ref": "#/$defs/hex" },
+            "timestamp": { "type": "string", "pattern": "^[0-9]+$", "$comment": "u64 as a string (lossless)." },
+            "nBits":     { "type": "integer", "minimum": 0 },
+            "height":    { "type": "integer", "minimum": 0 },
+            "minerPk":   { "$ref": "#/$defs/hex" },
+            "votes":     { "$ref": "#/$defs/hex" }
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "required": ["maxBlockCost", "storageFeeFactor", "minValuePerByte", "inputCost", "dataInputCost", "outputCost", "tokenAccessCost"],
+          "additionalProperties": false,
+          "properties": {
+            "maxBlockCost":    { "type": "integer", "minimum": 0 },
+            "storageFeeFactor":{ "type": "integer", "minimum": 0 },
+            "minValuePerByte": { "type": "integer", "minimum": 0 },
+            "inputCost":       { "type": "integer", "minimum": 0 },
+            "dataInputCost":   { "type": "integer", "minimum": 0 },
+            "outputCost":      { "type": "integer", "minimum": 0 },
+            "tokenAccessCost": { "type": "integer", "minimum": 0 }
+          }
+        },
         "context": {
           "type": "object", "required": ["height"], "additionalProperties": false,
           "properties": { "height": { "type": "integer", "minimum": 0 } }
@@ -53,6 +82,7 @@
         "activated": { "type": "integer", "minimum": 0, "maximum": 127 },
         "ergoTree": { "type": "integer", "minimum": 0, "maximum": 127 }
       }
-    }
+    },
+    "hex": { "type": "string", "pattern": "^([0-9a-f]{2})*$", "$comment": "lower-case hex, whole bytes (empty allowed for e.g. no data-inputs list element)." }
   }
 }

@@ -26,21 +26,31 @@ A transaction vector file is a committed JSON under
 schema is `santa-transaction/v1` and whose entries each carry the full determination set
 (enforced by `schema/santa-transaction.vector.schema.json`):
 
-- **`tx`** — the signed transaction, node-API JSON (`id`, `inputs[].spendingProof`,
-  `dataInputs`, `outputs`). Decoded by the runner via its own node-JSON serde; the JVM oracle
-  decodes the same bytes via `ApiCodecs` (`Decoder[ErgoTransaction]`), so the vector payload
-  and the oracle's input are identical by construction.
-- **`inputBoxes`** — full `ErgoBox` JSON per input, ordered to match `tx.inputs`. The runner
-  resolves spending proofs against the box at the same index.
-- **`dataInputBoxes`** — full `ErgoBox` JSON per data-input (may be empty).
-- **`context.height`** — block height for the pre-header and parameters.
-- **`version.activated`** + **`version.ergoTree`** — the protocol versions under which the
-  scripts were compiled and must be verified.
+The tx, boxes, and context are carried as **sigma-serialized BYTES**, not JSON. Bytes are the
+consensus-unambiguous form: they preserve context-extension wire ORDER (which a JSON object's
+integer keys reorder ascending — a JS `JSON.parse` does this *at parse time*, silently
+re-signing a non-ascending extension into a different `bytes_to_sign` → rejecting a chain-valid
+tx) and u64 precision (which `JSON.parse` truncates past 2⁵³). Every conformer — JVM, sigma-rust,
+ergots — decodes bytes faithfully; no impl can re-order or truncate them.
+
+- **`tx_bytes_hex`** — the signed transaction, canonical sigma bytes (the `parseTransaction`
+  input). The runner deserializes it directly; the JVM oracle decodes the same bytes via
+  `ErgoTransactionSerializer`, identical by construction.
+- **`input_boxes_hex`** — spent input boxes as `ErgoBox` bytes, in tx-input order.
+- **`data_input_boxes_hex`** — data-input boxes as `ErgoBox` bytes (may be empty).
+- **`headers_hex`** — the last (up to 10) headers, **NEWEST-first** (scorex bytes) — the provided
+  block context (`ErgoStateContext.lastHeaders`).
+- **`preHeader`** — the validating block's pre-header: `{version, parentId, timestamp` (u64 string)
+  `, nBits, height, minerPk, votes}`.
+- **`parameters`** — `{maxBlockCost, storageFeeFactor, minValuePerByte, inputCost, dataInputCost,
+  outputCost, tokenAccessCost}` (the testnet table at the capture height).
+- **`context.height`** — the block height (`== preHeader.height`).
+- **`version.activated`** + **`version.ergoTree`** — the protocol versions the scripts compile/verify under.
 - **`expected`** — the JVM-blessed `{valid: bool, cost: int|null, reason: null|string}`.
 
 There is no `expected.error` field. The oracle either accepted (with a cost) or rejected (with
 a reason); "errored" as a vector state does not exist — the blesser hard-fails on any oracle
-failure against a captured seed (CapturedTx `FAIL-LOUD-on-valid:false`).
+failure against a captured seed (`CapturedTxFull` `FAIL-LOUD-on-valid:false`).
 
 A worked example is at §9.
 
@@ -120,47 +130,38 @@ without tier-specific logic.
 executable form of this section; `santa-check`'s `tests/oracle.rs` proves the grader against
 all 37 oracle cases across all three tiers.
 
-## 5. The minimal-context contract
+## 5. The provided-context contract
 
-**This is the seam that makes the blesser and every runner comparable.** For every field of
-`ErgoStateContext` the vector does not carry, the blesser and each runner fill in the same
-pinned defaults:
+**This is the seam that makes the blesser and every runner comparable.** The vector carries the
+**real** block context, and the blesser and each runner validate under *that* context — there are
+no synthetic defaults for an impl to reconstruct identically (the coordination risk the earlier
+minimal-context model carried, where each impl had to build the same zeroed `ErgoStateContext`).
 
-| Field | Value |
+| Field | Source |
 |---|---|
-| pre-header `height` | `context.height` from the vector entry |
-| pre-header `version` (blockVersion) | `version.activated + 1` |
-| pre-header `timestamp` | `0` |
-| pre-header `nBits` | `0` |
-| pre-header `votes` | `[0, 0, 0]` |
-| pre-header `parent_id` | `Digest32::zero()` / `Header.GenesisParentId` |
-| parameters | launch-default (`TestnetLaunchParameters`), `BlockVersion` key updated to `activated + 1` |
-| last-headers ring | JVM: `Seq.empty` (ergo-core); sigma-rust: 10 synthetic headers, same zeroed fields |
-| state digest | JVM reads `chain-testnet.conf`'s `genesisStateDigestHex` (`cb63aa…`) |
+| last headers (`ErgoStateContext.lastHeaders`) | `headers_hex` — the real last (≤10) headers, **NEWEST-first** (head = tip / pre-header parent) |
+| pre-header | `preHeader` — real `{version, parentId, timestamp, nBits, height, minerPk, votes}` |
+| parameters | `parameters` — the testnet table at the capture height |
+| state digest | the JVM reads `chain-testnet.conf`'s `genesisStateDigestHex` (`cb63aa…`); stateful tx validation does not consult the UTXO root |
 
-The last-headers equivalence holds because the current captured corpus contains no script that
-reads `CONTEXT.headers`: a script that did cannot have been blessed valid against the JVM's
-empty `Seq.empty`, so it could never enter the corpus as a capture. The zeroed sigma-rust
-ring and the JVM empty seq are functionally indistinguishable for this corpus.
+Because the real headers are carried, a script that reads `CONTEXT.headers` **is** representable
+under `santa-transaction/v1` — it was not under the prior synthetic model (an empty/zeroed ring).
+The capture provides the exact on-chain headers; the NEWEST-first order matches
+`ErgoStateContext.lastHeaders` (`ErgoStateContext.scala:85/113/233`).
 
-**Oracle recipe (compact).** `TxValidate.scala` constructs:
+**Oracle recipe (compact).** `TxEngine.validateBytes` builds the real context:
 ```scala
-val params = new Parameters(height,
-  TestnetLaunchParameters.parametersTable.updated(Parameters.BlockVersion, blockVersion.toInt),
-  ErgoValidationSettingsUpdate.empty)
-val preHeader = CPreHeader(blockVersion, Header.GenesisParentId, ts=0, nBits=0, height,
-  votes=Array.fill(3)(0.toByte), minerPk=group.generator)
-val ctx = UpcomingStateContext(Seq.empty, None, preHeader,
+val headers = headers_hex.map(HeaderSerializer.parseBytes)   // newest-first; .head == tip
+val preHdr  = CPreHeader(version, headers.head.id, timestamp, nBits, height, votes, minerPk)
+val ctx = UpcomingStateContext(headers, None, preHdr,
   chainSettings.genesisStateDigest, params, ErgoValidationSettings.initial, VotingData.empty)
 tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L)
 ```
 
-**Version boundary for `santa-transaction/v1`.** A vector is valid under this format only if
-its verdict is independent of every defaulted field. The first captured script that reads a
-field this contract leaves zeroed (e.g. `CONTEXT.headers`, a live `nBits`, a real
-`timestamp`) would force that field into the capture payload, requiring a
-`santa-transaction/v2` — exactly the mechanism by which the eval tier grew `v1` → `v2` → `v3`
-when new context fields entered scope.
+**Version boundary for `santa-transaction/v1`.** The context is now carried, so context-reading
+scripts no longer force a bump. The next `santa-transaction/v2` trigger is a new *axis* — e.g. a
+tx-tier **cost** dimension once `validateStateful` exposes one — exactly the mechanism by which the
+eval tier grew `v1` → `v2` → `v3` when new dimensions entered scope.
 
 ## 6. Provenance
 
@@ -232,10 +233,15 @@ This block is easy to update as the corpus grows or runners evolve.
 // vector entry (vectors/transaction/v6/captured/bigint-downcast-2666.json → entries[0])
 {
   "name": "bigint-downcast-2666",
-  "source": "testnet:testnet-bigint-downcast-v3@2666",
-  "tx": { "id": "fcb588…", "inputs": [{ "boxId": "90a2f3…", "spendingProof": { … } }, …], … },
-  "inputBoxes": [ { "boxId": "90a2f3…", "ergoTree": "1b8d03…", … }, … ],
-  "dataInputBoxes": [],
+  "source": "testnet:bigint-downcast-2666@2666",
+  "tx_bytes_hex": "0296bbdd…",                       // canonical sigma tx bytes
+  "input_boxes_hex": [ "c0843d…", … ],               // ErgoBox bytes, in tx-input order
+  "data_input_boxes_hex": [],
+  "headers_hex": [ "04d43a…", … ],                   // 10 headers, NEWEST-first
+  "preHeader": { "version": 4, "parentId": "8b09b7…", "timestamp": "1768…",
+                 "nBits": 84141514, "height": 2666, "minerPk": "02339b…", "votes": "000000" },
+  "parameters": { "maxBlockCost": 1000000, "storageFeeFactor": 1250000, "minValuePerByte": 360,
+                  "inputCost": 2000, "dataInputCost": 100, "outputCost": 100, "tokenAccessCost": 100 },
   "context": { "height": 2666 },
   "version": { "activated": 3, "ergoTree": 3 },
   "expected": { "valid": true, "cost": 14846, "reason": null }
@@ -258,4 +264,8 @@ This block is easy to update as the corpus grows or runners evolve.
 // dasher (not-implemented):
 { "bigint-downcast-2666": { "valid": null, "cost": null, "error": "not-implemented" } }
 // → grade: {"kind": "coverage", "tag": "not-implemented"}
+
+// NOTE (post bytes-anchor migration): the eni/develop verdicts above illustrate the grading
+// dimensions but predate the JSON→bytes shape change — both currently grade `errored` until
+// their sigma-rust arms switch from the (removed) JSON `tx` field to `parseTransaction(tx_bytes_hex)`.
 ```

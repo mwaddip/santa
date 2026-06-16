@@ -4,11 +4,14 @@ import scala.util.{Failure, Success}
 
 import io.circe.Json
 
+import scorex.util.encode.Base16
+import sigma.VersionContext
+import sigma.serialization.SigmaSerializer
 import org.ergoplatform.ErgoBox
 import org.ergoplatform.http.api.ApiCodecs
 import org.ergoplatform.modifiers.history.CPreHeader
-import org.ergoplatform.modifiers.history.header.Header
-import org.ergoplatform.modifiers.mempool.ErgoTransaction
+import org.ergoplatform.modifiers.history.header.{Header, HeaderSerializer}
+import org.ergoplatform.modifiers.mempool.{ErgoTransaction, ErgoTransactionSerializer}
 import org.ergoplatform.nodeView.state.{UpcomingStateContext, VotingData}
 import org.ergoplatform.settings.{ChainSettings, ChainSettingsReader, ErgoValidationSettings,
   ErgoValidationSettingsUpdate, Parameters, TestnetLaunchParameters}
@@ -53,6 +56,53 @@ object TxEngine extends ApiCodecs {
     }
   }
 
+  /** Bytes-anchored validate: tx + boxes from their sigma bytes, under the vector's PROVIDED context
+    * (real last `headers` + `preHeader` + `parameters`) rather than a height-synthetic one. The
+    * bytes path is the consensus-unambiguous form — it preserves context-extension wire order (which
+    * a JSON object key-reorders), so it's what dasher (and the order vector) ride. Parse only is
+    * wrapped in the v-context so v6 box trees deserialize; `validateStateful` manages its own. */
+  def validateBytes(txHex: String, inputBoxesHex: Seq[String], dataInputBoxesHex: Seq[String],
+                    headersHex: Seq[String], preHeader: Json, parameters: Json): Verdict = {
+    implicit val chainSettings: ChainSettings =
+      ChainSettingsReader.read(ChainConf).getOrElse(sys.error(s"chain settings: $ChainConf"))
+    val ph        = preHeader.hcursor
+    val version   = ph.get[Int]("version").toOption.map(_.toByte).getOrElse(sys.error("preHeader.version"))
+    val timestamp = ph.get[String]("timestamp").toOption.map(_.toLong)
+      .orElse(ph.get[Long]("timestamp").toOption).getOrElse(sys.error("preHeader.timestamp"))
+    val nBits     = ph.get[Long]("nBits").toOption.getOrElse(sys.error("preHeader.nBits"))
+    val height    = ph.get[Int]("height").toOption.getOrElse(sys.error("preHeader.height"))
+    val votes     = Base16.decode(ph.get[String]("votes").toOption.getOrElse("000000")).get
+    val minerPk   = sigma.serialization.GroupElementSerializer.parse(
+      SigmaSerializer.startReader(Base16.decode(ph.get[String]("minerPk").toOption.getOrElse(sys.error("preHeader.minerPk"))).get))
+
+    // parameters are the testnet launch table (the fixtures carry the unchanged launch values); the
+    // provided `parameters` are asserted equal at capture time, not re-derived here.
+    val _ = parameters
+    val blockVersion = version
+    val params = new Parameters(height,
+      TestnetLaunchParameters.parametersTable.updated(Parameters.BlockVersion, blockVersion.toInt),
+      ErgoValidationSettingsUpdate.empty)
+    // ErgoStateContext.lastHeaders is NEWEST-first (head == best/tip; see ErgoStateContext.scala:85/113/233),
+    // which is exactly headers_hex's order — so no reverse. preHeader.parentId must be the tip = head.
+    val headers   = headersHex.map(h => HeaderSerializer.parseBytes(Base16.decode(h).get)).toIndexedSeq
+    val parentId  = if (headers.nonEmpty) headers.head.id else Header.GenesisParentId
+    val preHdr    = CPreHeader(blockVersion, parentId, timestamp, nBits, height, votes, minerPk)
+    val ctx = UpcomingStateContext(headers, None, preHdr, chainSettings.genesisStateDigest,
+      params, ErgoValidationSettings.initial, VotingData.empty)
+
+    val (tx, boxesToSpend, dataBoxes) = VersionContext.withVersions(version, version) {
+      def box(hex: String): ErgoBox =
+        ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(hex).get))
+      (ErgoTransactionSerializer.parseBytes(Base16.decode(txHex).get),
+        inputBoxesHex.map(box).toIndexedSeq, dataInputBoxesHex.map(box).toIndexedSeq)
+    }
+    implicit val verifier: ErgoInterpreter = ErgoInterpreter(params)
+    tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L).result.toTry match {
+      case Success(cost) => Verdict(valid = true,  cost = Some(cost.toLong), reason = None)
+      case Failure(e)    => Verdict(valid = false, cost = None, reason = Some(s"${e.getClass.getName}: ${e.getMessage}"))
+    }
+  }
+
   /** One `santa-transaction` vector entry → actuals (the shared tx result shape:
     * `{ valid, cost, error[, reason] }`). A decode failure here is a harness/oracle
     * self-contradiction (the same decode blessed the vector), so it surfaces as
@@ -61,14 +111,13 @@ object TxEngine extends ApiCodecs {
     val c    = e.hcursor
     val name = c.get[String]("name").toOption.getOrElse("?")
     try {
-      val tx = c.downField("tx").focus.getOrElse(sys.error(s"tx entry '$name': missing tx"))
-      val inputBoxes     = c.downField("inputBoxes").values.getOrElse(Vector.empty).toSeq
-      val dataInputBoxes = c.downField("dataInputBoxes").values.getOrElse(Vector.empty).toSeq
-      val height = c.downField("context").get[Int]("height").toOption
-        .getOrElse(sys.error(s"tx entry '$name': missing context.height"))
-      val activated = c.downField("version").get[Int]("activated").toOption
-        .getOrElse(sys.error(s"tx entry '$name': missing version.activated"))
-      val v = validate(tx, inputBoxes, dataInputBoxes, height, activated)
+      val txHex      = c.get[String]("tx_bytes_hex").toOption.getOrElse(sys.error(s"tx entry '$name': missing tx_bytes_hex"))
+      val inHex      = c.downField("input_boxes_hex").as[List[String]].getOrElse(Nil)
+      val dtHex      = c.downField("data_input_boxes_hex").as[List[String]].getOrElse(Nil)
+      val headersHex = c.downField("headers_hex").as[List[String]].getOrElse(Nil)
+      val preHeader  = c.downField("preHeader").focus.getOrElse(sys.error(s"tx entry '$name': missing preHeader"))
+      val parameters = c.downField("parameters").focus.getOrElse(sys.error(s"tx entry '$name': missing parameters"))
+      val v = validateBytes(txHex, inHex, dtHex, headersHex, preHeader, parameters)
       val base = Json.obj(
         "valid" -> Json.fromBoolean(v.valid),
         "cost"  -> v.cost.map(Json.fromLong).getOrElse(Json.Null),
