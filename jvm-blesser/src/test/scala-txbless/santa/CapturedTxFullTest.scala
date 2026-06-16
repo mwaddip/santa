@@ -1,12 +1,13 @@
 package santa
 
-/** Re-blesses all 7 tx seeds to the bytes-anchored full-context shape and writes staging vectors.
-  * Needs the testnet node (:9053) for the 4 originals' headers/preHeader. Green ⇒ every captured tx
-  * accepts under its provided real context via the bytes path. */
+/** Re-blesses all 8 tx seeds to the bytes-anchored full-context shape and writes staging vectors.
+  * Needs the testnet node (:9053) for the 4 originals' + the order-ext seed's headers/preHeader.
+  * Green ⇒ every captured tx accepts under its provided real context via the bytes path (the
+  * order-ext tx accepting proves the JVM preserves the non-ascending extension order). */
 class CapturedTxFullTest extends munit.FunSuite {
-  test("all 7 tx seeds re-bless ACCEPT in the bytes+context shape") {
+  test("all 8 tx seeds re-bless ACCEPT in the bytes+context shape") {
     val blessed = CapturedTxFull.blessAll()
-    assertEquals(blessed.size, 7)
+    assertEquals(blessed.size, 8)
     blessed.foreach { case (slug, env) =>
       val e = env.hcursor.downField("entries").downArray
       assertEquals(e.downField("expected").get[Boolean]("valid").toOption, Some(true), s"$slug must accept")
@@ -22,7 +23,7 @@ class CapturedTxFullTest extends munit.FunSuite {
     CapturedTxFull.writeVectors(java.nio.file.Paths.get("target", "tx-vectors-full"))
     Seq("getvarfrominput-92847", "multi-input-10-402900", "multi-input-3-402800",
         "bigint-downcast-2666", "powhit-return-type-28474", "deserialize-context-111927",
-        "atleast-degenerate-bound-184137").foreach { s =>
+        "atleast-degenerate-bound-184137", "order-ext-224312").foreach { s =>
       assert(java.nio.file.Files.exists(java.nio.file.Paths.get("target", "tx-vectors-full", s"$s.json")), s"staging $s.json")
     }
   }

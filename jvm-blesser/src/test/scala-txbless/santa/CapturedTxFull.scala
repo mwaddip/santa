@@ -20,11 +20,8 @@ import io.circe.Json
 import io.circe.parser.parse
 import scorex.util.encode.Base16
 
-import sigma.VersionContext
-import org.ergoplatform.ErgoBox
 import org.ergoplatform.http.api.ApiCodecs
 import org.ergoplatform.modifiers.history.header.{Header, HeaderSerializer}
-import org.ergoplatform.modifiers.mempool.{ErgoTransaction, ErgoTransactionSerializer}
 
 object CapturedTxFull extends ApiCodecs {
   private val Node      = "http://127.0.0.1:9053"
@@ -116,21 +113,37 @@ object CapturedTxFull extends ApiCodecs {
   }
 
   private def fromOriginal(slug: String, height: Int): (String, Json) = {
+    // The originals are already bytes-shape (migrated to `e9ad8da`); re-bless them from the
+    // committed tx_bytes_hex + box hex + provided context — no JSON re-serialize, no node fetch.
     val e0 = parse(slurp(s"../vectors/transaction/v6/captured/$slug.json")).fold(e => sys.error(e.toString), identity)
       .hcursor.downField("entries").downArray
-    val (txHex, inHex, dtHex) = VersionContext.withVersions(ErgoTreeV.toByte, ErgoTreeV.toByte) {
-      val tx = e0.downField("tx").focus.get.as[ErgoTransaction].fold(er => sys.error(s"$slug tx: $er"), identity)
-      def boxHex(j: Json) = Base16.encode(ErgoBox.sigmaSerializer.toBytes(j.as[ErgoBox].fold(er => sys.error(s"$slug box: $er"), identity)))
-      (Base16.encode(ErgoTransactionSerializer.toBytes(tx)),
-        e0.downField("inputBoxes").values.getOrElse(Nil).toSeq.map(boxHex),
-        e0.downField("dataInputBoxes").values.getOrElse(Nil).toSeq.map(boxHex))
-    }
+    val txHex      = e0.get[String]("tx_bytes_hex").toOption.getOrElse(sys.error(s"$slug tx_bytes_hex"))
+    val inHex      = e0.downField("input_boxes_hex").as[List[String]].fold(er => sys.error(s"$slug input_boxes_hex: $er"), identity)
+    val dtHex      = e0.downField("data_input_boxes_hex").as[List[String]].getOrElse(Nil)
+    val headersHex = e0.downField("headers_hex").as[List[String]].fold(er => sys.error(s"$slug headers_hex: $er"), identity)
+    val preHeader  = e0.downField("preHeader").focus.getOrElse(sys.error(s"$slug preHeader"))
+    envelope(slug, entry(slug, height, txHex, inHex, dtHex, headersHex, preHeader))
+  }
+
+  /** The order-extension pin: a testnet tx whose input-0 ContextExtension is NON-ascending on the
+    * wire (363d6222@224312, idx 15), captured as EXACT binary by the rust-node session — the node's
+    * JSON normalizes the key order ascending and 404s the spent boxes, so JSON can't carry it. The
+    * extension is part of bytes_to_sign, so JVM ACCEPT here proves ergo-core PRESERVES the received
+    * order (a re-sorting validator reconstructs a different signing message → rejects). */
+  private def fromOrderExt(): (String, Json) = {
+    val slug = "order-ext-224312"
+    val c = parse(slurp("../docs/findings/testnet-order-ext/order-ext-tx.json")).fold(e => sys.error(e.toString), identity).hcursor
+    val height = c.get[Int]("block_height").toOption.getOrElse(sys.error("order-ext block_height"))
+    val txHex  = c.get[String]("tx_bytes_hex").toOption.getOrElse(sys.error("order-ext tx_bytes_hex"))
+    val inHex  = c.downField("input_boxes_hex").as[List[String]].fold(e => sys.error(s"order-ext input_boxes_hex: $e"), identity)
+    val dtHex  = c.downField("data_input_boxes_hex").as[List[String]].getOrElse(Nil)
     val (headersHex, preHeader) = fetchContext(height)
     envelope(slug, entry(slug, height, txHex, inHex, dtHex, headersHex, preHeader))
   }
 
   def blessAll(): Seq[(String, Json)] =
-    ErgotsSeeds.map { case (s, d) => fromErgots(s, d) } ++ OriginalSeeds.map { case (s, h) => fromOriginal(s, h) }
+    (ErgotsSeeds.map { case (s, d) => fromErgots(s, d) } ++
+      OriginalSeeds.map { case (s, h) => fromOriginal(s, h) }) :+ fromOrderExt()
 
   def writeVectors(outDir: java.nio.file.Path): Unit = {
     java.nio.file.Files.createDirectories(outDir)
