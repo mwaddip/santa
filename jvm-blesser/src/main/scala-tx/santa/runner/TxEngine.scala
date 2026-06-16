@@ -75,12 +75,21 @@ object TxEngine extends ApiCodecs {
     val minerPk   = sigma.serialization.GroupElementSerializer.parse(
       SigmaSerializer.startReader(Base16.decode(ph.get[String]("minerPk").toOption.getOrElse(sys.error("preHeader.minerPk"))).get))
 
-    // parameters are the testnet launch table (the fixtures carry the unchanged launch values); the
-    // provided `parameters` are asserted equal at capture time, not re-derived here.
-    val _ = parameters
+    // Honor the vector's provided `parameters` (contract §5): override the launch table's economic
+    // entries. A no-op for captured seeds (their params == launch), the seam the reject arm rides.
     val blockVersion = version
+    val pc = parameters.hcursor
+    def pInt(k: String): Int = pc.get[Int](k).toOption.getOrElse(sys.error(s"parameters.$k"))
     val params = new Parameters(height,
-      TestnetLaunchParameters.parametersTable.updated(Parameters.BlockVersion, blockVersion.toInt),
+      TestnetLaunchParameters.parametersTable
+        .updated(Parameters.BlockVersion,             blockVersion.toInt)
+        .updated(Parameters.MaxBlockCostIncrease,     pInt("maxBlockCost"))
+        .updated(Parameters.MinValuePerByteIncrease,  pInt("minValuePerByte"))
+        .updated(Parameters.StorageFeeFactorIncrease, pInt("storageFeeFactor"))
+        .updated(Parameters.InputCostIncrease,        pInt("inputCost"))
+        .updated(Parameters.DataInputCostIncrease,    pInt("dataInputCost"))
+        .updated(Parameters.OutputCostIncrease,       pInt("outputCost"))
+        .updated(Parameters.TokenAccessCostIncrease,  pInt("tokenAccessCost")),
       ErgoValidationSettingsUpdate.empty)
     // ErgoStateContext.lastHeaders is NEWEST-first (head == best/tip; see ErgoStateContext.scala:85/113/233),
     // which is exactly headers_hex's order — so no reverse. preHeader.parentId must be the tip = head.
