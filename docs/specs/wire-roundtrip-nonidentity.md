@@ -76,6 +76,34 @@ meaningful, not an echo no-op), and it pins the 1-vs-3 divergence directly. The 
 echo (an identity round-trip that would model the boxId-preserve behavior) was the alternative;
 rejected for the structural path. See **Consensus-liveness note** for the boxId nuance this leaves.
 
+## Outcome (landed 2026-06-16)
+
+Shipped across 7 SANTA commits (`ceb7f73..ce1bf09`, local) + santa-blitzen `eni` `af0840a`. The
+predictive "three-way discriminator", "first grade", and runner-impact prose below is the
+pre-landing design; **this section supersedes it where they differ.**
+
+- **Capability + `ErgoTree` kind + vector + docs** landed as designed; `validate` 5/5; **rudolph green
+  on all 5** (blesser ≡ control, by construction).
+- **The probe (Task 7) proved the two-path split is symmetric across impls.** sigma-rust mirrors the
+  JVM: `ErgoTree::sigma_parse_bytes` (SigmaProp-strict) **echoes** the cached template bytes
+  (identity); `ErgoTree::sigma_parse_bytes_lenient` (arbitrary-root — the analog of the JVM
+  `checkType=false` `LenientErgoTree`) **re-encodes from structure**. So the runner arm uses
+  **lenient**; using strict would echo the non-canonical input and spuriously red on all 5. The
+  "structural, not cached" clause is now proven live on both sides.
+- **blitzen-eni is GREEN on all 5, not red.** sigma-rust eni `10a77c5c` ("match the JVM's exact
+  U+FFFD substitution for STypeVar names") makes the lenient round-trip byte-exact to the JVM on
+  every case **including `eda080`** (1 FFFD, not 3) — the sigma-rust session *fixed* the fork, not
+  just acknowledged it. The vector is therefore a **regression guard** pinning eni ≡ JVM on the
+  surrogate (eni red_total 5→0), rather than the predicted live eni divergence.
+- **blitzen-develop cannot take the arm** — upstream `ergoplatform/sigma-rust#develop` lacks
+  `sigma_parse_bytes_lenient` (a fork-only conformance addition, `16878aed`). It stays honest
+  `not-implemented`, by design (same reason it is not-impl on v6-fullctx).
+- **The live divergence is now latent on the un-fixed impls** — ergots/dasher and arkadianet/vixen
+  carry no structural `ErgoTree` wire arm yet (honest not-impl); routed to add one + adopt the
+  JVM-exact substitution. The vector will then pin their convergence or catch a residual fork.
+
+Finding: `docs/findings/wire-stypevar-utf8-byte-exactness.md`.
+
 ## The capability — non-identity `expected_bytes_hex`
 
 Additive, backward-compatible field on a wire entry (schema `santa-wire/v1`, unchanged
