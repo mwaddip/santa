@@ -88,8 +88,9 @@ pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
     json!({"kind": "accept", "value": value, "cost": cost})
 }
 
-/// §6 wire-tier verdict: a single round-trip judgment. The blessed expected IS the entry's own
-/// `bytes_hex` (round-trip to self), so grading is `bytes_hex` lower-case exact-equality + `error`
+/// §6 wire-tier verdict: a single round-trip judgment. The blessed expected is `expected_bytes_hex`
+/// when present (a non-identity round-trip), else the entry's own `bytes_hex` (round-trip to self),
+/// so grading is `bytes_hex` lower-case exact-equality + `error`
 /// null -> a `roundtrip` nice/differ verdict — no value/cost split (the wire tier has no cost
 /// dimension). `not-implemented` (no serializer for this kind) and `panicked` (a runner crash) reuse
 /// the eval `coverage`/`panicked` verdict shapes, so conform tallies them uniformly across tiers; a
@@ -104,8 +105,15 @@ pub fn grade_wire(actual: &Value, expected: &Value) -> Value {
     if err_is(actual, "not-implemented") {
         return json!({"kind": "coverage", "tag": "not-implemented"});
     }
+    // Non-identity round-trip: a blessed `expected_bytes_hex` (JVM-canonical output that differs
+    // from the non-canonical input) overrides the identity default (`bytes_hex`). Absent =>
+    // round-trip-to-self, every existing vendored vector unchanged.
+    // See docs/specs/wire-roundtrip-nonidentity.md.
+    let expected_hex = expected
+        .get("expected_bytes_hex")
+        .or_else(|| expected.get("bytes_hex"));
     let ok = actual.get("error").is_none_or(Value::is_null)
-        && hex_eq(actual.get("bytes_hex"), expected.get("bytes_hex"));
+        && hex_eq(actual.get("bytes_hex"), expected_hex);
     json!({"kind": "roundtrip", "verdict": if ok { "nice" } else { "differ" }})
 }
 

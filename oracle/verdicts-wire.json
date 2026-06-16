@@ -35,6 +35,16 @@
     {"name": "totality-breach-null-actual-is-differ",
      "actual":   null,
      "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "roundtrip", "verdict": "differ"}},
+
+    {"name": "nonidentity-canonical-match-is-nice",
+     "actual":   {"bytes_hex": "11", "error": null},
+     "expected": {"bytes_hex": "00", "expected_bytes_hex": "11"},
+     "verdict":  {"kind": "roundtrip", "verdict": "nice"}},
+
+    {"name": "nonidentity-echo-of-input-is-differ",
+     "actual":   {"bytes_hex": "00", "error": null},
+     "expected": {"bytes_hex": "00", "expected_bytes_hex": "11"},
      "verdict":  {"kind": "roundtrip", "verdict": "differ"}}
   ]
 }
