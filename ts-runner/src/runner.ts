@@ -599,35 +599,125 @@ export function runWireVector(doc: WireVector): Record<string, WireResult> {
 }
 
 // ---- Transaction tier ----
-// ergots is an eval library; aggregate tx validation (conservation, tokens, min-value, cost) is
-// not implemented. Returning valid:true from script-verify alone would be an unsound false-green
-// (e.g. a non-conserving tx passes script checks but must be rejected). The faithful outcome for
-// every entry is not-implemented — a coverage verdict, not coal. These entries are the growth
-// ledger: they flip green as ergots grows its tx-validation layer (runner-contract §6).
+// dasher dispatches to ergots' @ergots/transaction: parseTransaction(tx_bytes_hex) → build
+// StatefulDeps (input/data boxes + the provided block context) → validateStateful, which RETURNS
+// void on accept and THROWS on reject. Bytes are the consensus form — the context-extension wire
+// order survives parseTransaction with no special handling (the getVarFromInput / inputExtensions
+// substrate intact). The package lives on the ergots tx branch; if absent (ergots-impl on a pre-tx
+// master) it loads as null and every entry degrades to not-implemented, leaving eval/wire untouched.
+// Accept/reject only — validateStateful exposes no cost yet, so cost is null (graded n/a).
+// runner-contract-transaction.md §1-§5.
 
-interface TxVectorEntry { name: string }
-interface TxVector { schema: string; entries: TxVectorEntry[] }
+interface TxEntry {
+  name: string
+  tx_bytes_hex: string
+  input_boxes_hex: string[]
+  data_input_boxes_hex: string[]
+  headers_hex: string[]
+  preHeader: { version: number; parentId: string; timestamp: string; nBits: number; height: number; minerPk: string; votes: string }
+  parameters: Record<string, number>
+  version: { activated: number; ergoTree: number }
+}
+interface TxVector { schema: string; entries: TxEntry[] }
 
-/** One transaction entry's faithful outcome. */
+/** One transaction entry's faithful outcome (runner-contract §3): accepted (valid true) /
+ *  rejected (valid false + reason) / errored (decode-setup failure + reason) / not-implemented /
+ *  panicked (note). cost is null until a tx-tier cost axis lands. */
 type TxResult = {
   valid: boolean | null
   cost: number | null
   error: null | 'errored' | 'not-implemented' | 'panicked'
+  reason?: string
   note?: string
 }
 
 // Frozen singleton — returned by reference on every entry (never mutated).
 const TX_NOT_IMPL: TxResult = Object.freeze({ valid: null, cost: null, error: 'not-implemented' })
 
-/** run(transaction vector) → actuals: exactly one TxResult per entry, keyed by name (total). */
-export function runTransactionVector(doc: TxVector): Record<string, TxResult> {
+/** SANTA preHeader JSON → ergots PreHeader (hex→bytes, u64 string→bigint). */
+function toPreHeader(p: TxEntry['preHeader']): PreHeader {
+  return {
+    version: p.version,
+    parentId: hexToBytes(p.parentId),
+    timestamp: BigInt(p.timestamp),
+    nBits: Number(p.nBits),
+    height: p.height,
+    minerPk: hexToBytes(p.minerPk),
+    votes: hexToBytes(p.votes),
+  }
+}
+
+/** Lazily load @ergots/transaction. A VARIABLE specifier keeps tsc from statically resolving it
+ *  (the package is only present when ergots-impl is pinned to the tx branch); absence ⇒ null. */
+async function loadTxModule(): Promise<{
+  parseTransaction: (b: Uint8Array) => unknown
+  validateStateful: (tx: unknown, deps: unknown) => void
+} | null> {
+  try {
+    const spec = '@ergots/transaction'
+    return (await import(spec)) as never
+  } catch {
+    return null
+  }
+}
+
+/** One tx entry → its verdict. Setup/decode failures (parseTransaction, box/header parse) are
+ *  `errored`; validateStateful returning void is `accept`, throwing is `reject` (record the code).
+ *  Wrapped by the caller's panic-net for anything otherwise-uncaught. */
+function runTxEntry(
+  e: TxEntry,
+  parseTransaction: (b: Uint8Array) => unknown,
+  validateStateful: (tx: unknown, deps: unknown) => void,
+): TxResult {
+  let tx: unknown
+  let deps: unknown
+  try {
+    const treeVersion = e.version.ergoTree
+    const box = (hex: string): ErgoBox =>
+      (parseSValue(SBOX, treeVersion, new ByteReader(hexToBytes(hex))) as { value: ErgoBox }).value
+    tx = parseTransaction(hexToBytes(e.tx_bytes_hex))
+    deps = {
+      inputBoxes: e.input_boxes_hex.map(box),
+      dataInputBoxes: e.data_input_boxes_hex.map(box),
+      stateContext: {
+        headers: e.headers_hex.map((h) => parseHeader(new ByteReader(hexToBytes(h)))),
+        preHeader: toPreHeader(e.preHeader),
+        parameters: e.parameters,
+      },
+    }
+  } catch (err) {
+    const reason = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
+    return { valid: null, cost: null, error: 'errored', reason }
+  }
+  try {
+    validateStateful(tx, deps)
+    return { valid: true, cost: null, error: null }
+  } catch (err) {
+    const code = (err as { code?: unknown } | null)?.code
+    const reason = code != null ? String(code) : err instanceof Error ? err.name : String(err)
+    return { valid: false, cost: null, error: null, reason }
+  }
+}
+
+/** run(transaction vector) → actuals: exactly one TxResult per entry, keyed by name (total). The
+ *  panic-net mirrors runEntry — any otherwise-uncaught throw becomes `panicked`. */
+export async function runTransactionVector(doc: TxVector): Promise<Record<string, TxResult>> {
+  const mod = await loadTxModule()
   const actuals: Record<string, TxResult> = {}
-  for (const e of doc.entries) actuals[e.name] = TX_NOT_IMPL
+  for (const e of doc.entries) {
+    if (!mod) { actuals[e.name] = TX_NOT_IMPL; continue }
+    try {
+      actuals[e.name] = runTxEntry(e, mod.parseTransaction, mod.validateStateful)
+    } catch (err) {
+      const note = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
+      actuals[e.name] = { valid: null, cost: null, error: 'panicked', note }
+    }
+  }
   return actuals
 }
 
 // ---- CLI: runner <vector.json> [actuals-out.json] (mirrors Runner.scala) ----
-function main(argv: string[]): void {
+async function main(argv: string[]): Promise<void> {
   const vecPath = argv[2]
   if (!vecPath) {
     console.error('usage: runner <vector.json> [<actuals-out.json>]')
@@ -638,7 +728,7 @@ function main(argv: string[]): void {
   const actuals = schema.startsWith('santa-wire/')
     ? runWireVector(raw as WireVector)
     : schema.startsWith('santa-transaction/')
-    ? runTransactionVector(raw as TxVector)
+    ? await runTransactionVector(raw as TxVector)
     : runVector(raw as Vector)
   const json = JSON.stringify(actuals, null, 2)
   const outPath = argv[3]
@@ -652,4 +742,6 @@ function main(argv: string[]): void {
 
 // Run main only when invoked as the bin (not when imported). pathToFileURL resolves a
 // relative argv path to an absolute file URL so the comparison is robust.
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main(process.argv)
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main(process.argv).catch((e) => { console.error(e); process.exit(1) })
+}

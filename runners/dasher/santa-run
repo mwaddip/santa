@@ -23,6 +23,13 @@ OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # runners/dasher -> repo root
 TS="$ROOT/ts-runner"
 (cd "$impl/ergots" && npm install --no-audit --no-fund >/dev/null 2>&1 && npm run build >/dev/null 2>&1)
+# @ergots/transaction is NOT in the monorepo's root `build` script (which builds only
+# scorex/avltree/nipopow/ergoscript), so its dist/ is missing and dasher's tx arm can't
+# import it. Build it explicitly when the package is present (the tx branches); a pre-tx
+# master has no such package, so this is skipped. A real build failure still aborts (set -e).
+if [ -d "$impl/ergots/packages/transaction" ]; then
+  (cd "$impl/ergots" && npm run build -w @ergots/transaction >/dev/null 2>&1)
+fi
 ln -sfn "$impl/ergots" "$TS/ergots-impl"
 (cd "$TS" && npm install --no-audit --no-fund >/dev/null 2>&1 && npm run build >/dev/null 2>&1)
 for f in "$VECTORS"/*.json; do
