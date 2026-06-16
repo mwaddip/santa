@@ -141,7 +141,7 @@ minimal-context model carried, where each impl had to build the same zeroed `Erg
 |---|---|
 | last headers (`ErgoStateContext.lastHeaders`) | `headers_hex` — the real last (≤10) headers, **NEWEST-first** (head = tip / pre-header parent) |
 | pre-header | `preHeader` — real `{version, parentId, timestamp, nBits, height, minerPk, votes}` |
-| parameters | `parameters` — the testnet table at the capture height |
+| parameters | `parameters` — the economic table at the capture height; **honored** (`TxEngine.validateBytes` overrides the launch table's 7 economic params from this field), the seam the authored param-driven reject arm (§6) rides |
 | state digest | the JVM reads `chain-testnet.conf`'s `genesisStateDigestHex` (`cb63aa…`); stateful tx validation does not consult the UTXO root |
 
 Because the real headers are carried, a script that reads `CONTEXT.headers` **is** representable
@@ -172,9 +172,12 @@ Two provenances, distinguished by the `source` prefix on each entry:
   oracle rejection of a captured seed (`CapturedTx` sys.error + "FAIL LOUD"). The validate
   binary's `tx_path_guard` independently enforces the invariant: a committed vector under
   `vectors/transaction/*/captured/` with `expected.valid: false` is a schema violation.
-- **`authored`** — the adversarial reject arm; `source: "santa:<label>"`. Future. An authored
-  vector may have `expected.valid: false` (a tx the oracle correctly rejects) and must carry a
-  `reason`; it may also test the accept arm for scripts not reachable via testnet captures.
+- **`authored`** — the adversarial reject arm; `source: "santa:<label>"`. An authored vector may
+  have `expected.valid: false` (a tx the oracle correctly rejects) and must carry a `reason`; it may
+  also test the accept arm for scripts not reachable via testnet captures. **Populated (Track B):**
+  two no-re-sign, param-driven boundary pairs — `cost-limit-boundary` + `min-value-dust-boundary`
+  (§8) — built over a captured seed by moving exactly one economic parameter. Conservation/body-level
+  rejects (Track A, re-signed) are deferred. Design: `docs/specs/transaction-reject-arm.md`.
 
 **Re-blessing.** Producing actuals requires no oracle dependency (§3) — a runner needs only
 its own implementation. Re-producing the committed vectors requires the blesser:
@@ -194,36 +197,47 @@ recorded as coal, not silently swallowed.
 | **rudolph** | control (build-gated) | Declares `transaction`; the tx arm (`santa.runner.TxEngine`, reached by reflection) exists only in builds carrying ergo-core (`SANTA_TX_BLESSER=1` — local maintainer machines and the conform CI, which publishes ergo-core itself). As verification it is oracle-tautological; its value is the HARNESS CONTROL — the same role rudolph plays for eval — so the tx staging/grading pipeline has a row that must be green. A build without ergo-core emits a faithful `not-implemented` per entry (blue coverage cell): a capability fact about that build, not an excuse. |
 | **comet** | out-of-scope (grey) | Does not declare `transaction` in `tiers` (`runner.json`). Fleet is a tx-building/serialization SDK with no verifier: it cannot script-verify a signed input (its only adjacent surface is prover-side reduce+sign of *unsigned* txs, delegated to sigmastate-js — sigma's artifact, not Fleet code) and has no stateful aggregate. Not a growth ledger — validation is outside Fleet's design scope, so grey, not not-impl. |
 | **blitzen-eni** | full (`cost: true`) | sigma-rust @ ergo-node-integration (`jit-cost` feature). Produces `valid` + `cost`. Costed accept divergences are expected — this is the deliverable. |
-| **blitzen-develop** | value-only (`cost: false`) | sigma-rust @ upstream develop. Produces `valid` only; `cost: null` unconditionally. Each of the 4 current seeds is red with its upstream bug. |
-| **dasher** | not-implemented (growth ledger) | ergots does not yet implement stateful tx validation. Rationale: script-verify alone would false-green non-conserving txs; the tier needs the full `validateStateful` surface. dasher's not-impl slice is the roadmap ledger for the tx tier. |
+| **blitzen-develop** | value-only (`cost: false`) | sigma-rust @ upstream develop. Produces `valid` only; `cost: null` unconditionally. Red on its upstream production-reject bugs (§8) and the cost-ceiling over-accept. |
+| **dasher** | full (`cost: true`) | ergots implements stateful tx validation (`@ergots/transaction`); produces `valid` + `cost`, live across the captured corpus. Reject-arm divergences (the cost-ceiling over-accept, §8) are the deliverable. |
 
 ## 8. Status
 
-4 captured seeds: `bigint-downcast-2666`, `deserialize-context-111927`,
-`atleast-degenerate-bound-184137`, `powhit-return-type-28474`.
+**10 vectors / 12 entries:** 8 captured seeds + 2 authored boundary pairs (the Track-B reject arm).
 
-Current 5-way result:
-- **blitzen-eni**: **`valid 4/4 · cost 4/4` byte-exact.** The initial bless surfaced 3 genuine
-  cost divergences (bigint 14826 vs 14846, deserialize 14816 vs 15374, powhit 16401 vs 16656;
-  atleast exact — the structural-accounting control). A decomposition spike named the ops
-  (avl get/remove uncosted · deserialize-substitution presence charge · UBI-arith
-  misclassified); routed; sigma-rust fixed all three plus the `enrich_err` cost-lattice
-  wrinkle; re-graded exact at fork-eni `324cc4cd` with zero eval side-effects — the tier's
-  first divergence→fix→convergence loop.
-- **blitzen-develop**: 0/4 — each seed red with its upstream bug, each a distinct upstream defect:
-  - `bigint-downcast-2666`: production-path tree-version bug — `reduce_to_crypto` leaves
-    `tree_version` at V0, so the v3-gated `Downcast` op is illegal and sigma-rust rejects what
-    the JVM accepts; the divergence eval structurally cannot catch (tree_version is pre-set, not
-    computed by the evaluator).
-  - `atleast-degenerate-bound-184137`: degenerate-bound handling in `Atleast` — sigma-rust
-    rejects with `bound 1 > input size 0` where the JVM accepts.
-  - `deserialize-context-111927`: context-extension substitution missing — sigma-rust cannot
-    resolve `DeserializeContext` variable 0.
-  - `powhit-return-type-28474`: `powHit` return-type / `SFunc` parse bug — sigma-rust fails to
-    parse the ergotree's `SFunc` condition type.
-- **dasher**: 4/4 not-implemented (blue coverage cells; growth ledger).
-- **rudolph**: `valid 4/4 · cost 4/4` — the control row (ergo-core-gated build; see §7).
-- **comet**: not in the tx slice (out-of-scope grey; wire-only — see §7).
+**Captured (8 seeds, all `valid: true`):** the 4 originals `bigint-downcast-2666`,
+`deserialize-context-111927`, `atleast-degenerate-bound-184137`, `powhit-return-type-28474` + the 4
+bytes-anchored `getvarfrominput-92847`, `multi-input-3-402800`, `multi-input-10-402900`,
+`order-ext-224312`.
+
+**Authored (2 boundary pairs over `multi-input-3-402800` — a plain tx every impl accepts, so the
+reject entries test enforcement, not a base bug):** `cost-limit-boundary` (maxBlockCost = the seed's
+cost / cost − 1) and `min-value-dust-boundary` (minValuePerByte at the dust flip / + 1), each an
+accept control + a one-step reject. Design: `docs/specs/transaction-reject-arm.md`.
+
+**Current 4-way result** (comet grey — wire-only, no `transaction` tier):
+
+| | captured (8) | authored (4) |
+|---|---|---|
+| **rudolph** (control) | valid 8/8 · cost 8/8 | valid 4/4 · cost 2/2 |
+| **blitzen-eni** (cost) | valid 8/8 · cost 8/8 | valid 3/4 · cost 1/1 |
+| **blitzen-develop** (value) | valid 4/8 | valid 3/4 |
+| **dasher** (ergots) | valid 8/8 | valid 3/4 |
+
+**Captured divergences** — blitzen-develop is red on the 4 originals, each a distinct upstream
+production-reject bug eval cannot catch (tree_version is pre-set): `bigint-downcast` v3-gated
+`Downcast` illegal (tree_version left V0); `atleast` degenerate-bound (`bound 1 > input size 0`);
+`deserialize-context` missing context-extension substitution; `powhit` `SFunc` return-type parse.
+eni converged to byte-exact cost across all 8 — the tier's first divergence→fix→convergence loop.
+
+**Authored reject-arm divergences (the Track-B deliverable)** — the JVM (rudolph) accepts a tx
+costing exactly `maxBlockCost` and rejects at `−1`; the cost ceiling splits three ways:
+- **dasher (ergots) + blitzen-develop OVER-ACCEPT the cost-limit reject** — neither enforces
+  `maxBlockCost` at the `validateStateful` seam (`got valid:true` at `maxBlockCost = cost − 1`).
+- **blitzen-eni OVER-REJECTS the cost-limit accept** — it enforces the ceiling but on a
+  `maxBlockCost × 10` budget (`CostLimitExceeded(184150)` at `maxBlockCost 18415`) while reporting
+  JVM-equal cost (18415), so it rejects a tx that fits its own reported cost.
+- **The dust floor is green on all four** — a cross-impl regression guard; cost-ceiling enforcement
+  is the live divergence. Routed per-impl via `prompts/`.
 
 This block is easy to update as the corpus grows or runners evolve.
 
