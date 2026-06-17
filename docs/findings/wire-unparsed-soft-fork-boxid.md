@@ -85,21 +85,33 @@ REJECT arm (`error: "errored"` ⇒ the JVM rejects at deserialize, a conformant 
   nor `> LastDataType` (111), so rule 1009 does NOT fire — a direct `SerializerException` ("Not defined
   DataSerializer for type SHeader") ESCAPES the soft-fork fallback and the JVM **rejects**, even size-flagged
   (blessed live: deserialize THROWS). Graded by `grade_wire`'s reject arm (`errored` actual = nice; producing
-  bytes = over-accept coal). **Board: rudolph + vixen reject (nice); blitzen-eni OVER-ACCEPTS** — sigma-rust
-  degrades the SHeader tree to Unparsed + round-trips where the JVM rejects (a real lib-vs-JVM divergence,
-  routed to sigma-rust to confirm it's the lenient deserializer not the wire arm); dasher panicked (a ts-runner
-  classification gap — ergots throws a typed `SValueParseError`); develop not-impl. Bytes from ergots'
-  `sheader-constants-v2-header-literal` fixture.
+  bytes = over-accept coal). **Board (converged): rudolph + vixen reject (nice); blitzen-eni OVER-ACCEPTED**
+  (degraded the SHeader tree where the JVM rejects) → **FIXED** (sigma-rust eni `044be6c3` gates the lenient
+  degrade on rule-1009's `NonSerializableTypeCode`; eni now rejects, green); dasher errored (ergots throws a
+  typed `SValueParseError`, mapped → errored by the ts-runner `isWireCodecError`); develop **not-impl** — its
+  wire ErgoTree arm needs the lenient parse it lacks, so this ErgoTree vector does NOT grade develop's
+  over-accept (the Box twin below does). Bytes from ergots' `sheader-constants-v2-header-literal` fixture.
+- **`Box.softfork_header_constant_reject.json`** (`kind: Box`, 1 entry, **REJECT**) — the SAME SHeader reject on
+  the **box→tree** path: a real `ErgoBox` frame whose propositionBytes ARE the SHeader tree. The box parse runs
+  the impl's STRICT `sigma_parse` (not the lenient bare-tree arm), so it GRADES the strict-path over-accept the
+  ErgoTree vector misses. **Board: rudolph + eni reject (nice); blitzen-develop, dasher, AND vixen OVER-ACCEPT**
+  — all three degrade the SHeader tree inside a box → accept a box the JVM rejects (a crafted-bytes
+  boxId/consensus over-accept). develop's is the sigma-rust strict `sigma_parse` (fix `a9ba5bac` pending); ergots
+  is a NEW inconsistency (rejects the BARE SHeader tree but degrades it inside a box); arkadianet's is NEW.
+  Minted by frame-swap (a real box frame around a 0xfd tree, propBytes swapped) so the strict parse reaches the
+  SHeader DataSerializer; the parse dies at the tree before the tail.
 
-All four are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
-`AuthoredWireUnparsedSoftForkOptionConstantTest` / `AuthoredWireUnparsedSoftForkHeaderConstantTest`, which
-re-derive the blessing each run (genuinely-unparsed + JVM identity, or — for the reject arm — that
-`LenientErgoTree.deserialize` THROWS a `SerializerException` naming SHeader) so a sigma-state change fails loud.
+All five are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
+`AuthoredWireUnparsedSoftForkOptionConstantTest` / `AuthoredWireUnparsedSoftForkHeaderConstantTest` /
+`AuthoredWireBoxSoftForkHeaderRejectTest`, which re-derive the blessing each run (genuinely-unparsed + JVM
+identity, or — for the reject arms — that `LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse`
+THROWS a `SerializerException` naming SHeader) so a sigma-state change fails loud.
 
-The `(a)` degrade + `(b)` reject pair pins the exact `CheckSerializableTypeCode` (rule 1009) boundary:
+The `(a)` degrade + `(b)`/Box reject set pins the exact `CheckSerializableTypeCode` (rule 1009) boundary:
 SOption is the rule's special case (soft-fork degrade → round-trip), SHeader is not (direct reject). An impl
-that treats both alike — degrading SHeader like SOption (eni), or rejecting SOption like SHeader — diverges
-from JVM consensus on which size-flagged trees survive deserialization.
+that treats both alike — degrading SHeader like SOption — diverges from JVM consensus on which size-flagged
+trees survive deserialization: caught on the LENIENT path on eni (`(b)`, now fixed) and on the STRICT
+box→tree path on develop, ergots, and arkadianet (the Box twin).
 
 ## What would be needed to actually fork the boxId (not demonstrated reachable)
 
