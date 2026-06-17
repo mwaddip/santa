@@ -69,9 +69,19 @@ sigma-state 6.0.3 is jar-only; spikes are the gate, not recollection:
 - **`ErgoTree.unparsed_soft_fork_roundtrip.json`** (`kind: ErgoTree`, 2 entries: `0b01fd`, `0b03fd0102`) —
   pins the JVM/eni preserve and surfaces the bare-tree parse divergences (vixen/dasher/develop). The
   3-byte body proves the full declared region is preserved, not just the opcode.
+- **`ErgoTree.unparsed_soft_fork_option_constant.json`** (`kind: ErgoTree`, 1 entry: `1a060128010a7300`) —
+  a SECOND degrade trigger: not an unknown opcode (rule 1002) but a **non-serializable type code in a
+  segregated constant** (a `SOption[SInt]` constant, typeCode `0x28`, which trips
+  `CheckSerializableTypeCode`, rule 1009). The size flag (header `0x1a` = v2 + size + seg) wraps it as
+  `UnparsedErgoTree` → identity round-trip (blessed live: rudolph + eni green; dasher panicked, vixen
+  errored, develop not-impl — same bare-tree spread). This is the **DEGRADE** side of the rule-1009
+  boundary; the **REJECT** twin — an `SHeader` constant (typeCode `0x68`, which rule 1009 does NOT
+  special-case, so a direct `SerializerException` escapes the soft-fork fallback and the JVM rejects) —
+  lands as a wire **reject arm** (pending ergots' exact hex).
 
-Both are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest`, which
-re-derive the blessing each run (genuinely-unparsed + JVM identity) so a sigma-state change fails loud.
+All three are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
+`AuthoredWireUnparsedSoftForkOptionConstantTest`, which re-derive the blessing each run
+(genuinely-unparsed + JVM identity) so a sigma-state change fails loud.
 
 ## What would be needed to actually fork the boxId (not demonstrated reachable)
 
