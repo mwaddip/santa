@@ -45,6 +45,31 @@
     {"name": "nonidentity-echo-of-input-is-differ",
      "actual":   {"bytes_hex": "00", "error": null},
      "expected": {"bytes_hex": "00", "expected_bytes_hex": "11"},
-     "verdict":  {"kind": "roundtrip", "verdict": "differ"}}
+     "verdict":  {"kind": "roundtrip", "verdict": "differ"}},
+
+    {"name": "reject-expected-errored-actual-is-nice",
+     "actual":   {"bytes_hex": null, "error": "errored"},
+     "expected": {"bytes_hex": "1a0168", "error": "errored"},
+     "verdict":  {"kind": "reject", "verdict": "nice"}},
+
+    {"name": "reject-expected-but-produced-bytes-is-coal",
+     "actual":   {"bytes_hex": "1a0168", "error": null},
+     "expected": {"bytes_hex": "1a0168", "error": "errored"},
+     "verdict":  {"kind": "reject", "verdict": "reject"}},
+
+    {"name": "reject-expected-null-actual-is-differ",
+     "actual":   null,
+     "expected": {"bytes_hex": "1a0168", "error": "errored"},
+     "verdict":  {"kind": "reject", "verdict": "differ"}},
+
+    {"name": "reject-expected-panicked-stays-panicked",
+     "actual":   {"bytes_hex": null, "error": "panicked", "note": "boom in the tree parser"},
+     "expected": {"bytes_hex": "1a0168", "error": "errored"},
+     "verdict":  {"kind": "panicked"}},
+
+    {"name": "reject-expected-not-implemented-is-coverage",
+     "actual":   {"bytes_hex": null, "error": "not-implemented"},
+     "expected": {"bytes_hex": "1a0168", "error": "errored"},
+     "verdict":  {"kind": "coverage", "tag": "not-implemented"}}
   ]
 }

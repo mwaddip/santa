@@ -88,22 +88,39 @@ pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
     json!({"kind": "accept", "value": value, "cost": cost})
 }
 
-/// §6 wire-tier verdict: a single round-trip judgment. The blessed expected is `expected_bytes_hex`
-/// when present (a non-identity round-trip), else the entry's own `bytes_hex` (round-trip to self),
-/// so grading is `bytes_hex` lower-case exact-equality + `error`
-/// null -> a `roundtrip` nice/differ verdict — no value/cost split (the wire tier has no cost
-/// dimension). `not-implemented` (no serializer for this kind) and `panicked` (a runner crash) reuse
-/// the eval `coverage`/`panicked` verdict shapes, so conform tallies them uniformly across tiers; a
-/// non-null `errored` / a byte mismatch / a null actual (totality breach) is differ (coal).
+/// §6 wire-tier verdict. TWO arms: round-trip (accept) and reject.
+/// REJECT arm — when the vector entry carries `error: "errored"` (the JVM rejects these bytes at
+/// deserialize, e.g. an SHeader-typed constant whose SerializerException escapes the soft-fork
+/// fallback): a clean `errored` actual is the correct rejection (`reject` nice); anything that
+/// PRODUCES bytes (round-trips, error null) is the over-accept (`reject` coal). Mirrors the eval
+/// reject arm so conform tallies it uniformly.
+/// ROUND-TRIP arm (no `error` marker) — the blessed expected is `expected_bytes_hex` when present
+/// (a non-identity round-trip), else the entry's own `bytes_hex` (round-trip to self), so grading is
+/// `bytes_hex` lower-case exact-equality + `error` null -> a `roundtrip` nice/differ verdict — no
+/// value/cost split (the wire tier has no cost dimension). For a round-trip vector a non-null
+/// `errored` / a byte mismatch / a null actual (totality breach) is differ (coal).
+/// `not-implemented` (no serializer for this kind) and `panicked` (a runner crash) reuse the eval
+/// `coverage`/`panicked` verdict shapes, so conform tallies them uniformly across tiers.
 pub fn grade_wire(actual: &Value, expected: &Value) -> Value {
     if actual.is_null() {
-        return json!({"kind": "roundtrip", "verdict": "differ"});
+        // A reject-expected vector reads a null actual as a totality breach (coal), same as round-trip:
+        // a runner that emits nothing did not cleanly reject.
+        return json!({"kind": if err_is(expected, "errored") { "reject" } else { "roundtrip" },
+            "verdict": "differ"});
     }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
     }
     if err_is(actual, "not-implemented") {
         return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+    // Reject arm: `expected.error == "errored"` marks bytes the JVM REJECTS at deserialize. A clean
+    // `errored` actual is the correct rejection (nice); anything that PRODUCES bytes (round-trips,
+    // error null) is the over-accept (reject/coal). panicked/not-impl handled above — a crash is not
+    // a clean reject. Mirrors the eval reject arm (grade()), so the conform tally's `reject` arm counts it.
+    if err_is(expected, "errored") {
+        let v = if err_is(actual, "errored") { "nice" } else { "reject" };
+        return json!({"kind": "reject", "verdict": v});
     }
     // Non-identity round-trip: a blessed `expected_bytes_hex` (JVM-canonical output that differs
     // from the non-canonical input) overrides the identity default (`bytes_hex`). Absent =>

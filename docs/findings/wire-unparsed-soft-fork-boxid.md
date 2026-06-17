@@ -59,7 +59,8 @@ sigma-state 6.0.3 is jar-only; spikes are the gate, not recollection:
 
 ## The vectors
 
-`vectors/wire/v6/authored/`, identity round-trip (no `expected_bytes_hex`; absent ⇒ round-trip-to-self):
+`vectors/wire/v6/authored/` — identity round-trips (no `expected_bytes_hex` ⇒ round-trip-to-self) plus one
+REJECT arm (`error: "errored"` ⇒ the JVM rejects at deserialize, a conformant runner must error):
 
 - **`Box.unparsed_soft_fork_boxid.json`** (`kind: Box`, 2 entries) — a green-**everywhere** invariant
   guard. It locks the consensus-safety property this investigation set out to test: *boxId is preserved
@@ -77,11 +78,28 @@ sigma-state 6.0.3 is jar-only; spikes are the gate, not recollection:
   errored, develop not-impl — same bare-tree spread). This is the **DEGRADE** side of the rule-1009
   boundary; the **REJECT** twin — an `SHeader` constant (typeCode `0x68`, which rule 1009 does NOT
   special-case, so a direct `SerializerException` escapes the soft-fork fallback and the JVM rejects) —
-  lands as a wire **reject arm** (pending ergots' exact hex).
+  lands as a wire **reject arm** — now shipped (next bullet).
+- **`ErgoTree.unparsed_soft_fork_header_constant.json`** (`kind: ErgoTree`, 1 entry, **REJECT**:
+  `error: "errored"`, no `expected_bytes_hex`) — the REJECT side of the rule-1009 boundary. A v2 + size + seg
+  tree with one segregated `SHeader` constant (typeCode `0x68` = 104): SHeader is neither `== OptionTypeCode`
+  nor `> LastDataType` (111), so rule 1009 does NOT fire — a direct `SerializerException` ("Not defined
+  DataSerializer for type SHeader") ESCAPES the soft-fork fallback and the JVM **rejects**, even size-flagged
+  (blessed live: deserialize THROWS). Graded by `grade_wire`'s reject arm (`errored` actual = nice; producing
+  bytes = over-accept coal). **Board: rudolph + vixen reject (nice); blitzen-eni OVER-ACCEPTS** — sigma-rust
+  degrades the SHeader tree to Unparsed + round-trips where the JVM rejects (a real lib-vs-JVM divergence,
+  routed to sigma-rust to confirm it's the lenient deserializer not the wire arm); dasher panicked (a ts-runner
+  classification gap — ergots throws a typed `SValueParseError`); develop not-impl. Bytes from ergots'
+  `sheader-constants-v2-header-literal` fixture.
 
-All three are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
-`AuthoredWireUnparsedSoftForkOptionConstantTest`, which re-derive the blessing each run
-(genuinely-unparsed + JVM identity) so a sigma-state change fails loud.
+All four are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
+`AuthoredWireUnparsedSoftForkOptionConstantTest` / `AuthoredWireUnparsedSoftForkHeaderConstantTest`, which
+re-derive the blessing each run (genuinely-unparsed + JVM identity, or — for the reject arm — that
+`LenientErgoTree.deserialize` THROWS a `SerializerException` naming SHeader) so a sigma-state change fails loud.
+
+The `(a)` degrade + `(b)` reject pair pins the exact `CheckSerializableTypeCode` (rule 1009) boundary:
+SOption is the rule's special case (soft-fork degrade → round-trip), SHeader is not (direct reject). An impl
+that treats both alike — degrading SHeader like SOption (eni), or rejecting SOption like SHeader — diverges
+from JVM consensus on which size-flagged trees survive deserialization.
 
 ## What would be needed to actually fork the boxId (not demonstrated reachable)
 

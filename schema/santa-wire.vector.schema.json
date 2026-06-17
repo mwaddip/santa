@@ -33,8 +33,13 @@
           "description": "OPTIONAL. The blessed JVM-canonical output when it differs from the input bytes_hex (a non-identity round-trip, e.g. a structural ErgoTree re-serialize that re-encodes a lossy-decoded STypeVar name). Absent => round-trip-to-self (the input IS the expected). See docs/specs/wire-roundtrip-nonidentity.md.",
           "$ref": "#/$defs/hex"
         },
+        "error": {
+          "description": "OPTIONAL. Marks a REJECT entry: the JVM rejects bytes_hex at deserialize, so a conformant runner must error (not produce a round-trip). Mutually exclusive with expected_bytes_hex (a reject has no canonical output). grade_wire: an `errored` actual is nice; producing bytes is the over-accept (coal). See docs/findings/wire-unparsed-soft-fork-boxid.md.",
+          "enum": ["errored"]
+        },
         "version": { "$ref": "#/$defs/version" }
-      }
+      },
+      "not": { "required": ["error", "expected_bytes_hex"] }
     },
     "version": {
       "type": "object",
