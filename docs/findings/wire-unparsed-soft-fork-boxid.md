@@ -108,13 +108,24 @@ REJECT arm (`error: "errored"` ⇒ the JVM rejects at deserialize, a conformant 
   **byte-identical** — where the v2 form rejects. **Board: rudolph + eni + dasher + vixen all GREEN (accept);
   develop not-impl** (its ErgoTree wire arm is absent upstream — pre-existing coverage gap). An impl that
   REJECTS this OVER-REJECTS a valid v6.0 SHeader constant; none currently does.
+- **`ErgoTree.sheader_constant_v3_malformed_pk_reject.json`** (`kind: ErgoTree`, 1 entry, **REJECT**:
+  `error: "errored"`) — the **malformed-Header-VALUE** residual: the v3 accept tree with the AutolykosSolution
+  pk's compressed-point prefix corrupted `0x00` → `0x05` (one byte; same length). At v3 the JVM accepts an
+  SHeader constant only if its Header value parses; the bad point makes `GroupElementSerializer.parse` throw →
+  the JVM REJECTS. **Board: rudolph + dasher (ergots) reject (nice); blitzen-eni AND vixen OVER-ACCEPT** —
+  both Rust forks parse + round-trip the off-curve pk (sigma-rust's EC deserialize skips on-curve validation
+  the JVM enforces); develop not-impl. The first **value-validation** (not type/version) divergence on the
+  SHeader boundary, and the first time the two Rust forks diverge *together* from JVM+TS. Blessed on the
+  valid-base-accepts / pk-corrupted-throws differential (robust against the wrapper's misleading message).
 
-All six are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
+All seven are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
 `AuthoredWireUnparsedSoftForkOptionConstantTest` / `AuthoredWireUnparsedSoftForkHeaderConstantTest` /
-`AuthoredWireBoxSoftForkHeaderRejectTest` / `AuthoredWireSHeaderConstantV3AcceptTest`, which re-derive the
-blessing each run (genuinely-unparsed + JVM identity, the v3 case genuinely-PARSED + identity, or — for the
-reject arms — that `LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse` THROWS a
-`SerializerException` naming SHeader) so a sigma-state change fails loud.
+`AuthoredWireBoxSoftForkHeaderRejectTest` / `AuthoredWireSHeaderConstantV3AcceptTest` /
+`AuthoredWireSHeaderConstantV3MalformedPkRejectTest`, which re-derive the blessing each run (genuinely-unparsed
++ JVM identity, the v3 accept case genuinely-PARSED + identity, or — for the reject arms — that
+`LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse` THROWS, naming SHeader for the type-code rejects
+or with an off-curve-pk `IllegalArgumentException` cause for the malformed-value reject) so a sigma-state change
+fails loud.
 
 The `(a)` degrade + `(b)`/Box reject set pins the exact `CheckSerializableTypeCode` (rule 1009) boundary:
 SOption is the rule's special case (soft-fork degrade → round-trip), SHeader is not (direct reject). An impl
@@ -143,10 +154,18 @@ not diverging. The `sheader_constant_v3_accept` vector pins the accept side of t
 regression (an impl that starts over-*rejecting* the valid v6.0 constant) goes red. (The no-size v3 form,
 header `0x13`, is ruled out — `CheckHeaderSizeBit` rule 1012 rejects it for the size-bit reason, not SHeader.)
 
-A *narrower* v3 over-accept may still exist and is **not yet probed**: the JVM accepts a v3 SHeader constant
-only if its Header value parses (`ErgoHeader.sigmaSerializer.parse` succeeds). An impl that accepts a
-**malformed/short Header payload** at v3, where the JVM rejects at the Header parse, would over-accept — a
-fresh-bless probe, tracked separately.
+A *narrower* v3 over-accept **DOES exist — found 2026-06-17** (`SHeaderV3MalformedValueSpike` + the
+`sheader_constant_v3_malformed_pk_reject` vector below). The JVM accepts a v3 SHeader constant only if its
+Header value parses (`ErgoHeader.sigmaSerializer.parse`). A v3 SHeader constant whose AutolykosSolution **pk
+is an invalid compressed point** (prefix `0x05`) is REJECTED by the JVM — `GroupElementSerializer.parse`
+throws an `IllegalArgumentException` (which `deserializeErgoTree` wraps as a `SerializerException` with a
+misleading "tree version" message; the real cause is the bad point) — and is rejected by **ergots (dasher
+green)**. But **both Rust forks OVER-ACCEPT it: sigma-rust(eni) AND arkadianet(vixen) parse + round-trip it
+byte-identical** (red on the vector). So sigma-rust's GroupElement / `AutolykosSolution` deserialize does
+**not** validate the point is on-curve where the JVM (and ergots' TS) do — a crafted-bytes over-accept shared
+across both independent Rust forks. It is almost certainly **not SHeader-specific**: the pk decode is shared
+by all Header deserialization, so a bad-pk Header anywhere (e.g. a captured block) would likely over-accept
+the same way (untested outside the SHeader-constant path). Routed to sigma-rust (eni → develop) + arkadianet.
 
 ## What would be needed to actually fork the boxId (not demonstrated reachable)
 

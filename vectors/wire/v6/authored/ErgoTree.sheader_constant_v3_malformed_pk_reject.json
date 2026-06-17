@@ -1,0 +1,19 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.sheader_constant_v3_malformed_pk_reject",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "entries" : [
+    {
+      "name" : "sheader-constant-v3-malformed-pk-reject#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sheader-constant-v3-malformed-pk-reject",
+      "description" : "v3 SHeader-as-constant (header 0x1b = v3 + size + seg) whose AutolykosSolution pk carries an INVALID compressed-point prefix (0x05). The JVM accepts SHeader constants at treeVersion >= 3 but only if the Header value parses — ErgoHeader.sigmaSerializer.parse -> GroupElementSerializer.parse rejects the bad point (IllegalArgumentException, wrapped as a SerializerException whose top message is a misleading \"tree version\" mislabel) so the JVM REJECTS. The MALFORMED-VALUE residual of the SHeader-constant v3 boundary (the accept twin sheader_constant_v3_accept carries a valid Header value). An impl that decodes the pk without on-curve / valid-prefix validation accepts a v3 SHeader constant the JVM rejects -> a crafted-bytes over-accept.",
+      "bytes_hex" : "1bdb01016802000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0843d0000000000000000000000000000000000000000000000000000000000000000070239b8010000000005000000000000000000000000000000000000000000000000000000000000000000000001000000017300",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
