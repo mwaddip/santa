@@ -113,19 +113,31 @@ REJECT arm (`error: "errored"` ⇒ the JVM rejects at deserialize, a conformant 
   pk's compressed-point prefix corrupted `0x00` → `0x05` (one byte; same length). At v3 the JVM accepts an
   SHeader constant only if its Header value parses; the bad point makes `GroupElementSerializer.parse` throw →
   the JVM REJECTS. **Board: rudolph + dasher (ergots) reject (nice); blitzen-eni AND vixen OVER-ACCEPT** —
-  both Rust forks parse + round-trip the off-curve pk (sigma-rust's EC deserialize skips on-curve validation
-  the JVM enforces); develop not-impl. The first **value-validation** (not type/version) divergence on the
-  SHeader boundary, and the first time the two Rust forks diverge *together* from JVM+TS. Blessed on the
-  valid-base-accepts / pk-corrupted-throws differential (robust against the wrapper's misleading message).
+  both Rust forks echo the off-curve-pk tree (the size-flagged degrade gate swallows the correctly-produced
+  point error — see §Mechanism above; develop not-impl). The first **value-validation** (not type/version)
+  divergence on the SHeader boundary, and the first time the two Rust forks diverge *together* from JVM+TS.
+  Blessed on the valid-base-accepts / pk-corrupted-throws differential (robust against the wrapper's misleading message).
+- **`ErgoTree.sheader_constant_v3_truncated_reject.json`** (`kind: ErgoTree`, 1 entry, **REJECT**:
+  `error: "errored"`) — the **truncation sibling** on the same degrade gate (sigma-rust ask §3b). The v3 accept
+  tree with the last 22 bytes dropped, cutting mid-field into the Header constant's `pk`. The Header deserialize
+  runs out of bytes and throws a hard EOF/underflow (a **non-ValidationException**) → the JVM REJECTS; it does
+  NOT degrade (truncation is not soft-forkable, unlike the position-limit rule-1014 case which DOES degrade —
+  the (b)-vs-(c) discriminator). **Board: rudolph + dasher (ergots) + vixen reject (nice); blitzen-eni
+  OVER-ACCEPTS** (its degrade gate swallows the truncation error + echoes; `red_total 1→2`) — the C-lite
+  target, flips green post-fix. Unlike the malformed-pk, **vixen rejects here** (its bare-ErgoTree wire arm
+  strips the size flag — no size-based degrade-skip — see the ErgoTree-surface section above), so this vector
+  grades eni's over-accept specifically. The size VLQ is rewritten to MATCH the truncated length so the
+  degrade-skip succeeds (echo = over-accept) rather than EOF-rejecting for the wrong reason (a false-green the
+  first cut hit). Blessed on the valid-accepts / truncated-throws-non-ValidationException differential.
 
-All seven are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
+All eight are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
 `AuthoredWireUnparsedSoftForkOptionConstantTest` / `AuthoredWireUnparsedSoftForkHeaderConstantTest` /
 `AuthoredWireBoxSoftForkHeaderRejectTest` / `AuthoredWireSHeaderConstantV3AcceptTest` /
-`AuthoredWireSHeaderConstantV3MalformedPkRejectTest`, which re-derive the blessing each run (genuinely-unparsed
-+ JVM identity, the v3 accept case genuinely-PARSED + identity, or — for the reject arms — that
-`LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse` THROWS, naming SHeader for the type-code rejects
-or with an off-curve-pk `IllegalArgumentException` cause for the malformed-value reject) so a sigma-state change
-fails loud.
+`AuthoredWireSHeaderConstantV3MalformedPkRejectTest` / `AuthoredWireSHeaderConstantV3TruncatedRejectTest`, which
+re-derive the blessing each run (genuinely-unparsed + JVM identity, the v3 accept case genuinely-PARSED +
+identity, or — for the reject arms — that `LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse` THROWS,
+naming SHeader for the type-code rejects, or a non-ValidationException for the malformed-value / truncation
+rejects) so a sigma-state change fails loud.
 
 The `(a)` degrade + `(b)`/Box reject set pins the exact `CheckSerializableTypeCode` (rule 1009) boundary:
 SOption is the rule's special case (soft-fork degrade → round-trip), SHeader is not (direct reject). An impl
@@ -161,11 +173,20 @@ is an invalid compressed point** (prefix `0x05`) is REJECTED by the JVM — `Gro
 throws an `IllegalArgumentException` (which `deserializeErgoTree` wraps as a `SerializerException` with a
 misleading "tree version" message; the real cause is the bad point) — and is rejected by **ergots (dasher
 green)**. But **both Rust forks OVER-ACCEPT it: sigma-rust(eni) AND arkadianet(vixen) parse + round-trip it
-byte-identical** (red on the vector). So sigma-rust's GroupElement / `AutolykosSolution` deserialize does
-**not** validate the point is on-curve where the JVM (and ergots' TS) do — a crafted-bytes over-accept shared
-across both independent Rust forks. It is almost certainly **not SHeader-specific**: the pk decode is shared
-by all Header deserialization, so a bad-pk Header anywhere (e.g. a captured block) would likely over-accept
-the same way (untested outside the SHeader-constant path). Routed to sigma-rust (eni → develop) + arkadianet.
+byte-identical** (red on the vector).
+
+**Mechanism — the DEGRADE GATE, not a lenient EC decode (sigma-rust root-caused, correcting an initial
+mis-read).** sigma-rust's k256 `from_sec1_bytes` *correctly* rejects the off-curve point; the size-flagged
+`ErgoTree::parse_with` degrade gate escapes only `NonSerializableTypeCode` (the SHeader carve-out) and degrades
+EVERY other error to `Unparsed` + echo — swallowing the correctly-produced point error. So the over-accept is
+**specific to the size-flagged ErgoTree-as-constant path**, NOT a general Header-validation gap: the raw
+`Header.sigmaSerializer.parse` block path has no degrade fallback (source: `ErgoHeader.scala`), so a bad-pk
+Header in a captured block is **already rejected** on eni+develop (sigma-rust verified). The earlier "a
+captured-block bad-pk Header would over-accept the same way" suspicion was **WRONG** — corrected here. The same
+gate has a **truncation sibling** (next vector). sigma-rust's C-lite fix escapes the whole `ScorexParsingError`
+wire-error class EXCEPT position-limit (rule 1014), which keeps degrading to match the JVM
+(`deserializeErgoTree` maps `ReaderPositionLimitExceeded` → `CheckPositionLimit` `ValidationException` →
+degrade). Routed `prompts/sigma-rust-header-pk-on-curve-overaccept.md` (eni → develop) + arkadianet; fix in progress.
 
 ## What would be needed to actually fork the boxId (not demonstrated reachable)
 

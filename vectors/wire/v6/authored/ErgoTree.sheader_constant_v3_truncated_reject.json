@@ -1,0 +1,19 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.sheader_constant_v3_truncated_reject",
+  "blessed_by" : "jvm:sigma-state-6.0.3",
+  "entries" : [
+    {
+      "name" : "sheader-constant-v3-truncated-reject#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sheader-constant-v3-truncated-reject",
+      "description" : "v3 SHeader-as-constant (header 0x1b) with the Header constant truncated 22 bytes mid-pk and the size VLQ rewritten to match (so a lenient degrade-skip echoes rather than EOF-rejecting for the wrong reason). The Header deserialize runs out of bytes and throws a hard EOF/underflow (a non-ValidationException) so the JVM REJECTS — it does NOT degrade (truncation is not soft-forkable, unlike the position-limit rule-1014 case). The sibling of the malformed-pk reject on the same size-flagged ErgoTree-constant degrade gate. An impl whose lenient ErgoTree degrade swallows the truncation error and echoes the raw bytes (e.g. sigma-rust pre-C-lite) OVER-ACCEPTS a tree the JVM rejects -> crafted-bytes over-accept.",
+      "bytes_hex" : "1bc501016802000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0843d0000000000000000000000000000000000000000000000000000000000000000070239b80100000000000000000000000000000000000000000000000000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
