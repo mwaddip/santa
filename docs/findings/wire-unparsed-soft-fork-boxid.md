@@ -100,18 +100,53 @@ REJECT arm (`error: "errored"` ⇒ the JVM rejects at deserialize, a conformant 
   is a NEW inconsistency (rejects the BARE SHeader tree but degrades it inside a box); arkadianet's is NEW.
   Minted by frame-swap (a real box frame around a 0xfd tree, propBytes swapped) so the strict parse reaches the
   SHeader DataSerializer; the parse dies at the tree before the tail.
+- **`ErgoTree.sheader_constant_v3_accept.json`** (`kind: ErgoTree`, 1 entry, **ACCEPT** + identity) — the
+  POSITIVE side of the SHeader-constant version boundary: the same SHeader-constant tree with the ErgoTree
+  version bumped 2 → 3 (header `0x1b` = v3 + size + seg). At `treeVersion ≥ 3` SHeader's `DataSerializer`
+  EXISTS (gated on `VersionContext.isV3OrLaterErgoTreeVersion` — `DataSerializer.scala:19,39`), so the JVM
+  PARSES the SHeader constant (as a `CHeader` via `ErgoHeader.sigmaSerializer`) and round-trips
+  **byte-identical** — where the v2 form rejects. **Board: rudolph + eni + dasher + vixen all GREEN (accept);
+  develop not-impl** (its ErgoTree wire arm is absent upstream — pre-existing coverage gap). An impl that
+  REJECTS this OVER-REJECTS a valid v6.0 SHeader constant; none currently does.
 
-All five are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
+All six are guarded by `AuthoredWireBoxUnparsedSoftForkTest` / `AuthoredWireUnparsedSoftForkTest` /
 `AuthoredWireUnparsedSoftForkOptionConstantTest` / `AuthoredWireUnparsedSoftForkHeaderConstantTest` /
-`AuthoredWireBoxSoftForkHeaderRejectTest`, which re-derive the blessing each run (genuinely-unparsed + JVM
-identity, or — for the reject arms — that `LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse`
-THROWS a `SerializerException` naming SHeader) so a sigma-state change fails loud.
+`AuthoredWireBoxSoftForkHeaderRejectTest` / `AuthoredWireSHeaderConstantV3AcceptTest`, which re-derive the
+blessing each run (genuinely-unparsed + JVM identity, the v3 case genuinely-PARSED + identity, or — for the
+reject arms — that `LenientErgoTree.deserialize` / `ErgoBox.sigmaSerializer.parse` THROWS a
+`SerializerException` naming SHeader) so a sigma-state change fails loud.
 
 The `(a)` degrade + `(b)`/Box reject set pins the exact `CheckSerializableTypeCode` (rule 1009) boundary:
 SOption is the rule's special case (soft-fork degrade → round-trip), SHeader is not (direct reject). An impl
 that treats both alike — degrading SHeader like SOption — diverges from JVM consensus on which size-flagged
 trees survive deserialization: caught on the LENIENT path on eni (`(b)`, now fixed) and on the STRICT
 box→tree path on develop, ergots, and arkadianet (the Box twin).
+
+## The SHeader reject is VERSION-GATED — the v≥3 over-accept premise, refuted (2026-06-17)
+
+The v2 reject is **not** universal. ergots' box-reject reply (§"Two notes" #2) flagged a suspected
+*"v≥3 SHeader-as-DATA constant: ergots + sigma-rust accept where the JVM rejects at every version"* —
+a two-impl consensus over-accept. **Blesser-first spike (`SHeaderV3RejectSpike`) REFUTED it:** the JVM does
+**not** reject at every version. SHeader's `DataSerializer` is gated on `isV3OrLaterErgoTreeVersion`
+(`DataSerializer.scala:19,39`) — SHeader-as-constant is a genuine **v6.0 / ErgoTree-v3 feature**:
+
+| tree version | header | JVM (lenient · strict · box) | mechanism |
+|---|---|---|---|
+| **v2** | `0x1a` | **reject · reject · reject** | no `DataSerializer` for SHeader → `SerializerException` escapes the soft-fork fallback |
+| **v3** | `0x1b` | **accept · accept · accept** | `DataSerializer` reads a `CHeader` via `ErgoHeader.sigmaSerializer` → parses + round-trips identical |
+
+So the "JVM rejects at every version" assumption (carried in the v2 reject framing above) is the **v2-only**
+story. At v3 the JVM accepts, and conform confirms **every impl that implements the wire ErgoTree arm
+matches it** — eni, dasher (ergots), and vixen (arkadianet) all accept the v3 SHeader constant; develop is
+not-impl. ergots' over-accept worry was unfounded: they (and eni, and arkadianet) are **conformant** at v3,
+not diverging. The `sheader_constant_v3_accept` vector pins the accept side of the boundary so a future
+regression (an impl that starts over-*rejecting* the valid v6.0 constant) goes red. (The no-size v3 form,
+header `0x13`, is ruled out — `CheckHeaderSizeBit` rule 1012 rejects it for the size-bit reason, not SHeader.)
+
+A *narrower* v3 over-accept may still exist and is **not yet probed**: the JVM accepts a v3 SHeader constant
+only if its Header value parses (`ErgoHeader.sigmaSerializer.parse` succeeds). An impl that accepts a
+**malformed/short Header payload** at v3, where the JVM rejects at the Header parse, would over-accept — a
+fresh-bless probe, tracked separately.
 
 ## What would be needed to actually fork the boxId (not demonstrated reachable)
 
