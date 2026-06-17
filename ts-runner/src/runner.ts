@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import {
-  parseTree, serializeTree, evaluateWith, makeContext, EvalError,
-  parseSValue, serializeSValue, parseSType, serializeSType, SValueParseError, SValueSerializeError, ErgoTreeParseError, ErgoTreeSerializeError, ExprParseError, type SType,
+  parseTree, serializeTree, isUnparsedTree, evaluateWith, makeContext, EvalError,
+  parseSValue, serializeSValue, parseSType, serializeSType, STypeParseError, SValueParseError, SValueSerializeError, ErgoTreeParseError, ErgoTreeSerializeError, ExprParseError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
@@ -109,6 +109,10 @@ function runEntryInner(schema: string, e: Entry): Result {
     if (err instanceof ExprParseError) return { value: null, cost: null, error: 'errored' }
     throw err
   }
+  // A size-flagged soft-fork tree degrades to UnparsedErgoTree on master's parseTree; SANTA's eval
+  // vectors are always parsed (evaluable) trees, so an unparsed one is a malformed eval input — refuse
+  // it (errored) and narrow `tree` to the parsed arm (.constants) for the context build below.
+  if (isUnparsedTree(tree)) return { value: null, cost: null, error: 'errored' }
 
   // [1] decode + bind the entry's context per its envelope (rudolph Runner.scala dispatch):
   //       v2: single `input` → var 1 in SELF's ContextExtension (EvalCore.evalApplied);
@@ -237,10 +241,11 @@ const ORACLE_UNBOUND = /\btypeId=99, methodId=7\b/
  *  wire byte on both sides (the 101:12 handler normalizes its signed Byte operand to this
  *  domain), so `Number(id)` is the identity bridge. */
 function decodeExtension(ext: { [varId: string]: SValueJson }, treeVersion: number): ContextExtension {
-  const values: ContextExtension['values'] = {}
+  // master's ContextExtension['values'] is a Map<number, {tpe, value}>.
+  const values = new Map<number, ReturnType<typeof decodeSValue>>()
   for (const [id, j] of Object.entries(ext)) {
     const { value, tpe } = decodeSValue(j, treeVersion)
-    values[Number(id)] = { tpe, value }
+    values.set(Number(id), { tpe, value })
   }
   return { values }
 }
@@ -454,8 +459,11 @@ function buildFullCtxOpts(
   // Per-input ContextExtensions (read by getVarFromInput by index); the SELF input's is also
   // the top-level context.extension (bare getVar), per EvalCore.fullContext.
   const inputExtensions = (c.input_extensions ?? []).map((ext) => decodeExtension(ext, treeVersion))
-  const extension = inputExtensions[c.self_index] ?? { values: {} }
+  const extension = inputExtensions[c.self_index] ?? { values: new Map() }
 
+  // master's parseTree returns ParsedErgoTree | UnparsedErgoTree; a fullctx eval golden is always a
+  // parsed tree, so refuse an unparsed one (FullCtxRefused → errored) and narrow `tree` for .constants.
+  if (isUnparsedTree(tree)) throw new FullCtxRefused('unparsed soft-fork tree cannot be evaluated')
   return {
     treeVersion,
     constants: tree.constants,
@@ -496,6 +504,20 @@ type WireResult = {
 }
 
 const SBOX: SType = { tag: 'SBox' }
+
+/** ergots' typed wire-codec error classes — a codec REJECTION of the bytes (a faithful reject ⇒
+ *  `errored`), distinct from an untyped throw (a library/runner defect ⇒ the panic-net). The ErgoTree
+ *  round-trip COMPOSES the SValue/SType/Expr/tree codecs, so a tree with a bad constant or type throws
+ *  the constituent codec's typed error (e.g. an SHeader-typed segregated constant ⇒ SValueParseError),
+ *  not ErgoTreeParseError. Mirrors ergots' own test/conformance/_santa.ts isWireParseError set. */
+function isWireCodecError(err: unknown): boolean {
+  return err instanceof SValueParseError || err instanceof SValueSerializeError
+    || err instanceof STypeParseError
+    || err instanceof ErgoTreeParseError || err instanceof ErgoTreeSerializeError
+    || err instanceof SigmaBooleanParseError || err instanceof SigmaBooleanSerializeError
+    || err instanceof ExprParseError
+    || err instanceof ReaderError
+}
 
 /** Round-trip one wire entry → exactly one WireResult. Never-panic net mirrors runEntry: any
  *  otherwise-uncaught throw becomes `panicked` (note carries the message) so the run continues. */
@@ -570,15 +592,17 @@ function runWireEntryInner(e: WireEntry): WireResult {
       // Structural ErgoTree round-trip: parse to a tree, re-serialize FROM structure. ergots'
       // serializeTree re-encodes (header → size → constants → body via serializeExpr), NOT a
       // cached-bytes echo — the structural round-trip the kind requires (runner-contract-wire.md §5).
-      // parseTree is lenient on the root (our witnesses eval to Int 5, not a SigmaProp). A typed
-      // ErgoTree codec rejection is `errored`; an untyped throw (e.g. ergots' strict-UTF-8 decode of
-      // an ill-formed STypeVar name — the divergence this vector pins) falls to the panic-net.
+      // parseTree is lenient on the root (our witnesses eval to Int 5, not a SigmaProp). The tree
+      // round-trip COMPOSES the SValue/SType/Expr codecs, so a typed codec rejection from any of them
+      // (e.g. an SHeader-typed segregated constant ⇒ SValueParseError) is `errored` (a faithful
+      // reject); an untyped throw (e.g. ergots' strict-UTF-8 decode of an ill-formed STypeVar name)
+      // falls to the panic-net.
       const bytes = hexToBytes(e.bytes_hex)
       try {
         const tree = parseTree(bytes)
         return { bytes_hex: bytesToHex(serializeTree(tree)), error: null }
       } catch (err) {
-        if (err instanceof ErgoTreeParseError || err instanceof ErgoTreeSerializeError) {
+        if (isWireCodecError(err)) {
           return { bytes_hex: null, error: 'errored' }
         }
         throw err

@@ -7,7 +7,7 @@ import { runWireVector } from '../src/runner'
 const here = path.dirname(fileURLToPath(import.meta.url))
 const loadVector = (
   rel: string,
-): { schema: string; entries: { name: string; kind: string; bytes_hex: string; version: { activated: number; ergoTree: number } }[] } =>
+): { schema: string; entries: { name: string; kind: string; bytes_hex: string; expected_bytes_hex?: string; error?: string; version: { activated: number; ergoTree: number } }[] } =>
   JSON.parse(readFileSync(path.resolve(here, '../../vectors/wire', rel), 'utf8'))
 
 describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
@@ -48,18 +48,28 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
     }
   })
 
-  it('ErgoTree: the structural round-trip engages — a faithful divergence on the ill-formed STypeVar names', () => {
+  it('ErgoTree (STypeVar names): round-trips to the JVM-canonical lossy bytes — ergots master adopted the U+FFFD collapse', () => {
     const vec = loadVector('v6/authored/STypeVar.name_utf8_roundtrip.json')
     const actuals = runWireVector(vec)
     expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
-    // The arm engages (never not-implemented). ergots strict-UTF-8-rejects every ill-formed type-var
-    // name and throws an UNTYPED error, so the harness classifies it `panicked` (the classification
-    // gap — same shape as the eval STypeVar arm). It flips to `errored` if ergots types the reject, or
-    // green once ergots adopts the JVM's lossy U+FFFD collapse. The node fix is the ergots session's;
-    // the runner arm is SANTA's. Update this assertion when ergots converges.
+    // ergots master now lossy-decodes the ill-formed type-var names (the JVM's U+FFFD collapse) and
+    // re-serializes the structural tree, so each entry round-trips to its blessed JVM-canonical output
+    // (expected_bytes_hex, non-identity) — converged, no longer the panicked classification gap.
     for (const e of vec.entries) {
-      expect(actuals[e.name].bytes_hex).toBeNull()
-      expect(actuals[e.name].error).toBe('panicked')
+      expect(actuals[e.name].error).toBeNull()
+      expect(actuals[e.name].bytes_hex).toBe(e.expected_bytes_hex ?? e.bytes_hex)
+    }
+  })
+
+  it('ErgoTree (SHeader-constant reject): a typed codec rejection grades errored, not panicked', () => {
+    // The (b) reject vector: a size-flagged tree with a segregated SHeader constant the JVM rejects.
+    // ergots throws a typed SValueParseError parsing the constant; isWireCodecError maps it to `errored`
+    // (a faithful reject), NOT the panic-net. Guards the typed-codec-error classification.
+    const vec = loadVector('v6/authored/ErgoTree.unparsed_soft_fork_header_constant.json')
+    const actuals = runWireVector(vec)
+    expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
+    for (const e of vec.entries) {
+      expect(actuals[e.name]).toEqual({ bytes_hex: null, error: 'errored' })
     }
   })
 })
