@@ -517,20 +517,27 @@ function isWireCodecError(err: unknown): boolean {
     || err instanceof SigmaBooleanParseError || err instanceof SigmaBooleanSerializeError
     || err instanceof ExprParseError
     || err instanceof ReaderError
+    // @ergots/transaction's TxParseError is loaded lazily (variable specifier), so match by name
+    // rather than instanceof — a tx-codec rejection of the bytes is a faithful `errored`.
+    || (err instanceof Error && err.name === 'TxParseError')
 }
+
+/** The wire-tier slice of the lazily-loaded @ergots/transaction codec (null if ergots-impl
+ *  predates the tx tier — then a Transaction entry degrades to not-implemented). */
+type WireTxCodec = { parseTransaction: (b: Uint8Array) => unknown; serializeTransaction: (tx: unknown) => Uint8Array } | null
 
 /** Round-trip one wire entry → exactly one WireResult. Never-panic net mirrors runEntry: any
  *  otherwise-uncaught throw becomes `panicked` (note carries the message) so the run continues. */
-export function runWireEntry(e: WireEntry): WireResult {
+export function runWireEntry(e: WireEntry, tx: WireTxCodec = null): WireResult {
   try {
-    return runWireEntryInner(e)
+    return runWireEntryInner(e, tx)
   } catch (err) {
     const note = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
     return { bytes_hex: null, error: 'panicked', note }
   }
 }
 
-function runWireEntryInner(e: WireEntry): WireResult {
+function runWireEntryInner(e: WireEntry, tx: WireTxCodec): WireResult {
   const treeVersion = e.version.ergoTree
   switch (e.kind) {
     case 'Box': {
@@ -608,17 +615,37 @@ function runWireEntryInner(e: WireEntry): WireResult {
         throw err
       }
     }
+    case 'Transaction': {
+      // ergots HAS a tx wire codec since @ergots/transaction (merged) — round-trip via
+      // parseTransaction → serializeTransaction, the structural analog of the ErgoTree case
+      // (serializeTransaction re-encodes from structure, not a cached-bytes echo). The codec is the
+      // lazily-loaded module threaded in by runWireVector; null (ergots-impl predates the tx tier)
+      // ⇒ not-implemented. A typed tx-codec rejection ⇒ errored (faithful reject) via isWireCodecError.
+      if (!tx) return { bytes_hex: null, error: 'not-implemented' }
+      const bytes = hexToBytes(e.bytes_hex)
+      try {
+        const parsed = tx.parseTransaction(bytes)
+        return { bytes_hex: bytesToHex(tx.serializeTransaction(parsed)), error: null }
+      } catch (err) {
+        if (isWireCodecError(err)) {
+          return { bytes_hex: null, error: 'errored' }
+        }
+        throw err
+      }
+    }
     default:
-      // Transaction + Header stay not-implemented: ergots has no transaction serializer (it is an
-      // eval library, not a tx builder), and a bare Header parses via a different (scorex) path.
+      // Header stays not-implemented: a bare Header parses via a different (scorex) path.
       return { bytes_hex: null, error: 'not-implemented' }
   }
 }
 
-/** run(wire vector) → actuals: exactly one WireResult per entry, keyed by name (total). */
-export function runWireVector(doc: WireVector): Record<string, WireResult> {
+/** run(wire vector) → actuals: exactly one WireResult per entry, keyed by name (total).
+ *  Async because the Transaction kind round-trips via the lazily-loaded @ergots/transaction codec,
+ *  loaded once per vector and threaded into each entry (null ⇒ Transaction degrades to not-impl). */
+export async function runWireVector(doc: WireVector): Promise<Record<string, WireResult>> {
+  const tx = await loadTxModule()
   const actuals: Record<string, WireResult> = {}
-  for (const e of doc.entries) actuals[e.name] = runWireEntry(e)
+  for (const e of doc.entries) actuals[e.name] = runWireEntry(e, tx)
   return actuals
 }
 
@@ -675,6 +702,7 @@ function toPreHeader(p: TxEntry['preHeader']): PreHeader {
  *  (the package is only present when ergots-impl is pinned to the tx branch); absence ⇒ null. */
 async function loadTxModule(): Promise<{
   parseTransaction: (b: Uint8Array) => unknown
+  serializeTransaction: (tx: unknown) => Uint8Array
   validateStateful: (tx: unknown, deps: unknown) => void
 } | null> {
   try {
@@ -750,7 +778,7 @@ async function main(argv: string[]): Promise<void> {
   const raw = JSON.parse(readFileSync(vecPath, 'utf8')) as { schema?: string }
   const schema = raw.schema ?? ''
   const actuals = schema.startsWith('santa-wire/')
-    ? runWireVector(raw as WireVector)
+    ? await runWireVector(raw as WireVector)
     : schema.startsWith('santa-transaction/')
     ? await runTransactionVector(raw as TxVector)
     : runVector(raw as Vector)
