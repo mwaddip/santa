@@ -77,6 +77,7 @@ object WalkerOracle {
   *
   *   POST /eval        body = one v6-fullctx envelope   → one result JSON
   *   POST /eval-batch  body = [envelope, ...]            → [result, ...] (block batch)
+  *   POST /avl-proof   body = tree+ops                   → {proof_bytes, proof_digest, tree_digest}
   *   GET  /health      → {"status":"ok"}
   *
   * Run: `sbt --batch "runMain santa.OracleService [port]"` (default 9777). */
@@ -116,8 +117,17 @@ object OracleService {
       }
     })
 
+    server.createContext("/avl-proof", new HttpHandler {
+      def handle(ex: HttpExchange): Unit = try {
+        respond(ex, 200, AvlProofGenerator.fromJson(readBody(ex)).noSpaces)
+      } catch {
+        case t: Throwable =>
+          respond(ex, 400, Json.obj("error" -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}")).noSpaces)
+      }
+    })
+
     server.setExecutor(Executors.newFixedThreadPool(4))
     server.start()
-    println(s"santa walker JVM oracle listening on http://127.0.0.1:$port  (POST /eval, POST /eval-batch, GET /health)")
+    println(s"santa walker JVM oracle listening on http://127.0.0.1:$port  (POST /eval, POST /eval-batch, POST /avl-proof, GET /health)")
   }
 }
