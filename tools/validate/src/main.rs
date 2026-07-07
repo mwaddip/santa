@@ -579,14 +579,21 @@ fn block_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: expected arm shape violation: {head:?}", rel.display());
         }
-        // block.adProofs.proofBytes must be a non-empty string on every entry.
+        // block.adProofs.proofBytes must be a non-empty string on every entry,
+        // unless the entry is a proofless block (simulated by empty proofBytes).
         let bad_proof: Vec<&str> = doc["entries"]
             .as_array()
             .map(|es| {
                 es.iter()
                     .filter(|e| {
                         let proof_bytes = e["block"]["adProofs"]["proofBytes"].as_str();
-                        proof_bytes.is_none_or(|s| s.is_empty())
+                        if proof_bytes.is_none_or(|s| s.is_empty()) {
+                            // Proofless block entries carry empty proofBytes by design.
+                            let source = e["source"].as_str().unwrap_or("");
+                            !source.contains("proofless")
+                        } else {
+                            false
+                        }
                     })
                     .filter_map(|e| e["name"].as_str())
                     .collect()
