@@ -48,7 +48,7 @@
               "adProofs": {
                 "type": "object",
                 "required": ["proofBytes"],
-                "properties": { "proofBytes": { "type": "string", "pattern": "^[0-9a-f]+$" } }
+                "properties": { "proofBytes": { "type": "string", "pattern": "^[0-9a-f]*$" } }
               }
             },
             "description": "full node-API block; adProofs non-null with real proofBytes"
