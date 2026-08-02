@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-authds.vector.schema.json",
+  "title": "SANTA authds vector (santa-authds/v1)",
+  "type": "object",
+  "required": ["schema", "op", "blessed_by", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "santa-authds/v1" },
+    "op": { "type": "string", "minLength": 1 },
+    "blessed_by": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "minLength": 1 },
+    "entries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entry" } }
+  },
+  "$defs": {
+    "hex": { "type": "string", "pattern": "^([0-9a-f]{2})*$" },
+    "op_item": {
+      "type": "object",
+      "required": ["tag", "key_hex"],
+      "additionalProperties": false,
+      "properties": {
+        "tag": { "enum": ["Insert", "Update", "Remove", "Lookup", "InsertOrUpdate",
+                          "RemoveIfExists", "UpdateLongBy", "UnknownModification"] },
+        "key_hex": { "$ref": "#/$defs/hex" },
+        "value_hex": { "$ref": "#/$defs/hex" },
+        "delta": { "type": "string", "pattern": "^-?[0-9]+$" }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": ["name", "source", "kind", "settings", "payload", "expected"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["avl_prove", "avl_verify"] },
+        "settings": { "type": "object" },
+        "payload": { "type": "object" },
+        "expected": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "avl_prove" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "settings": {
+                "type": "object",
+                "required": ["key_length", "value_length"],
+                "additionalProperties": false,
+                "properties": {
+                  "key_length": { "type": "integer", "minimum": 1 },
+                  "value_length": { "type": ["integer", "null"], "minimum": 0 }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "required": ["operations", "gen_proof_after"],
+                "additionalProperties": false,
+                "properties": {
+                  "operations": { "type": "array", "items": { "$ref": "#/$defs/op_item" } },
+                  "gen_proof_after": { "type": "array", "items": { "type": "integer", "minimum": 0 } }
+                }
+              },
+              "expected": {
+                "type": "object",
+                "required": ["proofs", "digests"],
+                "additionalProperties": false,
+                "properties": {
+                  "proofs": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
+                  "digests": { "type": "array", "items": { "$ref": "#/$defs/hex" } }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "avl_verify" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "settings": {
+                "type": "object",
+                "required": ["key_length", "value_length", "max_num_operations", "max_deletes"],
+                "additionalProperties": false,
+                "properties": {
+                  "key_length": { "type": "integer", "minimum": 1 },
+                  "value_length": { "type": ["integer", "null"], "minimum": 0 },
+                  "max_num_operations": { "type": ["integer", "null"], "minimum": 0 },
+                  "max_deletes": { "type": ["integer", "null"], "minimum": 0 }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "required": ["starting_digest_hex", "proof_hex", "operations"],
+                "additionalProperties": false,
+                "properties": {
+                  "starting_digest_hex": { "$ref": "#/$defs/hex" },
+                  "proof_hex": { "$ref": "#/$defs/hex" },
+                  "operations": { "type": "array", "items": { "$ref": "#/$defs/op_item" } }
+                }
+              },
+              "expected": {
+                "type": "object",
+                "required": ["proof_accepted", "results", "new_digest_hex"],
+                "additionalProperties": false,
+                "properties": {
+                  "proof_accepted": { "type": "boolean" },
+                  "results": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["ok", "value"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "ok": { "type": "boolean" },
+                        "value": { "anyOf": [{ "$ref": "#/$defs/hex" }, { "type": "null" }] }
+                      }
+                    }
+                  },
+                  "new_digest_hex": { "anyOf": [{ "$ref": "#/$defs/hex" }, { "type": "null" }] }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

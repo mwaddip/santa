@@ -79,6 +79,15 @@ fn main() -> ExitCode {
         jsonschema::validator_for(&wire_act_schema).expect("wire actuals schema invalid");
     println!("[meta] wire vector + actuals schemas: built (valid Draft 2020-12)");
 
+    // AuthDS tier (santa-authds/v1): independent schemas, no cross-ref.
+    let authds_vec_schema = load(&schema_dir.join("santa-authds.vector.schema.json"));
+    let authds_act_schema = load(&schema_dir.join("santa-authds.actuals.schema.json"));
+    let authds_vec_validator =
+        jsonschema::validator_for(&authds_vec_schema).expect("authds vector schema invalid");
+    let _authds_act_validator =
+        jsonschema::validator_for(&authds_act_schema).expect("authds actuals schema invalid");
+    println!("[meta] authds vector + actuals schemas: built (valid Draft 2020-12)");
+
     // Transaction tier (santa-transaction/v1): independent schemas, no cross-ref.
     let tx_vec_schema = load(&schema_dir.join("santa-transaction.vector.schema.json"));
     let tx_act_schema = load(&schema_dir.join("santa-transaction.actuals.schema.json"));
@@ -148,6 +157,26 @@ fn main() -> ExitCode {
     println!("[wire corpus] {wok}/{} valid", wire_files.len());
     errs += wire_path_guard(&root, &wire_files);
     errs += wire_actuals_guards(&wire_act_validator);
+
+    // AuthDS corpus: validate every committed authds vector against the authds vector schema.
+    // vectors/authds/ may not exist yet (empty corpus) — json_files handles missing dirs gracefully.
+    let authds_files = json_files(&root.join("vectors").join("authds"));
+    println!("\n[authds corpus] validating {} committed authds vectors:", authds_files.len());
+    let mut aok = 0;
+    for f in &authds_files {
+        let doc = load(f);
+        let errors: Vec<_> = authds_vec_validator.iter_errors(&doc).collect();
+        if errors.is_empty() {
+            aok += 1;
+        } else {
+            errs += 1;
+            println!("  FAIL {}", f.file_name().unwrap().to_string_lossy());
+            for e in errors.iter().take(4) {
+                println!("      {}", truncate(&e.to_string(), 180));
+            }
+        }
+    }
+    println!("[authds corpus] {aok}/{} valid", authds_files.len());
 
     // Transaction corpus: validate every committed transaction vector against the tx vector schema.
     let tx_files = json_files(&root.join("vectors").join("transaction"));
