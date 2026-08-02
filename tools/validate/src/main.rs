@@ -471,9 +471,17 @@ fn wire_actuals_guards(v: &Validator) -> u32 {
 /// be "any" (AVL proofs are not ErgoTree-versioned, unlike eval/wire/tx/block); provenance must
 /// be "vendored" (ergots' prover/verifier fixtures: inputs vendored, expectations re-derived
 /// through jvm-blesser). Per-entry source must start with the ergots avltree fixture prefix.
-/// Structural invariant the schema cannot express (JSON Schema has no cross-array length
-/// equality): for avl_prove entries, payload.gen_proof_after, expected.proofs, and
-/// expected.digests must be parallel arrays of the same length.
+/// Structural invariants the schema cannot express (JSON Schema has no cross-array length
+/// equality):
+///   - avl_prove: payload.gen_proof_after, expected.proofs, and expected.digests must be
+///     parallel arrays of the same length.
+///   - avl_verify: the operations <-> results arity is conditional on proof_accepted (per
+///     docs/specs/authds-tier.md). proof_accepted:true => results.length ==
+///     payload.operations.length exactly (the blesser records one entry per operation even after
+///     the verifier is poisoned; a short results array means an implementation short-circuited
+///     the loop). proof_accepted:false => results must be [] (the blesser does not attempt
+///     operations when the proof does not anchor at all; a non-empty results on a rejected proof
+///     means operations ran that should not have).
 fn authds_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
     println!("\n[authds catalogue] path <-> envelope guard:");
     let vroot = root.join("vectors");
@@ -553,6 +561,37 @@ fn authds_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             let head = &bad_lengths[..bad_lengths.len().min(3)];
             g += 1;
             println!("  [WRONG] {}: avl_prove parallel-array length mismatch: {head:?}", rel.display());
+        }
+        // Structural invariant the schema cannot express (Finding 4, conditional on
+        // proof_accepted): avl_verify's operations <-> results arity. proof_accepted:true
+        // requires results.length == operations.length exactly; proof_accepted:false requires
+        // results == [] (the blesser never attempts operations when the proof itself is rejected).
+        let bad_arity: Vec<String> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| e["kind"].as_str() == Some("avl_verify"))
+                    .filter_map(|e| {
+                        let name = e["name"].as_str().unwrap_or("(unnamed)");
+                        let proof_accepted = e["expected"]["proof_accepted"].as_bool()?;
+                        let ops = e["payload"]["operations"].as_array()?.len();
+                        let results = e["expected"]["results"].as_array()?.len();
+                        let ok = if proof_accepted { results == ops } else { results == 0 };
+                        if ok {
+                            None
+                        } else {
+                            Some(format!(
+                                "{name} (proof_accepted={proof_accepted}, operations={ops}, results={results})"
+                            ))
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_arity.is_empty() {
+            let head = &bad_arity[..bad_arity.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: avl_verify operations/results arity mismatch: {head:?}", rel.display());
         }
     }
     if g == 0 {
@@ -1878,6 +1917,105 @@ mod tests {
         let bad = authds_path_guard(&tmp, &[fpath]);
         let _ = fs::remove_dir_all(&tmp);
         assert!(bad > 0, "gen_proof_after=2, proofs=3, digests=1 must fire [WRONG] (parallel-array invariant)");
+    }
+
+    /// Minimal well-formed avl_verify vector. `proof_accepted` selects which of the two
+    /// legitimate shapes to build: accepted (one results entry per operation, 1 operation here)
+    /// or rejected (results == [], the blesser's documented convention for a rejected proof).
+    fn minimal_authds_verify_vector(proof_accepted: bool) -> Value {
+        let (results, new_digest_hex) = if proof_accepted {
+            (json!([{ "ok": true, "value": "cc" }]), json!("dd"))
+        } else {
+            (json!([]), json!(null))
+        };
+        json!({
+            "schema": "santa-authds/v1",
+            "op": "avl_verify",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "verify-test-001",
+                "source": "ergots:packages/avltree/test/fixtures/avltree/lookup-basic",
+                "kind": "avl_verify",
+                "settings": { "key_length": 32, "value_length": 8, "max_num_operations": null, "max_deletes": null },
+                "payload": {
+                    "starting_digest_hex": "aa",
+                    "proof_hex": "bb",
+                    "operations": [ { "tag": "Lookup", "key_hex": "aa" } ]
+                },
+                "expected": {
+                    "proof_accepted": proof_accepted,
+                    "results": results,
+                    "new_digest_hex": new_digest_hex
+                }
+            }]
+        })
+    }
+
+    /// Both legitimate avl_verify shapes (accepted-with-matching-results,
+    /// rejected-with-empty-results) validate against the schema AND pass authds_path_guard with
+    /// 0 failures — proves Finding 4's arity check does not false-positive on either branch.
+    #[test]
+    fn authds_path_guard_verify_well_formed_passes() {
+        let v = authds_vec_validator();
+
+        let doc_accepted = minimal_authds_verify_vector(true);
+        assert!(v.is_valid(&doc_accepted), "well-formed accepted-proof verify vector should pass schema");
+        let tmp1 = std::env::temp_dir().join(format!("santa-authds-verifyok-accepted-{}", std::process::id()));
+        let vdir1 = tmp1.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir1).expect("create temp dir");
+        let fpath1 = vdir1.join("AvlVerify.accepted.json");
+        fs::write(&fpath1, serde_json::to_string(&doc_accepted).unwrap()).expect("write temp vector");
+        let bad1 = authds_path_guard(&tmp1, &[fpath1]);
+        let _ = fs::remove_dir_all(&tmp1);
+        assert_eq!(bad1, 0, "accepted-proof verify vector with results.length == operations.length must pass path_guard");
+
+        let doc_rejected = minimal_authds_verify_vector(false);
+        assert!(v.is_valid(&doc_rejected), "well-formed rejected-proof verify vector should pass schema");
+        let tmp2 = std::env::temp_dir().join(format!("santa-authds-verifyok-rejected-{}", std::process::id()));
+        let vdir2 = tmp2.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir2).expect("create temp dir");
+        let fpath2 = vdir2.join("AvlVerify.rejected.json");
+        fs::write(&fpath2, serde_json::to_string(&doc_rejected).unwrap()).expect("write temp vector");
+        let bad2 = authds_path_guard(&tmp2, &[fpath2]);
+        let _ = fs::remove_dir_all(&tmp2);
+        assert_eq!(bad2, 0, "rejected-proof verify vector with results == [] must pass path_guard");
+    }
+
+    /// Finding 4, accepted-proof branch: proof_accepted:true requires results.length ==
+    /// operations.length exactly. 2 operations with only 1 results entry must fire [WRONG].
+    #[test]
+    fn authds_path_guard_verify_length_mismatch_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-authds-verifylen-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let mut doc = minimal_authds_verify_vector(true);
+        doc["entries"][0]["payload"]["operations"] = json!([
+            { "tag": "Lookup", "key_hex": "aa" },
+            { "tag": "Lookup", "key_hex": "bb" }
+        ]);
+        // expected.results stays at length 1 (from the accepted-shape fixture) — short by one op.
+        let fpath = vdir.join("AvlVerify.lenmismatch.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "proof_accepted=true with results shorter than operations must fire [WRONG]");
+    }
+
+    /// Finding 4, rejected-proof branch: proof_accepted:false requires results == []. A
+    /// non-empty results on a rejected proof must fire [WRONG] — this is the branch a check that
+    /// only ever exercised accepted proofs would miss entirely.
+    #[test]
+    fn authds_path_guard_verify_rejected_nonempty_results_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-authds-verifyreject-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let mut doc = minimal_authds_verify_vector(false);
+        doc["entries"][0]["expected"]["results"] = json!([{ "ok": false, "value": null }]);
+        let fpath = vdir.join("AvlVerify.rejectednonempty.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "proof_accepted=false with non-empty results must fire [WRONG]");
     }
 
     /// authds vectors must be filed under version "any" — any other label fires [WRONG].
