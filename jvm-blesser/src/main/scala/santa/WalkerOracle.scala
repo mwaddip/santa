@@ -78,6 +78,7 @@ object WalkerOracle {
   *   POST /eval        body = one v6-fullctx envelope   → one result JSON
   *   POST /eval-batch  body = [envelope, ...]            → [result, ...] (block batch)
   *   POST /avl-proof   body = tree+ops                   → {proof_bytes, proof_digest, tree_digest}
+  *                     (+ gen_proof_after: [Int])         → {proofs: [...], digests: [...]} (multi-cycle)
   *   GET  /health      → {"status":"ok"}
   *
   * Run: `sbt --batch "runMain santa.OracleService [port]"` (default 9777). */

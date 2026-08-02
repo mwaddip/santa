@@ -50,15 +50,7 @@ object AvlProofGenerator {
 
     // Perform the operations we want a proof for
     for (op <- operations) {
-      val avlOp = op.kind match {
-        case "Insert" =>
-          val v = op.value.getOrElse(sys.error("Insert requires value"))
-          Insert(ADKey @@ dec(op.key), ADValue @@ dec(v))
-        case "Lookup"  => Lookup(ADKey @@ dec(op.key))
-        case "Remove"  => Remove(ADKey @@ dec(op.key))
-        case other     => sys.error(s"unknown operation kind: $other")
-      }
-      tree.performOneOperation(avlOp).get
+      tree.performOneOperation(toOperation(op)).get
     }
 
     val proofBytes = tree.generateProof()
@@ -68,6 +60,85 @@ object AvlProofGenerator {
     val proofDigest = Blake2b256(proofBytes)
 
     (hex(proofBytes), hex(proofDigest), hex(treeDigest))
+  }
+
+  /** Multi-cycle proof generation. Performs `operations` in order and captures
+    * `(generateProof(), digest)` immediately after the operation whose index
+    * appears in `genProofAfter` (ascending, 0-based). Returns parallel lists.
+    *
+    * The cycle boundary is load-bearing: `generateProof()` resets the prover's
+    * modification tracking, so a proof taken mid-sequence is NOT recoverable
+    * from a one-shot run. This is the shape ergots' prover fixtures exercise.
+    */
+  def generateCycles(config: TreeConfig,
+                     initialEntries: List[Kv],
+                     operations: List[AvlOp],
+                     genProofAfter: List[Int]): (List[String], List[String]) = {
+
+    require(genProofAfter == genProofAfter.sorted.distinct,
+      s"genProofAfter must be ascending and distinct: $genProofAfter")
+    genProofAfter.foreach { i =>
+      require(i >= 0 && i < operations.size,
+        s"genProofAfter index $i out of range for ${operations.size} operations")
+    }
+
+    val tree = new BatchAVLProver[Digest32, Blake2b256.type](
+      keyLength = config.keyLength,
+      valueLengthOpt = config.valueLengthOpt
+    )
+    for (kv <- initialEntries) {
+      tree.performOneOperation(Insert(ADKey @@ dec(kv.key), ADValue @@ dec(kv.value))).get
+    }
+    if (initialEntries.nonEmpty) tree.generateProof()
+
+    val triggers = genProofAfter.toSet
+    val proofs = List.newBuilder[String]
+    val digests = List.newBuilder[String]
+
+    operations.zipWithIndex.foreach { case (op, i) =>
+      tree.performOneOperation(toOperation(op)).get
+      if (triggers.contains(i)) {
+        proofs += hex(tree.generateProof())
+        digests += hex(tree.digest)
+      }
+    }
+    (proofs.result(), digests.result())
+  }
+
+  /** Shared op decoding — the operation vocabulary the fixtures use. */
+  private def toOperation(op: AvlOp): scorex.crypto.authds.avltree.batch.Operation =
+    op.kind match {
+      case "Insert" =>
+        Insert(ADKey @@ dec(op.key), ADValue @@ dec(op.value.getOrElse(sys.error("Insert requires value"))))
+      case "Lookup" => Lookup(ADKey @@ dec(op.key))
+      case "Remove" => Remove(ADKey @@ dec(op.key))
+      case other    => sys.error(s"unknown operation kind: $other")
+    }
+
+  /** Decode a `santa-authds/v1` `avl_prove` entry (snake_case `settings` /
+    * `payload`) and run the prover. Main scope on purpose: the vendored blesser
+    * and the rudolph control arm share this ONE decode path, so a control
+    * divergence can never mean "the vector builder and the runner disagree
+    * about decoding". */
+  def deriveFromEntry(entry: io.circe.Json): (List[String], List[String]) = {
+    val c = entry.hcursor
+    val s = c.downField("settings")
+    val cfg = TreeConfig(
+      s.get[Int]("key_length").toOption.getOrElse(sys.error("settings.key_length missing")),
+      s.get[Option[Int]]("value_length").toOption.flatten
+    )
+    val ops = c.downField("payload").downField("operations").values
+      .getOrElse(sys.error("payload.operations missing")).toList.map { j =>
+        val o = j.hcursor
+        AvlOp(
+          o.get[String]("tag").toOption.getOrElse(sys.error("op.tag missing")),
+          o.get[String]("key_hex").toOption.getOrElse(sys.error("op.key_hex missing")),
+          o.get[String]("value_hex").toOption
+        )
+      }
+    val cycles = c.downField("payload").get[List[Int]]("gen_proof_after")
+      .getOrElse(sys.error("payload.gen_proof_after missing"))
+    generateCycles(cfg, Nil, ops, cycles)
   }
 
   // ── JSON adapter ──────────────────────────────────────────────────────
@@ -105,11 +176,21 @@ object AvlProofGenerator {
         )
       }
 
-    val (proofBytes, proofDigest, treeDigest) = generate(config, initial, ops)
-    Json.obj(
-      "proof_bytes"  -> Json.fromString(proofBytes),
-      "proof_digest" -> Json.fromString(proofDigest),
-      "tree_digest"  -> Json.fromString(treeDigest)
-    )
+    val genProofAfter: List[Int] = c.downField("gen_proof_after").as[List[Int]].getOrElse(Nil)
+
+    if (genProofAfter.nonEmpty) {
+      val (proofs, digests) = generateCycles(config, initial, ops, genProofAfter)
+      Json.obj(
+        "proofs"  -> Json.arr(proofs.map(Json.fromString): _*),
+        "digests" -> Json.arr(digests.map(Json.fromString): _*)
+      )
+    } else {
+      val (proofBytes, proofDigest, treeDigest) = generate(config, initial, ops)
+      Json.obj(
+        "proof_bytes"  -> Json.fromString(proofBytes),
+        "proof_digest" -> Json.fromString(proofDigest),
+        "tree_digest"  -> Json.fromString(treeDigest)
+      )
+    }
   }
 }
