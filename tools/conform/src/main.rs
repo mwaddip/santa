@@ -2,7 +2,7 @@
 //! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
 //! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
 //! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
-use santa_check::{grade, grade_block, grade_chain, grade_transaction, grade_wire};
+use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_transaction, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -248,12 +248,29 @@ struct Counts {
     chain_value_total: u64,
     chain_value_nice: u64,
     chain_value_coal: u64,
+    // authds tier: prove has two INDEPENDENT dims (proof bytes, digests) with no
+    // suppression; verify chains accepted -> results -> digest. digest counters are
+    // shared by both kinds (a prove digest and a verify digest are the same concept).
+    authds_proof_total: u64,
+    authds_proof_nice: u64,
+    authds_proof_coal: u64,
+    authds_digest_total: u64,
+    authds_digest_nice: u64,
+    authds_digest_coal: u64,
+    authds_accepted_total: u64,
+    authds_accepted_nice: u64,
+    authds_accepted_coal: u64,
+    authds_results_total: u64,
+    authds_results_nice: u64,
+    authds_results_coal: u64,
     red: Vec<Value>,
 }
 
 impl Counts {
     fn red_total(&self) -> u64 {
         self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal + self.chain_value_coal
+        + self.authds_proof_coal + self.authds_digest_coal
+        + self.authds_accepted_coal + self.authds_results_coal
     }
     fn to_json(&self) -> Value {
         json!({
@@ -267,6 +284,10 @@ impl Counts {
             "block_valid_total": self.block_valid_total, "block_valid_nice": self.block_valid_nice, "block_valid_coal": self.block_valid_coal,
             "post_digest_total": self.post_digest_total, "post_digest_nice": self.post_digest_nice, "post_digest_coal": self.post_digest_coal,
             "chain_value_total": self.chain_value_total, "chain_value_nice": self.chain_value_nice, "chain_value_coal": self.chain_value_coal,
+            "authds_proof_total": self.authds_proof_total, "authds_proof_nice": self.authds_proof_nice, "authds_proof_coal": self.authds_proof_coal,
+            "authds_digest_total": self.authds_digest_total, "authds_digest_nice": self.authds_digest_nice, "authds_digest_coal": self.authds_digest_coal,
+            "authds_accepted_total": self.authds_accepted_total, "authds_accepted_nice": self.authds_accepted_nice, "authds_accepted_coal": self.authds_accepted_coal,
+            "authds_results_total": self.authds_results_total, "authds_results_nice": self.authds_results_nice, "authds_results_coal": self.authds_results_coal,
             "red": self.red,
         })
     }
@@ -409,6 +430,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         let is_tx = schema.starts_with("santa-transaction/");
         let is_block = schema.starts_with("santa-block/");
         let is_chain = schema.starts_with("santa-chain/");
+        let is_authds = schema.starts_with("santa-authds/");
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
@@ -421,6 +443,8 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                 grade_block(&actual, &e["expected"])
             } else if is_chain {
                 grade_chain(&actual, e)
+            } else if is_authds {
+                grade_authds(&actual, e)
             } else {
                 grade(&actual, &e["expected"], claims_cost)
             };
@@ -547,6 +571,59 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                         };
                         c.red.push(red_detail(&op, name, "value",
                             expected, got, note, script));
+                    }
+                }
+                Some("authds_prove") => {
+                    c.authds_proof_total += 1;
+                    if g["proof"] == "nice" {
+                        c.authds_proof_nice += 1;
+                    } else {
+                        c.authds_proof_coal += 1;
+                        c.red.push(red_detail(&op, name, "proof",
+                            format!("proofs {}", e["expected"]["proofs"]),
+                            format!("proofs {}", actual["proofs"]), None, script));
+                    }
+                    c.authds_digest_total += 1;
+                    if g["digest"] == "nice" {
+                        c.authds_digest_nice += 1;
+                    } else {
+                        c.authds_digest_coal += 1;
+                        c.red.push(red_detail(&op, name, "digest",
+                            format!("digests {}", e["expected"]["digests"]),
+                            format!("digests {}", actual["digests"]), None, script));
+                    }
+                }
+                Some("authds_verify") => {
+                    c.authds_accepted_total += 1;
+                    if g["accepted"] == "nice" {
+                        c.authds_accepted_nice += 1;
+                    } else {
+                        c.authds_accepted_coal += 1;
+                        c.red.push(red_detail(&op, name, "accepted",
+                            format!("proof_accepted {}", e["expected"]["proof_accepted"]),
+                            format!("proof_accepted {}", actual["proof_accepted"]), None, script));
+                    }
+                    if g["results"] != "n/a" {
+                        c.authds_results_total += 1;
+                        if g["results"] == "nice" {
+                            c.authds_results_nice += 1;
+                        } else {
+                            c.authds_results_coal += 1;
+                            c.red.push(red_detail(&op, name, "results",
+                                format!("results {}", e["expected"]["results"]),
+                                format!("results {}", actual["results"]), None, script));
+                        }
+                    }
+                    if g["digest"] != "n/a" {
+                        c.authds_digest_total += 1;
+                        if g["digest"] == "nice" {
+                            c.authds_digest_nice += 1;
+                        } else {
+                            c.authds_digest_coal += 1;
+                            c.red.push(red_detail(&op, name, "digest",
+                                format!("new_digest_hex {}", e["expected"]["new_digest_hex"]),
+                                format!("new_digest_hex {}", actual["new_digest_hex"]), None, script));
+                        }
                     }
                 }
                 _ => {
@@ -1090,5 +1167,48 @@ mod tests {
         assert_eq!(c.chain_value_nice, 0);
         assert_eq!(c.chain_value_coal, 0);
         let _ = fs::remove_dir_all(&tmp);
+    }
+
+    // ── authds tally tests ───────────────────────────────────────────────────
+
+    /// Write a minimal santa-authds/v1 avl_prove vector under a temp vectors/ tree.
+    fn write_authds_prove_vector(tag: &str, proofs: &[&str]) -> std::path::PathBuf {
+        let root = std::env::temp_dir()
+            .join(format!("santa-authds-tally-test-{}-{}", std::process::id(), tag));
+        let dir = root.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&dir).unwrap();
+        let v = serde_json::json!({
+            "schema": "santa-authds/v1",
+            "op": "authds:vendored:probe",
+            "blessed_by": "jvm:scrypto-3.0.0",
+            "entries": [{
+                "name": "probe#0",
+                "source": "ergots:probe",
+                "kind": "avl_prove",
+                "settings": {"key_length": 32, "value_length": null},
+                "payload": {"operations": [], "gen_proof_after": []},
+                "expected": {"proofs": proofs, "digests": ["11"]}
+            }]
+        });
+        fs::write(dir.join("AvlProve.probe.json"), serde_json::to_string(&v).unwrap()).unwrap();
+        root
+    }
+
+    #[test]
+    fn authds_prove_dims_tally_independently() {
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let root = write_authds_prove_vector("indep", &["aa"]);
+        let mut actuals = BTreeMap::new();
+        actuals.insert(
+            "authds/any/vendored/AvlProve.probe.json".to_string(),
+            json!({"probe#0": {"proofs": ["ff"], "digests": ["11"], "error": null}}),
+        );
+        let slices = super::tally(&actuals, true, &root);
+        let c = slices.values().next().unwrap();
+        assert_eq!(c.authds_proof_coal, 1, "wrong proof bytes must be coal");
+        assert_eq!(c.authds_digest_nice, 1, "matching digest must still be nice");
+        assert_eq!(c.red_total(), 1);
+        fs::remove_dir_all(&root).ok();
     }
 }
