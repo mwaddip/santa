@@ -1,0 +1,266 @@
+{
+  "schema": "santa-oracle-authds/v1",
+  "description": "AuthDS-tier verdict meta-vectors: (actual, entry) -> grade_authds verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Precedence: panicked → coal unconditionally, checked before the entry's kind or expected values are read; not-implemented → coverage (a growth-ledger cell, not coal); then value grading dispatched on entry.kind. avl_prove grades `proof` and `digest` as INDEPENDENT dimensions with no suppression between them — a digest that matches expected while the proof bytes do not is graded proof-coal/digest-nice, not suppressed to n/a, because a digest-correct/proof-wrong runner (non-canonical AVL proof bytes that still happen to reduce to the canonical digest) is the class of defect this tier exists to surface; chaining the dimensions would hide it behind a green digest. Both avl_prove dimensions additionally require actual.error to be null — a non-null error vetoes both regardless of whether the produced values happen to match expected. avl_verify grades `accepted -> results -> digest` as a CHAIN: results is graded only when proof_accepted matches expected AND expected.proof_accepted is true (there is nothing legitimate downstream to grade on a rejected proof, so results and digest are 'n/a'); digest is graded only when results is nice, because a digest computed after a divergent operation sequence carries no information and is suppressed to 'n/a' rather than compared. `new_digest_hex: null` is itself a real, meaningful value — a failing operation poisons the verifier so it reports no digest — and null-vs-null is a legitimate nice match, not an absent-field n/a. An entry kind this grader does not recognize grades coal on every dimension of the default avl_prove shape — never a silent pass.",
+  "cases": [
+    {
+      "name": "prove-both-nice",
+      "description": "avl_prove: proofs and digests both match expected exactly, error null → proof nice, digest nice.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": ["aa", "bb"],
+          "digests": ["11", "22"]
+        }
+      },
+      "actual": {
+        "proofs": ["aa", "bb"],
+        "digests": ["11", "22"],
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_prove",
+        "proof": "nice",
+        "digest": "nice"
+      }
+    },
+    {
+      "name": "prove-proof-coal-digest-nice",
+      "description": "avl_prove: the proof bytes diverge from the canonical proof (a non-canonical serialization) while the resulting digest still matches expected. proof and digest are independent — the digest match must not suppress the proof mismatch, because a digest-correct/proof-wrong runner is precisely the defect class (non-canonical AVL proof bytes) this tier exists to catch.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": ["aa", "bb"],
+          "digests": ["11", "22"]
+        }
+      },
+      "actual": {
+        "proofs": ["ff", "bb"],
+        "digests": ["11", "22"],
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_prove",
+        "proof": "proof",
+        "digest": "nice"
+      }
+    },
+    {
+      "name": "prove-both-coal-data-mismatch",
+      "description": "avl_prove: both the proof bytes and the digest diverge from expected → both dimensions grade coal, independently of each other.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": ["aa", "bb"],
+          "digests": ["11", "22"]
+        }
+      },
+      "actual": {
+        "proofs": ["ff", "bb"],
+        "digests": ["99", "22"],
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_prove",
+        "proof": "proof",
+        "digest": "digest"
+      }
+    },
+    {
+      "name": "prove-errored-coal",
+      "description": "avl_prove: the runner reports an error even though the proof and digest values it produced happen to match expected byte-for-byte (stale data from a previous entry, or a partially populated actual). A non-null error must veto both dimensions regardless of value equality — a failed run is never gradeable as nice.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": ["aa", "bb"],
+          "digests": ["11", "22"]
+        }
+      },
+      "actual": {
+        "proofs": ["aa", "bb"],
+        "digests": ["11", "22"],
+        "error": "errored"
+      },
+      "verdict": {
+        "kind": "authds_prove",
+        "proof": "proof",
+        "digest": "digest"
+      }
+    },
+    {
+      "name": "verify-full-nice",
+      "description": "avl_verify: the proof is accepted as expected, every operation result matches, and the resulting digest matches → all three dimensions nice.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": true,
+          "results": [{"ok": true, "value": null}],
+          "new_digest_hex": "33"
+        }
+      },
+      "actual": {
+        "proof_accepted": true,
+        "results": [{"ok": true, "value": null}],
+        "new_digest_hex": "33",
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_verify",
+        "accepted": "nice",
+        "results": "nice",
+        "digest": "nice"
+      }
+    },
+    {
+      "name": "verify-over-accept-coal",
+      "description": "avl_verify: the reference verifier refuses this proof (proof_accepted:false) but the runner anchors it anyway (proof_accepted:true) — an over-accept, the failure mode the reject arm exists to catch. accepted grades coal, and there is nothing legitimate downstream to grade, so results and digest are n/a rather than compared against data the reference never produced.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": false,
+          "results": [],
+          "new_digest_hex": null
+        }
+      },
+      "actual": {
+        "proof_accepted": true,
+        "results": [{"ok": true, "value": null}],
+        "new_digest_hex": "33",
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_verify",
+        "accepted": "accepted",
+        "results": "n/a",
+        "digest": "n/a"
+      }
+    },
+    {
+      "name": "verify-rejected-proof-nice",
+      "description": "avl_verify: both the reference and the runner refuse the proof at the same starting digest under the same settings. Reproducing a rejection is itself a nice verdict; results and digest are n/a because no operations were legitimately attempted on either side.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": false,
+          "results": [],
+          "new_digest_hex": null
+        }
+      },
+      "actual": {
+        "proof_accepted": false,
+        "results": [],
+        "new_digest_hex": null,
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_verify",
+        "accepted": "nice",
+        "results": "n/a",
+        "digest": "n/a"
+      }
+    },
+    {
+      "name": "verify-results-mismatch-suppresses-digest",
+      "description": "avl_verify: the proof is accepted on both sides, but one operation's outcome differs (ok:true vs ok:false) → results grades coal. digest is downstream of the operations, not parallel to them, so it is suppressed to n/a rather than compared — a digest computed after a divergent operation sequence carries no information.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": true,
+          "results": [{"ok": true, "value": null}],
+          "new_digest_hex": "33"
+        }
+      },
+      "actual": {
+        "proof_accepted": true,
+        "results": [{"ok": false, "value": null}],
+        "new_digest_hex": "33",
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_verify",
+        "accepted": "nice",
+        "results": "results",
+        "digest": "n/a"
+      }
+    },
+    {
+      "name": "verify-poisoned-null-digest-nice",
+      "description": "avl_verify: a failing operation poisons the verifier so it reports no digest — new_digest_hex:null is a real, meaningful value here, not an absent field. Both sides poisoned identically is a correctly reproduced verdict, so digest grades nice via null-equals-null, not n/a and not coal.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": true,
+          "results": [{"ok": false, "value": null}],
+          "new_digest_hex": null
+        }
+      },
+      "actual": {
+        "proof_accepted": true,
+        "results": [{"ok": false, "value": null}],
+        "new_digest_hex": null,
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_verify",
+        "accepted": "nice",
+        "results": "nice",
+        "digest": "nice"
+      }
+    },
+    {
+      "name": "panicked",
+      "description": "A runner crash grades panicked unconditionally, before the entry's kind or expected values are even consulted — checked ahead of every other precedence rule.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": ["aa", "bb"],
+          "digests": ["11", "22"]
+        }
+      },
+      "actual": {
+        "proofs": null,
+        "digests": null,
+        "error": "panicked",
+        "note": "index out of bounds in tree rebuild"
+      },
+      "verdict": {
+        "kind": "panicked"
+      }
+    },
+    {
+      "name": "not-implemented",
+      "description": "A conformer with no prover declares not-implemented rather than attempting the operation. This is a coverage/growth-ledger cell, not a coal verdict — checked after panicked but before any value grading.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": ["aa", "bb"],
+          "digests": ["11", "22"]
+        }
+      },
+      "actual": {
+        "proofs": null,
+        "digests": null,
+        "error": "not-implemented"
+      },
+      "verdict": {
+        "kind": "coverage",
+        "tag": "not-implemented"
+      }
+    },
+    {
+      "name": "unknown-kind-coal",
+      "description": "An entry kind this grader does not recognize (a future or malformed kind discriminator) must never silently pass — it grades coal on every dimension of the default authds_prove shape rather than defaulting to nice.",
+      "entry": {
+        "kind": "merkle_prove",
+        "expected": {}
+      },
+      "actual": {
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_prove",
+        "proof": "proof",
+        "digest": "digest"
+      }
+    }
+  ]
+}
