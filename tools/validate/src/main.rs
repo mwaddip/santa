@@ -84,7 +84,7 @@ fn main() -> ExitCode {
     let authds_act_schema = load(&schema_dir.join("santa-authds.actuals.schema.json"));
     let authds_vec_validator =
         jsonschema::validator_for(&authds_vec_schema).expect("authds vector schema invalid");
-    let _authds_act_validator =
+    let authds_act_validator =
         jsonschema::validator_for(&authds_act_schema).expect("authds actuals schema invalid");
     println!("[meta] authds vector + actuals schemas: built (valid Draft 2020-12)");
 
@@ -177,6 +177,8 @@ fn main() -> ExitCode {
         }
     }
     println!("[authds corpus] {aok}/{} valid", authds_files.len());
+    errs += authds_path_guard(&root, &authds_files);
+    errs += authds_actuals_guards(&authds_act_validator);
 
     // Transaction corpus: validate every committed transaction vector against the tx vector schema.
     let tx_files = json_files(&root.join("vectors").join("transaction"));
@@ -452,6 +454,150 @@ fn wire_actuals_guards(v: &Validator) -> u32 {
         ("note on non-panicked rejected", json!({"e#0": {"bytes_hex": null, "error": "errored", "note": "x"}}), false),
     ];
     println!("\n[wire actuals] asymmetry guards:");
+    let mut bad: u32 = 0;
+    for (label, doc, want) in checks {
+        let got = v.is_valid(doc);
+        let good = got == *want;
+        if !good {
+            bad += 1;
+        }
+        println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
+    }
+    bad
+}
+
+/// AuthDS taxonomy path <-> in-data envelope guard. Per docs/specs/authds-tier.md, authds
+/// vectors live at a single fixed cell: tier "authds" => schema "santa-authds/"; version must
+/// be "any" (AVL proofs are not ErgoTree-versioned, unlike eval/wire/tx/block); provenance must
+/// be "vendored" (ergots' prover/verifier fixtures: inputs vendored, expectations re-derived
+/// through jvm-blesser). Per-entry source must start with the ergots avltree fixture prefix.
+/// Structural invariant the schema cannot express (JSON Schema has no cross-array length
+/// equality): for avl_prove entries, payload.gen_proof_after, expected.proofs, and
+/// expected.digests must be parallel arrays of the same length.
+fn authds_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
+    println!("\n[authds catalogue] path <-> envelope guard:");
+    let vroot = root.join("vectors");
+    let mut g: u32 = 0;
+    for f in files {
+        let rel = f.strip_prefix(&vroot).unwrap();
+        let parts: Vec<String> = rel
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned())
+            .collect();
+        if parts.len() != 4 {
+            g += 1;
+            println!("  [WRONG] {}: not <tier>/<version>/<provenance>/<op>.json", rel.display());
+            continue;
+        }
+        let (tier, version, prov) = (&parts[0], &parts[1], &parts[2]);
+        let doc = load(f);
+        let schema = doc.get("schema").and_then(Value::as_str).unwrap_or("");
+        if tier != "authds" || !schema.starts_with("santa-authds/") {
+            g += 1;
+            println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
+        }
+        // authds is a single fixed cell (not ErgoTree-versioned, single vendored source family):
+        // version must be "any", provenance must be "vendored". Unlike wire/tx/block/chain there
+        // is no variance to accommodate here.
+        if version != "any" {
+            g += 1;
+            println!("  [WRONG] {}: unknown version label {version:?} (authds is not ErgoTree-versioned; expected 'any')", rel.display());
+        }
+        if prov != "vendored" {
+            g += 1;
+            println!("  [WRONG] {}: unknown provenance {prov:?} (expected 'vendored')", rel.display());
+        }
+        // Per-entry source must start with the ergots avltree fixture prefix (docs/specs/authds-tier.md
+        // `## Vectors / taxonomy`: source: "ergots:packages/avltree/test/fixtures/<set>/<name>").
+        let bad_src: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| {
+                        let src = e["source"].as_str().unwrap_or("");
+                        !src.starts_with("ergots:packages/avltree/test/fixtures/")
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_src.is_empty() {
+            let head = &bad_src[..bad_src.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: entry source(s) missing ergots avltree fixture prefix: {head:?}", rel.display());
+        }
+        // Structural invariant the schema cannot express: avl_prove's gen_proof_after, proofs,
+        // and digests are parallel arrays — same length, entry by entry.
+        let bad_lengths: Vec<String> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| e["kind"].as_str() == Some("avl_prove"))
+                    .filter_map(|e| {
+                        let name = e["name"].as_str().unwrap_or("(unnamed)");
+                        let gpa = e["payload"]["gen_proof_after"].as_array()?.len();
+                        let proofs = e["expected"]["proofs"].as_array()?.len();
+                        let digests = e["expected"]["digests"].as_array()?.len();
+                        if gpa != proofs || gpa != digests {
+                            Some(format!(
+                                "{name} (gen_proof_after={gpa}, proofs={proofs}, digests={digests})"
+                            ))
+                        } else {
+                            None
+                        }
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !bad_lengths.is_empty() {
+            let head = &bad_lengths[..bad_lengths.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: avl_prove parallel-array length mismatch: {head:?}", rel.display());
+        }
+    }
+    if g == 0 {
+        println!("  [OK] all {} authds paths agree with their envelopes", files.len());
+    } else {
+        println!("  {g} authds path/envelope mismatch(es)");
+    }
+    g
+}
+
+/// AuthDS actuals asymmetry guards: an avl_prove verdict carries proofs+digests (both non-null)
+/// + null error; an avl_verify verdict carries proof_accepted+results (both non-null, results may
+/// be an empty array) + new_digest_hex present as a key (string OR null are both legitimate
+/// values — null means a poisoned verifier or a rejected proof, not an absent field) + null error.
+/// Rows carry no kind tag, so the accept shape is keyed off which fields are present, and the
+/// union shape (other kind's fields present-and-null) is legal. Any non-null error forces every
+/// verdict field, if present, to null. `note` iff error == "panicked" — forbidden even on
+/// "errored" (the stricter block/wire idiom; chain's laxer "errored may optionally carry note"
+/// does not apply here).
+fn authds_actuals_guards(v: &Validator) -> u32 {
+    let checks: &[(&str, Value, bool)] = &[
+        // ---- valid cases ----
+        ("prove-ok", json!({"p#0": {"proofs": ["aa"], "digests": ["bb"], "error": null}}), true),
+        ("verify-ok", json!({"v#0": {"proof_accepted": true, "results": [{"ok": true, "value": "cc"}], "new_digest_hex": "dd", "error": null}}), true),
+        ("verify-ok w/ poisoned digest null", json!({"v#0": {"proof_accepted": true, "results": [{"ok": false, "value": null}], "new_digest_hex": null, "error": null}}), true),
+        ("verify-ok w/ proof rejected (empty results, null digest)", json!({"v#0": {"proof_accepted": false, "results": [], "new_digest_hex": null, "error": null}}), true),
+        ("union shape: prove row w/ other kind's fields null", json!({"p#0": {"proofs": ["aa"], "digests": ["bb"], "proof_accepted": null, "results": null, "new_digest_hex": null, "error": null}}), true),
+        ("errored", json!({"p#0": {"error": "errored"}}), true),
+        ("not-implemented", json!({"p#0": {"error": "not-implemented"}}), true),
+        ("panicked carries note", json!({"p#0": {"error": "panicked", "note": "boom"}}), true),
+        // ---- invalid cases ----
+        ("empty file rejected", json!({}), false),
+        ("empty row rejected", json!({"p#0": {}}), false),
+        ("bogus error value rejected", json!({"p#0": {"error": "bogus"}}), false),
+        ("errored still carrying proofs/digests rejected", json!({"p#0": {"error": "errored", "proofs": ["aa"], "digests": ["bb"]}}), false),
+        ("errored still carrying proof_accepted rejected", json!({"v#0": {"error": "errored", "proof_accepted": true}}), false),
+        ("error null w/ zero verdict fields rejected", json!({"p#0": {"error": null}}), false),
+        ("error null w/ only proofs (missing digests) rejected", json!({"p#0": {"error": null, "proofs": ["aa"]}}), false),
+        ("error null w/ verify fields missing new_digest_hex key rejected", json!({"v#0": {"error": null, "proof_accepted": true, "results": []}}), false),
+        ("panicked without note rejected", json!({"p#0": {"error": "panicked"}}), false),
+        ("note on success rejected", json!({"p#0": {"proofs": ["aa"], "digests": ["bb"], "error": null, "note": "x"}}), false),
+        ("note on errored rejected", json!({"p#0": {"error": "errored", "note": "x"}}), false),
+        ("extra unknown field rejected", json!({"p#0": {"proofs": ["aa"], "digests": ["bb"], "error": null, "bogus_field": 1}}), false),
+    ];
+    println!("\n[authds actuals] asymmetry guards:");
     let mut bad: u32 = 0;
     for (label, doc, want) in checks {
         let got = v.is_valid(doc);
@@ -1664,5 +1810,174 @@ mod tests {
         assert!(!v.is_valid(&doc), "panicked is never a blessable expected (const errored)");
         doc["entries"][0]["expected"] = serde_json::json!({});
         assert!(!v.is_valid(&doc), "empty expected matches neither oneOf branch");
+    }
+
+    // ── AuthDS tier tests ────────────────────────────────────────────────────────
+
+    fn authds_vec_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-authds.vector.schema.json"));
+        jsonschema::validator_for(&schema).expect("authds vector schema invalid")
+    }
+
+    fn authds_act_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-authds.actuals.schema.json"));
+        jsonschema::validator_for(&schema).expect("authds actuals schema invalid")
+    }
+
+    /// Minimal well-formed avl_prove vector, correctly filed under authds/any/vendored/.
+    fn minimal_authds_prove_vector() -> Value {
+        json!({
+            "schema": "santa-authds/v1",
+            "op": "avl_prove",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "prove-test-001",
+                "source": "ergots:packages/avltree/test/fixtures/prover/insert-basic",
+                "kind": "avl_prove",
+                "settings": { "key_length": 32, "value_length": null },
+                "payload": {
+                    "operations": [ { "tag": "Insert", "key_hex": "aa", "value_hex": "bb" } ],
+                    "gen_proof_after": [0]
+                },
+                "expected": { "proofs": ["aabb"], "digests": ["ccdd"] }
+            }]
+        })
+    }
+
+    /// A well-formed avl_prove vector validates against the authds schema AND authds_path_guard
+    /// returns 0 when filed under authds/any/vendored/.
+    #[test]
+    fn authds_path_guard_well_formed_passes() {
+        let v = authds_vec_validator();
+        let doc = minimal_authds_prove_vector();
+        assert!(v.is_valid(&doc), "well-formed authds prove vector should pass schema");
+
+        let tmp = std::env::temp_dir().join(format!("santa-authds-test-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let fpath = vdir.join("AvlProve.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(bad, 0, "well-formed prove vector under authds/any/vendored/ must have 0 path-guard failures");
+    }
+
+    /// Finding 2 regression: gen_proof_after / proofs / digests must be parallel arrays. A
+    /// 2-index gen_proof_after with 3 proofs and 1 digest must fire [WRONG].
+    #[test]
+    fn authds_path_guard_prove_length_mismatch_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-authds-lenmismatch-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let mut doc = minimal_authds_prove_vector();
+        doc["entries"][0]["payload"]["gen_proof_after"] = json!([0, 1]);
+        doc["entries"][0]["expected"]["proofs"] = json!(["aabb", "ccdd", "eeff"]);
+        doc["entries"][0]["expected"]["digests"] = json!(["1122"]);
+        let fpath = vdir.join("AvlProve.lenmismatch.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "gen_proof_after=2, proofs=3, digests=1 must fire [WRONG] (parallel-array invariant)");
+    }
+
+    /// authds vectors must be filed under version "any" — any other label fires [WRONG].
+    #[test]
+    fn authds_path_guard_bad_version_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-authds-badver-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("v1").join("vendored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = minimal_authds_prove_vector();
+        let fpath = vdir.join("AvlProve.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "version other than 'any' must fire [WRONG]");
+    }
+
+    /// authds vectors must be filed under provenance "vendored" — any other label fires [WRONG].
+    #[test]
+    fn authds_path_guard_bad_provenance_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-authds-badprov-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("any").join("authored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = minimal_authds_prove_vector();
+        let fpath = vdir.join("AvlProve.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "provenance other than 'vendored' must fire [WRONG]");
+    }
+
+    /// Per-entry source must start with the ergots avltree fixture prefix.
+    #[test]
+    fn authds_path_guard_bad_source_prefix_fires_wrong() {
+        let tmp = std::env::temp_dir().join(format!("santa-authds-badsrc-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let mut doc = minimal_authds_prove_vector();
+        doc["entries"][0]["source"] = json!("santa:hand-authored");
+        let fpath = vdir.join("AvlProve.badsrc.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = authds_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "entry source not starting with the ergots avltree fixture prefix must fire [WRONG]");
+    }
+
+    /// authds_actuals_guards returns 0 failures against the real schema.
+    #[test]
+    fn authds_actuals_guards_all_pass() {
+        let v = authds_act_validator();
+        let bad = authds_actuals_guards(&v);
+        assert_eq!(bad, 0, "authds_actuals_guards should report 0 failures");
+    }
+
+    /// Actuals: empty file (zero entries) must be rejected (contract: minProperties 1).
+    #[test]
+    fn authds_actuals_empty_file_rejected() {
+        let v = authds_act_validator();
+        let doc = json!({});
+        assert!(!v.is_valid(&doc), "empty actuals file must be rejected (minProperties 1)");
+    }
+
+    /// Actuals: panicked without note must be rejected.
+    #[test]
+    fn authds_actuals_panicked_without_note_rejected() {
+        let v = authds_act_validator();
+        let doc = json!({"p#0": {"error": "panicked"}});
+        assert!(!v.is_valid(&doc), "panicked without note must be rejected by authds actuals schema");
+    }
+
+    /// Actuals: a non-null error must not carry verdict field values (proofs/digests here).
+    #[test]
+    fn authds_actuals_errored_with_verdict_fields_rejected() {
+        let v = authds_act_validator();
+        let doc = json!({"p#0": {"error": "errored", "proofs": ["aa"], "digests": ["bb"]}});
+        assert!(!v.is_valid(&doc), "errored row carrying non-null proofs/digests must be rejected");
+    }
+
+    /// Actuals: error null with zero verdict fields present (no shape satisfied) must be rejected.
+    #[test]
+    fn authds_actuals_null_error_missing_verdict_rejected() {
+        let v = authds_act_validator();
+        let doc = json!({"p#0": {"error": null}});
+        assert!(!v.is_valid(&doc), "error:null with no verdict fields must be rejected (no verdict produced)");
+    }
+
+    /// Actuals: error null carrying only proof-shaped fields (verify's new_digest_hex key entirely
+    /// absent) must be rejected — the missing-key vs. present-as-null distinction is load-bearing.
+    #[test]
+    fn authds_actuals_verify_missing_new_digest_hex_key_rejected() {
+        let v = authds_act_validator();
+        let doc = json!({"v#0": {"error": null, "proof_accepted": true, "results": []}});
+        assert!(!v.is_valid(&doc), "avl_verify verdict missing the new_digest_hex key entirely must be rejected");
+    }
+
+    /// Actuals: new_digest_hex present as null (poisoned verifier / rejected proof) is a legitimate
+    /// value, not an absent field — must be accepted alongside a full verdict.
+    #[test]
+    fn authds_actuals_verify_null_digest_is_legitimate_value() {
+        let v = authds_act_validator();
+        let doc = json!({"v#0": {"error": null, "proof_accepted": false, "results": [], "new_digest_hex": null}});
+        assert!(v.is_valid(&doc), "new_digest_hex: null with proof_accepted/results present is a legitimate avl_verify verdict");
     }
 }

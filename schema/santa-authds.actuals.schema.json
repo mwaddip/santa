@@ -2,19 +2,61 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/mwaddip/santa/schema/santa-authds.actuals.schema.json",
   "title": "SANTA authds actuals (santa-authds/v1)",
+  "description": "A runner's output for one authds vector file: each entry name -> a result object. The actuals file carries no kind tag, so the accept/reject asymmetry is keyed off which verdict fields are present, not off kind: an avl_prove verdict is proofs + digests (both non-null); an avl_verify verdict is proof_accepted + results (both non-null, results may be an empty array) + new_digest_hex present as a key (string or null are both legitimate values -- null means a poisoned verifier, not an absent field). error null => a verdict was produced (at least one of the two shapes above, the union shape with the other kind's fields present-and-null is legal); any non-null error forces every verdict field (proofs, digests, proof_accepted, results, new_digest_hex), if present, to null. error == 'panicked' requires note; forbidden otherwise.",
   "type": "object",
-  "additionalProperties": {
-    "type": "object",
-    "required": ["error"],
-    "properties": {
-      "proofs": { "type": ["array", "null"], "items": { "type": "string" } },
-      "digests": { "type": ["array", "null"], "items": { "type": "string" } },
-      "proof_accepted": { "type": ["boolean", "null"] },
-      "results": { "type": ["array", "null"] },
-      "new_digest_hex": { "type": ["string", "null"] },
-      "error": { "type": ["string", "null"] },
-      "note": {}
-    },
-    "additionalProperties": false
+  "minProperties": 1,
+  "additionalProperties": { "$ref": "#/$defs/result" },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "required": ["error"],
+      "additionalProperties": false,
+      "properties": {
+        "proofs": { "type": ["array", "null"], "items": { "type": "string" } },
+        "digests": { "type": ["array", "null"], "items": { "type": "string" } },
+        "proof_accepted": { "type": ["boolean", "null"] },
+        "results": { "type": ["array", "null"] },
+        "new_digest_hex": { "type": ["string", "null"] },
+        "error": { "enum": [null, "errored", "not-implemented", "panicked"] },
+        "note": { "type": "string", "description": "Panic message/class. Present iff error == 'panicked'; forbidden otherwise." }
+      },
+      "allOf": [
+        {
+          "$comment": "error null => a verdict was produced. avl_prove shape: proofs AND digests both present and non-null. avl_verify shape: proof_accepted AND results both present and non-null (results may be an empty array) AND new_digest_hex present as a key (string or null are both legitimate values). Keyed off which fields are present since actuals rows carry no kind tag; the union shape (other kind's fields present-and-null) is still legal.",
+          "if": { "properties": { "error": { "type": "null" } }, "required": ["error"] },
+          "then": {
+            "anyOf": [
+              {
+                "required": ["proofs", "digests"],
+                "properties": { "proofs": { "type": "array" }, "digests": { "type": "array" } }
+              },
+              {
+                "required": ["proof_accepted", "results", "new_digest_hex"],
+                "properties": { "proof_accepted": { "type": "boolean" }, "results": { "type": "array" } }
+              }
+            ]
+          }
+        },
+        {
+          "$comment": "error non-null => every verdict field (proofs, digests, proof_accepted, results, new_digest_hex), if present, must be null.",
+          "if": { "not": { "properties": { "error": { "type": "null" } }, "required": ["error"] } },
+          "then": {
+            "properties": {
+              "proofs": { "type": "null" },
+              "digests": { "type": "null" },
+              "proof_accepted": { "type": "null" },
+              "results": { "type": "null" },
+              "new_digest_hex": { "type": "null" }
+            }
+          }
+        },
+        {
+          "$comment": "note present iff error is 'panicked'; forbidden otherwise.",
+          "if": { "properties": { "error": { "const": "panicked" } }, "required": ["error"] },
+          "then": { "required": ["note"] },
+          "else": { "not": { "required": ["note"] } }
+        }
+      ]
+    }
   }
 }
