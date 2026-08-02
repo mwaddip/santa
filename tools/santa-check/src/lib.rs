@@ -800,4 +800,59 @@ mod authds_tests {
         assert_eq!(g["proof"], "proof");
         assert_eq!(g["digest"], "digest");
     }
+
+    // ── review round 1, Finding 1: the `clean` gate is provably load-bearing ───
+    // Every pre-existing "errored" case above pairs the error with verdict data
+    // that is ALREADY mismatched, so `clean &&` never actually decides the
+    // outcome there — deleting it would leave those green. These two make the
+    // error flag the ONLY thing standing between "nice" and coal: every verdict
+    // field matches structurally; only `error` differs from a clean run.
+
+    #[test]
+    fn prove_errored_with_otherwise_matching_data_is_coal_on_both_dims() {
+        // proofs and digests both match expected byte-for-byte; only the error
+        // flag says this run failed. Without `clean &&` (lib.rs:373,378) both
+        // dims would structurally-equal their way to "nice" — a false green on
+        // a runner that reported failure. Verified by mutation (see report).
+        let a = json!({"proofs": ["aa", "bb"], "digests": ["11", "22"], "error": "errored"});
+        let g = grade_authds(&a, &prove_entry());
+        assert_eq!(g["proof"], "proof", "error must veto even a byte-exact proof match");
+        assert_eq!(g["digest"], "digest", "error must veto even a byte-exact digest match");
+    }
+
+    #[test]
+    fn verify_errored_with_otherwise_matching_data_is_coal_and_suppresses_downstream() {
+        // proof_accepted, results, and new_digest_hex all match expected exactly;
+        // only the error flag differs. Without `clean &&` in accepted_ok
+        // (lib.rs:386) this would grade nice/nice/nice — a false green on a
+        // runner that reported failure. Verified by mutation (see report).
+        let a = json!({"proof_accepted": true, "results": [{"ok": true, "value": null}],
+                       "new_digest_hex": "33", "error": "errored"});
+        let g = grade_authds(&a, &verify_entry(true));
+        assert_eq!(g["accepted"], "accepted", "error must veto even a matching proof_accepted");
+        assert_eq!(g["results"], "n/a", "no downstream grading once accepted is not nice");
+        assert_eq!(g["digest"], "n/a");
+    }
+
+    // ── review round 1, Finding 2: null new_digest_hex is a REAL value ─────────
+    // (the "poisoned verifier" case — a failing operation leaves the verifier
+    // with no digest), not an absent field. structural_equal's explicit
+    // `(Null, Null) => true` must be what fires here, not the neighbouring
+    // grade_block idiom (`.filter(|v| !v.is_null())`, which treats null as
+    // "undeclared" and would silently flip this to coal). Verified by mutation
+    // (see report).
+
+    #[test]
+    fn verify_poisoned_verifier_null_digest_match_is_nice() {
+        let e = json!({"kind": "avl_verify", "expected": {
+            "proof_accepted": true,
+            "results": [{"ok": false, "value": null}],
+            "new_digest_hex": null}});
+        let a = json!({"proof_accepted": true, "results": [{"ok": false, "value": null}],
+                       "new_digest_hex": null, "error": null});
+        let g = grade_authds(&a, &e);
+        assert_eq!(g["accepted"], "nice");
+        assert_eq!(g["results"], "nice");
+        assert_eq!(g["digest"], "nice", "both sides poisoned identically is a reproduced verdict");
+    }
 }
