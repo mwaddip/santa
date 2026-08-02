@@ -183,6 +183,30 @@
       }
     },
     {
+      "name": "verify-digest-mismatch-alone-is-coal",
+      "description": "avl_verify: proof_accepted matches and every operation result matches, but the final digest differs from expected — the realistic shape of a subtly-broken AVL implementation that reproduces every individual operation correctly yet computes the wrong final root. digest grades coal on its own merits; accepted and results are unaffected, because a wrong root does not retroactively invalidate operations that were themselves reproduced correctly.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": true,
+          "results": [{"ok": true, "value": null}],
+          "new_digest_hex": "33"
+        }
+      },
+      "actual": {
+        "proof_accepted": true,
+        "results": [{"ok": true, "value": null}],
+        "new_digest_hex": "ff",
+        "error": null
+      },
+      "verdict": {
+        "kind": "authds_verify",
+        "accepted": "nice",
+        "results": "nice",
+        "digest": "digest"
+      }
+    },
+    {
       "name": "verify-poisoned-null-digest-nice",
       "description": "avl_verify: a failing operation poisons the verifier so it reports no digest — new_digest_hex:null is a real, meaningful value here, not an absent field. Both sides poisoned identically is a correctly reproduced verdict, so digest grades nice via null-equals-null, not n/a and not coal.",
       "entry": {

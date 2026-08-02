@@ -855,4 +855,23 @@ mod authds_tests {
         assert_eq!(g["results"], "nice");
         assert_eq!(g["digest"], "nice", "both sides poisoned identically is a reproduced verdict");
     }
+
+    // ── review round 2: the digest dimension's own COAL outcome was uncovered ──
+    // Every existing verify test either reaches a nice digest or suppresses the
+    // dimension to n/a (rejected proof, over-accept, results mismatch, errored).
+    // None ever asserts digest going coal on its own merits — the realistic
+    // shape of a subtly-broken AVL implementation: proof anchors correctly,
+    // every operation returns the right value, but the FINAL digest is wrong
+    // (right answers, wrong root). Asserts all three dims, not just digest, to
+    // pin that a wrong digest does not retroactively poison accepted/results.
+
+    #[test]
+    fn verify_digest_mismatch_alone_is_coal_without_poisoning_upstream_dims() {
+        let a = json!({"proof_accepted": true, "results": [{"ok": true, "value": null}],
+                       "new_digest_hex": "ff", "error": null});
+        let g = grade_authds(&a, &verify_entry(true));
+        assert_eq!(g["accepted"], "nice", "a wrong final digest must not retroactively coal accepted");
+        assert_eq!(g["results"], "nice", "operations were reproduced correctly; only the root differs");
+        assert_eq!(g["digest"], "digest", "wrong final digest is exactly what this dimension exists to catch");
+    }
 }
