@@ -346,6 +346,71 @@ pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
     json!({"kind": "chain", "value": if nice { "nice" } else { "value" }})
 }
 
+/// §N authds-tier verdict. Dispatches on `entry["kind"]` like `grade_chain`.
+///
+/// `avl_prove` — `proof` and `digest` are INDEPENDENT dimensions with NO
+/// suppression chain. A correct digest alongside non-canonical proof bytes is
+/// the ADPROOF-FINDING class and is the single most important signal this arm
+/// exists to surface; chaining would hide it behind a green digest.
+///
+/// `avl_verify` — chained `accepted -> results -> digest`. The digest is
+/// DOWNSTREAM of the operations, not parallel to them: a poisoned verifier
+/// reports no digest, so grading it after a results mismatch is meaningless.
+///
+/// Unknown kind is coal on every dimension — never a silent pass.
+pub fn grade_authds(actual: &Value, entry: &Value) -> Value {
+    if err_is(actual, "panicked") {
+        return json!({"kind": "panicked"});
+    }
+    if err_is(actual, "not-implemented") {
+        return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+    let expected = &entry["expected"];
+    let clean = actual.get("error").is_none_or(Value::is_null);
+
+    match entry["kind"].as_str() {
+        Some("avl_prove") => {
+            let proof = if clean && structural_equal(&actual["proofs"], &expected["proofs"]) {
+                "nice"
+            } else {
+                "proof"
+            };
+            let digest = if clean && structural_equal(&actual["digests"], &expected["digests"]) {
+                "nice"
+            } else {
+                "digest"
+            };
+            json!({"kind": "authds_prove", "proof": proof, "digest": digest})
+        }
+        Some("avl_verify") => {
+            let accepted_ok = clean && actual["proof_accepted"] == expected["proof_accepted"];
+            let accepted = if accepted_ok { "nice" } else { "accepted" };
+
+            // Downstream dims exist only when the proof was accepted on BOTH sides.
+            let downstream = accepted_ok
+                && expected["proof_accepted"].as_bool().unwrap_or(false);
+
+            let results = if !downstream {
+                "n/a"
+            } else if structural_equal(&actual["results"], &expected["results"]) {
+                "nice"
+            } else {
+                "results"
+            };
+            let digest = if results != "nice" {
+                "n/a"
+            } else if structural_equal(&actual["new_digest_hex"], &expected["new_digest_hex"]) {
+                "nice"
+            } else {
+                "digest"
+            };
+            json!({"kind": "authds_verify", "accepted": accepted,
+                   "results": results, "digest": digest})
+        }
+        _ => json!({"kind": "authds_prove", "proof": "proof", "digest": "digest"}),
+    }
+}
+
 #[cfg(test)]
 mod chain_tests {
     use super::*;
@@ -617,5 +682,122 @@ mod tx_tests {
         let actual = json!({"valid": null, "cost": null, "error": "not-implemented"});
         let v = grade_transaction(&actual, &exp_reject());
         assert_eq!(v, json!({"kind": "coverage", "tag": "not-implemented"}));
+    }
+}
+
+#[cfg(test)]
+mod authds_tests {
+    use super::*;
+    use serde_json::json;
+
+    fn prove_entry() -> Value {
+        json!({"kind": "avl_prove",
+               "expected": {"proofs": ["aa", "bb"], "digests": ["11", "22"]}})
+    }
+
+    #[test]
+    fn prove_all_match_is_nice_on_both_dims() {
+        let a = json!({"proofs": ["aa", "bb"], "digests": ["11", "22"], "error": null});
+        let g = grade_authds(&a, &prove_entry());
+        assert_eq!(g["kind"], "authds_prove");
+        assert_eq!(g["proof"], "nice");
+        assert_eq!(g["digest"], "nice");
+    }
+
+    #[test]
+    fn prove_digest_right_proof_wrong_is_the_adproof_finding_shape() {
+        // The whole reason the dims are INDEPENDENT: a correct digest must not
+        // mask non-canonical proof bytes.
+        let a = json!({"proofs": ["ff", "bb"], "digests": ["11", "22"], "error": null});
+        let g = grade_authds(&a, &prove_entry());
+        assert_eq!(g["proof"], "proof");
+        assert_eq!(g["digest"], "nice", "digest must still be graded and green");
+    }
+
+    #[test]
+    fn prove_length_mismatch_is_coal_on_the_short_dim() {
+        let a = json!({"proofs": ["aa"], "digests": ["11", "22"], "error": null});
+        let g = grade_authds(&a, &prove_entry());
+        assert_eq!(g["proof"], "proof");
+        assert_eq!(g["digest"], "nice");
+    }
+
+    #[test]
+    fn prove_errored_is_coal_on_both_dims() {
+        let a = json!({"proofs": null, "digests": null, "error": "errored"});
+        let g = grade_authds(&a, &prove_entry());
+        assert_eq!(g["proof"], "proof");
+        assert_eq!(g["digest"], "digest");
+    }
+
+    fn verify_entry(accepted: bool) -> Value {
+        if accepted {
+            json!({"kind": "avl_verify", "expected": {
+                "proof_accepted": true,
+                "results": [{"ok": true, "value": null}],
+                "new_digest_hex": "33"}})
+        } else {
+            json!({"kind": "avl_verify", "expected": {
+                "proof_accepted": false, "results": [], "new_digest_hex": null}})
+        }
+    }
+
+    #[test]
+    fn verify_clean_success_is_nice_all_the_way_down() {
+        let a = json!({"proof_accepted": true, "results": [{"ok": true, "value": null}],
+                       "new_digest_hex": "33", "error": null});
+        let g = grade_authds(&a, &verify_entry(true));
+        assert_eq!(g["kind"], "authds_verify");
+        assert_eq!(g["accepted"], "nice");
+        assert_eq!(g["results"], "nice");
+        assert_eq!(g["digest"], "nice");
+    }
+
+    #[test]
+    fn verify_rejected_proof_is_nice_and_suppresses_downstream() {
+        let a = json!({"proof_accepted": false, "results": [], "new_digest_hex": null, "error": null});
+        let g = grade_authds(&a, &verify_entry(false));
+        assert_eq!(g["accepted"], "nice");
+        assert_eq!(g["results"], "n/a", "nothing downstream to grade on a rejected proof");
+        assert_eq!(g["digest"], "n/a");
+    }
+
+    #[test]
+    fn verify_over_accept_is_coal_and_suppresses_downstream() {
+        // The reject arm's whole job: an impl that anchors a proof the JVM refuses.
+        let a = json!({"proof_accepted": true, "results": [{"ok": true, "value": null}],
+                       "new_digest_hex": "33", "error": null});
+        let g = grade_authds(&a, &verify_entry(false));
+        assert_eq!(g["accepted"], "accepted");
+        assert_eq!(g["results"], "n/a");
+        assert_eq!(g["digest"], "n/a");
+    }
+
+    #[test]
+    fn verify_results_mismatch_suppresses_digest() {
+        let a = json!({"proof_accepted": true, "results": [{"ok": false, "value": null}],
+                       "new_digest_hex": "33", "error": null});
+        let g = grade_authds(&a, &verify_entry(true));
+        assert_eq!(g["accepted"], "nice");
+        assert_eq!(g["results"], "results");
+        assert_eq!(g["digest"], "n/a", "digest is downstream of the operations");
+    }
+
+    #[test]
+    fn panicked_and_not_implemented_take_precedence() {
+        let pk = json!({"error": "panicked", "note": "boom"});
+        let ni = json!({"error": "not-implemented"});
+        assert_eq!(grade_authds(&pk, &prove_entry())["kind"], "panicked");
+        assert_eq!(grade_authds(&ni, &prove_entry())["kind"], "coverage");
+    }
+
+    #[test]
+    fn unknown_kind_is_coal_never_a_silent_pass() {
+        let e = json!({"kind": "merkle_prove", "expected": {}});
+        let a = json!({"error": null});
+        let g = grade_authds(&a, &e);
+        assert_eq!(g["kind"], "authds_prove");
+        assert_eq!(g["proof"], "proof");
+        assert_eq!(g["digest"], "digest");
     }
 }
