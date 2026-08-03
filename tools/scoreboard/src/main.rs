@@ -132,6 +132,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                     let is_tx = sk.starts_with("transaction/");
                     let is_block = sk.starts_with("block/");
                     let is_chain = sk.starts_with("chain/");
+                    let is_authds = sk.starts_with("authds/");
                     let title = if is_wire {
                         let mut t = format!("roundtrip {}/{}", g("roundtrip_nice"), g("roundtrip_total"));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
@@ -171,6 +172,22 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
                         t
+                    } else if is_authds {
+                        // AuthDS tier (AVL prover + verifier). authds_prove tallies proof + digest
+                        // INDEPENDENTLY on every entry (no suppression) — a coal proof next to a nice
+                        // digest (a correct digest computed from non-canonical proof bytes) is this
+                        // tier's signature divergence and must stay visible, not averaged away.
+                        // authds_verify chains accepted -> results -> digest, skipping n/a dims, so
+                        // its totals are legitimately smaller. Mirrors block's abridged tooltip: the
+                        // digest total (shared by both kinds) is shown once, not duplicated.
+                        let mut t = format!("prove {}/{}", g("authds_proof_nice"), g("authds_proof_total"));
+                        t.push_str(&format!(" \u{b7} verify {}/{}",
+                            g("authds_accepted_nice"), g("authds_accepted_total")));
+                        t.push_str(&format!(" \u{b7} digest {}/{}",
+                            g("authds_digest_nice"), g("authds_digest_total")));
+                        if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
+                        if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        t
                     } else {
                         format!(
                             "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} panicked {}",
@@ -178,12 +195,22 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                             g("reject_nice"), g("reject_total"), g("panicked")
                         )
                     };
-                    // For tx/block/chain slices: if every red entry is dim="not-implemented" it is a
-                    // coverage/roadmap cell (the impl doesn't support this tier yet), not a genuine
+                    // For tx/block/chain/authds slices: if every red entry is dim="not-implemented" it
+                    // is a coverage/roadmap cell (the impl doesn't support this tier yet), not a genuine
                     // divergence. Render with the not-impl count and a distinct style rather than as a
                     // red coal cell.
-                    let all_not_impl = (is_tx || is_block || is_chain) && red > 0
+                    let all_not_impl = (is_tx || is_block || is_chain || is_authds) && red > 0
                         && red_arr.iter().all(|e| e.get("dim").and_then(|v| v.as_str()) == Some("not-implemented"));
+                    // AuthDS grades FOUR independent coal counters per slice (proof/digest/accepted/
+                    // results) — a divergence in ANY one of them must flip the cell red even when the
+                    // shared `red` list under-counts it, so the decision below is widened to also check
+                    // the counters directly (not solely the `red` array length every other tier uses).
+                    let red = if is_authds {
+                        red.max((g("authds_proof_coal") + g("authds_digest_coal")
+                            + g("authds_accepted_coal") + g("authds_results_coal")) as usize)
+                    } else {
+                        red
+                    };
                     if all_not_impl {
                         body.push_str(&format!(
                             "<td class=\"coverage\" title=\"{title}\">not-impl {}</td>",
@@ -262,7 +289,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
 <div><span class="sw coverage"></span><b>blue</b> — not-impl (roadmap; no verdict yet)</div>
-<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, or chain value.</div>
+<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, chain value, or authds prove / verify / digest.</div>
 </div>
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
@@ -837,5 +864,142 @@ mod tests {
         let b: Value = serde_json::from_str(&j).unwrap();
         assert_eq!(b["color"], "red");
         assert_eq!(b["message"], "v6 \u{2717} (3)"); // "v6 ✗ (3)"
+    }
+
+    // ── AuthDS tier cell tests (AVL prover + verifier) ─────────────────────────────────────────
+
+    #[test]
+    fn dashboard_renders_authds_cells() {
+        let results = json!({"runners": [
+            {"name": "rudolph", "label": "rudolph", "version": "v6", "tiers": ["authds"], "cost": true,
+             "slices": {"authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 10, "authds_proof_coal": 0,
+                "authds_digest_total": 60, "authds_digest_nice": 60, "authds_digest_coal": 0,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 46, "authds_results_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []}}}]});
+        let html = dashboard(&results, "ref");
+        assert!(html.contains("prove 10/10"), "authds tooltip must show the prove dim");
+        assert!(html.contains("class=\"nice\""), "a clean authds cell must be green");
+    }
+
+    #[test]
+    fn authds_proof_coal_is_red_cell() {
+        let results = json!({"runners": [
+            {"name": "dasher", "label": "dasher", "version": "v6", "tiers": ["authds"], "cost": true,
+             "slices": {"authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 9, "authds_proof_coal": 1,
+                "authds_digest_total": 60, "authds_digest_nice": 60, "authds_digest_coal": 0,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 46, "authds_results_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []}}}]});
+        let html = dashboard(&results, "ref");
+        assert!(html.contains("class=\"coal\""), "a proof-coal authds cell must be red");
+    }
+
+    // The three tests below pin the *other* three coal counters independently, mirroring
+    // authds_proof_coal_is_red_cell — each flips exactly one of the four authds coal counters
+    // with everything else (including `red: []`, same as the fixtures above) clean, so the coal
+    // decision is proven to key on all four counters directly rather than on the shared `red`
+    // array length (which these fixtures deliberately leave empty). This is the failure mode the
+    // brief calls out: a cell must not go green just because one of the four coal counters was
+    // left unchecked.
+
+    #[test]
+    fn authds_digest_coal_is_red_cell() {
+        let results = json!({"runners": [
+            {"name": "dasher", "label": "dasher", "version": "v6", "tiers": ["authds"], "cost": true,
+             "slices": {"authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 10, "authds_proof_coal": 0,
+                "authds_digest_total": 60, "authds_digest_nice": 59, "authds_digest_coal": 1,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 46, "authds_results_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []}}}]});
+        let html = dashboard(&results, "ref");
+        assert!(html.contains("class=\"coal\""), "a digest-coal authds cell must be red");
+    }
+
+    #[test]
+    fn authds_accepted_coal_is_red_cell() {
+        let results = json!({"runners": [
+            {"name": "dasher", "label": "dasher", "version": "v6", "tiers": ["authds"], "cost": true,
+             "slices": {"authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 10, "authds_proof_coal": 0,
+                "authds_digest_total": 60, "authds_digest_nice": 60, "authds_digest_coal": 0,
+                "authds_accepted_total": 50, "authds_accepted_nice": 49, "authds_accepted_coal": 1,
+                "authds_results_total": 46, "authds_results_nice": 46, "authds_results_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []}}}]});
+        let html = dashboard(&results, "ref");
+        assert!(html.contains("class=\"coal\""), "an accepted-coal authds cell must be red");
+    }
+
+    #[test]
+    fn authds_results_coal_is_red_cell() {
+        let results = json!({"runners": [
+            {"name": "dasher", "label": "dasher", "version": "v6", "tiers": ["authds"], "cost": true,
+             "slices": {"authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 10, "authds_proof_coal": 0,
+                "authds_digest_total": 60, "authds_digest_nice": 60, "authds_digest_coal": 0,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 45, "authds_results_coal": 1,
+                "not_impl": 0, "panicked": 0, "red": []}}}]});
+        let html = dashboard(&results, "ref");
+        assert!(html.contains("class=\"coal\""), "a results-coal authds cell must be red");
+    }
+
+    #[test]
+    fn authds_all_not_impl_is_coverage_cell_not_coal() {
+        // Mirrors block_all_not_impl_is_coverage_cell_not_coal / chain's equivalent: a slice
+        // where every red entry is dim="not-implemented" is a roadmap/coverage cell, not coal.
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "dasher", "mark": "coal", "red_total": 3,
+              "slices": { "authds/any/vendored": {
+                "authds_proof_total": 0, "authds_proof_nice": 0, "authds_proof_coal": 0,
+                "authds_digest_total": 0, "authds_digest_nice": 0, "authds_digest_coal": 0,
+                "authds_accepted_total": 0, "authds_accepted_nice": 0, "authds_accepted_coal": 0,
+                "authds_results_total": 0, "authds_results_nice": 0, "authds_results_coal": 0,
+                "not_impl": 3, "panicked": 0,
+                "red": [
+                  {"dim":"not-implemented","entry":"a","op":"a"},
+                  {"dim":"not-implemented","entry":"b","op":"b"},
+                  {"dim":"not-implemented","entry":"c","op":"c"}
+                ]
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("class=\"coverage\""),
+            "all-not-impl authds slice must render as coverage cell, not coal");
+        assert!(html.contains("not-impl 3"),
+            "coverage cell must show not-impl count");
+    }
+
+    #[test]
+    fn authds_cost_false_runner_clean_slice_is_amber() {
+        // AuthDS has no cost dimension of its own (like chain). This pins the deliberate choice
+        // to follow chain's precedent (subject to the runner's cost:false flag like every other
+        // non-wire tier) rather than wire's explicit exemption ("wire is never amber, it has no
+        // cost") — nothing in the brief or the neighbouring arms carves out a chain/authds
+        // exemption, so a cost:false runner's clean authds slice renders amber, not green.
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "blitzen-develop", "mark": "nice", "red_total": 0, "cost": false,
+              "slices": { "authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 10, "authds_proof_coal": 0,
+                "authds_digest_total": 60, "authds_digest_nice": 60, "authds_digest_coal": 0,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 46, "authds_results_coal": 0,
+                "not_impl": 0, "panicked": 0, "red": []
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("class=\"partial\""),
+            "cost:false runner's clean authds slice must be amber, matching chain's precedent");
     }
 }
