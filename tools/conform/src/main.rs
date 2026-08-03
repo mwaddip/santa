@@ -333,6 +333,22 @@ impl Counts {
                 bits.push(format!("{} val-coal", self.chain_value_coal));
             }
         }
+        // authds slices: prove's independent proof+digest dims, then verify's chained
+        // accepted/results dims. digest is shared by both kinds (one shown total, not two) —
+        // no single dim plays "valid"/"value"'s gate role here, so none gets an extra coal bit;
+        // nice/total says everything (a slice can be pure-prove, pure-verify, or a mix of both).
+        if self.authds_proof_total > 0 {
+            bits.push(format!("proof {}/{}", self.authds_proof_nice, self.authds_proof_total));
+        }
+        if self.authds_digest_total > 0 {
+            bits.push(format!("digest {}/{}", self.authds_digest_nice, self.authds_digest_total));
+        }
+        if self.authds_accepted_total > 0 {
+            bits.push(format!("accepted {}/{}", self.authds_accepted_nice, self.authds_accepted_total));
+        }
+        if self.authds_results_total > 0 {
+            bits.push(format!("results {}/{}", self.authds_results_nice, self.authds_results_total));
+        }
         if self.cost_graded > 0 {
             bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
         }
@@ -859,6 +875,21 @@ mod tests {
         assert_eq!(c.red_total(), 1);
     }
 
+    #[test]
+    fn summary_reports_authds_dims() {
+        // A mixed authds slice: prove's proof+digest, verify's accepted+results, and the shared
+        // digest total accumulating contributions from both kinds — pins order and format so a
+        // future refactor can't silently drop a dim back to a blank console line (Finding 2).
+        let c = super::Counts {
+            authds_proof_total: 2, authds_proof_nice: 1,
+            authds_digest_total: 3, authds_digest_nice: 2,
+            authds_accepted_total: 2, authds_accepted_nice: 2,
+            authds_results_total: 1, authds_results_nice: 0,
+            ..Default::default()
+        };
+        assert_eq!(c.summary(), "proof 1/2 · digest 2/3 · accepted 2/2 · results 0/1");
+    }
+
     // ── transaction tally tests ──────────────────────────────────────────────
 
     /// Build a synthetic santa-transaction/v1 vector JSON with the given entries.
@@ -1208,6 +1239,144 @@ mod tests {
         let c = slices.values().next().unwrap();
         assert_eq!(c.authds_proof_coal, 1, "wrong proof bytes must be coal");
         assert_eq!(c.authds_digest_nice, 1, "matching digest must still be nice");
+        assert_eq!(c.red_total(), 1);
+        fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn authds_prove_digest_coal_independently_of_nice_proof() {
+        // The mirror of authds_prove_dims_tally_independently: proof matches, digest doesn't.
+        // Proves authds_digest_coal reaches red_total() from the *prove* arm specifically.
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let root = write_authds_prove_vector("digest-coal", &["aa"]);
+        let mut actuals = BTreeMap::new();
+        actuals.insert(
+            "authds/any/vendored/AvlProve.probe.json".to_string(),
+            json!({"probe#0": {"proofs": ["aa"], "digests": ["22"], "error": null}}),
+        );
+        let slices = super::tally(&actuals, true, &root);
+        let c = slices.values().next().unwrap();
+        assert_eq!(c.authds_proof_nice, 1, "matching proof must still be nice");
+        assert_eq!(c.authds_digest_coal, 1, "wrong digest must be coal");
+        assert_eq!(c.red_total(), 1);
+        fs::remove_dir_all(&root).ok();
+    }
+
+    /// Write a minimal santa-authds/v1 avl_verify vector under a temp vectors/ tree, with the
+    /// given `expected` triple. Mirrors write_authds_prove_vector's shape for the verify kind.
+    fn write_authds_verify_vector(
+        tag: &str,
+        expected_accepted: bool,
+        expected_results: serde_json::Value,
+        expected_digest: serde_json::Value,
+    ) -> std::path::PathBuf {
+        let root = std::env::temp_dir()
+            .join(format!("santa-authds-tally-test-{}-{}", std::process::id(), tag));
+        let dir = root.join("vectors").join("authds").join("any").join("vendored");
+        fs::create_dir_all(&dir).unwrap();
+        let v = serde_json::json!({
+            "schema": "santa-authds/v1",
+            "op": "authds:vendored:probe",
+            "blessed_by": "jvm:scrypto-3.0.0",
+            "entries": [{
+                "name": "probe#0",
+                "source": "ergots:probe",
+                "kind": "avl_verify",
+                "settings": {"key_length": 32, "value_length": null,
+                             "max_num_operations": null, "max_deletes": null},
+                "payload": {"starting_digest_hex": "00", "proof_hex": "aa", "operations": []},
+                "expected": {
+                    "proof_accepted": expected_accepted,
+                    "results": expected_results,
+                    "new_digest_hex": expected_digest
+                }
+            }]
+        });
+        fs::write(dir.join("AvlVerify.probe.json"), serde_json::to_string(&v).unwrap()).unwrap();
+        root
+    }
+
+    #[test]
+    fn authds_verify_accepted_coal_suppresses_downstream_to_na() {
+        // expected rejects the proof; actual over-accepts it (the reject arm's failure mode).
+        // accepted must grade coal, and results/digest must stay untouched at n/a — proving
+        // authds_accepted_coal reaches red_total(), and that a coal accepted truly withholds
+        // the downstream totals rather than merely leaving their coal counters at 0.
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let root = write_authds_verify_vector("accepted-coal", false, json!([]), json!(null));
+        let mut actuals = BTreeMap::new();
+        actuals.insert(
+            "authds/any/vendored/AvlVerify.probe.json".to_string(),
+            json!({"probe#0": {
+                "proof_accepted": true,
+                "results": [{"ok": true, "value": null}],
+                "new_digest_hex": "33",
+                "error": null
+            }}),
+        );
+        let slices = super::tally(&actuals, true, &root);
+        let c = slices.values().next().unwrap();
+        assert_eq!(c.authds_accepted_coal, 1, "over-accept must be coal");
+        assert_eq!(c.authds_results_total, 0, "results stays n/a (untouched), not merely coal-free");
+        assert_eq!(c.authds_digest_total, 0, "digest stays n/a (untouched), not merely coal-free");
+        assert_eq!(c.red_total(), 1);
+        fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn authds_verify_results_coal_suppresses_digest_to_na() {
+        // accepted matches (nice); one operation's outcome diverges -> results coal. digest is
+        // downstream of results, so it must stay untouched at n/a. Proves authds_results_coal
+        // reaches red_total().
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let root = write_authds_verify_vector(
+            "results-coal", true, json!([{"ok": true, "value": null}]), json!("33"));
+        let mut actuals = BTreeMap::new();
+        actuals.insert(
+            "authds/any/vendored/AvlVerify.probe.json".to_string(),
+            json!({"probe#0": {
+                "proof_accepted": true,
+                "results": [{"ok": false, "value": null}],
+                "new_digest_hex": "33",
+                "error": null
+            }}),
+        );
+        let slices = super::tally(&actuals, true, &root);
+        let c = slices.values().next().unwrap();
+        assert_eq!(c.authds_accepted_nice, 1, "accepted must still be nice");
+        assert_eq!(c.authds_results_coal, 1, "diverging operation outcome must be coal");
+        assert_eq!(c.authds_digest_total, 0, "digest stays n/a (untouched) when results is coal");
+        assert_eq!(c.red_total(), 1);
+        fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn authds_verify_digest_coal_after_clean_chain() {
+        // accepted and results both match (both nice); only the final digest diverges. Proves
+        // authds_digest_coal reaches red_total() from the *verify* arm specifically (the prove
+        // arm is covered separately by authds_prove_digest_coal_independently_of_nice_proof).
+        use serde_json::json;
+        use std::collections::BTreeMap;
+        let root = write_authds_verify_vector(
+            "digest-coal", true, json!([{"ok": true, "value": null}]), json!("33"));
+        let mut actuals = BTreeMap::new();
+        actuals.insert(
+            "authds/any/vendored/AvlVerify.probe.json".to_string(),
+            json!({"probe#0": {
+                "proof_accepted": true,
+                "results": [{"ok": true, "value": null}],
+                "new_digest_hex": "ff",
+                "error": null
+            }}),
+        );
+        let slices = super::tally(&actuals, true, &root);
+        let c = slices.values().next().unwrap();
+        assert_eq!(c.authds_accepted_nice, 1, "accepted must still be nice");
+        assert_eq!(c.authds_results_nice, 1, "results must still be nice");
+        assert_eq!(c.authds_digest_coal, 1, "wrong final digest must be coal");
         assert_eq!(c.red_total(), 1);
         fs::remove_dir_all(&root).ok();
     }
