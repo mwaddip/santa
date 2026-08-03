@@ -227,6 +227,18 @@ prove. `not-impl` is the honest cell and flips if sigma-rust grows a prover.
   (`prompts/ergo-avltree-canonical-proof-resolved.md`), so the expectation is
   convergence — and convergence across 10 richer multi-cycle sequences is itself
   the result, given block 28474 remains unexplained upstream of the prover.
+  **Outcome: 10/10 converged.**
+
+## Confirmed findings
+
+- **`UnknownModification` is a keyless singleton in scrypto, a keyed lookup
+  everywhere else** —
+  [`docs/findings/authds-unknownmodification-jvm-vs-rust.md`](../findings/authds-unknownmodification-jvm-vs-rust.md).
+  Surfaced by the 50 verifier re-blesses: 46/50 agree with the JVM, and all four
+  that do not contain the tag. scrypto rejects it (fixed zero-length key sorts
+  below −inf) and poisons the verifier; `ergo_avltree_rust` / ergots honour the
+  caller's key and treat it as a non-modifying lookup. Expect a real dasher red
+  on those four entries — it is the finding, not an adapter bug.
 
 ## Honest limitations
 

@@ -1,7 +1,7 @@
 package santa
 
 import scorex.crypto.authds.avltree.batch.BatchAVLVerifier
-import scorex.crypto.authds.{ADDigest, ADKey, ADValue, SerializedAdProof}
+import scorex.crypto.authds.{ADDigest, SerializedAdProof}
 import scorex.crypto.hash.{Blake2b256, Digest32}
 import scorex.util.encode.Base16
 
@@ -50,8 +50,16 @@ object AvlVerifierBlesser {
     // Level 2 — one entry per operation. Once an operation fails the verifier is
     // poisoned and every subsequent operation fails too; we still record one
     // entry per operation so the array length always matches the payload.
+    //
+    // `toOperation` is evaluated OUTSIDE the Try on purpose: `performOneOperation`
+    // captures what scrypto rejects (a key below -inf, an absent key, a negative
+    // UpdateLongBy result), but a decoder error — unknown tag, non-hex key,
+    // `UpdateLongBy` with no `delta` — means the VECTOR is malformed, not that an
+    // implementation failed an operation. Blessing that as `{ok: false}` would ship
+    // an authoring bug as a conformance expectation, so it propagates loudly.
     val results = operations.map { op =>
-      verifier.performOneOperation(toOperation(op)) match {
+      val operation = toOperation(op)
+      verifier.performOneOperation(operation) match {
         case scala.util.Success(Some(v)) => OpResult(ok = true, Some(hex(v)))
         case scala.util.Success(None)    => OpResult(ok = true, None)
         case scala.util.Failure(_)       => OpResult(ok = false, None)
@@ -62,18 +70,13 @@ object AvlVerifierBlesser {
     VerifyOutcome(proofAccepted = true, results, verifier.digest.map(hex))
   }
 
-  private def toOperation(op: AvlProofGenerator.AvlOp): scorex.crypto.authds.avltree.batch.Operation = {
-    import scorex.crypto.authds.avltree.batch.{Insert, Lookup, Remove, Update}
-    op.kind match {
-      case "Insert" =>
-        Insert(ADKey @@ dec(op.key), ADValue @@ dec(op.value.getOrElse(sys.error("Insert requires value"))))
-      case "Update" =>
-        Update(ADKey @@ dec(op.key), ADValue @@ dec(op.value.getOrElse(sys.error("Update requires value"))))
-      case "Lookup" => Lookup(ADKey @@ dec(op.key))
-      case "Remove" => Remove(ADKey @@ dec(op.key))
-      case other    => sys.error(s"unknown operation kind: $other")
-    }
-  }
+  /** The full eight-tag `santa-authds/v1` operation vocabulary, delegated to the
+    * prover's decoder rather than re-implemented: prove and verify hand scrypto
+    * the same `Operation` values, so a tag that means one thing to the prover and
+    * another to the verifier is not a shape this tier can express. One vocabulary,
+    * one place — the same reason `deriveFromEntry` is the one decode path. */
+  private def toOperation(op: AvlProofGenerator.AvlOp): scorex.crypto.authds.avltree.batch.Operation =
+    AvlProofGenerator.toOperation(op)
 
   /** Decode a `santa-authds/v1` `avl_verify` entry (snake_case `settings` /
     * `payload`) and verify. Shared by the vendored blesser and the rudolph
@@ -94,7 +97,10 @@ object AvlVerifierBlesser {
         AvlProofGenerator.AvlOp(
           o.get[String]("tag").toOption.getOrElse(sys.error("op.tag missing")),
           o.get[String]("key_hex").toOption.getOrElse(sys.error("op.key_hex missing")),
-          o.get[String]("value_hex").toOption
+          o.get[String]("value_hex").toOption,
+          // decimal STRING (UpdateLongBy). Dropping it here would make every
+          // `UpdateLongBy` entry die in toOperation with "requires delta".
+          o.get[String]("delta").toOption
         )
       }
     verify(
