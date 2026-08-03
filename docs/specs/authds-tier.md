@@ -133,9 +133,10 @@ is the final digest, or null if any operation broke the verifier.
 **Operation encoding** (shared): `{tag, key_hex, value_hex?, delta?}` with tags
 `Insert`, `Update`, `Remove`, `Lookup`, `InsertOrUpdate`, `RemoveIfExists`,
 `UpdateLongBy`, `UnknownModification`. `delta` is a decimal **string** for
-`UpdateLongBy` (Long range; the eval tier's Long-as-string rule applies —
-`update-long-by-i64-max-boundary` is in the corpus and would lose precision as a
-JSON number). All hex lower-case.
+`UpdateLongBy` (Long range; the eval tier's Long-as-string rule applies
+pre-emptively — a JSON number loses precision past 2^53. No delta in the current
+corpus needs it, the largest `|delta|` anywhere is `100`; a future fixture could
+still carry one beyond the safe-integer bound). All hex lower-case.
 
 ## Result shape (runner contract)
 
@@ -151,11 +152,15 @@ growth-ledger cell, not a gap.
 
 ## Grading — `grade_authds`
 
-**`avl_prove` — `proof` and `digest` are INDEPENDENT dimensions, per cycle.**
-Deliberately *not* chained, breaking with the block tier's
-`valid → post_digest → cost` suppression. Rationale: digest-correct-but-proof-
-bytes-different is precisely the ADPROOF-FINDING class, the single most important
-signal this arm exists to surface. Chaining would hide it behind a green digest.
+**`avl_prove` — `proof` and `digest` are INDEPENDENT dimensions, graded per ENTRY.**
+Each dimension is one verdict per entry over the *whole* `proofs`/`digests` array,
+positionally — not per individual `gen_proof_after` cycle: an entry with 3 proof
+cycles still contributes exactly one `proof` verdict and one `digest` verdict, so
+`authds_proof_total` counts entries (10), not cycles (18). Deliberately *not*
+chained, breaking with the block tier's `valid → post_digest → cost` suppression.
+Rationale: digest-correct-but-proof-bytes-different is precisely the
+ADPROOF-FINDING class, the single most important signal this arm exists to
+surface. Chaining would hide it behind a green digest.
 
 **`avl_verify` — chained `proof_accepted → results → new_digest`.** An upstream
 failure suppresses the downstream dimensions, matching block. Note the order:
@@ -194,7 +199,7 @@ rebuilt rather than counted.
 `vectors/authds/any/vendored/` — **`any`** because AVL proofs are not
 ErgoTree-versioned, matching how chain files `Retargeting` and `HeaderVotes`.
 Provenance **`vendored`**, following the wire tier's ergots+Fleet precedent:
-`source: "ergots:packages/avltree/test/fixtures/<set>/<name>"`.
+`source: "ergots:packages/avltree/test/fixtures/<set>/<name>.json"`.
 
 ## Conformers
 
@@ -261,7 +266,10 @@ both seed a single leaf (height 0) — every packed proof and digest diverges fr
 operation on. The fix (`b533fe5`) exists in the author's local ergots checkout but is
 unpushed; npm's published `@ergots/avltree@0.3.0` was cut from the fixed tree and is
 unaffected (same version string, two different implementations — a process hazard worth
-tracking on its own). Severity low: the verifier is the consensus surface and it is 46/50
+tracking on its own). This npm-vs-git claim is network-verified-at-the-time (npm registry
+`time` map + a downloaded-tarball inspection), not locally re-checkable — every local
+`@ergots/avltree` under `node_modules` is a workspace symlink with no tarball or integrity
+hash to compare against. Severity low: the verifier is the consensus surface and it is 46/50
 green; the prover is off-chain tooling. Routed at
 `prompts/ergots-push-avltree-prover-sentinel-fix.md` (untracked).
 
@@ -290,6 +298,14 @@ agrees with the JVM's rejection in every case.
   (`keyLength` 1 and 8, fixed `valueLength`, `maxNumOperations` bounds) reach
   library surface that consensus touches only through ErgoScript. That is a
   deliberate widening, accepted when this tier was scoped.
+- **Two of the 50 verify entries are the same test.** `config-variance-max-ops-exact`
+  and `lookup-3leaves-present` are byte-identical in `settings`, `payload`, and
+  `expected` — 50 named entries, 49 distinct inputs. The duplicate's name promises
+  a `max_num_operations`-at-the-exact-bound cell it does not actually add (the
+  plain lookup already carries `max_num_operations: 1` with one operation).
+  Inherited from ergots' upstream fixture set, not introduced by re-blessing; the
+  committed vector is not being deduplicated or regenerated over it — recorded
+  here as a known coverage gap.
 
 ## Build order
 

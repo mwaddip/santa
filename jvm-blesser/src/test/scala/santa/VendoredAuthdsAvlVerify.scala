@@ -71,9 +71,11 @@ object VendoredAuthdsAvlVerify {
     AvlVerifierBlesser.deriveFromEntry(entry)
 
   /** Fixture op tags carry through unchanged; `delta` becomes a decimal STRING
-    * (Long range — `update-long-by-i64-max-boundary` sits one step below
-    * `Long.MaxValue` and would lose precision as a JSON number in any JS
-    * consumer). Absent optionals are OMITTED rather than nulled: the schema's
+    * (Long range — a pre-emptive application of the eval tier's Long-as-string
+    * rule: a JSON number loses precision past 2^53. No `delta` in the current
+    * corpus is anywhere near that bound — the largest `|delta|` is 100 — this
+    * guards a future fixture, not an existing one). Absent optionals are
+    * OMITTED rather than nulled: the schema's
     * op_item has `additionalProperties: false` with `value_hex`/`delta` optional
     * and NOT nullable, so a `"delta": null` would fail validation. (Contrast the
     * four `settings` fields, which ARE required-and-nullable — see `extract`.)
@@ -120,9 +122,12 @@ object VendoredAuthdsAvlVerify {
         "payload" -> payload,
         "expected" -> Json.obj(
           "proof_accepted" -> Json.fromBoolean(out.proofAccepted),
-          // `results` is [] exactly when the proof did not anchor — the conditional
-          // arity invariant validate enforces. Otherwise one entry per operation,
-          // including the ones that run after the verifier is already poisoned.
+          // `results` is [] whenever the proof did not anchor (never omitted) — but not
+          // ONLY then: an anchored proof with zero operations (`batch-0ops`) also produces
+          // `results: []`. The invariant validate enforces is one-directional: accepted =>
+          // results.length == operations.length; not-accepted => results == []. Otherwise
+          // one entry per operation, including the ones that run after the verifier is
+          // already poisoned.
           "results" -> Json.arr(out.results.map { r =>
             Json.obj(
               "ok" -> Json.fromBoolean(r.ok),

@@ -157,7 +157,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   (ergots)** `proof 0/10 · digest 42/52 · accepted 50/50 · results 42/46`, red 24 — two
   real, confirmed findings: pushed ergots `master` seeds an empty AVL tree as two sentinel
   leaves instead of one (all 10 `avl_prove` entries; fixed locally, unpushed — npm's
-  published `0.3.0` is unaffected, same version string naming two different trees) and
+  published `0.3.0` is unaffected, same version string naming two different trees; this
+  npm-vs-git claim is network-verified-at-the-time — npm's `time` map + a tarball inspection
+  — not locally re-checkable, since every local `@ergots/avltree` is a workspace symlink with
+  no tarball or integrity hash to compare against) and
   scrypto's `UnknownModification` is a fixed zero-length-key singleton that poisons the JVM
   verifier where ergots/`ergo_avltree_rust` treat it as a keyed, non-modifying lookup (4
   `results` entries;
@@ -180,7 +183,7 @@ Still greenfield, and where help is most wanted (see below):
 ```
 SPEC.md            umbrella spec — architecture, tiers, contracts, roadmap, glossary
 BOOTSTRAP.md       design rationale + decision log (the *why*)
-docs/contract/     the frozen runner I/O contracts (eval · wire · transaction)
+docs/contract/     the frozen runner I/O contracts (eval · wire · transaction · block · chain · authds)
 docs/specs/        per-phase subspecs
 docs/findings/     recorded cross-implementation divergences
 docs/coverage/     standing corpus coverage manifest (what the vectors exercise)
@@ -188,9 +191,12 @@ schema/            JSON Schemas for vectors + actuals, and the validator
 vectors/eval/      the canonical eval corpus — the "nice list" (v5/ and v6/)
 vectors/wire/      wire-tier round-trip vectors
 vectors/transaction/  transaction-tier captured vectors (v6/captured/)
+vectors/block/     block-tier digest-state vectors (captured + authored mutations)
+vectors/chain/     chain-tier retargeting / voting / fork_vote_gate / header_votes vectors
+vectors/authds/    authds-tier AVL+ prover/verifier vectors (any/vendored/)
 jvm-blesser/       Scala: the blesser, the JVM reference runner (Rudolph), the harness
 ts-runner/         Dasher — the ergots runner + the conformance gate
-runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni · comet)
+runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni · comet · donner · vixen)
 conform            the runner-agnostic orchestrator — runs every runner, prints the table
 README.md          this file
 ```

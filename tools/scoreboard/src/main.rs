@@ -182,11 +182,16 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         // digest (a correct digest computed from non-canonical proof bytes) is this
                         // tier's signature divergence and must stay visible, not averaged away.
                         // authds_verify chains accepted -> results -> digest, skipping n/a dims, so
-                        // its totals are legitimately smaller. Mirrors block's abridged tooltip: the
-                        // digest total (shared by both kinds) is shown once, not duplicated.
+                        // its totals are legitimately smaller. The contract (§4) documents FOUR
+                        // counters per slice (proof/digest/accepted/results) — all four render here,
+                        // or a divergence confined to `results` alone (e.g. dasher's 4 live
+                        // UnknownModification reds) would be invisible in the hover even though the
+                        // cell counts it as coal.
                         let mut t = format!("prove {}/{}", g("authds_proof_nice"), g("authds_proof_total"));
                         t.push_str(&format!(" \u{b7} verify {}/{}",
                             g("authds_accepted_nice"), g("authds_accepted_total")));
+                        t.push_str(&format!(" \u{b7} results {}/{}",
+                            g("authds_results_nice"), g("authds_results_total")));
                         t.push_str(&format!(" \u{b7} digest {}/{}",
                             g("authds_digest_nice"), g("authds_digest_total")));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
@@ -216,9 +221,30 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         red
                     };
                     if all_not_impl {
+                        // AuthDS-only: a slice can be not-impl on one KIND (e.g. avl_prove — eni's
+                        // and donner's documented shape, contract §6: avl_verify yes / avl_prove
+                        // not-impl) while fully graded, and passing, on the other — both kinds share
+                        // one authds/<version>/<provenance> row. Collapsing straight to "not-impl N"
+                        // would erase a clean verify pass from the board even though the tooltip
+                        // still carries it (§4/§9). Append whichever dims actually graded (total > 0)
+                        // alongside the not-impl count; a slice with nothing graded at all (no AVL
+                        // surface whatsoever) degrades to exactly the old "not-impl N" text, since
+                        // every dim total is 0 there too.
+                        let mut cell = format!("not-impl {}", g("not_impl"));
+                        if is_authds {
+                            for (label, nice, total) in [
+                                ("prove", g("authds_proof_nice"), g("authds_proof_total")),
+                                ("verify", g("authds_accepted_nice"), g("authds_accepted_total")),
+                                ("results", g("authds_results_nice"), g("authds_results_total")),
+                                ("digest", g("authds_digest_nice"), g("authds_digest_total")),
+                            ] {
+                                if total > 0 {
+                                    cell.push_str(&format!(" \u{b7} {label} {nice}/{total}"));
+                                }
+                            }
+                        }
                         body.push_str(&format!(
-                            "<td class=\"coverage\" title=\"{title}\">not-impl {}</td>",
-                            g("not_impl")
+                            "<td class=\"coverage\" title=\"{title}\">{cell}</td>"
                         ));
                     } else if red > 0 {
                         body.push_str(&format!("<td class=\"coal\" title=\"{title}\">{coal_icon} {red}</td>"));
@@ -295,7 +321,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
 <div><span class="sw coverage"></span><b>blue</b> — not-impl (roadmap; no verdict yet)</div>
-<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, chain value, or authds prove / verify / digest.</div>
+<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, chain value, or authds prove / verify / results / digest.</div>
 </div>
 <p class="meta">Generated from <code>{escaped_git_ref}</code>.</p>
 </body></html>
@@ -1009,5 +1035,67 @@ mod tests {
             "cost:false runner's clean authds slice must be green, matching wire's precedent (no cost dimension to leave ungraded)");
         assert!(!html.contains("value-only (cost not graded)"),
             "authds cells never carry the value-only amber note — there is no cost dimension for it to describe");
+    }
+
+    #[test]
+    fn authds_tooltip_includes_results_dimension() {
+        // Regression pin (C2): dasher's real board (proof 0/10 · digest 42/52 · accepted 50/50 ·
+        // results 42/46) has visible reds ONLY in `results` (the UnknownModification finding) —
+        // a tooltip that omits `results` would show a clean-looking hover on a cell the matrix
+        // still counts as coal via the widened authds `red` (authds_results_coal).
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "dasher", "mark": "coal", "red_total": 24,
+              "slices": { "authds/any/vendored": {
+                "authds_proof_total": 10, "authds_proof_nice": 0, "authds_proof_coal": 10,
+                "authds_digest_total": 52, "authds_digest_nice": 42, "authds_digest_coal": 10,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 42, "authds_results_coal": 4,
+                "not_impl": 0, "panicked": 0, "red": []
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("results 42/46"), "authds tooltip must show the results dim");
+        // full ordered tooltip, so a future edit can't silently drop one segment again
+        assert!(html.contains("prove 0/10 \u{b7} verify 50/50 \u{b7} results 42/46 \u{b7} digest 42/52"),
+            "authds tooltip must carry all four documented counters (contract §4/§9)");
+    }
+
+    #[test]
+    fn authds_partial_not_impl_shows_passing_dims_not_bare_coverage() {
+        // C1 regression pin: the eni/donner shape the spec documents (§6) — avl_prove not-impl
+        // on all 10 entries, avl_verify fully mounted and green. Before the fix this collapsed
+        // to a bare "not-impl 10" coverage cell, indistinguishable from a runner with NO AVL
+        // surface at all: the 50/50 verify pass vanished from the rendered cell (only the
+        // tooltip title kept it).
+        let mut red_arr = Vec::new();
+        for i in 0..10 {
+            red_arr.push(json!({"dim": "not-implemented", "entry": format!("e{i}"), "op": format!("e{i}")}));
+        }
+        let data = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "blitzen-eni", "mark": "coal", "red_total": 10,
+              "slices": { "authds/any/vendored": {
+                "authds_proof_total": 0, "authds_proof_nice": 0, "authds_proof_coal": 0,
+                "authds_digest_total": 46, "authds_digest_nice": 46, "authds_digest_coal": 0,
+                "authds_accepted_total": 50, "authds_accepted_nice": 50, "authds_accepted_coal": 0,
+                "authds_results_total": 46, "authds_results_nice": 46, "authds_results_coal": 0,
+                "not_impl": 10, "panicked": 0,
+                "red": red_arr
+              }}
+            }
+          ]
+        });
+        let html = dashboard(&data, "ref");
+        assert!(html.contains("class=\"coverage\""),
+            "an authds slice not-impl only on avl_prove must still render as a coverage cell, not coal");
+        // the CELL TEXT (not just the tooltip) must show the passing verify/results/digest dims —
+        // "prove" is omitted since its total is 0 (nothing graded there to show).
+        assert!(html.contains(">not-impl 10 \u{b7} verify 50/50 \u{b7} results 46/46 \u{b7} digest 46/46<"),
+            "the coverage cell text must show what actually passed alongside the not-impl count");
     }
 }

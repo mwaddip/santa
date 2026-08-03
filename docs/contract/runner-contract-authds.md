@@ -112,11 +112,14 @@ expected : { proof_accepted: bool,
 `{tag, key_hex, value_hex?, delta?}`. Tags: `Insert`, `Update`, `Remove`, `Lookup`,
 `InsertOrUpdate`, `RemoveIfExists`, `UpdateLongBy`, `UnknownModification`. `delta` is a
 **decimal string** for `UpdateLongBy` (Long range — the eval tier's Long-as-string rule,
-`runner-contract.md` §4; a JSON number would lose precision — `update-long-by-i64-max-boundary`
-is in the corpus and exercises exactly this). `UnknownModification` is a case *object* in
-scrypto with a fixed **zero-length** key — the vector still carries `key_hex` for schema
-uniformity (every `op_item` requires it), but no implementation reads it for this tag
-(§8/§9's finding).
+`runner-contract.md` §4, applied pre-emptively: `delta` is a Long-typed field and a JSON
+number loses precision past 2^53. No fixture in the current corpus needs the protection —
+the largest `|delta|` anywhere is `100` — this is a forward-looking rule, not a reaction to
+an existing boundary case). `UnknownModification` is a case *object* in scrypto with a fixed
+**zero-length** key — the vector still carries `key_hex` for schema uniformity (every
+`op_item` requires it), but scrypto itself never reads that key for this tag. ergots and
+`ergo_avltree_rust` both **do** honour the caller's key here, treating the operation as a
+keyed, non-modifying lookup — that disagreement is precisely §8/§9's finding.
 
 ### Version label: `any`
 
@@ -215,8 +218,16 @@ downstream dimensions to `n/a` (skipped, not graded):
    findings. When graded, nice iff `actual.new_digest_hex` structurally equals
    `expected.new_digest_hex`.
 
-**Unknown `kind`** in a graded run is coal on every dimension the entry would otherwise
-carry — never a silent pass, the standing rule every tier's grader follows.
+**Unknown `kind`.** Both runners map a `kind` they don't recognise to
+`error: "not-implemented"` (`Runner.authdsEntry`'s `case _`, `runner.ts`'s `AUTHDS_NOT_IMPL`
+fallthrough) — and `grade_authds` checks `error == "not-implemented"` **before** it ever
+inspects `entry["kind"]` (§4 above), so in practice an unrecognised kind resolves to the blue
+coverage verdict, not coal. `grade_authds` does carry a coal fallback for a genuinely
+unmatched `kind` on an otherwise-clean actual (`{"kind": "authds_prove", "proof": "proof",
+"digest": "digest"}`), but no runner today produces that combination — it is reachable only
+from `oracle/verdicts-authds.json`'s synthetic entries. Worth stating precisely now: it is
+what decides how an unimplemented `merkle_*` kind will render once that family lands — a
+growth-ledger cell, not a red one.
 
 The verdict object is `{"kind": "authds_prove", "proof": "nice"|"proof", "digest":
 "nice"|"digest"}` or `{"kind": "authds_verify", "accepted": …, "results": …|"n/a",
@@ -232,7 +243,7 @@ not a fixed count tied to entry totals. Worth knowing before reading §9's board
 ## 5. Provenance
 
 Single provenance in v1: **`vendored`** — following the wire tier's ergots+Fleet precedent
-(`runner-contract-wire.md`). `source: "ergots:packages/avltree/test/fixtures/<set>/<name>"`,
+(`runner-contract-wire.md`). `source: "ergots:packages/avltree/test/fixtures/<set>/<name>.json"`,
 where `<set>` is `prover` (10 fixtures → `avl_prove`) or `avltree` (50 fixtures →
 `avl_verify`).
 
@@ -372,11 +383,15 @@ Two further limits, surfaced building the runner arms (Task 9-10) and not yet in
   I had": `AvlProofGenerator.generateCycles` calls `.get` on
   `tree.performOneOperation(...)`, which *throws* rather than returning a classifiable
   `Try`, and there is no per-operation classification seam analogous to
-  `BatchAVLVerifier.performOneOperation`'s `Try[Option[ADValue]]` (§7). Any domain-rejected
-  prove operation therefore surfaces as `panicked`, not `errored` — a real shape limit of
-  `santa-authds/v1`, discovered in Task 9, not a defect to route or fix. (It is also why no
-  vendored `avl_prove` fixture can ever carry `UnknownModification` — §5/§9's finding: the
-  blessing step itself would throw before such a vector could be committed.)
+  `BatchAVLVerifier.performOneOperation`'s `Try[Option[ADValue]]` (§7). A domain-rejected
+  prove operation therefore surfaces as `panicked` on **rudolph's control arm**, which drives
+  this same `AvlProofGenerator` at grading time (§7) — a real limit of that implementation,
+  discovered in Task 9, not a defect to route or fix, and **not** a format-level constraint:
+  `ts-runner`'s independent adapter catches the identical domain rejection explicitly and
+  reports `errored` instead (`ts-runner/src/runner.ts:869`), by design. Both are faithful to
+  their own implementation and both grade coal, so the board is unaffected either way. (It is
+  also why no vendored `avl_prove` fixture can ever carry `UnknownModification` — §5/§9's
+  finding: the blessing step itself would throw before such a vector could be committed.)
 - **rudolph's green proves consistency, not correctness.** §7 already states the mechanism:
   the control arm calls the exact same `deriveFromEntry` functions the vendored vectors
   were blessed with. A red on rudolph's authds slice would mean the committed vector and
@@ -422,7 +437,12 @@ where both scrypto and `ergo_avltree_rust` seed a single leaf (height 0), so eve
 proof and digest diverges from the first cycle on. The fix (`b533fe5`) exists in the
 author's local ergots checkout but is **unpushed**; npm's published `@ergots/avltree@0.3.0`
 was cut from the fixed tree and is unaffected — the same version string names two different
-implementations. Severity low: the verifier is the consensus surface and it is 46/50 green;
+implementations. (This npm-vs-git claim rests on network probes — the npm registry's `time`
+map and a downloaded-tarball inspection — made at review time; it is **not** locally
+re-checkable, since every `@ergots/avltree` under a local `node_modules` is a workspace
+symlink to a source checkout with no tarball or integrity hash to compare against. Treat it
+as network-verified-at-the-time, not as a standing local invariant.) Severity low: the
+verifier is the consensus surface and it is 46/50 green;
 the prover is off-chain tooling. Routed at `prompts/ergots-push-avltree-prover-sentinel-fix.md`
 (untracked working scaffolding — cited here for continuity, not as a durable reference).
 
@@ -464,6 +484,7 @@ omission to quietly drop.
 // avl_verify entry — accept (empty tree, one Lookup — never modifies)
 {
   "name": "empty-tree-lookup",
+  "source": "ergots:packages/avltree/test/fixtures/avltree/empty-tree-lookup.json",
   "kind": "avl_verify",
   "settings": { "key_length": 32, "value_length": null,
                 "max_num_operations": 1, "max_deletes": 0 },
@@ -484,6 +505,7 @@ omission to quietly drop.
 // avl_verify entry — level-1 reject (proof itself rejected; no operations attempted)
 {
   "name": "adverse-truncated-proof",
+  "source": "ergots:packages/avltree/test/fixtures/avltree/adverse-truncated-proof.json",
   "kind": "avl_verify",
   "settings": { "key_length": 32, "value_length": null,
                 "max_num_operations": 1, "max_deletes": 0 },
