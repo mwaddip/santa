@@ -216,12 +216,29 @@ object Runner {
   /** santa-authds/v1 — the runner IS the oracle here (rudolph is the control),
     * so it drives exactly the same blesser code paths the vectors were built
     * from. A control divergence means the vectors and the runner disagree about
-    * decoding, which is a build error, not a finding. */
+    * decoding, which is a build error, not a finding.
+    *
+    * Outcome classification matches the sibling arms (wireEntry / TxEngine.txEntry /
+    * BlockEngine.blockEntry / ChainEngine.chainEntry): `deriveFromEntry` is the single
+    * decode-AND-compute path for both kinds, and every legitimate domain answer it can
+    * produce — including every clean rejection (a poisoned verifier, a failed
+    * operation) — comes back as a plain return value with `error: null`
+    * (`AvlVerifierBlesser.verify`'s three levels; never a thrown exception, confirmed
+    * even scrypto's own internal construction failures are caught before they escape).
+    * So anything that escapes `deriveFromEntry` as an exception is, in `TxEngine`'s own
+    * words, "a harness/oracle self-contradiction (the same decode blessed the vector)"
+    * — never a clean domain answer — and surfaces as `panicked`, not `errored`; `note`
+    * appears only there, per schema/santa-authds.actuals.schema.json's stricter
+    * block/wire idiom ("present iff error == 'panicked'; forbidden otherwise" — unlike
+    * chain's laxer errored-may-carry-note). `NonFatal` (not `Throwable`) matches every
+    * sibling catch: a fatal JVM error must not be swallowed into a JSON row. */
   def authdsEntry(e: Json): (String, Json) = {
     val c    = e.hcursor
     val name = c.get[String]("name").toOption.getOrElse("?")
     try {
-      val actual = c.get[String]("kind").toOption.get match {
+      val kind = c.get[String]("kind").toOption
+        .getOrElse(sys.error(s"authds entry '$name': missing kind"))
+      val actual = kind match {
         case "avl_prove" =>
           val (proofs, digests) = AvlProofGenerator.deriveFromEntry(e)
           Json.obj(
@@ -237,15 +254,15 @@ object Runner {
               "value" -> r.value.map(Json.fromString).getOrElse(Json.Null))): _*),
             "new_digest_hex" -> out.newDigestHex.map(Json.fromString).getOrElse(Json.Null),
             "error" -> Json.Null)
-        case other =>
-          Json.obj("error" -> Json.fromString("not-implemented"),
-                   "note" -> Json.fromString(s"unknown authds kind: $other"))
+        case _ =>
+          Json.obj("error" -> Json.fromString("not-implemented"))
       }
       name -> actual
     } catch {
-      case t: Throwable =>
-        name -> Json.obj("error" -> Json.fromString("errored"),
-                 "note" -> Json.fromString(s"${t.getClass.getName}: ${t.getMessage}"))
+      case scala.util.control.NonFatal(t) =>
+        name -> Json.obj(
+          "error" -> Json.fromString("panicked"),
+          "note"  -> Json.fromString(s"${t.getClass.getName}: ${Option(t.getMessage).getOrElse("")}"))
     }
   }
 
