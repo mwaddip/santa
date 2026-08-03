@@ -149,25 +149,32 @@ genuine cross-implementation divergences — which is exactly its job. What runs
 - ✅ **AuthDS tier live** — `santa-authds/v1`; grades the AVL+ batch **prover** (canonical
   proof bytes) and **verifier** (three independently-gradable levels: proof acceptance ·
   per-operation results · final digest) directly, below the ErgoScript layer every other
-  tier reaches it through. **60 vendored entries**
-  (`vectors/authds/any/vendored/` — 10 `avl_prove` + 50 `avl_verify`, ergots' own AVL-prover
+  tier reaches it through. **47 vendored entries**
+  (`vectors/authds/any/vendored/` — 10 `avl_prove` + 37 `avl_verify`, ergots' own AVL-prover
   fixture corpus, every expectation re-derived through `jvm-blesser` rather than trusted
   from its Rust-blessed origin — `blessed_by: "jvm:scrypto-3.0.0"`). Conformers: **rudolph
-  control** `proof 10/10 · digest 56/56 · accepted 50/50 · results 46/46`, red 0 · **dasher
-  (ergots @ `f906eb2`)** `proof 10/10 · digest 52/52 · accepted 50/50 · results 42/46`,
-  red 4 — two real, confirmed findings, **one now fixed**: pushed ergots `master` seeded an
-  empty AVL tree as two sentinel leaves instead of one (all 10 `avl_prove` entries, red 24
-  at ship; ergots pushed the fix `b533fe5` and all 20 prove-side reds cleared on the
-  2026-08-03 re-grade, confirmed by conform CI `30836488512`). A separate, **still-open**
-  hazard survives it: npm's published `0.3.0` was cut from the fixed tree while git's was
-  not — one version string naming two different implementations; that claim is
-  network-verified-at-the-time (npm's `time` map + a tarball inspection), not locally
-  re-checkable, since every local `@ergots/avltree` is a workspace symlink with no tarball
-  or integrity hash to compare against. The second finding stands unchanged:
-  scrypto's `UnknownModification` is a fixed zero-length-key singleton that poisons the JVM
-  verifier where ergots/`ergo_avltree_rust` treat it as a keyed, non-modifying lookup (4
-  `results` entries;
-  [finding](docs/findings/authds-unknownmodification-jvm-vs-rust.md)) — plus one prediction
+  control** and **dasher (ergots)** both `proof 10/10 · digest 43/43 · accepted 37/37 ·
+  results 33/33`, **red 0** — ergots matches the JVM on every graded entry · **vixen
+  (arkadianet)** `accepted 29/30 · results 26/26 · digest 26/26`, red 1 + 17 not-implemented.
+  Two confirmed findings, **both now closed**, and a third open on vixen:
+  pushed ergots `master` seeded an empty AVL tree as two sentinel leaves instead of one (all
+  10 `avl_prove` entries, red 24 at ship; ergots pushed the fix `b533fe5` and all 20
+  prove-side reds cleared on the 2026-08-03 re-grade, confirmed by conform CI
+  `30836488512`). A separate, **still-open** hazard survives it: npm's published `0.3.0` was
+  cut from the fixed tree while git's was not — one version string naming two different
+  implementations; that claim is network-verified-at-the-time (npm's `time` map + a tarball
+  inspection), not locally re-checkable, since every local `@ergots/avltree` is a workspace
+  symlink with no tarball or integrity hash to compare against.
+  The second finding — scrypto's `UnknownModification` as a fixed zero-length-key singleton
+  poisoning the JVM verifier where ergots/`ergo_avltree_rust` treat it as a keyed,
+  non-modifying lookup — turned out **not to be a consensus divergence at all**:
+  `UnknownModification`, `UpdateLongBy` and `RemoveIfExists` have **zero** fully-qualified
+  references in sigma-state 6.0.3 or ergo-core, so no ErgoScript or node path can construct
+  them. The 13 fixtures exercising them are retired to
+  [`unreachable/`](unreachable/README.md) (preserved, not deleted — dead code can be
+  revived), and with them gone the JVM and `ergo_avltree_rust` agree on **37/37** of the
+  reachable corpus. The finding is kept and reframed
+  ([finding](docs/findings/authds-unknownmodification-jvm-vs-rust.md)) — plus one prediction
   that did *not* land: the four adverse (malformed/mismatched/truncated/swapped-digest
   proof) fixtures were flagged as a possible reject-detection miss and came back fully
   green, ergots independently agreeing with the JVM. blitzen-eni / donner / vixen not yet

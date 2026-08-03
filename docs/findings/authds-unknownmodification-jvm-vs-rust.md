@@ -1,8 +1,38 @@
 # AuthDS finding — `UnknownModification` is a keyless singleton in scrypto, a keyed lookup everywhere else
 
 **Tier:** authds (`santa-authds/v1`, `avl_verify`). **Surfaced:** 2026-08-03, the 50-fixture verify re-bless (Task 8).
-**Status:** real, confirmed on both sides. Recorded, not reconciled — the committed vector carries the JVM answer.
-**Blast radius:** 4 of the 50 vendored verifier fixtures; 17 pinned divergence keys, all one root cause.
+**Status: REAL but NOT a consensus divergence — reclassified 2026-08-04.** The behavioural difference below is
+confirmed on both sides and is accurately described. What changed is its standing: the operation is **unreachable**,
+so the disagreement is about an API artifact rather than about consensus, and it can never be observed on-chain.
+**Blast radius: none.** It was 4 of 50 vendored fixtures and 17 pinned divergence keys; those fixtures are retired to
+[`unreachable/`](../../unreachable/README.md) and the pin is now empty.
+
+## Why this is no longer graded
+
+Fully-qualified references to `scorex/crypto/authds/avltree/batch/<Op>`, counted across the shipped JVM artifacts:
+
+| Operation | sigma-state 6.0.3 | verdict |
+|---|---|---|
+| `Insert` · `Update` · `Remove` · `Lookup` · `InsertOrUpdate` | 3 · 2 · 2 · 2 · 2 | reachable |
+| **`UnknownModification`** · **`UpdateLongBy`** · **`RemoveIfExists`** | **0 · 0 · 0** | unreachable |
+
+`ergo-core` likewise shows zero for all three, and its own state-change path
+(`ergo-core/.../modifiers/state/StateChanges.scala`) imports only `{Insert, Lookup, Operation, Remove}`. Inside
+scrypto the sole references to `UnknownModification` are its own two class files — nothing constructs it, no
+deserializer yields it, nothing dispatches on it. No ErgoScript contract and no node path can produce the operation,
+so no implementation's handling of it is observable by consensus.
+
+A zero is trustworthy here in a way the nonzero counts are not: prefix matching can only *inflate* a count (a search
+for `…/Update` also matches `…/UpdateLongBy`), never reduce one to zero. An earlier bare-substring grep put `Update`
+at 24 — noise, which is why the check was redone against fully-qualified names.
+
+**This document is retained deliberately.** "We checked, and it cannot be reached" is a result: without it the next
+reader re-derives the whole investigation from the same suspicious-looking fixture expectations. The analysis below
+stands as written and remains correct about what the implementations *do*; only its consensus standing changed.
+
+**Consequence.** With these fixtures retired, the JVM and `ergo_avltree_rust` agree on **37/37** of the reachable
+verifier corpus, and dasher (ergots) reaches red 0 across every tier. Every one of the 17 divergences the blesser
+pinned had this single root cause.
 
 ## The divergence
 

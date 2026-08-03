@@ -239,13 +239,20 @@ prove. `not-impl` is the honest cell and flips if sigma-rust grows a prover.
 ## Confirmed findings
 
 - **`UnknownModification` is a keyless singleton in scrypto, a keyed lookup
-  everywhere else** —
+  everywhere else — but NOT a consensus divergence** —
   [`docs/findings/authds-unknownmodification-jvm-vs-rust.md`](../findings/authds-unknownmodification-jvm-vs-rust.md).
-  Surfaced by the 50 verifier re-blesses: 46/50 agree with the JVM, and all four
-  that do not contain the tag. scrypto rejects it (fixed zero-length key sorts
-  below −inf) and poisons the verifier; `ergo_avltree_rust` / ergots honour the
-  caller's key and treat it as a non-modifying lookup. Expect a real dasher red
-  on those four entries — it is the finding, not an adapter bug.
+  Originally surfaced by the 50 verifier re-blesses (46/50 agreed with the JVM; all
+  four that did not contained the tag): scrypto rejects it, the fixed zero-length key
+  sorting below −inf, and poisons the verifier, where `ergo_avltree_rust` / ergots
+  honour the caller's key and treat it as a non-modifying lookup.
+  **Retired 2026-08-04.** The operation is unreachable — `UnknownModification`,
+  `UpdateLongBy` and `RemoveIfExists` all have **zero** fully-qualified references in
+  sigma-state 6.0.3 or ergo-core, so nothing an ErgoScript contract or the node can do
+  constructs them. A disagreement about behaviour no consensus path can observe is not
+  a conformance divergence. The 13 fixtures exercising them moved to
+  [`unreachable/`](../../unreachable/README.md) — preserved rather than deleted, since
+  dead code can be revived — and the corpus is now **37 verifier entries, 37/37
+  agreeing with the JVM**.
 
 ## Live board (2026-08-03)
 

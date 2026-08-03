@@ -57,7 +57,7 @@ class VendoredAuthdsAvlVerifyTest extends munit.FunSuite {
     assertEquals(doc.get[String]("op").toOption, Some("authds:vendored:avl-verify"))
     assertEquals(doc.get[String]("blessed_by").toOption, Some("jvm:scrypto-3.0.0"))
     val entries = committedEntries
-    assertEquals(entries.size, 50)
+    assertEquals(entries.size, 37)
     entries.foreach { e =>
       val c = e.hcursor
       assertEquals(c.get[String]("kind").toOption, Some("avl_verify"))
@@ -180,22 +180,14 @@ class VendoredAuthdsAvlVerifyTest extends munit.FunSuite {
       }
     }
     assert(withValue > 0, "corpus must exercise value-carrying operations")
-    assertEquals(withDelta, 6, "six UpdateLongBy operations carry a decimal-string delta")
-  }
-
-  test("committed vector: UpdateLongBy deltas are decimal STRINGS, Long-exact") {
-    val deltas = committedEntries.flatMap { e =>
-      e.hcursor.downField("payload").downField("operations").values.get.toVector
-        .filter(_.hcursor.get[String]("tag").toOption.contains("UpdateLongBy"))
-        .map { op =>
-          op.hcursor.get[String]("delta")
-            .fold(err => fail(s"delta must be a JSON string, not a number: $err"), identity)
-        }
-    }
-    assertEquals(deltas.size, 6)
-    deltas.foreach { d =>
-      assertEquals(d.toLong.toString, d, s"delta '$d' must round-trip through Long exactly")
-    }
+    // `delta` is carried only by UpdateLongBy, which is unreachable from any
+    // consensus path and retired to unreachable/authds/ (2026-08-04). Pinned at 0 so
+    // reactivating it trips here: restore this count AND the Long-exactness guard
+    // that used to live in the test below (the schema constrains `delta` to
+    // ^-?[0-9]+$, but not that it round-trips through Long).
+    assertEquals(withDelta, 0,
+      "UpdateLongBy is retired to unreachable/authds/ — if it is reactivated, restore " +
+        "this count and the deleted 'deltas are decimal STRINGS, Long-exact' test")
   }
 
   test("every entry's source names the fixture file it was built from") {
@@ -254,80 +246,36 @@ class VendoredAuthdsAvlVerifyTest extends munit.FunSuite {
     assert(rejects >= 4, s"expected >= 4 proof-rejection entries, found $rejects")
   }
 
-  /** `UnknownModification` on the VERIFY side, pinned empirically.
-    *
-    * scrypto's `UnknownModification` is a case OBJECT whose `key` is a fixed
-    * ZERO-LENGTH array (pinned on the prove side in `AvlProofGeneratorTest`): the
-    * entry's `key_hex` never reaches it. A zero-length key sorts below the tree's
-    * negative-infinity sentinel, so scrypto raises `Key  is less than -inf`.
-    *
-    * On the PROVE side that kills the run — `generateCycles` calls `.get`. Here the
-    * question is where the throw lands: `performOneOperation` returns a `Try`, so if
-    * the rejection happens inside it the entry records a FAILED operation; if it
-    * happened during op construction it would escape and error the whole entry. This
-    * pins that it is the former, which is why the two `unknown-mod-*` fixtures bless
-    * cleanly rather than blowing up `extract()`. */
-  test("UnknownModification is a captured Failure on the verify side, not an escape") {
-    List("unknown-mod-3leaves-absent", "unknown-mod-3leaves-present").foreach { n =>
-      val exp = committedByName(n).downField("expected")
-      assertEquals(exp.get[Boolean]("proof_accepted").toOption, Some(true),
-        s"$n: the proof itself is well-formed")
-      assertEquals(exp.downField("results").values.get.size, 1,
-        s"$n: the operation ran and was recorded — construction did not escape the Try")
-      assertEquals(exp.downField("results").downN(0).get[Boolean]("ok").toOption, Some(false),
-        s"$n: scrypto rejects the zero-length key, so the operation FAILS")
-      assertEquals(exp.get[Option[String]]("new_digest_hex").toOption.flatten, None,
-        s"$n: a failed operation poisons the verifier")
-    }
-    // …and the rejection observed directly, so WHERE it lands is pinned, not inferred
-    // from the blessed row, and so a scrypto change to the reason is loud.
-    val p = committedByName("unknown-mod-3leaves-present").downField("payload")
-    val verifier = new BatchAVLVerifier[Digest32, Blake2b256.type](
-      startingDigest   = ADDigest @@ Base16.decode(p.get[String]("starting_digest_hex").toOption.get).get,
-      proof            = SerializedAdProof @@ Base16.decode(p.get[String]("proof_hex").toOption.get).get,
-      keyLength        = 32,
-      valueLengthOpt   = None,
-      maxNumOperations = Some(1),
-      maxDeletes       = Some(0))
-    assert(verifier.digest.isDefined, "the fixture's proof anchors — this is not a level-1 rejection")
-    // op construction: the case object, so nothing can throw before performOneOperation
-    val op = AvlProofGenerator.toOperation(
-      AvlProofGenerator.AvlOp("UnknownModification", "aa" * 32, None))
-    assertEquals(op.key.length, 0, "scrypto ignores the caller's key; its own is zero-length")
-    val attempt = verifier.performOneOperation(op)
-    assert(attempt.isFailure, "performOneOperation CAPTURES the rejection — it does not escape the Try")
-    val msg = attempt.failed.get.getMessage
-    assert(msg.contains("is less than -inf"), s"unexpected scrypto rejection reason: $msg")
-  }
-
   // ── THE DELIVERABLE ───────────────────────────────────────────────────────
 
   /** Fixture expectations that the JVM genuinely CONTRADICTS, keyed
-    * `<fixture>:<dimension>`. Each one is a recorded Rust-vs-JVM finding, not a
-    * vector to reconcile: the committed vector carries the JVM answer regardless.
+    * `<fixture>:<dimension>`. Each one would be a recorded Rust-vs-JVM finding, not
+    * a vector to reconcile: the committed vector carries the JVM answer regardless.
     * Pinned as an exact set so a NEW divergence fails, and so a divergence that
     * silently disappears (upstream fix, scrypto bump) fails too.
     *
-    * ONE root cause covers all 17 — `UnknownModification`
-    * (docs/findings/authds-unknownmodification-jvm-vs-rust.md). scrypto's is a case
-    * OBJECT with a fixed ZERO-LENGTH key that its own tree then rejects
-    * (`Key  is less than -inf`); `ergo_avltree_rust`'s carries the CALLER's key and
-    * behaves as a non-modifying lookup. The two implementations are not performing
-    * the same operation, so wherever the tag appears the JVM fails the op, the
-    * verifier is poisoned, and every later op in that batch fails too. The
-    * downstream entries below are that cascade, not independent findings. */
-  private val KnownDivergences: Set[String] =
-    Set(
-      // the tag itself, on its own
-      "unknown-mod-3leaves-absent:digest",   // rust: unchanged tree; jvm: poisoned
-      "unknown-mod-3leaves-present:digest",
-      "unknown-mod-3leaves-present:results[0]",
-      // …and its poisoning cascade inside the two mixed batches
-      "batch-16ops-mixed:digest",
-      "batch-16ops-mixed:results[14]",       // op 14 IS the UnknownModification
-      "batch-16ops-mixed:results[15]",       // a Lookup, failed only because 14 poisoned
-      "batch-stress-mixed-100:digest"
-    ) ++ (90 to 99).map(i => s"batch-stress-mixed-100:results[$i]") // ops 90–99 all UnknownModification
+    * **EMPTY as of 2026-08-04 — the JVM and `ergo_avltree_rust` agree on the entire
+    * reachable corpus.** It previously held 17 entries with a single root cause,
+    * `UnknownModification`: scrypto's is a case OBJECT with a fixed ZERO-LENGTH key
+    * that its own tree then rejects (`Key  is less than -inf`), where
+    * `ergo_avltree_rust`'s carries the CALLER's key and behaves as a non-modifying
+    * lookup. The two were not performing the same operation, so wherever the tag
+    * appeared the JVM failed the op, poisoned the verifier, and every later op in
+    * that batch failed too — 3 direct entries plus a 14-entry cascade.
+    *
+    * That divergence was never observable by consensus: `UnknownModification`,
+    * `UpdateLongBy` and `RemoveIfExists` have ZERO fully-qualified references in
+    * sigma-state 6.0.3 or ergo-core, so no ErgoScript or node path can construct
+    * them. The 13 fixtures exercising them are retired to `unreachable/authds/`
+    * (see that directory's README for the evidence and how to bring them back);
+    * the finding is retained and reframed at
+    * docs/findings/authds-unknownmodification-jvm-vs-rust.md.
+    *
+    * An empty set is the strongest form of this pin: ANY divergence now fails the
+    * test as a new finding. Do not add to it without demonstrating the behaviour is
+    * consensus-reachable — an unreachable one belongs in `unreachable/`, and a
+    * reachable one belongs in `docs/findings/`. */
+  private val KnownDivergences: Set[String] = Set.empty
 
   /** THE DELIVERABLE. The vendored fixtures ship Rust-blessed expectations
     * (`ergo_avltree_rust`); the vector's expectations come from the JVM. This
@@ -346,7 +294,7 @@ class VendoredAuthdsAvlVerifyTest extends munit.FunSuite {
     val entryByName = entries.map(e => e.hcursor.get[String]("name").toOption.get -> e).toMap
 
     val sb = new StringBuilder(
-      "\n===== authds avl_verify: JVM vs Rust-blessed (50 vendored fixtures) =====\n")
+      "\n===== authds avl_verify: JVM vs Rust-blessed (37 vendored fixtures) =====\n")
     val divergences = scala.collection.mutable.ArrayBuffer.empty[String]
     var matched, enriched = 0
 

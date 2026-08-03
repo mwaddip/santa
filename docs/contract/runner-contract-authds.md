@@ -403,19 +403,31 @@ Two further limits, surfaced building the runner arms (Task 9-10) and not yet in
 
 ## 9. Status
 
-**Live** as of 2026-08-03. Corpus: 60 entries at `vectors/authds/any/vendored/` — 10
-`avl_prove` (`AvlProve.ergots_corpus.json`), 50 `avl_verify`
+**Live** as of 2026-08-04. Corpus: **47 entries** at `vectors/authds/any/vendored/` — 10
+`avl_prove` (`AvlProve.ergots_corpus.json`), 37 `avl_verify`
 (`AvlVerify.ergots_corpus.json`) — `blessed_by: "jvm:scrypto-3.0.0"`. Mounted conformers:
-**rudolph** (control) and **dasher** (ergots). `SANTA_TX_BLESSER=1 ./conform`, slice
-`authds/any/vendored`:
+**rudolph** (control), **dasher** (ergots) and **vixen** (arkadianet, `avl_verify` only).
+`SANTA_TX_BLESSER=1 ./conform`, slice `authds/any/vendored`:
 
 | Runner | proof | digest | accepted | results | red_total |
 |---|---|---|---|---|---|
-| rudolph (JVM control) | 10/10 | 56/56 | 50/50 | 46/46 | **0** |
-| dasher (ergots @ `f906eb2`) | 10/10 | 52/52 | 50/50 | 42/46 | **4** |
+| rudolph (JVM control) | 10/10 | 43/43 | 37/37 | 33/33 | **0** |
+| dasher (ergots @ `f906eb2`) | 10/10 | 43/43 | 37/37 | 33/33 | **0** |
+| vixen (arkadianet) | n/a | 26/26 | 29/30 | 26/26 | **18** |
 
-Re-graded 2026-08-03; identical under conform CI `30836488512`, the first CI run to
-include this tier.
+**The corpus shrank from 60 to 47 on 2026-08-04**, when 13 `avl_verify` fixtures were
+retired to [`unreachable/`](../../unreachable/README.md): they exercise
+`UnknownModification`, `UpdateLongBy` and `RemoveIfExists`, which have **zero**
+fully-qualified references in sigma-state 6.0.3 or ergo-core and so cannot be
+constructed by any consensus path. With them gone dasher reaches red 0 — ergots matches
+the JVM on every graded entry — and the blesser's `KnownDivergences` pin is **empty**,
+since all 17 recorded JVM-vs-Rust divergences had that single unreachable root cause.
+
+vixen's 18 = **17 `not-implemented`** (10 `avl_prove`, since its arm is verify-only, plus
+7 `avl_verify` whose `Update`/`InsertOrUpdate` operations arkadianet's `AvlVerifier`
+cannot report a value for) **+ 1 genuine coal**: `adverse-malicious-extra-nodes`, where
+arkadianet accepts a proof carrying injected extra nodes that both the JVM and ergots
+reject. `proof` is `n/a` — no `avl_prove` arm is mounted for vixen (§6).
 
 (`digest` pools both kinds' contributions, §4: rudolph's 56 = 10 `avl_prove` entries
 always graded + 46 `avl_verify` entries that reach the digest dimension; dasher's 52 = the
