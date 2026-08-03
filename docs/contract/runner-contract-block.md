@@ -41,7 +41,14 @@ schema is `santa-block/v1` and whose entries each carry the full determination s
   version-gate mutation shrinks `123`/blockVersion — meaningful only on an
   epoch-boundary donor, see §5).
 - **`block`** — the full node-API block: `header`, `blockTransactions`, `extension`,
-  `adProofs` with non-empty `proofBytes` (schema-required — nothing proofless is a vector).
+  `adProofs`. `proofBytes` is lowercase hex, **non-empty on every entry except the
+  `proofless` mutation class**, where the empty string encodes a block carrying no usable
+  ADProofs section (§8). This is schema-enforced: the base pattern is `^[0-9a-f]*$` (it must
+  permit empty, or the class is not representable at all) and a top-level `if`/`else` adds
+  `minLength: 1` for every file whose `op` is not `block:mutation:proofless`. The exemption
+  keys on the **controlled `op` discriminator**, never on the free-text `source` — a vector
+  merely *mentioning* proofless buys nothing. `tools/validate`'s block guard applies the same
+  rule as belt-and-braces; both layers are pinned by tests in `tools/validate`.
 - **`boxes`** — raw serialized bytes (`{boxId, bytes}`, hash-self-verifying) of every
   external input/data-input box. **Engines may ignore this field**: a digest-native
   validator extracts spent-box values from the proof's `Remove` leaves; the field exists
@@ -190,14 +197,20 @@ at bless time.
 rust-regenerated proof verifies but is non-canonical for the data-input Lookup (the
 ADPROOF-FINDING). Joins when a JVM UTXO source regenerates it or the fork fix lands.
 
-**Authored (6):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
-`txs-reorder` · `pow-solution-flip` over the 2666 donor + **`version-gate` over the
-epoch-boundary-2560 donor** (its first, mid-epoch authoring was retired by the §5
+**Authored (7):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
+`txs-reorder` · `pow-solution-flip` · `proofless` over the 2666 donor + **`version-gate`
+over the epoch-boundary-2560 donor** (its first, mid-epoch authoring was retired by the §5
 finding; over a boundary the gate genuinely fires on-chain). The mutation shrinks the
 HANDED `parameters.table["123"]` while the block's own extension still packs
 blockVersion 4 — a validator must derive the boundary check from the handed pre-state
 params, not the block's self-declared extension (the JVM rejects via `exBlockVersion`,
 and `exMatchParameters` would fire too: written ≠ calculated).
+
+**`proofless`** (added 2026-07-07) is the odd one out: every other class *corrupts* a
+field, this one *removes* a section — `adProofs.proofBytes` and `.digest` both empty,
+expected `reason: "MissingProof"`. It is the degenerate limit of §5's proofs-section
+canonicality bullet (no proof at all rather than a non-canonical one), and it is the class
+that forced the schema's `proofBytes` pattern from `+` to `*`.
 
 **Board:** rudolph (control) and donner both `captured: valid 4/4 · digest 4/4 ·
 cost 4/4` + `authored: valid 6/6` — donner's initial version-gate accept (it sourced
@@ -207,6 +220,15 @@ was routed and fixed same-day (enr `380941a` hands the vector table as
 `exMatchParameters` twin — verdict identical, reason diagnostic-only). vixen
 (arkadianet/ergo) `captured 4/4·4/4·3/4` + `authored 5/6` — the version-gate accept
 plus its 111927 cost divergence (169202 vs blessed 170876); theirs to take.
+
+> **Board staleness (noted 2026-08-03).** The figures above predate `proofless` (they count
+> 6 authored, not 7) and predate the 07-07 vixen pin bumps, which cleared vixen's
+> version-gate red — the latest local run has vixen `authored 7/7 · captured 4/4` with zero
+> block reds. That run also reports **only the `valid` dimension** for block (no `digest`/
+> `cost` totals), so the `digest 4/4 · cost 4/4` claims are neither confirmed nor refuted
+> here and the board is left as-is rather than rewritten from a partial reading. donner
+> produced **no results at all** in that run (see the tier's build-tracking ask), so its row
+> is unverified against the 7-vector corpus. Refresh this block from a full re-grade.
 
 ## 9. Worked example
 
