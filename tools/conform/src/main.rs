@@ -1202,10 +1202,28 @@ mod tests {
 
     // ── authds tally tests ───────────────────────────────────────────────────
 
+    // Fix round 2: write_authds_prove_vector and write_authds_verify_vector both used to key
+    // their temp root on process::id() + the caller's tag alone, with no kind-namespacing. Two
+    // callers passing the same descriptive tag (e.g. both "digest-coal", one prove one verify)
+    // computed the byte-identical path, and cargo test's parallel threads raced each other's
+    // fs::remove_dir_all cleanup against the sibling's still-running tally() read — an observed
+    // ~3%-of-runs NotFound panic, not hypothetical. A monotonic counter makes every call's root
+    // unique by construction: it can never collide, even if a future test reuses "digest-coal"
+    // again, because uniqueness no longer depends on any caller picking a distinct string.
+    static AUTHDS_TEST_DIR_SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+    /// The tag is a human-readable label only (visible in the dir name for debugging leftovers);
+    /// the counter, not the tag, is what guarantees no two calls — same tag or not, same helper
+    /// or not — ever compute the same root.
+    fn authds_test_root(tag: &str) -> std::path::PathBuf {
+        let n = AUTHDS_TEST_DIR_SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        std::env::temp_dir()
+            .join(format!("santa-authds-tally-test-{}-{}-{}", std::process::id(), n, tag))
+    }
+
     /// Write a minimal santa-authds/v1 avl_prove vector under a temp vectors/ tree.
     fn write_authds_prove_vector(tag: &str, proofs: &[&str]) -> std::path::PathBuf {
-        let root = std::env::temp_dir()
-            .join(format!("santa-authds-tally-test-{}-{}", std::process::id(), tag));
+        let root = authds_test_root(tag);
         let dir = root.join("vectors").join("authds").join("any").join("vendored");
         fs::create_dir_all(&dir).unwrap();
         let v = serde_json::json!({
@@ -1271,8 +1289,7 @@ mod tests {
         expected_results: serde_json::Value,
         expected_digest: serde_json::Value,
     ) -> std::path::PathBuf {
-        let root = std::env::temp_dir()
-            .join(format!("santa-authds-tally-test-{}-{}", std::process::id(), tag));
+        let root = authds_test_root(tag);
         let dir = root.join("vectors").join("authds").join("any").join("vendored");
         fs::create_dir_all(&dir).unwrap();
         let v = serde_json::json!({
