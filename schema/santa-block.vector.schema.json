@@ -51,7 +51,7 @@
                 "properties": { "proofBytes": { "type": "string", "pattern": "^[0-9a-f]*$" } }
               }
             },
-            "description": "full node-API block; adProofs non-null with real proofBytes"
+            "description": "full node-API block; adProofs non-null, with real proofBytes outside the proofless class"
           },
           "boxes": {
             "type": "array",
@@ -95,6 +95,33 @@
                                 "cost": { "const": null },
                                 "reason": { "type": "string" } } }
             ]
+          }
+        }
+      }
+    }
+  },
+  "$comment": "Empty proofBytes is legal ONLY in the proofless mutation class. The pattern above must stay '*' so the class is representable at all; non-emptiness is re-imposed below, keyed on the controlled `op` discriminator rather than on the free-text `source`.",
+  "if": {
+    "required": ["op"],
+    "properties": { "op": { "const": "block:mutation:proofless" } }
+  },
+  "else": {
+    "properties": {
+      "entries": {
+        "items": {
+          "properties": {
+            "block": {
+              "properties": {
+                "adProofs": {
+                  "properties": {
+                    "proofBytes": {
+                      "minLength": 1,
+                      "description": "non-empty outside the proofless class"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

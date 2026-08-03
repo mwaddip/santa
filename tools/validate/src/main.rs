@@ -793,21 +793,19 @@ fn block_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: expected arm shape violation: {head:?}", rel.display());
         }
-        // block.adProofs.proofBytes must be a non-empty string on every entry,
-        // unless the entry is a proofless block (simulated by empty proofBytes).
+        // block.adProofs.proofBytes must be a non-empty string on every entry, unless this is the
+        // proofless mutation class (where empty encodes "no ADProofs section"). Keyed on the
+        // controlled `op` discriminator — NOT on a substring of the free-text `source`, which
+        // would exempt anything merely mentioning the word. The schema enforces the same rule
+        // (santa-block.vector.schema.json `if`/`else`); this guard is deliberate belt-and-braces.
+        let proofless_class = doc.get("op").and_then(Value::as_str) == Some("block:mutation:proofless");
         let bad_proof: Vec<&str> = doc["entries"]
             .as_array()
             .map(|es| {
                 es.iter()
                     .filter(|e| {
                         let proof_bytes = e["block"]["adProofs"]["proofBytes"].as_str();
-                        if proof_bytes.is_none_or(|s| s.is_empty()) {
-                            // Proofless block entries carry empty proofBytes by design.
-                            let source = e["source"].as_str().unwrap_or("");
-                            !source.contains("proofless")
-                        } else {
-                            false
-                        }
+                        proof_bytes.is_none_or(|s| s.is_empty()) && !proofless_class
                     })
                     .filter_map(|e| e["name"].as_str())
                     .collect()
@@ -2117,5 +2115,126 @@ mod tests {
         let v = authds_act_validator();
         let doc = json!({"v#0": {"error": null, "proof_accepted": false, "results": [], "new_digest_hex": null}});
         assert!(v.is_valid(&doc), "new_digest_hex: null with proof_accepted/results present is a legitimate avl_verify verdict");
+    }
+
+    // ---- block: empty proofBytes is legal ONLY in the proofless class -------------------
+    //
+    // The invariant used to live in the schema (`proofBytes` pattern `^[0-9a-f]+$`) until the
+    // proofless mutation class needed an empty string to be representable at all. It was then
+    // relaxed corpus-wide to `*` and re-imposed in `block_path_guard` as a SUBSTRING test on the
+    // free-text `source` field — so any entry whose source merely contained "proofless" escaped
+    // the check. These tests pin the invariant back in the schema, keyed on the controlled `op`
+    // discriminator, so the substring hole cannot reopen.
+
+    fn block_vec_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-block.vector.schema.json"));
+        jsonschema::validator_for(&schema).expect("block vector schema invalid")
+    }
+
+    fn minimal_block_vector(op: &str, source: &str, proof_bytes: &str) -> Value {
+        json!({
+            "schema": "santa-block/v1",
+            "op": op,
+            "blessed_by": "test",
+            "entries": [{
+                "name": "test-entry",
+                "source": source,
+                "parent_digest": "ab".repeat(33),
+                "headers": [],
+                "parameters": { "table": {} },
+                "block": {
+                    "header": {},
+                    "blockTransactions": {},
+                    "extension": {},
+                    "adProofs": { "proofBytes": proof_bytes }
+                },
+                "boxes": [],
+                "version": { "activated": 3, "ergoTree": 3 },
+                "expected": {
+                    "valid": false, "post_digest": null, "cost": null, "reason": "MissingProof"
+                }
+            }]
+        })
+    }
+
+    /// Baseline: a normal block vector with real proof bytes passes.
+    #[test]
+    fn block_vector_nonempty_proofbytes_passes() {
+        let v = block_vec_validator();
+        let doc = minimal_block_vector(
+            "block:mutation:stateroot-flip", "santa:mutation:stateroot-flip:over:2666", "0102ab");
+        assert!(v.is_valid(&doc), "non-empty proofBytes must pass the block schema");
+    }
+
+    /// Empty proofBytes on a NON-proofless op must be rejected by the schema itself.
+    #[test]
+    fn block_vector_empty_proofbytes_fails_on_non_proofless_op() {
+        let v = block_vec_validator();
+        let doc = minimal_block_vector(
+            "block:mutation:stateroot-flip", "santa:mutation:stateroot-flip:over:2666", "");
+        assert!(!v.is_valid(&doc),
+            "empty proofBytes outside the proofless class must fail the block schema");
+    }
+
+    /// Empty proofBytes IS legal under the proofless op — the class must stay representable.
+    #[test]
+    fn block_vector_empty_proofbytes_passes_on_proofless_op() {
+        let v = block_vec_validator();
+        let doc = minimal_block_vector(
+            "block:mutation:proofless", "santa:mutation:proofless:over:bigint-downcast-2666", "");
+        assert!(v.is_valid(&doc),
+            "the proofless class must be able to carry empty proofBytes");
+    }
+
+    /// THE HOLE THE SUBSTRING GUARD LEFT OPEN: a source containing "proofless" on a non-proofless
+    /// op no longer buys an exemption — the schema keys on `op`, not on free text.
+    #[test]
+    fn block_vector_proofless_in_source_does_not_exempt_a_non_proofless_op() {
+        let v = block_vec_validator();
+        let doc = minimal_block_vector(
+            "block:mutation:stateroot-flip", "santa:mutation:near-proofless:over:2666", "");
+        assert!(!v.is_valid(&doc),
+            "a 'proofless' substring in source must NOT exempt a non-proofless op");
+    }
+
+    /// The committed proofless vector validates against the real schema.
+    #[test]
+    fn committed_proofless_vector_passes_schema() {
+        let v = block_vec_validator();
+        let path = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../..").join("vectors/block/v6/authored/proofless.json");
+        let doc = load(&path);
+        assert!(v.is_valid(&doc), "committed proofless.json must satisfy the block schema");
+    }
+
+    /// Writes `doc` into a temp vectors/block/v6/authored/ tree, runs block_path_guard, cleans up.
+    fn block_guard_on(doc: Value, tag: &str) -> u32 {
+        let tmp = std::env::temp_dir()
+            .join(format!("santa-block-test-{}-{tag}", std::process::id()));
+        let vdir = tmp.join("vectors").join("block").join("v6").join("authored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let fpath = vdir.join("probe.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = block_path_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        bad
+    }
+
+    /// The guard (the belt-and-braces layer under the schema) exempts the proofless class...
+    #[test]
+    fn block_guard_allows_empty_proofbytes_under_proofless_op() {
+        let doc = minimal_block_vector(
+            "block:mutation:proofless", "santa:mutation:proofless:over:bigint-downcast-2666", "");
+        assert_eq!(block_guard_on(doc, "ok"), 0,
+            "proofless op must not trip the proofBytes guard");
+    }
+
+    /// ...and no longer accepts a free-text "proofless" in `source` as an exemption.
+    #[test]
+    fn block_guard_rejects_empty_proofbytes_when_only_source_says_proofless() {
+        let doc = minimal_block_vector(
+            "block:mutation:stateroot-flip", "santa:mutation:near-proofless:over:2666", "");
+        assert!(block_guard_on(doc, "hole") > 0,
+            "a 'proofless' substring in source must not exempt a non-proofless op");
     }
 }
