@@ -4,16 +4,17 @@ import io.circe.Json
 
 import sigma.ast.{EvaluatedValue, SType}
 
-import santa.{EvalCore, WalkerOracle, WireCanonicalize}
+import santa.{AvlProofGenerator, AvlVerifierBlesser, EvalCore, WalkerOracle, WireCanonicalize}
 
 /** JVM reference runner — Rudolph.
   *
-  * Consumes a `santa-eval`, `santa-wire`, `santa-transaction`, `santa-block`, or
-  * `santa-chain` vector and emits, per entry, its ACTUAL — eval `{ value, cost, error }`,
-  * wire `{ bytes_hex, error }`, tx `{ valid, cost, error }`, block `{ valid, post_digest,
-  * cost, error }`, or chain (per-kind: `{ nbits, error }` / `{ parameters,
-  * activated_update, error }`) — JSON keyed by entry `name`. Each entry is processed
-  * under the version the vector records.
+  * Consumes a `santa-eval`, `santa-wire`, `santa-transaction`, `santa-block`,
+  * `santa-chain`, or `santa-authds` vector and emits, per entry, its ACTUAL — eval
+  * `{ value, cost, error }`, wire `{ bytes_hex, error }`, tx `{ valid, cost, error }`,
+  * block `{ valid, post_digest, cost, error }`, chain (per-kind: `{ nbits, error }` /
+  * `{ parameters, activated_update, error }`), or authds (per-kind: `{ proofs, digests,
+  * error }` / `{ proof_accepted, results, new_digest_hex, error }`) — JSON keyed by
+  * entry `name`. Each entry is processed under the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
   *   - `santa-eval/v4` → EvalCore.evalWithSelfRegistersAndVar1 (SELF box registers + var 1 = index)
@@ -29,6 +30,10 @@ import santa.{EvalCore, WalkerOracle, WireCanonicalize}
   *     digest) under the same gate; otherwise a faithful `not-implemented`.
   *   - `santa-chain/v1` → ChainEngine.chainEntry (DifficultyAdjustment /
   *     Parameters.update) under the same gate; otherwise a faithful `not-implemented`.
+  *   - `santa-authds/v1` → authdsEntry, which drives AvlProofGenerator.deriveFromEntry /
+  *     AvlVerifierBlesser.deriveFromEntry directly (no gate — this tier is main-scope
+  *     scrypto only). Rudolph IS the oracle these vectors were blessed from, so this is
+  *     the control arm: it must come out red 0.
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
@@ -208,19 +213,56 @@ object Runner {
     }
   }
 
+  /** santa-authds/v1 — the runner IS the oracle here (rudolph is the control),
+    * so it drives exactly the same blesser code paths the vectors were built
+    * from. A control divergence means the vectors and the runner disagree about
+    * decoding, which is a build error, not a finding. */
+  def authdsEntry(e: Json): (String, Json) = {
+    val c    = e.hcursor
+    val name = c.get[String]("name").toOption.getOrElse("?")
+    try {
+      val actual = c.get[String]("kind").toOption.get match {
+        case "avl_prove" =>
+          val (proofs, digests) = AvlProofGenerator.deriveFromEntry(e)
+          Json.obj(
+            "proofs" -> Json.arr(proofs.map(Json.fromString): _*),
+            "digests" -> Json.arr(digests.map(Json.fromString): _*),
+            "error" -> Json.Null)
+        case "avl_verify" =>
+          val out = AvlVerifierBlesser.deriveFromEntry(e)
+          Json.obj(
+            "proof_accepted" -> Json.fromBoolean(out.proofAccepted),
+            "results" -> Json.arr(out.results.map(r => Json.obj(
+              "ok" -> Json.fromBoolean(r.ok),
+              "value" -> r.value.map(Json.fromString).getOrElse(Json.Null))): _*),
+            "new_digest_hex" -> out.newDigestHex.map(Json.fromString).getOrElse(Json.Null),
+            "error" -> Json.Null)
+        case other =>
+          Json.obj("error" -> Json.fromString("not-implemented"),
+                   "note" -> Json.fromString(s"unknown authds kind: $other"))
+      }
+      name -> actual
+    } catch {
+      case t: Throwable =>
+        name -> Json.obj("error" -> Json.fromString("errored"),
+                 "note" -> Json.fromString(s"${t.getClass.getName}: ${t.getMessage}"))
+    }
+  }
+
   /** Run one vector file, writing actuals to outPath (or stdout if None). */
   def runFile(vecPath: String, outPath: Option[String]): Unit = {
-    val doc     = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
+    val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
-    val schema  = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
-    val entries = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
-    val isWire  = schema.startsWith("santa-wire/")
-    val isTx    = schema.startsWith("santa-transaction/")
-    val isBlock = schema.startsWith("santa-block/")
-    val isChain = schema.startsWith("santa-chain/")
-    val pairs   = entries.toVector.map(e =>
+    val schema   = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
+    val entries  = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
+    val isWire   = schema.startsWith("santa-wire/")
+    val isTx     = schema.startsWith("santa-transaction/")
+    val isBlock  = schema.startsWith("santa-block/")
+    val isChain  = schema.startsWith("santa-chain/")
+    val isAuthds = schema.startsWith("santa-authds/")
+    val pairs    = entries.toVector.map(e =>
       if (isTx) txEntry(e) else if (isBlock) blockEntry(e) else if (isChain) chainEntry(e)
-      else if (isWire) wireEntry(e) else evalEntry(schema, e))
+      else if (isWire) wireEntry(e) else if (isAuthds) authdsEntry(e) else evalEntry(schema, e))
     val out     = Json.obj(pairs: _*).spaces2
     outPath match {
       case Some(p) =>
