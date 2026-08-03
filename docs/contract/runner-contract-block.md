@@ -212,23 +212,36 @@ expected `reason: "MissingProof"`. It is the degenerate limit of §5's proofs-se
 canonicality bullet (no proof at all rather than a non-canonical one), and it is the class
 that forced the schema's `proofBytes` pattern from `+` to `*`.
 
-**Board:** rudolph (control) and donner both `captured: valid 4/4 · digest 4/4 ·
-cost 4/4` + `authored: valid 6/6` — donner's initial version-gate accept (it sourced
-the boundary check from the block's extension rather than the handed pre-state params)
-was routed and fixed same-day (enr `380941a` hands the vector table as
-`expected_boundary_params`, the node's own sync wiring; its reject reason is the
-`exMatchParameters` twin — verdict identical, reason diagnostic-only). vixen
-(arkadianet/ergo) `captured 4/4·4/4·3/4` + `authored 5/6` — the version-gate accept
-plus its 111927 cost divergence (169202 vs blessed 170876); theirs to take.
+**Board (re-graded 2026-08-03, `SANTA_TX_BLESSER=1 ./conform`) — all three block
+conformers are green on the full 11-vector corpus:**
 
-> **Board staleness (noted 2026-08-03).** The figures above predate `proofless` (they count
-> 6 authored, not 7) and predate the 07-07 vixen pin bumps, which cleared vixen's
-> version-gate red — the latest local run has vixen `authored 7/7 · captured 4/4` with zero
-> block reds. That run also reports **only the `valid` dimension** for block (no `digest`/
-> `cost` totals), so the `digest 4/4 · cost 4/4` claims are neither confirmed nor refuted
-> here and the board is left as-is rather than rewritten from a partial reading. donner
-> produced **no results at all** in that run (see the tier's build-tracking ask), so its row
-> is unverified against the 7-vector corpus. Refresh this block from a full re-grade.
+| Conformer | `captured` (4) | `authored` (7) |
+|---|---|---|
+| **rudolph** (control) | valid 4/4 · digest 4/4 · cost 4/4 | valid 7/7 |
+| **donner** (enr, staged `d3d32ae` / v0.7.10) | valid 4/4 · digest 4/4 · cost 4/4 | valid 7/7 |
+| **vixen** (arkadianet/ergo) | valid 4/4 · digest 4/4 · cost 4/4 | valid 7/7 |
+
+Two divergences recorded in earlier revisions of this table are **now resolved**, and
+both are worth keeping as history rather than deleting:
+
+- **donner's version-gate accept** (it sourced the boundary check from the block's
+  extension rather than the handed pre-state params) was routed and fixed same-day —
+  enr `380941a` hands the vector table as `expected_boundary_params`, the node's own
+  sync wiring; its reject reason is the `exMatchParameters` twin (verdict identical,
+  reason diagnostic-only).
+- **vixen's 111927 cost divergence** (169202 vs blessed 170876) and its version-gate
+  accept — the first independently-surfaced block finding — have both since gone
+  green upstream. `authored 5/6 → 7/7`, `captured 3/4 → 4/4` on cost.
+
+**Caveat on donner's row.** donner was *absent from the board entirely* between
+2026-07-07 and 2026-08-03 — it failed to compile, so every cell above was ungraded
+for it, `proofless` included. Cause was a `[patch.crates-io]` omission in the runner's
+own manifest, not an enr defect (donner restates enr's patch table because Cargo
+honours `[patch]` only from the consuming workspace root; enr's vendored `redb` entry
+was never restated, so `redb` resolved to crates.io and `enr-state` failed on
+`Database::{set_read_cache_limit,clear_read_cache}`). Fixed in santa-donner `5227242`,
+which also moved `ergo_avltree_rust` from a 16-commit-stale `rev` to `branch = "main"`.
+A green donner row is only as old as that fix — re-read it, don't assume continuity.
 
 ## 9. Worked example
 
