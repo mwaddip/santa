@@ -132,6 +132,10 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                     let is_tx = sk.starts_with("transaction/");
                     let is_block = sk.starts_with("block/");
                     let is_chain = sk.starts_with("chain/");
+                    // AuthDS slices grade prove/verify dimensions only — there is no cost dimension
+                    // in the schema, the Counts fields, or the avl_prove/avl_verify verdict, so (like
+                    // wire) a clean authds pass is never amber: "cost not graded" would be a false
+                    // claim about a tier that has no cost to grade in the first place.
                     let is_authds = sk.starts_with("authds/");
                     let title = if is_wire {
                         let mut t = format!("roundtrip {}/{}", g("roundtrip_nice"), g("roundtrip_total"));
@@ -218,8 +222,10 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         ));
                     } else if red > 0 {
                         body.push_str(&format!("<td class=\"coal\" title=\"{title}\">{coal_icon} {red}</td>"));
-                    } else if is_wire || cost_graded {
-                        // Wire round-trip pass, or a full value+cost pass (eval/tx on a cost-graded runner) → green.
+                    } else if is_wire || is_authds || cost_graded {
+                        // Wire round-trip pass, a clean authds prove/verify pass (authds has no cost
+                        // dimension either, so nothing was left ungraded — the pass is complete, not
+                        // value-only), or a full value+cost pass (eval/tx on a cost-graded runner) → green.
                         body.push_str(&format!("<td class=\"nice\" title=\"{title}\">{nice_icon}</td>"));
                     } else {
                         // cost:false runner: value-only pass (eval) or valid-only pass (tx) — amber.
@@ -978,12 +984,12 @@ mod tests {
     }
 
     #[test]
-    fn authds_cost_false_runner_clean_slice_is_amber() {
-        // AuthDS has no cost dimension of its own (like chain). This pins the deliberate choice
-        // to follow chain's precedent (subject to the runner's cost:false flag like every other
-        // non-wire tier) rather than wire's explicit exemption ("wire is never amber, it has no
-        // cost") — nothing in the brief or the neighbouring arms carves out a chain/authds
-        // exemption, so a cost:false runner's clean authds slice renders amber, not green.
+    fn authds_cost_false_runner_clean_slice_is_nice() {
+        // AuthDS has no cost dimension of its own — not in the schema, not in the Counts
+        // fields, not in the avl_prove/avl_verify verdict. A cost:false runner's clean authds
+        // slice therefore left nothing ungraded: it must follow wire's exemption (green, never
+        // amber), not chain's pre-existing "no cost dimension but still amber-eligible" gap —
+        // that gap is chain's own inconsistency, not a precedent to propagate into a new tier.
         let data = json!({
           "schema": "santa-results/v1",
           "runners": [
@@ -999,7 +1005,9 @@ mod tests {
           ]
         });
         let html = dashboard(&data, "ref");
-        assert!(html.contains("class=\"partial\""),
-            "cost:false runner's clean authds slice must be amber, matching chain's precedent");
+        assert!(html.contains("class=\"nice\""),
+            "cost:false runner's clean authds slice must be green, matching wire's precedent (no cost dimension to leave ungraded)");
+        assert!(!html.contains("value-only (cost not graded)"),
+            "authds cells never carry the value-only amber note — there is no cost dimension for it to describe");
     }
 }
