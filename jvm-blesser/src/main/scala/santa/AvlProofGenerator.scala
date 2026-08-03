@@ -19,7 +19,12 @@ object AvlProofGenerator {
   /** Input shape for /avl-proof. */
   case class TreeConfig(keyLength: Int, valueLengthOpt: Option[Int])
   case class Kv(key: String, value: String)
-  case class AvlOp(kind: String, key: String, value: Option[String])
+
+  /** One AVL operation. `delta` is a decimal STRING (parsed with `.toLong`) so an
+    * i64-boundary `UpdateLongBy` survives JSON — a JSON number would lose precision.
+    * Defaulted so every pre-existing call site keeps compiling. */
+  case class AvlOp(kind: String, key: String, value: Option[String],
+                   delta: Option[String] = None)
 
   private def dec(hex: String): Array[Byte] =
     Base16.decode(hex).getOrElse(sys.error(s"invalid hex: ${hex.take(32)}..."))
@@ -105,15 +110,31 @@ object AvlProofGenerator {
     (proofs.result(), digests.result())
   }
 
-  /** Shared op decoding — the operation vocabulary the fixtures use. */
-  private def toOperation(op: AvlOp): scorex.crypto.authds.avltree.batch.Operation =
+  /** Shared op decoding — the full eight-tag `santa-authds/v1` operation vocabulary
+    * (docs/specs/authds-tier.md "Operation encoding").
+    *
+    * `UnknownModification` is a case OBJECT with a FIXED, zero-length `key()`; it
+    * ignores the caller's key entirely, so the entry's `key_hex` is deliberately not
+    * passed. See `AvlProofGeneratorTest` for the pin. */
+  private[santa] def toOperation(op: AvlOp): scorex.crypto.authds.avltree.batch.Operation = {
+    import scorex.crypto.authds.avltree.batch.{
+      InsertOrUpdate, RemoveIfExists, UnknownModification, Update, UpdateLongBy}
+    def value: Array[Byte] =
+      dec(op.value.getOrElse(sys.error(s"${op.kind} requires value")))
     op.kind match {
-      case "Insert" =>
-        Insert(ADKey @@ dec(op.key), ADValue @@ dec(op.value.getOrElse(sys.error("Insert requires value"))))
-      case "Lookup" => Lookup(ADKey @@ dec(op.key))
-      case "Remove" => Remove(ADKey @@ dec(op.key))
-      case other    => sys.error(s"unknown operation kind: $other")
+      case "Insert"         => Insert(ADKey @@ dec(op.key), ADValue @@ value)
+      case "Update"         => Update(ADKey @@ dec(op.key), ADValue @@ value)
+      case "InsertOrUpdate" => InsertOrUpdate(ADKey @@ dec(op.key), ADValue @@ value)
+      case "Remove"         => Remove(ADKey @@ dec(op.key))
+      case "RemoveIfExists" => RemoveIfExists(ADKey @@ dec(op.key))
+      case "Lookup"         => Lookup(ADKey @@ dec(op.key))
+      case "UpdateLongBy"   =>
+        UpdateLongBy(ADKey @@ dec(op.key),
+          op.delta.getOrElse(sys.error("UpdateLongBy requires delta")).toLong)
+      case "UnknownModification" => UnknownModification
+      case other            => sys.error(s"unknown operation kind: $other")
     }
+  }
 
   /** Decode a `santa-authds/v1` `avl_prove` entry (snake_case `settings` /
     * `payload`) and run the prover. Main scope on purpose: the vendored blesser
@@ -133,7 +154,8 @@ object AvlProofGenerator {
         AvlOp(
           o.get[String]("tag").toOption.getOrElse(sys.error("op.tag missing")),
           o.get[String]("key_hex").toOption.getOrElse(sys.error("op.key_hex missing")),
-          o.get[String]("value_hex").toOption
+          o.get[String]("value_hex").toOption,
+          o.get[String]("delta").toOption
         )
       }
     val cycles = c.downField("payload").get[List[Int]]("gen_proof_after")
@@ -172,7 +194,9 @@ object AvlProofGenerator {
         AvlOp(
           e.hcursor.get[String]("kind").fold(e => sys.error(s"op kind: $e"), identity),
           e.hcursor.get[String]("key").fold(e => sys.error(s"op key: $e"), identity),
-          e.hcursor.get[String]("value").toOption
+          e.hcursor.get[String]("value").toOption,
+          // decimal string (UpdateLongBy) — same convention as santa-authds/v1's `delta`
+          e.hcursor.get[String]("delta").toOption
         )
       }
 
