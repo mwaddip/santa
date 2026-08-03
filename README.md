@@ -146,6 +146,27 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   entries not yet mounted = their ledger) · blitzen nipopow-at-most deferred · dasher ledger.
   Contract:
   [`docs/contract/runner-contract-chain.md`](docs/contract/runner-contract-chain.md).
+- ✅ **AuthDS tier live** — `santa-authds/v1`; grades the AVL+ batch **prover** (canonical
+  proof bytes) and **verifier** (three independently-gradable levels: proof acceptance ·
+  per-operation results · final digest) directly, below the ErgoScript layer every other
+  tier reaches it through. **60 vendored entries**
+  (`vectors/authds/any/vendored/` — 10 `avl_prove` + 50 `avl_verify`, ergots' own AVL-prover
+  fixture corpus, every expectation re-derived through `jvm-blesser` rather than trusted
+  from its Rust-blessed origin — `blessed_by: "jvm:scrypto-3.0.0"`). Conformers: **rudolph
+  control** `proof 10/10 · digest 56/56 · accepted 50/50 · results 46/46`, red 0 · **dasher
+  (ergots)** `proof 0/10 · digest 42/52 · accepted 50/50 · results 42/46`, red 24 — two
+  real, confirmed findings: pushed ergots `master` seeds an empty AVL tree as two sentinel
+  leaves instead of one (all 10 `avl_prove` entries; fixed locally, unpushed — npm's
+  published `0.3.0` is unaffected, same version string naming two different trees) and
+  scrypto's `UnknownModification` is a fixed zero-length-key singleton that poisons the JVM
+  verifier where ergots/`ergo_avltree_rust` treat it as a keyed, non-modifying lookup (4
+  `results` entries;
+  [finding](docs/findings/authds-unknownmodification-jvm-vs-rust.md)) — plus one prediction
+  that did *not* land: the four adverse (malformed/mismatched/truncated/swapped-digest
+  proof) fixtures were flagged as a possible reject-detection miss and came back fully
+  green, ergots independently agreeing with the JVM. blitzen-eni / donner / vixen not yet
+  mounted (`avl_verify`-only arm routed). Contract:
+  [`docs/contract/runner-contract-authds.md`](docs/contract/runner-contract-authds.md).
 
 Still greenfield, and where help is most wanted (see below):
 

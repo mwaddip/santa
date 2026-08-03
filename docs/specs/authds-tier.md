@@ -1,6 +1,8 @@
 # SANTA — AuthDS tier (`santa-authds/v1`, AVL prover + verifier)
 
-> Status: **SPEC** (design approved 2026-08-02, not yet built).
+> Status: **LIVE** (design approved 2026-08-02, built and mounted 2026-08-03). Durable
+> contract: [`docs/contract/runner-contract-authds.md`](../contract/runner-contract-authds.md)
+> — this document remains the design record; see "Live board" below for real numbers.
 > Tier name: `authds`. Kinds v1: `avl_prove`, `avl_verify`.
 > Vectors: `vectors/authds/any/vendored/` — 60 entries (10 prove, 50 verify).
 
@@ -239,6 +241,35 @@ prove. `not-impl` is the honest cell and flips if sigma-rust grows a prover.
   below −inf) and poisons the verifier; `ergo_avltree_rust` / ergots honour the
   caller's key and treat it as a non-modifying lookup. Expect a real dasher red
   on those four entries — it is the finding, not an adapter bug.
+
+## Live board (2026-08-03)
+
+`SANTA_TX_BLESSER=1 ./conform`, slice `authds/any/vendored`. Conformers: rudolph (control)
+and dasher (ergots) — the only two mounted so far; blitzen-eni / donner / vixen
+`avl_verify` arms are routed, not yet built (`prompts/authds-verify-arms.md`, untracked).
+
+| Runner | proof | digest | accepted | results | red_total |
+|---|---|---|---|---|---|
+| rudolph (JVM control) | 10/10 | 56/56 | 50/50 | 46/46 | **0** |
+| dasher (ergots) | 0/10 | 42/52 | 50/50 | 42/46 | **24** |
+
+dasher's `results` reds are exactly the four `UnknownModification` entries above
+("Confirmed findings"). dasher's `proof`/`digest` reds are a **second, independent**
+confirmed finding: pushed ergots `master` (`da2a257`) seeds an empty AVL tree as an
+internal node over two sentinel leaves (height 1) where scrypto and `ergo_avltree_rust`
+both seed a single leaf (height 0) — every packed proof and digest diverges from the first
+operation on. The fix (`b533fe5`) exists in the author's local ergots checkout but is
+unpushed; npm's published `@ergots/avltree@0.3.0` was cut from the fixed tree and is
+unaffected (same version string, two different implementations — a process hazard worth
+tracking on its own). Severity low: the verifier is the consensus surface and it is 46/50
+green; the prover is off-chain tooling. Routed at
+`prompts/ergots-push-avltree-prover-sentinel-fix.md` (untracked).
+
+**A prediction that did not fire:** the four `adverse-*` fixtures (malformed / mismatched /
+truncated / swapped-digest proofs) were flagged in "Predicted findings" above as a possible
+`accepted` miss for dasher, since the vector commits to rejection on evidence the ergots
+fixtures could not themselves supply. All four came back green — ergots independently
+agrees with the JVM's rejection in every case.
 
 ## Honest limitations
 

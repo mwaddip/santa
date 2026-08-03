@@ -5,6 +5,11 @@
 > runners against *this document + the JSON Schemas in [`/schema`](../../schema/)*, not
 > against any one implementation's source. Umbrella: [SPEC.md](../../SPEC.md).
 >
+> Per-tier contracts (each a lean companion inheriting totality, never-panic, faithful
+> outcomes, and this document's comparator topology): [wire](./runner-contract-wire.md) ·
+> [transaction](./runner-contract-transaction.md) · [block](./runner-contract-block.md) ·
+> [chain](./runner-contract-chain.md) · [authds](./runner-contract-authds.md).
+>
 > Companion machine-checkable schemas:
 > [`schema/santa-eval.vector.schema.json`](../../schema/santa-eval.vector.schema.json),
 > [`schema/santa-eval.actuals.schema.json`](../../schema/santa-eval.actuals.schema.json).
