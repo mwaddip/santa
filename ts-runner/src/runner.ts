@@ -7,6 +7,10 @@ import {
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
 import { ByteReader, ByteWriter, parseHeader, ReaderError } from '@ergots/scorex'
+import {
+  BatchAVLProver, verifyAvlBatchPartial, AvlVerifyError,
+  type AvlTreeConfig, type Operation,
+} from '@ergots/avltree'
 import { decodeSValue } from './decode'
 import { encodeSValue, type Json } from './encode'
 import { hexToBytes, bytesToHex } from './hex'
@@ -768,6 +772,176 @@ export async function runTransactionVector(doc: TxVector): Promise<Record<string
   return actuals
 }
 
+// ---- santa-authds/v1: authenticated-AVL+ prove + verify over @ergots/avltree ----
+// The only genuinely independent prover reimplementation under test (docs/specs/authds-tier.md).
+// `BatchAVLVerifier` is deliberately NOT exported by @ergots/avltree, so the verify arm goes
+// through the public `verifyAvlBatchPartial`, whose partial-success shape is what lets a
+// per-operation failure be reported faithfully instead of collapsing the batch.
+
+interface AuthdsOpItem { tag: string; key_hex?: string; value_hex?: string; delta?: string }
+interface AuthdsEntry {
+  name: string
+  kind: string
+  settings: {
+    key_length?: number
+    value_length?: number | null
+    max_num_operations?: number | null
+    max_deletes?: number | null
+  }
+  payload: {
+    operations?: AuthdsOpItem[]
+    gen_proof_after?: number[]
+    starting_digest_hex?: string
+    proof_hex?: string
+  }
+}
+interface AuthdsVector { schema: string; entries: AuthdsEntry[] }
+
+/** One authds entry's faithful outcome. Two kind-keyed verdict shapes share one row type
+ *  (the actuals file carries no kind tag — santa-authds.actuals.schema.json keys the
+ *  asymmetry off which verdict fields are present):
+ *    - avl_prove  → proofs + digests, one pair per gen_proof_after index
+ *    - avl_verify → proof_accepted + results + new_digest_hex
+ *  Outcome vocabulary and the never-panic invariant are the standard ones (runner-contract §3);
+ *  `note` is present iff error === 'panicked' (the schema enforces it both ways). */
+type AuthdsResult = {
+  proofs?: string[]
+  digests?: string[]
+  proof_accepted?: boolean
+  results?: { ok: boolean; value: string | null }[]
+  new_digest_hex?: string | null
+  error: null | 'errored' | 'not-implemented' | 'panicked'
+  note?: string
+}
+
+// Frozen singleton — an unrecognized kind is a growth-ledger cell, not a gap.
+const AUTHDS_NOT_IMPL: AuthdsResult = Object.freeze({ error: 'not-implemented' })
+
+/** A required vector field. Absence is a malformed vector, not a domain answer — a plain throw
+ *  lands on the panic-net as `panicked` with a naming note (rudolph's `sys.error` idiom). */
+function authdsReq<T>(v: T | undefined, what: string): T {
+  if (v === undefined) throw new Error(`authds: missing ${what}`)
+  return v
+}
+
+/** SANTA op JSON → an @ergots/avltree Operation. An unrecognized tag throws plain (⇒ panicked):
+ *  the vector schema's enum is closed, so a tag outside it is a harness/vector defect. */
+function authdsOp(o: AuthdsOpItem): Operation {
+  const key = hexToBytes(authdsReq(o.key_hex, `op ${o.tag}.key_hex`))
+  const value = (): Uint8Array => hexToBytes(authdsReq(o.value_hex, `op ${o.tag}.value_hex`))
+  switch (o.tag) {
+    case 'Insert':              return { tag: 'Insert', key, value: value() }
+    case 'Update':              return { tag: 'Update', key, value: value() }
+    case 'InsertOrUpdate':      return { tag: 'InsertOrUpdate', key, value: value() }
+    case 'Remove':              return { tag: 'Remove', key }
+    case 'RemoveIfExists':      return { tag: 'RemoveIfExists', key }
+    case 'Lookup':              return { tag: 'Lookup', key }
+    case 'UnknownModification': return { tag: 'UnknownModification', key }
+    case 'UpdateLongBy':        return { tag: 'UpdateLongBy', key, delta: BigInt(authdsReq(o.delta, 'op UpdateLongBy.delta')) }
+    default: throw new Error(`unknown authds op tag: ${o.tag}`)
+  }
+}
+
+/** A DoS bound: the vector's `null` means "unbounded", which AvlTreeConfig spells `undefined`
+ *  (validateConfig rejects a literal null via the safe-integer check). */
+function authdsBound(v: number | null | undefined): number | undefined {
+  return v == null ? undefined : v
+}
+
+/** Drive @ergots/avltree for one entry. Returns the verdict directly; every throw is classified
+ *  by the caller's net. */
+function runAuthdsEntryInner(e: AuthdsEntry): AuthdsResult {
+  if (e.kind === 'avl_prove') {
+    const keyLength = authdsReq(e.settings.key_length, 'settings.key_length')
+    const valueLength = authdsReq(e.settings.value_length, 'settings.value_length')
+    const operations = authdsReq(e.payload.operations, 'payload.operations')
+    // A Set, not an index scan: gen_proof_after is a sorted-distinct index list, and the cycle
+    // boundary is load-bearing — generateProof() resets the prover's internal state, so a proof
+    // is taken at exactly the flagged indices and nowhere else.
+    const triggers = new Set<number>(authdsReq(e.payload.gen_proof_after, 'payload.gen_proof_after'))
+    const p = new BatchAVLProver(keyLength, valueLength)
+    const proofs: string[] = []
+    const digests: string[] = []
+    for (const [i, o] of operations.entries()) {
+      // A precondition failure is a RETURNED value here (not a throw): the implementation's own
+      // clean refusal of material the oracle blessed ⇒ `errored` (runner-contract §3), never
+      // softened into a verdict and never inflated into a crash.
+      if (!p.performOneOperation(authdsOp(o)).success) return { error: 'errored' }
+      if (!triggers.has(i)) continue
+      proofs.push(bytesToHex(p.generateProof()))
+      const d = p.digest()
+      // Unreachable on the success path (a non-poisoned prover always labels a root); a null here
+      // would be an ergots logic bug, so surface it as one rather than emitting a bogus digest.
+      if (d === null) throw new Error(`authds: prover digest() null after op ${i}`)
+      digests.push(bytesToHex(d))
+    }
+    return { proofs, digests, error: null }
+  }
+
+  if (e.kind === 'avl_verify') {
+    const config: AvlTreeConfig = {
+      keyLength: authdsReq(e.settings.key_length, 'settings.key_length'),
+      valueLengthOpt: authdsReq(e.settings.value_length, 'settings.value_length'),
+      maxNumOperations: authdsBound(e.settings.max_num_operations),
+      maxDeletes: authdsBound(e.settings.max_deletes),
+    }
+    const ops = authdsReq(e.payload.operations, 'payload.operations').map(authdsOp)
+    const partial = verifyAvlBatchPartial(
+      hexToBytes(authdsReq(e.payload.starting_digest_hex, 'payload.starting_digest_hex')),
+      hexToBytes(authdsReq(e.payload.proof_hex, 'payload.proof_hex')),
+      config,
+      ops,
+    )
+    // null == proof-decode failure or a constructor digest mismatch — the verifier never
+    // anchored, so no operation was attempted. Same condition as the JVM's `digest.isEmpty`
+    // before any op, i.e. the proof itself was rejected.
+    if (partial === null) return { proof_accepted: false, results: [], new_digest_hex: null, error: null }
+    // `partial.results` holds the SUCCESSFUL ops only (length === opsCompleted); the verifier
+    // stops at the first failure, so every op from opsCompleted on is unattempted-and-failed.
+    const results = ops.map((_, i) => {
+      if (i >= partial.opsCompleted) return { ok: false, value: null }
+      const v = partial.results[i]
+      return { ok: true, value: v == null ? null : bytesToHex(v) }
+    })
+    // THE TRAP: ergots' partial result reports the digest snapshot from BEFORE the failing op,
+    // whereas the JVM reports NO digest at all once an operation poisons the verifier. Passing
+    // the snapshot through would manufacture a divergence on every operation-failure vector for
+    // a reason that lives entirely in this adapter. The digest is only ergots' answer to "what
+    // is the post-batch root" when the whole batch completed.
+    const newDigest = partial.opsCompleted === ops.length ? bytesToHex(partial.newDigest) : null
+    return { proof_accepted: true, results, new_digest_hex: newDigest, error: null }
+  }
+
+  return AUTHDS_NOT_IMPL
+}
+
+/** Run one authds entry → exactly one AuthdsResult (total, never-panic).
+ *
+ *  Outcome classification mirrors the wire arm's isWireCodecError split. `AvlVerifyError` is
+ *  @ergots/avltree's one typed rejection class — an explicit refusal of the caller's material
+ *  (config shape, key/value length, an out-of-i64 delta, a key at or past a ±inf sentinel). That
+ *  is the implementation's own verdict on blessed input, so it is `errored` and graded as the
+ *  divergence it is (runner-contract §3), never softened and never inflated. Anything else that
+ *  escapes is an uncaught throw — a malformed vector or a library defect — and is `panicked`
+ *  with the message in `note`, keeping "the runner crashed" distinct from "the runner cleanly
+ *  reported a failure". */
+export function runAuthdsEntry(e: AuthdsEntry): AuthdsResult {
+  try {
+    return runAuthdsEntryInner(e)
+  } catch (err) {
+    if (err instanceof AvlVerifyError) return { error: 'errored' }
+    const note = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
+    return { error: 'panicked', note }
+  }
+}
+
+/** run(authds vector) → actuals: exactly one AuthdsResult per entry, keyed by name. */
+export function runAuthdsVector(doc: AuthdsVector): Record<string, AuthdsResult> {
+  const actuals: Record<string, AuthdsResult> = {}
+  for (const e of doc.entries) actuals[e.name] = runAuthdsEntry(e)
+  return actuals
+}
+
 // ---- CLI: runner <vector.json> [actuals-out.json] (mirrors Runner.scala) ----
 async function main(argv: string[]): Promise<void> {
   const vecPath = argv[2]
@@ -781,6 +955,8 @@ async function main(argv: string[]): Promise<void> {
     ? await runWireVector(raw as WireVector)
     : schema.startsWith('santa-transaction/')
     ? await runTransactionVector(raw as TxVector)
+    : schema.startsWith('santa-authds/')
+    ? runAuthdsVector(raw as unknown as AuthdsVector)
     : runVector(raw as Vector)
   const json = JSON.stringify(actuals, null, 2)
   const outPath = argv[3]
