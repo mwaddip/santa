@@ -19,12 +19,31 @@ object VendoredAuthdsAvlProve {
   val Op = "AvlProve.ergots_corpus"
   val Source = "ergots:packages/avltree/test/fixtures/prover"
 
+  /** The committed vector this blesser owns — the artifact every conformer is
+    * graded against. Read back by the guard test; never written to by it. */
+  val VectorPath: java.nio.file.Path =
+    java.nio.file.Paths.get("..", "vectors", "authds", "any", "vendored", s"$Op.json")
+
   private val seedDir =
     java.nio.file.Paths.get("src", "test", "resources", "ergots-avltree", "prover")
 
-  /** The vendored fixtures, name-sorted. Public so the comparison test reads the
-    * same files through the same listing (one seed-reading path). */
-  def seeds: Vector[Json] = {
+  /** One vendored fixture. `file` is the FILENAME — the only thing that can
+    * honestly name the upstream path — and `name` is the fixture's own internal
+    * label. `require`d equal on construction: if they ever disagree, `source`
+    * built from either one would be a lie about where the input came from, and
+    * validate's prefix check could not see it. */
+  case class Seed(file: String, json: Json) {
+    val stem: String = file.stripSuffix(".json")
+    val name: String = json.hcursor.get[String]("name")
+      .fold(e => sys.error(s"fixture $file has no name: $e"), identity)
+    require(name == stem,
+      s"vendored fixture $file declares name '$name' — filename and internal name must agree, " +
+        "otherwise the entry's `source` points at a file that does not exist")
+  }
+
+  /** The vendored fixtures, filename-sorted. Public so the comparison test reads
+    * the same files through the same listing (one seed-reading path). */
+  def seeds: Vector[Seed] = {
     val files = java.nio.file.Files.list(seedDir).toArray
       .map(_.asInstanceOf[java.nio.file.Path])
       .filter(_.toString.endsWith(".json"))
@@ -32,8 +51,9 @@ object VendoredAuthdsAvlProve {
       .toVector
     require(files.nonEmpty, s"no vendored prover fixtures under $seedDir")
     files.map { p =>
-      parseJson(new String(java.nio.file.Files.readAllBytes(p), "UTF-8"))
+      val json = parseJson(new String(java.nio.file.Files.readAllBytes(p), "UTF-8"))
         .fold(e => sys.error(s"bad fixture $p: $e"), identity)
+      Seed(p.getFileName.toString, json)
     }
   }
 
@@ -60,9 +80,8 @@ object VendoredAuthdsAvlProve {
   }
 
   def extract(): Map[String, Json] = {
-    val entries = seeds.map { fx =>
-      val c = fx.hcursor
-      val name = c.get[String]("name").toOption.get
+    val entries = seeds.map { seed =>
+      val c = seed.json.hcursor
       val cfg = c.downField("config")
       // `value_length` is required-and-nullable in santa-authds/v1: emit an
       // explicit null when the fixture has no fixed value length, never omit it.
@@ -79,8 +98,10 @@ object VendoredAuthdsAvlProve {
       val stub = Json.obj("settings" -> settings, "payload" -> payload)
       val (proofs, digests) = derive(stub)
       Json.obj(
-        "name" -> Json.fromString(name),
-        "source" -> Json.fromString(s"$Source/$name.json"),
+        "name" -> Json.fromString(seed.name),
+        // keyed off the FILENAME, not the fixture's internal name — `source` must
+        // name a file that actually exists upstream (Seed require()s the two agree)
+        "source" -> Json.fromString(s"$Source/${seed.file}"),
         "kind" -> Json.fromString("avl_prove"),
         "settings" -> settings,
         "payload" -> payload,
@@ -99,8 +120,16 @@ object VendoredAuthdsAvlProve {
     ))
   }
 
-  /** Persist to a staging dir (build artifact; cp into vectors/authds/any/vendored/
-    * once inspected). Mirrors VendoredWireErgots.writeVectors, slug-collision-guarded. */
+  /** The ONE serialization of an envelope. Writer and currency check share it, so
+    * "the committed file equals a fresh build" cannot drift into a formatting
+    * argument between two renderers. */
+  def render(envelope: Json): String = envelope.spaces2
+
+  /** Persist. Mirrors VendoredWireErgots.writeVectors, slug-collision-guarded.
+    * Driven by the currency test's opt-in regenerate
+    * (`SANTA_WRITE_AUTHDS=1 sbt test`) — the default test run only READS the
+    * committed vector, so a hand-edit fails the guard instead of being silently
+    * overwritten. */
   def writeVectors(vectors: Map[String, Json], outDir: java.nio.file.Path): Unit = {
     java.nio.file.Files.createDirectories(outDir)
     val collisions = vectors.keys.groupBy(SpecExtract.slug).filter(_._2.size > 1)
@@ -109,7 +138,7 @@ object VendoredAuthdsAvlProve {
         collisions.map { case (s, ops) => s"'$s.json' <- ${ops.mkString(" / ")}" }.mkString("; "))
     vectors.foreach { case (op, json) =>
       java.nio.file.Files.write(outDir.resolve(s"${SpecExtract.slug(op)}.json"),
-        json.spaces2.getBytes(java.nio.charset.StandardCharsets.UTF_8))
+        render(json).getBytes(java.nio.charset.StandardCharsets.UTF_8))
     }
   }
 }
