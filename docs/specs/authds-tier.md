@@ -256,22 +256,35 @@ and dasher (ergots) — the only two mounted so far; blitzen-eni / donner / vixe
 | Runner | proof | digest | accepted | results | red_total |
 |---|---|---|---|---|---|
 | rudolph (JVM control) | 10/10 | 56/56 | 50/50 | 46/46 | **0** |
-| dasher (ergots) | 0/10 | 42/52 | 50/50 | 42/46 | **24** |
+| dasher (ergots @ `f906eb2`) | 10/10 | 52/52 | 50/50 | 42/46 | **4** |
 
-dasher's `results` reds are exactly the four `UnknownModification` entries above
-("Confirmed findings"). dasher's `proof`/`digest` reds are a **second, independent**
-confirmed finding: pushed ergots `master` (`da2a257`) seeds an empty AVL tree as an
-internal node over two sentinel leaves (height 1) where scrypto and `ergo_avltree_rust`
-both seed a single leaf (height 0) — every packed proof and digest diverges from the first
-operation on. The fix (`b533fe5`) exists in the author's local ergots checkout but is
-unpushed; npm's published `@ergots/avltree@0.3.0` was cut from the fixed tree and is
-unaffected (same version string, two different implementations — a process hazard worth
-tracking on its own). This npm-vs-git claim is network-verified-at-the-time (npm registry
-`time` map + a downloaded-tarball inspection), not locally re-checkable — every local
-`@ergots/avltree` under `node_modules` is a workspace symlink with no tarball or integrity
-hash to compare against. Severity low: the verifier is the consensus surface and it is 46/50
-green; the prover is off-chain tooling. Routed at
-`prompts/ergots-push-avltree-prover-sentinel-fix.md` (untracked).
+Re-graded 2026-08-03 against ergots `master` = `f906eb2`, and confirmed identical by the
+first CI run to include this tier (conform `30836488512`, green).
+
+dasher's 4 remaining reds are exactly the four `UnknownModification` entries above
+("Confirmed findings") — `unknown-mod-3leaves-{absent,present}`, `batch-16ops-mixed`,
+`batch-stress-mixed-100`. That finding is unaffected and reproduces in a clean CI
+environment.
+
+**The prover finding is RESOLVED (kept here as history, not deleted).** Between the tier
+shipping and this re-grade, dasher was `proof 0/10 · digest 42/52`, red 24: pushed ergots
+`master` (`da2a257`) seeded an empty AVL tree as an internal node over two sentinel leaves
+(height 1) where scrypto and `ergo_avltree_rust` both seed a single leaf (height 0), so
+every packed proof and digest diverged from the first operation on. ergots pushed the fix
+(`b533fe5`, reachable from `f906eb2`) and all 20 reds cleared — the 10 `avl_prove` entries
+plus the 10 prove-side `digest` contributions. Worth recording that this finding was first
+labelled a "pin artefact" and that label was **overturned** before it was reported: the
+runner tracked `#master`, conform fetched the current head, and the head was broken.
+Reporting it rather than neutralising it is what produced the fix.
+
+**Still open, and independent of the above: npm `@ergots/avltree@0.3.0` ≠ git `0.3.0`.**
+npm's published 0.3.0 was cut from the fixed tree while git's 0.3.0 tag was not — the same
+version string naming two different implementations. This survives the prover fix, because
+it is a release-process hazard rather than a prover defect. It remains
+network-verified-at-the-time (npm registry `time` map + a downloaded-tarball inspection)
+and **not** locally re-checkable: every local `@ergots/avltree` under `node_modules` is a
+workspace symlink with no tarball or integrity hash to compare against. Treat it as
+unconfirmed until re-probed.
 
 **A prediction that did not fire:** the four `adverse-*` fixtures (malformed / mismatched /
 truncated / swapped-digest proofs) were flagged in "Predicted findings" above as a possible

@@ -412,7 +412,10 @@ Two further limits, surfaced building the runner arms (Task 9-10) and not yet in
 | Runner | proof | digest | accepted | results | red_total |
 |---|---|---|---|---|---|
 | rudolph (JVM control) | 10/10 | 56/56 | 50/50 | 46/46 | **0** |
-| dasher (ergots) | 0/10 | 42/52 | 50/50 | 42/46 | **24** |
+| dasher (ergots @ `f906eb2`) | 10/10 | 52/52 | 50/50 | 42/46 | **4** |
+
+Re-graded 2026-08-03; identical under conform CI `30836488512`, the first CI run to
+include this tier.
 
 (`digest` pools both kinds' contributions, §4: rudolph's 56 = 10 `avl_prove` entries
 always graded + 46 `avl_verify` entries that reach the digest dimension; dasher's 52 = the
@@ -429,22 +432,33 @@ constructor). Affects 4 `results` reds: `unknown-mod-3leaves-{absent,present}`,
 repeated here:
 [`docs/findings/authds-unknownmodification-jvm-vs-rust.md`](../findings/authds-unknownmodification-jvm-vs-rust.md).
 
-**Confirmed finding — `ergots@master` ships a broken AVL prover.** All 10 `avl_prove`
-entries are red on both `proof` and `digest` — a **separate** finding from the one above
-(no prove vector can ever carry `UnknownModification`, §8). Pushed `ergots` master
-(`da2a257`) seeds an empty tree as an internal node over two sentinel leaves (height 1)
-where both scrypto and `ergo_avltree_rust` seed a single leaf (height 0), so every packed
-proof and digest diverges from the first cycle on. The fix (`b533fe5`) exists in the
-author's local ergots checkout but is **unpushed**; npm's published `@ergots/avltree@0.3.0`
-was cut from the fixed tree and is unaffected — the same version string names two different
-implementations. (This npm-vs-git claim rests on network probes — the npm registry's `time`
-map and a downloaded-tarball inspection — made at review time; it is **not** locally
-re-checkable, since every `@ergots/avltree` under a local `node_modules` is a workspace
-symlink to a source checkout with no tarball or integrity hash to compare against. Treat it
-as network-verified-at-the-time, not as a standing local invariant.) Severity low: the
-verifier is the consensus surface and it is 46/50 green;
-the prover is off-chain tooling. Routed at `prompts/ergots-push-avltree-prover-sentinel-fix.md`
-(untracked working scaffolding — cited here for continuity, not as a durable reference).
+**Confirmed finding, since RESOLVED — `ergots@master` shipped a broken AVL prover.**
+Retained as history: deleting a finding that produced a fix loses the reason it was
+reported. At tier ship, all 10 `avl_prove` entries were red on both `proof` and `digest` —
+a **separate** finding from the one above (no prove vector can ever carry
+`UnknownModification`, §8). Pushed `ergots` master (`da2a257`) seeded an empty tree as an
+internal node over two sentinel leaves (height 1) where both scrypto and
+`ergo_avltree_rust` seed a single leaf (height 0), so every packed proof and digest
+diverged from the first cycle on. **ergots pushed the fix (`b533fe5`, reachable from
+`f906eb2`); re-graded 2026-08-03 all 20 reds cleared** — 10 `proof` + the 10 prove-side
+`digest` contributions — leaving dasher at red 4 (the `UnknownModification` set alone).
+Confirmed independently by conform CI `30836488512`.
+
+Note the label history, because it is the reusable part: this was first called a "pin
+artefact" and that label was **overturned**. The eni/donner precedent is a runner locked to
+an OLD sha while upstream's published artifact is correct; here dasher tracked `#master`,
+conform fetched the current head, and the head was broken. "Already fixed on my laptop" is
+exactly the neutraliser a conformance suite must refuse — and refusing it is what produced
+the push.
+
+**Independent and still open — npm `@ergots/avltree@0.3.0` ≠ git `0.3.0`.** npm's published
+0.3.0 was cut from the fixed tree while git's was not: one version string, two
+implementations. This **outlives** the prover fix, being a release-process hazard rather
+than a prover defect. The claim rests on network probes — the npm registry's `time` map and
+a downloaded-tarball inspection — made at review time; it is **not** locally re-checkable,
+since every `@ergots/avltree` under a local `node_modules` is a workspace symlink to a
+source checkout with no tarball or integrity hash to compare against. Treat it as
+network-verified-at-the-time, not as a standing local invariant.
 
 **A prediction that did not fire.** The four `adverse-*` entries
 (`adverse-malicious-extra-nodes`, `adverse-mismatched-config-keylength`,

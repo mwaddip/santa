@@ -154,13 +154,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   fixture corpus, every expectation re-derived through `jvm-blesser` rather than trusted
   from its Rust-blessed origin — `blessed_by: "jvm:scrypto-3.0.0"`). Conformers: **rudolph
   control** `proof 10/10 · digest 56/56 · accepted 50/50 · results 46/46`, red 0 · **dasher
-  (ergots)** `proof 0/10 · digest 42/52 · accepted 50/50 · results 42/46`, red 24 — two
-  real, confirmed findings: pushed ergots `master` seeds an empty AVL tree as two sentinel
-  leaves instead of one (all 10 `avl_prove` entries; fixed locally, unpushed — npm's
-  published `0.3.0` is unaffected, same version string naming two different trees; this
-  npm-vs-git claim is network-verified-at-the-time — npm's `time` map + a tarball inspection
-  — not locally re-checkable, since every local `@ergots/avltree` is a workspace symlink with
-  no tarball or integrity hash to compare against) and
+  (ergots @ `f906eb2`)** `proof 10/10 · digest 52/52 · accepted 50/50 · results 42/46`,
+  red 4 — two real, confirmed findings, **one now fixed**: pushed ergots `master` seeded an
+  empty AVL tree as two sentinel leaves instead of one (all 10 `avl_prove` entries, red 24
+  at ship; ergots pushed the fix `b533fe5` and all 20 prove-side reds cleared on the
+  2026-08-03 re-grade, confirmed by conform CI `30836488512`). A separate, **still-open**
+  hazard survives it: npm's published `0.3.0` was cut from the fixed tree while git's was
+  not — one version string naming two different implementations; that claim is
+  network-verified-at-the-time (npm's `time` map + a tarball inspection), not locally
+  re-checkable, since every local `@ergots/avltree` is a workspace symlink with no tarball
+  or integrity hash to compare against. The second finding stands unchanged:
   scrypto's `UnknownModification` is a fixed zero-length-key singleton that poisons the JVM
   verifier where ergots/`ergo_avltree_rust` treat it as a keyed, non-modifying lookup (4
   `results` entries;
