@@ -103,6 +103,49 @@ describe('santa-authds/v1 adapter', () => {
   })
 })
 
+describe('santa-authds/v1 adapter — DoS bounds', () => {
+  // The `adverse-malicious-extra-nodes` payload: a proof carrying more nodes than the
+  // declared op budget can justify. Its rejection rests ENTIRELY on max_num_operations
+  // being 0 — relax the bound and ergots accepts the proof. So the vector's `0` must
+  // reach AvlTreeConfig as 0, not be collapsed to undefined ("unbounded") by a falsy
+  // check. A `?? `/`||` slip here would flip a red cell green on a full conform run and
+  // nowhere else, which is the slowest possible place to notice.
+  const adverse = (maxOps: number | null, maxDeletes: number | null) => ({
+    name: 'adverse-malicious-extra-nodes',
+    kind: 'avl_verify',
+    settings: {
+      key_length: 32,
+      value_length: null,
+      max_num_operations: maxOps,
+      max_deletes: maxDeletes,
+    },
+    payload: {
+      starting_digest_hex: '215197cff0244d874639dab08e97913fa0b1979192b264a64f4f24f9ac132e7a02',
+      proof_hex:
+        '03fbf12f7c13a9bd41c97bcb4073995069741012a975a254df1d2fc3519d9b75' +
+        '03020202020202020202020202020202020202020202020202020202020202020202' +
+        '03030303030303030303030303030303030303030303030303030303030303030000' +
+        '0008020202020202020203752a2fcab8542e5360a9df7074ed5ff3f0f89938218370' +
+        '923775e6cbc35add0a00000402',
+      operations: [{ tag: 'Lookup', key_hex: '02'.repeat(32) }],
+    },
+  })
+
+  it('an explicit max_num_operations of 0 is a REAL bound, not "unbounded"', () => {
+    const a = runAuthdsEntry(adverse(0, 0))
+    expect(a.error).toBeNull()
+    expect(a.proof_accepted).toBe(false)
+    expect(a.results).toEqual([])
+    expect(a.new_digest_hex).toBeNull()
+  })
+
+  it('the same payload is ACCEPTED once the bound is relaxed — 0 is load-bearing', () => {
+    const a = runAuthdsEntry(adverse(null, null))
+    expect(a.error).toBeNull()
+    expect(a.proof_accepted).toBe(true)
+  })
+})
+
 describe('santa-authds/v1 adapter — outcome classification', () => {
   // ergots' typed rejection of the caller's material (AvlVerifyError) is the
   // implementation's own verdict ⇒ `errored` (runner-contract §3), mirroring the
