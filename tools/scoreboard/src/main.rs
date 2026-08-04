@@ -120,6 +120,27 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
             // never checked, so it must not look like a full value+cost pass.
             let cost_graded = r.get("cost").and_then(|c| c.as_bool()).unwrap_or(true);
             let slices = r.get("slices").and_then(|s| s.as_object()).unwrap_or(&empty);
+            // A runner that could not build/run emits `mark: "errored"` with NO slices, so every
+            // one of its cells would otherwise fall to the same grey `—` a genuinely out-of-scope
+            // tier uses. That is the failure mode that let donner sit UNGRADED (not red) for four
+            // weeks in 2026-07: a blank cell that looks like a blank cell carries no information.
+            // Distinguish "declared this tier and produced nothing" from "never claimed it".
+            let did_not_run = r.get("mark").and_then(|m| m.as_str()) == Some("errored");
+            let declares_tier = r
+                .get("tiers")
+                .and_then(|t| t.as_array())
+                .is_some_and(|ts| {
+                    let tier = sk.split('/').next().unwrap_or("");
+                    ts.iter().any(|t| t.as_str() == Some(tier))
+                });
+            if did_not_run && declares_tier {
+                body.push_str(
+                    "<td class=\"norun\" title=\"runner declared this tier but produced no \
+                     actuals — it failed to build or run, so this slice is UNGRADED, not passing\">\
+                     \u{26a0}</td>",
+                );
+                continue;
+            }
             match slices.get(sk) {
                 None => body.push_str("<td class=\"na\">\u{2014}</td>"), // — not in this runner's scope
                 Some(s) => {
@@ -282,6 +303,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  td.partial {{ background: #fdf0c4; text-align: center; }}
  td.coal {{ background: #fde6e6; text-align: center; white-space: nowrap; }}
  td.na {{ background: #f7f7f7; color: #aaa; text-align: center; }}
+ td.norun {{ background: #4a4a4a; color: #fff; text-align: center; font-weight: bold; }}
  td.coverage {{ background: #e8eaf6; color: #444; text-align: center; }}
  .src {{ color: #666; font-size: .8rem; font-weight: normal; }}
  .meta {{ color: #666; font-size: .85rem; }}
@@ -292,6 +314,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  .legend .sw.partial {{ background: #fdf0c4; }}
  .legend .sw.coal {{ background: #fde6e6; }}
  .legend .sw.na {{ background: #f7f7f7; }}
+ .legend .sw.norun {{ background: #4a4a4a; }}
  .legend .sw.coverage {{ background: #e8eaf6; }}
  .legend .hint {{ color: #666; margin-top: .5rem; }}
  h2 {{ font-size: 1.15rem; margin-top: 2rem; }}
@@ -320,6 +343,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
 <div><span class="sw coal"></span><b>red</b> {coal_icon} N — N divergences (the deliverable)</div>
 <div><span class="sw na"></span><b>grey</b> — not in scope</div>
+<div><span class="sw norun"></span><b>dark</b> ⚠ — <b>UNGRADED</b>: runner declared this tier but failed to build/run. Not a pass — no verdict was produced at all.</div>
 <div><span class="sw coverage"></span><b>blue</b> — not-impl (roadmap; no verdict yet)</div>
 <div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, chain value, or authds prove / verify / results / digest.</div>
 </div>
@@ -1097,5 +1121,43 @@ mod tests {
         // "prove" is omitted since its total is 0 (nothing graded there to show).
         assert!(html.contains(">not-impl 10 \u{b7} verify 50/50 \u{b7} results 46/46 \u{b7} digest 46/46<"),
             "the coverage cell text must show what actually passed alongside the not-impl count");
+    }
+
+    // ── "did not run" must not look like "not in scope" ────────────────────────────────────────
+
+    /// A runner that failed to build emits mark:"errored" with NO slices. Its cells must render
+    /// as UNGRADED for every tier it DECLARES, and stay grey only for tiers it never claimed.
+    /// Regression guard for the 2026-07 incident where donner sat ungraded (not red) for four
+    /// weeks behind cells indistinguishable from legitimately out-of-scope ones.
+    #[test]
+    fn dashboard_distinguishes_did_not_run_from_out_of_scope() {
+        let results = json!({"runners": [
+            {"name": "rudolph", "label": "rudolph", "version": "v6", "tiers": ["block", "eval"],
+             "cost": true, "mark": "nice", "red_total": 0, "slices": {
+                "block/v6/authored": {"block_valid_total": 7, "block_valid_nice": 7,
+                    "block_valid_coal": 0, "not_impl": 0, "panicked": 0, "red": []},
+                "eval/v6/authored": {"value_total": 1, "value_nice": 1, "value_coal": 0,
+                    "cost_graded": 1, "cost_nice": 1, "cost_coal": 0, "reject_total": 0,
+                    "not_impl": 0, "panicked": 0, "red": []}
+             }},
+            // declares block, produced nothing at all
+            {"name": "donner", "label": "donner", "version": "v6", "tiers": ["block"],
+             "cost": true, "mark": "errored", "red_total": Value::Null, "slices": {},
+             "error": "santa-run exited 101: could not build/run"}
+        ]});
+        let html = dashboard(&results, "deadbeef");
+        // donner declared `block` -> its block row is UNGRADED, dark, never grey
+        assert!(html.contains("class=\"norun\""),
+            "a declared-but-ungraded slice must get its own cell class, not the out-of-scope grey");
+        assert!(html.contains("UNGRADED"),
+            "the ungraded cell's tooltip must say so in words, not just by colour");
+        // donner never declared `eval`, so that row stays legitimately grey
+        let eval_row = html.split("eval/v6/authored").nth(1).unwrap_or("");
+        let eval_cells = eval_row.split("</tr>").next().unwrap_or("");
+        assert!(eval_cells.contains("class=\"na\""),
+            "a tier the runner never claimed must remain grey — this fix must not turn every \
+             blank cell into an alarm");
+        assert!(!eval_cells.contains("class=\"norun\""),
+            "an undeclared tier must NOT be reported as ungraded");
     }
 }
