@@ -160,11 +160,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   pushed ergots `master` seeded an empty AVL tree as two sentinel leaves instead of one (all
   10 `avl_prove` entries, red 24 at ship; ergots pushed the fix `b533fe5` and all 20
   prove-side reds cleared on the 2026-08-03 re-grade, confirmed by conform CI
-  `30836488512`). A separate, **still-open** hazard survives it: npm's published `0.3.0` was
-  cut from the fixed tree while git's was not — one version string naming two different
-  implementations; that claim is network-verified-at-the-time (npm's `time` map + a tarball
-  inspection), not locally re-checkable, since every local `@ergots/avltree` is a workspace
-  symlink with no tarball or integrity hash to compare against.
+  `30836488512`). A separate release hazard survived it and was **re-probed 2026-08-04** —
+  confirmed, but its direction was backwards and it is not recurring. npm records a `gitHead`
+  and ships `src/` in the tarball, so `npm view <pkg>@<v> gitHead` + a diff of `npm pack`'s
+  `package/src` settles any version locally (retiring the earlier "network-verified-at-the-time"
+  hedge). `0.3.0` was published **faithfully** from `6ad72d3` — a commit carrying the sentinel
+  fix that had **not been merged to `master`**, where the broken `da2a257` still sat. npm was
+  not the odd artifact; **git `master` was stale**. Worse and previously unseen: `0.3.0`–`0.3.3`
+  all declare that same `gitHead` while `0.3.3`'s content is demonstrably not that commit, so
+  for those releases no commit reproduces the artifact. **`0.4.0` is clean** — `gitHead` =
+  `master`, byte-identical, and graded green.
   The second finding — scrypto's `UnknownModification` as a fixed zero-length-key singleton
   poisoning the JVM verifier where ergots/`ergo_avltree_rust` treat it as a keyed,
   non-modifying lookup — turned out **not to be a consensus divergence at all**:

@@ -463,14 +463,27 @@ conform fetched the current head, and the head was broken. "Already fixed on my 
 exactly the neutraliser a conformance suite must refuse — and refusing it is what produced
 the push.
 
-**Independent and still open — npm `@ergots/avltree@0.3.0` ≠ git `0.3.0`.** npm's published
-0.3.0 was cut from the fixed tree while git's was not: one version string, two
-implementations. This **outlives** the prover fix, being a release-process hazard rather
-than a prover defect. The claim rests on network probes — the npm registry's `time` map and
-a downloaded-tarball inspection — made at review time; it is **not** locally re-checkable,
-since every `@ergots/avltree` under a local `node_modules` is a workspace symlink to a
-source checkout with no tarball or integrity hash to compare against. Treat it as
-network-verified-at-the-time, not as a standing local invariant.
+**Independent of the prover fix — the npm-vs-git release hazard. RE-PROBED 2026-08-04:
+confirmed, direction corrected, no longer recurring, and no longer caveated.**
+
+The check is locally reproducible after all — npm records a **`gitHead`** and the tarball
+ships `src/`, so `npm view <pkg>@<v> gitHead` plus a diff of `npm pack`'s `package/src`
+against that commit settles any version offline of the registry's own bookkeeping.
+
+- **`0.3.0`**: `gitHead 6ad72d3`, content **byte-identical** to it — but `6ad72d3` was **not
+  on `master`**. It contains the sentinel fix (`b533fe5` is its ancestor) while `master`
+  still carried the broken `da2a257`. So npm published *faithfully from an unmerged fix
+  branch*; **git `master` was the stale artifact**, not npm. Earlier revisions of this
+  section had that backwards.
+- **`0.3.1`–`0.3.3`**: all three declare the *same* `gitHead 6ad72d3`, and `0.3.3`'s content
+  is **not** that commit (3 files differ, plus an extra `serialize.ts`). For those releases
+  no commit reproduces the artifact — a strictly worse hazard than the original finding, and
+  one it did not describe.
+- **`0.4.0`**: `gitHead 005200a` = `master`, all 18 files byte-identical, and the tier grades
+  it green (dasher red 0, matching the rudolph control exactly).
+
+The "one version string, two implementations" observation stands; its cause was an unmerged
+branch rather than a bad publish. Re-run the two commands on any future release.
 
 **A prediction that did not fire.** The four `adverse-*` entries
 (`adverse-malicious-extra-nodes`, `adverse-mismatched-config-keylength`,

@@ -284,14 +284,41 @@ labelled a "pin artefact" and that label was **overturned** before it was report
 runner tracked `#master`, conform fetched the current head, and the head was broken.
 Reporting it rather than neutralising it is what produced the fix.
 
-**Still open, and independent of the above: npm `@ergots/avltree@0.3.0` ≠ git `0.3.0`.**
-npm's published 0.3.0 was cut from the fixed tree while git's 0.3.0 tag was not — the same
-version string naming two different implementations. This survives the prover fix, because
-it is a release-process hazard rather than a prover defect. It remains
-network-verified-at-the-time (npm registry `time` map + a downloaded-tarball inspection)
-and **not** locally re-checkable: every local `@ergots/avltree` under `node_modules` is a
-workspace symlink with no tarball or integrity hash to compare against. Treat it as
-unconfirmed until re-probed.
+**Independent of the above — the npm-vs-git release hazard. RE-PROBED 2026-08-04: confirmed,
+mechanism corrected, and no longer recurring.**
+
+An earlier revision of this section said npm's `0.3.0` "was cut from the fixed tree while
+git's was not", and hedged the whole claim as network-verified-at-the-time. Both parts are
+now superseded — the check **is** locally reproducible, because npm records a **`gitHead`**
+in package metadata and the tarball ships `src/`:
+
+```
+npm view @ergots/avltree@<v> gitHead     # the commit npm claims it was published from
+npm pack @ergots/avltree@<v>             # then diff its package/src against that commit
+```
+
+What that shows:
+
+| Version | declared `gitHead` | content matches it | on `master` when published |
+|---|---|---|---|
+| `0.3.0` | `6ad72d3` | yes — byte-identical | **no** |
+| `0.3.1`–`0.3.3` | `6ad72d3` (all three) | **`0.3.3` does not** — 3 files differ, ships an extra `serialize.ts` | no |
+| `0.4.0` | `005200a` | yes — all 18 files byte-identical | **yes** (it *is* `master`) |
+
+**The direction was backwards.** npm's `0.3.0` was published *faithfully* from `6ad72d3`, a
+commit that **contains** the sentinel fix (`b533fe5` is its ancestor; `batch-prover.ts` has
+the single-leaf init) but had **not been merged to `master`**, where `da2a257` still carried
+the broken two-sentinel form. npm was not the odd artifact — **git `master` was stale**. The
+"one version string, two implementations" observation holds; the cause was a fix living on an
+unmerged branch, not a bad publish.
+
+**A second, worse hazard, previously unseen:** four releases declare the *same* `gitHead`, and
+`0.3.3`'s content is demonstrably not that commit. For those versions **no commit reproduces
+the artifact** — `gitHead` cannot be trusted there at all.
+
+**`0.4.0` is clean on both counts** and the tier grades it green (dasher red 0, identical to
+the rudolph control), so the hazard is not recurring. Re-run the two commands above on any
+future release; it is cheap and no longer needs a caveat.
 
 **A prediction that did not fire:** the four `adverse-*` fixtures (malformed / mismatched /
 truncated / swapped-digest proofs) were flagged in "Predicted findings" above as a possible
