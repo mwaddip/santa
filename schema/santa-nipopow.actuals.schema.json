@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-nipopow.actuals.schema.json",
+  "title": "SANTA nipopow actuals",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": {
+    "type": "object",
+    "required": ["error"],
+    "additionalProperties": false,
+    "properties": {
+      "interlinks": {
+        "anyOf": [
+          { "type": "array", "items": { "type": "array", "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" } } },
+          { "type": "null" }
+        ]
+      },
+      "proofHex": { "anyOf": [{ "type": "string", "pattern": "^([0-9a-f]{2})*$" }, { "type": "null" }] },
+      "error": { "anyOf": [{ "enum": ["errored", "not-implemented", "panicked"] }, { "type": "null" }] },
+      "note": { "type": "string" }
+    },
+    "allOf": [
+      {
+        "if": { "properties": { "error": { "const": "panicked" } } },
+        "then": { "required": ["error", "note"] }
+      },
+      {
+        "if": { "properties": { "error": { "type": "null" } } },
+        "then": {
+          "not": { "required": ["note"] }
+        }
+      },
+      {
+        "if": { "properties": { "error": { "const": "errored" } } },
+        "then": {
+          "not": { "required": ["note"] }
+        }
+      }
+    ]
+  }
+}
