@@ -115,6 +115,15 @@ fn main() -> ExitCode {
         jsonschema::validator_for(&chain_act_schema).expect("chain actuals schema invalid");
     println!("[meta] chain vector + actuals schemas: built (valid Draft 2020-12)");
 
+    // NiPoPoW tier (santa-nipopow/v1): independent schemas, no cross-ref.
+    let nipopow_vec_schema = load(&schema_dir.join("santa-nipopow.vector.schema.json"));
+    let nipopow_act_schema = load(&schema_dir.join("santa-nipopow.actuals.schema.json"));
+    let nipopow_vec_validator =
+        jsonschema::validator_for(&nipopow_vec_schema).expect("nipopow vector schema invalid");
+    let nipopow_act_validator =
+        jsonschema::validator_for(&nipopow_act_schema).expect("nipopow actuals schema invalid");
+    println!("[meta] nipopow vector + actuals schemas: built (valid Draft 2020-12)");
+
     // 2. Every committed vector validates against the vector schema.
     let files = json_files(&root.join("vectors").join("eval"));
     println!("\n[corpus] validating {} committed vectors:", files.len());
@@ -243,6 +252,27 @@ fn main() -> ExitCode {
     println!("[chain corpus] {chok}/{} valid", chain_files.len());
     errs += chain_path_guard(&root, &chain_files);
     errs += chain_actuals_guards(&chain_act_validator);
+
+    // NiPoPoW corpus: validate every committed nipopow vector against the nipopow vector schema.
+    let nipopow_files = json_files(&root.join("vectors").join("nipopow"));
+    println!("\n[nipopow corpus] validating {} committed nipopow vectors:", nipopow_files.len());
+    let mut npok = 0;
+    for f in &nipopow_files {
+        let doc = load(f);
+        let errors: Vec<_> = nipopow_vec_validator.iter_errors(&doc).collect();
+        if errors.is_empty() {
+            npok += 1;
+        } else {
+            errs += 1;
+            println!("  FAIL {}", f.file_name().unwrap().to_string_lossy());
+            for e in errors.iter().take(4) {
+                println!("      {}", truncate(&e.to_string(), 180));
+            }
+        }
+    }
+    println!("[nipopow corpus] {npok}/{} valid", nipopow_files.len());
+    errs += nipopow_path_guard(&root, &nipopow_files);
+    errs += nipopow_actuals_guards(&nipopow_act_validator);
 
     println!(
         "\n=== {} ===",
@@ -1149,6 +1179,88 @@ fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
         println!("  {g} transaction path/envelope mismatch(es)");
     }
     g
+}
+
+/// NiPoPoW taxonomy path <-> in-data envelope guard. tier "nipopow" => schema "santa-nipopow/";
+/// version must be "any" (NiPoPoW proofs are not ErgoTree-versioned); provenance must be
+/// "authored" (the only NiPoPoW provenance shipped so far). The `chain` array must be contiguous
+/// from height 1 (index i => height i+1) — the parallel-array invariant JSON Schema cannot express.
+fn nipopow_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
+    println!("\n[nipopow catalogue] path <-> envelope guard:");
+    let vroot = root.join("vectors");
+    let mut g: u32 = 0;
+    for f in files {
+        let rel = f.strip_prefix(&vroot).unwrap();
+        let parts: Vec<String> = rel
+            .components()
+            .map(|c| c.as_os_str().to_string_lossy().into_owned())
+            .collect();
+        if parts.len() != 4 {
+            g += 1;
+            println!("  [WRONG] {}: not <tier>/<version>/<provenance>/<file>.json", rel.display());
+            continue;
+        }
+        let (tier, version, prov) = (&parts[0], &parts[1], &parts[2]);
+        let doc = load(f);
+        let schema = doc.get("schema").and_then(Value::as_str).unwrap_or("");
+        if tier != "nipopow" || !schema.starts_with("santa-nipopow/") {
+            g += 1;
+            println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
+        }
+        if version != "any" {
+            g += 1;
+            println!("  [WRONG] {}: nipopow version must be 'any', got {version:?}", rel.display());
+        }
+        if prov != "authored" {
+            g += 1;
+            println!("  [WRONG] {}: nipopow provenance must be 'authored', got {prov:?}", rel.display());
+        }
+        // Chain must be contiguous from height 1.
+        if let Some(chain) = doc["chain"].as_array() {
+            for (i, h) in chain.iter().enumerate() {
+                let height = h["height"].as_i64().unwrap_or(0);
+                if height != (i as i64 + 1) {
+                    g += 1;
+                    println!("  [WRONG] {}: chain[{i}] height={height}, expected {}", rel.display(), i + 1);
+                    break;
+                }
+            }
+        }
+    }
+    if g == 0 {
+        println!("  [OK] all {} nipopow paths agree with their envelopes", files.len());
+    } else {
+        println!("  {g} nipopow path/envelope mismatch(es)");
+    }
+    g
+}
+
+/// NiPoPoW actuals asymmetry guards: interlinks-ok carries interlinks + null error; prove-ok
+/// carries proofHex + null error; error non-null forces both verdict fields null; panicked
+/// carries note (forbidden elsewhere, mirroring block/wire/authds).
+fn nipopow_actuals_guards(v: &Validator) -> u32 {
+    let checks: &[(&str, Value, bool)] = &[
+        ("interlinks-ok", json!({"i#0": {"interlinks": [["abababababababababababababababababababababababababababababababab"]], "error": null}}), true),
+        ("prove-ok", json!({"p#0": {"proofHex": "aabbccdd", "error": null}}), true),
+        ("errored", json!({"p#0": {"error": "errored"}}), true),
+        ("not-implemented", json!({"p#0": {"error": "not-implemented"}}), true),
+        ("panicked carries note", json!({"p#0": {"error": "panicked", "note": "boom"}}), true),
+        ("panicked without note rejected", json!({"p#0": {"error": "panicked"}}), false),
+        ("note on success rejected", json!({"p#0": {"proofHex": "aa", "error": null, "note": "x"}}), false),
+        ("note on errored rejected", json!({"p#0": {"error": "errored", "note": "x"}}), false),
+        ("extra field rejected", json!({"p#0": {"proofHex": "aa", "error": null, "bogus": 1}}), false),
+    ];
+    println!("\n[nipopow actuals] asymmetry guards:");
+    let mut bad: u32 = 0;
+    for (label, doc, want) in checks {
+        let got = v.is_valid(doc);
+        let good = got == *want;
+        if !good {
+            bad += 1;
+        }
+        println!("  [{}] {label}: valid={got} (want {want})", if good { "OK" } else { "WRONG" });
+    }
+    bad
 }
 
 #[cfg(test)]

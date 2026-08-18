@@ -9,12 +9,14 @@ import santa.{AvlProofGenerator, AvlVerifierBlesser, EvalCore, WalkerOracle, Wir
 /** JVM reference runner — Rudolph.
   *
   * Consumes a `santa-eval`, `santa-wire`, `santa-transaction`, `santa-block`,
-  * `santa-chain`, or `santa-authds` vector and emits, per entry, its ACTUAL — eval
-  * `{ value, cost, error }`, wire `{ bytes_hex, error }`, tx `{ valid, cost, error }`,
-  * block `{ valid, post_digest, cost, error }`, chain (per-kind: `{ nbits, error }` /
-  * `{ parameters, activated_update, error }`), or authds (per-kind: `{ proofs, digests,
-  * error }` / `{ proof_accepted, results, new_digest_hex, error }`) — JSON keyed by
-  * entry `name`. Each entry is processed under the version the vector records.
+  * `santa-chain`, `santa-authds`, or `santa-nipopow` vector and emits, per entry, its
+  * ACTUAL — eval `{ value, cost, error }`, wire `{ bytes_hex, error }`, tx
+  * `{ valid, cost, error }`, block `{ valid, post_digest, cost, error }`, chain
+  * (per-kind: `{ nbits, error }` / `{ parameters, activated_update, error }`), authds
+  * (per-kind: `{ proofs, digests, error }` / `{ proof_accepted, results,
+  * new_digest_hex, error }`), or nipopow (per-kind: `{ interlinks, error }` /
+  * `{ proofHex, error }`) — JSON keyed by entry `name`. Each entry is processed under
+  * the version the vector records.
   *
   * Dispatches by the vector's top-level `schema` field:
   *   - `santa-eval/v4` → EvalCore.evalWithSelfRegistersAndVar1 (SELF box registers + var 1 = index)
@@ -34,6 +36,9 @@ import santa.{AvlProofGenerator, AvlVerifierBlesser, EvalCore, WalkerOracle, Wir
   *     AvlVerifierBlesser.deriveFromEntry directly (no gate — this tier is main-scope
   *     scrypto only). Rudolph IS the oracle these vectors were blessed from, so this is
   *     the control arm: it must come out red 0.
+  *   - `santa-nipopow/v1` → NipopowEngine.nipopowEntry (interlink reconstruction /
+  *     NipopowAlgos.prove over the file-level `chain` field) under the same
+  *     SANTA_TX_BLESSER gate as tx/block/chain; otherwise a faithful `not-implemented`.
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
@@ -266,6 +271,30 @@ object Runner {
     }
   }
 
+  /** Reflection seam to the gated [[santa.runner.NipopowEngine]] (same SANTA_TX_BLESSER
+    * gate — ergo-core composition). Absent ⇒ the not-implemented arm. */
+  private lazy val nipopowEntryFn: Option[(Vector[Json], Json) => (String, Json)] =
+    try {
+      val clazz = Class.forName("santa.runner.NipopowEngine$")
+      val inst  = clazz.getField("MODULE$").get(null)
+      val m     = clazz.getMethod("nipopowEntry", classOf[Vector[_]], classOf[Json])
+      Some((chain: Vector[Json], e: Json) => m.invoke(inst, chain, e).asInstanceOf[(String, Json)])
+    } catch { case _: ClassNotFoundException => None }
+
+  /** Grade one nipopow-tier entry — real verdicts via the gated engine (interlinks
+    * reconstruction / NipopowAlgos.prove), or the faithful `not-implemented` outcome on
+    * a build without it. The file-level `chain` field (header hex + reference interlinks)
+    * is threaded in from `doc` since nipopow entries are chain-relative, not standalone. */
+  def nipopowEntry(doc: Json, e: Json): (String, Json) = nipopowEntryFn match {
+    case Some(fn) =>
+      val chain = doc.hcursor.downField("chain").values
+        .getOrElse(Vector.empty).toVector
+      fn(chain, e)
+    case None =>
+      val name = e.hcursor.get[String]("name").toOption.getOrElse("?")
+      name -> Json.obj("error" -> Json.fromString("not-implemented"))
+  }
+
   /** Run one vector file, writing actuals to outPath (or stdout if None). */
   def runFile(vecPath: String, outPath: Option[String]): Unit = {
     val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
@@ -277,9 +306,11 @@ object Runner {
     val isBlock  = schema.startsWith("santa-block/")
     val isChain  = schema.startsWith("santa-chain/")
     val isAuthds = schema.startsWith("santa-authds/")
+    val isNipopow = schema.startsWith("santa-nipopow/")
     val pairs    = entries.toVector.map(e =>
       if (isTx) txEntry(e) else if (isBlock) blockEntry(e) else if (isChain) chainEntry(e)
-      else if (isWire) wireEntry(e) else if (isAuthds) authdsEntry(e) else evalEntry(schema, e))
+      else if (isWire) wireEntry(e) else if (isAuthds) authdsEntry(e)
+      else if (isNipopow) nipopowEntry(doc, e) else evalEntry(schema, e))
     val out     = Json.obj(pairs: _*).spaces2
     outPath match {
       case Some(p) =>

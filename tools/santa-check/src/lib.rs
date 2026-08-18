@@ -411,6 +411,37 @@ pub fn grade_authds(actual: &Value, entry: &Value) -> Value {
     }
 }
 
+pub fn grade_nipopow(actual: &Value, entry: &Value, chain: &Value) -> Value {
+    if err_is(actual, "panicked") {
+        return json!({"kind": "panicked"});
+    }
+    if err_is(actual, "not-implemented") {
+        return json!({"kind": "coverage", "tag": "not-implemented"});
+    }
+    match entry["kind"].as_str() {
+        Some("nipopow_interlinks") => {
+            let clean = actual.get("error").is_none_or(Value::is_null);
+            let chain_arr = chain.as_array();
+            let actual_arr = actual.get("interlinks").and_then(Value::as_array);
+            let ok = clean && chain_arr.is_some() && actual_arr.is_some() && {
+                let ca = chain_arr.unwrap();
+                let aa = actual_arr.unwrap();
+                ca.len() == aa.len()
+                    && ca.iter().zip(aa).all(|(c, a)| structural_equal(&c["interlinks"], a))
+            };
+            json!({"kind": "nipopow_interlinks", "interlinks": if ok { "nice" } else { "interlinks" }})
+        }
+        Some("nipopow_prove") => {
+            let clean = actual.get("error").is_none_or(Value::is_null);
+            let expected_hex = entry["expected"]["proofHex"].as_str().unwrap_or("");
+            let actual_hex = actual.get("proofHex").and_then(Value::as_str).unwrap_or("");
+            let ok = clean && expected_hex.eq_ignore_ascii_case(actual_hex) && !expected_hex.is_empty();
+            json!({"kind": "nipopow_prove", "proof": if ok { "nice" } else { "proof" }})
+        }
+        _ => json!({"kind": "nipopow_prove", "proof": "proof"}),
+    }
+}
+
 #[cfg(test)]
 mod chain_tests {
     use super::*;
@@ -873,5 +904,103 @@ mod authds_tests {
         assert_eq!(g["accepted"], "nice", "a wrong final digest must not retroactively coal accepted");
         assert_eq!(g["results"], "nice", "operations were reproduced correctly; only the root differs");
         assert_eq!(g["digest"], "digest", "wrong final digest is exactly what this dimension exists to catch");
+    }
+}
+
+#[cfg(test)]
+mod nipopow_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn grade_nipopow_interlinks_nice() {
+        let chain = json!([
+            {"height": 1, "interlinks": ["aabb"]},
+            {"height": 2, "interlinks": ["aabb"]},
+            {"height": 3, "interlinks": ["aabb", "ccdd", "ccdd", "ccdd"]}
+        ]);
+        let entry = json!({"kind": "nipopow_interlinks", "expected": {}});
+        let actual = json!({
+            "interlinks": [["aabb"], ["aabb"], ["aabb", "ccdd", "ccdd", "ccdd"]],
+            "error": null
+        });
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "nipopow_interlinks");
+        assert_eq!(g["interlinks"], "nice");
+    }
+
+    #[test]
+    fn grade_nipopow_interlinks_first_divergence() {
+        let chain = json!([
+            {"height": 1, "interlinks": ["aabb"]},
+            {"height": 2, "interlinks": ["aabb"]},
+            {"height": 3, "interlinks": ["aabb", "ccdd", "ccdd", "ccdd"]}
+        ]);
+        let entry = json!({"kind": "nipopow_interlinks", "expected": {}});
+        let actual = json!({
+            "interlinks": [["aabb"], ["aabb"], ["aabb", "XXXX", "ccdd", "ccdd"]],
+            "error": null
+        });
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "nipopow_interlinks");
+        assert_eq!(g["interlinks"], "interlinks");
+    }
+
+    #[test]
+    fn grade_nipopow_prove_nice() {
+        let chain = json!([]);
+        let entry = json!({
+            "kind": "nipopow_prove",
+            "expected": {"proofHex": "aabbccdd"}
+        });
+        let actual = json!({"proofHex": "aabbccdd", "error": null});
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "nipopow_prove");
+        assert_eq!(g["proof"], "nice");
+    }
+
+    #[test]
+    fn grade_nipopow_prove_mismatch() {
+        let chain = json!([]);
+        let entry = json!({
+            "kind": "nipopow_prove",
+            "expected": {"proofHex": "aabbccdd"}
+        });
+        let actual = json!({"proofHex": "aabb0000", "error": null});
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "nipopow_prove");
+        assert_eq!(g["proof"], "proof");
+    }
+
+    #[test]
+    fn grade_nipopow_prove_case_insensitive() {
+        let chain = json!([]);
+        let entry = json!({
+            "kind": "nipopow_prove",
+            "expected": {"proofHex": "aaBBccDD"}
+        });
+        let actual = json!({"proofHex": "AAbbCCdd", "error": null});
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "nipopow_prove");
+        assert_eq!(g["proof"], "nice");
+    }
+
+    #[test]
+    fn grade_nipopow_not_implemented() {
+        let chain = json!([]);
+        let entry = json!({"kind": "nipopow_prove", "expected": {"proofHex": "aa"}});
+        let actual = json!({"error": "not-implemented"});
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "coverage");
+        assert_eq!(g["tag"], "not-implemented");
+    }
+
+    #[test]
+    fn grade_nipopow_panicked() {
+        let chain = json!([]);
+        let entry = json!({"kind": "nipopow_interlinks", "expected": {}});
+        let actual = json!({"error": "panicked", "note": "boom"});
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "panicked");
     }
 }
