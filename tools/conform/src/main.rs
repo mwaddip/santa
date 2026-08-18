@@ -2,7 +2,12 @@
 //! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
 //! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
 //! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
-use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_transaction, grade_wire};
+// Counts::to_json() is one flat json!{} object whose key count grows with every tier; each
+// additional tier's fields push serde_json's json! macro further into its recursive expansion.
+// 45 fields (post-nipopow) exceeds the default 128 limit — bump it with headroom for future tiers
+// rather than fragmenting to_json() into merged sub-objects for a compiler budget, not a design issue.
+#![recursion_limit = "256"]
+use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_nipopow, grade_transaction, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -263,6 +268,13 @@ struct Counts {
     authds_results_total: u64,
     authds_results_nice: u64,
     authds_results_coal: u64,
+    // nipopow tier: two independent dims — interlinks and proof.
+    nipopow_interlinks_total: u64,
+    nipopow_interlinks_nice: u64,
+    nipopow_interlinks_coal: u64,
+    nipopow_proof_total: u64,
+    nipopow_proof_nice: u64,
+    nipopow_proof_coal: u64,
     red: Vec<Value>,
 }
 
@@ -271,6 +283,7 @@ impl Counts {
         self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal + self.chain_value_coal
         + self.authds_proof_coal + self.authds_digest_coal
         + self.authds_accepted_coal + self.authds_results_coal
+        + self.nipopow_interlinks_coal + self.nipopow_proof_coal
     }
     fn to_json(&self) -> Value {
         json!({
@@ -288,6 +301,8 @@ impl Counts {
             "authds_digest_total": self.authds_digest_total, "authds_digest_nice": self.authds_digest_nice, "authds_digest_coal": self.authds_digest_coal,
             "authds_accepted_total": self.authds_accepted_total, "authds_accepted_nice": self.authds_accepted_nice, "authds_accepted_coal": self.authds_accepted_coal,
             "authds_results_total": self.authds_results_total, "authds_results_nice": self.authds_results_nice, "authds_results_coal": self.authds_results_coal,
+            "nipopow_interlinks_total": self.nipopow_interlinks_total, "nipopow_interlinks_nice": self.nipopow_interlinks_nice, "nipopow_interlinks_coal": self.nipopow_interlinks_coal,
+            "nipopow_proof_total": self.nipopow_proof_total, "nipopow_proof_nice": self.nipopow_proof_nice, "nipopow_proof_coal": self.nipopow_proof_coal,
             "red": self.red,
         })
     }
@@ -348,6 +363,13 @@ impl Counts {
         }
         if self.authds_results_total > 0 {
             bits.push(format!("results {}/{}", self.authds_results_nice, self.authds_results_total));
+        }
+        // nipopow slices: two independent dims — interlinks and proof.
+        if self.nipopow_interlinks_total > 0 {
+            bits.push(format!("interlinks {}/{}", self.nipopow_interlinks_nice, self.nipopow_interlinks_total));
+        }
+        if self.nipopow_proof_total > 0 {
+            bits.push(format!("proof {}/{}", self.nipopow_proof_nice, self.nipopow_proof_total));
         }
         if self.cost_graded > 0 {
             bits.push(format!("cost {}/{}", self.cost_nice, self.cost_graded));
@@ -447,6 +469,7 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
         let is_block = schema.starts_with("santa-block/");
         let is_chain = schema.starts_with("santa-chain/");
         let is_authds = schema.starts_with("santa-authds/");
+        let is_nipopow = schema.starts_with("santa-nipopow/");
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = act.get(name).cloned().unwrap_or(Value::Null);
@@ -461,6 +484,8 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                 grade_chain(&actual, e)
             } else if is_authds {
                 grade_authds(&actual, e)
+            } else if is_nipopow {
+                grade_nipopow(&actual, e, &vec["chain"])
             } else {
                 grade(&actual, &e["expected"], claims_cost)
             };
@@ -640,6 +665,29 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                                 format!("new_digest_hex {}", e["expected"]["new_digest_hex"]),
                                 format!("new_digest_hex {}", actual["new_digest_hex"]), None, script));
                         }
+                    }
+                }
+                Some("nipopow_interlinks") => {
+                    c.nipopow_interlinks_total += 1;
+                    if g["interlinks"] == "nice" {
+                        c.nipopow_interlinks_nice += 1;
+                    } else {
+                        c.nipopow_interlinks_coal += 1;
+                        c.red.push(red_detail(&op, name, "interlinks",
+                            "interlinks match".to_string(),
+                            "interlinks diverge".to_string(), None, script));
+                    }
+                }
+                Some("nipopow_prove") => {
+                    c.nipopow_proof_total += 1;
+                    if g["proof"] == "nice" {
+                        c.nipopow_proof_nice += 1;
+                    } else {
+                        c.nipopow_proof_coal += 1;
+                        c.red.push(red_detail(&op, name, "proof",
+                            format!("proofHex {}", brief(&e["expected"]["proofHex"], 48)),
+                            format!("proofHex {}", brief(actual.get("proofHex").unwrap_or(&Value::Null), 48)),
+                            None, script));
                     }
                 }
                 _ => {
