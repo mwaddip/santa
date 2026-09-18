@@ -29,6 +29,9 @@ import scorex.util.{ModifierId, bytesToId}
   * the cost loop runs first, proofs second — single-fault mutations are unaffected; a
   * doubly-bad block reports its cost/script reason.
   */
+import org.ergoplatform.modifiers.history.extension.ExtensionCandidate
+import org.ergoplatform.settings.Algos
+
 object BlockEngine extends ApiCodecs {
   // FILE path (not classpath), shared with TxEngine — santa-run forks sbt from
   // jvm-blesser/, so the cwd-relative read works for both scopes.
@@ -107,6 +110,28 @@ object BlockEngine extends ApiCodecs {
           if (!java.util.Arrays.equals(computed, header.transactionsRoot))
             Some(s"bsCorrespondsToHeader: transactionsRoot mismatch " +
               s"(computed ${hex(computed)} != header ${hex(header.transactionsRoot)})")
+          else None
+        }
+        // bsCorrespondsToHeader for the EXTENSION section (ergo_logic 2026-09-17):
+        // recompute the extension Merkle root from the delivered fields and require it
+        // to equal header.extensionRoot — the same section-digest-vs-header idiom the
+        // proofs arm already applies to adProofsRoot. Without this the model is blind to
+        // extension mutations (S-003).
+        .orElse {
+          val extFields: Seq[(Array[Byte], Array[Byte])] =
+            blockJson.hcursor.downField("extension").downField("fields").focus
+              .flatMap(_.asArray)
+              .getOrElse(sys.error("block: no extension.fields"))
+              .map { pair =>
+                val arr = pair.asArray.getOrElse(sys.error("extension field not a pair"))
+                val k = scorex.util.encode.Base16.decode(arr(0).asString.get).get
+                val v = scorex.util.encode.Base16.decode(arr(1).asString.get).get
+                (k, v)
+              }
+          val computed = ExtensionCandidate(extFields).digest
+          if (!java.util.Arrays.equals(computed, header.extensionRoot))
+            Some(s"bsCorrespondsToHeader: extensionRoot mismatch " +
+              s"(computed ${hex(computed)} != header ${hex(header.extensionRoot)})")
           else None
         }
 
