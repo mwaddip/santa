@@ -113,11 +113,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   **Blitzen-develop `valid 0/4`** (upstream bugs; the bigint-downcast
   seed exposes the tree-version bug eval cannot catch) · **Dasher `4 not-implemented`**
   (growth ledger) · **Comet out-of-scope** (wire-only; Fleet has no verifier).
-  **Storage-rent vectors** (`storage-rent-*`, 21 entries over a synthetic context at the
+  **Storage-rent vectors** (`storage-rent-*`, 25 entries over a synthetic context at the
   `StoragePeriod` height) pin every arm of the JVM's rent spend:
   - the gate
   - the fallbacks to the script
-  - the final recreation verdict
+  - the final recreation verdict, including register equality as the JVM compares it (stored
+    nodes and retained script bytes, not values)
   - the 32-bit-wrapping storage fee
   - the 50-unit `StorageContractCost`
 

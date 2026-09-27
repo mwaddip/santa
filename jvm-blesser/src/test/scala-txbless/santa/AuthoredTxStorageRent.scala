@@ -31,10 +31,12 @@ import io.circe.Json
 import scorex.crypto.authds.ADDigest
 import scorex.crypto.hash.Digest32
 import scorex.util.ModifierId
-import sigma.ast.{ByteArrayConstant, IntConstant, ShortConstant}
+import scorex.util.encode.Base16
+import sigma.VersionContext
+import sigma.ast.{ByteArrayConstant, Constant, IntConstant, SInt, STuple, SType, ShortConstant, Tuple}
 import sigma.interpreter.ContextExtension
-import sigma.serialization.GroupElementSerializer
-import org.ergoplatform.{ErgoBox, ErgoBoxCandidate, Input}
+import sigma.serialization.{ErgoTreeSerializer, GroupElementSerializer, SigmaSerializer}
+import org.ergoplatform.{ErgoBox, ErgoBoxCandidate, ErgoLikeTransaction, Input}
 import org.ergoplatform.mining.AutolykosSolution
 import org.ergoplatform.modifiers.history.header.{Header, HeaderSerializer}
 import santa.runner.TxEngine
@@ -123,26 +125,29 @@ object AuthoredTxStorageRent {
   lazy val scriptCost: Long = {
     val young = box("santa:rent:script-cost-probe", 1000000000L, H - 10)
     val t = tx(Seq(input(young, ext())), Seq(candidate(young.value, H)))
-    val v = validate(t, Seq(young))
+    val v = validate(txBytes(t), Seq(young))
     require(v.valid, s"script-cost probe must be valid: ${v.reason}")
     val c = v.cost.get - initialCost(1, 1)
     require(c != StorageContractCost, s"sigmaProp(true) script cost $c equals StorageContractCost — paths indistinguishable")
     c
   }
 
-  private def validate(t: org.ergoplatform.ErgoLikeTransaction, inBoxes: Seq[ErgoBox]): TxEngine.Verdict =
-    TxEngine.validateBytes(hex(txBytes(t)), inBoxes.map(b => hex(b.bytes)), Nil, headersHex, preHeader, params)
+  private def validate(txBytes: Array[Byte], inBoxes: Seq[ErgoBox]): TxEngine.Verdict =
+    TxEngine.validateBytes(hex(txBytes), inBoxes.map(b => hex(b.bytes)), Nil, headersHex, preHeader, params)
 
   /** Bless one entry: build the tx, check ERG balance, validate under the synthetic context, and fail loud
     * unless the verdict is the arm's — reject: input `rejectAt` fails with the rent verdict (false, 50);
-    * accept: cost = initial + assets + 50 per Rent + scriptCost per Script. */
+    * accept: cost = initial + assets + 50 per Rent + scriptCost per Script. `patchTx` rewrites the serialized
+    * tx before blessing, for encodings the JVM serializer never writes (it re-serializes trees canonically). */
   private def entry(name: String, source: String, description: String, spends: Seq[Spend],
-                    outputs: Seq[ErgoBoxCandidate], paths: Seq[Path], rejectAt: Option[Int]): Json = {
+                    outputs: Seq[ErgoBoxCandidate], paths: Seq[Path], rejectAt: Option[Int],
+                    patchTx: Array[Byte] => Array[Byte] = identity): Json = {
     val inBoxes = spends.map(_.box)
     require(inBoxes.map(_.value).sum == outputs.map(_.value).sum,
       s"$name: ERG not preserved (${inBoxes.map(_.value).sum} in, ${outputs.map(_.value).sum} out) — would reject for the wrong reason")
     val t = tx(spends.map(s => Input(s.box.id, sigma.interpreter.ProverResult(s.proof, s.extension))), outputs)
-    val v = validate(t, inBoxes)
+    val bytes = patchTx(txBytes(t))
+    val v = validate(bytes, inBoxes)
     rejectAt match {
       case Some(i) =>
         val want = s"#$i => Success((false,$StorageContractCost))"
@@ -161,7 +166,7 @@ object AuthoredTxStorageRent {
       "name"                 -> Json.fromString(name),
       "source"               -> Json.fromString(source),
       "description"          -> Json.fromString(description),
-      "tx_bytes_hex"         -> Json.fromString(hex(txBytes(t))),
+      "tx_bytes_hex"         -> Json.fromString(hex(bytes)),
       "input_boxes_hex"      -> Json.arr(inBoxes.map(b => Json.fromString(hex(b.bytes))): _*),
       "data_input_boxes_hex" -> Json.arr(),
       "headers_hex"          -> Json.arr(headersHex.map(Json.fromString): _*),
@@ -242,7 +247,87 @@ object AuthoredTxStorageRent {
         Seq(Spend(withToken, rentVar)), Seq(candidate(V - tokenFee, H), candidate(tokenFee, H)), Nil, Some(0)),
       entry("rent-recreation-register-reject", src("recreation", "register-reject"),
         "A box with R4 = Int(42) whose output 0 drops R4: an additional register is not preserved. Final reject.",
-        Seq(Spend(withR4, rentVar)), Seq(candidate(V - r4Fee, H), candidate(r4Fee, H)), Nil, Some(0)))
+        Seq(Spend(withR4, rentVar)), Seq(candidate(V - r4Fee, H), candidate(r4Fee, H)), Nil, Some(0))) ++
+      tupleRegisterEntries ++ scriptEncodingEntries
+  }
+
+  /** Parse with the JVM's own serializers, as TxEngine does (v6 context). */
+  private def jvmParseBox(bytes: Array[Byte]): ErgoBox = VersionContext.withVersions(Activated.toByte, Activated.toByte) {
+    ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(bytes))
+  }
+  private def jvmParseTx(bytes: Array[Byte]): ErgoLikeTransaction = VersionContext.withVersions(Activated.toByte, Activated.toByte) {
+    ErgoLikeTransaction.serializer.parse(SigmaSerializer.startReader(bytes))
+  }
+
+  /** `checkExpiredBox` compares registers with `ErgoBox.get` equality (`ErgoInterpreter.scala:50-52`): the
+    * stored EvaluatedValue nodes, not their values. A Tuple *expression* (a legal register value — `Tuple`
+    * extends EvaluatedValue so it can sit in a register, values.scala:807) never equals a Constant
+    * (`ConstantNode.equals` only matches a Constant, values.scala:356), even when both hold (1, 2). */
+  private def tupleRegisterEntries: Seq[Json] = {
+    val tupleExpr  = Tuple(IntConstant(1), IntConstant(2))
+    val tupleConst = Constant[SType]((1, 2).asInstanceOf[SType#WrappedType], STuple(SInt, SInt))
+    val b   = box("santa:rent:recreation-tuple", V, 0, regs = Map(ErgoBox.R4 -> tupleExpr))
+    val fee = trueStorageFee(b)
+    val keep  = Seq(recreate(b, V - fee, H), candidate(fee, H))
+    val asConst = Seq(candidate(V - fee, H, regs = Map(ErgoBox.R4 -> tupleConst)), candidate(fee, H))
+    // The committed bytes must carry what the entries claim, as the JVM reads them back.
+    val inR4 = jvmParseBox(b.bytes).additionalRegisters(ErgoBox.R4)
+    require(inR4.isInstanceOf[Tuple] && inR4 == tupleExpr, s"input R4 must parse back as the Tuple expression: $inR4")
+    val outR4 = jvmParseTx(txBytes(tx(Seq(input(b, rentVar)), asConst))).outputCandidates(0).additionalRegisters(ErgoBox.R4)
+    require(outR4.isInstanceOf[Constant[_]] && outR4.tpe == STuple(SInt, SInt) && outR4 == tupleConst,
+      s"output R4 must parse back as the (Int, Int) Constant (1, 2): $outR4")
+    require(inR4 != outR4 && outR4 != inR4, "Tuple expression and tuple Constant must be unequal under ErgoBox.get equality")
+    Seq(
+      entry("rent-recreation-tuple-register-accept", src("recreation", "tuple-register-accept"),
+        "A box whose R4 is stored as a Tuple EXPRESSION (Tuple(Int(1), Int(2)), opcode encoding), recreated with " +
+        "the same Tuple expression in R4: registers preserved, the rent path accepts. Twin of the reject below.",
+        Seq(Spend(b, rentVar)), keep, Seq(Rent(0)), None),
+      entry("rent-recreation-tuple-register-reject", src("recreation", "tuple-register-reject"),
+        "The same box recreated with R4 as the equal tuple CONSTANT ((1, 2): (Int, Int)). checkExpiredBox compares " +
+        "registers with ErgoBox.get equality (ErgoInterpreter.scala:50-52): a Tuple node never equals a Constant " +
+        "node (values.scala:356, :807), so R4 is not preserved even though both evaluate to (1, 2). Final reject.",
+        Seq(Spend(b, rentVar)), asConst, Nil, Some(0)))
+  }
+
+  /** R1 is `ByteArrayConstant(propositionBytes)` (ErgoBoxCandidate.get, ScriptRegId): the tree's RETAINED
+    * wire bytes. A non-canonical encoding of the same tree — the constants count as an overlong VLQ — parses
+    * to the same tree, but its bytes differ, so R1 is not preserved. The JVM serializer always writes the
+    * canonical form (serializeErgoTree), so the overlong bytes are spliced into the serialized tx. */
+  private def scriptEncodingEntries: Seq[Json] = {
+    val canonicalHex = "10010101d17300"   // sigmaProp(true), constant-segregated: count 01, [Boolean true], d1 7300
+    val overlongHex  = "1081000101d17300" // the same tree with the constants count as the 2-byte VLQ 81 00
+    val canonical = Base16.decode(canonicalHex).get
+    val overlong  = Base16.decode(overlongHex).get
+    val (tree, reserializedOverlong, retainedOverlong) = VersionContext.withVersions(Activated.toByte, 0) {
+      val t = ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(canonical)
+      val o = ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(overlong)
+      (t, ErgoTreeSerializer.DefaultSerializer.serializeErgoTree(o), o.bytes)
+    }
+    require(tree.bytes.sameElements(canonical) && reserializedOverlong.sameElements(canonical) &&
+      retainedOverlong.sameElements(overlong),
+      "the overlong tree must be the same tree (re-serializes canonically) with different retained bytes")
+    val b   = box("santa:rent:recreation-segregated", V, 0, tree = tree)
+    val fee = trueStorageFee(b)
+    val outs = Seq(recreate(b, V - fee, H), candidate(fee, H)) // output 1 is 0008d3: the only segregated tree is output 0's
+    def toOverlong(tx: Array[Byte]): Array[Byte] = {
+      val at = tx.indexOfSlice(canonical)
+      require(at >= 0 && tx.indexOfSlice(canonical, at + 1) < 0, "the canonical tree must occur exactly once in the tx")
+      tx.take(at) ++ overlong ++ tx.drop(at + canonical.length) // output bodies carry no length prefix
+    }
+    val parsedOut = jvmParseTx(toOverlong(txBytes(tx(Seq(input(b, rentVar)), outs)))).outputCandidates(0)
+    require(parsedOut.propositionBytes.sameElements(overlong) && !parsedOut.propositionBytes.sameElements(b.propositionBytes),
+      "the JVM must retain the overlong bytes as output 0's propositionBytes (R1)")
+    Seq(
+      entry("rent-recreation-segregated-script-accept", src("recreation", "segregated-script-accept"),
+        s"A box guarded by the constant-segregated sigmaProp(true) tree $canonicalHex, recreated with the same " +
+        "tree bytes: R1 preserved, the rent path accepts. Twin of the reject below.",
+        Seq(Spend(b, rentVar)), outs, Seq(Rent(0)), None),
+      entry("rent-recreation-noncanonical-script-reject", src("recreation", "noncanonical-script-reject"),
+        s"The same recreation, but output 0's tree is encoded as $overlongHex: the constants count written as an " +
+        "overlong VLQ (81 00 for 1). It parses to the same tree, yet R1 is ByteArrayConstant(propositionBytes) — the " +
+        "retained wire bytes — so R1 is not preserved. Final reject. An impl comparing re-serialized trees " +
+        "accepts it.",
+        Seq(Spend(b, rentVar)), outs, Nil, Some(0), patchTx = toOverlong))
   }
 
   private def fallbackEntries: Seq[Json] = {

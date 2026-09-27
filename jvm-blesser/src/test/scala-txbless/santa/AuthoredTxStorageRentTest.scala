@@ -27,7 +27,7 @@ class AuthoredTxStorageRentTest extends munit.FunSuite {
       assert(n.endsWith("-accept") || n.endsWith("-reject"), s"$n: name must end in -accept or -reject")
       assertEquals(valid(e), n.endsWith("-accept"), s"$n: verdict")
     }
-    assertEquals(all.size, 21)
+    assertEquals(all.size, 25)
   }
 
   test("rejects are rent verdicts; accepts carry a cost") {

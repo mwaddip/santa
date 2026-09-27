@@ -211,10 +211,10 @@ recorded as coal, not silently swallowed.
 
 ## 8. Status
 
-**16 vectors / 33 entries:**
+**16 vectors / 37 entries:**
 - 8 captured seeds
 - 2 authored boundary pairs (the Track-B reject arm)
-- 6 authored storage-rent files (21 entries, below)
+- 6 authored storage-rent files (25 entries, below)
 
 **Captured (8 seeds, all `valid: true`):** the 4 originals `bigint-downcast-2666`,
 `deserialize-context-111927`, `atleast-degenerate-bound-184137`, `powhit-return-type-28474` + the 4
@@ -226,7 +226,7 @@ reject entries test enforcement, not a base bug):** `cost-limit-boundary` (maxBl
 cost / cost − 1) and `min-value-dust-boundary` (minValuePerByte at the dust flip / + 1), each an
 accept control + a one-step reject. Design: `docs/specs/transaction-reject-arm.md`.
 
-**Authored storage rent (6 files / 21 entries; `AuthoredTxStorageRent`, synthetic context at height
+**Authored storage rent (6 files / 25 entries; `AuthoredTxStorageRent`, synthetic context at height
 1051200, §6).** Every box is `sigmaProp(true)`, so the script path accepts every one of these
 transactions. A reject can only come from the rent verdict. JVM source:
 `ErgoInterpreter.verify` / `checkExpiredBox`, ergo v6.0.6.
@@ -234,6 +234,13 @@ transactions. A reject can only come from the rent verdict. JVM source:
   - the correct recreation accepts, and so does a token-bearing twin
   - five final rejects, each breaking one property: creation height, value, R1 (script),
     R2 (tokens), R4
+  - register equality as the JVM compares it: `ErgoBox.get` returns the stored node, so the
+    comparison is between nodes, not values. Two pairs, each an accept twin and a final reject:
+    - R4 stored as a Tuple *expression* and recreated as the same expression accepts; recreated
+      as the equal tuple *Constant* it rejects (a Tuple node never equals a Constant,
+      `values.scala:356/807`)
+    - R1 is the tree's *retained* wire bytes. A constant-segregated tree recreated with the same
+      bytes accepts; recreated as an overlong-VLQ encoding of the same tree it rejects
 - **`storage-rent-fallback`:** the script path accepts, and the input costs its script, not 50:
   - var 127 is an Int
   - var 127 indexes past the last output
@@ -250,15 +257,24 @@ transactions. A reject can only come from the rent verdict. JVM source:
     exactly at `value + 2147467296` accepts, and one nanoERG less rejects.
   - 3436 bytes: the fee wraps to 32704. `value − 32704` accepts and `value − 32705` rejects.
 
-Grades from local, unpushed sigma-rust SHAs (2026-09-27). Rudolph is valid 21/21 · cost 12/12.
+Grades from local, unpushed sigma-rust SHAs (2026-09-27). Rudolph is valid 25/25 · cost 14/14.
+The first 21 entries shipped first; the table grades them.
 
-| Runner | SHA | Result on the 21 |
+| Runner | SHA | Result on the first 21 |
 |---|---|---|
 | blitzen-eni | `b438d520` | valid 12/21 (the 9 final rejects over-accept) · cost 5/12 (each rent accept 50 short) |
 | blitzen-eni | `e8c4c3c0`, `50777a12` | valid 21/21 · cost 12/12 |
 | blitzen-develop | `1633e018`, `f599fff1`, `4620d6de` | valid 12/21 |
 | blitzen-develop | `bc07fc44` | valid 21/21 |
 | dasher | `aaec5d58` | valid 12/21 (the same 9) |
+
+The four register-equality entries came from the final code review.
+- **blitzen-eni `50777a12`, blitzen-develop `1633e018` and dasher `aaec5d58`:** each passes both
+  accept twins and over-accepts both rejects.
+- **Tuple R4:** sigma-rust treats the Tuple expression and the tuple Constant as equal. A fix is in
+  progress.
+- **Non-canonical R1:** sigma-rust compares re-serialized trees, so it stays red until its
+  `ErgoTree` retains wire bytes. That is a known gap.
 
 **Current 4-way result**, without the storage-rent files (comet grey — wire-only, no `transaction` tier):
 
