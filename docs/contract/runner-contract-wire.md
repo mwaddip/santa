@@ -118,9 +118,15 @@ arms are named non-goals, to be specified when built (do not implement against t
   bytes the JVM rejects at parse, each built so a lenient parser round-trips them cleanly and the
   over-accept surfaces as bytes rather than an incidental EOF. Families in `wire/v6/authored/`: the
   soft-fork SHeader-constant rejects; the ContextExtension bounds (count ≥ 128, id ≥ 0x80 —
-  `Transaction.context_extension_{count,id}_bound`); and the creation-height parse bound (a box,
+  `Transaction.context_extension_{count,id}_bound`); the ContextExtension value rules (a v6-only
+  type — Option, Header or UnsignedBigInt, also inside a collection or tuple — rejected by
+  `CheckV6Type`, rule 1019; a value nested past the reader's 110-level cap —
+  `Transaction.context_extension_{v6_type,depth_bound}`); and the creation-height parse bound (a box,
   output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`). Each
-  bound ships with its accept twin on the other side.
+  bound ships with its accept twin on the other side. Beside them,
+  `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
+  repeated extension id to its last value at its first position, so a runner must re-serialize the
+  parsed transaction, not echo its input.
 - **`structural-assert` variant (`santa-wire/v2`)** — parse → emit a canonical structural
   form → compare; catches misparse-that-round-trips. Additive; `santa-wire/v1` stays.
 - **Captured + serializer-only conformers** — real testnet `Transaction`/`Header`/box
