@@ -1100,11 +1100,12 @@ fn chain_actuals_guards(v: &Validator) -> u32 {
 }
 
 /// Transaction taxonomy path <-> in-data envelope guard. tier "transaction" => schema
-/// "santa-transaction/v1"; version v6 => activated 3; provenance captured => every entry
-/// source starts with "testnet:" AND expected.valid == true; provenance authored => every
-/// entry source starts with "santa:".
+/// "santa-transaction/v1"; version v5 => activated 2, v6 => activated 3; provenance captured =>
+/// every entry source starts with "testnet:" or "mainnet:" (chain history) AND expected.valid ==
+/// true; provenance authored => every entry source starts with "santa:".
 fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
     let version_activated = |v: &str| match v {
+        "v5" => Some(2i64),
         "v6" => Some(3i64),
         _ => None,
     };
@@ -1145,8 +1146,8 @@ fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
         }
-        // Provenance: captured => source starts with "testnet:" AND expected.valid == true.
-        // authored => source starts with "santa:".
+        // Provenance: captured => source starts with "testnet:" or "mainnet:" AND expected.valid ==
+        // true. authored => source starts with "santa:".
         let bad_src: Vec<&str> = doc["entries"]
             .as_array()
             .map(|es| {
@@ -1155,7 +1156,7 @@ fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
                         let src = e["source"].as_str().unwrap_or("");
                         match prov.as_str() {
                             "captured" => {
-                                let wrong_src = !src.starts_with("testnet:");
+                                let wrong_src = !(src.starts_with("testnet:") || src.starts_with("mainnet:"));
                                 let wrong_valid = e["expected"]["valid"].as_bool() != Some(true);
                                 wrong_src || wrong_valid
                             }
@@ -1387,6 +1388,30 @@ mod tests {
         // Clean up regardless.
         let _ = fs::remove_dir_all(&tmp);
         assert!(bad > 0, "unknown version directory v7 must fire at least one [WRONG]");
+    }
+
+    /// Mainnet history under v5: a `mainnet:` captured entry with activated 2 is accepted; an
+    /// unknown source prefix under captured still fires.
+    #[test]
+    fn tx_path_guard_mainnet_captured_under_v5() {
+        let tmp = std::env::temp_dir().join(format!("santa-test-mainnet-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("transaction").join("v5").join("captured");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = |source: &str| json!({
+            "schema": "santa-transaction/v1", "op": "test-op", "blessed_by": "test",
+            "entries": [{ "name": "e", "source": source,
+                          "version": { "activated": 2, "ergoTree": 2 },
+                          "expected": { "valid": true, "cost": 1000, "reason": null } }]
+        });
+        let good = vdir.join("good.json");
+        fs::write(&good, serde_json::to_string(&doc("mainnet:rent-s1@1051232:3d89")).unwrap()).unwrap();
+        let bad = vdir.join("bad.json");
+        fs::write(&bad, serde_json::to_string(&doc("explorer:rent@1")).unwrap()).unwrap();
+        let g_good = tx_path_guard(&tmp, &[good]);
+        let g_bad = tx_path_guard(&tmp, &[bad]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(g_good, 0, "a mainnet: captured entry under v5 (activated 2) must pass");
+        assert!(g_bad > 0, "a captured entry with an unknown source prefix must fire");
     }
 
     // ── Chain tier tests ─────────────────────────────────────────────────────────

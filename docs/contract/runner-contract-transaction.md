@@ -167,11 +167,20 @@ eval tier grew `v1` → `v2` → `v3` when new dimensions entered scope.
 
 Two provenances, distinguished by the `source` prefix on each entry:
 
-- **`captured`** — primary corpus. `source: "testnet:<seed-dir>@<height>"`. A captured tx is
-  on-chain history; it is therefore inherently `valid: true`. The blesser hard-fails on any
-  oracle rejection of a captured seed (`CapturedTx` sys.error + "FAIL LOUD"). The validate
-  binary's `tx_path_guard` independently enforces the invariant: a committed vector under
+- **`captured`** — primary corpus. `source: "testnet:<seed-dir>@<height>"` for testnet seeds, or
+  `"mainnet:<label>@<height>:<txId>"` for mainnet history. A captured tx is on-chain history, so
+  it is inherently `valid: true`. The blesser hard-fails on any oracle rejection of a captured
+  seed (`CapturedTx` sys.error + "FAIL LOUD"). The validate binary's `tx_path_guard`
+  independently enforces the invariant: a committed vector under
   `vectors/transaction/*/captured/` with `expected.valid: false` is a schema violation.
+  - **Version directory.** A capture's directory follows its block's version: block version 3
+    (mainnet before the 6.0 soft fork) is `v5` with `activated` 2, and block version 4 is `v6`
+    with `activated` 3.
+  - **Parameters.** Mainnet captures carry the real voting-epoch parameters at their height, read
+    from the extension of the epoch-start block.
+  - **Chain settings.** Mainnet captures are blessed under the same `chain-testnet.conf`. Its one
+    network-specific tx rule, EIP-27 re-emission (`txReemission`), is off there. Skipping a rule
+    can only accept more, and every mainnet capture already passed it on chain.
 - **`authored`** — the adversarial reject arm; `source: "santa:<label>"`. An authored vector may
   have `expected.valid: false` (a tx the oracle correctly rejects) and must carry a `reason`; it may
   also test the accept arm for scripts not reachable via testnet captures. **Populated (Track B):**
@@ -277,6 +286,14 @@ The four register-equality entries came from the final code review.
   set 24/25 · cost 14/14) and blitzen-develop `16e86dde` (valid 24/25).
 - **Non-canonical R1:** sigma-rust compares re-serialized trees, so it stays red on both until its
   `ErgoTree` retains wire bytes. That is a known gap.
+
+**Mainnet storage-rent sample (captured, 15 files / 122 entries in `transaction/{v5,v6}/captured/`).**
+A stratified sample of real rent spends, the real-history gate for rent ports. Method, the
+978,026-input population and the strata are in
+[`docs/findings/mainnet-rent-spotcheck.md`](../findings/mainnet-rent-spotcheck.md).
+- rudolph and blitzen-eni `bf4d6943`: 122/122, valid and cost
+- blitzen-eni `b438d520`: valid, and each rent input 50 short
+- blitzen-develop and dasher (ergots `f2a9c4b`): 122/122 valid
 
 **Current 4-way result**, without the storage-rent files (comet grey — wire-only, no `transaction` tier):
 

@@ -122,6 +122,9 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - the 32-bit-wrapping storage fee
   - the 50-unit `StorageContractCost`
 
+  A stratified **mainnet sample** (122 real rent spends, v5 and v6 eras) gates rent ports on real
+  history ([`docs/findings/mainnet-rent-spotcheck.md`](docs/findings/mainnet-rent-spotcheck.md)).
+
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
