@@ -271,9 +271,11 @@ The first 21 entries shipped first; the table grades them.
 The four register-equality entries came from the final code review.
 - **blitzen-eni `50777a12`, blitzen-develop `1633e018` and dasher `aaec5d58`:** each passes both
   accept twins and over-accepts both rejects.
-- **Tuple R4:** sigma-rust treats the Tuple expression and the tuple Constant as equal. A fix is in
-  progress.
-- **Non-canonical R1:** sigma-rust compares re-serialized trees, so it stays red until its
+- **Tuple R4:** before the register fix, sigma-rust treated the Tuple expression and the tuple
+  Constant as equal. The fix compares R4..R9 as stored values and also corrects the
+  `NonMandatoryRegisters::get` slot offset. It is green on blitzen-eni `bf4d6943` (full storage-rent
+  set 24/25 · cost 14/14) and blitzen-develop `16e86dde` (valid 24/25).
+- **Non-canonical R1:** sigma-rust compares re-serialized trees, so it stays red on both until its
   `ErgoTree` retains wire bytes. That is a known gap.
 
 **Current 4-way result**, without the storage-rent files (comet grey — wire-only, no `transaction` tier):
