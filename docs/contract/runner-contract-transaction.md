@@ -178,6 +178,13 @@ Two provenances, distinguished by the `source` prefix on each entry:
   two no-re-sign, param-driven boundary pairs — `cost-limit-boundary` + `min-value-dust-boundary`
   (§8) — built over a captured seed by moving exactly one economic parameter. Conservation/body-level
   rejects (Track A, re-signed) are deferred. Design: `docs/specs/transaction-reject-arm.md`.
+  **Storage rent** (`storage-rent-*`, §8): minted, not captured — every box is `sigmaProp(true)`, so
+  no spend needs a signature, under a **synthetic** context. No captured chain reaches the
+  `StoragePeriod` height on testnet, so the context is ten parent-linked v4 headers below height
+  1051200 with the preHeader on top (`parentId` = the newest header's id). Scripts never read the
+  headers. `AuthoredTxStorageRent` fails the bless unless each verdict is the arm's, for the arm's
+  reason: a rent reject must carry the JVM's `#i => Success((false,50))`, and every accept's cost
+  must decompose exactly into initial + assets + 50 per rent input + the script cost per script input.
 
 **Re-blessing.** Producing actuals requires no oracle dependency (§3) — a runner needs only
 its own implementation. Re-producing the committed vectors requires the blesser:
@@ -204,7 +211,10 @@ recorded as coal, not silently swallowed.
 
 ## 8. Status
 
-**10 vectors / 12 entries:** 8 captured seeds + 2 authored boundary pairs (the Track-B reject arm).
+**16 vectors / 33 entries:**
+- 8 captured seeds
+- 2 authored boundary pairs (the Track-B reject arm)
+- 6 authored storage-rent files (21 entries, below)
 
 **Captured (8 seeds, all `valid: true`):** the 4 originals `bigint-downcast-2666`,
 `deserialize-context-111927`, `atleast-degenerate-bound-184137`, `powhit-return-type-28474` + the 4
@@ -216,7 +226,41 @@ reject entries test enforcement, not a base bug):** `cost-limit-boundary` (maxBl
 cost / cost − 1) and `min-value-dust-boundary` (minValuePerByte at the dust flip / + 1), each an
 accept control + a one-step reject. Design: `docs/specs/transaction-reject-arm.md`.
 
-**Current 4-way result** (comet grey — wire-only, no `transaction` tier):
+**Authored storage rent (6 files / 21 entries; `AuthoredTxStorageRent`, synthetic context at height
+1051200, §6).** Every box is `sigmaProp(true)`, so the script path accepts every one of these
+transactions. A reject can only come from the rent verdict. JVM source:
+`ErgoInterpreter.verify` / `checkExpiredBox`, ergo v6.0.6.
+- **`storage-rent-recreation`:**
+  - the correct recreation accepts, and so does a token-bearing twin
+  - five final rejects, each breaking one property: creation height, value, R1 (script),
+    R2 (tokens), R4
+- **`storage-rent-fallback`:** the script path accepts, and the input costs its script, not 50:
+  - var 127 is an Int
+  - var 127 indexes past the last output
+  - var 127 is negative
+- **`storage-rent-gate`:** the script path accepts:
+  - the box is `StoragePeriod − 1` blocks old
+  - the spending proof is non-empty
+- **`storage-rent-mixed-inputs`:** a rent input next to a scripted input, in both orders. The cost
+  is initial + 50 + the script cost.
+- **`storage-rent-dust`:** value == fee accepts regardless of the output (`value − fee <= 0`);
+  fee + 1 rejects.
+- **`storage-rent-fee-wrap`:** the fee is `Int * Int`:
+  - 1718 bytes: the fee overflows to −2147467296. The unwrapped-fee output rejects; the output
+    exactly at `value + 2147467296` accepts, and one nanoERG less rejects.
+  - 3436 bytes: the fee wraps to 32704. `value − 32704` accepts and `value − 32705` rejects.
+
+Grades from local, unpushed sigma-rust SHAs (2026-09-27). Rudolph is valid 21/21 · cost 12/12.
+
+| Runner | SHA | Result on the 21 |
+|---|---|---|
+| blitzen-eni | `b438d520` | valid 12/21 (the 9 final rejects over-accept) · cost 5/12 (each rent accept 50 short) |
+| blitzen-eni | `e8c4c3c0`, `50777a12` | valid 21/21 · cost 12/12 |
+| blitzen-develop | `1633e018`, `f599fff1`, `4620d6de` | valid 12/21 |
+| blitzen-develop | `bc07fc44` | valid 21/21 |
+| dasher | `aaec5d58` | valid 12/21 (the same 9) |
+
+**Current 4-way result**, without the storage-rent files (comet grey — wire-only, no `transaction` tier):
 
 | | captured (8) | authored (4) |
 |---|---|---|

@@ -68,8 +68,11 @@ Per entry the comparator emits **one** verdict (no value/cost split, no amber):
 - **`not-implemented` → coverage**, coal — always a real coverage finding (exactly as eval
   §5: it never matches, so it is surfaced, not hidden).
 - **`panicked` → coal unconditionally** — a crash is not a clean rejection.
+- **Reject entries** (the vector entry carries `"error": "errored"`: the JVM rejects `bytes_hex` at
+  parse, so there is no canonical output): **`reject` nice** iff the actual is `errored`. Producing
+  bytes is the **over-accept** — coal, whatever the bytes.
 
-Precedence mirrors the eval grade: **panicked → not-implemented → roundtrip**. The
+Precedence mirrors the eval grade: **panicked → not-implemented → roundtrip / reject**. The
 `not-implemented` and `panicked` verdicts are the *same shapes* the eval grade emits, so a
 consumer tallies coverage/panicked uniformly across tiers. `oracle/verdicts-wire.json` is
 the executable form of this section (reproduced by `santa-check`'s `tests/oracle.rs`).
@@ -104,14 +107,20 @@ Unchanged from `runner-contract.md` §3:
   the canonicalize-bless already catches serialize-side divergences (JVM-vs-sigma-rust)
   before any runner runs. The blind spot is closed by the **deferred** arms below.
 
-## 6. Relationship & deferred arms (NOT specified here)
+## 6. Relationship & further arms
 
 The eval contract is frozen and untouched; this companion adds the wire result shape beside
-it (the `schema` discriminator routes between them). Named non-goals, to be specified when
-built (do not implement against them) — see `wire-tier.md` "Out of scope / Deferred":
+it (the `schema` discriminator routes between them). The reject arm below is live; the other
+arms are named non-goals, to be specified when built (do not implement against them) — see
+`wire-tier.md` "Out of scope / Deferred":
 
-- **Wire reject/mutation arm** — malformed/non-canonical bytes a correct parser must reject;
-  disciplines the echo-cheat. The wire analog of the eval reject arm.
+- **Wire reject/mutation arm — LIVE** (§3; `error` in `schema/santa-wire.vector.schema.json`):
+  bytes the JVM rejects at parse, each built so a lenient parser round-trips them cleanly and the
+  over-accept surfaces as bytes rather than an incidental EOF. Families in `wire/v6/authored/`: the
+  soft-fork SHeader-constant rejects; the ContextExtension bounds (count ≥ 128, id ≥ 0x80 —
+  `Transaction.context_extension_{count,id}_bound`); and the creation-height parse bound (a box,
+  output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`). Each
+  bound ships with its accept twin on the other side.
 - **`structural-assert` variant (`santa-wire/v2`)** — parse → emit a canonical structural
   form → compare; catches misparse-that-round-trips. Additive; `santa-wire/v1` stays.
 - **Captured + serializer-only conformers** — real testnet `Transaction`/`Header`/box

@@ -1,0 +1,42 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.creation_height_int_bound",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "name" : "box-creation-height-0x7fffffff-accept#0",
+      "kind" : "Box",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "ErgoBox created at height 0x7FFFFFFF (Int.MaxValue): the highest creation height the JVM parses (getUIntExact, ErgoBoxCandidate.scala:195). Round-trip identity.",
+      "bytes_hex" : "8094ebdc030008d3ffffffff0700003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db00200"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "error" : "errored",
+      "name" : "box-creation-height-0x80000000-reject#1",
+      "kind" : "Box",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "The same box with its creation height VLQ set to 0x80000000 (Int.MinValue as an Int). The JVM's getUIntExact throws ArithmeticException: Int overflow at parse (v5+; v4 read it as a negative Int). An impl reading the height as u32 parses the box: the over-accept.",
+      "bytes_hex" : "8094ebdc030008d3808080800800003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db00200"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "error" : "errored",
+      "name" : "box-creation-height-0xffffffff-reject#2",
+      "kind" : "Box",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "The same box at creation height 0xFFFFFFFF: the V1-era height -1. The JVM rejects it at parse like 0x80000000, so a V1 negative-height box can never reach the storage-rent gate's signed age arithmetic on the reference node.",
+      "bytes_hex" : "8094ebdc030008d3ffffffff0f00003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db00200"
+    }
+  ]
+}

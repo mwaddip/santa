@@ -96,8 +96,13 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   (`Constant` 178 · `Box` 11 · `SigmaBoolean` 7 · `Transaction` 17), JVM-canonicalized
   from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds. Rudolph + Blitzen 213/213;
   Dasher 196 (no tx serializer — growth ledger); Comet 185 (Fleet's honest gaps, recorded
-  as findings). Contract:
-  [`docs/contract/runner-contract-wire.md`](docs/contract/runner-contract-wire.md).
+  as findings). An authored **reject arm** (`wire/v6/authored/`) pins bytes the JVM refuses at
+  parse, each with an accept twin on the other side of the bound:
+  - soft-fork SHeader constants
+  - **ContextExtension bounds:** count ≥ 128, and variable id ≥ 0x80 (since sigma-state 6.0.5)
+  - **creation-height bound:** a box, output or Box constant created above `Int.MaxValue`
+
+  Contract: [`docs/contract/runner-contract-wire.md`](docs/contract/runner-contract-wire.md).
 - ✅ **Transaction tier live** — `santa-transaction/v1` schema; **4 captured vectors**
   (`vectors/transaction/v6/captured/`), each JVM-blessed via `ergo-core 6.0.2.1
   validateStateful`. Conformer stances: **Rudolph control** (gated `TxEngine`; the
@@ -107,8 +112,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   divergence→fix→convergence loop) ·
   **Blitzen-develop `valid 0/4`** (upstream bugs; the bigint-downcast
   seed exposes the tree-version bug eval cannot catch) · **Dasher `4 not-implemented`**
-  (growth ledger) · **Comet out-of-scope** (wire-only; Fleet has no verifier). Contract:
-  [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
+  (growth ledger) · **Comet out-of-scope** (wire-only; Fleet has no verifier).
+  **Storage-rent vectors** (`storage-rent-*`, 21 entries over a synthetic context at the
+  `StoragePeriod` height) pin every arm of the JVM's rent spend:
+  - the gate
+  - the fallbacks to the script
+  - the final recreation verdict
+  - the 32-bit-wrapping storage fee
+  - the 50-unit `StorageContractCost`
+
+  Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
   `cost`. **4 captured testnet seeds** (block 2666 cost 39379 — the triple-anchored

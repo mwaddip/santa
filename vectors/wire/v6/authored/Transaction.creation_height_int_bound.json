@@ -1,0 +1,76 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.creation_height_int_bound",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "name" : "tx-output-creation-height-0x7fffffff-accept#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "Transaction whose output candidate has creation height 0x7FFFFFFF: parses (stateful rules would refuse it as created in the future, but this is the parse bound). Round-trip identity.",
+      "bytes_hex" : "012061d6446e3f7dfc190b7c10223e91030fc362b2220bcfbaf9e72dedf99b6215000000000180a8d6b9070008d3ffffffff070000"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "error" : "errored",
+      "name" : "tx-output-creation-height-0x80000000-reject#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "The same transaction with the output's creation height VLQ set to 0x80000000: the JVM rejects the whole tx at parse (getUIntExact). A u32 reader parses it; in a v2+ block such an output is also refused later by the stateful negative-height rule, so this form pins the parse divergence only.",
+      "bytes_hex" : "012061d6446e3f7dfc190b7c10223e91030fc362b2220bcfbaf9e72dedf99b6215000000000180a8d6b9070008d380808080080000"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "name" : "tx-extension-box-constant-creation-height-0x7fffffff-accept#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "Transaction whose input 0 extension binds variable 0 to a Box constant (SBox data) created at 0x7FFFFFFF. Round-trip identity.",
+      "bytes_hex" : "012061d6446e3f7dfc190b7c10223e91030fc362b2220bcfbaf9e72dedf99b6215000100638094ebdc030008d3ffffffff0700003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db0020000000180a8d6b9070008d3640000"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "error" : "errored",
+      "name" : "tx-extension-box-constant-creation-height-0x80000000-reject#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "The same transaction with the embedded box's creation height set to 0x80000000. SBox data is parsed with the box serializer, so the JVM rejects the whole tx at parse. Reachable at every block version: no stateful rule looks at an embedded box's height, so an impl that parses it can accept the spend.",
+      "bytes_hex" : "012061d6446e3f7dfc190b7c10223e91030fc362b2220bcfbaf9e72dedf99b6215000100638094ebdc030008d3808080800800003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db0020000000180a8d6b9070008d3640000"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "name" : "tx-register-box-constant-creation-height-0x7fffffff-accept#4",
+      "kind" : "Transaction",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "Transaction whose output R4 holds a Box constant created at 0x7FFFFFFF. Round-trip identity.",
+      "bytes_hex" : "012061d6446e3f7dfc190b7c10223e91030fc362b2220bcfbaf9e72dedf99b6215000000000180a8d6b9070008d3640001638094ebdc030008d3ffffffff0700003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db00200"
+    },
+    {
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "error" : "errored",
+      "name" : "tx-register-box-constant-creation-height-0x80000000-reject#5",
+      "kind" : "Transaction",
+      "source" : "santa:authored-creation-height-int-bound",
+      "description" : "The same transaction with the R4 box's creation height set to 0x80000000: the JVM rejects the tx at parse. Reachable like the extension form — nothing checks an embedded box's height after parse.",
+      "bytes_hex" : "012061d6446e3f7dfc190b7c10223e91030fc362b2220bcfbaf9e72dedf99b6215000000000180a8d6b9070008d3640001638094ebdc030008d3808080800800003eded4963207772ba9e1c6167124b098abe5160cca12273b859cc777241db00200"
+    }
+  ]
+}
