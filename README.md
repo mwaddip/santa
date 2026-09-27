@@ -106,6 +106,9 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     a Box nested in an extension, plus the levels a soft-fork-degraded tree leaves on the reader
     (also when the degrade is nested inside a tree that parses)
   - **creation-height bound:** a box, output or Box constant created above `Int.MaxValue`
+  - **tree read window:** a box's tree reads within 4096 bytes of its own start (then the box
+    window is back); an overrun degrades a sized tree and rejects an unsized one
+  - **root type:** an unsized tree whose root is not a SigmaProp
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity
   round-trip, and so does a size-flagged tree whose declared size is wrong: the JVM ignores it when

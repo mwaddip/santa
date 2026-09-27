@@ -126,8 +126,10 @@ arms are named non-goals, to be specified when built (do not implement against t
   segregated tree constant, a SigmaBoolean, a Box nested in an extension, and the levels a
   soft-fork-degraded tree leaves on the reader — `Transaction.{register,tree_body,
   segregated_constant,sigma_boolean,nested_box}_depth_bound`,
-  `Transaction.{degraded_tree,nested_degrade}_depth_leak`);
-  and the creation-height parse bound (a box, output, or Box constant created above `Int.MaxValue` —
+  `Transaction.{degraded_tree,nested_degrade}_depth_leak`); a box's tree read window (4096 bytes
+  from the tree's start, replacing the box window; checked before each read but not before a peek —
+  `{Box,Transaction}.tree_read_window`); the root-type check on unsized trees
+  (`{Box,Transaction}.tree_root_type_check`); and the creation-height parse bound (a box, output, or Box constant created above `Int.MaxValue` —
   `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
