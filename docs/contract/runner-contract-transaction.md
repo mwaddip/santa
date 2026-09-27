@@ -182,9 +182,11 @@ Two provenances, distinguished by the `source` prefix on each entry:
 **Re-blessing.** Producing actuals requires no oracle dependency (§3) — a runner needs only
 its own implementation. Re-producing the committed vectors requires the blesser:
 `SANTA_TX_BLESSER=1 sbt test` inside `jvm-blesser/` with a `publishLocal`'d ergo-core
-6.0.2.1 (locally from an `ergoplatform/ergo@v6.0.2.1` clone; the conform CI workflow
+6.0.6 (locally from an `ergoplatform/ergo@v6.0.6` clone; the conform CI workflow
 publishes the same artifacts itself, cached by tag). The README carries the full
-prerequisite.
+prerequisite. The committed vectors were blessed under ergo-core 6.0.2.1 (their
+`blessed_by` says so) and re-derived identically under 6.0.6 when the oracle moved
+(2026-09-27).
 
 **Never-panic invariant.** The runner wraps each entry; a would-be crash is caught and
 surfaces as `panicked` + `note`, and the run continues. An implementation crash is faithfully

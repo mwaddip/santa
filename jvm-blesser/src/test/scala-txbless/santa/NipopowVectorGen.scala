@@ -118,7 +118,7 @@ object NipopowVectorGen {
       (6, 5)
     ).flatMap { case (m, k) =>
       if (chain.length >= m + k) {
-        nipopow.prove(chain)(PoPowParams(m, k, continuous = false)) match {
+        PoPowParams(m, k, continuous = false).flatMap(nipopow.prove(chain)(_)) match {
           case scala.util.Success(proof) =>
             Some(proveEntry(m, k, None, "tip", "NipopowAlgos.prove", serializer.toBytes(proof)))
           case scala.util.Failure(ex) =>
@@ -134,7 +134,7 @@ object NipopowVectorGen {
       val endIdx = math.min(midIdx + k, length - 1)
       val truncated = chain.take(endIdx + 1)
       if (truncated.length >= m + k) {
-        nipopow.prove(truncated)(PoPowParams(m, k, continuous = false)) match {
+        PoPowParams(m, k, continuous = false).flatMap(nipopow.prove(truncated)(_)) match {
           case scala.util.Success(proof) =>
             val anchor = chain(midIdx)
             val anchorIdHex = bytesToHex(idToBytes(anchor.id))

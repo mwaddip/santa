@@ -224,10 +224,17 @@ the conform CI publishes ergo-core itself and sets `SANTA_TX_BLESSER=1`, so the 
 grid carries the tx control row; a build without ergo-core degrades that arm to
 `not-implemented`.) To re-bless (e.g. to add new seeds):
 
-1. Clone [`ergoplatform/ergo`](https://github.com/ergoplatform/ergo) at tag `v6.0.2.1`.
-2. From that clone: `sbt "avldb/publishLocal" "ergoWallet/publishLocal" "ergoCore/publishLocal"` — publishes `ergo-core 6.0.2.1` to `~/.ivy2/local`.
-3. From `jvm-blesser/`: `SANTA_TX_BLESSER=1 sbt -batch "testOnly santa.CapturedTxTest"` — stages blessed JSON under `jvm-blesser/target/tx-vectors/`.
+1. Clone [`ergoplatform/ergo`](https://github.com/ergoplatform/ergo) at tag `v6.0.6`.
+2. From that clone: `sbt "avldb/publishLocal" "ergoWallet/publishLocal" "ergoCore/publishLocal"` — publishes `ergo-core 6.0.6` to `~/.ivy2/local`.
+3. From `jvm-blesser/`: `SANTA_TX_BLESSER=1 sbt -batch "testOnly santa.CapturedTxFullTest"` — fetches each seed's header context from a testnet node API at `127.0.0.1:9053` and stages blessed JSON under `jvm-blesser/target/tx-vectors-full/`.
 4. Copy the staged files into `vectors/transaction/v6/captured/` and commit.
+
+**Oracle version.** The oracle pins `sigma-state` 6.0.6 and `ergo-core` 6.0.6 — the reference
+node's v6.0.6 release (its sigma-state moved to 6.0.6 in node v6.0.5). It moved from 6.0.3 /
+6.0.2.1 on 2026-09-27, after the whole corpus re-derived identically under the new pins: every
+rudolph actual (value, cost, verdict, reason) on all seven tiers, and every blesser that
+regenerates committed files. Each vector's `blessed_by` still names the oracle that first
+blessed it.
 
 The bundled `jvm-blesser/src/test/resources/chain-testnet.conf` is pinned by the
 [transaction runner contract](docs/contract/runner-contract-transaction.md) and must

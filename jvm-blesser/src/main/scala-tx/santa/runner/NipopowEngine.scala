@@ -57,7 +57,9 @@ object NipopowEngine {
             popowHeaders
           }
 
-          val proof = nipopow.prove(chain)(PoPowParams(m, k, continuous = false))
+          // ergo-core 6.0.6: PoPowParams.apply validates (m, k) and returns a Try.
+          val proof = PoPowParams(m, k, continuous = false)
+            .flatMap(params => nipopow.prove(chain)(params))
             .getOrElse(sys.error(s"nipopow entry '$name': prove failed"))
           val proofBytes = serializer.toBytes(proof)
           name -> Json.obj(

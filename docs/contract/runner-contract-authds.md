@@ -9,9 +9,10 @@
 > [`schema/santa-authds.vector.schema.json`](../../schema/santa-authds.vector.schema.json),
 > [`schema/santa-authds.actuals.schema.json`](../../schema/santa-authds.actuals.schema.json).
 >
-> Oracle: scrypto 3.0.0 (`blessed_by: "jvm:scrypto-3.0.0"`), via `jvm-blesser`'s
-> `AvlProofGenerator` / `AvlVerifierBlesser` — the authority for this tier is scrypto, not
-> sigma-state (contrast the eval tier, whose oracle is `sigma-state`). Design record:
+> Oracle: scrypto — 3.1.1 (sigma-state 6.0.6's) since 2026-09-27; the committed vectors were
+> blessed under 3.0.0 (`blessed_by: "jvm:scrypto-3.0.0"`) and re-derive identically — via
+> `jvm-blesser`'s `AvlProofGenerator` / `AvlVerifierBlesser` — the authority for this tier is
+> scrypto, not sigma-state (contrast the eval tier, whose oracle is `sigma-state`). Design record:
 > [`docs/specs/authds-tier.md`](../specs/authds-tier.md) — read for rationale; this
 > document is the durable, current source on any divergence between the two.
 
@@ -299,7 +300,7 @@ prove. `not-impl` is the honest cell and flips if sigma-rust grows a prover.
 ## 7. JVM oracle recipe
 
 `jvm-blesser/src/main/scala/santa/{AvlProofGenerator,AvlVerifierBlesser}.scala` wrap
-scrypto 3.0.0's own `BatchAVLProver` / `BatchAVLVerifier` directly — **no gate**. Unlike
+scrypto's own `BatchAVLProver` / `BatchAVLVerifier` directly — **no gate**. Unlike
 the tx/block/chain engines (which need a `publishLocal`'d `ergo-core` behind
 `SANTA_TX_BLESSER`, README "Re-blessing transaction vectors"), authds needs only scrypto,
 already a main-scope `jvm-blesser` dependency. This has a load-bearing consequence for how

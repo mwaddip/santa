@@ -483,8 +483,10 @@ The universal provenance set, sparse per tier — chain plans three:
 
 **Re-blessing.** Producing actuals needs no oracle dependency; re-producing committed
 vectors needs the gated blesser: `SANTA_TX_BLESSER=1 sbt test` in `jvm-blesser/` with
-ergo-core 6.0.2.1 available (the gate name is historical — it admits ergo-core to the
-build and gates the tx, block, **and chain** engines alike).
+ergo-core 6.0.6 available (the gate name is historical — it admits ergo-core to the
+build and gates the tx, block, **and chain** engines alike). The committed vectors were blessed
+under ergo-core 6.0.2.1 and re-derived byte-identically under 6.0.6 when the oracle moved
+(2026-09-27) — the chain blessers rewrite the committed files in place.
 
 ## 7. Conformer stances
 

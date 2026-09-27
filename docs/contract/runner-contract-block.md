@@ -172,8 +172,9 @@ Two provenances, distinguished by the `source` prefix (validate-guarded):
 
 **Re-blessing.** Producing actuals needs no oracle dependency; re-producing committed
 vectors needs the gated blesser: `SANTA_TX_BLESSER=1 sbt test` in `jvm-blesser/` with
-ergo-core 6.0.2.1 available (the gate name is historical — it admits ergo-core to the
-build and gates the tx **and** block engines alike).
+ergo-core 6.0.6 available (the gate name is historical — it admits ergo-core to the
+build and gates the tx **and** block engines alike). The committed vectors were blessed under
+ergo-core 6.0.2.1 and re-derived identically under 6.0.6 when the oracle moved (2026-09-27).
 
 ## 7. Conformer stances
 

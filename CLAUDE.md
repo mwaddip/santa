@@ -43,4 +43,5 @@ without asking; brainstorm in open prose, not multiple-choice.
 - `~/projects/ergots` — the mainnet-validation harness that motivated this; its
   ~two-dozen divergence findings (`tools/mainnet-validate/findings/`) are the seed corpus.
 - `~/projects/ergo-node-rust` — the Rust node + `addons/indexer`; rides the sigma-rust fork.
-- `~/projects/ergo-node-build` — the JVM reference node (v6.0.3), the canonical oracle.
+- `~/projects/ergo-node-build` — the JVM reference node, the canonical oracle. The oracle pins
+  its v6.0.6 release (sigma-state 6.0.6 / ergo-core 6.0.6, `publishLocal`'d from a clone of that tag).

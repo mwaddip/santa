@@ -6,11 +6,14 @@
 //
 // Run:  sbt --batch "run <path-to-eval-vector.json>"
 
+// 2.12.20 == the reference node's own scala212 (ergoplatform/ergo@v6.0.6 build.sbt), so the
+// scala-library on the oracle's classpath is the node's — not the 2.12.21 sigma-state 6.0.6
+// was compiled with (its POM asks for 2.12.21; sbt pins scala-library to scalaVersion).
 ThisBuild / scalaVersion := "2.12.20"
 ThisBuild / organization := "io.santa"
 
-// Tx-tier engine: ergo-core is NOT on Maven; publishLocal'd from ergoplatform/ergo@v6.0.2.1
-// (locally from the ergo-node-build clone; in CI by the conform workflow's publish step).
+// Tx-tier engine: ergo-core is NOT on Maven; publishLocal'd from ergoplatform/ergo@v6.0.6
+// (locally from a clone of that tag; in CI by the conform workflow's publish step).
 // SANTA_TX_BLESSER=1 compiles the tx engine (rudolph's transaction arm + the blesser).
 // Unset: the dep and both gated source dirs are excluded — eval/wire build untouched, and
 // rudolph's tx arm degrades to a faithful `not-implemented` (the Runner finds the engine
@@ -28,13 +31,14 @@ lazy val jvmBlesser = (project in file("."))
       "Repo for leveldbjni-all" at "https://gitlab.com/api/v4/projects/61211221/packages/maven"
     ) else Seq.empty),
     libraryDependencies ++= Seq(
-      // The reference interpreter. 6.0.3 == the version ergo-node-build pins,
-      // so cost/sigma-tree output matches the canonical node (OVERRIDES rule 13).
-      "org.scorexfoundation" %% "sigma-state" % "6.0.3",
+      // The reference interpreter. 6.0.6 == the version the reference node pins
+      // (ergoplatform/ergo@v6.0.6, sigmaStateVersion), so cost/sigma-tree output matches
+      // the canonical node (OVERRIDES rule 13).
+      "org.scorexfoundation" %% "sigma-state" % "6.0.6",
       // JSON in/out for reading the eval vectors.
-      // Pinned to 0.13.0 to match the circe version sigma-state 6.0.3 brings
-      // transitively (avoids an eviction conflict; 0.13.0 has all we use).
-      "io.circe" %% "circe-parser" % "0.13.0",
+      // Pinned to 0.14.15 to match the circe version sigma-state 6.0.6 brings
+      // transitively (avoids an eviction conflict; also ergo@v6.0.6's circeVersion).
+      "io.circe" %% "circe-parser" % "0.14.15",
       // Test framework (munit auto-registers via its service descriptor).
       "org.scalameta" %% "munit" % "0.7.29" % Test,
       // V6 extractor (Phase 2): drives the executable language spec to generate
@@ -42,28 +46,28 @@ lazy val jvmBlesser = (project in file("."))
       // sub-module's Test classes (root project aggregates Test/packageBin across
       // core/data/interpreter/parsers/sdk/sc), incl. `sigma.LanguageSpecificationV6`
       // and the SigmaDslTesting / CompilerTestingCommons framework.
-      "org.scorexfoundation" %% "sigma-state" % "6.0.3" % Test classifier "tests",
+      "org.scorexfoundation" %% "sigma-state" % "6.0.6" % Test classifier "tests",
       // Test deps the V6 spec + framework transitively use (versions matched to
-      // sigma-state 6.0.3's own build.sbt to avoid eviction).
-      "org.scalatest"     %% "scalatest"               % "3.2.14"  % Test,
-      "org.scalactic"     %% "scalactic"               % "3.2.14"  % Test,
+      // sigma-state 6.0.6's own build.sbt to avoid eviction).
+      "org.scalatest"     %% "scalatest"               % "3.2.20"  % Test,
+      "org.scalactic"     %% "scalactic"               % "3.2.20"  % Test,
       "org.scalacheck"    %% "scalacheck"              % "1.15.2"  % Test,
       "org.scalatestplus" %% "scalacheck-1-15"         % "3.2.3.0" % Test,
       // The V6 spec's framework pretty-prints expected expressions / suggestions via
       // `SigmaPPrint` (com.lihaoyi:pprint). Without it, the property bodies that print
       // (decodeNbits/encodeNbits/some/none/AvlTree equivalence) throw
       // NoClassDefFoundError mid-body and their verifyCases never fire — silently
-      // shrinking the captured corpus. Pinned to sigma-state 6.0.3's own pprint.
+      // shrinking the captured corpus. Pinned to sigma-state 6.0.6's own pprint.
       "com.lihaoyi"       %% "pprint"                  % "0.6.3"   % Test
     ),
     // Tx-tier engine: ergo-core (+ ergo-wallet for ErgoInterpreter; avldb transitively)
-    // publishLocal'd at 6.0.2.1 — NOT on Maven. Drives ErgoTransaction.validateStateful:
+    // publishLocal'd at 6.0.6 — NOT on Maven. Drives ErgoTransaction.validateStateful:
     // main scope (the Runner's transaction arm, santa.runner.TxEngine) with the blesser
     // riding the same gate in test scope. Excluded when SANTA_TX_BLESSER is unset so an
     // ergo-core-less build still compiles everything else.
     libraryDependencies ++= (if (txBlesserEnabled) Seq(
-      "org.ergoplatform"  %% "ergo-core"               % "6.0.2.1",
-      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.2.1"
+      "org.ergoplatform"  %% "ergo-core"               % "6.0.6",
+      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.6"
     ) else Seq.empty),
     // The gated sources (which import ergo-core) only compile when enabled:
     // main scala-tx = the runner engine; test scala-txbless = the captured-tx blesser.

@@ -9,8 +9,9 @@
 > [`schema/santa-nipopow.vector.schema.json`](../../schema/santa-nipopow.vector.schema.json),
 > [`schema/santa-nipopow.actuals.schema.json`](../../schema/santa-nipopow.actuals.schema.json).
 >
-> Oracle: JVM `ergo-core` 6.0.2.1's `NipopowAlgos` (`blessed_by:
-> "jvm:ergo-core-6.0.2.1-NipopowAlgos"`), driven by `jvm-blesser`'s `NipopowVectorGen`
+> Oracle: JVM `ergo-core`'s `NipopowAlgos` — 6.0.6 since 2026-09-27; the committed vectors
+> were blessed under 6.0.2.1 (`blessed_by: "jvm:ergo-core-6.0.2.1-NipopowAlgos"`) and re-derive
+> identically under 6.0.6 — driven by `jvm-blesser`'s `NipopowVectorGen`
 > (bless-time, §5) and `NipopowEngine` (rudolph's live control arm, §6) — both call the
 > same underlying `ergo-core` classes but are two independently-written call sites, not one
 > shared function (contrast authds, §6 below). **No separate `docs/specs/nipopow-tier.md`
