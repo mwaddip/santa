@@ -26,7 +26,7 @@ import scala.util.{Failure, Success, Try}
 import io.circe.Json
 import sigma.{Colls, Evaluation}
 import sigma.VersionContext
-import sigma.ast.{BigIntConstant, CollectionConstant, Constant, EvaluatedValue, IntConstant, SBigInt, SByte,
+import sigma.ast.{BigIntConstant, CollectionConstant, Constant, EvaluatedValue, IntConstant, SBigInt,
   SCollection, SHeader, SInt, SOption, SType, STuple, SUnsignedBigInt, UnsignedBigIntConstant}
 import sigma.data.{CBigInt, CUnsignedBigInt}
 import sigma.interpreter.ContextExtension
@@ -73,17 +73,6 @@ object AuthoredWireContextExtensionParse {
 
   private def pair(a: Any, b: Any, t: STuple): Constant[SType] =
     Constant[SType]((a, b).asInstanceOf[SType#WrappedType], t)
-
-  /** Coll^n[Byte]: n nested collections, each outer one holding one element, the innermost empty. */
-  private def nestedCollOfBytes(n: Int): Constant[SType] = {
-    require(n >= 2, s"Coll^$n[Byte]")
-    val (value, tpe) = (2 to n).foldLeft[(Any, SType)]((Colls.emptyColl(Evaluation.stypeToRType(SByte)), SCollection(SByte))) {
-      case ((inner, tInner), _) =>
-        (Colls.fromItems[Any](inner)(Evaluation.stypeToRType(tInner).asInstanceOf[sigma.data.RType[Any]]),
-          SCollection(tInner))
-    }
-    Constant[SType](value.asInstanceOf[SType#WrappedType], tpe)
-  }
 
   private def version: Json =
     Json.obj("activated" -> Json.fromInt(V3.toInt), "ergoTree" -> Json.fromInt(V3.toInt))

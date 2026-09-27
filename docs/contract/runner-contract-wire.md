@@ -121,9 +121,13 @@ arms are named non-goals, to be specified when built (do not implement against t
   `Transaction.context_extension_{count,id}_bound`); the ContextExtension value rules (a v6-only
   type — Option, Header or UnsignedBigInt, also inside a collection or tuple — rejected by
   `CheckV6Type`, rule 1019; a value nested past the reader's 110-level cap —
-  `Transaction.context_extension_{v6_type,depth_bound}`); and the creation-height parse bound (a box,
-  output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`). Each
-  bound ships with its accept twin on the other side. Beside them,
+  `Transaction.context_extension_{v6_type,depth_bound}`); the same 110-level cap on every other
+  path the JVM's per-transaction level counter runs through (a register value, a tree body, a
+  segregated tree constant, a SigmaBoolean, a Box nested in an extension, and the levels a
+  soft-fork-degraded tree leaves on the reader — `Transaction.{register,tree_body,
+  segregated_constant,sigma_boolean,nested_box}_depth_bound`, `Transaction.degraded_tree_depth_leak`);
+  and the creation-height parse bound (a box, output, or Box constant created above `Int.MaxValue` —
+  `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
   parsed transaction, not echo its input.

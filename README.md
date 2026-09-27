@@ -102,6 +102,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **ContextExtension bounds:** count ≥ 128, and variable id ≥ 0x80 (since sigma-state 6.0.5)
   - **ContextExtension values:** a v6-only type (`CheckV6Type`: Option, Header, UnsignedBigInt),
     and a value nested past the reader's 110-level cap
+  - **parse depth:** the same cap on registers, tree bodies, segregated constants, SigmaBooleans and
+    a Box nested in an extension, plus the levels a soft-fork-degraded tree leaves on the reader
   - **creation-height bound:** a box, output or Box constant created above `Int.MaxValue`
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity

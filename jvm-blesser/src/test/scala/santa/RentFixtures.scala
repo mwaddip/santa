@@ -1,7 +1,7 @@
 package santa
 
-// Shared construction kit for the context-extension-bounds, creation-height-bound and storage-rent
-// vectors (wire + transaction tiers). Pure sigma-state (no ergo-core), so the ungated wire blessers
+// Shared construction kit for the context-extension (bounds, parse rules), parse-depth, creation-height-bound
+// and storage-rent vectors (wire + transaction tiers). Pure sigma-state (no ergo-core), so the ungated wire blessers
 // can use it; the gated tx blesser (AuthoredTxStorageRent) adds only the header context on top.
 //
 // Everything is deterministic: tx ids and token ids are Blake2b256 over a label, so re-running a
@@ -9,8 +9,8 @@ package santa
 
 import scorex.crypto.hash.Blake2b256
 import scorex.util.encode.Base16
-import sigma.Colls
-import sigma.ast.{ErgoTree, EvaluatedValue, SType, SigmaPropConstant}
+import sigma.{Colls, Evaluation}
+import sigma.ast.{Constant, ErgoTree, EvaluatedValue, SByte, SCollection, SType, SigmaPropConstant}
 import sigma.data.{Digest32Coll, TrivialProp}
 import sigma.interpreter.{ContextExtension, ProverResult}
 import sigma.serialization.SigmaSerializer
@@ -73,6 +73,17 @@ object RentFixtures {
   def jvmStorageFee(b: ErgoBox, factor: Int = StorageFeeFactor): Int = factor * b.bytes.length
   /** The same product without the wrap. */
   def trueStorageFee(b: ErgoBox, factor: Int = StorageFeeFactor): Long = factor.toLong * b.bytes.length
+
+  /** Coll^n[Byte]: n nested collections, each outer one holding one element, the innermost empty. */
+  def nestedCollOfBytes(n: Int): Constant[SType] = {
+    require(n >= 2, s"Coll^$n[Byte]")
+    val (value, tpe) = (2 to n).foldLeft[(Any, SType)]((Colls.emptyColl(Evaluation.stypeToRType(SByte)), SCollection(SByte))) {
+      case ((inner, tInner), _) =>
+        (Colls.fromItems[Any](inner)(Evaluation.stypeToRType(tInner).asInstanceOf[sigma.data.RType[Any]]),
+          SCollection(tInner))
+    }
+    Constant[SType](value.asInstanceOf[SType#WrappedType], tpe)
+  }
 
   def vlqU32(v: Long): Array[Byte] = { val w = SigmaSerializer.startWriter(); w.putUInt(v); w.toBytes }
 
