@@ -130,7 +130,9 @@ arms are named non-goals, to be specified when built (do not implement against t
   `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
-  parsed transaction, not echo its input.
+  parsed transaction, not echo its input. `{Box,Transaction}.sized_tree_declared_size` are
+  non-identity round-trips too: the JVM ignores a size-flagged tree's declared size when its body
+  parses, continues after the bytes the body consumed, and writes the recomputed size.
 - **`structural-assert` variant (`santa-wire/v2`)** — parse → emit a canonical structural
   form → compare; catches misparse-that-round-trips. Additive; `santa-wire/v1` stays.
 - **Captured + serializer-only conformers** — real testnet `Transaction`/`Header`/box

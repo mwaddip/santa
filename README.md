@@ -107,7 +107,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **creation-height bound:** a box, output or Box constant created above `Int.MaxValue`
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity
-  round-trip.
+  round-trip, and so does a size-flagged tree whose declared size is wrong: the JVM ignores it when
+  the body parses and re-serializes with the real size.
 
   Contract: [`docs/contract/runner-contract-wire.md`](docs/contract/runner-contract-wire.md).
 - ✅ **Transaction tier live** — `santa-transaction/v1` schema; **4 captured vectors**
