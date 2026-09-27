@@ -2,11 +2,12 @@
 
 **Tier:** wire (`santa-wire/v1`)  
 **Surfaced:** 2026-09-27, first conform runs of the vectors below  
-**Status:** OPEN — sigma-rust over-accepts on every path; routed to the sigma-rust and ergo-node-rust sessions  
+**Status:** FIXED on sigma-rust eni `862df85f` (pushed 2026-09-28); develop PR #926 (`d0d5e4e3`) open  
 **Conformers affected:**
-- blitzen-eni `bf4d6943` and blitzen-develop `1633e018`: every reject below. ergo-node-rust pins eni `bf4d6943`.
-- dasher at ergots `master`: the extension, SigmaBoolean, nested-box and degrade-leak rejects.
-- dasher at ergots `extension-bounds-storage-rent` `f2a9c4b`: only the degrade leak.
+- blitzen-develop `1633e018`: every reject below. blitzen-eni `bf4d6943` had the same gaps; `862df85f` passes every
+  pair.
+- dasher at ergots `master`: the extension, SigmaBoolean, nested-box and both degrade-leak rejects. ergots PR #17
+  (`287a9d6`) passes every pair.
 
 **Vectors:** `vectors/wire/v6/authored/Transaction.*`, one accept/reject pair each (below)
 
@@ -30,6 +31,7 @@ sigma-rust counts nothing, so it parses and re-serializes every one of them.
 | `sigma_boolean_depth_bound` | extension SigmaProp, `CAND(inner, TrueProp)` k deep | k + 3 | 107 / 108 |
 | `nested_box_depth_bound` | extension Box whose size-flagged tree carries `Coll^n[Byte]` | 2 + n | 108 / 109 |
 | `degraded_tree_depth_leak` | output 0's tree degrades 10 deep, then output 1 R4 `Coll^n[Byte]` | 10 + 1 + n | 99 / 100 |
+| `nested_degrade_depth_leak` | output 0's tree parses, but a Box constant in it degrades 10 deep; then output 1 R4 `Coll^n[Byte]` | 10 + 1 + n | 99 / 100 |
 
 `Coll^n[Byte]` is n nested collections, each outer one holding one element, the innermost empty.
 
@@ -70,6 +72,10 @@ A tree degrading k levels deep leaves k levels on the reader for the rest of the
 `degraded_tree_depth_leak` pair shows it live. The blesser also checks a control: the reject's output 1 behind a
 normally parsing output 0 accepts. So the JVM rejects there only because of the leak.
 
+Every enclosing frame lowers the level by one from wherever it is, not back to a saved value. So a degrade nested
+inside a tree that parses leaks too: `nested_degrade_depth_leak` puts the degrading tree in a Box constant of
+output 0's own size-flagged tree, which parses, and output 1 still starts 10 levels up.
+
 ## sigma-rust
 
 `ergotree-ir/src/serialization/sigma_byte_reader.rs` keeps no level. No parse path in
@@ -98,7 +104,8 @@ would exceed 110. The pairs pin four details a straight port can miss:
   (`chain/context_extension.rs:84`). It needs the value level too.
 - A size-flagged tree parsed on an inner reader must start from the outer level (`nested_box_depth_bound`).
 - A depth error inside a size-flagged tree must reject, not degrade (`tree_body_depth_bound`).
-- A degraded tree must leave its levels on the reader (`degraded_tree_depth_leak`).
+- A degraded tree must leave its levels on the reader (`degraded_tree_depth_leak`), also through an enclosing tree
+  that parses (`nested_degrade_depth_leak`).
 
 This is a parsing fix, so it lands on sigma-rust `develop` first and is cherry-picked to eni. Each accept entry
 guards against an off-by-one over-reject.

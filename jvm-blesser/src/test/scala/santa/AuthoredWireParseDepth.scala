@@ -23,11 +23,12 @@ package santa
 //   SigmaBoolean    extension SigmaProp, k nested CAND(inner, TrueProp): k + 3      k = 107 / 108
 //   nested box      extension Box whose size-flagged tree carries Coll^n: 2 + n     n = 108 / 109
 //   degrade leak    output 0 degrades 10 deep; output 1 R4 = Coll^n: 10 + 1 + n      n = 99 / 100
+//   nested degrade  output 0's tree parses, but a Box constant in it degrades 10 deep: 10 + 1 + n   n = 99 / 100
 //
 // extract() re-derives every verdict through WireCanonicalize — the path rudolph grades with — and fails loud
 // if a reject is rejected for any reason other than the depth cap, if an accept is not canonical, or if a
 // size-flagged tree that should parse degraded instead (an accept that tests nothing). The degrade-leak
-// reject also has a control: the same output 1 behind a normally parsing output 0 must accept.
+// rejects share a control: the same output 1 behind a normally parsing output 0 must accept.
 
 import scala.util.{Failure, Success, Try}
 
@@ -53,6 +54,7 @@ object AuthoredWireParseDepth {
   val OpSigmaBoolean       = "Transaction.sigma_boolean_depth_bound"
   val OpNestedBox          = "Transaction.nested_box_depth_bound"
   val OpDegradeLeak        = "Transaction.degraded_tree_depth_leak"
+  val OpNestedDegradeLeak  = "Transaction.nested_degrade_depth_leak"
   val Source               = "santa:authored-parse-depth"
 
   /** The variable id every single-entry extension uses. */
@@ -231,6 +233,31 @@ object AuthoredWireParseDepth {
         "degrade round-trips the tx: the over-accept.",
         tx(ContextExtension.empty, leakOutputs(100, degradedFirst))))
 
+    // The same degrade, nested: output 0's size-flagged tree parses, but its segregated constant 0 is a Box whose
+    // tree degrades. Each enclosing frame lowers the level by one from wherever it is, so the 10 levels outlive the
+    // outer tree's successful parse and reach output 1.
+    val degradingBox = box("santa:cpd:nested-degrade", 1000000L, 1, tree = degradingTree)
+    val nestingFirst = candidate(1000000L, 1, tree = treeCarrying(SizedSegregationHeader,
+      Constant[SType](CBox(degradingBox).asInstanceOf[SType#WrappedType], SBox)))
+    val nestedLeakAccept = tx(ContextExtension.empty, leakOutputs(99, nestingFirst))
+    val nestingTree = parsed(nestedLeakAccept).outputCandidates(0).ergoTree
+    require(nestingTree.root.isRight, "output 0's tree must parse — the degrade is nested inside it")
+    require(nestingTree.constants.head.value.asInstanceOf[CBox].ebox.ergoTree.root.isLeft,
+      "the Box constant's tree must degrade")
+    val nestedLeakEntries = Seq(
+      accept("nested-degrade-leak-coll99-accept#0",
+        "Output 0's tree is size-flagged and segregated (header 0x18) and parses: constants [Box, SigmaProp(true)], " +
+        s"body placeholder 1. The Box constant's own tree is $DegradingTreeHex, which degrades at depth 10 as in " +
+        "degraded_tree_depth_leak. Nested inside a tree that parses, the degrade still leaves its 10 levels on the " +
+        "reader: every enclosing frame lowers the level by one from wherever it is. Output 1 R4 = Coll^99[Byte] then " +
+        "takes 10 + 1 + 99 = 110. Round-trip identity.",
+        nestedLeakAccept),
+      reject("nested-degrade-leak-coll100-reject#1",
+        "The same tx with output 1 R4 = Coll^100[Byte]: 111, rejected at parse. An impl that restores the level once " +
+        "the outer tree parses (for instance a forked reader for the sized body that hands back only its own level) " +
+        "round-trips the tx: the over-accept.",
+        tx(ContextExtension.empty, leakOutputs(100, nestingFirst))))
+
     def envelope(op: String, entries: Seq[Json]): Json = Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
@@ -242,7 +269,8 @@ object AuthoredWireParseDepth {
       OpSegregatedConstant -> envelope(OpSegregatedConstant, segregatedEntries),
       OpSigmaBoolean       -> envelope(OpSigmaBoolean, sigmaBooleanEntries),
       OpNestedBox          -> envelope(OpNestedBox, nestedEntries),
-      OpDegradeLeak        -> envelope(OpDegradeLeak, leakEntries))
+      OpDegradeLeak        -> envelope(OpDegradeLeak, leakEntries),
+      OpNestedDegradeLeak  -> envelope(OpNestedDegradeLeak, nestedLeakEntries))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

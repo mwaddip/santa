@@ -84,10 +84,23 @@ class AuthoredWireParseDepthTest extends munit.FunSuite {
     }
   }
 
+  test("nested degrade leak: a degrade inside output 0's parsing tree leaves 10 levels; Coll^99 accepts, 100 rejects") {
+    pair(AuthoredWireParseDepth.OpNestedDegradeLeak) { (hex, reject) =>
+      val n = if (reject) 100 else 99
+      // output 0's tree: header 0x18 (v0, size, segregation), size 0x39 = 57, two constants: a Box (type 0x63:
+      // value 1000000, the degrading tree, height 1, no tokens or registers, ...) and SigmaProp(true); body
+      // placeholder 1
+      val degrading = "0b" + "0a" + "d1" + "ef" * 8 + "fd"
+      assert(hex.contains("18" + "39" + "02" + "63" + "c0843d" + degrading + "01" + "0000"), "tree carrying the box")
+      assert(hex.endsWith("01" + collN(n)), s"output 1 R4 Coll^$n[Byte]")
+    }
+  }
+
   test("envelopes: santa-wire/v1, the node's v6 tx parse context (3, 3), Transaction kind, 6.0.6 blessing") {
     assertEquals(vectors.keySet, Set(AuthoredWireParseDepth.OpRegister, AuthoredWireParseDepth.OpTreeBody,
       AuthoredWireParseDepth.OpSegregatedConstant, AuthoredWireParseDepth.OpSigmaBoolean,
-      AuthoredWireParseDepth.OpNestedBox, AuthoredWireParseDepth.OpDegradeLeak))
+      AuthoredWireParseDepth.OpNestedBox, AuthoredWireParseDepth.OpDegradeLeak,
+      AuthoredWireParseDepth.OpNestedDegradeLeak))
     vectors.values.foreach { env =>
       val c = env.hcursor
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))

@@ -104,6 +104,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     and a value nested past the reader's 110-level cap
   - **parse depth:** the same cap on registers, tree bodies, segregated constants, SigmaBooleans and
     a Box nested in an extension, plus the levels a soft-fork-degraded tree leaves on the reader
+    (also when the degrade is nested inside a tree that parses)
   - **creation-height bound:** a box, output or Box constant created above `Int.MaxValue`
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity
