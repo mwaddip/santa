@@ -147,12 +147,59 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
       }
   }
 
+  // Parse acceptance: node-construction checks at parse. Each tree wraps its node in BoolToSigmaProp (d1); v0
+  // unsized unless the header says otherwise (08 = v0 sized, 0b = v3 sized). Int 1 = 04 02, Long 1 = 05 02,
+  // true = 01 01.
+  private val AcceptanceTrees: List[(String, Boolean)] = List(
+    "00d1ae0402d90101040101" -> false,         // Exists(Int 1, (x: Int) => true)
+    "00d1ef0402" -> false,                     // LogicalNot(Int 1)
+    "00d17f" -> false,                         // TrueLeaf, opcode 7f
+    "00d180" -> false,                         // FalseLeaf, opcode 80
+    "00d193db630104020502" -> false,           // EQ(PropertyCall(SBox.value, Int 1), Long 1)
+    "00d1da040200" -> false,                   // Apply(Int 1, [])
+    "00d193b1b3040204040400" -> true,          // EQ(SizeOf(Append(Int 1, Int 2)), Int 0)
+    "080ad193b1b3040204040400" -> true,        // the same, sized
+    "00d193b1b40402040004020400" -> true,      // EQ(SizeOf(Slice(Int 1, 0, 1)), Int 0)
+    "080cd193b1b40402040004020400" -> true,    // the same, sized
+    "00d1e60402" -> false,                     // OptionIsDefined(Int 1)
+    "0b06d19304020502" -> true,                // v3 EQ(Int 1, Long 1)
+    "00d19304020502" -> false,                 // v0 EQ(Int 1, Long 1): upcast
+    "0b06d19304020402" -> false,               // v3 EQ(Int 1, Int 1)
+    "00d19101010101" -> true,                  // GT(true, true)
+    "0806d19101010101" -> true,                // the same, sized
+    "00d19104020402" -> false,                 // GT(Int 1, Int 1)
+    "00d193f2010101010400" -> true,            // EQ(BitOr(true, true), Int 0)
+    "0809d193f2010101010400" -> true,          // the same, sized
+    "00d193f2040204020400" -> false)           // EQ(BitOr(Int 1, Int 1), Int 0)
+
+  Seq(AuthoredWireBoxTreeParse.OpBoxAcceptance -> "Box", AuthoredWireBoxTreeParse.OpTxAcceptance -> "Transaction").foreach {
+    case (op, kind) =>
+      test(s"$kind parse acceptance: unchecked nodes parse, erased casts and builder constraints reject") {
+        val es = entries(op)
+        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2))
+        AcceptanceTrees.zip(es).foreach { case ((tree, _), e) =>
+          assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
+        }
+        // TrueLeaf and FalseLeaf are Boolean constants: the JVM writes them back as 01 01 and 01 00, not 7f and 80.
+        def rewritten(e: Json): Option[String] = e.hcursor.get[String]("expected_bytes_hex").toOption
+        val want = Map(2 -> ("00d17f", "00d10101"), 3 -> ("00d180", "00d10100"))
+        es.zipWithIndex.foreach { case (e, i) =>
+          want.get(i) match {
+            case Some((from, to)) =>
+              assertEquals(rewritten(e), Some(bytesHex(e).replace(Value + from + Fields, Value + to + Fields)))
+            case None => assertEquals(rewritten(e), None, s"entry $i round-trips to itself")
+          }
+        }
+      }
+  }
+
   test("envelopes: santa-wire/v1, the node's v6 parse context (3, 3), authored source, 6.0.6 blessing") {
     assertEquals(vectors.keySet, Set(AuthoredWireBoxTreeParse.OpBoxWindow, AuthoredWireBoxTreeParse.OpTxWindow,
       AuthoredWireBoxTreeParse.OpBoxRoot, AuthoredWireBoxTreeParse.OpTxRoot,
       AuthoredWireBoxTreeParse.OpBoxFunc, AuthoredWireBoxTreeParse.OpTxFunc,
       AuthoredWireBoxTreeParse.OpBoxValUse, AuthoredWireBoxTreeParse.OpTxValUse,
-      AuthoredWireBoxTreeParse.OpBoxGate, AuthoredWireBoxTreeParse.OpTxGate))
+      AuthoredWireBoxTreeParse.OpBoxGate, AuthoredWireBoxTreeParse.OpTxGate,
+      AuthoredWireBoxTreeParse.OpBoxAcceptance, AuthoredWireBoxTreeParse.OpTxAcceptance))
     vectors.foreach { case (op, env) =>
       val c = env.hcursor
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))

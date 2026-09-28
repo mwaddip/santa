@@ -115,6 +115,11 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     failure inside it rejects: an out-of-store placeholder, type code 0, an unknown SigmaBoolean opcode,
     a BigInt over 32 bytes, a `ValDef` id past `Int.MaxValue`, a malformed `FunDef` or function type
     parameter, a Box constant with a bad height or registers
+  - **parse acceptance:** which node constructors check their operands at parse. Most check nothing,
+    so `Exists` or `LogicalNot` on an `Int` parses. `Append`/`Slice` on a non-collection throw a
+    `ClassCastException`; `EQ(Int, Long)` from tree v3 and `GT` on Booleans fail the builder's
+    constraints; `BitOr` needs numeric operands. The `TrueLeaf`/`FalseLeaf` opcodes `7f`/`80` parse and
+    come back as the Boolean constants `01 01`/`01 00`, a non-identity round-trip
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs

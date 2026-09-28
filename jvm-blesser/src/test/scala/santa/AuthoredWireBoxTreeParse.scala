@@ -27,6 +27,20 @@ package santa
 //    a malformed FunDef or function type parameter, a Box constant with a bad height or registers. Each reject is
 //    built so that an impl missing the bound parses it or degrades it (either way it accepts), and each has an accept
 //    twin across the bound.
+// 6. Parse acceptance: which node constructors check their operands at parse. Most take their operands by an erased
+//    cast and check nothing, so a node on an operand of the wrong type parses: Exists or LogicalNot on an Int, a
+//    PropertyCall whose method does not unify with its object (`SMethod.specializeFor` keeps the method,
+//    `SMethod.scala:193-199`), an Apply of a non-function (its `tpe` is lazy, NoType), OptionIsDefined on an Int (its
+//    opType builds `SFunc(input.tpe, SBoolean)` with no cast). TrueLeaf and FalseLeaf parse from their own opcodes
+//    7f and 80 (`ValueSerializer.scala:79-80`). The exceptions:
+//    - Append and Slice hold `val tpe = input.tpe` (`transformers.scala:62`, `:89`), a strict val whose checkcast to
+//      SCollection throws ClassCastException at construction;
+//    - DeserializationSigmaBuilder checks equality and comparison operands (`SigmaBuilder.scala:686-702`), with no
+//      upcast from tree v3 on (`:757-758`): EQ(Int, Long) is ConstraintFailed at v3 and upcast at v0, and GT on
+//      Booleans fails the numeric check;
+//    - BitOp requires numeric operands (`trees.scala:913`): an IllegalArgumentException, rethrown as a
+//      SerializerException.
+//    None of these is a ValidationException, so a size-flagged tree rejects too.
 //
 // Every candidate has value 1000000 (3 VLQ bytes), so its tree window ends 3 bytes after its box window (candidate
 // offsets 4099 and 4096). Box entries are a bare box; Transaction entries carry the candidate as an output.
@@ -59,6 +73,8 @@ object AuthoredWireBoxTreeParse {
   val OpTxValUse  = "Transaction.tree_valuse_unbound"
   val OpBoxGate   = "Box.tree_degrade_gate"
   val OpTxGate    = "Transaction.tree_degrade_gate"
+  val OpBoxAcceptance = "Box.tree_parse_acceptance"
+  val OpTxAcceptance  = "Transaction.tree_parse_acceptance"
   val Source      = "santa:authored-box-tree-parse"
 
   private def hexOf(parts: Array[Byte]*): String = Base16.encode(parts.reduce(_ ++ _))
@@ -188,6 +204,17 @@ object AuthoredWireBoxTreeParse {
     val got = degradedBy(parsedTree(kind, bytes))
     require(got == degrade, s"$name: tree degrade rule must be $degrade, got $got")
     entry(name, kind, description, in)
+  }
+
+  /** A non-identity accept: the tree parses and the JVM writes the object back as `rewritten` (expected_bytes_hex). */
+  private def acceptRewritten(name: String, kind: String, description: String, bytes: Array[Byte],
+                              rewritten: Array[Byte]): Json = {
+    val (in, want) = (hex(bytes), hex(rewritten))
+    require(want != in, s"$name: a non-identity accept must change the bytes")
+    val out = canonical(kind, in)
+    require(out == want, s"$name: the JVM must re-serialize to ${want.take(80)}…, got ${out.take(80)}…")
+    require(degradedBy(parsedTree(kind, bytes)).isEmpty, s"$name: the tree must parse")
+    entry(name, kind, description, in, "expected_bytes_hex" -> Json.fromString(want))
   }
 
   /** A reject entry: the JVM must throw, with every `mention` in the cause chain and no `forbid`. */
@@ -415,6 +442,102 @@ object AuthoredWireBoxTreeParse {
           cand(boxConstTree(nestedBox(1, "06" + "0402" * 6))), degrade = None))
     }
 
+    // Trees wrap the node under test in BoolToSigmaProp (d1), so the root is a SigmaProp. v0 unsized unless noted.
+    def acceptanceEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val subject = if (kind == "Box") "A bare box" else "A transaction output"
+      def cand(tree: String): Array[Byte] = wrap(Value ++ b(tree) ++ Fields)
+      val sizedV0 = (content: String) => hex(sizedTree(0x08, b(content)))
+      val appendBody = "d193b1b3040204040400"
+      val sliceBody  = "d193b1b40402040004020400"
+      val gtBoolBody = "d19101010101"
+      val bitOrBody  = "d193f2010101010400"
+      val unchecked = "The JVM builds the node with an erased cast and checks nothing, so the tree parses. Round-trip " +
+        "identity. An impl that type-checks the operand at parse rejects it: the over-reject."
+      Seq(
+        accept(s"$k-c1-exists-on-int-accept#0", kind,
+          s"$subject whose unsized v0 tree is BoolToSigmaProp(Exists(Int 1, (x: Int) => true)): Exists over an Int. " +
+          unchecked, cand("00d1ae0402d90101040101"), degrade = None),
+        accept(s"$k-c2-logicalnot-on-int-accept#1", kind,
+          s"$subject whose tree is BoolToSigmaProp(LogicalNot(Int 1)). " + unchecked, cand("00d1ef0402"), degrade = None),
+        acceptRewritten(s"$k-c3-trueleaf-opcode-accept#2", kind,
+          s"$subject whose tree is BoolToSigmaProp(TrueLeaf) with TrueLeaf as its own opcode 7f " +
+          "(CaseObjectSerialization, ValueSerializer.scala:79). It parses. NON-IDENTITY: TrueLeaf is the Boolean " +
+          "constant true (values.scala:771) and the box serializer writes a parsed tree back from its structure " +
+          "(ErgoBoxCandidate.scala:142), so the tree comes back as 00 d1 01 01. A transaction's id and its output " +
+          "boxes' ids are computed over those bytes. An impl that keeps the 7f, or does not parse it, diverges.",
+          cand("00d17f"), rewritten = cand("00d10101")),
+        acceptRewritten(s"$k-c3-falseleaf-opcode-accept#3", kind,
+          s"$subject whose tree is BoolToSigmaProp(FalseLeaf), opcode 80 (ValueSerializer.scala:80). It parses and, " +
+          "like #2, comes back as the Boolean constant: 00 d1 01 00. NON-IDENTITY.",
+          cand("00d180"), rewritten = cand("00d10100")),
+        accept(s"$k-c4-property-call-on-wrong-type-accept#4", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ(PropertyCall(SBox.value) on Int 1, Long 1)) (db 63 01). " +
+          "SMethod.specializeFor finds no unification of SBox with SInt and keeps the method as it is " +
+          "(SMethod.scala:193-199), typed Long, so the EQ is well-typed and the tree parses. Round-trip identity. An " +
+          "impl that fails the unification rejects it: the over-reject.",
+          cand("00d193db630104020502"), degrade = None),
+        accept(s"$k-c5-apply-non-function-accept#5", kind,
+          s"$subject whose tree is BoolToSigmaProp(Apply(Int 1, [])). Apply's tpe is a lazy val, NoType for a " +
+          "non-function, and nothing reads it at parse (values.scala:1247-1251). " + unchecked,
+          cand("00d1da040200"), degrade = None),
+        reject(s"$k-e1-append-on-int-reject#6", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ(SizeOf(Append(Int 1, Int 2)), Int 0)). Append holds `val tpe = " +
+          "input.tpe` (transformers.scala:62), a strict val whose checkcast to SCollection throws ClassCastException " +
+          "when the node is built: the JVM rejects.",
+          cand("00" + appendBody), mention = Seq("ClassCastException")),
+        reject(s"$k-e1-append-on-int-sized-reject#7", kind,
+          s"$subject whose tree is the same, size-flagged: a ClassCastException is not a ValidationException, so the " +
+          "tree does not degrade and the JVM rejects.",
+          cand(sizedV0(appendBody)), mention = Seq("ClassCastException")),
+        reject(s"$k-e2-slice-on-int-reject#8", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ(SizeOf(Slice(Int 1, 0, 1)), Int 0)). Slice holds `val tpe = " +
+          "input.tpe` too (transformers.scala:89): ClassCastException, a reject.",
+          cand("00" + sliceBody), mention = Seq("ClassCastException")),
+        reject(s"$k-e2-slice-on-int-sized-reject#9", kind,
+          s"$subject whose tree is the same, size-flagged: rejected as well.",
+          cand(sizedV0(sliceBody)), mention = Seq("ClassCastException")),
+        accept(s"$k-e3-option-isdefined-on-int-accept#10", kind,
+          s"$subject whose tree is BoolToSigmaProp(OptionIsDefined(Int 1)). Its opType is SFunc(input.tpe, SBoolean) " +
+          "(transformers.scala:656), which takes any type with no cast to SOption, and its tpe is SBoolean. " + unchecked,
+          cand("00d1e60402"), degrade = None),
+        reject(s"$k-l1-eq-int-long-v3-reject#11", kind,
+          s"$subject whose size-flagged v3 tree (0b) is BoolToSigmaProp(EQ(Int 1, Long 1)). From tree v3 the " +
+          "deserializing builder does not upcast (SigmaBuilder.scala:757-758), so the same-type check throws " +
+          "ConstraintFailed (:691), which is not a ValidationException: the JVM rejects. An impl without the check " +
+          "parses it: the over-accept.",
+          cand("0b06d19304020502"), mention = Seq("ConstraintFailed")),
+        accept(s"$k-l1-eq-int-long-v0-upcast-accept#12", kind,
+          s"The twin: $subject whose tree is the same EQ in an unsized v0 tree. Below v3 the builder upcasts the Int to " +
+          "Long first, so the tree parses. Round-trip identity.",
+          cand("00d19304020502"), degrade = None),
+        accept(s"$k-l1-eq-int-int-v3-accept#13", kind,
+          s"The other twin: $subject whose v3 tree is BoolToSigmaProp(EQ(Int 1, Int 1)): the same types, so it " +
+          "parses. Round-trip identity.",
+          cand("0b06d19304020402"), degrade = None),
+        reject(s"$k-l2-gt-boolean-reject#14", kind,
+          s"$subject whose tree is BoolToSigmaProp(GT(true, true)). The builder's comparison check requires numeric " +
+          "operands (SigmaBuilder.scala:699): ConstraintFailed, a reject. An impl without the check parses it.",
+          cand("00" + gtBoolBody), mention = Seq("ConstraintFailed")),
+        reject(s"$k-l2-gt-boolean-sized-reject#15", kind,
+          s"$subject whose tree is the same, size-flagged: ConstraintFailed does not degrade, so rejected as well.",
+          cand(sizedV0(gtBoolBody)), mention = Seq("ConstraintFailed")),
+        accept(s"$k-l2-gt-int-accept#16", kind,
+          s"The twin: $subject whose tree is BoolToSigmaProp(GT(Int 1, Int 1)). It parses. Round-trip identity.",
+          cand("00d19104020402"), degrade = None),
+        reject(s"$k-l3-bitor-boolean-reject#17", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ(BitOr(true, true), Int 0)). BitOp requires numeric operands " +
+          "(trees.scala:913): an IllegalArgumentException, which deserializeErgoTree rethrows as a SerializerException " +
+          "reading 'Tree version (0) is above activated script version (3)': the JVM rejects.",
+          cand("00" + bitOrBody), mention = Seq("IllegalArgumentException")),
+        reject(s"$k-l3-bitor-boolean-sized-reject#18", kind,
+          s"$subject whose tree is the same, size-flagged: the SerializerException does not degrade, so rejected as well.",
+          cand(sizedV0(bitOrBody)), mention = Seq("IllegalArgumentException")),
+        accept(s"$k-l3-bitor-int-accept#19", kind,
+          s"The twin: $subject whose tree is BoolToSigmaProp(EQ(BitOr(Int 1, Int 1), Int 0)). It parses. Round-trip " +
+          "identity.", cand("00d193f2040204020400"), degrade = None))
+    }
+
     def envelope(op: String, es: Seq[Json]): Json = Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
@@ -431,7 +554,9 @@ object AuthoredWireBoxTreeParse {
       OpBoxValUse -> envelope(OpBoxValUse, valUseEntries("Box", boxWith)),
       OpTxValUse  -> envelope(OpTxValUse, valUseEntries("Transaction", cand => txWith(cand))),
       OpBoxGate   -> envelope(OpBoxGate, gateEntries("Box", boxWith)),
-      OpTxGate    -> envelope(OpTxGate, gateEntries("Transaction", cand => txWith(cand))))
+      OpTxGate    -> envelope(OpTxGate, gateEntries("Transaction", cand => txWith(cand))),
+      OpBoxAcceptance -> envelope(OpBoxAcceptance, acceptanceEntries("Box", boxWith)),
+      OpTxAcceptance  -> envelope(OpTxAcceptance, acceptanceEntries("Transaction", cand => txWith(cand))))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =
