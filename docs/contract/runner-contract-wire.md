@@ -146,7 +146,10 @@ arms are named non-goals, to be specified when built (do not implement against t
   which node constructors check their operands at parse (most check nothing, so a node on an operand
   of the wrong type parses; `Append`/`Slice` on a non-collection, `EQ(Int, Long)` from tree v3, `GT` on
   Booleans and `BitOr` on Booleans reject; the `TrueLeaf`/`FalseLeaf` opcodes re-serialize as Boolean
-  constants, a non-identity round-trip — `{Box,Transaction}.tree_parse_acceptance`);
+  constants, a non-identity round-trip — `{Box,Transaction}.tree_parse_acceptance`); failures nested in a
+  Box constant, count bounds and counts that wrap, header bits, root forms, the `85` pair form, and the
+  SigmaBoolean conjecture bounds (`{Box,Transaction}.tree_{nested_degrade,count_bounds,count_wrap,
+  header_bits,root_forms,bool_pair_form,sigmaboolean_bounds}`, `SigmaBoolean.conjecture_bounds`);
   the reader's scope
   (a block's transactions each parse on a fresh reader, so neither leaked levels nor `ValDef` types
   reach the next transaction, while one transaction's outputs share theirs —

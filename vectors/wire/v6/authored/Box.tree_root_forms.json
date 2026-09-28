@@ -1,0 +1,52 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.tree_root_forms",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "box-apply-coll-sigmaprop-root-accept#0",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose unsized tree is Apply(Coll(sigmaProp(true)), [0]) (da 14 01 d3 01 04 00). Apply of a collection types as its element, SigmaProp, so rule 1001 passes and the tree parses. Round-trip identity.",
+      "bytes_hex" : "c0843d00da1401d30104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-apply-int-root-degrade-accept#1",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose size-flagged tree is Apply(Int 0, [0]) (08 06 da 04 00 01 04 00): NoType, not a SigmaProp, so rule 1001 degrades the tree. Round-trip identity.",
+      "bytes_hex" : "c0843d0806da04000104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-context-datainputs-root-reject#2",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose unsized tree is 00 db 65 01 fe: PropertyCall(SContext.dataInputs) on CONTEXT, a Coll[Box] root. Rule 1001 fails, and unsized the tree cannot degrade: the JVM rejects. An impl that types an unknown method's result as 'any' passes the root check: the over-accept.",
+      "bytes_hex" : "c0843d00db6501fe0100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-context-datainputs-root-sized-degrade-accept#3",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "The twin: A bare box whose tree is the same, size-flagged: rule 1001 degrades it. Round-trip identity.",
+      "bytes_hex" : "c0843d0804db6501fe0100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

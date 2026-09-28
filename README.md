@@ -120,6 +120,11 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     `ClassCastException`; `EQ(Int, Long)` from tree v3 and `GT` on Booleans fail the builder's
     constraints; `BitOr` needs numeric operands. The `TrueLeaf`/`FalseLeaf` opcodes `7f`/`80` parse and
     come back as the Boolean constants `01 01`/`01 00`, a non-identity round-trip
+  - **nested failures and counts:** a `ValidationException` inside a Box constant degrades the outer
+    size-flagged tree, while a nested unsized tree's failure rejects; SigmaAnd/Apply counts above
+    100000 and collection counts above `0xFFFF` reject; a constants count that wraps negative means
+    none, and `getUShort` truncates a count to 32 bits before its range check (both non-identity);
+    header bits 5–7 are kept; CTHRESHOLD needs `k <= n <= 255`, while `CAND()`/`COR()` parse
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs

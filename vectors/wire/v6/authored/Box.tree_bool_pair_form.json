@@ -1,0 +1,40 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.tree_bool_pair_form",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "box-plus-on-bool-collections-accept#0",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree is BoolToSigmaProp(EQ(Plus(C, C), C)), C = Coll[Boolean](true) (85 01 01). Only the nine relations read an 85 after their opcode as a packed Boolean pair; for Plus it is the start of a Boolean collection constant. The builder does not check an arithmetic operation's operand types at parse, so the tree parses. Round-trip identity. An impl that reads the pair form here consumes different bytes.",
+      "bytes_hex" : "c0843d00d1939a8501018501018501010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-minus-on-bool-collections-accept#1",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree is the same with Minus (99). Round-trip identity.",
+      "bytes_hex" : "c0843d00d193998501018501018501010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-eq-bool-pair-accept#2",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree is BoolToSigmaProp(EQ(true, true)) in the relation's packed pair form, 93 85 03. Round-trip identity.",
+      "bytes_hex" : "c0843d00d19385030100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

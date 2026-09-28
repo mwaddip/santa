@@ -1,0 +1,79 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.tree_count_wrap",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "box-constants-count-wraps-negative-accept#0",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose size-flagged, segregated tree declares 2^32 - 1 constants (ff ff ff ff 0f) and has the body SigmaProp(true). deserializeConstants reads the count as getUInt().toInt and takes a negative count as no constants (ErgoTreeSerializer.scala:248-261), so the tree parses, and the JVM writes it back with count 0: NON-IDENTITY.",
+      "bytes_hex" : "c0843d1807ffffffff0f08d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d18030008d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-constants-count-2-31-accept#1",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree declares 2^31 constants, Int.MinValue once truncated. deserializeConstants reads the count as getUInt().toInt and takes a negative count as no constants (ErgoTreeSerializer.scala:248-261), so the tree parses, and the JVM writes it back with count 0: NON-IDENTITY.",
+      "bytes_hex" : "c0843d1807808080800808d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d18030008d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-constants-count-wraps-negative-unsized-accept#2",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose unsized segregated tree (10) declares 2^32 - 1 constants. deserializeConstants reads the count as getUInt().toInt and takes a negative count as no constants (ErgoTreeSerializer.scala:248-261), so the tree parses, and the JVM writes it back with count 0: NON-IDENTITY.",
+      "bytes_hex" : "c0843d10ffffffff0f08d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d100008d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-bool-collection-count-2-32-accept#3",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree is BoolToSigmaProp(EQ(SizeOf(<85, count 2^32>), 0)): a Boolean collection constant whose count VLQ is 2^32. scorex-util 0.2.0's getUShort is getULong().toInt followed by the 0..65535 check, so the 32-bit truncation comes first: a count of 2^32 + k reads as k. The tree parses and comes back with the count written as k: NON-IDENTITY. An impl that range-checks the full value rejects it: the over-reject. Here k = 0: an empty collection, written back as 85 00.",
+      "bytes_hex" : "c0843d00d193b185808080801004000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d00d193b1850004000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-bool-collection-count-2-32-plus-1-accept#4",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree is BoolToSigmaProp(EQ(SizeOf(<85, count 2^32 + 1, bits 01>), 1)). scorex-util 0.2.0's getUShort is getULong().toInt followed by the 0..65535 check, so the 32-bit truncation comes first: a count of 2^32 + k reads as k. The tree parses and comes back with the count written as k: NON-IDENTITY. An impl that range-checks the full value rejects it: the over-reject. Here k = 1: one bit is read, written back as 85 01 01.",
+      "bytes_hex" : "c0843d00d193b18581808080100104020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d00d193b185010104020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-collection-count-2-32-accept#5",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose tree is BoolToSigmaProp(EQ(SizeOf(<83, count 2^32, Int>), 0)): a ConcreteCollection of Int (ConcreteCollectionSerializer.scala:28). scorex-util 0.2.0's getUShort is getULong().toInt followed by the 0..65535 check, so the 32-bit truncation comes first: a count of 2^32 + k reads as k. The tree parses and comes back with the count written as k: NON-IDENTITY. An impl that range-checks the full value rejects it: the over-reject. Written back as 83 00 04.",
+      "bytes_hex" : "c0843d00d193b18380808080100404000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d00d193b183000404000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
