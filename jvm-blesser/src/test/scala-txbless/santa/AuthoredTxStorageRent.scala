@@ -55,7 +55,7 @@ object AuthoredTxStorageRent {
   private val Launch: Seq[(String, Int)] = Seq(
     "maxBlockCost" -> 1000000, "storageFeeFactor" -> StorageFeeFactor, "minValuePerByte" -> 360,
     "inputCost" -> 2000, "dataInputCost" -> 100, "outputCost" -> 100, "tokenAccessCost" -> 100)
-  private val params: Json = Json.obj(Launch.map { case (k, v) => k -> Json.fromInt(v) }: _*)
+  private[santa] val params: Json = Json.obj(Launch.map { case (k, v) => k -> Json.fromInt(v) }: _*)
   private def param(k: String): Int = Launch.toMap.apply(k)
 
   private val NBits  = 117440512L      // 0x07000000; never decoded by stateful tx validation
@@ -88,8 +88,8 @@ object AuthoredTxStorageRent {
   }
 
   private val headers: Seq[Header] = headersBelow(H)
-  private val headersHex: Seq[String] = headers.map(h => hex(HeaderSerializer.toBytes(h)))
-  private val preHeader: Json = Json.obj(
+  private[santa] val headersHex: Seq[String] = headers.map(h => hex(HeaderSerializer.toBytes(h)))
+  private[santa] val preHeader: Json = Json.obj(
     "version"   -> Json.fromInt(4),
     "parentId"  -> Json.fromString(headers.head.id),
     "timestamp" -> Json.fromString((headers.head.timestamp + 120000L).toString),

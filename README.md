@@ -156,6 +156,14 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   A stratified **mainnet sample** (122 real rent spends, v5 and v6 eras) gates rent ports on real
   history ([`docs/findings/mainnet-rent-spotcheck.md`](docs/findings/mainnet-rent-spotcheck.md)).
 
+  **Sized-tree spends** (`sized-tree-spend`, `sized-tree-output-bytes`, on the same synthetic context):
+  - a box whose tree degraded under rule 1001 does not spend;
+  - a leafless `CAND()` or `CTHRESHOLD(0, [])` spends with its secret-free 24-byte Fiat-Shamir proof, and with no
+    proof does not;
+  - inside the creating transaction, an output that declares its tree size wrongly keeps its tree as received in
+    `propositionBytes`, while its `bytes`, its id and the signing message are re-encoded. A deterministic Schnorr
+    proof pins the signing message.
+
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
