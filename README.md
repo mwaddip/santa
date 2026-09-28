@@ -111,6 +111,9 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **root type:** an unsized tree whose root is not a SigmaProp
   - **function type:** a register or extension value typed 0x70 (a sized tree's 0x70 constant degrades)
   - **unbound ValUse:** a tree using a variable it never defined, sized or not (not a soft-fork degrade)
+  - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
+    transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
+    one transaction's outputs share theirs
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity
   round-trip, and so does a size-flagged tree whose declared size is wrong: the JVM ignores it when

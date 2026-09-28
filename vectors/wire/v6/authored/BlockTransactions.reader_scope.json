@@ -1,0 +1,52 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.reader_scope",
+  "blessed_by" : "jvm:ergo-core-6.0.6-BlockTransactionsSerializer",
+  "entries" : [
+    {
+      "name" : "block-depth-left-then-plain-accept#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-reader-scope",
+      "description" : "Block section (version 4) with two transactions. Tx A's only output has the size-flagged v3 tree BoolToSigmaProp(LogicalNot^107(0xfd)), which degrades 109 levels deep and leaves those levels on its reader. Tx B has an ordinary sigmaProp(true) output. The JVM parses each transaction on a fresh SigmaByteReader, so tx B starts at level 0 and the section round-trips. On one shared reader, tx B's plain tree would need levels 110 and 111: an impl that shares reader state across transactions rejects the section.",
+      "bytes_hex" : "bfbc8c5cb61b59dd3cd2918450c7272600312b3b8c929808b09e76253d1bfecf84ade20402012273c73313bd759c7a0e122d48a6b452a378a24fc783280e8d3789f08f5567b20000000001c0843d0b6dd1efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeffd01000001e21828951e367099a66b8cac0f867c2297848003ab45f38d8c3b864598d728590000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "block-plain-then-depth-left-accept#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-reader-scope",
+      "description" : "The same two transactions, the ordinary one first: nothing follows the degrade, so even a shared reader accepts. The control for #0.",
+      "bytes_hex" : "bfbc8c5cb61b59dd3cd2918450c7272600312b3b8c929808b09e76253d1bfecf84ade2040201e21828951e367099a66b8cac0f867c2297848003ab45f38d8c3b864598d728590000000001c0843d0008d3010000012273c73313bd759c7a0e122d48a6b452a378a24fc783280e8d3789f08f5567b20000000001c0843d0b6dd1efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefeffd010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "block-valdef-then-valuse-reject#2",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-reader-scope",
+      "description" : "Block section: tx A's output tree is BlockValue(ValDef(1, SigmaProp(true)), ValUse(1)); tx B's is 00 72 01, the bare ValUse(1). Tx B parses on a fresh reader whose ValDef store is empty, so ValUse(1) throws NoSuchElementException and the JVM rejects the section. On one shared reader tx A's ValDef(1) would resolve it: an impl that shares reader state across transactions round-trips the section, the over-accept.",
+      "bytes_hex" : "bfbc8c5cb61b59dd3cd2918450c7272600312b3b8c929808b09e76253d1bfecf84ade2040201456971d1f52b5bafce6e5c94848a0892d936cfe52a65d6a75d48d1fcc586f9f60000000001c0843d00d801d60108d3720101000001b2c4c3246f9b3015b4fea907cb8b0748e5c6c434c665d8cf2b2668427caf97620000000001c0843d007201010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "block-valdef-then-own-valdef-accept#3",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-reader-scope",
+      "description" : "The twin of #2: tx B's tree defines its own ValDef(1). Round-trip identity.",
+      "bytes_hex" : "bfbc8c5cb61b59dd3cd2918450c7272600312b3b8c929808b09e76253d1bfecf84ade2040201456971d1f52b5bafce6e5c94848a0892d936cfe52a65d6a75d48d1fcc586f9f60000000001c0843d00d801d60108d37201010000015dea0e5b89dbbc08eb741989221dda7428575bb695d2a75bb15e434e379af43b0000000001c0843d00d801d60108d37201010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

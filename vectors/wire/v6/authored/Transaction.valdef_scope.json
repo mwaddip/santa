@@ -1,0 +1,30 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.valdef_scope",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "tx-valdef-out0-valuse-out1-accept#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-reader-scope",
+      "description" : "One transaction, two outputs: output 0's tree is BlockValue(ValDef(1, SigmaProp(true)), ValUse(1)), output 1's is 00 72 01, the bare ValUse(1). The outputs share the transaction's reader, and ValDef(1) is still in its store when output 1's tree parses, so the JVM accepts. An impl that scopes the ValDef store to one tree rejects it: the over-reject.",
+      "bytes_hex" : "0175d49ae507e92170b21cec1ba573c1c9ad3db6e93323773d7d4ade7ecedb6ccc0000000002c0843d00d801d60108d3720101000080897a007201010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "tx-valuse-out0-valdef-out1-reject#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-reader-scope",
+      "description" : "The same outputs in the reverse order: output 0's bare ValUse(1) parses before any ValDef(1), so the store is empty and the JVM rejects (NoSuchElementException).",
+      "bytes_hex" : "01cb84cc69de00be49937f267ef8eebb2e9ae535f3b03c9514bb692aa7e1a3465a0000000002c0843d00720101000080897a00d801d60108d37201010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

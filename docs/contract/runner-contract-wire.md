@@ -96,8 +96,15 @@ Unchanged from `runner-contract.md` §3:
 ## 5. Kind dispatch & the honest limitation
 
 - **`kind`** selects the serializer the runner dispatches on — the initial set is
-  `{ Constant, Box, Transaction, Header, SigmaBoolean, ErgoTree }`, extensible. A `kind` the runner
-  does not serialize is `not-implemented` (§2), never a silent skip. An **`ErgoTree`-kind round-trip
+  `{ Constant, Box, Transaction, Header, SigmaBoolean, ErgoTree }`, extensible; `BlockTransactions` is
+  added. A `kind` the runner does not serialize is `not-implemented` (§2), never a silent skip.
+- **`BlockTransactions`** is a block's transactions section as the JVM frames it: the 32-byte header
+  id, `VLQ(10,000,000 + blockVersion)` (block version > 1), the VLQ tx count, then the transactions.
+  The runner parses the transactions one after another from the section's bytes, as a node parses a
+  block, and re-serializes the section. The JVM gives each transaction a fresh reader (ergo v6.0.6
+  `ErgoTransactionSerializer.parse`): no nesting level, constant or ValDef state carries from one
+  transaction to the next. rudolph grades it through ergo-core's `BlockTransactionsSerializer`, which
+  needs the `SANTA_TX_BLESSER` build. An **`ErgoTree`-kind round-trip
   MUST re-serialize the parsed tree from structure**, not emit a cached/preserved copy of the input
   bytes (the JVM's `ErgoTree.bytes` echo, sigma-rust's template-bytes cache) — else it does not
   exercise the type/name re-encode the kind exists to test (e.g. the STypeVar UTF-8 surrogate fork).
@@ -131,8 +138,11 @@ arms are named non-goals, to be specified when built (do not implement against t
   `{Box,Transaction}.tree_read_window`); the root-type check on unsized trees
   (`{Box,Transaction}.tree_root_type_check`); the function type code 0x70 in a value (a sized tree's 0x70
   constant degrades instead — `{Box,Transaction}.func_type_code`); a `ValUse` with no `ValDef`, which
-  rejects even in a size-flagged tree (`{Box,Transaction}.tree_valuse_unbound`); and the creation-height parse bound (a box, output, or Box constant created above `Int.MaxValue` —
-  `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
+  rejects even in a size-flagged tree (`{Box,Transaction}.tree_valuse_unbound`); the reader's scope
+  (a block's transactions each parse on a fresh reader, so neither leaked levels nor `ValDef` types
+  reach the next transaction, while one transaction's outputs share theirs —
+  `BlockTransactions.reader_scope`, `Transaction.valdef_scope`); and the creation-height parse bound
+  (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
   parsed transaction, not echo its input. `{Box,Transaction}.sized_tree_declared_size` are

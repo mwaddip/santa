@@ -21,7 +21,7 @@
         "name": { "type": "string", "minLength": 1 },
         "kind": {
           "description": "Serializer selector the runner dispatches on.",
-          "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree"]
+          "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree", "BlockTransactions"]
         },
         "source": {
           "description": "Candidate origin for THIS entry (e.g. fleet:serializer/_test-vectors, ergots:fixture-gen/wire, testnet:capture@<range>). Per-entry so one slice (e.g. Box) can hold vectors vendored from several frameworks. Provenance dir follows: framework source => vendored; testnet:/santa: => authored.",

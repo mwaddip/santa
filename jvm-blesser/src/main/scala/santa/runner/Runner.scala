@@ -203,11 +203,15 @@ object Runner {
         .getOrElse(sys.error(s"wire entry '$name': missing version.activated"))
       val ergoTree  = c.downField("version").get[Int]("ergoTree").toOption.map(_.toByte)
         .getOrElse(sys.error(s"wire entry '$name': missing version.ergoTree"))
-      scala.util.Try(WireCanonicalize.canonicalize(kind, hex, activated, ergoTree)) match {
-        case scala.util.Success(bytes) =>
-          name -> Json.obj("bytes_hex" -> Json.fromString(bytes), "error" -> Json.Null)
-        case scala.util.Failure(scala.util.control.NonFatal(_)) =>
-          name -> Json.obj("bytes_hex" -> Json.Null, "error" -> Json.fromString("errored"))
+      if (!WireCanonicalize.supports(kind)) {
+        name -> Json.obj("bytes_hex" -> Json.Null, "error" -> Json.fromString("not-implemented"))
+      } else {
+        scala.util.Try(WireCanonicalize.canonicalize(kind, hex, activated, ergoTree)) match {
+          case scala.util.Success(bytes) =>
+            name -> Json.obj("bytes_hex" -> Json.fromString(bytes), "error" -> Json.Null)
+          case scala.util.Failure(scala.util.control.NonFatal(_)) =>
+            name -> Json.obj("bytes_hex" -> Json.Null, "error" -> Json.fromString("errored"))
+        }
       }
     } catch {
       case scala.util.control.NonFatal(t) =>
