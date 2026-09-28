@@ -54,13 +54,20 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
-  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Five runners wired today:
-  **Rudolph** (the JVM reference — the all-🎁 control that blessed the corpus), **Dasher**
-  (the pure-TS `ergots` library, [`ts-runner/`](ts-runner/)), **Blitzen** as two
-  submodules pinning `sigma-rust` at upstream `develop` (value-only) and the
-  `ergo-node-integration` fork (`--features jit-cost`), and **Comet** (the pure-TS
-  **Fleet SDK** — wire tier only). Each is graded against the
-  JVM-blessed `expected` — the runner is SANTA's; the implementation under test is a dependency.
+  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Eight runners wired today:
+  - **Rudolph**: the JVM reference, the all-🎁 control that blessed the corpus.
+  - **Dasher**: the pure-TS `ergots` library ([`ts-runner/`](ts-runner/)).
+  - **Blitzen**, three submodules pinning `sigma-rust` at:
+    - upstream `develop` (value-only);
+    - the `eni` branch of the mwaddip fork (`--features jit-cost`);
+    - that fork's `master`, which takes over from `eni`. It is the eni runner, so it builds once eni's API has moved
+      there.
+  - **Comet**: the pure-TS **Fleet SDK**, wire tier only.
+  - **Donner**: ergo-node-rust.
+  - **Vixen**: arkadianet/ergo.
+
+  Each is graded against the JVM-blessed `expected`. The runner is SANTA's; the implementation under test is a
+  dependency.
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green
   across the entire eval tier** (every v5+v6 spec+authored slice, value, cost, and reject —
   2026-06-10); its remaining reds are roadmap not-impls (the growth ledger). Blitzen-eni
@@ -267,7 +274,7 @@ vectors/chain/     chain-tier retargeting / voting / fork_vote_gate / header_vot
 vectors/authds/    authds-tier AVL+ prover/verifier vectors (any/vendored/)
 jvm-blesser/       Scala: the blesser, the JVM reference runner (Rudolph), the harness
 ts-runner/         Dasher — the ergots runner + the conformance gate
-runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni · comet · donner · vixen)
+runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni · blitzen-master · comet · donner · vixen)
 conform            the runner-agnostic orchestrator — runs every runner, prints the table
 README.md          this file
 ```
