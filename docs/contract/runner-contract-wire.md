@@ -138,7 +138,12 @@ arms are named non-goals, to be specified when built (do not implement against t
   `{Box,Transaction}.tree_read_window`); the root-type check on unsized trees
   (`{Box,Transaction}.tree_root_type_check`); the function type code 0x70 in a value (a sized tree's 0x70
   constant degrades instead — `{Box,Transaction}.func_type_code`); a `ValUse` with no `ValDef`, which
-  rejects even in a size-flagged tree (`{Box,Transaction}.tree_valuse_unbound`); the reader's scope
+  rejects even in a size-flagged tree (`{Box,Transaction}.tree_valuse_unbound`); the degrade gate that
+  rule belongs to (a size-flagged tree degrades only on a `ValidationException`, so any other parse
+  failure inside it rejects — an out-of-store placeholder, type code 0, an unknown SigmaBoolean opcode,
+  a BigInt over 32 bytes, a `ValDef` id past `Int.MaxValue`, a malformed `FunDef` or function type
+  parameter, a Box constant with a bad height or registers — `{Box,Transaction}.tree_degrade_gate`);
+  the reader's scope
   (a block's transactions each parse on a fresh reader, so neither leaked levels nor `ValDef` types
   reach the next transaction, while one transaction's outputs share theirs —
   `BlockTransactions.reader_scope`, `Transaction.valdef_scope`); and the creation-height parse bound

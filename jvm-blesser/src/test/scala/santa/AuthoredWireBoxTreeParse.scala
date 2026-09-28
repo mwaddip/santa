@@ -20,6 +20,13 @@ package santa
 //    1018 below tree v3 (0x70 is no type code there) and by rule 1009 at v3.
 // 4. A ValUse whose ValDef is not in scope throws NoSuchElementException from the ValDef type store. That is not a
 //    ValidationException, so even a size-flagged tree rejects instead of degrading.
+// 5. The degrade gate, the class rule 4 belongs to. `deserializeErgoTree` degrades a size-flagged tree only on a
+//    ValidationException (`ErgoTreeSerializer.scala:197`). It rethrows an IllegalArgumentException as a
+//    SerializerException (`:191`), and every other exception propagates, so the object is rejected: an out-of-store
+//    placeholder, type code 0, an unknown SigmaBoolean opcode, a BigInt over 32 bytes, a ValDef id past Int.MaxValue,
+//    a malformed FunDef or function type parameter, a Box constant with a bad height or registers. Each reject is
+//    built so that an impl missing the bound parses it or degrades it (either way it accepts), and each has an accept
+//    twin across the bound.
 //
 // Every candidate has value 1000000 (3 VLQ bytes), so its tree window ends 3 bytes after its box window (candidate
 // offsets 4099 and 4096). Box entries are a bare box; Transaction entries carry the candidate as an output.
@@ -50,6 +57,8 @@ object AuthoredWireBoxTreeParse {
   val OpTxFunc    = "Transaction.func_type_code"
   val OpBoxValUse = "Box.tree_valuse_unbound"
   val OpTxValUse  = "Transaction.tree_valuse_unbound"
+  val OpBoxGate   = "Box.tree_degrade_gate"
+  val OpTxGate    = "Transaction.tree_degrade_gate"
   val Source      = "santa:authored-box-tree-parse"
 
   private def hexOf(parts: Array[Byte]*): String = Base16.encode(parts.reduce(_ ++ _))
@@ -125,6 +134,26 @@ object AuthoredWireBoxTreeParse {
       BlockValue(IndexedSeq(ValDef(1, SigmaPropConstant(TrivialProp.TrueProp))), ValUse(1, SSigmaProp))
         .asInstanceOf[SigmaPropValue]).bytes
   }
+
+  /** A size-flagged tree: `header`, the content's size, the content. */
+  private def sizedTree(header: Int, content: Array[Byte]): Array[Byte] =
+    Array(header.toByte) ++ vlq(content.length) ++ content
+  /** Sized v0 tree: a BigInt constant of declared size `size`, then `value`. */
+  private def bigIntTree(size: Int, value: Array[Byte]): Array[Byte] = sizedTree(0x08, b("06") ++ vlq(size) ++ value)
+  /** Sized v0 tree BlockValue(ValDef(id, SigmaProp(true)), ValUse(id)). */
+  private def valDefIdTree(id: Long): Array[Byte] =
+    sizedTree(0x08, b("d801" + "d6") ++ vlqU32(id) ++ b("08d3" + "72") ++ vlqU32(id))
+  /** Sized v0 tree BlockValue(FunDef(1, <type arguments>, SigmaProp(true)), ValUse(1)); `tpeArgs` is the count byte
+    * and the types. */
+  private def funDefTree(tpeArgs: String): Array[Byte] = sizedTree(0x08, b("d801" + "d701" + tpeArgs + "08d3" + "7201"))
+  /** Sized, segregated v3 tree: a constant of type SFunc(Int => Int) with the one type parameter `param`, then 02 and
+    * body placeholder 0 (as funcConstTree). */
+  private def funcParamTree(param: String): Array[Byte] = sizedTree(0x1b, b("01" + "7001040401" + param + "02" + "7300"))
+  /** A box as a Box constant's data: value 1000000, tree 00 08 d3, `height`, no tokens, `regs`, zero tx id, index 0. */
+  private def nestedBox(height: Long, regs: String): Array[Byte] =
+    Value ++ b("0008d3") ++ vlqU32(height) ++ b("00" + regs) ++ zeros(32) ++ b("00")
+  /** Sized, segregated v0 tree: constant 0 = Box(`nested`), constant 1 = SigmaProp(true), body placeholder 1. */
+  private def boxConstTree(nested: Array[Byte]): Array[Byte] = sizedTree(0x18, b("02" + "63") ++ nested ++ b("08d3" + "7301"))
 
   private def version: Json =
     Json.obj("activated" -> Json.fromInt(V3.toInt), "ergoTree" -> Json.fromInt(V3.toInt))
@@ -288,6 +317,104 @@ object AuthoredWireBoxTreeParse {
           wrap(Value ++ b("007201") ++ Fields), mention = Seq("NoSuchElementException")))
     }
 
+    // Mentions are exception CLASS names: HotSpot's fast throw drops the message of a hot implicit exception.
+    def gateEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val subject = if (kind == "Box") "A bare box" else "A transaction output"
+      def cand(tree: Array[Byte]): Array[Byte] = wrap(Value ++ tree ++ Fields)
+      val bigValue = b("0001") ++ zeros(31)       // 2^248 in 33 bytes: fits 256 bits, one redundant leading zero
+      Seq(
+        reject(s"$k-gate-placeholder-out-of-store-reject#0", kind,
+          s"$subject whose size-flagged v0 tree is 08 02 73 05: the body is ConstantPlaceholder(5) and the tree has no " +
+          "constants, so ConstantStore.get(5) indexes past the empty store (ArrayIndexOutOfBoundsException). " +
+          "deserializeErgoTree degrades a size-flagged tree only on a ValidationException (ErgoTreeSerializer.scala:197), " +
+          "so the JVM rejects. An impl that degrades any body failure round-trips it: the over-accept.",
+          cand(b("08027305")), mention = Seq("ArrayIndexOutOfBoundsException")),
+        accept(s"$k-gate-placeholder-in-store-accept#1", kind,
+          s"The twin: $subject whose size-flagged, segregated v0 tree 18 05 01 08 d3 73 00 has constant 0 = " +
+          "SigmaProp(true) and the body ConstantPlaceholder(0). It parses. Round-trip identity.",
+          cand(b("18050108d37300")), degrade = None),
+        reject(s"$k-gate-type-code-zero-reject#2", kind,
+          s"$subject whose size-flagged v0 tree is 08 01 00: a constant of type code 0. TypeSerializer throws " +
+          "InvalidTypePrefix, a SerializerException, which does not degrade the tree: the JVM rejects.",
+          cand(b("080100")), mention = Seq("InvalidTypePrefix")),
+        reject(s"$k-gate-sigmaboolean-opcode-reject#3", kind,
+          s"$subject whose size-flagged v0 tree is 08 02 08 01: a SigmaProp constant whose SigmaBoolean opcode is 0x01. " +
+          "The SigmaBoolean parser matches the opcode with no default case: a MatchError, and the JVM rejects.",
+          cand(b("08020801")), mention = Seq("MatchError")),
+        accept(s"$k-gate-sigmaprop-control-accept#4", kind,
+          s"The control for #2 and #3: $subject whose size-flagged v0 tree is 08 02 08 d3, SigmaProp(true). It parses. " +
+          "Round-trip identity.",
+          cand(b("080208d3")), degrade = None),
+        reject(s"$k-gate-bigint-size-33-reject#5", kind,
+          s"$subject whose size-flagged v0 tree is a BigInt constant of declared size 33 (06 21), followed by 33 value " +
+          "bytes: 00 01 and 31 zeros, 2^248, which fits 256 bits. So an impl without the size bound parses it whole. " +
+          "CoreDataSerializer throws a SerializerException for any size over 32: the JVM rejects.",
+          cand(bigIntTree(33, bigValue)), mention = Seq("BigInt value doesn't not fit into 32 bytes: 33")),
+        accept(s"$k-gate-bigint-size-32-degrade-accept#6", kind,
+          s"The twin: $subject whose tree holds the same value in 32 bytes (06 20 01, then 31 zeros). It parses, but the " +
+          "root is a BigInt: rule 1001 (CheckDeserializedScriptIsSigmaProp), a ValidationException, degrades the tree, so " +
+          "the object is accepted. Round-trip identity.",
+          cand(bigIntTree(32, bigValue.drop(1))), degrade = Some(1001)),
+        reject(s"$k-gate-valdef-id-overflow-reject#7", kind,
+          s"$subject whose size-flagged v0 tree is BlockValue(ValDef(2^31, SigmaProp(true)), ValUse(2^31)). " +
+          "ValDefSerializer reads the id with getUIntExact, which throws ArithmeticException (Int overflow) past " +
+          "Int.MaxValue: the JVM rejects. An impl that reads ids as u32 parses the whole tree (the ValUse names the same " +
+          "id): the over-accept.",
+          cand(valDefIdTree(1L << 31)), mention = Seq("ArithmeticException")),
+        accept(s"$k-gate-valdef-id-int-max-accept#8", kind,
+          s"The twin: $subject whose tree is the same with id 2^31 - 1 (ff ff ff ff 07), which fits. It parses. " +
+          "Round-trip identity.",
+          cand(valDefIdTree((1L << 31) - 1)), degrade = None),
+        reject(s"$k-gate-fundef-negative-tpe-count-reject#9", kind,
+          s"$subject whose size-flagged v0 tree is BlockValue(FunDef(1, ...), ValUse(1)) with the FunDef (d7) " +
+          "type-argument count 0xff, the signed byte -1. safeNewArray(-1) throws NegativeArraySizeException: the JVM " +
+          "rejects.",
+          cand(funDefTree("ff")), mention = Seq("NegativeArraySizeException")),
+        reject(s"$k-gate-fundef-tpe-arg-not-typevar-reject#10", kind,
+          s"$subject whose tree is the same FunDef with one type argument, Int (04), which is not a type variable. The " +
+          "cast to STypeVar throws ClassCastException: the JVM rejects. An impl that takes any type there parses the tree.",
+          cand(funDefTree("01" + "04")), mention = Seq("ClassCastException")),
+        accept(s"$k-gate-fundef-tpe-arg-typevar-accept#11", kind,
+          s"The twin for #9 and #10: $subject whose FunDef has one type argument, the type variable T (67 01 54). It " +
+          "parses. Round-trip identity.",
+          cand(funDefTree("01" + "670154")), degrade = None),
+        reject(s"$k-gate-sfunc-tpe-param-not-typevar-reject#12", kind,
+          s"$subject whose size-flagged, segregated v3 tree (header 1b) has a constant typed SFunc(Int => Int) with one " +
+          "type parameter, Int (70 01 04 04 01 04). TypeSerializer's require(ident.isInstanceOf[STypeVar]) throws " +
+          "IllegalArgumentException, and deserializeErgoTree rethrows it as a SerializerException (with the message " +
+          "'Tree version (3) is above activated script version (3)'): the JVM rejects. An impl that takes any type as " +
+          "the parameter degrades the tree on the function's data (rule 1009) instead.",
+          cand(funcParamTree("04")), mention = Seq("IllegalArgumentException")),
+        accept(s"$k-gate-sfunc-tpe-param-typevar-degrade-accept#13", kind,
+          s"The twin: $subject whose type parameter is T (67 01 54). The type parses and the function's data cannot " +
+          "(rule 1009, a ValidationException), so the tree degrades and the object is accepted. Round-trip identity.",
+          cand(funcParamTree("670154")), degrade = Some(1009)),
+        reject(s"$k-gate-box-const-height-overflow-reject#14", kind,
+          s"$subject whose size-flagged, segregated v0 tree has constant 0 = a Box (type 63), constant 1 = " +
+          "SigmaProp(true) and the body ConstantPlaceholder(1). The nested box is created at height 2^31, and " +
+          "ErgoBoxCandidate's parse reads the height with getUIntExact (ErgoBoxCandidate.scala:195): " +
+          "ArithmeticException, and the JVM rejects. An impl that reads " +
+          "it as u32 parses the tree.",
+          cand(boxConstTree(nestedBox(1L << 31, "00"))), mention = Seq("ArithmeticException")),
+        accept(s"$k-gate-box-const-height-int-max-accept#15", kind,
+          s"The twin: $subject whose nested box is created at height 2^31 - 1. The tree parses. Round-trip identity.",
+          cand(boxConstTree(nestedBox((1L << 31) - 1, "00"))), degrade = None),
+        reject(s"$k-gate-box-const-register-not-constant-reject#16", kind,
+          s"$subject whose tree has the same Box constant, created at height 1, with R4 = Height (a3), an expression " +
+          "and not a constant. ErgoBoxCandidate's parse casts each register to EvaluatedValue " +
+          "(ErgoBoxCandidate.scala:231): ClassCastException, and the JVM rejects.",
+          cand(boxConstTree(nestedBox(1, "01" + "a3"))), mention = Seq("ClassCastException")),
+        reject(s"$k-gate-box-const-seven-registers-reject#17", kind,
+          s"$subject whose nested box has 7 registers (Int 1 each). There are 6 non-mandatory register ids, R4 to R9, " +
+          "so looking up the seventh (ErgoBoxCandidate.scala:230) throws ArrayIndexOutOfBoundsException: the JVM rejects.",
+          cand(boxConstTree(nestedBox(1, "07" + "0402" * 7))), mention = Seq("ArrayIndexOutOfBoundsException")),
+        accept(s"$k-gate-box-const-six-registers-accept#18", kind,
+          s"The twin for #16 and #17: $subject whose nested box has 6 registers, R4 to R9 = Int 1. The tree parses. " +
+          "Round-trip identity.",
+          cand(boxConstTree(nestedBox(1, "06" + "0402" * 6))), degrade = None))
+    }
+
     def envelope(op: String, es: Seq[Json]): Json = Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
@@ -302,7 +429,9 @@ object AuthoredWireBoxTreeParse {
         v => boxWith(Value ++ b("0008d3") ++ b("01" + "00" + "01") ++ v))),
       OpTxFunc    -> envelope(OpTxFunc, funcEntries("Transaction", cand => txWith(cand), txWithExtValue)),
       OpBoxValUse -> envelope(OpBoxValUse, valUseEntries("Box", boxWith)),
-      OpTxValUse  -> envelope(OpTxValUse, valUseEntries("Transaction", cand => txWith(cand))))
+      OpTxValUse  -> envelope(OpTxValUse, valUseEntries("Transaction", cand => txWith(cand))),
+      OpBoxGate   -> envelope(OpBoxGate, gateEntries("Box", boxWith)),
+      OpTxGate    -> envelope(OpTxGate, gateEntries("Transaction", cand => txWith(cand))))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

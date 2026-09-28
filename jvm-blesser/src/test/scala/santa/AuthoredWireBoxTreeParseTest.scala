@@ -110,11 +110,49 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
       }
   }
 
+  // The degrade gate: size-flagged trees whose parse throws something other than a ValidationException (rejects),
+  // each beside an accept twin. vlq(2^31) = 80 80 80 80 08, vlq(2^31 - 1) = ff ff ff ff 07; a nested box is
+  // value c0843d, tree 00 08 d3, the height, no tokens, the registers, a 32-byte tx id and index 00.
+  private val Zeros31 = zeros(31)
+  private def nested(height: String, regs: String): String = Value + "0008d3" + height + "00" + regs + zeros(32) + "00"
+  private val GateTrees: List[(String, Boolean)] = List(
+    "08027305" -> true,                                                        // ConstantPlaceholder(5), no constants
+    "18050108d37300" -> false,                                                 // segregated SigmaProp(true), placeholder 0
+    "080100" -> true,                                                          // a constant of type code 0
+    "08020801" -> true,                                                        // SigmaProp, SigmaBoolean opcode 0x01
+    "080208d3" -> false,                                                       // SigmaProp(true)
+    "0823" + "0621" + "0001" + Zeros31 -> true,                                // BigInt of declared size 33
+    "0822" + "0620" + "01" + Zeros31 -> false,                                 // BigInt of size 32 (degrades)
+    "0810" + "d801" + "d6" + "8080808008" + "08d3" + "72" + "8080808008" -> true,  // ValDef/ValUse id 2^31
+    "0810" + "d801" + "d6" + "ffffffff07" + "08d3" + "72" + "ffffffff07" -> false, // id 2^31 - 1
+    "0809" + "d801" + "d701" + "ff" + "08d3" + "7201" -> true,                 // FunDef, type-argument count -1
+    "080a" + "d801" + "d701" + "01" + "04" + "08d3" + "7201" -> true,          // FunDef, type argument Int
+    "080c" + "d801" + "d701" + "01" + "670154" + "08d3" + "7201" -> false,     // FunDef, type argument T
+    "1b0a" + "01" + "7001040401" + "04" + "02" + "7300" -> true,               // v3 SFunc, type parameter Int
+    "1b0c" + "01" + "7001040401" + "670154" + "02" + "7300" -> false,          // v3 SFunc, type parameter T (degrades)
+    "1834" + "0263" + nested("8080808008", "00") + "08d37301" -> true,         // Box constant, height 2^31
+    "1834" + "0263" + nested("ffffffff07", "00") + "08d37301" -> false,        // Box constant, height 2^31 - 1
+    "1831" + "0263" + nested("01", "01" + "a3") + "08d37301" -> true,          // Box constant, R4 = Height
+    "183e" + "0263" + nested("01", "07" + "0402" * 7) + "08d37301" -> true,    // Box constant, 7 registers
+    "183c" + "0263" + nested("01", "06" + "0402" * 6) + "08d37301" -> false)   // Box constant, 6 registers
+
+  Seq(AuthoredWireBoxTreeParse.OpBoxGate -> "Box", AuthoredWireBoxTreeParse.OpTxGate -> "Transaction").foreach {
+    case (op, kind) =>
+      test(s"$kind degrade gate: 11 non-ValidationException rejects, each with its accept twin") {
+        val es = entries(op)
+        assertEquals(es.map(isReject), GateTrees.map(_._2))
+        GateTrees.zip(es).foreach { case ((tree, _), e) =>
+          assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
+        }
+      }
+  }
+
   test("envelopes: santa-wire/v1, the node's v6 parse context (3, 3), authored source, 6.0.6 blessing") {
     assertEquals(vectors.keySet, Set(AuthoredWireBoxTreeParse.OpBoxWindow, AuthoredWireBoxTreeParse.OpTxWindow,
       AuthoredWireBoxTreeParse.OpBoxRoot, AuthoredWireBoxTreeParse.OpTxRoot,
       AuthoredWireBoxTreeParse.OpBoxFunc, AuthoredWireBoxTreeParse.OpTxFunc,
-      AuthoredWireBoxTreeParse.OpBoxValUse, AuthoredWireBoxTreeParse.OpTxValUse))
+      AuthoredWireBoxTreeParse.OpBoxValUse, AuthoredWireBoxTreeParse.OpTxValUse,
+      AuthoredWireBoxTreeParse.OpBoxGate, AuthoredWireBoxTreeParse.OpTxGate))
     vectors.foreach { case (op, env) =>
       val c = env.hcursor
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))

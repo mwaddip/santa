@@ -111,6 +111,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **root type:** an unsized tree whose root is not a SigmaProp
   - **function type:** a register or extension value typed 0x70 (a sized tree's 0x70 constant degrades)
   - **unbound ValUse:** a tree using a variable it never defined, sized or not (not a soft-fork degrade)
+  - **degrade gate:** a size-flagged tree degrades only on a `ValidationException`, so any other parse
+    failure inside it rejects: an out-of-store placeholder, type code 0, an unknown SigmaBoolean opcode,
+    a BigInt over 32 bytes, a `ValDef` id past `Int.MaxValue`, a malformed `FunDef` or function type
+    parameter, a Box constant with a bad height or registers
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs
