@@ -524,6 +524,9 @@ function isWireCodecError(err: unknown): boolean {
     // @ergots/transaction's TxParseError is loaded lazily (variable specifier), so match by name
     // rather than instanceof — a tx-codec rejection of the bytes is a faithful `errored`.
     || (err instanceof Error && err.name === 'TxParseError')
+    // ExprTpeError: a node the JVM refuses to build (ergots' sized-tree work lets it propagate as a
+    // hard reject). By name too: ergots master does not export the class from the package root.
+    || (err instanceof Error && err.name === 'ExprTpeError')
 }
 
 /** The wire-tier slice of the lazily-loaded @ergots/transaction codec (null if ergots-impl

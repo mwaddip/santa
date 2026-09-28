@@ -85,6 +85,15 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
       .toEqual({ bytes_hex: null, error: 'errored' })
   })
 
+  it('an ExprTpeError is a typed rejection, matched by name (ergots master does not export the class)', () => {
+    // ergots' sized-tree work lets ExprTpeError propagate as a hard reject (a node the JVM refuses to build). A stub tx
+    // codec throws one, so the classification is tested without depending on which ergots paths raise it.
+    const err = Object.assign(new Error('Apply.func has tpe SInt, expected SFunc'), { name: 'ExprTpeError' })
+    const tx = { parseTransaction: () => { throw err }, serializeTransaction: () => new Uint8Array() }
+    expect(runWireEntry({ name: 'x', kind: 'Transaction', bytes_hex: '00', version: { activated: 3, ergoTree: 3 } }, tx))
+      .toEqual({ bytes_hex: null, error: 'errored' })
+  })
+
   it('ErgoTree (SHeader-constant reject): a typed codec rejection grades errored, not panicked', async () => {
     // The (b) reject vector: a size-flagged tree with a segregated SHeader constant the JVM rejects.
     // ergots throws a typed SValueParseError parsing the constant; isWireCodecError maps it to `errored`
