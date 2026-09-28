@@ -398,12 +398,16 @@ fn brief(v: &Value, max: usize) -> String {
 }
 
 /// The expected side of one red entry, by tier: eval "value @ cost" (or the expected
-/// error tag), wire "roundtrip <bytes…>", tx "valid <v> @ cost <c>",
-/// chain per-kind phrase (nbits / parameters+update).
+/// error tag), wire "roundtrip <bytes…>" (the bytes grade_wire compares against:
+/// `expected_bytes_hex` when present, else the input) or a reject entry's error tag,
+/// tx "valid <v> @ cost <c>", chain per-kind phrase (nbits / parameters+update).
 fn expected_brief(e: &Value, is_wire: bool, is_tx: bool, is_chain: bool) -> String {
     let exp = &e["expected"];
     if is_wire {
-        format!("roundtrip {}", brief(&e["bytes_hex"], 48))
+        match e["error"].as_str() {
+            Some(err) => err.to_string(),
+            None => format!("roundtrip {}", brief(e.get("expected_bytes_hex").unwrap_or(&e["bytes_hex"]), 48)),
+        }
     } else if is_tx {
         format!("valid {} @ cost {}", exp["valid"], exp["cost"])
     } else if is_chain {
@@ -913,6 +917,17 @@ mod tests {
             ..Default::default()
         };
         assert_eq!(c.summary(), "value 10/10 · 254 not-impl · cost 10/10 · reject 3/3");
+    }
+
+    #[test]
+    fn expected_brief_wire_follows_the_grader() {
+        // A wire entry's expected side is what grade_wire compares against: `errored` for a reject entry,
+        // `expected_bytes_hex` for a non-identity round-trip, the entry's own bytes otherwise. A panicked or
+        // not-implemented reject entry used to read "roundtrip <input bytes>".
+        let brief = |e: serde_json::Value| super::expected_brief(&e, true, false, false);
+        assert_eq!(brief(serde_json::json!({"bytes_hex": "0a0b", "error": "errored"})), "errored");
+        assert_eq!(brief(serde_json::json!({"bytes_hex": "0a0b", "expected_bytes_hex": "0c0d"})), "roundtrip 0c0d");
+        assert_eq!(brief(serde_json::json!({"bytes_hex": "0a0b"})), "roundtrip 0a0b");
     }
 
     #[test]
