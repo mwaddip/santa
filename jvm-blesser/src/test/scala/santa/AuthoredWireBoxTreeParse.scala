@@ -15,6 +15,11 @@ package santa
 // 2. The root type. `deserializeErgoTree` runs rule 1001 `CheckDeserializedScriptIsSigmaProp` on sized and unsized
 //    trees alike (`:173-175`): a sized tree degrades, an unsized one rejects ("Cannot handle ValidationException,
 //    ErgoTree serialized without size bit.", `:204-207`).
+// 3. The function type code 0x70. Under the node's (3, 3) context an extension value or register typed 0x70 parses as
+//    SFunc, which has no data encoding: rule 1009, a reject. As a size-flagged tree's constant it degrades, by rule
+//    1018 below tree v3 (0x70 is no type code there) and by rule 1009 at v3.
+// 4. A ValUse whose ValDef is not in scope throws NoSuchElementException from the ValDef type store. That is not a
+//    ValidationException, so even a size-flagged tree rejects instead of degrading.
 //
 // Every candidate has value 1000000 (3 VLQ bytes), so its tree window ends 3 bytes after its box window (candidate
 // offsets 4099 and 4096). Box entries are a bare box; Transaction entries carry the candidate as an output.
@@ -27,7 +32,9 @@ import scala.util.{Failure, Success, Try}
 import io.circe.Json
 import scorex.util.encode.Base16
 import sigma.VersionContext
-import sigma.ast.{ErgoTree, UnparsedErgoTree}
+import sigma.ast.{BlockValue, ErgoTree, SSigmaProp, SigmaPropConstant, UnparsedErgoTree, ValDef, ValUse}
+import sigma.ast.syntax.SigmaPropValue
+import sigma.data.TrivialProp
 import sigma.serialization.SigmaSerializer
 import org.ergoplatform.{ErgoBox, ErgoBoxCandidate, ErgoLikeTransaction}
 
@@ -39,6 +46,10 @@ object AuthoredWireBoxTreeParse {
   val OpTxWindow  = "Transaction.tree_read_window"
   val OpBoxRoot   = "Box.tree_root_type_check"
   val OpTxRoot    = "Transaction.tree_root_type_check"
+  val OpBoxFunc   = "Box.func_type_code"
+  val OpTxFunc    = "Transaction.func_type_code"
+  val OpBoxValUse = "Box.tree_valuse_unbound"
+  val OpTxValUse  = "Transaction.tree_valuse_unbound"
   val Source      = "santa:authored-box-tree-parse"
 
   private def hexOf(parts: Array[Byte]*): String = Base16.encode(parts.reduce(_ ++ _))
@@ -93,6 +104,27 @@ object AuthoredWireBoxTreeParse {
     VersionContext.withVersions(V3, V3) {
       replaceUnique(txBytes(RentFixtures.tx(Seq(input(spent, ext())), placeholder +: after)), placeholderBytes, cand)
     }
+
+  /** The placeholder tx with input 0's (empty) extension replaced by {1: `value`}, written raw. */
+  private def txWithExtValue(value: Array[Byte]): Array[Byte] = {
+    val base = txWith(placeholderBytes)
+    require(base(0) == 1 && base(33) == 0 && base(34) == 0, s"unexpected tx layout: ${hex(base)}")
+    base.take(34) ++ b("0101") ++ value ++ base.drop(35)
+  }
+
+  /** SFunc(Int => Int): type code 0x70, one domain type Int, range Int, no type params. */
+  private val FuncType = b("70" + "01" + "04" + "04" + "00")
+  /** Sized, segregated tree of version `v`: constant 0 of the function type, then 02 and body placeholder 0. */
+  private def funcConstTree(v: Int): Array[Byte] = {
+    val content = b("01") ++ FuncType ++ b("02" + "7300")
+    Array((0x18 | v).toByte) ++ vlq(content.length) ++ content
+  }
+  /** Sized tree BlockValue(ValDef(1, SigmaProp(true)), ValUse(1)): the bound twin of an unbound ValUse. */
+  private lazy val boundValUseTree: Array[Byte] = VersionContext.withVersions(V3, V3) {
+    ErgoTree(ErgoTree.setSizeBit(ErgoTree.ZeroHeader), IndexedSeq(),
+      BlockValue(IndexedSeq(ValDef(1, SigmaPropConstant(TrivialProp.TrueProp))), ValUse(1, SSigmaProp))
+        .asInstanceOf[SigmaPropValue]).bytes
+  }
 
   private def version: Json =
     Json.obj("activated" -> Json.fromInt(V3.toInt), "ergoTree" -> Json.fromInt(V3.toInt))
@@ -214,6 +246,48 @@ object AuthoredWireBoxTreeParse {
           wrap(Value ++ b("08020402") ++ Fields), degrade = Some(1001)))
     }
 
+    def funcEntries(kind: String, wrap: Array[Byte] => Array[Byte], valueAt: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val (subject, where) = if (kind == "Box") ("A bare box", "R4") else ("A transaction output", "input 0's extension value 1")
+      Seq(
+        reject(s"$k-func-type-value-reject#0", kind,
+          s"$subject whose $where is typed 0x70 = SFunc(Int => Int) (70 01 04 04 00). Under the node's (3, 3) context the " +
+          "type parses (function types exist from tree v3), but a function has no data encoding: rule 1009 " +
+          "(CheckSerializableTypeCode), and outside a tree there is nothing to degrade, so the JVM rejects. An impl " +
+          "that panics on the type code (sigma-rust before 09a61b05) is red as panicked.",
+          valueAt(FuncType), mention = Seq("Data value of the type with the code 112 cannot be deserialized")),
+        accept(s"$k-int-value-accept#1", kind,
+          s"$subject whose $where is Int 1 (04 02): the control. Round-trip identity.",
+          valueAt(b("0402")), degrade = None),
+        accept(s"$k-func-const-v2-degrade-accept#2", kind,
+          s"$subject whose size-flagged, segregated v2 tree has a constant of type 0x70. Below tree v3 0x70 is no type " +
+          "code: CheckTypeCodeV6 (rule 1018) throws a ValidationException and the tree degrades to UnparsedErgoTree. " +
+          "Round-trip identity.",
+          wrap(Value ++ funcConstTree(2) ++ Fields), degrade = Some(1018)),
+        accept(s"$k-func-const-v3-degrade-accept#3", kind,
+          s"$subject with the same tree at v3: the function type parses, its data cannot (rule 1009), and the tree " +
+          "degrades too. Round-trip identity.",
+          wrap(Value ++ funcConstTree(3) ++ Fields), degrade = Some(1009)))
+    }
+
+    def valUseEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val subject = if (kind == "Box") "A bare box" else "A transaction output"
+      Seq(
+        reject(s"$k-valuse-unbound-sized-reject#0", kind,
+          s"$subject whose size-flagged v0 tree is 08 02 72 01: the body is ValUse(1) with no ValDef(1) in scope. The " +
+          "ValDef type store throws NoSuchElementException, not a ValidationException, so the size flag does not " +
+          "degrade it: the JVM rejects. An impl that degrades any body failure round-trips it: the over-accept.",
+          wrap(Value ++ b("08027201") ++ Fields), mention = Seq("NoSuchElementException")),
+        accept(s"$k-valuse-bound-sized-accept#1", kind,
+          s"$subject whose size-flagged tree binds it first: BlockValue(ValDef(1, SigmaProp(true)), ValUse(1)). Round-trip " +
+          "identity.",
+          wrap(Value ++ boundValUseTree ++ Fields), degrade = None),
+        reject(s"$k-valuse-unbound-unsized-reject#2", kind,
+          s"$subject whose unsized v0 tree is 00 72 01, the same unbound ValUse(1): rejected as well.",
+          wrap(Value ++ b("007201") ++ Fields), mention = Seq("NoSuchElementException")))
+    }
+
     def envelope(op: String, es: Seq[Json]): Json = Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
@@ -223,7 +297,12 @@ object AuthoredWireBoxTreeParse {
       OpBoxWindow -> envelope(OpBoxWindow, boxWindow),
       OpTxWindow  -> envelope(OpTxWindow, txWindow),
       OpBoxRoot   -> envelope(OpBoxRoot, rootEntries("Box", boxWith)),
-      OpTxRoot    -> envelope(OpTxRoot, rootEntries("Transaction", cand => txWith(cand))))
+      OpTxRoot    -> envelope(OpTxRoot, rootEntries("Transaction", cand => txWith(cand))),
+      OpBoxFunc   -> envelope(OpBoxFunc, funcEntries("Box", boxWith,
+        v => boxWith(Value ++ b("0008d3") ++ b("01" + "00" + "01") ++ v))),
+      OpTxFunc    -> envelope(OpTxFunc, funcEntries("Transaction", cand => txWith(cand), txWithExtValue)),
+      OpBoxValUse -> envelope(OpBoxValUse, valUseEntries("Box", boxWith)),
+      OpTxValUse  -> envelope(OpTxValUse, valUseEntries("Transaction", cand => txWith(cand))))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

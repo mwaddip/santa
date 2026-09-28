@@ -1,0 +1,52 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.func_type_code",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "transaction-func-type-value-reject#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A transaction output whose input 0's extension value 1 is typed 0x70 = SFunc(Int => Int) (70 01 04 04 00). Under the node's (3, 3) context the type parses (function types exist from tree v3), but a function has no data encoding: rule 1009 (CheckSerializableTypeCode), and outside a tree there is nothing to degrade, so the JVM rejects. An impl that panics on the type code (sigma-rust before 09a61b05) is red as panicked.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001017001040400000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "transaction-int-value-accept#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A transaction output whose input 0's extension value 1 is Int 1 (04 02): the control. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001010402000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "transaction-func-const-v2-degrade-accept#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A transaction output whose size-flagged, segregated v2 tree has a constant of type 0x70. Below tree v3 0x70 is no type code: CheckTypeCodeV6 (rule 1018) throws a ValidationException and the tree degrades to UnparsedErgoTree. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d1a09017001040400027300010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "transaction-func-const-v3-degrade-accept#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A transaction output with the same tree at v3: the function type parses, its data cannot (rule 1009), and the tree degrades too. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d1b09017001040400027300010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

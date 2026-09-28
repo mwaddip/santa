@@ -109,6 +109,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **tree read window:** a box's tree reads within 4096 bytes of its own start (then the box
     window is back); an overrun degrades a sized tree and rejects an unsized one
   - **root type:** an unsized tree whose root is not a SigmaProp
+  - **function type:** a register or extension value typed 0x70 (a sized tree's 0x70 constant degrades)
+  - **unbound ValUse:** a tree using a variable it never defined, sized or not (not a soft-fork degrade)
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity
   round-trip, and so does a size-flagged tree whose declared size is wrong: the JVM ignores it when

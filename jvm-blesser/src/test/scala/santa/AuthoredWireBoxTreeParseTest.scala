@@ -72,9 +72,49 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
       }
   }
 
+  // SFunc(Int => Int): type code 0x70, one domain type, Int (04), range Int (04), no type params.
+  private val FuncType = "70" + "01" + "04" + "04" + "00"
+  // Sized, segregated tree of version v (header 0x18 | v): one constant of the function type, then 02 and body
+  // placeholder 0 (9 content bytes, all inside the declared size).
+  private def funcConstTree(v: Int): String = "%02x".format(0x18 | v) + "09" + "01" + FuncType + "02" + "7300"
+
+  test("Box function type: an R4 of type 0x70 rejects, an Int R4 accepts, v2 and v3 trees with a 0x70 constant degrade") {
+    val es = entries(AuthoredWireBoxTreeParse.OpBoxFunc)
+    assertEquals(es.map(isReject), List(true, false, false, false))
+    // [1 register][R4] after height 1 and no tokens; the R4 function type has no data, so nothing more is read
+    Seq(Value + "0008d3" + "01" + "00" + "01" + FuncType, Value + "0008d3" + "01" + "00" + "01" + "0402",
+      Value + funcConstTree(2) + Fields, Value + funcConstTree(3) + Fields).zip(es).foreach { case (cand, e) =>
+      assert(bytesHex(e).startsWith(cand), s"box starts with $cand")
+    }
+  }
+
+  test("Transaction function type: an extension value of type 0x70 rejects, Int accepts, v2 and v3 tree outputs degrade") {
+    val es = entries(AuthoredWireBoxTreeParse.OpTxFunc)
+    assertEquals(es.map(isReject), List(true, false, false, false))
+    // input 0's extension starts at byte 34 (hex 68): [count 01][id 01][value]
+    assertEquals(bytesHex(es(0)).substring(68, 68 + 14), "0101" + FuncType)
+    assertEquals(bytesHex(es(1)).substring(68, 68 + 8), "0101" + "0402")
+    assert(bytesHex(es(2)).endsWith(Value + funcConstTree(2) + Fields))
+    assert(bytesHex(es(3)).endsWith(Value + funcConstTree(3) + Fields))
+  }
+
+  Seq(AuthoredWireBoxTreeParse.OpBoxValUse -> "Box", AuthoredWireBoxTreeParse.OpTxValUse -> "Transaction").foreach {
+    case (op, kind) =>
+      test(s"$kind unbound ValUse: sized 08 02 72 01 rejects, the bound twin accepts, unsized 00 72 01 rejects") {
+        val es = entries(op)
+        assertEquals(es.map(isReject), List(true, false, true))
+        // ValUse(1) = 72 01; the twin is BlockValue (d8) of one ValDef (d6) id 1 = SigmaProp(true), then ValUse(1)
+        Seq("08" + "02" + "7201", "08" + "08" + "d801" + "d601" + "08d3" + "7201", "00" + "7201").zip(es).foreach {
+          case (tree, e) => assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
+        }
+      }
+  }
+
   test("envelopes: santa-wire/v1, the node's v6 parse context (3, 3), authored source, 6.0.6 blessing") {
     assertEquals(vectors.keySet, Set(AuthoredWireBoxTreeParse.OpBoxWindow, AuthoredWireBoxTreeParse.OpTxWindow,
-      AuthoredWireBoxTreeParse.OpBoxRoot, AuthoredWireBoxTreeParse.OpTxRoot))
+      AuthoredWireBoxTreeParse.OpBoxRoot, AuthoredWireBoxTreeParse.OpTxRoot,
+      AuthoredWireBoxTreeParse.OpBoxFunc, AuthoredWireBoxTreeParse.OpTxFunc,
+      AuthoredWireBoxTreeParse.OpBoxValUse, AuthoredWireBoxTreeParse.OpTxValUse))
     vectors.foreach { case (op, env) =>
       val c = env.hcursor
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))

@@ -129,7 +129,9 @@ arms are named non-goals, to be specified when built (do not implement against t
   `Transaction.{degraded_tree,nested_degrade}_depth_leak`); a box's tree read window (4096 bytes
   from the tree's start, replacing the box window; checked before each read but not before a peek —
   `{Box,Transaction}.tree_read_window`); the root-type check on unsized trees
-  (`{Box,Transaction}.tree_root_type_check`); and the creation-height parse bound (a box, output, or Box constant created above `Int.MaxValue` —
+  (`{Box,Transaction}.tree_root_type_check`); the function type code 0x70 in a value (a sized tree's 0x70
+  constant degrades instead — `{Box,Transaction}.func_type_code`); a `ValUse` with no `ValDef`, which
+  rejects even in a size-flagged tree (`{Box,Transaction}.tree_valuse_unbound`); and the creation-height parse bound (a box, output, or Box constant created above `Int.MaxValue` —
   `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
