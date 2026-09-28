@@ -555,8 +555,10 @@ function runWireEntryInner(e: WireEntry, tx: WireTxCodec): WireResult {
         return { bytes_hex: bytesToHex(w.toBytes()), error: null }
       } catch (err) {
         // A codec rejection of the bytes is `errored` — a real round-trip divergence if the JVM
-        // accepted them. Anything unexpected falls through to runWireEntry's panic-net.
-        if (err instanceof SValueParseError || err instanceof SValueSerializeError) {
+        // accepted them. A box COMPOSES the SValue/SType/Expr/tree/SigmaBoolean codecs (its tree,
+        // registers, nested Box constants), so any of their typed errors is a rejection
+        // (isWireCodecError). Anything unexpected falls through to runWireEntry's panic-net.
+        if (isWireCodecError(err)) {
           return { bytes_hex: null, error: 'errored' }
         }
         throw err
@@ -573,7 +575,8 @@ function runWireEntryInner(e: WireEntry, tx: WireTxCodec): WireResult {
         serializeSigmaBoolean(sb, w)
         return { bytes_hex: bytesToHex(w.toBytes()), error: null }
       } catch (err) {
-        if (err instanceof SigmaBooleanParseError || err instanceof SigmaBooleanSerializeError) {
+        // Typed codec errors, the reader's (a truncated proposition) included, are a rejection.
+        if (isWireCodecError(err)) {
           return { bytes_hex: null, error: 'errored' }
         }
         throw err
@@ -593,7 +596,8 @@ function runWireEntryInner(e: WireEntry, tx: WireTxCodec): WireResult {
         serializeSValue(type, value, treeVersion, w)
         return { bytes_hex: bytesToHex(w.toBytes()), error: null }
       } catch (err) {
-        if (err instanceof SValueParseError || err instanceof SValueSerializeError) {
+        // The type's codec (STypeParseError) and every codec a value composes are rejections too.
+        if (isWireCodecError(err)) {
           return { bytes_hex: null, error: 'errored' }
         }
         throw err

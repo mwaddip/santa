@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { runWireVector } from '../src/runner'
+import { runWireEntry, runWireVector } from '../src/runner'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const loadVector = (
@@ -61,6 +61,28 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
       expect(actuals[e.name].error).toBeNull()
       expect(actuals[e.name].bytes_hex).toBe(e.expected_bytes_hex ?? e.bytes_hex)
     }
+  })
+
+  it('Box (degrade gate): every reject is a typed codec rejection, errored — none panics', async () => {
+    // ergots refuses these trees with typed errors (ExprParseError, STypeParseError, SigmaBooleanParseError,
+    // SValueParseError), the same ones the Transaction arm already maps to `errored`. The Box arm used to map only
+    // the SValue errors, so 7 of the 11 rejects landed in the panic net.
+    const vec = loadVector('v6/authored/Box.tree_degrade_gate.json')
+    const actuals = await runWireVector(vec)
+    expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
+    for (const e of vec.entries) {
+      expect(actuals[e.name].error, e.name).not.toBe('panicked')
+      if (e.error === 'errored') expect(actuals[e.name], e.name).toEqual({ bytes_hex: null, error: 'errored' })
+    }
+  })
+
+  it('Constant and SigmaBoolean: a typed codec rejection grades errored, not panicked', () => {
+    const v6 = { activated: 3, ergoTree: 3 }
+    // type code 0: STypeParseError; ProveDlog (cd) with no group element: the reader runs out
+    expect(runWireEntry({ name: 'c', kind: 'Constant', bytes_hex: '00', version: v6 }))
+      .toEqual({ bytes_hex: null, error: 'errored' })
+    expect(runWireEntry({ name: 's', kind: 'SigmaBoolean', bytes_hex: 'cd', version: v6 }))
+      .toEqual({ bytes_hex: null, error: 'errored' })
   })
 
   it('ErgoTree (SHeader-constant reject): a typed codec rejection grades errored, not panicked', async () => {

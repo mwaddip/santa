@@ -54,11 +54,12 @@ v6 parse context (3, 3).
 | rudolph | all green | all green |
 | blitzen-eni `0bd7199f` | **all 22 over-accepted** (degraded) | all green |
 | blitzen-develop `1633e018` | **all 22 over-accepted** | all green |
-| dasher (ergots `f2f4a94c`) | Transaction kind all green. Box kind: #0, #2, #3, #7, #9, #10, #12 **panicked**, the rest green | **#13 rejected** (both kinds) |
+| dasher (ergots `f2f4a94c`) | all green (both kinds) | **#13 rejected** (both kinds) |
 
-- **dasher's Box panics are a SANTA runner defect.** ergots rejects every one of them with a typed error for the right
-  reason (`ExprParseError`, `STypeParseError`, `SigmaBooleanParseError`). The runner's Box arm maps only the SValue
-  errors to `errored` and lets the rest reach its panic net.
+- **dasher's Box kind first graded 7 of these rejects as panicked.** That was a SANTA runner defect, fixed 2026-09-28. ergots
+  rejects every one with a typed error for the right reason (`ExprParseError`, `STypeParseError`,
+  `SigmaBooleanParseError`), but the runner's Box arm mapped only the SValue errors to `errored`. The same fix corrects
+  the earlier Box panics in `tree_valuse_unbound`, `tree_read_window` and `sized_tree_declared_size`.
 - **dasher's #13** is ergots not degrading on a function's data (rule 1009), the same gap as
   `{Box,Transaction}.func_type_code`.
 - **The existing corpus** is unchanged on every runner.

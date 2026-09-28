@@ -43,9 +43,11 @@ object is rejected.
 | blitzen-eni `0bd7199f` | all green | **accepts the sized unbound tree** (both kinds) |
 | blitzen-develop `1633e018` | **panics** on the v2 degrade (both kinds) and on the extension-value reject | **accepts the sized unbound tree** (both kinds) |
 | blitzen-develop at #927 `09a61b05` | all green | **accepts the sized unbound tree** (both kinds) |
-| dasher (ergots `f2f4a94c`) | **rejects** the v2 and v3 degrades (both kinds) | Box kind: **panics** on both rejects; Transaction kind: green |
+| dasher (ergots `f2f4a94c`) | **rejects** the v2 and v3 degrades (both kinds) | all green (both kinds) |
 
 - **The develop panics** are the `unreachable!()` that sigma-rust's `09a61b05` turns into `InvalidTypeCode`.
+- **dasher's Box ValUse rejects** first graded as panicked: a SANTA runner defect, fixed 2026-09-28. ergots rejects both with a
+  typed `ExprParseError` (`wire-tree-degrade-gate.md`).
 - **The ValUse red** is sigma-rust degrading any failure inside a size-flagged body to `Unparsed`. The JVM degrades
   only on a `ValidationException`.
 - **The existing corpus** is unchanged on every runner.

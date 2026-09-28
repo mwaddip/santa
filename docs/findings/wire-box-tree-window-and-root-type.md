@@ -60,12 +60,14 @@ The vectors hold three candidates:
 | rudolph | ✓ | ✓ | ✓ rejects |
 | eni `862df85f` | **rejects** (both kinds) | ✓ | **accepts** (both kinds) |
 | develop `1633e018` | ✓ (by coincidence, see below) | **all accept** | **accepts** (both kinds) |
-| dasher `f2f4a94c` | Box: panics · Transaction: rejects | Box: panics · Transaction: ✓ | **accepts** (both kinds) |
+| dasher `f2f4a94c` | **rejects** (both kinds) | ✓ | **accepts** (both kinds) |
 
 - **eni's degrade-accept red** is the declared-size bound again (`wire-sized-tree-declared-size.md`). eni parses a
   sized body only within its declared 5 bytes and rejects on the end of input.
 - **develop degrades on any error**, so it lands on the JVM's answer for the degrade-accept, but by coincidence. It
   has no windows, so it accepts every window reject.
+- **dasher's Box entries** first graded as panicked: a SANTA runner defect, fixed 2026-09-28. ergots answers with a typed
+  `ReaderError`, a clean rejection (`wire-tree-degrade-gate.md`).
 - **Existing corpus:** unchanged for rudolph, eni and develop. dasher's `master` moved to the merged PR #17
   (`f2f4a94c`); besides these entries, its only reds are the four `sized_tree_declared_size` ones.
 

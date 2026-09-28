@@ -40,11 +40,13 @@ the Transaction entry has the tree on its only output.
 | rudolph | ✓ | ✓ | ✓ |
 | blitzen-eni `bf4d6943` | ✓ | rejects | rejects |
 | blitzen-develop `1633e018` | ✓ | rejects | keeps the declared size 1 (see below) |
-| dasher (ergots `master`) | ✓ | rejects | Box: panics (`ReaderError: readU8: EOF`); Transaction: rejects |
+| dasher (ergots `master`) | ✓ | rejects | rejects |
 
 - **develop on "under".** It degrades the tree to `Unparsed` (bytes `09 01 08`) and reads the leftover `d3 01` as
   creation height 211. It happens to re-serialize the input unchanged, but it holds a different box than the JVM:
   an unparsed script at height 211, where the JVM has `sigmaProp(true)` at height 1.
+- **dasher's Box "under"** first graded as panicked: a SANTA runner defect, fixed 2026-09-28. ergots rejects it with a typed
+  `ReaderError` (`readU8: EOF`), as it does the Transaction entry (`wire-tree-degrade-gate.md`).
 - **Existing corpus.** Unchanged for every runner.
 
 ## Why it matters
