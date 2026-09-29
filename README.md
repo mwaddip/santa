@@ -58,8 +58,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **Rudolph**: the JVM reference, the all-🎁 control that blessed the corpus.
   - **Dasher**: the pure-TS `ergots` library ([`ts-runner/`](ts-runner/)).
   - **Blitzen**, two submodules pinning `sigma-rust` at:
-    - upstream `develop` (value-only);
-    - the `master` branch of the mwaddip fork (`--features jit-cost`). It took over from the fork's `eni` branch,
+    - `blitzen-develop`: upstream `develop` (value-only);
+    - `blitzen-mwaddip`: the `master` branch of the mwaddip fork (`--features jit-cost`). It took over from the fork's `eni` branch,
       whose runner was retired on 2026-09-29 after master reproduced it exactly.
   - **Comet**: the pure-TS **Fleet SDK**, wire tier only.
   - **Donner**: ergo-node-rust.
@@ -273,7 +273,7 @@ vectors/chain/     chain-tier retargeting / voting / fork_vote_gate / header_vot
 vectors/authds/    authds-tier AVL+ prover/verifier vectors (any/vendored/)
 jvm-blesser/       Scala: the blesser, the JVM reference runner (Rudolph), the harness
 ts-runner/         Dasher — the ergots runner + the conformance gate
-runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-master · comet · donner · vixen)
+runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-mwaddip · comet · donner · vixen)
 conform            the runner-agnostic orchestrator — runs every runner, prints the table
 README.md          this file
 ```
