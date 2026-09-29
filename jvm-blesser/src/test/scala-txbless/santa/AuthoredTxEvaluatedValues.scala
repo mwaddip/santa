@@ -21,7 +21,8 @@ package santa
 import io.circe.Json
 import scorex.util.encode.Base16
 import sigma.VersionContext
-import sigma.ast.{Constant, ErgoTree, EvaluatedValue, Height, IntConstant, SInt, STuple, SType, Tuple}
+import sigma.ast.{ByteArrayConstant, ByteConstant, ConcreteCollection, Constant, ErgoTree, EvaluatedValue,
+  GroupGenerator, Height, IntConstant, SByte, SInt, STuple, SType, Tuple}
 import sigma.crypto.CryptoConstants.dlogGroup
 import sigma.serialization.ErgoTreeSerializer
 import sigmastate.crypto.DLogProtocol.DLogProverInput
@@ -168,7 +169,135 @@ object AuthoredTxEvaluatedValues {
         "The box of #12 (R4 = Tuple(1, HEIGHT)) guarded by sigmaProp(true), which reads no register: nothing converts " +
         s"the registers, so the box spends. Valid. $note",
         spent("santa:ev:v10-noread", True, regs = Map(ErgoBox.R4 -> tup1H, ErgoBox.R5 -> IntConstant(1))), "00",
-        want = true))
+        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12)
+  }
+
+  /** sigma-rust's follow-ups: where a Tuple node's value fails (T), collections of Tuple nodes and a function element
+    * type (C), deserializing these kinds (D), and SContext method 11. */
+  private def followUpEntries(note: String, True: ErgoTree, v10: ErgoTree, tup12: EvaluatedValue[_ <: SType],
+                              pair12: EvaluatedValue[_ <: SType]): Seq[Json] = {
+    val pairT = STuple(SInt, SInt)
+    val (node, const) = ("0100" + "860204020404", "0100" + "580204")
+    val nodeIs = "Input 0's extension is {0: Tuple(1, 2)} as a Tuple node (86 02 04 02 04 04), whose value is a Coll " +
+      "typed as a pair."
+    val constIs = "The twin: {0: (1, 2)} as the (Int, Int) constant (58 02 04), a real pair."
+    val unchecked = "GetVar, ExtractRegisterAs and OptionGet pass the value on unchecked (transformers.scala:491-494, " +
+      ":579-582, :602-605); the first check is at the node that consumes it."
+    val checked = "Value.checkType (values.scala:251-260) throws 'Invalid type returned by evaluator'"
+    // (slug, tree, node verdict, node reason, description of the script and the node verdict)
+    val extRows = Seq(
+      ("t1-getvar-isdefined", "00d1e6e30058", true, "",
+        s"The script is sigmaProp(getVar[(Int, Int)](0).isDefined). $unchecked isDefined reads nothing: valid."),
+      ("t2-getvar-get-neq", "00d194e4e30058580000", false, "Invalid type returned by evaluator",
+        s"The script is sigmaProp(getVar[(Int, Int)](0).get != (0, 0)). NEQ checks both operands (trees.scala:1226-1228): " +
+        s"$checked on the Coll. Invalid."),
+      ("t3-getvar-map-lambda", "00d193e4dc2407e3005801d901015804020402", false, "InvocationTargetException",
+        "The script is sigmaProp(getVar[(Int, Int)](0).map({ (p: (Int, Int)) => 1 }).get == 1). A lambda checks its " +
+        "argument (values.scala:1074), and Option.map calls it by reflection, so the type error surfaces as an " +
+        "InvocationTargetException. Invalid."),
+      ("t4-getvar-eq-getvar", "00d193e30058e30058", true, "",
+        "The script is sigmaProp(getVar[(Int, Int)](0) == getVar[(Int, Int)](0)). EQ checks both operands, but " +
+        "isValueOfType checks only an Option's outer class (SType.scala:199), and the two options compare equal: valid."),
+      ("t5-coll-of-getvar-get", "00d193b1830158e4e300580402", false, "Invalid type returned by evaluator",
+        "The script is sigmaProp(Coll(getVar[(Int, Int)](0).get).size == 1). A ConcreteCollection checks each item " +
+        s"(values.scala:894): $checked. Invalid."),
+      ("t8-getvarfrominput-isdefined", "0b0cd1e6dc650cfe020300020058", true, "",
+        "The script, a v3 tree, is sigmaProp(CONTEXT.getVarFromInput[(Int, Int)](0, 0).isDefined), input 0 being SELF. " +
+        "getVarFromInput returns Some(v.value) when the RType matches (CContext.scala:76-82): valid."))
+    val extEntries = extRows.zipWithIndex.flatMap { case ((slug, treeHex, nodeValid, why, desc), i) =>
+      Seq(
+        entry(15 + 2 * i, s"$slug-node-${if (nodeValid) "accept" else "reject"}", s"$nodeIs $desc $note",
+          spent(s"santa:ev:$slug:node", tree(treeHex)), node, want = nodeValid, because = why),
+        entry(16 + 2 * i, s"$slug-constant-accept", s"$constIs The same script: valid. $note",
+          spent(s"santa:ev:$slug:const", tree(treeHex)), const, want = true))
+    }
+    val regRows = Seq(
+      ("t6-r4-isdefined", "00d1e6c6a70458", true, "",
+        s"The script is sigmaProp(SELF.R4[(Int, Int)].isDefined). $unchecked Valid."),
+      ("t7-r4-get-neq", "00d194e4c6a70458580000", false, "Invalid type returned by evaluator",
+        s"The script is sigmaProp(SELF.R4[(Int, Int)].get != (0, 0)). NEQ checks its operands: $checked. Invalid."))
+    val regEntries = regRows.zipWithIndex.flatMap { case ((slug, treeHex, nodeValid, why, desc), i) =>
+      Seq(
+        entry(27 + 2 * i, s"$slug-node-${if (nodeValid) "accept" else "reject"}",
+          s"The spent box's R4 is the Tuple node (1, 2). $desc $note",
+          spent(s"santa:ev:$slug:node", tree(treeHex), regs = Map(ErgoBox.R4 -> tup12)), "00", want = nodeValid,
+          because = why),
+        entry(28 + 2 * i, s"$slug-constant-accept", s"The twin: R4 is the (Int, Int) constant (1, 2). Valid. $note",
+          spent(s"santa:ev:$slug:const", tree(treeHex), regs = Map(ErgoBox.R4 -> pair12)), "00", want = true))
+    }
+    val c1 = "830158860204020404"
+    val c2 = "8300700204040400"
+    val collOfTuple: EvaluatedValue[_ <: SType] = ConcreteCollection[STuple](Seq(Tuple(IntConstant(1), IntConstant(2))), pairT)
+    val collBytes: EvaluatedValue[_ <: SType] = ConcreteCollection[SByte.type](Seq(ByteConstant(1), ByteConstant(1)), SByte)
+    val deserReg = tree("00d1d5040100") // sigmaProp(DeserializeRegister(R4, Boolean))
+    val collEntries = Seq(
+      entry(31, "c1-ext-coll-of-tuple-node-reject",
+        s"Input 0's extension is {0: a Coll[(Int, Int)] holding the Tuple node (1, 2)} ($c1), and the spent tree is " +
+        "sigmaProp(true), evaluated. toSigmaContext converts it: ConcreteCollection.value copies each item's value into " +
+        "an array of the element's class (values.scala:882-885), a Tuple2 array, and storing the Coll throws " +
+        s"ArrayStoreException. Invalid. $note",
+        spent("santa:ev:c1", True), "0100" + c1, want = false, because = "ArrayStoreException"),
+      entry(32, "c1-ext-sigmaprop-root-accept",
+        s"The same extension, spending a SigmaPropConstant root (00 08 d3): nothing converts. Valid. $note",
+        spent("santa:ev:c1-root", tree("0008d3")), "0100" + c1, want = true),
+      entry(33, "c1-r4-read-r5-reject",
+        "The spent box's R4 is the same Coll[(Int, Int)] and R5 is Int 1; the script is sigmaProp(SELF.R5[Int].get == 1). " +
+        s"The first register read converts R4 too (CBox.scala:77-94): ArrayStoreException. Invalid. $note",
+        spent("santa:ev:c1-reg", v10, regs = Map(ErgoBox.R4 -> collOfTuple, ErgoBox.R5 -> IntConstant(1))), "00",
+        want = false, because = "ArrayStoreException"),
+      entry(34, "c2-ext-coll-of-func-reject",
+        s"Input 0's extension is {0: an empty Coll of (Int, Int) => Int} ($c2), which parses at tree v3; the spent tree " +
+        "is sigmaProp(true), evaluated. stypeToRType has no case for a function of two arguments " +
+        "(Evaluation.scala:51-55), so the conversion throws and the input fails. ergo-core then logs the failed input's " +
+        "context as JSON (ErgoTransaction.scala:139-146), re-serializing the extension under the ambient context, the " +
+        "default (1, 1) in block validation, where TypeSerializer cannot write a function type (TypeSerializer.scala:111): " +
+        "a MatchError. Block validation runs inside Try.flatMap (UtxoState.scala:138-139), so the block fails. Invalid. " +
+        note, spent("santa:ev:c2", True), "0100" + c2, want = false, because = "MatchError"),
+      entry(35, "c2-ext-coll-of-func-one-arg-accept",
+        s"The twin: {0: an empty Coll of Int => Int} (83 00 70 01 04 04 00): stypeToRType converts a one-argument " +
+        s"function type. Valid. $note",
+        spent("santa:ev:c2-twin", True), "0100" + "83007001040400", want = true),
+      entry(36, "c2-ext-sigmaprop-root-accept",
+        s"The C2 extension, spending a SigmaPropConstant root: nothing converts, nothing fails. Valid. $note",
+        spent("santa:ev:c2-root", tree("0008d3")), "0100" + c2, want = true))
+    val deserEntries = Seq(
+      entry(37, "d1-r4-coll-byte-node-deserialize-accept",
+        "The spent box's R4 is Coll[Byte](1, 1) as a ConcreteCollection node (83 02 02 02 01 02 01); the tree is " +
+        "sigmaProp(DeserializeRegister(R4, Boolean)). DeserializeRegister matches any register value and reads " +
+        ".value.toArray (ErgoLikeInterpreter.scala:17-36): the bytes 01 01, the constant true. Valid. " + note,
+        spent("santa:ev:d1", deserReg, regs = Map(ErgoBox.R4 -> collBytes)), "00", want = true),
+      entry(38, "d1-r4-coll-byte-constant-deserialize-accept",
+        s"The twin: R4 is the constant Coll[Byte](1, 1) (0e 02 01 01). Valid. $note",
+        spent("santa:ev:d1-twin", deserReg, regs = Map(ErgoBox.R4 -> ByteArrayConstant(Array[Byte](1, 1)))), "00",
+        want = true),
+      entry(39, "d2-r4-group-generator-deserialize-reject",
+        "R4 is GroupGenerator, the same tree. Its value is a GroupElement, so the substitution fails, and the " +
+        "DeserializeRegister node is left in the tree and evaluated, which throws ('Should be overriden in class " +
+        s"sigma.ast.DeserializeRegister'). Invalid. $note",
+        spent("santa:ev:d2", deserReg, regs = Map(ErgoBox.R4 -> GroupGenerator)), "00", want = false,
+        because = "Should be overriden"),
+      entry(40, "d3-ext-coll-byte-node-execute-accept",
+        "Input 0's extension is {0: Coll[Byte](1, 1) as a node}; the tree is sigmaProp(executeFromVar[Boolean](0)). " +
+        "DeserializeContext takes a value of type Coll[Byte] and reads .value (Interpreter.scala:110-126): true. " +
+        s"Valid. $note",
+        spent("santa:ev:d3", tree("00d1d40100")), "0100" + "83020202010201", want = true),
+      entry(41, "d4-ext-execute-then-convert-reject",
+        "Input 0's extension is {0: Tuple(1, HEIGHT), 1: Coll[Byte] 08 d3}; the tree is executeFromVar[SigmaProp](1), " +
+        "which deserializes to TrueProp. After the substitution the JVM still evaluates through CErgoTreeEvaluator.eval " +
+        "(Interpreter.scala:171-177), which converts every extension value, and var 0 fails Tuple.value's assert. " +
+        s"Invalid. $note",
+        spent("santa:ev:d4", tree("00d40801")), "02" + "00" + "86020402a3" + "01" + "0e0208d3", want = false,
+        because = "AssertionError"),
+      entry(42, "d4-ext-execute-accept",
+        s"The twin: the same without var 0. Valid. $note",
+        spent("santa:ev:d4-twin", tree("00d40801")), "01" + "01" + "0e0208d3", want = true),
+      entry(43, "context-getvar-v5-method-reject",
+        "The spent tree is sigmaProp(MethodCall(CONTEXT, SContext method 11, [Byte 0]).isDefined), which parses " +
+        "(wire: tree_parse_acceptance #23). Method 11 has no Java method (methods.scala:1750-1753), so evaluating it " +
+        s"throws NoSuchMethodException for Context.getVar(byte). Invalid. $note",
+        spent("santa:ev:m11", tree("00d1e6dc650bfe010200")), "0100" + "0402", want = false,
+        because = "NoSuchMethodException"))
+    extEntries ++ regEntries ++ collEntries ++ deserEntries
   }
 
   def blessAll(): Seq[(String, Json)] = Seq(SpendPath -> Json.obj(

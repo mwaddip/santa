@@ -244,6 +244,39 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "ext-c1-coll-of-tuple-node-accept#21",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "A one-input transaction whose input 0 carries the extension {0: v}, with v = 83 01 58 86 02 04 02 04 04, a Coll[(Int, Int)] whose one item is the Tuple node (1, 2). The item's type matches the declared element type, so ConcreteCollectionSerializer's assert passes. An EvaluatedValue, so the JVM parses it (ContextExtension.scala:61). (Converting it fails; see the transaction vector evaluated-values-spend.) Round-trip identity. sigma-rust, which reads only a Constant here, rejects it: the over-reject.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d71000100830158860204020404000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "ext-c2-coll-of-func-v3-accept#22",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "A one-input transaction whose input 0 carries the extension {0: v}, with v = 83 00 70 02 04 04 04 00, an empty Coll whose element type is the function type (Int, Int) => Int. From tree v3 the type parses and serializes. An EvaluatedValue, so the JVM parses it (ContextExtension.scala:61). (Converting it fails; see the transaction vector.) Round-trip identity. sigma-rust, which reads only a Constant here, rejects it: the over-reject.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001008300700204040400000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "ext-c2-coll-of-func-one-arg-v3-accept#23",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "A one-input transaction whose input 0 carries the extension {0: v}, with v = 83 00 70 01 04 04 00, an empty Coll of Int => Int. An EvaluatedValue, so the JVM parses it (ContextExtension.scala:61). Round-trip identity. sigma-rust, which reads only a Constant here, rejects it: the over-reject.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d7100010083007001040400000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

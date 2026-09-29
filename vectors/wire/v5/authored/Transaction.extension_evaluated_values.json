@@ -14,6 +14,41 @@
         "activated" : 2,
         "ergoTree" : 2
       }
+    },
+    {
+      "name" : "ext-c2-coll-of-func-below-v3-reject#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "The v6 file's C2, {0: an empty Coll of (Int, Int) => Int} (83 00 70 02 04 04 04 00), under (2, 2): below tree v3 the function type code 0x70 is not a type (rule 1008, CheckTypeCode): the JVM rejects.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001008300700204040400000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "ext-c2-coll-of-func-one-arg-below-v3-reject#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "The same with Int => Int (83 00 70 01 04 04 00): rule 1008, a reject.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d7100010083007001040400000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "ext-u1-tuple-upcast-height-below-v3-accept#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "{0: Tuple(1, Upcast(HEIGHT, Long))} (86 02 04 02 7e a3 05) under (2, 2). Below tree v3 the serializer drops an Upcast only when its input is a Constant: the stripped value decides the constant case, and otherwise the original node is written (ValueSerializer.scala:362-393). HEIGHT is not a Constant, so the Upcast stays. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d71000100860204027ea305000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
     }
   ]
 }

@@ -7,7 +7,8 @@
 
 **Vectors:** `vectors/wire/v6/authored/{Box,Transaction}.tree_parse_acceptance.json`. Entries #20–#22 (a
 `ConcreteCollection` item of the wrong type, an `AssertionError`) came later, from sigma-rust's source findings:
-`sized-tree-source-findings.md` §7.
+`sized-tree-source-findings.md` §7. Entries #23–#24 (`SContext` method 11 parses, sized or not, and fails only when
+evaluated) came from the evaluated-values follow-up: `evaluated-values.md` §4.
 
 ## The JVM (sigmastate 6.0.6)
 

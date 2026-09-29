@@ -355,6 +355,7 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
       val gtBoolBody = "d19101010101"
       val bitOrBody  = "d193f2010101010400"
       val collItemBody = "d193b1" + "8301040502" + "0402"
+      val m11Body = "d1e6" + "dc650bfe" + "01" + "0200"
       val unchecked = "The JVM builds the node with an erased cast and checks nothing, so the tree parses. Round-trip " +
         "identity. An impl that type-checks the operand at parse rejects it: the over-reject."
       Seq(
@@ -450,7 +451,17 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
           "does not degrade and the JVM rejects.", cand(sizedV0(collItemBody)), mention = Seq("AssertionError")),
         accept(s"$k-coll-item-right-type-accept#22", kind,
           s"The twin: $subject whose tree is BoolToSigmaProp(EQ(SizeOf(Coll[Int](Int 1)), Int 1)). It parses. " +
-          "Round-trip identity.", cand("00d193b1" + "8301040402" + "0402"), degrade = None))
+          "Round-trip identity.", cand("00d193b1" + "8301040402" + "0402"), degrade = None),
+        accept(s"$k-context-getvar-v5-method-accept#23", kind,
+          s"$subject whose tree is BoolToSigmaProp(OptionIsDefined(MethodCall(CONTEXT, SContext method 11, [Byte 0]))) " +
+          "(dc 65 0b fe 01 02 00). Method 11 is getVarV5Method, declared with info but no IR builder or Java method " +
+          "(methods.scala:1750-1753) and listed for v5 and v6 (:1766-1774): it resolves, and its type variable is left " +
+          "unbound, so the tree parses. Round-trip identity. Evaluating it fails (NoSuchMethodException for " +
+          "Context.getVar(byte); see the transaction vector evaluated-values-spend).",
+          cand("00" + m11Body), degrade = None),
+        accept(s"$k-context-getvar-v5-method-sized-accept#24", kind,
+          s"$subject whose tree is the same, size-flagged: it parses as well. Round-trip identity.",
+          cand(sizedV0(m11Body)), degrade = None))
     }
 
     Map(

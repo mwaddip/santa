@@ -55,6 +55,28 @@ object AuthoredWireEvaluatedValues extends BoxTreeWireFixtures {
       .mapObject(_.add("version", Json.obj("activated" -> Json.fromInt(a.toInt), "ergoTree" -> Json.fromInt(t.toInt))))
   }
 
+  /** An identity accept under the version (`a`, `t`). */
+  private def acceptAt(name: String, kind: String, description: String, bytes: Array[Byte], a: Byte, t: Byte): Json = {
+    val in = hex(bytes)
+    val out = WireCanonicalize.canonicalize(kind, in, a, t)
+    require(out == in, s"$name: the JVM must round-trip to itself under ($a, $t), got ${out.take(80)}…")
+    entry(name, kind, description, in)
+      .mapObject(_.add("version", Json.obj("activated" -> Json.fromInt(a.toInt), "ergoTree" -> Json.fromInt(t.toInt))))
+  }
+  /** A reject under the version (`a`, `t`): the JVM must throw, with every `mention` in the cause chain. */
+  private def rejectAt(name: String, kind: String, description: String, bytes: Array[Byte], mention: Seq[String],
+                       a: Byte, t: Byte): Json = {
+    val in = hex(bytes)
+    scala.util.Try(WireCanonicalize.canonicalize(kind, in, a, t)) match {
+      case scala.util.Success(out) => sys.error(s"$name: the JVM must REJECT under ($a, $t), got ${out.take(80)}…")
+      case scala.util.Failure(e) =>
+        val chain = causes(e)
+        mention.foreach(m => require(chain.exists(_.contains(m)), s"$name: want '$m' in ${chain.mkString(" <- ")}"))
+    }
+    entry(name, kind, description, in, "error" -> Json.fromString("errored"))
+      .mapObject(_.add("version", Json.obj("activated" -> Json.fromInt(a.toInt), "ergoTree" -> Json.fromInt(t.toInt))))
+  }
+
   private val Cast = "ClassCastException"
 
   def extract(): Map[String, Json] = {
@@ -126,7 +148,19 @@ object AuthoredWireEvaluatedValues extends BoxTreeWireFixtures {
       reject("ext-n6-tuple-count-0x80-reject#20", kind,
         s"$ext = 86 80 followed by 128 × Int 1 (04 02). The Tuple's count is a getByte: -128, and the allocation " +
         "throws a NegativeArraySizeException: the JVM rejects. An impl that reads the count as an unsigned byte takes " +
-        "128 items: the over-accept.", extTx("8680" + "0402" * 128), mention = Seq("NegativeArraySizeException")))
+        "128 items: the over-accept.", extTx("8680" + "0402" * 128), mention = Seq("NegativeArraySizeException")),
+      accept("ext-c1-coll-of-tuple-node-accept#21", kind,
+        s"$ext = 83 01 58 86 02 04 02 04 04, a Coll[(Int, Int)] whose one item is the Tuple node (1, 2). The item's " +
+        "type matches the declared element type, so ConcreteCollectionSerializer's assert passes. " +
+        s"$parses (Converting it fails; see the transaction vector evaluated-values-spend.) $identity",
+        extTx("830158860204020404"), degrade = None),
+      accept("ext-c2-coll-of-func-v3-accept#22", kind,
+        s"$ext = 83 00 70 02 04 04 04 00, an empty Coll whose element type is the function type (Int, Int) => Int. " +
+        s"From tree v3 the type parses and serializes. $parses (Converting it fails; see the transaction vector.) " +
+        s"$identity", extTx("8300700204040400"), degrade = None),
+      accept("ext-c2-coll-of-func-one-arg-v3-accept#23", kind,
+        s"$ext = 83 00 70 01 04 04 00, an empty Coll of Int => Int. $parses $identity",
+        extTx("83007001040400"), degrade = None))
 
     def regEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
       val k = kind.toLowerCase
@@ -171,7 +205,15 @@ object AuthoredWireEvaluatedValues extends BoxTreeWireFixtures {
           "CheckV6Type (ErgoBoxCandidate.scala:232) fails rule 1019 on the Option item, a reject.",
           c("86020402e30004"), mention = Seq("ValidationRule(1019")),
         reject(s"$k-tuple-count-0x80-reject#13", kind, s"$subject 86 80 followed by 128 × Int 1: the count reads " +
-          "-128, a reject.", c("8680" + "0402" * 128), mention = Seq("NegativeArraySizeException")))
+          "-128, a reject.", c("8680" + "0402" * 128), mention = Seq("NegativeArraySizeException")),
+        accept(s"$k-coll-of-tuple-node-accept#14", kind,
+          s"$subject 83 01 58 86 02 04 02 04 04, a Coll[(Int, Int)] holding the Tuple node (1, 2). $parses $identity " +
+          "(Reading any register of such a box fails; see the transaction vector evaluated-values-spend.)",
+          c("830158860204020404"), degrade = None),
+        accept(s"$k-coll-byte-node-accept#15", kind,
+          s"$subject 83 02 02 02 01 02 01, Coll[Byte](1, 1) as a ConcreteCollection node. $parses $identity " +
+          "(DeserializeRegister reads it as the bytes 01 01; see the transaction vector.)",
+          c("83020202010201"), degrade = None))
     }
 
     Map(
@@ -188,7 +230,19 @@ object AuthoredWireEvaluatedValues extends BoxTreeWireFixtures {
     "(ValueSerializer.scala:157-169): 86 02 04 02 04 02. NON-IDENTITY, and the tx id hashes that form. Blocks below v4 " +
     "parse their transactions outside any version context, under the default (1, 1) (VersionContext.scala:58-61, " +
     "BlockTransactions.scala:184-202), which strips the same way. The v6 file keeps it (tree v3).",
-    extTx("860204027e040205"), extTx("860204020402"), 2, 2))))
+    extTx("860204027e040205"), extTx("860204020402"), 2, 2),
+    rejectAt("ext-c2-coll-of-func-below-v3-reject#1", "Transaction",
+      "The v6 file's C2, {0: an empty Coll of (Int, Int) => Int} (83 00 70 02 04 04 04 00), under (2, 2): below tree v3 " +
+      "the function type code 0x70 is not a type (rule 1008, CheckTypeCode): the JVM rejects.",
+      extTx("8300700204040400"), Seq("ValidationRule(1008"), 2, 2),
+    rejectAt("ext-c2-coll-of-func-one-arg-below-v3-reject#2", "Transaction",
+      "The same with Int => Int (83 00 70 01 04 04 00): rule 1008, a reject.",
+      extTx("83007001040400"), Seq("ValidationRule(1008"), 2, 2),
+    acceptAt("ext-u1-tuple-upcast-height-below-v3-accept#3", "Transaction",
+      "{0: Tuple(1, Upcast(HEIGHT, Long))} (86 02 04 02 7e a3 05) under (2, 2). Below tree v3 the serializer drops an " +
+      "Upcast only when its input is a Constant: the stripped value decides the constant case, and otherwise the " +
+      "original node is written (ValueSerializer.scala:362-393). HEIGHT is not a Constant, so the Upcast stays. " +
+      "Round-trip identity.", extTx("860204027ea305"), 2, 2))))
 
   def writeVectors(outDir: java.nio.file.Path): Unit =
     SpecExtract.writeStaging("AuthoredWireEvaluatedValues", extract(), outDir)

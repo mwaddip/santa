@@ -126,7 +126,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     `ClassCastException`; `EQ(Int, Long)` from tree v3 and `GT` on Booleans fail the builder's
     constraints; `BitOr` needs numeric operands; a `ConcreteCollection` item of the wrong type fails an
     `assert` (an `AssertionError`). The `TrueLeaf`/`FalseLeaf` opcodes `7f`/`80` parse and come back as the
-    Boolean constants `01 01`/`01 00`, a non-identity round-trip
+    Boolean constants `01 01`/`01 00`, a non-identity round-trip; `SContext` method 11 parses and fails only
+    when evaluated
   - **nested failures and counts:** a `ValidationException` inside a Box constant degrades the outer
     size-flagged tree, while a nested unsized tree's failure rejects; SigmaAnd, Apply and constants
     counts above 100000 and collection counts above `0xFFFF` reject (below that the parser reads on, and

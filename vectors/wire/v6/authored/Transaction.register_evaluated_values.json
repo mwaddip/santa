@@ -164,6 +164,28 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "transaction-coll-of-tuple-node-accept#14",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "A transaction output (value 1000000, SigmaProp(true), height 1, no tokens) whose R4 is 83 01 58 86 02 04 02 04 04, a Coll[(Int, Int)] holding the Tuple node (1, 2). An EvaluatedValue, so the JVM parses it (ErgoBoxCandidate.scala:231). Round-trip identity. (Reading any register of such a box fails; see the transaction vector evaluated-values-spend.)",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010001830158860204020404",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "transaction-coll-byte-node-accept#15",
+      "kind" : "Transaction",
+      "source" : "santa:authored-evaluated-values",
+      "description" : "A transaction output (value 1000000, SigmaProp(true), height 1, no tokens) whose R4 is 83 02 02 02 01 02 01, Coll[Byte](1, 1) as a ConcreteCollection node. An EvaluatedValue, so the JVM parses it (ErgoBoxCandidate.scala:231). Round-trip identity. (DeserializeRegister reads it as the bytes 01 01; see the transaction vector.)",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d301000183020202010201",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

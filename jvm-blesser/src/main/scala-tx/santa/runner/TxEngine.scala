@@ -1,6 +1,6 @@
 package santa.runner
 
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 import io.circe.Json
 
@@ -12,7 +12,7 @@ import org.ergoplatform.http.api.ApiCodecs
 import org.ergoplatform.modifiers.history.CPreHeader
 import org.ergoplatform.modifiers.history.header.{Header, HeaderSerializer}
 import org.ergoplatform.modifiers.mempool.{ErgoTransaction, ErgoTransactionSerializer}
-import org.ergoplatform.nodeView.state.{UpcomingStateContext, VotingData}
+import org.ergoplatform.nodeView.state.{ErgoStateContext, UpcomingStateContext, VotingData}
 import org.ergoplatform.settings.{ChainSettings, ChainSettingsReader, ErgoValidationSettings,
   ErgoValidationSettingsUpdate, Parameters, TestnetLaunchParameters}
 import org.ergoplatform.wallet.interpreter.ErgoInterpreter
@@ -30,6 +30,18 @@ object TxEngine extends ApiCodecs {
   private val ChainConf = "src/test/resources/chain-testnet.conf"
 
   final case class Verdict(valid: Boolean, cost: Option[Long], reason: Option[String])
+
+  /** ergo-core's validateStateful as the node's block validation runs it. A throw out of it fails the block the tx is
+    * in: the node applies a block's transactions inside Try.flatMap (ergo UtxoState.scala:138-139), outside any version
+    * context, as here. One such throw: verifyInput logs a failed input's context as JSON (ErgoTransaction.scala:139-146),
+    * re-serializing its extension under the ambient (1, 1) context, where TypeSerializer cannot write a function type
+    * (TypeSerializer.scala:111): a MatchError. */
+  private def verdict(tx: ErgoTransaction, boxesToSpend: IndexedSeq[ErgoBox], dataBoxes: IndexedSeq[ErgoBox],
+                      ctx: ErgoStateContext)(implicit verifier: ErgoInterpreter): Verdict =
+    Try(tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L).result.toTry).flatten match {
+      case Success(cost) => Verdict(valid = true,  cost = Some(cost.toLong), reason = None)
+      case Failure(e)    => Verdict(valid = false, cost = None, reason = Some(s"${e.getClass.getName}: ${e.getMessage}"))
+    }
 
   /** Validate one tx. activated = the vector's version.activated (3 for v6);
     * blockVersion = activated + 1. ts/nBits are cosmetic (preHeader). */
@@ -49,11 +61,7 @@ object TxEngine extends ApiCodecs {
       Array.fill(3)(0.toByte), org.ergoplatform.mining.group.generator)
     val ctx = UpcomingStateContext(Seq.empty, None, preHeader, chainSettings.genesisStateDigest,
       params, ErgoValidationSettings.initial, VotingData.empty)
-    implicit val verifier: ErgoInterpreter = ErgoInterpreter(params)
-    tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L).result.toTry match {
-      case Success(cost) => Verdict(valid = true,  cost = Some(cost.toLong), reason = None)
-      case Failure(e)    => Verdict(valid = false, cost = None, reason = Some(s"${e.getClass.getName}: ${e.getMessage}"))
-    }
+    verdict(tx, boxesToSpend, dataBoxes, ctx)(ErgoInterpreter(params))
   }
 
   /** Bytes-anchored validate: tx + boxes from their sigma bytes, under the vector's PROVIDED context
@@ -105,11 +113,7 @@ object TxEngine extends ApiCodecs {
       (ErgoTransactionSerializer.parseBytes(Base16.decode(txHex).get),
         inputBoxesHex.map(box).toIndexedSeq, dataInputBoxesHex.map(box).toIndexedSeq)
     }
-    implicit val verifier: ErgoInterpreter = ErgoInterpreter(params)
-    tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L).result.toTry match {
-      case Success(cost) => Verdict(valid = true,  cost = Some(cost.toLong), reason = None)
-      case Failure(e)    => Verdict(valid = false, cost = None, reason = Some(s"${e.getClass.getName}: ${e.getMessage}"))
-    }
+    verdict(tx, boxesToSpend, dataBoxes, ctx)(ErgoInterpreter(params))
   }
 
   /** One `santa-transaction` vector entry → actuals (the shared tx result shape:

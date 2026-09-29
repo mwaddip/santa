@@ -23,7 +23,7 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
   private val V9 = "00d193" + "8c" + "e4" + "c6" + "a7" + "04" + "58" + "01" + "0402" // SELF.R4[(Int, Int)].get._1 == 1
   private val V10 = "00d193" + "e4" + "c6" + "a7" + "05" + "04" + "0402"             // SELF.R5[Int].get == 1
 
-  test("spend: extension and register values convert at evaluation; a Tuple node is a Coll, not a pair") {
+  test("spend: values convert at evaluation; a Tuple node is a Coll typed as a pair, and fails where its type is checked") {
     val es = entries
     // (the spent box after its value: tree, height, no tokens, registers; input 0's extension; valid; reason)
     val want: List[(String, String, Boolean, String)] = List(
@@ -41,7 +41,40 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
       (V9 + "01" + "00" + "01" + "580204", "00", true, ""),                                    // V9 twin
       (V10 + "01" + "00" + "02" + "86020402a3" + "0402", "00", false, "AssertionError"),       // V10
       (V10 + "01" + "00" + "02" + "860204020404" + "0402", "00", true, ""),                    // V10 twin
-      (True + "01" + "00" + "02" + "86020402a3" + "0402", "00", true, ""))                     // V10, no register read
+      (True + "01" + "00" + "02" + "86020402a3" + "0402", "00", true, "")) ++                  // V10, no register read
+      // T1..T8: where a Tuple node's value fails; each with the (Int, Int) constant as the twin
+      List(
+        ("00d1e6e30058", "valid", "valid"),                                  // T1 getVar(0).isDefined
+        ("00d194e4e30058580000", "Invalid type returned by evaluator", "valid"), // T2 getVar(0).get != (0, 0)
+        ("00d193e4dc2407e3005801d901015804020402", "InvocationTargetException", "valid"), // T3 map(p => 1).get == 1
+        ("00d193e30058e30058", "valid", "valid"),                            // T4 getVar(0) == getVar(0)
+        ("00d193b1830158e4e300580402", "Invalid type returned by evaluator", "valid"), // T5 Coll(getVar(0).get).size
+        ("0b0cd1e6dc650cfe020300020058", "valid", "valid")                   // T8 getVarFromInput(0, 0).isDefined, v3
+      ).flatMap { case (t, node, const) =>
+        List((t + "01" + "00" + "00", "01" + "00" + "860204020404", node == "valid", if (node == "valid") "" else node),
+             (t + "01" + "00" + "00", "01" + "00" + "580204", const == "valid", ""))
+      } ++
+      List(
+        ("00d1e6c6a70458", "valid"),                                         // T6 SELF.R4[(Int, Int)].isDefined
+        ("00d194e4c6a70458580000", "Invalid type returned by evaluator")     // T7 SELF.R4[(Int, Int)].get != (0, 0)
+      ).flatMap { case (t, node) =>
+        List((t + "01" + "00" + "01" + "860204020404", "00", node == "valid", if (node == "valid") "" else node),
+             (t + "01" + "00" + "01" + "580204", "00", true, ""))
+      } ++
+      List(
+        (True + "01" + "00" + "00", "01" + "00" + "830158860204020404", false, "ArrayStoreException"),       // C1
+        ("0008d3" + "01" + "00" + "00", "01" + "00" + "830158860204020404", true, ""),                      // C1 twin
+        (V10 + "01" + "00" + "02" + "830158860204020404" + "0402", "00", false, "ArrayStoreException"),    // C1 reg
+        (True + "01" + "00" + "00", "01" + "00" + "8300700204040400", false, "MatchError"),                 // C2
+        (True + "01" + "00" + "00", "01" + "00" + "83007001040400", true, ""),                              // C2 twin
+        ("0008d3" + "01" + "00" + "00", "01" + "00" + "8300700204040400", true, ""),                        // C2, constant root
+        ("00d1d5040100" + "01" + "00" + "01" + "83020202010201", "00", true, ""),                           // D1
+        ("00d1d5040100" + "01" + "00" + "01" + "0e020101", "00", true, ""),                                 // D1 twin
+        ("00d1d5040100" + "01" + "00" + "01" + "82", "00", false, "Should be overriden"),                   // D2
+        ("00d1d40100" + "01" + "00" + "00", "01" + "00" + "83020202010201", true, ""),                      // D3
+        ("00d40801" + "01" + "00" + "00", "02" + "00" + "86020402a3" + "01" + "0e0208d3", false, "AssertionError"), // D4
+        ("00d40801" + "01" + "00" + "00", "01" + "01" + "0e0208d3", true, ""),                              // D4 twin
+        ("00d1e6dc650bfe010200" + "01" + "00" + "00", "01" + "00" + "0402", false, "NoSuchMethodException")) // method 11
     assertEquals(es.map(valid), want.map(_._3))
     want.zip(es).foreach { case ((box, ext, _, why), e) =>
       assert(inputBox(e).startsWith(Value + box), s"spent box ${Value + box}: ${inputBox(e).take(80)}")

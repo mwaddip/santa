@@ -268,6 +268,28 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "transaction-context-getvar-v5-method-accept#23",
+      "kind" : "Transaction",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A transaction output whose tree is BoolToSigmaProp(OptionIsDefined(MethodCall(CONTEXT, SContext method 11, [Byte 0]))) (dc 65 0b fe 01 02 00). Method 11 is getVarV5Method, declared with info but no IR builder or Java method (methods.scala:1750-1753) and listed for v5 and v6 (:1766-1774): it resolves, and its type variable is left unbound, so the tree parses. Round-trip identity. Evaluating it fails (NoSuchMethodException for Context.getVar(byte); see the transaction vector evaluated-values-spend).",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d00d1e6dc650bfe010200010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "transaction-context-getvar-v5-method-sized-accept#24",
+      "kind" : "Transaction",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A transaction output whose tree is the same, size-flagged: it parses as well. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0809d1e6dc650bfe010200010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

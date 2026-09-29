@@ -173,7 +173,9 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
     "00d193f2040204020400" -> false,           // EQ(BitOr(Int 1, Int 1), Int 0)
     "00d193b18301040502" + "0402" -> true,     // EQ(SizeOf(Coll[Int](Long 1)), Int 1): an item of the wrong type
     "080ad193b18301040502" + "0402" -> true,   // the same, sized
-    "00d193b18301040402" + "0402" -> false)    // EQ(SizeOf(Coll[Int](Int 1)), Int 1)
+    "00d193b18301040402" + "0402" -> false,    // EQ(SizeOf(Coll[Int](Int 1)), Int 1)
+    "00d1e6dc650bfe010200" -> false,           // MethodCall(CONTEXT, SContext method 11 getVar, [Byte 0]).isDefined
+    "0809d1e6dc650bfe010200" -> false)         // the same, sized
 
   Seq(AuthoredWireBoxTreeParse.OpBoxAcceptance -> "Box", AuthoredWireBoxTreeParse.OpTxAcceptance -> "Transaction").foreach {
     case (op, kind) =>

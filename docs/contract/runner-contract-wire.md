@@ -146,7 +146,8 @@ arms are named non-goals, to be specified when built (do not implement against t
   which node constructors check their operands at parse (most check nothing, so a node on an operand
   of the wrong type parses; `Append`/`Slice` on a non-collection, `EQ(Int, Long)` from tree v3, `GT` on
   Booleans, `BitOr` on Booleans and a `ConcreteCollection` item of the wrong type reject; the
-  `TrueLeaf`/`FalseLeaf` opcodes re-serialize as Boolean constants, a non-identity round-trip —
+  `TrueLeaf`/`FalseLeaf` opcodes re-serialize as Boolean constants, a non-identity round-trip; `SContext`
+  method 11, declared without an IR builder, parses and fails only when evaluated —
   `{Box,Transaction}.tree_parse_acceptance`); failures nested in a Box constant, count bounds and counts
   that wrap, header bits, root forms, the `85` pair form (a relation's only; after the other two-argument
   opcodes it starts a collection), and the SigmaBoolean conjecture bounds

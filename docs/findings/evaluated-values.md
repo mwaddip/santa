@@ -4,19 +4,24 @@
 **Surfaced:** 2026-09-29, a probe from the sigma-rust session (`~/projects/sigma-rust/prompts/santa-probe-evaluated-values.md`)
 for ergo-node-rust's board item #16 (liveness). A transaction the JVM accepts can stall a Rust node that reads only
 Constants there.  
-**Status:** every row holds on the JVM (sigma-state 6.0.6, ergo-core 6.0.6) as sigma-rust read it, with two
-corrections:
-- V1 and V10 fail with an `AssertionError`, not a `ClassCastException`;
-- the open rows V3 and V9 are invalid.
+**Status:** every row of both rounds holds on the JVM (sigma-state 6.0.6, ergo-core 6.0.6) as sigma-rust read it,
+with these corrections:
+- V1, V10 and D4 fail with an `AssertionError`, not a `ClassCastException`;
+- the open rows V3 and V9 are invalid;
+- D2 fails with a `RuntimeException`: the `DeserializeRegister` node is left in the tree and evaluated;
+- C2 surfaces as a `MatchError` from ergo-core's failure log (§4).
+
+The second round (§4) also answers whether `SContext` method 11 parses: it does, and it fails when evaluated.
 
 **Vectors:**
 
 | File | Entries | Rows |
 |---|---|---|
-| `vectors/wire/v6/authored/Transaction.extension_evaluated_values.json` | 21 | X1–X15, N1–N6 |
-| `vectors/wire/v5/authored/Transaction.extension_evaluated_values.json` | 1 | X15 below tree v3 |
-| `vectors/wire/v6/authored/{Box,Transaction}.register_evaluated_values.json` | 14 each | G1–G6, two more accepts, six rejects |
-| `vectors/transaction/v6/authored/evaluated-values-spend.json` | 15 | V1–V10 with twins |
+| `vectors/wire/v6/authored/Transaction.extension_evaluated_values.json` | 24 | X1–X15, N1–N6; C1, C2 and C2's twin |
+| `vectors/wire/v5/authored/Transaction.extension_evaluated_values.json` | 4 | X15 and U1 below tree v3; C2 and its twin reject |
+| `vectors/wire/v6/authored/{Box,Transaction}.register_evaluated_values.json` | 16 each | G1–G6, four more accepts (C1, D1 among them), six rejects |
+| `vectors/wire/v6/authored/{Box,Transaction}.tree_parse_acceptance.json` | #23–#24 | `SContext` method 11, unsized and sized |
+| `vectors/transaction/v6/authored/evaluated-values-spend.json` | 44 | V1–V10 with twins (#0–#14); T1–T8, C1/C2 and D1–D4 with twins, method 11 (#15–#43) |
 
 Blessers: `AuthoredWireEvaluatedValues` and `AuthoredTxEvaluatedValues`. Each re-derives every verdict on the JVM and
 fails loud on a wrong-reason reject or different bytes.
@@ -124,21 +129,109 @@ that reads any of its registers fails, while a script that reads none spends it.
 **V9 is an existing divergence** on sigma-rust's fork master. That master already parses a register tuple of constants
 (`ParsedTupleExpr`) and reads it as a real pair.
 
+## 4. The second round
+
+### Where a `Tuple` node's value fails (T1–T8)
+
+The node reaches the script as a `Coll` typed as a pair. `GetVar`, `ExtractRegisterAs` and `OptionGet` pass it on
+unchecked (`transformers.scala:491-494`, `:579-582`, `:602-605`). The first check is at the node that consumes it,
+`Value.checkType` (`values.scala:251-260`).
+
+Every row uses the extension `{0: Tuple(1, 2)}` as a node (T6 and T7 use R4), next to its twin, the constant
+`(1, 2)` (`58 02 04`).
+
+| # | Script | Tuple node | Constant twin |
+|---|---|---|---|
+| T1 | `getVar[(Int, Int)](0).isDefined` | valid | valid |
+| T2 | `getVar[(Int, Int)](0).get != (0, 0)` | **invalid**: `NEQ` checks its operands (`trees.scala:1226-1228`) | valid |
+| T3 | `getVar[(Int, Int)](0).map({ (p: (Int, Int)) => 1 }).get == 1` | **invalid** (1) | valid |
+| T4 | `getVar[(Int, Int)](0) == getVar[(Int, Int)](0)` | valid (2) | valid |
+| T5 | `Coll(getVar[(Int, Int)](0).get).size == 1` | **invalid**: the collection checks its item (`values.scala:894`) | valid |
+| T6 | `SELF.R4[(Int, Int)].isDefined` | valid | valid |
+| T7 | `SELF.R4[(Int, Int)].get != (0, 0)` | **invalid** | valid |
+| T8 | `CONTEXT.getVarFromInput[(Int, Int)](0, 0).isDefined`, a v3 tree | valid (3) | valid |
+
+1. The lambda checks its argument (`values.scala:1074`). `Option.map` calls it by reflection, so the error surfaces as
+   an `InvocationTargetException`.
+2. `EQ` checks both operands, but `isValueOfType` checks only an `Option`'s outer class (`SType.scala:199`), and the
+   two options compare equal.
+3. `getVarFromInput` returns `Some(v.value)` when the RType matches (`CContext.scala:76-82`).
+
+### Collections of `Tuple` nodes, and a function element type (C1, C2)
+
+**C1.** The extension `{0: a Coll[(Int, Int)] holding the Tuple node (1, 2)}` (`83 01 58 86 02 04 02 04 04`) parses:
+the item's type is the element type.
+- **Converting it throws `ArrayStoreException`.** `ConcreteCollection.value` copies each item's value into an array of
+  the element's class (`values.scala:882-885`), a `Tuple2` array, and the item's value is a `Coll`. So the spend is
+  invalid.
+- **With a SigmaPropConstant root** nothing converts, and the spend is valid.
+- **As R4, with R5 read,** the spend is invalid: the first register read converts R4 too.
+
+**C2.** The extension `{0: an empty Coll of (Int, Int) => Int}` (`83 00 70 02 04 04 04 00`) parses at tree v3 and
+round-trips identically. Below v3 it rejects (rule 1008; the v5 file). The spend fails in three steps:
+1. **The conversion throws.** `stypeToRType` has no case for a function of two arguments (`Evaluation.scala:51-55`).
+2. **The failure log throws.** ergo-core's `verifyInput` then logs the failed input's context as JSON
+   (`ErgoTransaction.scala:139-146`). That re-serializes the extension under the ambient context, the default (1, 1) in
+   block validation. At (1, 1), `TypeSerializer` cannot write a function type (`TypeSerializer.scala:111`), so a
+   `MatchError` escapes `validateStateful`.
+3. **The block fails.** Block validation runs inside `Try.flatMap` (`UtxoState.scala:138-139`). The mempool validates
+   under `(activated, activated)` (`ErgoMemPool.scala:291`), where the log succeeds and the input is simply invalid.
+   Either way, the spend is invalid.
+
+The one-argument twin (`Int => Int`) is valid, and so is C2 with a SigmaPropConstant root.
+
+**SANTA's `TxEngine` now mirrors that `Try`:** a throw out of `validateStateful` is an invalid verdict. Before, it
+escaped, and rudolph would have panicked on this entry.
+
+### Deserializing the new kinds (D1–D4)
+
+| # | Setup | JVM |
+|---|---|---|
+| D1 | R4 = `Coll[Byte](1, 1)` as a node, `sigmaProp(DeserializeRegister(R4, Boolean))` | valid (1) |
+| D1 twin | R4 = `0e 02 01 01` | valid |
+| D2 | R4 = GroupGenerator | **invalid** (2) |
+| D3 | ext `{0: Coll[Byte](1, 1)}` as a node, `sigmaProp(executeFromVar[Boolean](0))` | valid (3) |
+| D4 | ext `{0: Tuple(1, HEIGHT), 1: 0e 02 08 d3}`, `executeFromVar[SigmaProp](1)` | **invalid** (4) |
+| D4 twin | without var 0 | valid |
+
+1. `DeserializeRegister` matches any register value and reads `.value.toArray` (`ErgoLikeInterpreter.scala:17-36`).
+2. The substitution fails, the `DeserializeRegister` node stays in the tree, and evaluating it throws: "Should be
+   overriden in class sigma.ast.DeserializeRegister", a `RuntimeException`.
+3. `DeserializeContext` takes a value of type `Coll[Byte]` and reads `.value` (`Interpreter.scala:110-126`).
+4. After the substitution the JVM still evaluates through `CErgoTreeEvaluator.eval` (`Interpreter.scala:171-177`),
+   which converts every extension value. Var 0 fails `Tuple.value`'s assert.
+
+### An `Upcast` of a non-constant (U1)
+
+`{0: Tuple(1, Upcast(HEIGHT, Long))}` under (2, 2) is written back as read. The pre-v3 strip only applies to an
+`Upcast` of a Constant (`ValueSerializer.scala:362-393`).
+
+### `SContext` method 11 (the question)
+
+`MethodCall(CONTEXT, SContext method 11, [Byte 0])` parses in an unsized and in a size-flagged tree, and round-trips
+identically (`tree_parse_acceptance` #23, #24).
+- `getVarV5Method` is declared with info but no IR builder or Java method (`methods.scala:1750-1753`), and is listed for
+  v5 and v6 (`:1766-1774`). Its type variable stays unbound.
+- Evaluating it throws `NoSuchMethodException` for `Context.getVar(byte)` (`evaluated-values-spend` #43).
+- sigma-rust also parses it and fails only when evaluating, so there is no L divergence.
+
 ## Grades
 
-These are the default pins; blitzen-mwaddip is at fork master `08105652`. 65 entries are new: 50 wire and 15
-transaction. The existing corpus grades the same on every runner.
+These are the default pins; blitzen-mwaddip is at fork master `08105652`. Both rounds together add 108 entries: 65 in
+the first and 43 in the second. The existing corpus grades the same on every runner.
 
-| Runner | Reds on the new entries | Red total |
-|---|---|---|
-| rudolph | none | 0 |
-| blitzen-mwaddip `08105652` | 44 | 63 → 107 |
-| blitzen-develop `1633e018` | the same 44 | 422 → 466 |
-| dasher (ergots `3d48cd1a`) | 42 | 82 → 124 |
-| vixen (arkadianet `bd9c1172`) | 10 | 138 → 148 |
-| comet (Fleet) | 1: the v5 file, which it has no Transaction kind for | 28 → 29 |
+| Runner | First round (65) | Second round (43) | Red total |
+|---|---|---|---|
+| rudolph | 0 | 0 | 0 |
+| blitzen-mwaddip `08105652` | 44 | 26 | 63 → 133 |
+| blitzen-develop `1633e018` | 44 | 25 | 422 → 491 |
+| dasher (ergots `3d48cd1a`) | 42 | 25 | 82 → 149 |
+| vixen (arkadianet `bd9c1172`) | 10 | 3 | 138 → 151 |
+| comet (Fleet) | 1 | 3: the v5 file, which it has no Transaction kind for | 28 → 32 |
 
-**blitzen-mwaddip's 44:**
+### First round
+
+**blitzen-mwaddip's 44** (blitzen-develop has the same 44):
 - **Accepts that error.** Every extension accept errors: X1–X15 and the v5 X15, 16 in all. The N rejects are green.
   Every register accept but `Tuple(1, 2)` errors: G1–G6 and `Coll[Int](HEIGHT)`, 7 per kind.
 - **Over-accept: the register Tuple with count `0x80`** (#13, both kinds). Master reads the count as an unsigned
@@ -159,3 +252,24 @@ transaction. The existing corpus grades the same on every runner.
   Transaction kind), where the JVM re-encodes them. Its Box kind re-encodes them correctly.
 
 vixen mounts no transaction tier.
+
+### Second round
+
+**blitzen-mwaddip's 26:**
+- **Errors at parse.** Every row with a non-Constant errors at parse:
+  - T1–T5 and T8 with the Tuple node (6);
+  - C1 and C2, their SigmaPropConstant-root twins and C2's one-argument twin (6);
+  - D1–D4 (4);
+  - on the wire, C1, C2, C2's twin (3) and U1 (1), plus the register C1 and D1 values (2 per kind).
+- **T7 is accepted** where the JVM's evaluation fails: V9's divergence again, through `NEQ`.
+- **A cost divergence:** D4's twin (`executeFromVar[SigmaProp](1)` without var 0) is valid on both, but costs 12117
+  against the JVM's 12112.
+- **Green:** the Constant twins, D1's constant twin, T6, method 11 (both parse it and fail when evaluating it), and
+  the v5 C2 rejects.
+
+**blitzen-develop's 25:** the same, minus the cost red (it grades no cost).
+
+**dasher's 25:** the same errors, and T7 accepted.
+
+**vixen's 3:** it accepts C2 and its twin below tree v3 (an over-accept: the function type code is not a type before
+v3), and it errors on U1.

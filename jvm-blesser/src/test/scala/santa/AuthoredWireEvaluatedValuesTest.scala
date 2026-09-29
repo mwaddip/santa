@@ -51,7 +51,10 @@ class AuthoredWireEvaluatedValuesTest extends munit.FunSuite {
       ("9a04020404", true, None, V33),                           // N3 Plus(1, 2)
       ("860204027300", true, None, V33),                         // N4 Tuple(1, placeholder)
       ("86020402e30004", true, None, V33),                       // N5 Tuple(1, GetVar[Int](0)): Option, rule 1019
-      ("8680" + "0402" * 128, true, None, V33))                  // N6 Tuple count 0x80: getByte reads -128
+      ("8680" + "0402" * 128, true, None, V33),                  // N6 Tuple count 0x80: getByte reads -128
+      ("830158860204020404", false, None, V33),                  // C1 a Coll[(Int, Int)] holding a Tuple node
+      ("8300700204040400", false, None, V33),                    // C2 an empty Coll of (Int, Int) => Int: v3 types
+      ("83007001040400", false, None, V33))                      // C2 twin: an empty Coll of Int => Int
     assertEquals(es.map(isReject), want.map(_._2))
     want.zip(es).foreach { case ((v, _, to, ver), e) =>
       assertEquals(bytesHex(e), extTx(v), v)
@@ -60,12 +63,19 @@ class AuthoredWireEvaluatedValuesTest extends munit.FunSuite {
     }
   }
 
-  test("v5: below tree v3 the Upcast of a constant is written as the constant (X15 at (2, 2))") {
+  test("v5: below tree v3 an Upcast of a constant is dropped, of HEIGHT kept; function types do not parse") {
     val es = vectorsV5(OpExt).hcursor.downField("entries").as[List[Json]].fold(e => fail(s"entries: $e"), identity)
-    assertEquals(es.map(isReject), List(false))
-    assertEquals(bytesHex(es.head), extTx("860204027e040205"))
-    assertEquals(rewritten(es.head), Some(extTx("860204020402")))
-    assertEquals(version(es.head), (2, 2))
+    val want: List[(String, Boolean, Option[String])] = List(
+      ("860204027e040205", false, Some("860204020402")), // X15 Tuple(1, Upcast(1, Long)): the Upcast of a constant goes
+      ("8300700204040400", true, None),                  // C2: the function type code before v3, rule 1008
+      ("83007001040400", true, None),                    // C2 twin: the same
+      ("860204027ea305", false, None))                   // U1 Tuple(1, Upcast(HEIGHT, Long)): the Upcast stays
+    assertEquals(es.map(isReject), want.map(_._2))
+    want.zip(es).foreach { case ((v, _, to), e) =>
+      assertEquals(bytesHex(e), extTx(v), v)
+      assertEquals(rewritten(e), to.map(extTx), v)
+      assertEquals(version(e), (2, 2), v)
+    }
   }
 
   // The same values as R4 of a candidate: value 1000000, SigmaProp(true), height 1, no tokens, one register.
@@ -84,7 +94,9 @@ class AuthoredWireEvaluatedValuesTest extends munit.FunSuite {
     ("9a04020404", true, None),                      // Plus(1, 2)
     ("860204027300", true, None),                    // Tuple(1, placeholder)
     ("86020402e30004", true, None),                  // Tuple(1, GetVar[Int](0)): rule 1019
-    ("8680" + "0402" * 128, true, None))             // Tuple count 0x80
+    ("8680" + "0402" * 128, true, None),             // Tuple count 0x80
+    ("830158860204020404", false, None),             // C1: a Coll[(Int, Int)] holding a Tuple node
+    ("83020202010201", false, None))                 // D1: Coll[Byte](1, 1) as a node
   Seq(OpBoxRegs -> "Box", OpTxRegs -> "Transaction").foreach { case (op, kind) =>
     test(s"$kind registers: the same values as R4 parse or reject alike; 7f and constant Booleans are written back") {
       val es = entries(op)
