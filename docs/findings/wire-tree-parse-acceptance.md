@@ -5,7 +5,9 @@
 (`wire-tree-degrade-gate.md`)  
 **Status:** OPEN on sigma-rust eni and develop (found by sigma-rust, not yet fixed)
 
-**Vectors:** `vectors/wire/v6/authored/{Box,Transaction}.tree_parse_acceptance.json`
+**Vectors:** `vectors/wire/v6/authored/{Box,Transaction}.tree_parse_acceptance.json`. Entries #20–#22 (a
+`ConcreteCollection` item of the wrong type, an `AssertionError`) came later, from sigma-rust's source findings:
+`sized-tree-source-findings.md` §7.
 
 ## The JVM (sigmastate 6.0.6)
 

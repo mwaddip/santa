@@ -13,6 +13,11 @@ package santa
 //      CTHRESHOLD(0, []) spends with a 24-byte proof: its Fiat-Shamir challenge, which needs no secret (the JVM's own
 //      prover makes it). With no proof it does not spend, and neither do COR(), CAND([TrueProp]) or
 //      CTHRESHOLD(0, [TrueProp]). A trivial child does not make the conjecture trivial.
+//    - The SigmaAnd and SigmaOr NODES (ea, eb) are not constants: they evaluate through allZK / anyZK, which call
+//      CAND.normalized / COR.normalized (`CSigmaDslBuilder.scala:134-142`). Both require a non-empty list
+//      (`SigmaBoolean.scala:165`, `:201`), so an empty node parses (wire: tree_sigmaboolean_bounds) but fails to
+//      evaluate, while SigmaAnd of 256 sigmaProp(true) normalizes to TrueProp and spends with no proof (sigma-rust's
+//      source findings, 2026-09-29).
 // 2. Output bytes (sized-tree-output-bytes). An output declares its tree's size wrongly: 3 or 1 for the 2-byte body
 //    08 d3. Inside the creating transaction:
 //    - OUTPUTS(0).propositionBytes is the tree as received (ErgoTree.bytes, the parser's span);
@@ -152,7 +157,23 @@ object AuthoredTxSizedTreeRequests {
         s"accepts. $spendNote", "00" + "08" + "9601" + "d3", none, want = false),
       spendEntry(9, "cthreshold-k0-trueprop-child-no-proof-reject",
         s"CTHRESHOLD(0, [TrueProp]) (00 08 98 00 01 d3) with no proof: invalid. $spendNote",
-        "00" + "08" + "9800" + "01" + "d3", none, want = false))
+        "00" + "08" + "9800" + "01" + "d3", none, want = false),
+      spendEntry(10, "sigmaand-node-empty-reject",
+        s"The spent box's tree is the SigmaAnd node with no items (00 ea 00), which parses. Unlike the CAND() constant " +
+        "(#3), the node is evaluated: SigmaAnd goes through allZK, which calls CAND.normalized (CSigmaDslBuilder.scala:" +
+        "134-136), and that requires a non-empty list (SigmaBoolean.scala:165): the reduction throws before any proof " +
+        s"is checked, and the transaction is invalid. An impl that reduces the empty node to TrueProp accepts. $spendNote",
+        "00" + "ea00", none, want = false),
+      spendEntry(11, "sigmaor-node-empty-reject",
+        s"The SigmaOr node with no items (00 eb 00): anyZK calls COR.normalized (:140-142), which requires a non-empty " +
+        s"list too (:201): the reduction throws, invalid. (An impl that reduces it to FalseProp reaches the same " +
+        s"verdict.) $spendNote",
+        "00" + "eb00", none, want = false),
+      spendEntry(12, "sigmaand-node-256-true-accept",
+        s"The SigmaAnd node of 256 × sigmaProp(true) (00 ea 80 02 08 d3…), which parses (no bound at 255). " +
+        "CAND.normalized skips every TrueProp and returns TrueProp, so the box spends with no proof: valid. An impl that " +
+        s"bounds the node's items, or the CAND it builds, at 255 rejects it. $spendNote",
+        "00" + "ea8002" + "08d3" * 256, none, want = true))
   }
 
   // ── 2. output bytes ───────────────────────────────────────────────────────────────────────────────

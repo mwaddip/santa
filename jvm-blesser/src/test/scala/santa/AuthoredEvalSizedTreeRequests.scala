@@ -1,9 +1,12 @@
 package santa
 
-// Authored eval vector for ergots' sized-tree requests (2026-09-28): substConstants on a size-flagged template whose
+// Authored eval vectors for ergots' sized-tree requests (2026-09-28): substConstants on a size-flagged template whose
 // declared size is above u32. substConstants reads the template's header and size through deserializeHeaderAndSize:
 // the size is a getUInt, so its u32 bound applies, and otherwise it is ignored. The result is written with the true
-// size (sigmastate 6.0.6, under the node's v6 context). The tree is the spec vector's function
+// size (sigmastate 6.0.6, under the node's v6 context). Then sigma-rust's source findings (2026-09-29): the header byte
+// is written back as read, bits 5-7 included (`ErgoTreeSerializer.scala:367`), and a constants count that wraps
+// negative reads as no constants (`:248-261`, through deserializeHeaderWithTreeBytes, `:269-273`), so nothing is
+// substituted and the result has count 0. The tree is the spec vector's function
 // `(x: (Coll[Byte], Int)) => substConstants(x._1, Coll(x._2), Coll(sigmaProp(false)))`
 // (Fix_substConstants_in_v6.0_for_ErgoTree_version_0); the template comes in as its input, so each entry is one call.
 // Evaluated through the same EvalCore oracle as every authored eval vector; extract() fails loud if an outcome drifts.
@@ -15,6 +18,7 @@ object AuthoredEvalSizedTreeRequests {
   val V3: Byte = VersionContext.V6SoftForkVersion
   val Source = "santa:authored-eval-sized-tree-requests"
   val OpSubstSize = "substConstants:declared_size_u32"
+  val OpSubstForms = "substConstants:template_forms"
   /** The spec vector's substConstants function, v3. */
   val SubstTree = "1b21010100dad901014c0e748c7201018301048c720102830108d1730001e4e3014c0e"
 
@@ -45,8 +49,31 @@ object AuthoredEvalSizedTreeRequests {
         s"$script on the template ${template("05")}, the true size  // JVM: 18 05 01 08 d2 73 00, the control",
         SubstTree, "subst-declared-size-true-accept#2", input(template("05")), V3, ergoTree = 3))
     // First blessed on the 6.0.6 oracle; SpecExtract's envelope still carries the 6.0.3 stamp of the older vectors.
-    Map(OpSubstSize -> SpecExtract.authoredEnvelope(OpSubstSize, entries, Source)
-      .mapObject(_.add("blessed_by", Json.fromString("jvm:sigma-state-6.0.6"))))
+    Map(
+      OpSubstSize -> SpecExtract.authoredEnvelope(OpSubstSize, entries, Source)
+        .mapObject(_.add("blessed_by", Json.fromString("jvm:sigma-state-6.0.6"))),
+      OpSubstForms -> SpecExtract.authoredEnvelope(OpSubstForms, formEntries(script), Source)
+        .mapObject(_.add("blessed_by", Json.fromString("jvm:sigma-state-6.0.6"))))
+  }
+
+  /** sigma-rust's source findings: a template header with bit 5, and a constants count that wraps negative. */
+  private def formEntries(script: String): Seq[Json] = {
+    val bit5 = "38" + "05" + "01" + "08d3" + "7300" // sized, segregated, bit 5: constant 0 = SigmaProp(true)
+    val wraps = "18" + "07" + "ffffffff0f" + "08d3" // declares 2^32 - 1 constants, body SigmaProp(true)
+    val wrapsUnsized = "10" + "ffffffff0f" + "08d3"
+    Seq(
+      SpecExtract.authoredEntryV(OpSubstForms,
+        s"$script on the template $bit5: header 38, the size and segregation bits plus bit 5  // JVM: the header byte " +
+        "is written back as read (ErgoTreeSerializer.scala:367): 38 05 01 08 d2 73 00",
+        SubstTree, "subst-template-header-bit5-accept#0", input(bit5), V3, ergoTree = 3),
+      SpecExtract.authoredEntryV(OpSubstForms,
+        s"$script on the template $wraps, whose constants count 2^32 - 1 wraps negative  // JVM: getUInt().toInt < 0 " +
+        "means no constants (ErgoTreeSerializer.scala:248-261), so position 0 is out of range and nothing is " +
+        "replaced; the result has count 0 and the recomputed size: 18 03 00 08 d3",
+        SubstTree, "subst-template-count-wraps-accept#1", input(wraps), V3, ergoTree = 3),
+      SpecExtract.authoredEntryV(OpSubstForms,
+        s"$script on the unsized template $wrapsUnsized  // JVM: the same, with no size: 10 00 08 d3",
+        SubstTree, "subst-template-count-wraps-unsized-accept#2", input(wrapsUnsized), V3, ergoTree = 3))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

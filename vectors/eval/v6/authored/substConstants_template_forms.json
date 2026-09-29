@@ -1,0 +1,282 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "substConstants:template_forms",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "source" : "santa:authored-eval-sized-tree-requests",
+  "entries" : [
+    {
+      "name" : "subst-template-header-bit5-accept#0",
+      "script" : "{ (x: (Coll[Byte], Int)) => substConstants[Any](x._1, Coll[Int](x._2), Coll[Any](sigmaProp(false))) } on the template 38050108d37300: header 38, the size and segregation bits plus bit 5  // JVM: the header byte is written back as read (ErgoTreeSerializer.scala:367): 38 05 01 08 d2 73 00",
+      "tree_bytes_hex" : "1b21010100dad901014c0e748c7201018301048c720102830108d1730001e4e3014c0e",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 56
+              },
+              {
+                "kind" : "Byte",
+                "value" : 5
+              },
+              {
+                "kind" : "Byte",
+                "value" : 1
+              },
+              {
+                "kind" : "Byte",
+                "value" : 8
+              },
+              {
+                "kind" : "Byte",
+                "value" : -45
+              },
+              {
+                "kind" : "Byte",
+                "value" : 115
+              },
+              {
+                "kind" : "Byte",
+                "value" : 0
+              }
+            ]
+          },
+          {
+            "kind" : "Int",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 56
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : -46
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 351,
+        "error" : null
+      }
+    },
+    {
+      "name" : "subst-template-count-wraps-accept#1",
+      "script" : "{ (x: (Coll[Byte], Int)) => substConstants[Any](x._1, Coll[Int](x._2), Coll[Any](sigmaProp(false))) } on the template 1807ffffffff0f08d3, whose constants count 2^32 - 1 wraps negative  // JVM: getUInt().toInt < 0 means no constants (ErgoTreeSerializer.scala:248-261), so position 0 is out of range and nothing is replaced; the result has count 0 and the recomputed size: 18 03 00 08 d3",
+      "tree_bytes_hex" : "1b21010100dad901014c0e748c7201018301048c720102830108d1730001e4e3014c0e",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 24
+              },
+              {
+                "kind" : "Byte",
+                "value" : 7
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : 15
+              },
+              {
+                "kind" : "Byte",
+                "value" : 8
+              },
+              {
+                "kind" : "Byte",
+                "value" : -45
+              }
+            ]
+          },
+          {
+            "kind" : "Int",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 24
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : -45
+            }
+          ]
+        },
+        "cost" : 251,
+        "error" : null
+      }
+    },
+    {
+      "name" : "subst-template-count-wraps-unsized-accept#2",
+      "script" : "{ (x: (Coll[Byte], Int)) => substConstants[Any](x._1, Coll[Int](x._2), Coll[Any](sigmaProp(false))) } on the unsized template 10ffffffff0f08d3  // JVM: the same, with no size: 10 00 08 d3",
+      "tree_bytes_hex" : "1b21010100dad901014c0e748c7201018301048c720102830108d1730001e4e3014c0e",
+      "input" : {
+        "kind" : "Tuple",
+        "items" : [
+          {
+            "kind" : "Coll",
+            "elem" : {
+              "tag" : "SByte"
+            },
+            "items" : [
+              {
+                "kind" : "Byte",
+                "value" : 16
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : -1
+              },
+              {
+                "kind" : "Byte",
+                "value" : 15
+              },
+              {
+                "kind" : "Byte",
+                "value" : 8
+              },
+              {
+                "kind" : "Byte",
+                "value" : -45
+              }
+            ]
+          },
+          {
+            "kind" : "Int",
+            "value" : 0
+          }
+        ]
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : -45
+            }
+          ]
+        },
+        "cost" : 251,
+        "error" : null
+      }
+    }
+  ]
+}

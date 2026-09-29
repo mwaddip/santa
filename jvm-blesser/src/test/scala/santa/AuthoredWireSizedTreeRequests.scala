@@ -10,18 +10,33 @@ package santa
 //    CheckHeaderSizeBit (rule 1012, `:219`) runs before the nested tree's own handler (`:145`), and for rule 1019
 //    (`CheckV6Type`, `ErgoBoxCandidate.scala:232`) on a nested register. But a nested UNSIZED tree turns its
 //    ValidationException into a SerializerException ("Cannot handle ValidationException, ErgoTree serialized without
-//    size bit."), which does not degrade anything, and neither does an SHeader register in a pre-v3 tree (no data
-//    serializer).
-// 2. Count bounds. SigmaAnd's item count and Apply's argument count go through safeNewArray, which throws above
-//    MaxArrayLength 100000 (`sigma/util/package.scala:7-12`, `SigmaTransformerSerializer.scala:21-25`,
-//    `SigmaByteReader.scala:53-59`); a collection count goes through getUShort (`ConcreteCollectionSerializer.scala:28`).
-//    None of those is a ValidationException. At the bound the parser reads on, and a tree window degrades it.
+//    size bit."), which does not degrade anything, whether the rule is 1002 or 1001 (a root that is not a SigmaProp),
+//    and neither does an SHeader register in a pre-v3 tree (no data serializer).
+// 2. Count bounds. SigmaAnd's item count, Apply's argument count and the constants count go through safeNewArray,
+//    which throws above MaxArrayLength 100000 (`sigma/util/package.scala:7-12`, `SigmaTransformerSerializer.scala:21-25`,
+//    `SigmaByteReader.scala:53-59`, `ErgoTreeSerializer.scala:254`); a collection count goes through getUShort
+//    (`ConcreteCollectionSerializer.scala:28`). None of those is a ValidationException. At the bound the parser reads
+//    on: a tree window degrades it, or the input ends first, an IllegalArgumentException from scorex-util's reader that
+//    deserializeErgoTree rethrows as a SerializerException (`ErgoTreeSerializer.scala:191-193`): a reject.
 // 3. Counts that wrap. The constants count is `getUInt().toInt`; a negative count means no constants
 //    (`ErgoTreeSerializer.scala:248-261`), and the tree comes back with count 0. scorex-util 0.2.0's getUShort is
 //    `getULong().toInt` and only then the 0..65535 check, so a count of 2^32 + k reads as k.
-// 4. Header bits 5-7 are kept as they are. 5. Root forms under rule 1001. 6. The 85 pair form belongs to the nine
-//    relations only; an arithmetic operand starting with 85 is a Boolean collection. 7. CTHRESHOLD requires
-//    0 <= k <= n <= 255 after reading the children (`SigmaBoolean.scala:223`); CAND and COR check nothing.
+// 4. Header bits 5-7 are kept as they are. 5. Root forms under rule 1001.
+// 6. The 85 pair form belongs to the nine relations only (`Relation2Serializer.scala:40-51`). The other ten
+//    two-argument opcodes read two values (`TwoArgumentsSerializer.scala:21-25`), so an operand starting with 85 is a
+//    Boolean collection. The seven arithmetic operations are built unchecked (`SigmaBuilder.scala:707-712`), so they
+//    parse; BitOr, BitAnd and BitXor require numeric operands (`trees.scala:913`), an IllegalArgumentException that
+//    deserializeErgoTree rethrows as a SerializerException: a reject, sized or not.
+// 7. CTHRESHOLD requires 0 <= k <= n <= 255 after reading the children (`SigmaBoolean.scala:223`); CAND and COR check
+//    nothing (`:80-93`), so they take 0 children, or more than 255 up to getUShort's 65535. The SigmaAnd and SigmaOr
+//    nodes read a getUIntExact count into safeNewArray and are built unchecked (`SigmaTransformerSerializer.scala:20-30`,
+//    `SigmaBuilder.scala:515-519`): 0 or 256 items parse.
+// 8. getUShort outside trees. The same truncation applies wherever scorex's getUShort is read: a transaction's input,
+//    data-input and output counts (`ErgoLikeTransaction.scala:148`, `:155`, `:172`), a proof's length
+//    (`ProverResult.scala:40`), a box's index (`ErgoBox.scala:218`), and in data a collection's length and a BigInt's
+//    size (`CoreDataSerializer.scala:132`, `:112`). 2^32 + k reads as k and is written back as k (a parsed box keeps
+//    its bytes for its id, but the round-trip re-serializes it); 2^32 + 2^16 truncates to 65536 and fails the check,
+//    which a 16-bit mask would read as 0.
 
 import io.circe.Json
 
@@ -44,6 +59,9 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
   val OpBoxSigmaBoolean = "Box.tree_sigmaboolean_bounds"
   val OpTxSigmaBoolean  = "Transaction.tree_sigmaboolean_bounds"
   val OpConjectures     = "SigmaBoolean.conjecture_bounds"
+  val OpBoxUShort       = "Box.ushort_wrap"
+  val OpTxUShort        = "Transaction.ushort_wrap"
+  val OpConstUShort     = "Constant.ushort_wrap"
 
   private def hexVlq(n: Long): String = hex(vlqU32(n))
 
@@ -62,23 +80,42 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
   /** height 1, no tokens, R4 = Coll[Byte](n - 6): the n bytes a bulk read crosses the window with, and that a degrade
     * resumes the box at (as AuthoredWireBoxTreeParse's WinDegrade). */
   private def payload(n: Int): Array[Byte] = b("01" + "00" + "01" + "0e") ++ vlq(n - 6) ++ zeros(n - 6)
-  /** Sized v0 tree whose declared size covers `prefix`, a Coll[Byte] bulk read's type and length; then the payload.
-    * The bulk read starts at candidate offset 3 + 2 + |prefix| + 3 and ends at 4100, past the tree window (4099). */
-  private def countTree(prefix: String, collType: String): Array[Byte] = {
+  /** Sized tree (`header`, v0 unsegregated by default) whose declared size covers `prefix`, a Coll[Byte] bulk read's
+    * type and length; then the payload. The bulk read starts at candidate offset 3 + 2 + |prefix| + 3 and ends at 4100,
+    * past the tree window (4099). */
+  private def countTree(prefix: String, collType: String, header: Int = 0x08): Array[Byte] = {
     val n = MaxSize + 4 - 3 - 2 - prefix.length / 2 - collType.length / 2 - 2 // ends at 4100: value, header+size, VLQ n
     require(vlq(n).length == 2, s"n = $n must take a 2-byte VLQ")
-    sizedTree(0x08, b(prefix + collType) ++ vlq(n)) ++ payload(n)
+    sizedTree(header, b(prefix + collType) ++ vlq(n)) ++ payload(n)
   }
 
-  /** An accept entry for a kind with no tree (SigmaBoolean): identity round-trip. */
+  /** An accept entry for a kind with no tree (SigmaBoolean, Constant): identity round-trip. */
   private def acceptPlain(name: String, kind: String, description: String, bytes: Array[Byte]): Json = {
     val in = hex(bytes)
     require(canonical(kind, in) == in, s"$name: the JVM must round-trip an accept vector to itself")
     entry(name, kind, description, in)
   }
+  /** A non-identity accept for a kind with no tree: the JVM writes the object back as `rewritten`. */
+  private def acceptPlainRewritten(name: String, kind: String, description: String, bytes: Array[Byte],
+                                   rewritten: Array[Byte]): Json = {
+    val (in, want) = (hex(bytes), hex(rewritten))
+    require(want != in, s"$name: a non-identity accept must change the bytes")
+    val out = canonical(kind, in)
+    require(out == want, s"$name: the JVM must re-serialize to $want, got $out")
+    entry(name, kind, description, in, "expected_bytes_hex" -> Json.fromString(want))
+  }
+  /** `bytes` with the bytes `was` at offset `at` replaced by `to`. */
+  private def spliceAt(bytes: Array[Byte], at: Int, was: String, to: String): Array[Byte] = {
+    require(hex(bytes.slice(at, at + was.length / 2)) == was, s"expected $was at $at in ${hex(bytes)}")
+    bytes.take(at) ++ b(to) ++ bytes.drop(at + was.length / 2)
+  }
 
   private val NoSizeBit = "ErgoTree serialized without size bit"
   private val MaxArray  = "max limit is 100000"
+  private val UShort    = "out of unsigned short range"
+  /** 2^32 + 1 and 2^32 + 2^16 as VLQs: getUShort reads them as 1 and as 65536 (out of range). */
+  private val Wrap1     = "8180808010"
+  private val Wrap65536 = "8080848010"
 
   def extract(): Map[String, Json] = {
     def subjectOf(kind: String) = if (kind == "Box") "A bare box" else "A transaction output"
@@ -133,10 +170,20 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
           "The registers are read in order and R4 fails rule 1019 before the seventh register's missing id is ever looked " +
           "up (which would reject, see tree_degrade_gate #17), so the outer tree degrades. Round-trip identity. An impl " +
           "that checks the register count first rejects.",
-          cand(boxConstTree(0x1b, nestedBox("0008d3", "07" + OptionIntSome1 + "0402" * 6))), degrade = Some(1019)))
+          cand(boxConstTree(0x1b, nestedBox("0008d3", "07" + OptionIntSome1 + "0402" * 6))), degrade = Some(1019)),
+        reject(s"$k-nested-unsized-int-root-reject#9", kind,
+          s"$outer The nested box's tree is unsized, 00 04 02, whose root is Int 1: rule 1001 (the root must be a " +
+          "SigmaProp, ErgoTreeSerializer.scala:174) fails in the nested tree. Unsized, the nested tree turns that " +
+          s"ValidationException into a SerializerException ('$NoSizeBit.'), as #0 does for rule 1002, so the outer tree " +
+          "does not degrade: the JVM rejects. An impl that degrades the outer tree accepts it: the over-accept.",
+          cand(boxConstTree(0x18, nestedBox("000402", "00"))), mention = Seq(NoSizeBit, "ValidationRule(1001")),
+        accept(s"$k-nested-sized-int-root-accept#10", kind,
+          s"The twin: $subject whose nested tree is the same, size-flagged (08 02 04 02). Rule 1001 degrades it on its " +
+          "own, so the outer tree parses. Round-trip identity.",
+          cand(boxConstTree(0x18, nestedBox("08020402", "00"))), degrade = None))
     }
 
-    def countBoundEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+    def countBoundEntries(kind: String, wrap: Array[Byte] => Array[Byte], wrapLast: Array[Byte] => Array[Byte]): Seq[Json] = {
       val (k, subject) = (kind.toLowerCase, subjectOf(kind))
       def cand(tree: Array[Byte]): Array[Byte] = wrap(Value ++ tree)
       val layout = "The declared size covers the prefix up to a Coll[Byte] whose bulk read starts in time and ends past " +
@@ -167,7 +214,32 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
           cand(countTree("da0402" + hexVlq(70000), "0e")), degrade = Some(1014)),
         reject(s"$k-apply-count-above-bound-reject#5", kind,
           s"The twin: $subject whose Apply has 100001 arguments: above safeNewArray's limit, the JVM rejects. $layout",
-          cand(countTree("da0402" + hexVlq(100001), "0e")), mention = Seq(MaxArray)))
+          cand(countTree("da0402" + hexVlq(100001), "0e")), mention = Seq(MaxArray)),
+        reject(s"$k-constants-count-above-bound-reject#6", kind,
+          s"$subject whose size-flagged, segregated tree (18) declares 100001 constants, the first a Coll[Byte]. " +
+          "deserializeConstants allocates them with safeNewArray (ErgoTreeSerializer.scala:254), which refuses more than " +
+          s"100000 items before any constant is read: the JVM rejects. $layout An impl that bounds the count lower and " +
+          "degrades the tree accepts it: the over-accept.",
+          cand(countTree(hexVlq(100001), "0e", header = 0x18)), mention = Seq(MaxArray)),
+        accept(s"$k-constants-count-at-bound-degrade-accept#7", kind,
+          s"The twin: $subject whose tree declares 100000 constants: the JVM reads constant 0, the next read trips the " +
+          s"tree window (rule 1014), and the tree degrades. Round-trip identity. $layout",
+          cand(countTree(hexVlq(100000), "0e", header = 0x18)), degrade = Some(1014)),
+        accept(s"$k-constants-count-4097-window-degrade-accept#8", kind,
+          s"$subject whose tree declares 4097 constants. The JVM has no bound at 4096: it reads on, and the window " +
+          s"degrades the tree. Round-trip identity. $layout",
+          cand(countTree(hexVlq(4097), "0e", header = 0x18)), degrade = Some(1014)),
+        reject(s"$k-constants-count-4097-input-ends-reject#9", kind,
+          s"$subject whose size-flagged, segregated tree declares 4097 constants, the first a Coll[Byte] of 64 bytes, " +
+          "and whose declared size (4) ends after that length. The candidate's fields follow (height 1, no tokens, no " +
+          "registers)" + (if (kind == "Box") ", then the box's tx id and index: 36 bytes" else ", and it is the " +
+          "transaction's last output: 3 bytes") + ". The JVM reads on and the input ends first: scorex-util's reader " +
+          "throws an IllegalArgumentException ('Not enough bytes in the buffer'), which deserializeErgoTree rethrows as " +
+          "a SerializerException (ErgoTreeSerializer.scala:191-193), not a ValidationException: the JVM rejects, " +
+          "although the tree is size-flagged. An impl that degrades a tree whose count is above 4096 resumes after the " +
+          "declared size and accepts: the over-accept.",
+          wrapLast(Value ++ sizedTree(0x18, vlq(4097) ++ b("0e") ++ vlq(64)) ++ Fields),
+          mention = Seq("Not enough bytes in the buffer")))
     }
 
     def wrapEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
@@ -243,6 +315,9 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
       val (k, subject) = (kind.toLowerCase, subjectOf(kind))
       def cand(tree: String): Array[Byte] = wrap(Value ++ b(tree) ++ Fields)
       val c = "C = Coll[Boolean](true) (85 01 01)"
+      val c3 = "850101" * 3
+      val arith = Seq("9c" -> "Multiply", "9d" -> "Division", "9e" -> "Modulo", "a1" -> "Min", "a2" -> "Max")
+      val bit = Seq("f2" -> "BitOr", "f3" -> "BitAnd", "f5" -> "BitXor")
       Seq(
         accept(s"$k-plus-on-bool-collections-accept#0", kind,
           s"$subject whose tree is BoolToSigmaProp(EQ(Plus(C, C), C)), $c. Only the nine relations read an 85 after " +
@@ -255,7 +330,28 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
           cand("00d19399850101850101850101"), degrade = None),
         accept(s"$k-eq-bool-pair-accept#2", kind,
           s"$subject whose tree is BoolToSigmaProp(EQ(true, true)) in the relation's packed pair form, 93 85 03. " +
-          "Round-trip identity.", cand("00d1938503"), degrade = None))
+          "Round-trip identity.", cand("00d1938503"), degrade = None)) ++
+      arith.zipWithIndex.map { case ((op, name), i) =>
+        accept(s"$k-${name.toLowerCase}-on-bool-collections-accept#${3 + i}", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ($name(C, C), C)), $c. $name ($op) goes through " +
+          "TwoArgumentsSerializer, which reads two values (TwoArgumentsSerializer.scala:21-25), so its 85 starts a " +
+          "Boolean collection, and the builder builds the ArithOp without checking the operands (SigmaBuilder.scala:" +
+          "707-712): the tree parses. Round-trip identity. An impl that reads the pair form after the opcode consumes " +
+          "different bytes.", cand("00d193" + op + c3), degrade = None)
+      } ++
+      bit.zipWithIndex.map { case ((op, name), i) =>
+        reject(s"$k-${name.toLowerCase}-on-bool-collections-reject#${8 + i}", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ($name(C, C), C)), $c. $name ($op) reads two values as well, but " +
+          "BitOp requires numeric operands (trees.scala:913): an IllegalArgumentException, which deserializeErgoTree " +
+          "rethrows as a SerializerException (ErgoTreeSerializer.scala:191-193): the JVM rejects.",
+          cand("00d193" + op + c3), mention = Seq("IllegalArgumentException", "invalid types"))
+      } ++
+      bit.zipWithIndex.map { case ((op, name), i) =>
+        reject(s"$k-${name.toLowerCase}-on-bool-collections-sized-reject#${11 + i}", kind,
+          s"The twin: $subject whose tree is the same $name, size-flagged (08 0c). The SerializerException is not a " +
+          "ValidationException, so the tree does not degrade: the JVM rejects. An impl that degrades it accepts: the " +
+          "over-accept.", cand("080c" + "d193" + op + c3), mention = Seq("IllegalArgumentException", "invalid types"))
+      }
     }
 
     def sigmaBooleanTreeEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
@@ -272,7 +368,31 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
           cand(sizedTree(0x08, b("08" + "98" + "01") ++ vlq(255) ++ b("d3" * 255))), degrade = None),
         accept(s"$k-cand-no-children-accept#2", kind,
           s"$subject whose unsized tree is the SigmaProp constant CAND() (08 96 00): CAND carries no check, so it parses. " +
-          "Round-trip identity.", cand(b("00089600")), degrade = None))
+          "Round-trip identity.", cand(b("00089600")), degrade = None),
+        accept(s"$k-cand-256-children-accept#3", kind,
+          s"$subject whose unsized tree is the SigmaProp constant CAND(256 × TrueProp) (08 96 80 02 d3…). CAND's child " +
+          "count is a getUShort and the constructor checks nothing (SigmaBoolean.scala:80-86, :149), so up to 65535 " +
+          "children parse. Round-trip identity. An impl that bounds CAND at 255 children, as CTHRESHOLD is bounded, " +
+          "rejects it: the over-reject.", cand(b("00" + "08" + "96" + "8002" + "d3" * 256)), degrade = None),
+        accept(s"$k-cor-256-children-accept#4", kind,
+          s"$subject whose tree is the same with COR (97): it parses (:87-93, :185). Round-trip identity.",
+          cand(b("00" + "08" + "97" + "8002" + "d3" * 256)), degrade = None),
+        accept(s"$k-sigmaand-no-items-accept#5", kind,
+          s"$subject whose tree is the SigmaAnd node with no items (ea 00). SigmaTransformerSerializer reads a " +
+          "getUIntExact count into safeNewArray (SigmaTransformerSerializer.scala:20-30), and mkSigmaAnd builds " +
+          "SigmaAnd(items) unchecked (SigmaBuilder.scala:515-516): it parses. Round-trip identity. (Spending it fails: " +
+          "SigmaAnd evaluates through allZK and CAND.normalized, which requires a non-empty list; see the transaction " +
+          "vector sized-tree-spend.)", cand(b("00ea00")), degrade = None),
+        accept(s"$k-sigmaor-no-items-accept#6", kind,
+          s"$subject whose tree is SigmaOr() (eb 00): it parses, as SigmaAnd() does. Round-trip identity.",
+          cand(b("00eb00")), degrade = None),
+        accept(s"$k-sigmaand-256-items-accept#7", kind,
+          s"$subject whose tree is the SigmaAnd node of 256 × sigmaProp(true) (ea 80 02 08 d3…): the count is bounded " +
+          "only by safeNewArray's 100000, so it parses. Round-trip identity. An impl that bounds the items at 255 " +
+          "rejects it: the over-reject.", cand(b("00ea8002" + "08d3" * 256)), degrade = None),
+        accept(s"$k-sigmaor-256-items-accept#8", kind,
+          s"$subject whose tree is SigmaOr of 256 × sigmaProp(true): it parses. Round-trip identity.",
+          cand(b("00eb8002" + "08d3" * 256)), degrade = None))
     }
 
     val conjectures = {
@@ -295,7 +415,107 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
         acceptPlain("cthreshold-k-zero-accept#5", kind,
           "CTHRESHOLD(0, [TrueProp]) (98 00 01 d3): k = 0 passes the require. Round-trip identity.", b("980001d3")),
         acceptPlain("cthreshold-k-zero-no-children-accept#6", kind,
-          "CTHRESHOLD(0, []) (98 00 00). Round-trip identity.", b("980000")))
+          "CTHRESHOLD(0, []) (98 00 00). Round-trip identity.", b("980000")),
+        acceptPlain("cand-256-children-accept#7", kind,
+          "CAND(256 × TrueProp) (96 80 02 d3…). CAND's child count is a getUShort and the constructor checks nothing " +
+          "(SigmaBoolean.scala:80-86, :149), so up to 65535 children parse. Round-trip identity. An impl that bounds " +
+          "CAND at 255 children, as CTHRESHOLD is bounded, rejects it: the over-reject.", b("96" + "8002" + "d3" * 256)),
+        acceptPlain("cor-256-children-accept#8", kind,
+          "COR(256 × TrueProp) (97 80 02 d3…): it parses, as CAND does (:87-93, :185). Round-trip identity.",
+          b("97" + "8002" + "d3" * 256)),
+        reject("cthreshold-k-256-reject#9", kind,
+          "CTHRESHOLD(256, [TrueProp]) (98 80 02 01 d3). k is a getUShort, 256, and the require (k <= n, " +
+          "SigmaBoolean.scala:223) fails: the JVM rejects. An impl that reads k as a byte gets 0 and accepts " +
+          "CTHRESHOLD(0, [TrueProp]): the over-accept.", b("98" + "8002" + "01d3"), mention = Seq("IllegalArgumentException")),
+        acceptPlainRewritten("cthreshold-k-wraps-accept#10", kind,
+          s"CTHRESHOLD whose k is written as 2^32 + 1 ($Wrap1), over [TrueProp]. scorex-util's getUShort is " +
+          "getULong().toInt and only then the 0..65535 check, so k reads as 1: CTHRESHOLD(1, [TrueProp]), written back " +
+          "as 98 01 01 d3. NON-IDENTITY. An impl that range-checks the full value rejects it: the over-reject.",
+          b("98" + Wrap1 + "01d3"), b("980101d3")),
+        acceptPlainRewritten("cand-count-wraps-accept#11", kind,
+          s"CAND whose child count is written as 2^32 + 1 ($Wrap1): it reads as 1, CAND([TrueProp]), written back as " +
+          "96 01 d3. NON-IDENTITY.", b("96" + Wrap1 + "d3"), b("9601d3")),
+        reject("cand-count-wraps-to-65536-reject#12", kind,
+          s"CAND whose child count is written as 2^32 + 2^16 ($Wrap65536): truncated to 32 bits it is 65536, which " +
+          "getUShort's check refuses: the JVM rejects before reading a child. An impl that keeps the low 16 bits reads " +
+          "0 and accepts CAND(): the over-accept.", b("96" + Wrap65536), mention = Seq(UShort)))
+    }
+
+    def boxUShortEntries: Seq[Json] = {
+      val kind = "Box"
+      val plain = boxWith(placeholderBytes) // value 1000000, SigmaProp(true), height 1, the placeholder's tx id, index 0
+      val index = (to: String) => spliceAt(plain, plain.length - 1, "00", to)
+      val r4 = (len: String) => boxWith(Value ++ b("0008d3" + "01" + "00" + "01" + "0e" + len + "ab"))
+      val subject = "A bare box (value 1000000, SigmaProp(true), height 1, no tokens)"
+      Seq(
+        acceptRewritten("box-index-2-32-accept#0", kind,
+          s"$subject whose index is written as 2^32 (80 80 80 80 10). The index is a getUShort (ErgoBox.scala:218), " +
+          "which scorex-util reads as getULong().toInt and only then checks 0..65535: 2^32 reads as 0. The box parses " +
+          "and keeps the bytes as received for its id (:222); the round-trip re-serializes it with the index 00. " +
+          "NON-IDENTITY. An impl that range-checks the full value rejects it: the over-reject.",
+          index("8080808010"), plain),
+        acceptRewritten("box-index-2-32-plus-1-accept#1", kind,
+          s"$subject whose index is written as 2^32 + 1 ($Wrap1): it reads as 1 and is written back as 01. NON-IDENTITY.",
+          index(Wrap1), index("01")),
+        reject("box-index-wraps-to-65536-reject#2", kind,
+          s"$subject whose index is written as 2^32 + 2^16 ($Wrap65536): truncated to 32 bits it is 65536, outside the " +
+          "unsigned short range: the JVM rejects. An impl that keeps the low 16 bits reads 0 and accepts: the " +
+          "over-accept.", index(Wrap65536), mention = Seq(UShort)),
+        acceptRewritten("box-r4-coll-length-wraps-accept#3", kind,
+          s"$subject whose R4 is a Coll[Byte] with its length written as 2^32 + 1 ($Wrap1), then the byte ab. A " +
+          "collection's length in data is a getUShort too (CoreDataSerializer.scala:132): it reads as 1, and the " +
+          "register is written back as 0e 01 ab. NON-IDENTITY.", r4(Wrap1), r4("01")))
+    }
+
+    def txUShortEntries: Seq[Json] = {
+      val kind = "Transaction"
+      // 01 | the input's box id (32) | proof length 00 | extension 00 | data inputs 00 | tokens 00 | outputs 01 | output
+      val plain = txWith(placeholderBytes)
+      require(hex(plain.slice(33, 38)) == "0000000001", s"unexpected transaction layout ${hex(plain)}")
+      val subject = "A transaction with one input (no proof, no extension), no data inputs and one output"
+      Seq(
+        acceptRewritten("transaction-inputs-count-wraps-accept#0", kind,
+          s"$subject, whose inputs count is written as 2^32 + 1 ($Wrap1). The count is a getUShort " +
+          "(ErgoLikeTransaction.scala:148), which scorex-util reads as getULong().toInt and only then checks 0..65535: " +
+          "it reads as 1. The transaction parses and is written back with the count 01, and its id is computed over " +
+          "those re-encoded bytes (bytesToSign). NON-IDENTITY. An impl that range-checks the full value rejects it: the " +
+          "over-reject.", spliceAt(plain, 0, "01", Wrap1), plain),
+        reject("transaction-inputs-count-wraps-to-65537-reject#1", kind,
+          s"$subject, whose inputs count is written as 2^32 + 2^16 + 1 (81 80 84 80 10): truncated to 32 bits it is " +
+          "65537, outside the unsigned short range: the JVM rejects. An impl that keeps the low 16 bits reads 1 and " +
+          "accepts: the over-accept.", spliceAt(plain, 0, "01", "8180848010"), mention = Seq(UShort)),
+        acceptRewritten("transaction-data-inputs-count-wraps-accept#2", kind,
+          s"$subject, whose data-inputs count is written as 2^32 (80 80 80 80 10, :155): it reads as 0 and is written " +
+          "back as 00. NON-IDENTITY.", spliceAt(plain, 35, "00", "8080808010"), plain),
+        acceptRewritten("transaction-outputs-count-wraps-accept#3", kind,
+          s"$subject, whose outputs count is written as 2^32 + 1 (:172): it reads as 1 and is written back as 01. " +
+          "NON-IDENTITY.", spliceAt(plain, 37, "01", Wrap1), plain),
+        acceptRewritten("transaction-proof-length-wraps-accept#4", kind,
+          s"$subject, whose input carries the 1-byte proof ab with its length written as 2^32 + 1. A proof's length is " +
+          "a getUShort (ProverResult.scala:40): it reads as 1, and the input is written back as 01 ab. NON-IDENTITY. " +
+          "(The wire kind parses the proof; it does not verify it.)",
+          spliceAt(plain, 33, "00", Wrap1 + "ab"), spliceAt(plain, 33, "00", "01ab")))
+    }
+
+    val constUShort = {
+      val kind = "Constant"
+      Seq(
+        acceptPlainRewritten("coll-byte-length-wraps-accept#0", kind,
+          s"A Coll[Byte] constant (0e) whose length is written as 2^32 + 1 ($Wrap1), then the byte ab. A collection's " +
+          "length in data is a getUShort (CoreDataSerializer.scala:132), which scorex-util reads as getULong().toInt and " +
+          "only then checks 0..65535: it reads as 1. Written back as 0e 01 ab. NON-IDENTITY. An impl that range-checks " +
+          "the full value rejects it: the over-reject.", b("0e" + Wrap1 + "ab"), b("0e01ab")),
+        acceptPlainRewritten("coll-int-length-wraps-accept#1", kind,
+          "A Coll[Int] constant (10) whose length is written as 2^32 + 1, then Int 1 (02): one item, written back as " +
+          "10 01 02. NON-IDENTITY.", b("10" + Wrap1 + "02"), b("100102")),
+        acceptPlainRewritten("bigint-size-wraps-accept#2", kind,
+          "A BigInt constant (06) whose size is written as 2^32 + 1, then the byte 01. A BigInt's size is a getUShort as " +
+          "well (CoreDataSerializer.scala:112): it reads as 1, BigInt 1, written back as 06 01 01. NON-IDENTITY.",
+          b("06" + Wrap1 + "01"), b("060101")),
+        reject("coll-byte-length-wraps-to-65536-reject#3", kind,
+          s"A Coll[Byte] constant whose length is written as 2^32 + 2^16 ($Wrap65536): truncated to 32 bits it is " +
+          "65536, outside the unsigned short range: the JVM rejects. An impl that keeps the low 16 bits reads 0 and " +
+          "accepts an empty collection: the over-accept.", b("0e" + Wrap65536), mention = Seq(UShort)))
     }
 
     val box: Array[Byte] => Array[Byte] = boxWith
@@ -304,8 +524,8 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
     Map(
       OpBoxNested       -> envelope(OpBoxNested, nestedEntries("Box", box)),
       OpTxNested        -> envelope(OpTxNested, nestedEntries("Transaction", tx)),
-      OpBoxCountBounds  -> envelope(OpBoxCountBounds, countBoundEntries("Box", box)),
-      OpTxCountBounds   -> envelope(OpTxCountBounds, countBoundEntries("Transaction", txMid)),
+      OpBoxCountBounds  -> envelope(OpBoxCountBounds, countBoundEntries("Box", box, box)),
+      OpTxCountBounds   -> envelope(OpTxCountBounds, countBoundEntries("Transaction", txMid, tx)),
       OpBoxCountWrap    -> envelope(OpBoxCountWrap, wrapEntries("Box", box)),
       OpTxCountWrap     -> envelope(OpTxCountWrap, wrapEntries("Transaction", tx)),
       OpBoxHeaderBits   -> envelope(OpBoxHeaderBits, headerBitEntries("Box", box)),
@@ -316,7 +536,10 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
       OpTxBoolPair      -> envelope(OpTxBoolPair, boolPairEntries("Transaction", tx)),
       OpBoxSigmaBoolean -> envelope(OpBoxSigmaBoolean, sigmaBooleanTreeEntries("Box", box)),
       OpTxSigmaBoolean  -> envelope(OpTxSigmaBoolean, sigmaBooleanTreeEntries("Transaction", tx)),
-      OpConjectures     -> envelope(OpConjectures, conjectures))
+      OpConjectures     -> envelope(OpConjectures, conjectures),
+      OpBoxUShort       -> envelope(OpBoxUShort, boxUShortEntries),
+      OpTxUShort        -> envelope(OpTxUShort, txUShortEntries),
+      OpConstUShort     -> envelope(OpConstUShort, constUShort))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

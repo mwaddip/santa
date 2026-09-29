@@ -46,13 +46,13 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 2,346 entries across 211 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, plus
-  314 authored gap-fillers (oracle-blessed, never spec-copied); version-split into **v5**
-  (1,929 entries — the cumulative v5/mainnet method surface)
-  and **v6** (411 — the v6 new-feature surface). Each entry is `ErgoTree bytes (+ input)
-  → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
-  was blessed under.
+- ✅ **A blessed eval corpus — 2,447 entries across 285 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 359
+  authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
+  spends (full context); version-split into **v5** (1,950 entries — the cumulative
+  v5/mainnet method surface) and **v6** (497 — the v6 new-feature surface). Each entry is
+  `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
+  `(activated, ergoTree)` version it was blessed under.
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
   one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Seven runners wired today:
   - **Rudolph**: the JVM reference, the all-🎁 control that blessed the corpus.
@@ -124,13 +124,19 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **parse acceptance:** which node constructors check their operands at parse. Most check nothing,
     so `Exists` or `LogicalNot` on an `Int` parses. `Append`/`Slice` on a non-collection throw a
     `ClassCastException`; `EQ(Int, Long)` from tree v3 and `GT` on Booleans fail the builder's
-    constraints; `BitOr` needs numeric operands. The `TrueLeaf`/`FalseLeaf` opcodes `7f`/`80` parse and
-    come back as the Boolean constants `01 01`/`01 00`, a non-identity round-trip
+    constraints; `BitOr` needs numeric operands; a `ConcreteCollection` item of the wrong type fails an
+    `assert` (an `AssertionError`). The `TrueLeaf`/`FalseLeaf` opcodes `7f`/`80` parse and come back as the
+    Boolean constants `01 01`/`01 00`, a non-identity round-trip
   - **nested failures and counts:** a `ValidationException` inside a Box constant degrades the outer
-    size-flagged tree, while a nested unsized tree's failure rejects; SigmaAnd/Apply counts above
-    100000 and collection counts above `0xFFFF` reject; a constants count that wraps negative means
+    size-flagged tree, while a nested unsized tree's failure rejects; SigmaAnd, Apply and constants
+    counts above 100000 and collection counts above `0xFFFF` reject (below that the parser reads on, and
+    an input that ends first rejects even a sized tree); a constants count that wraps negative means
     none, and `getUShort` truncates a count to 32 bits before its range check (both non-identity);
-    header bits 5–7 are kept; CTHRESHOLD needs `k <= n <= 255`, while `CAND()`/`COR()` parse
+    header bits 5–7 are kept; only a relation reads `85` as a Boolean pair; CTHRESHOLD needs
+    `k <= n <= 255`, while CAND/COR data and SigmaAnd/SigmaOr nodes take 0 or more than 255 children
+  - **`getUShort` outside trees:** a transaction's input, data-input and output counts, a proof's
+    length, a box's index, and a collection's length or a BigInt's size in data read 2^32 + k as k
+    (non-identity); 2^32 + 2^16 rejects
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs

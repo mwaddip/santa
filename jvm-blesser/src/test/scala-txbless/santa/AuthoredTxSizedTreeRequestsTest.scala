@@ -18,7 +18,8 @@ class AuthoredTxSizedTreeRequestsTest extends munit.FunSuite {
   /** The proof length byte: after the 1-byte input count and the 32-byte box id. */
   private def proofLen(e: Json): String = str(e, "tx_bytes_hex").substring(66, 68)
 
-  test("spend: a rule-1001-degraded tree does not spend; empty conjectures spend only with their Fiat-Shamir proof") {
+  test("spend: a rule-1001-degraded tree does not spend; empty conjectures spend only with their Fiat-Shamir proof; " +
+    "empty SigmaAnd/SigmaOr nodes fail to evaluate") {
     val es = entries(SpendPath)
     val want = List(
       ("0807" + "95" + "0100" + "0402" + "08d3", false, "00"), // If(false, 1, sigmaProp(true)): degrades (1001)
@@ -30,7 +31,10 @@ class AuthoredTxSizedTreeRequestsTest extends munit.FunSuite {
       ("00" + "08" + "980000", false, "00"),                   // CTHRESHOLD(0, []) with no proof
       ("00" + "08" + "9700", false, "00"),                     // COR() with no proof
       ("00" + "08" + "9601" + "d3", false, "00"),              // CAND([TrueProp]) with no proof
-      ("00" + "08" + "9800" + "01" + "d3", false, "00"))       // CTHRESHOLD(0, [TrueProp]) with no proof
+      ("00" + "08" + "9800" + "01" + "d3", false, "00"),       // CTHRESHOLD(0, [TrueProp]) with no proof
+      ("00" + "ea00", false, "00"),                            // the SigmaAnd() node: CAND.normalized requires items
+      ("00" + "eb00", false, "00"),                            // the SigmaOr() node: COR.normalized, the same
+      ("00" + "ea8002" + "08d3" * 256, true, "00"))            // SigmaAnd of 256 sigmaProp(true): TrueProp, no proof
     assertEquals(es.map(valid), want.map(_._2))
     want.zip(es).foreach { case ((tree, _, len), e) =>
       // the spent box: value 1000000000 (5 VLQ bytes), then the tree

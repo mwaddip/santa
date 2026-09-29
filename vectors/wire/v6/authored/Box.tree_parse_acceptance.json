@@ -233,6 +233,41 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "box-coll-item-wrong-type-reject#20",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A bare box whose tree is BoolToSigmaProp(EQ(SizeOf(Coll[Int](Long 1)), Int 1)): a ConcreteCollection (83) declaring Int items (04) whose item is Long 1 (05 02). ConcreteCollectionSerializer asserts each item's type (ConcreteCollectionSerializer.scala:38), and the build does not elide the assert: an AssertionError, which no handler in deserializeErgoTree catches: the JVM rejects. An impl that does not compare the item types parses it: the over-accept.",
+      "bytes_hex" : "c0843d00d193b1830104050204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-coll-item-wrong-type-sized-reject#21",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A bare box whose tree is the same, size-flagged: an AssertionError is not a ValidationException, so the tree does not degrade and the JVM rejects.",
+      "bytes_hex" : "c0843d080ad193b1830104050204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-coll-item-right-type-accept#22",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "The twin: A bare box whose tree is BoolToSigmaProp(EQ(SizeOf(Coll[Int](Int 1)), Int 1)). It parses. Round-trip identity.",
+      "bytes_hex" : "c0843d00d193b1830104040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

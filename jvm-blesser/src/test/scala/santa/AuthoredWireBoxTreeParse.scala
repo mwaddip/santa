@@ -39,7 +39,10 @@ package santa
 //      upcast from tree v3 on (`:757-758`): EQ(Int, Long) is ConstraintFailed at v3 and upcast at v0, and GT on
 //      Booleans fails the numeric check;
 //    - BitOp requires numeric operands (`trees.scala:913`): an IllegalArgumentException, rethrown as a
-//      SerializerException.
+//      SerializerException;
+//    - ConcreteCollectionSerializer asserts each item's type against the declared element type
+//      (`ConcreteCollectionSerializer.scala:38`, a Scala `assert` the build does not elide): an AssertionError, which
+//      no handler in deserializeErgoTree catches.
 //    None of these is a ValidationException, so a size-flagged tree rejects too.
 //
 // Box entries are a bare box; Transaction entries carry the candidate as an output (BoxTreeWireFixtures).
@@ -351,6 +354,7 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
       val sliceBody  = "d193b1b40402040004020400"
       val gtBoolBody = "d19101010101"
       val bitOrBody  = "d193f2010101010400"
+      val collItemBody = "d193b1" + "8301040502" + "0402"
       val unchecked = "The JVM builds the node with an erased cast and checks nothing, so the tree parses. Round-trip " +
         "identity. An impl that type-checks the operand at parse rejects it: the over-reject."
       Seq(
@@ -434,7 +438,19 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
           cand(sizedV0(bitOrBody)), mention = Seq("IllegalArgumentException")),
         accept(s"$k-l3-bitor-int-accept#19", kind,
           s"The twin: $subject whose tree is BoolToSigmaProp(EQ(BitOr(Int 1, Int 1), Int 0)). It parses. Round-trip " +
-          "identity.", cand("00d193f2040204020400"), degrade = None))
+          "identity.", cand("00d193f2040204020400"), degrade = None),
+        reject(s"$k-coll-item-wrong-type-reject#20", kind,
+          s"$subject whose tree is BoolToSigmaProp(EQ(SizeOf(Coll[Int](Long 1)), Int 1)): a ConcreteCollection (83) " +
+          "declaring Int items (04) whose item is Long 1 (05 02). ConcreteCollectionSerializer asserts each item's type " +
+          "(ConcreteCollectionSerializer.scala:38), and the build does not elide the assert: an AssertionError, which no " +
+          "handler in deserializeErgoTree catches: the JVM rejects. An impl that does not compare the item types parses " +
+          "it: the over-accept.", cand("00" + collItemBody), mention = Seq("AssertionError")),
+        reject(s"$k-coll-item-wrong-type-sized-reject#21", kind,
+          s"$subject whose tree is the same, size-flagged: an AssertionError is not a ValidationException, so the tree " +
+          "does not degrade and the JVM rejects.", cand(sizedV0(collItemBody)), mention = Seq("AssertionError")),
+        accept(s"$k-coll-item-right-type-accept#22", kind,
+          s"The twin: $subject whose tree is BoolToSigmaProp(EQ(SizeOf(Coll[Int](Int 1)), Int 1)). It parses. " +
+          "Round-trip identity.", cand("00d193b1" + "8301040402" + "0402"), degrade = None))
     }
 
     Map(

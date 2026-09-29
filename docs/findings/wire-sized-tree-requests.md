@@ -5,7 +5,10 @@
 (`~/projects/ergots/prompts/santa-sized-tree-requests-2026-09-28.md`)  
 **Vectors:** `vectors/wire/v6/authored/{Box,Transaction}.tree_{nested_degrade,count_bounds,count_wrap,header_bits,root_forms,bool_pair_form,sigmaboolean_bounds}.json`
 and `SigmaBoolean.conjecture_bounds.json`: 79 entries (20 rejects, 12 non-identity). Blesser
-`AuthoredWireSizedTreeRequests`.
+`AuthoredWireSizedTreeRequests`.  
+**Later entries:** on 2026-09-29, sigma-rust's source findings appended entries to `nested_degrade`,
+`count_bounds`, `bool_pair_form`, `sigmaboolean_bounds` and `conjecture_bounds`, and added `ushort_wrap`. They are
+described in `sized-tree-source-findings.md`; the tables below cover the first 79.
 
 Everything below is sigmastate 6.0.6 under the node's v6 parse context (3, 3). A size-flagged tree degrades only on
 a `ValidationException` (`wire-tree-degrade-gate.md`).

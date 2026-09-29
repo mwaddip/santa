@@ -145,11 +145,16 @@ arms are named non-goals, to be specified when built (do not implement against t
   parameter, a Box constant with a bad height or registers — `{Box,Transaction}.tree_degrade_gate`);
   which node constructors check their operands at parse (most check nothing, so a node on an operand
   of the wrong type parses; `Append`/`Slice` on a non-collection, `EQ(Int, Long)` from tree v3, `GT` on
-  Booleans and `BitOr` on Booleans reject; the `TrueLeaf`/`FalseLeaf` opcodes re-serialize as Boolean
-  constants, a non-identity round-trip — `{Box,Transaction}.tree_parse_acceptance`); failures nested in a
-  Box constant, count bounds and counts that wrap, header bits, root forms, the `85` pair form, and the
-  SigmaBoolean conjecture bounds (`{Box,Transaction}.tree_{nested_degrade,count_bounds,count_wrap,
-  header_bits,root_forms,bool_pair_form,sigmaboolean_bounds}`, `SigmaBoolean.conjecture_bounds`);
+  Booleans, `BitOr` on Booleans and a `ConcreteCollection` item of the wrong type reject; the
+  `TrueLeaf`/`FalseLeaf` opcodes re-serialize as Boolean constants, a non-identity round-trip —
+  `{Box,Transaction}.tree_parse_acceptance`); failures nested in a Box constant, count bounds and counts
+  that wrap, header bits, root forms, the `85` pair form (a relation's only; after the other two-argument
+  opcodes it starts a collection), and the SigmaBoolean conjecture bounds
+  (`{Box,Transaction}.tree_{nested_degrade,count_bounds,count_wrap,header_bits,root_forms,bool_pair_form,
+  sigmaboolean_bounds}`, `SigmaBoolean.conjecture_bounds`); scorex's `getUShort` outside trees, which
+  truncates to 32 bits before its 0..65535 check (a transaction's input, data-input and output counts, a
+  proof's length, a box's index, and a collection's length or a BigInt's size in data: 2^32 + k reads as
+  k, a non-identity round-trip, and 2^32 + 2^16 rejects — `{Box,Transaction,Constant}.ushort_wrap`);
   the reader's scope
   (a block's transactions each parse on a fresh reader, so neither leaked levels nor `ValDef` types
   reach the next transaction, while one transaction's outputs share theirs —

@@ -4,7 +4,8 @@
 **Surfaced:** 2026-09-28, the transaction and eval part of ergots' sized-tree requests. The wire part is
 `wire-sized-tree-requests.md`.  
 **Vectors:**
-- `vectors/transaction/v6/authored/sized-tree-spend.json` (10 entries);
+- `vectors/transaction/v6/authored/sized-tree-spend.json` (13 entries; #10–#12 came from sigma-rust's source
+  findings, `sized-tree-source-findings.md` §2);
 - `vectors/transaction/v6/authored/sized-tree-output-bytes.json` (5 entries);
 - `vectors/eval/v6/authored/substConstants_declared_size_u32.json` (3 entries).
 
@@ -37,6 +38,9 @@ A spend evaluates the box's tree as it was parsed at ingest.
 | 7 | `COR()` | none | invalid |
 | 8 | `CAND([TrueProp])` | none | invalid |
 | 9 | `CTHRESHOLD(0, [TrueProp])` | none | invalid |
+| 10 | the `SigmaAnd()` node, `00 ea 00` | none | **invalid**: `CAND.normalized` requires items |
+| 11 | the `SigmaOr()` node, `00 eb 00` | none | **invalid**: `COR.normalized`, the same |
+| 12 | the `SigmaAnd` node of 256 × `sigmaProp(true)` | none | **valid**: normalizes to TrueProp |
 
 - **How it discriminates.**
   - A lenient parser evaluates #0 to `sigmaProp(true)` and accepts it.
