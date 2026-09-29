@@ -23,7 +23,7 @@ context), and non-pair tuples at `Value.checkType`. It also traces how a node th
 | `vectors/wire/v5/authored/Transaction.extension_evaluated_values.json` | 4 | X15 and U1 below tree v3; C2 and its twin reject |
 | `vectors/wire/v6/authored/{Box,Transaction}.register_evaluated_values.json` | 16 each | G1–G6, four more accepts (C1, D1 among them), six rejects |
 | `vectors/wire/v6/authored/{Box,Transaction}.tree_parse_acceptance.json` | #23–#24 | `SContext` method 11, unsized and sized |
-| `vectors/transaction/v6/authored/evaluated-values-spend.json` | 47 | V1–V10 with twins (#0–#14); T1–T8, C1/C2 and D1–D4 with twins, method 11 (#15–#43); X15 and C2's twin as an output's R4 (#44–#46) |
+| `vectors/transaction/v6/authored/evaluated-values-spend.json` | 51 | V1–V10 with twins (#0–#14); T1–T8, C1/C2 and D1–D4 with twins, method 11 (#15–#43); X15 and C2's twin as an output's R4 (#44–#46); X15 at the dust and size boundaries (#47–#50) |
 | `vectors/eval/v6/authored/Tuple.non_pair_type_check.json` | 6 | a triple at `EQ`, a `ValDef` and a lambda's argument, with pair twins |
 
 Blessers: `AuthoredWireEvaluatedValues`, `AuthoredTxEvaluatedValues` and `AuthoredEvalNonPairTuple`. Each re-derives every verdict on the JVM and
@@ -262,6 +262,22 @@ throws "Unsupported tuple type" for an `STuple` of arity other than 2 (`SType.sc
 | 2, 3 | a `ValDef` (`values.scala:1027`) | errored | true |
 | 4, 5 | a lambda's argument (`values.scala:1074`) | errored | true |
 
+### The dust and size boundaries of an X15 output (sigma-rust's PR #52 request)
+
+`verifyOutput`'s dust check (`value >= minValuePerByte × ErgoBox.bytes.length`, `ErgoTransaction.scala:171`,
+`BoxUtils.scala:41`) and its size check (`out.bytes.length <= MaxBoxSize`, 4096, `:175`) measure the output as the node
+writes it: at (1, 1), where X15's `Upcast` of a constant is dropped. So the output is two bytes shorter than at (3, 3).
+Measured on the JVM:
+
+| # | Output 0 | Bytes at (1, 1) / (3, 3) | JVM |
+|---|---|---|---|
+| 47 | R4 = X15, value 17280 = 48 × 360 | 48 / 50 | valid |
+| 48 | the same, value 17279 | 48 / 50 | **invalid** (`txDust`) |
+| 49 | R4 = X15, R5 = 4043 zero bytes, value 10⁹ | 4096 / 4098 | valid |
+| 50 | the same with R5 = 4044 bytes | 4097 / 4099 | **invalid** (`txBoxSize`) |
+
+An impl that measures at (3, 3) wants 18000 for #47 and sees 4098 bytes in #49, so it rejects both.
+
 ### The version context a thread inherits (item 2, by source; not reproduced on a node)
 
 **The mechanism is confirmed on the JVM.** `VersionContext` is a `DynamicVariable`, so an `InheritableThreadLocal`.
@@ -373,6 +389,16 @@ v3), and it errors on U1.
    tuple row.
 
 Board: mwaddip 60, develop 497, dasher 153, vixen 119 (arkadianet `3d554fe2`), comet 32, donner 10, rudolph 0.
+
+**The dust and size rows (#47–#50).**
+- **At fork master `3b23f47e`** blitzen-mwaddip rejects #47 and #49, because it measures the output at (3, 3). develop
+  and dasher error on all four. Board: mwaddip 62, develop 501, dasher 157, the rest unchanged.
+- **At PR #52's tip `d7c5b479`,** graded directly with runner `8428754`, exactly five entries change against
+  `3b23f47e`, and all now match the JVM:
+  - #46, #47 and #49 flip green, #47 and #49 at the JVM's costs;
+  - #48 and #50 change only their reason text.
+
+  Nothing else changes: blitzen-mwaddip would go 62 → 59.
 
 **Reproducibility.** The blesser JVM now runs with `-XX:-OmitStackTraceInFastThrow`. HotSpot had dropped the message of
 C1's `ArrayStoreException` in one bless, so `evaluated-values-spend` #31 and #33 differed between runs in their

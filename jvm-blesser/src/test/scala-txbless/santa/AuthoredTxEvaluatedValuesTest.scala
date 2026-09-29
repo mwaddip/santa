@@ -87,8 +87,7 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
   }
 
   test("third round: an output is written at the block path's (1, 1), the tx id at its read context (3, 3)") {
-    val es = entries.drop(44)
-    assertEquals(entries.size, 47)
+    val es = entries.slice(44, 47)
     assertEquals(es.map(valid), List(true, false, false))
     val x15 = "860204027e040205"                         // Tuple(1, Upcast(1, Long))
     val kept = "0008d3" + "010001" + x15                 // output 0 after its value, R4 as received
@@ -104,6 +103,22 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
     assertEquals(str(es(0), "tx_bytes_hex").substring(66, 68), "38")
     assertEquals(str(es(1), "tx_bytes_hex").substring(66, 68), "38")
     assert(reason(es(2)).contains("MatchError"), reason(es(2)))
+  }
+
+  test("dust and size: an output is measured as written at (1, 1), where X15's Upcast is dropped") {
+    val es = entries.drop(47)
+    assertEquals(entries.size, 51)
+    assertEquals(es.map(valid), List(true, false, true, false))
+    val x15 = "860204027e040205"
+    def vlq(n: Long): String = RentFixtures.hex(RentFixtures.vlqU32(n))
+    // output 0: its value, SigmaProp(true), height 1, no tokens, R4 = X15 (48 bytes at (1, 1), 50 at (3, 3))
+    assert(str(es(0), "tx_bytes_hex").contains(vlq(17280) + "0008d3" + "010001" + x15), "48 x 360 = 17280")
+    assert(str(es(1), "tx_bytes_hex").contains(vlq(17279) + "0008d3" + "010001" + x15), "one nanoERG below")
+    // output 0: 1000000000, R4 = X15, R5 = a Coll[Byte] of 4043 (4096 bytes at (1, 1)) or 4044 zero bytes
+    assert(str(es(2), "tx_bytes_hex").contains("8094ebdc03" + "0008d3" + "010002" + x15 + "0e" + vlq(4043) + "00" * 4043))
+    assert(str(es(3), "tx_bytes_hex").contains("8094ebdc03" + "0008d3" + "010002" + x15 + "0e" + vlq(4044) + "00" * 4044))
+    assert(reason(es(1)).contains("minValuePerByte"), reason(es(1)))
+    assert(reason(es(3)).contains("Box size should not exceed 4096"), reason(es(3)))
   }
 
   test("envelope and context: santa-transaction/v1, the storage-rent synthetic context, v6 activated") {

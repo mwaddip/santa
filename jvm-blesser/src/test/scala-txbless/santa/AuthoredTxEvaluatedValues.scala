@@ -175,7 +175,61 @@ object AuthoredTxEvaluatedValues {
         "The box of #12 (R4 = Tuple(1, HEIGHT)) guarded by sigmaProp(true), which reads no register: nothing converts " +
         s"the registers, so the box spends. Valid. $note",
         spent("santa:ev:v10-noread", True, regs = Map(ErgoBox.R4 -> tup1H, ErgoBox.R5 -> IntConstant(1))), "00",
-        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12) ++ outputEntries(True)
+        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12) ++ outputEntries(True) ++ boundaryEntries
+  }
+
+  /** sigma-rust's PR #52 request: verifyOutput's dust and size checks measure ErgoBox.bytes, written at the default
+    * (1, 1), where X15's Upcast of a constant is dropped: 2 bytes fewer than at (3, 3). */
+  private def boundaryEntries: Seq[Json] = {
+    val x15 = "860204027e040205"
+    val spentBox = VersionContext.withVersions(V3, V3) { box("santa:ev:boundary", V, 1) }
+    def splice(plain: Array[Byte], from: String, to: String): Array[Byte] = {
+      val (f, t) = (b(from), b(to))
+      val at = plain.indexOfSlice(f)
+      require(at >= 0 && plain.indexOfSlice(f, at + 1) < 0, s"$from must occur once")
+      plain.take(at) ++ t ++ plain.drop(at + f.length)
+    }
+    /** Output 0 = `value`, SigmaProp(true), height 1, R4 = X15 (and R5 = `r5` zero bytes when r5 > 0); output 1 takes
+      * the change. `len11` is output 0's ErgoBox.bytes length as the node writes it, at (1, 1). */
+    def txOf(value: Long, r5: Int, len11: Int): String = {
+      val bytes = VersionContext.withVersions(V3, V3) {
+        val regs: Map[ErgoBox.NonMandatoryRegisterId, EvaluatedValue[_ <: SType]] =
+          if (r5 > 0) Map(ErgoBox.R4 -> IntConstant(0), ErgoBox.R5 -> ByteArrayConstant(Array.fill[Byte](r5)(0)))
+          else Map(ErgoBox.R4 -> IntConstant(0))
+        val outs = Seq(candidate(value, 1, regs = regs)) ++ (if (V > value) Seq(candidate(V - value, 1)) else Nil)
+        val plain = txBytes(tx(Seq(input(spentBox, ext())), outs))
+        if (r5 > 0) splice(plain, "0008d3" + "010002" + "0400" + "0e", "0008d3" + "010002" + x15 + "0e")
+        else splice(plain, "0008d3" + "010001" + "0400", "0008d3" + "010001" + x15)
+      }
+      val parsed = VersionContext.withVersions(3, 3) { ErgoLikeTransaction.serializer.fromBytes(bytes) }
+      require(parsed.outputs(0).bytes.length == len11, s"output 0 must be $len11 bytes at (1, 1)")
+      val at33 = VersionContext.withVersions(3, 3) { ErgoLikeTransaction.serializer.fromBytes(bytes).outputs(0).bytes.length }
+      require(at33 == len11 + 2, s"output 0 must be ${len11 + 2} bytes at (3, 3), got $at33")
+      hex(bytes)
+    }
+    val measured = "verifyOutput measures ErgoBox.bytes, which the node writes at the default (1, 1), where an Upcast of " +
+      "a constant is written as the constant (ValueSerializer.scala:157-169): two bytes fewer than at (3, 3)."
+    val minimum = 48 * 360
+    Seq(
+      entryTx(47, "x15-output-dust-boundary-accept",
+        "Output 0 carries R4 = Tuple(1, Upcast(1, Long)) (86 02 04 02 7e 04 02 05) and is valued at exactly the dust " +
+        "minimum; output 1 takes the change. The dust check is value >= minValuePerByte × ErgoBox.bytes.length " +
+        s"(ErgoTransaction.scala:171, BoxUtils.scala:41). $measured Output 0 is 48 bytes, not 50, so with " +
+        s"minValuePerByte 360 the minimum is $minimum, and output 0 holds $minimum: valid. An impl that measures the " +
+        "output at (3, 3) wants 18000 and rejects it as dust.",
+        txOf(minimum, 0, 48), spentBox, want = true, because = ""),
+      entryTx(48, "x15-output-dust-below-reject",
+        s"The same with ${minimum - 1}, one nanoERG below the minimum: invalid (txDust).",
+        txOf(minimum - 1, 0, 48), spentBox, want = false, because = "minValuePerByte"),
+      entryTx(49, "x15-output-size-4096-accept",
+        "Output 0 (value 1000000000, height 1) carries R4 = the same Tuple and R5 = a Coll[Byte] of 4043 zero bytes. " +
+        s"$measured So ErgoBox.bytes is exactly 4096 bytes, and 4098 at (3, 3). txBoxSize requires " +
+        "out.bytes.length <= MaxBoxSize, 4096 (ErgoTransaction.scala:175): valid. An impl that measures at (3, 3) " +
+        "rejects it.",
+        txOf(V, 4043, 4096), spentBox, want = true, because = ""),
+      entryTx(50, "x15-output-size-4097-reject",
+        "The same with R5 one byte longer (4044): 4097 bytes at (1, 1): invalid (txBoxSize).",
+        txOf(V, 4044, 4097), spentBox, want = false, because = "Box size should not exceed 4096"))
   }
 
   /** sigma-rust's third round: an output is written at the block path's (1, 1), while the transaction is read, and its
