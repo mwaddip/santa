@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          submodules: recursive          # blitzen-develop / blitzen-eni / blitzen-master
+          submodules: recursive          # blitzen-develop / blitzen-master
       - name: Install mise (binary only — runners + SANTA's own tooling self-provision)
         uses: jdx/mise-action@v4
         with:

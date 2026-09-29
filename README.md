@@ -54,14 +54,13 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   → typed value + raw JIT cost`, committed with the `(activated, ergoTree)` version it
   was blessed under.
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
-  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Eight runners wired today:
+  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Seven runners wired today:
   - **Rudolph**: the JVM reference, the all-🎁 control that blessed the corpus.
   - **Dasher**: the pure-TS `ergots` library ([`ts-runner/`](ts-runner/)).
-  - **Blitzen**, three submodules pinning `sigma-rust` at:
+  - **Blitzen**, two submodules pinning `sigma-rust` at:
     - upstream `develop` (value-only);
-    - the `eni` branch of the mwaddip fork (`--features jit-cost`);
-    - that fork's `master`, which takes over from `eni`. It is the eni runner, so it builds once eni's API has moved
-      there.
+    - the `master` branch of the mwaddip fork (`--features jit-cost`). It took over from the fork's `eni` branch,
+      whose runner was retired on 2026-09-29 after master reproduced it exactly.
   - **Comet**: the pure-TS **Fleet SDK**, wire tier only.
   - **Donner**: ergo-node-rust.
   - **Vixen**: arkadianet/ergo.
@@ -274,7 +273,7 @@ vectors/chain/     chain-tier retargeting / voting / fork_vote_gate / header_vot
 vectors/authds/    authds-tier AVL+ prover/verifier vectors (any/vendored/)
 jvm-blesser/       Scala: the blesser, the JVM reference runner (Rudolph), the harness
 ts-runner/         Dasher — the ergots runner + the conformance gate
-runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-eni · blitzen-master · comet · donner · vixen)
+runners/           per-conformer dirs (rudolph · dasher · blitzen-develop · blitzen-master · comet · donner · vixen)
 conform            the runner-agnostic orchestrator — runs every runner, prints the table
 README.md          this file
 ```
