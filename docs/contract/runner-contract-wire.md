@@ -155,6 +155,12 @@ arms are named non-goals, to be specified when built (do not implement against t
   truncates to 32 bits before its 0..65535 check (a transaction's input, data-input and output counts, a
   proof's length, a box's index, and a collection's length or a BigInt's size in data: 2^32 + k reads as
   k, a non-identity round-trip, and 2^32 + 2^16 rejects — `{Box,Transaction,Constant}.ushort_wrap`);
+  extension and register values that are EvaluatedValues but not Constants (a Tuple or collection node,
+  whose items are not checked at parse, GroupGenerator, or the TrueLeaf/FalseLeaf opcodes parse; HEIGHT, a
+  placeholder or an operation reject; the JVM writes a Constant and a constant Boolean collection back in
+  their own forms — `Transaction.extension_evaluated_values`, `{Box,Transaction}.register_evaluated_values`;
+  the `wire/v5/authored/` file pins the one pre-v3 difference, an Upcast of a constant written as the
+  constant);
   the reader's scope
   (a block's transactions each parse on a fresh reader, so neither leaked levels nor `ValDef` types
   reach the next transaction, while one transaction's outputs share theirs —

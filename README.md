@@ -137,6 +137,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **`getUShort` outside trees:** a transaction's input, data-input and output counts, a proof's
     length, a box's index, and a collection's length or a BigInt's size in data read 2^32 + k as k
     (non-identity); 2^32 + 2^16 rejects
+  - **evaluated values:** an extension or register value may be any `EvaluatedValue` — a Tuple or
+    collection node (items unchecked at parse), `GroupGenerator`, or the `7f`/`80` opcodes (written back
+    as constants) — while `HEIGHT`, a placeholder or an operation rejects; the transaction tier pins what
+    happens at evaluation (a Tuple node is a `Coll`, not a pair; `Tuple(1, HEIGHT)` fails when converted)
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs
