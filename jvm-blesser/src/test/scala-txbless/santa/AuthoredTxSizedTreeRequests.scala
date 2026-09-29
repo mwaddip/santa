@@ -177,8 +177,8 @@ object AuthoredTxSizedTreeRequests {
   }
 
   // ── 2. output bytes ───────────────────────────────────────────────────────────────────────────────
-  private val secret = DLogProverInput(scalar("santa:sized-tree-requests:secret"))
-  private val pk = secret.publicImage
+  private[santa] val secret = DLogProverInput(scalar("santa:sized-tree-requests:secret"))
+  private[santa] val pk = secret.publicImage
 
   /** pk && OUTPUTS(0).propositionBytes == prop && OUTPUTS(0).bytes.slice(3, 7) == slice
     *    && OUTPUTS(0).id == blake2b256(OUTPUTS(0).bytes). */
@@ -194,7 +194,7 @@ object AuthoredTxSizedTreeRequests {
 
   /** A Schnorr proof of pk over `msg`, deterministic: the nonce comes from `nonceLabel`. Built as the JVM prover would
     * (Fiat-Shamir over the leaf and the message), and checked by the verdict. */
-  private def schnorr(msg: Array[Byte], nonceLabel: String): Array[Byte] = {
+  private[santa] def schnorr(msg: Array[Byte], nonceLabel: String): Array[Byte] = {
     val r = scalar(nonceLabel)
     val a = FirstDLogProverMessage(dlogGroup.exponentiate(dlogGroup.generator, r))
     val leaf = UnprovenSchnorr(pk, Some(a), Some(r), None, simulated = false)

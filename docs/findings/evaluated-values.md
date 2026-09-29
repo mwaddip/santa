@@ -11,7 +11,9 @@ with these corrections:
 - D2 fails with a `RuntimeException`: the `DeserializeRegister` node is left in the tree and evaluated;
 - C2 surfaces as a `MatchError` from ergo-core's failure log (§4).
 
-The second round (§4) also answers whether `SContext` method 11 parses: it does, and it fails when evaluated.
+The second round (§4) also answers whether `SContext` method 11 parses: it does, and it fails when evaluated. The
+third round (§5) pins an output's bytes on the node's path (written at (1, 1), while the tx id is computed at the read
+context), and non-pair tuples at `Value.checkType`. It also traces how a node thread can inherit a version context.
 
 **Vectors:**
 
@@ -21,9 +23,10 @@ The second round (§4) also answers whether `SContext` method 11 parses: it does
 | `vectors/wire/v5/authored/Transaction.extension_evaluated_values.json` | 4 | X15 and U1 below tree v3; C2 and its twin reject |
 | `vectors/wire/v6/authored/{Box,Transaction}.register_evaluated_values.json` | 16 each | G1–G6, four more accepts (C1, D1 among them), six rejects |
 | `vectors/wire/v6/authored/{Box,Transaction}.tree_parse_acceptance.json` | #23–#24 | `SContext` method 11, unsized and sized |
-| `vectors/transaction/v6/authored/evaluated-values-spend.json` | 44 | V1–V10 with twins (#0–#14); T1–T8, C1/C2 and D1–D4 with twins, method 11 (#15–#43) |
+| `vectors/transaction/v6/authored/evaluated-values-spend.json` | 47 | V1–V10 with twins (#0–#14); T1–T8, C1/C2 and D1–D4 with twins, method 11 (#15–#43); X15 and C2's twin as an output's R4 (#44–#46) |
+| `vectors/eval/v6/authored/Tuple.non_pair_type_check.json` | 6 | a triple at `EQ`, a `ValDef` and a lambda's argument, with pair twins |
 
-Blessers: `AuthoredWireEvaluatedValues` and `AuthoredTxEvaluatedValues`. Each re-derives every verdict on the JVM and
+Blessers: `AuthoredWireEvaluatedValues`, `AuthoredTxEvaluatedValues` and `AuthoredEvalNonPairTuple`. Each re-derives every verdict on the JVM and
 fails loud on a wrong-reason reject or different bytes.
 
 ## 1. Parse: extension and register values
@@ -174,9 +177,10 @@ round-trips identically. Below v3 it rejects (rule 1008; the v5 file). The spend
    (`ErgoTransaction.scala:139-146`). That re-serializes the extension under the ambient context, the default (1, 1) in
    block validation. At (1, 1), `TypeSerializer` cannot write a function type (`TypeSerializer.scala:111`), so a
    `MatchError` escapes `validateStateful`.
-3. **The block fails.** Block validation runs inside `Try.flatMap` (`UtxoState.scala:138-139`). The mempool validates
-   under `(activated, activated)` (`ErgoMemPool.scala:291`), where the log succeeds and the input is simply invalid.
-   Either way, the spend is invalid.
+3. **Both of the node's paths catch it.** Block validation runs inside `Try.flatMap` (`UtxoState.scala:138-139`), so
+   the block fails. The mempool's `withVersions` (`ErgoMemPool.scala:286-296`) covers only a re-parse: its validation
+   also runs outside any context, inside `Try.flatMap` (`UtxoStateReader.scala:54-60`), so the transaction is
+   invalidated. Either way, the spend is invalid.
 
 The one-argument twin (`Int => Int`) is valid, and so is C2 with a SigmaPropConstant root.
 
@@ -214,6 +218,77 @@ identically (`tree_parse_acceptance` #23, #24).
   v5 and v6 (`:1766-1774`). Its type variable stays unbound.
 - Evaluating it throws `NoSuchMethodException` for `Context.getVar(byte)` (`evaluated-values-spend` #43).
 - sigma-rust also parses it and fails only when evaluating, so there is no L divergence.
+
+## 5. The third round (sigma-rust's regrade follow-ups)
+
+### X15 as an output's R4: the tx id and the output's bytes (item 1)
+
+An output whose R4 is `Tuple(1, Upcast(1, Long))` (`86 02 04 02 7e 04 02 05`), confirmed on the node's path:
+- **The transaction is read at (3, 3), as a v4 block's are** (`BlockTransactions.scala:184-202`). The tx id is computed
+  at parse (`ErgoTransaction.scala:68`), and its message keeps the `Upcast`.
+- **The output is written later, at (1, 1).** `ErgoBox.bytes` is first read in `verifyOutput`'s size checks
+  (`ErgoTransaction.scala:163-176`), which run before any input script and outside any version context. So the output
+  is written at the default (1, 1), and the `Upcast` of the constant is dropped.
+- **Everything downstream of the output uses the stripped bytes.** Its id hashes them, and `stateChanges` stores them
+  (`Insert(o.id, o.bytes)`, `ErgoState.scala:184`).
+
+`evaluated-values-spend` #44 and #45 pin both halves:
+
+| # | Script | Proof | JVM |
+|---|---|---|---|
+| 44 | `proveDlog(pk) && OUTPUTS(0).bytes.slice(3, 15) == 00 08 d3 01 00 01 86 02 04 02 04 02` (stripped) | Schnorr over the message, which keeps the `Upcast` | valid |
+| 45 | the same, expecting the kept form | the same | **invalid** |
+
+### C2's twin as an output's register (item 4)
+
+An output whose R4 is an empty `Coll[Int => Int]` (`83 00 70 01 04 04 00`) parses at (3, 3).
+- **`verifyOutput` writes the output at (1, 1),** where `TypeSerializer` has no case for a function type
+  (`TypeSerializer.scala:111`). The result is a `MatchError`.
+- **Both paths reject it.** The block fails (`UtxoState.scala:138-139`), and the mempool invalidates the transaction
+  (`UtxoStateReader.scala:54-60`).
+
+Vector: `evaluated-values-spend` #46, invalid.
+
+### `Value.checkType` on a tuple that is not a pair (item 3)
+
+A constant triple's value is a `Coll` (`Evaluation.toDslTuple`, `Evaluation.scala:99-102`), and `isValueOfType`
+throws "Unsupported tuple type" for an `STuple` of arity other than 2 (`SType.scala:200-202`).
+
+`eval/v6/authored/Tuple.non_pair_type_check.json` pins three check sites:
+
+| # | Site | Triple | Pair twin |
+|---|---|---|---|
+| 0, 1 | `EQ`'s operands (`trees.scala:1206-1208`) | errored | true |
+| 2, 3 | a `ValDef` (`values.scala:1027`) | errored | true |
+| 4, 5 | a lambda's argument (`values.scala:1074`) | errored | true |
+
+### The version context a thread inherits (item 2, by source; not reproduced on a node)
+
+**The mechanism is confirmed on the JVM.** `VersionContext` is a `DynamicVariable`, so an `InheritableThreadLocal`.
+A thread constructed inside `withVersions` inherits that version as its own value for life. A spike showed this with a
+plain fixed thread pool: its worker was created by a task submitted inside `withVersions(3, 3)`, and it still reads
+(3, 3) for tasks submitted later outside any context.
+
+**The chain in ergo 6.0.6, from source:**
+1. **The NodeViewHolder's threads are re-created on demand.** The NodeViewHolder runs on `critical-dispatcher`, a
+   `thread-pool-executor` with `fixed-pool-size = 2` (`application.conf:597-604`). Akka 2.6.10's defaults for that
+   executor are `allow-core-timeout = on` and `keep-alive-time = 60s` (akka-actor `reference.conf:489`, `:533`). So a
+   NodeViewHolder thread idle for 60 s dies, and the thread that sends the next message constructs its replacement.
+2. **Some senders run inside `withVersions`.** `/transactions/bytes` and `/transactions/checkBytes` wrap parsing and
+   `validateTransactionAndProcess` in `withVersions(protocolVersion, protocolVersion)`
+   (`TransactionsApiRoute.scala:189-201`, `:210-221`). Inside that scope, `validateTransactionAndProcess` calls
+   `verifyTransaction` (`:165-177`), which asks an actor on `api-dispatcher`. That is a fork-join pool whose workers are
+   also created by the submitting thread.
+3. **The version can therefore propagate.** An API worker created in that scope inherits the version. If it is the
+   next thread to message an idle NodeViewHolder, the replacement thread inherits the version too, and block
+   validation on it writes outputs at v3+.
+
+**If that happens,** such a node and a default-context node disagree:
+- X15-like outputs keep the `Upcast`, so their box ids and stored bytes differ;
+- C2-twin-like outputs are valid (no `MatchError`) where the other node fails the block.
+
+That is a chain split between JVM nodes. Whether the timing occurs on a live node depends on traffic, and it has not
+been reproduced. It is a question for the ergo developers.
 
 ## Grades
 
@@ -273,3 +348,32 @@ vixen mounts no transaction tier.
 
 **vixen's 3:** it accepts C2 and its twin below tree v3 (an over-accept: the function type code is not a type before
 v3), and it errors on U1.
+
+### Third round, and the re-grade of fork master `3b23f47e`
+
+**Fork PR #51 (`3b23f47e`, runner santa-blitzen `8428754`):** 133 → 59.
+- **The pin change alone moves nothing.** Against `08105652`, the new runner's raw actuals are byte-identical to the
+  old runner's (386 files).
+- **At `3b23f47e`, 74 reds flip green and none are new.** The raw actuals change in exactly those 74 entries.
+- **The 49 wire and transaction reds left** are round C's (empty conjectures and node sizes, the parse-acceptance C, E
+  and L rows, the `Apply` root) and R1's (`sized-tree-output-bytes` #0, #1, #3; the storage-rent non-canonical
+  script).
+
+**The third round's 9 entries**, graded at `3b23f47e`:
+
+| Runner | Red | Detail |
+|---|---|---|
+| rudolph | 0 | |
+| blitzen-mwaddip | 1 | #46 errors at parse, where the JVM parses the transaction and finds it invalid; both reject it (1) |
+| blitzen-develop | 6 | the three triples evaluate to true; #44, #45 error; #46 panics |
+| dasher | 4 | the `EQ` triple evaluates to true; #44–#46 error |
+| vixen | 0 | vixen mounts no transaction tier |
+
+1. blitzen-mwaddip matches the JVM on #44/#45 (an output written at (1, 1), the message kept) and on every non-pair
+   tuple row.
+
+Board: mwaddip 60, develop 497, dasher 153, vixen 119 (arkadianet `3d554fe2`), comet 32, donner 10, rudolph 0.
+
+**Reproducibility.** The blesser JVM now runs with `-XX:-OmitStackTraceInFastThrow`. HotSpot had dropped the message of
+C1's `ArrayStoreException` in one bless, so `evaluated-values-spend` #31 and #33 differed between runs in their
+`reason` only. The reason is diagnostic, not graded, and with the flag it is stable.

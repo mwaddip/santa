@@ -21,12 +21,13 @@ package santa
 import io.circe.Json
 import scorex.util.encode.Base16
 import sigma.VersionContext
-import sigma.ast.{ByteArrayConstant, ByteConstant, ConcreteCollection, Constant, ErgoTree, EvaluatedValue,
-  GroupGenerator, Height, IntConstant, SByte, SInt, STuple, SType, Tuple}
+import sigma.ast.{BoolToSigmaProp, ByIndex, ByteArrayConstant, ByteConstant, ConcreteCollection, Constant, EQ, ErgoTree,
+  EvaluatedValue, ExtractBytes, GroupGenerator, Height, IntConstant, Outputs, SByte, SInt, STuple, SType, SigmaAnd,
+  SigmaPropConstant, Slice, Tuple}
 import sigma.crypto.CryptoConstants.dlogGroup
 import sigma.serialization.ErgoTreeSerializer
 import sigmastate.crypto.DLogProtocol.DLogProverInput
-import org.ergoplatform.ErgoBox
+import org.ergoplatform.{ErgoBox, ErgoLikeTransaction}
 import santa.runner.TxEngine
 
 import RentFixtures._
@@ -60,7 +61,12 @@ object AuthoredTxEvaluatedValues {
       txBytes(tx(Seq(input(bx, ext())), Seq(candidate(bx.value, outHeight))))
     }
     require(hex(plain.slice(33, 35)) == "0000", s"unexpected transaction layout ${hex(plain)}")
-    val txHex = hex(plain.take(34) ++ b(extHex) ++ plain.drop(35))
+    entryTx(i, slug, description, hex(plain.take(34) ++ b(extHex) ++ plain.drop(35)), bx, want, because)
+  }
+
+  /** Bless the transaction `txHex` spending `bx`: the JVM's verdict must be `want`, its reason must mention `because`. */
+  private def entryTx(i: Int, slug: String, description: String, txHex: String, bx: ErgoBox, want: Boolean,
+                      because: String): Json = {
     val v = validate(txHex, Seq(bx))
     require(v.valid == want, s"$slug#$i: want valid=$want, got valid=${v.valid} ${v.reason.getOrElse("")}")
     require(v.reason.getOrElse("").contains(because), s"$slug#$i: the reason must mention '$because': ${v.reason}")
@@ -169,7 +175,66 @@ object AuthoredTxEvaluatedValues {
         "The box of #12 (R4 = Tuple(1, HEIGHT)) guarded by sigmaProp(true), which reads no register: nothing converts " +
         s"the registers, so the box spends. Valid. $note",
         spent("santa:ev:v10-noread", True, regs = Map(ErgoBox.R4 -> tup1H, ErgoBox.R5 -> IntConstant(1))), "00",
-        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12)
+        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12) ++ outputEntries(True)
+  }
+
+  /** sigma-rust's third round: an output is written at the block path's (1, 1), while the transaction is read, and its
+    * id computed, at a v4 block's (3, 3). */
+  private def outputEntries(True: ErgoTree): Seq[Json] = {
+    val V1M = 1000000L
+    val x15 = "860204027e040205"
+    val kept = "0008d3" + "010001" + x15                // output 0 after its value, R4 as received
+    val stripped = "0008d3" + "010001" + "860204020402" // the same written below tree v3
+    /** proveDlog(pk) && OUTPUTS(0).bytes.slice(3, to) == want */
+    def script(to: Int, want: String): ErgoTree = VersionContext.withVersions(V3, V3) {
+      val out0 = ByIndex(Outputs, IntConstant(0))
+      ErgoTree.withoutSegregation(ErgoTree.ZeroHeader, SigmaAnd(
+        BoolToSigmaProp(EQ(Slice(ExtractBytes(out0), IntConstant(3), IntConstant(to)), ByteArrayConstant(b(want)))),
+        SigmaPropConstant(AuthoredTxSizedTreeRequests.pk)))
+    }
+    /** `bx` (value 1000000) spent into one output of 1000000 whose R4 is the raw bytes `r4`. */
+    def build(bx: ErgoBox, r4: String, proof: Array[Byte]): Array[Byte] = VersionContext.withVersions(V3, V3) {
+      val plain = txBytes(tx(Seq(input(bx, ext(), proof)), Seq(candidate(V1M, 1, regs = Map(ErgoBox.R4 -> IntConstant(0))))))
+      val (from, to) = (b("0008d3" + "010001" + "0400"), b("0008d3" + "010001" + r4))
+      val at = plain.indexOfSlice(from)
+      require(at >= 0 && plain.indexOfSlice(from, at + 1) < 0, "output 0's R4 must occur once")
+      plain.take(at) ++ to ++ plain.drop(at + from.length)
+    }
+    /** Signed as the node's message: the transaction read under a v4 block's context (3, 3). */
+    def signed(i: Int, bx: ErgoBox, r4: String): String = {
+      val msg = VersionContext.withVersions(3, 3) {
+        ErgoLikeTransaction.serializer.fromBytes(build(bx, r4, Array.emptyByteArray)).messageToSign
+      }
+      require(hex(msg).contains(x15), "the message must keep the Upcast")
+      hex(build(bx, r4, AuthoredTxSizedTreeRequests.schnorr(msg, s"santa:evaluated-values:nonce:$i")))
+    }
+    val boxOf = (label: String, t: ErgoTree) => VersionContext.withVersions(V3, V3) { box(label, V1M, 1, tree = t) }
+    val strippedBox = boxOf("santa:ev:x15-stripped", script(15, stripped))
+    val keptBox = boxOf("santa:ev:x15-kept", script(17, kept))
+    val c2Box = boxOf("santa:ev:c2-out", True)
+    val reads = "The node reads a v4 block's transactions under (3, 3) (BlockTransactions.scala:184-202) and computes the " +
+      "tx id there, at parse (ErgoTransaction.scala:68): its message keeps the Upcast. It writes output 0 when " +
+      "ErgoBox.bytes is first read, in verifyOutput's size checks (ErgoTransaction.scala:163-176), which run before any " +
+      "input script and outside any version context: the default (1, 1), where an Upcast of a constant is written as " +
+      "the constant (ValueSerializer.scala:157-169). So OUTPUTS(0).bytes, output 0's id and the bytes the state stores " +
+      "hold 86 02 04 02 04 02."
+    Seq(
+      entryTx(44, "x15-output-bytes-stripped-accept",
+        "Output 0 (value 1000000, SigmaProp(true), height 1) carries R4 = Tuple(1, Upcast(1, Long)) (86 02 04 02 7e 04 " +
+        s"02 05). $reads The spent box's script is proveDlog(pk) && OUTPUTS(0).bytes.slice(3, 15) == 00 08 d3 01 00 01 " +
+        "86 02 04 02 04 02, and the input carries a Schnorr proof over the message that keeps the Upcast. Valid.",
+        signed(44, strippedBox, x15), strippedBox, want = true, because = ""),
+      entryTx(45, "x15-output-bytes-kept-reject",
+        "The same transaction, but the script expects OUTPUTS(0).bytes.slice(3, 17) to hold the Upcast (00 08 d3 01 00 " +
+        "01 86 02 04 02 7e 04 02 05), with the same kind of valid signature. Invalid. An impl that writes the output " +
+        "as received accepts.",
+        signed(45, keptBox, x15), keptBox, want = false, because = "Success((false,"),
+      entryTx(46, "c2-twin-output-register-reject",
+        "Output 0's R4 is an empty Coll[Int => Int] (83 00 70 01 04 04 00), which parses at (3, 3); the spent box is " +
+        "sigmaProp(true). verifyOutput then writes output 0 at the default (1, 1), where TypeSerializer has no case for " +
+        "a function type (TypeSerializer.scala:111): a MatchError, which fails the block (UtxoState.scala:138-139) and " +
+        "invalidates the transaction in the mempool (UtxoStateReader.scala:54-60). Invalid.",
+        hex(build(c2Box, "83007001040400", Array.emptyByteArray)), c2Box, want = false, because = "MatchError"))
   }
 
   /** sigma-rust's follow-ups: where a Tuple node's value fails (T), collections of Tuple nodes and a function element

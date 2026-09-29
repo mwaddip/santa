@@ -24,7 +24,7 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
   private val V10 = "00d193" + "e4" + "c6" + "a7" + "05" + "04" + "0402"             // SELF.R5[Int].get == 1
 
   test("spend: values convert at evaluation; a Tuple node is a Coll typed as a pair, and fails where its type is checked") {
-    val es = entries
+    val es = entries.take(44)
     // (the spent box after its value: tree, height, no tokens, registers; input 0's extension; valid; reason)
     val want: List[(String, String, Boolean, String)] = List(
       (True + "01" + "00" + "00", "01" + "00" + "86020402a3", false, "AssertionError"),         // V1
@@ -84,6 +84,26 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
       assert(tx.drop(68).startsWith(ext + "00" + "00" + "01"), s"extension $ext: ${tx.drop(68).take(40)}")
       assert(reason(e).contains(why), s"reason must mention '$why': ${reason(e).take(200)}")
     }
+  }
+
+  test("third round: an output is written at the block path's (1, 1), the tx id at its read context (3, 3)") {
+    val es = entries.drop(44)
+    assertEquals(entries.size, 47)
+    assertEquals(es.map(valid), List(true, false, false))
+    val x15 = "860204027e040205"                         // Tuple(1, Upcast(1, Long))
+    val kept = "0008d3" + "010001" + x15                 // output 0 after its value, R4 as received
+    val stripped = "0008d3" + "010001" + "860204020402"  // the same written below tree v3
+    // output 0 (value 1000000) carries R4 as received; #46's R4 is an empty Coll[Int => Int]
+    assert(str(es(0), "tx_bytes_hex").contains("c0843d" + kept))
+    assert(str(es(1), "tx_bytes_hex").contains("c0843d" + kept))
+    assert(str(es(2), "tx_bytes_hex").contains("c0843d" + "0008d3" + "010001" + "83007001040400"))
+    // the spent script compares OUTPUTS(0).bytes.slice(3, n) with the stripped (#44) or the kept (#45) form
+    assert(inputBox(es(0)).contains("0e0c" + stripped), "the stripped constant")
+    assert(inputBox(es(1)).contains("0e0e" + kept), "the kept constant")
+    // #44 and #45 carry a 56-byte Schnorr proof over the JVM's message, which keeps the Upcast
+    assertEquals(str(es(0), "tx_bytes_hex").substring(66, 68), "38")
+    assertEquals(str(es(1), "tx_bytes_hex").substring(66, 68), "38")
+    assert(reason(es(2)).contains("MatchError"), reason(es(2)))
   }
 
   test("envelope and context: santa-transaction/v1, the storage-rent synthetic context, v6 activated") {

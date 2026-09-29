@@ -80,6 +80,9 @@ lazy val jvmBlesser = (project in file("."))
     fork := true,
     javaOptions ++= Seq(
       "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-      "--add-opens", "java.base/java.util=ALL-UNNAMED"
+      "--add-opens", "java.base/java.util=ALL-UNNAMED",
+      // HotSpot drops the message of an implicit exception (ArrayStoreException, ClassCastException, ...) once the
+      // throwing code is hot, so a blessed `reason` would depend on what ran before it. Always keep the message.
+      "-XX:-OmitStackTraceInFastThrow"
     )
   )
