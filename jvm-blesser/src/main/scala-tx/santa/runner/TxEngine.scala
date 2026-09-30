@@ -40,8 +40,16 @@ object TxEngine extends ApiCodecs {
                       ctx: ErgoStateContext)(implicit verifier: ErgoInterpreter): Verdict =
     Try(tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L).result.toTry).flatten match {
       case Success(cost) => Verdict(valid = true,  cost = Some(cost.toLong), reason = None)
-      case Failure(e)    => Verdict(valid = false, cost = None, reason = Some(s"${e.getClass.getName}: ${e.getMessage}"))
+      case Failure(e)    => Verdict(valid = false, cost = None, reason = Some(reasonOf(e)))
     }
+
+  /** An identity hash as Object.toString writes it: `@` and the hex hash code, after a class name or an array's type. */
+  private val IdentityHash = """(?<=[\w$;\[])@[0-9a-f]{1,8}(?!\w)""".r
+
+  /** A failure as a reason: the exception's class and message, with each identity hash (as in `[B@4b023973`) written
+    * `@<hash>`. The hash changes from run to run, and reasons are blessed into vectors. */
+  private[santa] def reasonOf(e: Throwable): String =
+    IdentityHash.replaceAllIn(s"${e.getClass.getName}: ${e.getMessage}", "@<hash>")
 
   /** Validate one tx. activated = the vector's version.activated (3 for v6);
     * blockVersion = activated + 1. ts/nBits are cosmetic (preHeader). */
