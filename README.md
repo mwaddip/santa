@@ -132,9 +132,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     index to `Int` (a `Long` index rejects there); a `BlockValue` item must be a `ValDef`; a register id
     must be 0 to 9; from v3 a `MethodCall` needs arguments (below v3 one without comes back as a
     `PropertyCall`). A node is built as soon as its bytes are read, so its failure rejects even where a
-    later read would have degraded the tree
+    later read would have degraded the tree; and a soft failure read first (a method not found, a type
+    missing below v3, a type without methods) degrades the tree before a later construction failure
   - **nested failures and counts:** a `ValidationException` inside a Box constant degrades the outer
-    size-flagged tree, while a nested unsized tree's failure rejects; SigmaAnd, Apply and constants
+    size-flagged tree, while a nested unsized tree's failure rejects; a nested box's registers are read
+    under the enclosing tree's version (in a v0 tree, a v3 box's SHeader register has no serializer and
+    rejects); SigmaAnd, Apply and constants
     counts above 100000 and collection counts above `0xFFFF` reject (below that the parser reads on, and
     an input that ends first rejects even a sized tree); a constants count that wraps negative means
     none, and `getUShort` truncates a count to 32 bits before its range check (both non-identity);

@@ -207,16 +207,29 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
   private def orderingCand(input: String): String = Value + "08" + "0c" + "d1" + "95" + "93" + "7e" + input + "05" +
     "0500" + "0e" + "f31f" + "01" + "00" + "01" + "0e" + "ed1f" + zeros(4077)
 
+  // After the ordering pair (#48 on): a soft failure read before a construction failure, in a size-flagged v0 tree, and
+  // its v3 twin, where nothing soft fails and the construction failure rejects. GT is 91; PropertyCall db, type, method.
+  private val SoftThenHardTrees: List[(String, Boolean)] = List(
+    "0809" + "d191" + "db0406" + "0402" + "0400" -> false, // v0 sigmaProp(1.toBytes > 0): method lookup, rule 1016
+    "0b09" + "d191" + "db0406" + "0402" + "0400" -> true,  // v3: toBytes resolves, and GT on a Coll[Byte] fails
+    "0807" + "d191" + "090105" + "0101" -> false,          // v0 sigmaProp(UnsignedBigInt 5 > true): type read, rule 1017
+    "0b07" + "d191" + "090105" + "0101" -> true,           // v3: GT on a Boolean fails
+    "0809" + "d191" + "db0901" + "0402" + "0101" -> false, // v0 PropertyCall on type 9: no methods, rule 1010
+    "0b09" + "d191" + "db0901" + "0402" + "0101" -> true)  // v3: the method resolves, and GT on a Boolean fails
+
   Seq(AuthoredWireBoxTreeParse.OpBoxAcceptance -> "Box", AuthoredWireBoxTreeParse.OpTxAcceptance -> "Transaction").foreach {
     case (op, kind) =>
       test(s"$kind parse acceptance: unchecked nodes parse; erased casts, builder constraints and a mistyped item reject") {
         val es = entries(op)
-        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2) ++ List(true, false))
+        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2) ++ List(true, false) ++ SoftThenHardTrees.map(_._2))
         AcceptanceTrees.zip(es).foreach { case ((tree, _), e) =>
           assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
         }
+        SoftThenHardTrees.zip(es.drop(AcceptanceTrees.size + 2)).foreach { case ((tree, _), e) =>
+          assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
+        }
         // The ordering pair differs only in the Upcast's input: true (01 01), then Int 1 (04 02).
-        val Seq(order, orderTwin) = es.drop(AcceptanceTrees.size)
+        val Seq(order, orderTwin) = es.slice(AcceptanceTrees.size, AcceptanceTrees.size + 2)
         assertEquals(orderingCand("0101").length, 2 * 4100)
         assert(bytesHex(order).contains(orderingCand("0101")), "the Upcast(true) candidate")
         assert(bytesHex(orderTwin).contains(orderingCand("0402")), "the Upcast(Int 1) candidate")

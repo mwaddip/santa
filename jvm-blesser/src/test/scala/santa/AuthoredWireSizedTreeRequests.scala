@@ -11,7 +11,9 @@ package santa
 //    (`CheckV6Type`, `ErgoBoxCandidate.scala:232`) on a nested register. But a nested UNSIZED tree turns its
 //    ValidationException into a SerializerException ("Cannot handle ValidationException, ErgoTree serialized without
 //    size bit."), which does not degrade anything, whether the rule is 1002 or 1001 (a root that is not a SigmaProp),
-//    and neither does an SHeader register in a pre-v3 tree (no data serializer).
+//    and neither does an SHeader register in a pre-v3 tree (no data serializer). A nested box's registers are read
+//    under the ENCLOSING tree's version, since a tree's version scopes only its own constants and body (`:154`): in a
+//    v0 tree, a v3 box's UnsignedBigInt or SFunc-typed register fails rule 1017 or 1018 (ergots, 2026-09-30).
 // 2. Count bounds. SigmaAnd's item count, Apply's argument count and the constants count go through safeNewArray,
 //    which throws above MaxArrayLength 100000 (`sigma/util/package.scala:7-12`, `SigmaTransformerSerializer.scala:21-25`,
 //    `SigmaByteReader.scala:53-59`, `ErgoTreeSerializer.scala:254`); a collection count goes through getUShort
@@ -76,6 +78,13 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
   private val OptionIntSome1 = "28" + "01" + "02"
   /** The 215-byte Header value of AuthoredWireUnparsedSoftForkHeaderConstant (after 1a db01 01 68). */
   private val HeaderValue = AuthoredWireUnparsedSoftForkHeaderConstant.Hex.drop(10).dropRight(4)
+  /** A v3 tree, SigmaProp(true): the nested box's own tree in the enclosing-version entries. */
+  private val V3TreeHex = "0b02" + "08d3"
+  /** sigmaProp(Upcast(true, Long)): the Upcast throws when built (`trees.scala:398`), so a parse that reaches it rejects. */
+  private val UpcastTrueBody = "d1" + "7e" + "0101" + "05"
+  /** Size-flagged, segregated tree `header`: one constant, Box(`nested`), and the body `body`. */
+  private def boxConstBodyTree(header: Int, nested: String, body: String): Array[Byte] =
+    sizedTree(header, b("01" + "63" + nested + body))
 
   /** height 1, no tokens, R4 = Coll[Byte](n - 6): the n bytes a bulk read crosses the window with, and that a degrade
     * resumes the box at (as AuthoredWireBoxTreeParse's WinDegrade). */
@@ -180,7 +189,55 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
         accept(s"$k-nested-sized-int-root-accept#10", kind,
           s"The twin: $subject whose nested tree is the same, size-flagged (08 02 04 02). Rule 1001 degrades it on its " +
           "own, so the outer tree parses. Round-trip identity.",
-          cand(boxConstTree(0x18, nestedBox("08020402", "00"))), degrade = None))
+          cand(boxConstTree(0x18, nestedBox("08020402", "00"))), degrade = None)) ++ enclosingEntries(kind, wrap)
+    }
+
+    // ergots' 2026-09-30 request, entries #11 on: which version reads a nested box's registers.
+    def enclosingEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val (k, subject) = (kind.toLowerCase, subjectOf(kind))
+      def cand(outerHeader: Int, r4: String): Array[Byte] =
+        wrap(Value ++ boxConstBodyTree(outerHeader, nestedBox(V3TreeHex, "01" + r4), UpcastTrueBody) ++ Fields)
+      val outer1 = s"$subject whose size-flagged, segregated tree has one constant, a Box, and the body " +
+        "sigmaProp(Upcast(true, Long)), which rejects if the parse reaches it (trees.scala:398). The Box's own tree " +
+        "is v3 (0b 02 08 d3)."
+      val scope = "A tree's version governs only its own constants and body (ErgoTreeSerializer.scala:154); the box's " +
+        "registers are read after its tree (ErgoBoxCandidate.scala:231), under the ENCLOSING tree's version."
+      val ubi = "09" + "0105"
+      val func = "70" + "01040400"
+      val sheader = "68" + HeaderValue
+      Seq(
+        accept(s"$k-nested-enclosing-v0-ubi-register-degrade-accept#11", kind,
+          s"$outer1 The outer tree is v0 (18), and the nested box's R4 is UnsignedBigInt 5 (09 01 05). $scope Below v3 " +
+          "there is no primitive type 9 (TypeSerializer.scala:257-267), so rule 1017 fails, a ValidationException, and " +
+          "the outer tree degrades before its body: the object is accepted. Round-trip identity. Read under v3, the " +
+          "value would parse and rule 1019 would refuse it in a register (#16), also a degrade, so this entry does not " +
+          "tell the two versions apart (#14 does). An impl with no soft failure at the register rejects at the body.",
+          cand(0x18, ubi), degrade = Some(1017)),
+        reject(s"$k-nested-enclosing-v0-int-register-body-reject#12", kind,
+          s"The control: $subject with the same outer tree, whose nested R4 is Int 1. Nothing fails before the body, " +
+          "and the body's Upcast throws: the JVM rejects.",
+          cand(0x18, "0402"), mention = Seq("Cannot create Upcast node for non-numeric type")),
+        accept(s"$k-nested-enclosing-v0-func-register-degrade-accept#13", kind,
+          s"$outer1 The outer tree is v0, and the nested R4 is typed SFunc(Int => Int) (70 01 04 04 00). Below v3 type " +
+          "code 112 is no type (TypeSerializer.scala:211, :228-229): rule 1018, and the outer tree degrades. Round-trip " +
+          "identity. (Read under v3, the type would parse and its data would fail rule 1009, a degrade as well.)",
+          cand(0x18, func), degrade = Some(1018)),
+        reject(s"$k-nested-enclosing-v0-sheader-register-reject#14", kind,
+          s"$outer1 The outer tree is v0, and the nested R4 is an SHeader (68, then a 215-byte header). $scope Below v3 " +
+          "SHeader has no data serializer: a SerializerException, which does not degrade, and the JVM rejects. Read " +
+          "under the nested tree's v3, the header would parse and rule 1019 would refuse it, a degrade (#15): so an impl " +
+          "that reads the register under the nested tree's version accepts it: the over-accept.",
+          cand(0x18, sheader), mention = Seq("Not defined DataSerializer for type SHeader")),
+        accept(s"$k-nested-enclosing-v3-sheader-register-degrade-accept#15", kind,
+          s"The twin: $subject whose outer tree is v3 (1b), with the same nested box. The SHeader parses, rule 1019 " +
+          "(CheckV6Type, ErgoBoxCandidate.scala:232) refuses it in a register, and the outer tree degrades. Round-trip " +
+          "identity.",
+          cand(0x1b, sheader), degrade = Some(1019)),
+        accept(s"$k-nested-enclosing-v3-ubi-register-degrade-accept#16", kind,
+          s"$subject whose outer tree is v3, with the nested R4 = UnsignedBigInt 5. The value parses, and rule 1019 " +
+          "refuses an UnsignedBigInt in a register, so the outer tree degrades. Round-trip identity. With #11: an " +
+          "UnsignedBigInt register is a soft failure under either version, 1017 below v3 and 1019 from v3.",
+          cand(0x1b, ubi), degrade = Some(1019)))
     }
 
     def countBoundEntries(kind: String, wrap: Array[Byte] => Array[Byte], wrapLast: Array[Byte] => Array[Byte]): Seq[Json] = {

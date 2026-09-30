@@ -152,7 +152,9 @@ arms are named non-goals, to be specified when built (do not implement against t
   item that is not a `ValDef`, a register id outside 0..9 and a v3 `MethodCall` with no arguments reject,
   while a pre-v3 `Coll[Long](Plus(Int, Long))` parses (the builder upcasts) and a pre-v3 `MethodCall` with
   no arguments re-serializes as a `PropertyCall`; a construction failure rejects even before a read that
-  would have degraded the tree — `{Box,Transaction}.tree_parse_acceptance`); failures nested in a Box constant, count bounds and counts
+  would have degraded the tree, and a soft failure read first (rules 1016, 1017, 1010) degrades the tree before a
+  later construction failure — `{Box,Transaction}.tree_parse_acceptance`); failures nested in a Box constant (whose
+  registers are read under the enclosing tree's version), count bounds and counts
   that wrap, header bits, root forms, the `85` pair form (a relation's only; after the other two-argument
   opcodes it starts a collection), and the SigmaBoolean conjecture bounds
   (`{Box,Transaction}.tree_{nested_degrade,count_bounds,count_wrap,header_bits,root_forms,bool_pair_form,

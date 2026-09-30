@@ -53,7 +53,9 @@ package santa
 //    the register id up with `findRegisterByIndex(id).get`; from tree v3 a MethodCall must have arguments
 //    (`MethodCallSerializer.scala:52-55`), and below v3 one without them is written back as a PropertyCall
 //    (`values.scala:1350`). A node is built right after its own bytes are read, so a construction failure rejects even
-//    when a later read would have degraded the tree.
+//    when a later read would have degraded the tree. And the reverse: a soft failure read first (a method not found,
+//    rule 1016; a type missing below v3, 1017; a type without methods, 1010) degrades the tree before a later
+//    construction failure is reached.
 //
 // Box entries are a bare box; Transaction entries carry the candidate as an output (BoxTreeWireFixtures).
 // extract() re-derives each blessing through WireCanonicalize under the node's v6 parse context (3, 3) and fails
@@ -614,7 +616,49 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
           "crosses the box window. Round-trip identity." +
           (if (kind == "Transaction") " A second output follows, so the parser's unchecked peek before the trip " +
             "lands on a real byte." else ""),
-          wrapMid(orderingCand("0402")), degrade = Some(1014)))
+          wrapMid(orderingCand("0402")), degrade = Some(1014))) ++ softThenHardEntries(kind, wrap)
+    }
+
+    // ergots' second request of 2026-09-30, entries #48 on: the mirror of #46: a soft failure read BEFORE a construction
+    // failure. The ValidationException degrades the size-flagged tree at once, so the construction failure is never
+    // reached. Each has a v3 twin, where nothing soft fails and the construction failure rejects.
+    def softThenHardEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val subject = if (kind == "Box") "A bare box" else "A transaction output"
+      def cand(header: Int, body: String): Array[Byte] = wrap(Value ++ sizedTree(header, b(body)) ++ Fields)
+      val toBytesGt = "d191" + "db0406" + "0402" + "0400"
+      val ubiGt     = "d191" + "090105" + "0101"
+      val type9Gt   = "d191" + "db0901" + "0402" + "0101"
+      val gtFails   = "GT's builder check needs numeric operands (SigmaBuilder.scala:696-704): ConstraintFailed, a reject"
+      Seq(
+        accept(s"$k-v0-method-lookup-1016-then-gt-degrade-accept#48", kind,
+          s"$subject whose size-flagged v0 tree is sigmaProp(1.toBytes > 0) (d1 91 db 04 06 04 02 04 00: a " +
+          "PropertyCall on Int, method 6). Below tree v3 no numeric method is found by id: the v5 method list keeps " +
+          "the generic numeric container as each method's objType (methods.scala:237-241), whose type is SNumericType " +
+          "(:263), and the lookup map groups methods by objType (:95-99). So the lookup fails rule 1016, a " +
+          "ValidationException, and the tree degrades before GT is built. Round-trip identity. An impl that finds the " +
+          "method, or does not treat the failed lookup as a soft failure, goes on to GT (#49) and rejects.",
+          cand(0x08, toBytesGt), degrade = Some(1016)),
+        reject(s"$k-v3-tobytes-gt-int-reject#49", kind,
+          s"The twin: $subject whose tree is the same at v3 (0b): toBytes is found, a Coll[Byte], and $gtFails.",
+          cand(0x0b, toBytesGt), mention = Seq("ConstraintFailed")),
+        accept(s"$k-v0-type-read-1017-then-gt-degrade-accept#50", kind,
+          s"$subject whose size-flagged v0 tree is sigmaProp(UnsignedBigInt(5) > true) (d1 91 09 01 05 01 01). Below v3 " +
+          "there is no primitive type 9 (TypeSerializer.scala:257-267): rule 1017 fails at the constant's type, and the " +
+          "tree degrades before GT is built. Round-trip identity.",
+          cand(0x08, ubiGt), degrade = Some(1017)),
+        reject(s"$k-v3-ubi-gt-boolean-reject#51", kind,
+          s"The twin: $subject whose tree is the same at v3: the UnsignedBigInt parses, and $gtFails on the Boolean.",
+          cand(0x0b, ubiGt), mention = Seq("ConstraintFailed")),
+        accept(s"$k-v0-no-methods-1010-then-gt-degrade-accept#52", kind,
+          s"$subject whose size-flagged v0 tree is sigmaProp(PropertyCall(type 9, method 1, Int 1) > true) (d1 91 db 09 " +
+          "01 04 02 01 01). Below v3 type 9 has no methods (MethodsContainer's v5 list, methods.scala:146-175), so " +
+          "CheckTypeWithMethods (rule 1010, SMethod.scala:345) fails after the object is read, and the tree degrades. " +
+          "Round-trip identity.",
+          cand(0x08, type9Gt), degrade = Some(1010)),
+        reject(s"$k-v3-type-9-method-gt-boolean-reject#53", kind,
+          s"The twin: $subject whose tree is the same at v3: the method is found, and $gtFails on the Boolean.",
+          cand(0x0b, type9Gt), mention = Seq("ConstraintFailed")))
     }
 
     Map(

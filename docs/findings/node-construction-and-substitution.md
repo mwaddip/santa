@@ -152,3 +152,76 @@ hash (`[B@4b023973`, `SigmaByteReader@3ee4b252`). That changes from run to run, 
 | donner, comet | | none graded: donner has no wire or transaction tier, and comet grades wire up to v5 |
 
 dasher reports no cost for these spends, so its entries are graded on validity alone.
+
+## 6. Soft failures at parse (ergots' second request, 2026-09-30)
+
+ergots is making its parser raise the JVM's parse-time `ValidationException`s: rules 1010 and 1016 at a method lookup,
+1017 and 1018 at a type read, and 1009 for function data. It asked for two things.
+
+**Rule ids and tables.** The rule id follows the activated version:
+- 1016 replaces 1011 (`methods.scala:128-136`);
+- 1017 replaces 1007 (`TypeSerializer.scala:16-24`);
+- 1018 replaces 1008 (`:226-231`).
+
+What exists follows the tree version:
+- the primitive types: type 9, UnsignedBigInt, exists from v3 (`:257-267`);
+- the function type code 112 (`:211`);
+- the method containers: type 9 gets its methods from v3 (`methods.scala:146-189`);
+- the method maps (`:100-111`).
+
+**Below v3, no numeric method is found by id.** The v5 method list keeps the generic container as each method's
+`objType`: the copy does not set it (`methods.scala:237-241`), and that container's type is `SNumericType` (`:263`).
+The lookup map groups methods by `objType` (`:95-99`), so `SInt`'s lookup never sees them. `1.toBytes` (method 6)
+therefore fails rule 1016 at v0, although `toBytes` is in the v5 list. The spike found the same for `toByte` (1) and
+`bitwiseInverse` (8).
+
+### A nested box's registers: `{Box,Transaction}.tree_nested_degrade` #11 to #16
+
+A tree's version scopes only its own constants and body (`ErgoTreeSerializer.scala:154`). A box's registers are read
+after its tree (`ErgoBoxCandidate.scala:231`), so a Box constant's registers are read under the enclosing tree's
+version.
+
+Every entry uses the same layout. The outer tree is size-flagged and segregated, with one constant, a Box whose own
+tree is v3 (`0b 02 08 d3`). Its body is `sigmaProp(Upcast(true, Long))`, which rejects if the parse reaches it.
+
+| # | Outer tree | Nested R4 | JVM |
+|---|---|---|---|
+| 11 | v0 | UnsignedBigInt 5 | degrade (1017) |
+| 12 | v0 | Int 1 | reject (the body) |
+| 13 | v0 | typed SFunc | degrade (1018) |
+| 14 | v0 | SHeader | reject: no SHeader data serializer below v3 |
+| 15 | v3 | SHeader | degrade (1019) |
+| 16 | v3 | UnsignedBigInt 5 | degrade (1019) |
+
+ergots expected that the nested tree's own version would accept R4. It would not: rule 1019 (`CheckV6Type`, run on
+every register at parse, `ErgoBoxCandidate.scala:232`) refuses UnsignedBigInt, SHeader and Option types. A function
+type's data fails 1009. So under either version, UnsignedBigInt and SFunc registers are soft failures, and #11 and #13
+pin the degrade, not the version. #14 and #15 do pin the version: read under the enclosing v0, an SHeader rejects;
+read under v3, it degrades.
+
+### A soft failure before a construction failure: `{Box,Transaction}.tree_parse_acceptance` #48 to #53
+
+This is the mirror of #46. The first failure decides: a `ValidationException` degrades the size-flagged tree at once,
+and the construction failure after it is never reached. Each entry has its v3 twin, where nothing fails softly and GT's
+numeric check (`SigmaBuilder.scala:696-704`) rejects.
+
+| # | Tree (size-flagged) | JVM |
+|---|---|---|
+| 48 | v0 `sigmaProp(1.toBytes > 0)` | degrade (1016, the lookup) |
+| 49 | the same at v3 | reject (`GT` on a `Coll[Byte]`) |
+| 50 | v0 `sigmaProp(UnsignedBigInt(5) > true)` | degrade (1017, the type read) |
+| 51 | the same at v3 | reject |
+| 52 | v0 `sigmaProp(PropertyCall(type 9, method 1, Int 1) > true)` | degrade (1010, no methods) |
+| 53 | the same at v3 | reject |
+
+### Grades of the twelve (2026-09-30)
+
+No implementation had moved since §5, and no existing grade changed. The reds count both kinds.
+
+| Runner | Reds on the new entries |
+|---|---|
+| rudolph | 0 |
+| dasher, ergots `953e6b3c` | 10: #12 and the v3 twins #49, #51, #53 (parsed: no `Upcast` or `GT` construction check); #13 (errored where the JVM degrades on 1018) |
+| blitzen-mwaddip, fork `3f8c2633` | 8: #12, #49, #51, #53 |
+| blitzen-develop, `1633e018` | 12: #12, #49, #51, #53; #13 panicked; #14 parsed (the SHeader register below v3) |
+| vixen, arkadianet `5d62fd58` | 0 |

@@ -52,9 +52,20 @@ class AuthoredWireSizedTreeRequestsTest extends munit.FunSuite {
         (outer("1b", "8802", nested("0008d3", "01" + "68" + HeaderValue)), false, None), // R4 SHeader, v3 outer (1019)
         (outer("1b", "3f", nested("0008d3", "07" + OptionIntSome1 + "0402" * 6)), false, None), // 7 registers, R4 Option
         (outer("18", "30", nested("000402", "00")), true, None),             // nested unsized, Int root (1001)
-        (outer("18", "31", nested("08020402", "00")), false, None)))         // nested sized: it degrades, the outer parses
+        (outer("18", "31", nested("08020402", "00")), false, None),          // nested sized: it degrades, the outer parses
+        // ergots' 2026-09-30 request: a v3 nested tree (0b 02 08 d3) whose box's R4 is read under the ENCLOSING tree's
+        // version. One constant, the Box; the body sigmaProp(Upcast(true, Long)) rejects if the parse ever reaches it.
+        (outerBody("18", "35", nested(V3Tree, "01" + "090105")), false, None),      // R4 UnsignedBigInt, v0 outer (1017)
+        (outerBody("18", "34", nested(V3Tree, "01" + "0402")), true, None),         // R4 Int: the body rejects
+        (outerBody("18", "37", nested(V3Tree, "01" + "7001040400")), false, None),  // R4 typed SFunc, v0 outer (1018)
+        (outerBody("18", "8a02", nested(V3Tree, "01" + "68" + HeaderValue)), true, None),  // R4 SHeader, v0 outer
+        (outerBody("1b", "8a02", nested(V3Tree, "01" + "68" + HeaderValue)), false, None), // R4 SHeader, v3 outer (1019)
+        (outerBody("1b", "35", nested(V3Tree, "01" + "090105")), false, None)))     // R4 UnsignedBigInt, v3 outer (1019)
     }
   }
+  private val V3Tree = "0b02" + "08d3"
+  private def outerBody(header: String, size: String, nestedBox: String): String =
+    header + size + "01" + "63" + nestedBox + "d1" + "7e" + "0101" + "05"
 
   // Count bounds: the declared size covers the prefix; the n bytes after it are a bulk read that crosses the tree window
   // and, from where a degrade resumes, the box's fields: height 1, no tokens, R4 = Coll[Byte](n - 6) of zeros.
