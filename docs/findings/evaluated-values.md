@@ -278,6 +278,45 @@ Measured on the JVM:
 
 An impl that measures at (3, 3) wants 18000 for #47 and sees 4098 bytes in #49, so it rejects both.
 
+### `bytesWithoutRef` of an X15 output: the first reader's tree version (sigma-rust's probe)
+
+**The rule.** `OUTPUTS(i).bytesWithoutRef` reads the output box's lazy `bytesWithNoRef` (`ErgoBoxCandidate.scala:54`,
+`CBox.scala:26`). Every input's context wraps the transaction's one set of output boxes
+(`ErgoLikeTransaction.scala:46`, `ErgoLikeContext.scala:157`), and each script runs under its own tree version
+(`Interpreter.scala:207`). So the first script, in input order, that reads an output's `bytesWithoutRef` writes it
+under that script's version. Every later read in the same transaction gets those bytes.
+
+**`bytes` works differently.** ergo's output checks read `bytes` first, at (1, 1). `ErgoBox` serializes `bytes` on its
+own (`ErgoBox.scala:87-92`), so reading it fixes nothing about `bytesWithoutRef`.
+
+For output 0 with R4 = X15:
+- `bytesWithoutRef` is 17 bytes below v3 (the `Upcast` dropped) and 19 at v3;
+- `bytes` is 50 at (1, 1).
+
+Measured on the JVM. Each script is `sigmaProp(OUTPUTS(0).<property>.size == n)`:
+
+| # | Inputs, in order (tree version: property == n) | JVM |
+|---|---|---|
+| 51 | v0: `bytesWithoutRef` == 17 | valid |
+| 52 | v0: `bytesWithoutRef` == 19 | invalid |
+| 53 | v3: `bytesWithoutRef` == 19 | valid |
+| 54 | v3: `bytesWithoutRef` == 17 | invalid |
+| 55 | v0: == 17, then v3: == 17 | valid: the v0 script read first |
+| 56 | v0: == 17, then v3: == 19 | invalid |
+| 57 | v3: == 19, then v0: == 19 | valid: the v3 script read first |
+| 58 | v3: == 19, then v0: == 17 | invalid |
+| 59 | v0: `bytes` == 50 | valid |
+| 60 | v3: `bytes` == 50 | valid |
+| 61 | v3: `bytes` == 52 | invalid |
+| 62 | v3: `bytes` == 50, then v0: `bytesWithoutRef` == 17 | valid: reading `bytes` fixes nothing |
+
+An impl that always writes `bytesWithoutRef` at v3 is red on #51, #52, #55 and #62. One that writes it for each
+reader, at that reader's own version, is red on #55 to #58.
+
+**Grades.** rudolph is green. Fork master `c6f8a395` is red on #51, #52, #55 and #62, the always-v3 pattern.
+dasher (`953e6b3c`) and develop (`1633e018`) error on all twelve: neither parses the X15 register. That takes
+blitzen-mwaddip from 93 to 97, dasher from 206 to 218 and develop from 551 to 563.
+
 ### The version context a thread inherits (item 2, by source; not reproduced on a node)
 
 **The mechanism is confirmed on the JVM.** `VersionContext` is a `DynamicVariable`, so an `InheritableThreadLocal`.

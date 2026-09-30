@@ -66,8 +66,12 @@ object AuthoredTxEvaluatedValues {
 
   /** Bless the transaction `txHex` spending `bx`: the JVM's verdict must be `want`, its reason must mention `because`. */
   private def entryTx(i: Int, slug: String, description: String, txHex: String, bx: ErgoBox, want: Boolean,
-                      because: String): Json = {
-    val v = validate(txHex, Seq(bx))
+                      because: String): Json = entryTxN(i, slug, description, txHex, Seq(bx), want, because)
+
+  /** `entryTx` for a transaction spending `boxes`, in input order. */
+  private def entryTxN(i: Int, slug: String, description: String, txHex: String, boxes: Seq[ErgoBox], want: Boolean,
+                       because: String): Json = {
+    val v = validate(txHex, boxes)
     require(v.valid == want, s"$slug#$i: want valid=$want, got valid=${v.valid} ${v.reason.getOrElse("")}")
     require(v.reason.getOrElse("").contains(because), s"$slug#$i: the reason must mention '$because': ${v.reason}")
     Json.obj(
@@ -75,7 +79,7 @@ object AuthoredTxEvaluatedValues {
       "source"               -> Json.fromString("santa:authored-tx-evaluated-values:spend"),
       "description"          -> Json.fromString(description),
       "tx_bytes_hex"         -> Json.fromString(txHex),
-      "input_boxes_hex"      -> Json.arr(Json.fromString(hex(bx.bytes))),
+      "input_boxes_hex"      -> Json.arr(boxes.map(x => Json.fromString(hex(x.bytes))): _*),
       "data_input_boxes_hex" -> Json.arr(),
       "headers_hex"          -> Json.arr(AuthoredTxStorageRent.headersHex.map(Json.fromString): _*),
       "preHeader"            -> AuthoredTxStorageRent.preHeader,
@@ -175,7 +179,8 @@ object AuthoredTxEvaluatedValues {
         "The box of #12 (R4 = Tuple(1, HEIGHT)) guarded by sigmaProp(true), which reads no register: nothing converts " +
         s"the registers, so the box spends. Valid. $note",
         spent("santa:ev:v10-noread", True, regs = Map(ErgoBox.R4 -> tup1H, ErgoBox.R5 -> IntConstant(1))), "00",
-        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12) ++ outputEntries(True) ++ boundaryEntries
+        want = true)) ++ followUpEntries(note, True, v10, tup12, pair12) ++ outputEntries(True) ++ boundaryEntries ++
+      bytesWithoutRefEntries
   }
 
   /** sigma-rust's PR #52 request: verifyOutput's dust and size checks measure ErgoBox.bytes, written at the default
@@ -230,6 +235,92 @@ object AuthoredTxEvaluatedValues {
       entryTx(50, "x15-output-size-4097-reject",
         "The same with R5 one byte longer (4044): 4097 bytes at (1, 1): invalid (txBoxSize).",
         txOf(V, 4044, 4097), spentBox, want = false, because = "Box size should not exceed 4096"))
+  }
+
+  /** sigma-rust's bytesWithoutRef probe (2026-09-30). OUTPUTS(i).bytesWithoutRef reads the output box's lazy
+    * bytesWithNoRef (`ErgoBoxCandidate.scala:54`, `CBox.scala:26`). Every input's context wraps the transaction's one
+    * set of output boxes (`ErgoLikeTransaction.scala:46`, `ErgoLikeContext.scala:157`), and each script runs under its
+    * own tree version (`Interpreter.scala:207`). So the first script, in input order, that reads it writes it under
+    * that script's version, and every later read in the transaction gets those bytes. ergo's output checks force
+    * `bytes`, which ErgoBox serializes on its own (`ErgoBox.scala:87-92`), not bytesWithNoRef. */
+  private def bytesWithoutRefEntries: Seq[Json] = {
+    val x15 = "860204027e040205"
+    def zz(n: Int): String = hex(vlqU32(2L * n)) // a positive Int, zigzag
+    /** sigmaProp(OUTPUTS(0).<op>.size == n): c4 = bytesWithoutRef, c3 = bytes. */
+    def body(op: String, n: Int): String = "d1" + "93" + "b1" + op + "b2" + "a5" + "0400" + "00" + "04" + zz(n)
+    def v0(op: String, n: Int): String = "00" + body(op, n)
+    def v3(op: String, n: Int): String = { val bd = body(op, n); "0b" + "%02x".format(bd.length / 2) + bd }
+    /** One spent box per tree, in input order, into output 0 = all the value, SigmaProp(true), height 1, R4 = X15. */
+    def build(label: String, trees: Seq[String]): (String, Seq[ErgoBox]) = VersionContext.withVersions(V3, V3) {
+      val boxes = trees.zipWithIndex.map { case (t, j) => spent(s"santa:ev:bwr:$label:$j", tree(t)) }
+      val out = candidate(V * trees.size, 1, regs = Map(ErgoBox.R4 -> IntConstant(0)))
+      val plain = txBytes(tx(boxes.map(bx => input(bx, ext())), Seq(out)))
+      val (from, to) = (b("0008d3" + "010001" + "0400"), b("0008d3" + "010001" + x15))
+      val at = plain.indexOfSlice(from)
+      require(at >= 0 && plain.indexOfSlice(from, at + 1) < 0, "output 0's R4 must occur once")
+      (hex(plain.take(at) ++ to ++ plain.drop(at + from.length)), boxes)
+    }
+    // The lengths, from fresh parses: output 0's bytesWithNoRef written below v3 and at v3, and its bytes at (1, 1).
+    val probe = build("lengths", Seq(v0("c4", 0)))._1
+    def out0At(a: Byte, t: Byte)(f: ErgoBox => Int): Int = {
+      val parsed = VersionContext.withVersions(V3, V3) { ErgoLikeTransaction.serializer.fromBytes(b(probe)) }
+      VersionContext.withVersions(a, t) { f(parsed.outputs(0)) }
+    }
+    val (l0, l3, lb) = (out0At(V3, 0)(_.bytesWithNoRef.length), out0At(V3, V3)(_.bytesWithNoRef.length),
+      out0At(1, 1)(_.bytes.length))
+    require((l0, l3, lb) == (17, 19, 50), s"bytesWithNoRef $l0 (v0) / $l3 (v3), bytes $lb (1, 1)")
+    def entry(i: Int, slug: String, description: String, trees: Seq[String], want: Boolean, because: String = ""): Json = {
+      val (h, boxes) = build(slug, trees)
+      entryTxN(i, slug, description, h, boxes, want, because)
+    }
+    val setup = "Output 0 takes all the value, with SigmaProp(true), height 1 and R4 = Tuple(1, Upcast(1, Long)) (86 02 04 " +
+      "02 7e 04 02 05). Each spent box holds 1000000000 and one script, sigmaProp(OUTPUTS(0).bytesWithoutRef.size == n) " +
+      "or sigmaProp(OUTPUTS(0).bytes.size == n), in a v0 tree or a size-flagged v3 tree; no proofs."
+    val rule = "OUTPUTS(0).bytesWithoutRef reads the output box's lazy bytesWithNoRef (ErgoBoxCandidate.scala:54, " +
+      "CBox.scala:26), and every input's context wraps the transaction's one set of output boxes " +
+      "(ErgoLikeTransaction.scala:46, ErgoLikeContext.scala:157). So the first script, in input order, that reads it " +
+      "writes it, under that script's tree version (Interpreter.scala:207), and later reads get those bytes. Below v3 " +
+      "the Upcast of a constant is written as the constant: 17 bytes, against 19 at v3."
+    Seq(
+      entry(51, "bwr-v0-reader-17-accept",
+        s"$setup One input, a v0 tree, asserting 17. $rule Valid.", Seq(v0("c4", l0)), want = true),
+      entry(52, "bwr-v0-reader-19-reject",
+        s"$setup One input, a v0 tree, asserting 19: the v0 reader writes 17. Invalid. An impl that writes " +
+        "bytesWithoutRef at v3 always accepts.", Seq(v0("c4", l3)), want = false, because = "Success((false"),
+      entry(53, "bwr-v3-reader-19-accept",
+        s"$setup One input, a v3 tree, asserting 19: the v3 reader keeps the Upcast. Valid.", Seq(v3("c4", l3)),
+        want = true),
+      entry(54, "bwr-v3-reader-17-reject",
+        s"$setup One input, a v3 tree, asserting 17. Invalid.", Seq(v3("c4", l0)), want = false,
+        because = "Success((false"),
+      entry(55, "bwr-v0-first-then-v3-reads-17-accept",
+        s"$setup Input 0 is a v0 tree asserting 17; input 1 a v3 tree asserting 17. $rule The v0 script reads first, so " +
+        "the v3 script gets its 17 bytes too. Valid. An impl that writes the bytes for each reader at its own version " +
+        "rejects input 1.", Seq(v0("c4", l0), v3("c4", l0)), want = true),
+      entry(56, "bwr-v0-first-then-v3-reads-19-reject",
+        s"$setup Input 0 is a v0 tree asserting 17; input 1 a v3 tree asserting 19: input 1 gets input 0's 17 bytes. " +
+        "Invalid.", Seq(v0("c4", l0), v3("c4", l3)), want = false, because = "Success((false"),
+      entry(57, "bwr-v3-first-then-v0-reads-19-accept",
+        s"$setup The reverse order: input 0 is a v3 tree asserting 19; input 1 a v0 tree asserting 19. The v3 script " +
+        "reads first, so the v0 script gets 19 bytes. Valid.", Seq(v3("c4", l3), v0("c4", l3)), want = true),
+      entry(58, "bwr-v3-first-then-v0-reads-17-reject",
+        s"$setup Input 0 is a v3 tree asserting 19; input 1 a v0 tree asserting 17. Invalid.",
+        Seq(v3("c4", l3), v0("c4", l0)), want = false, because = "Success((false"),
+      entry(59, "bytes-v0-reader-50-accept",
+        s"$setup One input, a v0 tree, asserting OUTPUTS(0).bytes.size == 50. ergo's output checks read ErgoBox.bytes " +
+        "first, outside any version context (ErgoTransaction.scala:163-176): the default (1, 1), where the Upcast is " +
+        "dropped. Valid.", Seq(v0("c3", lb)), want = true),
+      entry(60, "bytes-v3-reader-50-accept",
+        s"$setup One input, a v3 tree, asserting OUTPUTS(0).bytes.size == 50: bytes are already written at (1, 1), " +
+        "whatever tree reads them. Valid.", Seq(v3("c3", lb)), want = true),
+      entry(61, "bytes-v3-reader-52-reject",
+        s"$setup One input, a v3 tree, asserting OUTPUTS(0).bytes.size == 52, the length at (3, 3). Invalid.",
+        Seq(v3("c3", lb + 2)), want = false, because = "Success((false"),
+      entry(62, "bytes-read-first-then-v0-bwr-17-accept",
+        s"$setup Input 0 is a v3 tree that reads only OUTPUTS(0).bytes (== 50); input 1 a v0 tree asserting " +
+        "bytesWithoutRef == 17. ErgoBox.bytes is serialized apart from bytesWithNoRef (ErgoBox.scala:87-92), so " +
+        "reading it fixes nothing: input 1 is the first to read bytesWithoutRef and writes it at v0. Valid.",
+        Seq(v3("c3", lb), v0("c4", l0)), want = true))
   }
 
   /** sigma-rust's third round: an output is written at the block path's (1, 1), while the transaction is read, and its

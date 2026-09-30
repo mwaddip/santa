@@ -106,8 +106,7 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
   }
 
   test("dust and size: an output is measured as written at (1, 1), where X15's Upcast is dropped") {
-    val es = entries.drop(47)
-    assertEquals(entries.size, 51)
+    val es = entries.slice(47, 51)
     assertEquals(es.map(valid), List(true, false, true, false))
     val x15 = "860204027e040205"
     def vlq(n: Long): String = RentFixtures.hex(RentFixtures.vlqU32(n))
@@ -119,6 +118,33 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
     assert(str(es(3), "tx_bytes_hex").contains("8094ebdc03" + "0008d3" + "010002" + x15 + "0e" + vlq(4044) + "00" * 4044))
     assert(reason(es(1)).contains("minValuePerByte"), reason(es(1)))
     assert(reason(es(3)).contains("Box size should not exceed 4096"), reason(es(3)))
+  }
+
+  test("bytesWithoutRef: the first script to read it writes it, under that script's tree version") {
+    assertEquals(entries.size, 63)
+    val es = entries.drop(51)
+    def zz(n: Int): String = RentFixtures.hex(RentFixtures.vlqU32(2L * n)) // a positive Int, zigzag
+    // sigmaProp(OUTPUTS(0).<op>.size == n): c4 = bytesWithoutRef, c3 = bytes; in a v0 tree or a size-flagged v3 tree
+    def body(op: String, n: Int): String = "d1" + "93" + "b1" + op + "b2" + "a5" + "0400" + "00" + "04" + zz(n)
+    def v0(op: String, n: Int): String = "00" + body(op, n)
+    def v3(op: String, n: Int): String = "0b" + "0b" + body(op, n)
+    val (l0, l3, lb) = (17, 19, 50) // bytesWithoutRef below v3 and at v3; bytes at (1, 1)
+    val want: List[(List[String], Boolean)] = List(
+      List(v0("c4", l0)) -> true, List(v0("c4", l3)) -> false,                       // one v0 reader
+      List(v3("c4", l3)) -> true, List(v3("c4", l0)) -> false,                       // one v3 reader
+      List(v0("c4", l0), v3("c4", l0)) -> true, List(v0("c4", l0), v3("c4", l3)) -> false, // v0 first
+      List(v3("c4", l3), v0("c4", l3)) -> true, List(v3("c4", l3), v0("c4", l0)) -> false, // v3 first
+      List(v0("c3", lb)) -> true, List(v3("c3", lb)) -> true, List(v3("c3", lb + 2)) -> false, // bytes
+      List(v3("c3", lb), v0("c4", l0)) -> true)                                      // reading bytes fixes nothing
+    assertEquals(es.map(valid), want.map(_._2))
+    es.zip(want).foreach { case (e, (trees, _)) =>
+      val boxes = e.hcursor.downField("input_boxes_hex").as[List[String]].toOption.get
+      assertEquals(boxes.size, trees.size)
+      // each spent box: 1000000000, its tree, height 1, no tokens, no registers
+      boxes.zip(trees).foreach { case (bx, t) => assert(bx.startsWith(Value + t + "01" + "00" + "00"), s"box $bx") }
+      // output 0: all the value, SigmaProp(true), height 1, no tokens, R4 = X15
+      assert(str(e, "tx_bytes_hex").contains("0008d3" + "010001" + "860204027e040205"), "output 0's R4 = X15")
+    }
   }
 
   test("envelope and context: santa-transaction/v1, the storage-rent synthetic context, v6 activated") {

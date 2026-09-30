@@ -150,7 +150,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **evaluated values:** an extension or register value may be any `EvaluatedValue` — a Tuple or
     collection node (items unchecked at parse), `GroupGenerator`, or the `7f`/`80` opcodes (written back
     as constants) — while `HEIGHT`, a placeholder or an operation rejects; the transaction tier pins what
-    happens at evaluation (a Tuple node is a `Coll`, not a pair; `Tuple(1, HEIGHT)` fails when converted)
+    happens at evaluation (a Tuple node is a `Coll`, not a pair; `Tuple(1, HEIGHT)` fails when converted; an
+    output's `bytesWithoutRef` is written at the tree version of the first script that reads it)
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs
