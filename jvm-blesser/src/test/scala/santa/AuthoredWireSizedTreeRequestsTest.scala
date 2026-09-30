@@ -60,9 +60,16 @@ class AuthoredWireSizedTreeRequestsTest extends munit.FunSuite {
         (outerBody("18", "37", nested(V3Tree, "01" + "7001040400")), false, None),  // R4 typed SFunc, v0 outer (1018)
         (outerBody("18", "8a02", nested(V3Tree, "01" + "68" + HeaderValue)), true, None),  // R4 SHeader, v0 outer
         (outerBody("1b", "8a02", nested(V3Tree, "01" + "68" + HeaderValue)), false, None), // R4 SHeader, v3 outer (1019)
-        (outerBody("1b", "35", nested(V3Tree, "01" + "090105")), false, None)))     // R4 UnsignedBigInt, v3 outer (1019)
+        (outerBody("1b", "35", nested(V3Tree, "01" + "090105")), false, None),      // R4 UnsignedBigInt, v3 outer (1019)
+        // The mirror of #14/#15 (ergots' audit case): a v0 nested tree (00 08 d3) whose R4 is an UnsignedBigInt of
+        // declared size 33 (09 21, then 00 and 32 × ff: 2^256 - 1, which fits 256 bits).
+        (outerBody("1b", "54", nested("0008d3", "01" + Ubi33)), true, None),        // v3 outer: the size bound rejects
+        (outerBody("18", "54", nested("0008d3", "01" + Ubi33)), false, None),       // v0 outer: type 9 fails 1017
+        (outerBody("1b", "53", nested("0008d3", "01" + Ubi32)), false, None)))      // 32 bytes, v3 outer: 1019
     }
   }
+  private val Ubi33 = "09" + "21" + "00" + "ff" * 32
+  private val Ubi32 = "09" + "20" + "ff" * 32
   private val V3Tree = "0b02" + "08d3"
   private def outerBody(header: String, size: String, nestedBox: String): String =
     header + size + "01" + "63" + nestedBox + "d1" + "7e" + "0101" + "05"

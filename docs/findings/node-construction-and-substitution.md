@@ -182,7 +182,8 @@ after its tree (`ErgoBoxCandidate.scala:231`), so a Box constant's registers are
 version.
 
 Every entry uses the same layout. The outer tree is size-flagged and segregated, with one constant, a Box whose own
-tree is v3 (`0b 02 08 d3`). Its body is `sigmaProp(Upcast(true, Long))`, which rejects if the parse reaches it.
+tree is v3 (`0b 02 08 d3`), except in #17 to #19, where it is v0 (`00 08 d3`). Its body is
+`sigmaProp(Upcast(true, Long))`, which rejects if the parse reaches it.
 
 | # | Outer tree | Nested R4 | JVM |
 |---|---|---|---|
@@ -192,12 +193,17 @@ tree is v3 (`0b 02 08 d3`). Its body is `sigmaProp(Upcast(true, Long))`, which r
 | 14 | v0 | SHeader | reject: no SHeader data serializer below v3 |
 | 15 | v3 | SHeader | degrade (1019) |
 | 16 | v3 | UnsignedBigInt 5 | degrade (1019) |
+| 17 | v3, the Box's own tree v0 | UnsignedBigInt of declared size 33 | **reject**: the size bound (`CoreDataSerializer.scala:118-123`) |
+| 18 | v0, the Box's own tree v0 | the same | degrade (1017) |
+| 19 | v3, the Box's own tree v0 | the same value in 32 bytes | degrade (1019) |
 
 ergots expected that the nested tree's own version would accept R4. It would not: rule 1019 (`CheckV6Type`, run on
 every register at parse, `ErgoBoxCandidate.scala:232`) refuses UnsignedBigInt, SHeader and Option types. A function
 type's data fails 1009. So under either version, UnsignedBigInt and SFunc registers are soft failures, and #11 and #13
 pin the degrade, not the version. #14 and #15 do pin the version: read under the enclosing v0, an SHeader rejects;
-read under v3, it degrades.
+read under v3, it degrades. #17 and #18 are the mirror, from ergots' audit. A v0 box sits in a v3 tree, and its R4 is
+an UnsignedBigInt of declared size 33. Read under the enclosing v3, the size bound rejects it before 1019 is
+reached; read under v0, type 9 fails 1017 and degrades. #19, at 32 bytes, shows the reject comes from the size.
 
 ### A soft failure before a construction failure: `{Box,Transaction}.tree_parse_acceptance` #48 to #53
 
@@ -225,3 +231,8 @@ No implementation had moved since §5, and no existing grade changed. The reds c
 | blitzen-mwaddip, fork `3f8c2633` | 8: #12, #49, #51, #53 |
 | blitzen-develop, `1633e018` | 12: #12, #49, #51, #53; #13 panicked; #14 parsed (the SHeader register below v3) |
 | vixen, arkadianet `5d62fd58` | 0 |
+
+#17 to #19, added after ergots' reply, graded on the same implementations:
+- rudolph, blitzen-mwaddip and vixen are green on all three;
+- dasher is red on #18: it errors where the JVM degrades on 1017;
+- blitzen-develop is red on #17: it accepts where the JVM rejects on the size bound.

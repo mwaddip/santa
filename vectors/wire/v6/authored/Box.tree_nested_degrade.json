@@ -196,6 +196,40 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "box-nested-enclosing-v3-ubi-size-33-register-reject#17",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "A bare box whose size-flagged, segregated tree has one constant, a Box, and the body sigmaProp(Upcast(true, Long)), which rejects if the parse reaches it. The Box's own tree is v0 (00 08 d3). The outer tree is v3 (1b), and the nested R4 is an UnsignedBigInt of declared size 33 (09 21, then 00 and 32 × ff: 2^256 - 1 with a redundant leading zero, which fits 256 bits). Read under the enclosing v3, type 9 exists, and its data reader refuses a size over 32 before reading the bytes (CoreDataSerializer.scala:118-123): a SerializerException, which does not degrade, so the JVM rejects. Read under the nested tree's v0, type 9 would fail rule 1017, a degrade (#18): so an impl that reads the register under the nested tree's version accepts it, and so does one that bounds the value rather than the declared size.",
+      "bytes_hex" : "c0843d1b540163c0843d0008d3010001092100ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000d17e0101050100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-nested-enclosing-v0-ubi-size-33-register-degrade-accept#18",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "The twin: A bare box whose outer tree is v0 (18), with the same nested box. Below v3 there is no primitive type 9: rule 1017 fails at the type, before any size is read, and the outer tree degrades. Round-trip identity.",
+      "bytes_hex" : "c0843d18540163c0843d0008d3010001092100ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000d17e0101050100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-nested-enclosing-v3-ubi-size-32-register-degrade-accept#19",
+      "kind" : "Box",
+      "source" : "santa:authored-sized-tree-requests",
+      "description" : "The size twin: A bare box whose outer tree is v3, with the nested R4 = the same value in 32 bytes (09 20, 32 × ff). It parses, and rule 1019 refuses an UnsignedBigInt in a register, so the outer tree degrades. Round-trip identity.",
+      "bytes_hex" : "c0843d1b530163c0843d0008d30100010920ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff000000000000000000000000000000000000000000000000000000000000000000d17e0101050100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

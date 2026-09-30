@@ -13,7 +13,8 @@ package santa
 //    size bit."), which does not degrade anything, whether the rule is 1002 or 1001 (a root that is not a SigmaProp),
 //    and neither does an SHeader register in a pre-v3 tree (no data serializer). A nested box's registers are read
 //    under the ENCLOSING tree's version, since a tree's version scopes only its own constants and body (`:154`): in a
-//    v0 tree, a v3 box's UnsignedBigInt or SFunc-typed register fails rule 1017 or 1018 (ergots, 2026-09-30).
+//    v0 tree, a v3 box's UnsignedBigInt or SFunc-typed register fails rule 1017 or 1018 (ergots, 2026-09-30); in a
+//    v3 tree, a v0 box's UnsignedBigInt register of declared size 33 fails its size bound, a reject.
 // 2. Count bounds. SigmaAnd's item count, Apply's argument count and the constants count go through safeNewArray,
 //    which throws above MaxArrayLength 100000 (`sigma/util/package.scala:7-12`, `SigmaTransformerSerializer.scala:21-25`,
 //    `SigmaByteReader.scala:53-59`, `ErgoTreeSerializer.scala:254`); a collection count goes through getUShort
@@ -237,7 +238,38 @@ object AuthoredWireSizedTreeRequests extends BoxTreeWireFixtures {
           s"$subject whose outer tree is v3, with the nested R4 = UnsignedBigInt 5. The value parses, and rule 1019 " +
           "refuses an UnsignedBigInt in a register, so the outer tree degrades. Round-trip identity. With #11: an " +
           "UnsignedBigInt register is a soft failure under either version, 1017 below v3 and 1019 from v3.",
-          cand(0x1b, ubi), degrade = Some(1019)))
+          cand(0x1b, ubi), degrade = Some(1019))) ++ mirrorEntries(kind, wrap)
+    }
+
+    // The mirror of #14/#15, from ergots' audit (2026-09-30), entries #17 on: a v0 nested tree under a v3 enclosing
+    // tree, whose R4 is an UnsignedBigInt of declared size 33.
+    def mirrorEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val (k, subject) = (kind.toLowerCase, subjectOf(kind))
+      def cand(outerHeader: Int, r4: String): Array[Byte] =
+        wrap(Value ++ boxConstBodyTree(outerHeader, nestedBox("0008d3", "01" + r4), UpcastTrueBody) ++ Fields)
+      val outer1 = s"$subject whose size-flagged, segregated tree has one constant, a Box, and the body " +
+        "sigmaProp(Upcast(true, Long)), which rejects if the parse reaches it. The Box's own tree is v0 (00 08 d3)."
+      val ubi33 = "09" + "21" + "00" + "ff" * 32 // declared size 33: 00, then 2^256 - 1, which fits 256 bits
+      val ubi32 = "09" + "20" + "ff" * 32
+      Seq(
+        reject(s"$k-nested-enclosing-v3-ubi-size-33-register-reject#17", kind,
+          s"$outer1 The outer tree is v3 (1b), and the nested R4 is an UnsignedBigInt of declared size 33 (09 21, then " +
+          "00 and 32 × ff: 2^256 - 1 with a redundant leading zero, which fits 256 bits). Read under the enclosing v3, " +
+          "type 9 exists, and its data reader refuses a size over 32 before reading the bytes (CoreDataSerializer.scala:" +
+          "118-123): a SerializerException, which does not degrade, so the JVM rejects. Read under the nested tree's v0, " +
+          "type 9 would fail rule 1017, a degrade (#18): so an impl that reads the register under the nested tree's " +
+          "version accepts it, and so does one that bounds the value rather than the declared size.",
+          cand(0x1b, ubi33), mention = Seq("BigInt value doesn't not fit into 32 bytes: 33")),
+        accept(s"$k-nested-enclosing-v0-ubi-size-33-register-degrade-accept#18", kind,
+          s"The twin: $subject whose outer tree is v0 (18), with the same nested box. Below v3 there is no primitive " +
+          "type 9: rule 1017 fails at the type, before any size is read, and the outer tree degrades. Round-trip " +
+          "identity.",
+          cand(0x18, ubi33), degrade = Some(1017)),
+        accept(s"$k-nested-enclosing-v3-ubi-size-32-register-degrade-accept#19", kind,
+          s"The size twin: $subject whose outer tree is v3, with the nested R4 = the same value in 32 bytes (09 20, " +
+          "32 × ff). It parses, and rule 1019 refuses an UnsignedBigInt in a register, so the outer tree degrades. " +
+          "Round-trip identity.",
+          cand(0x1b, ubi32), degrade = Some(1019)))
     }
 
     def countBoundEntries(kind: String, wrap: Array[Byte] => Array[Byte], wrapLast: Array[Byte] => Array[Byte]): Seq[Json] = {

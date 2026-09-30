@@ -137,6 +137,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **nested failures and counts:** a `ValidationException` inside a Box constant degrades the outer
     size-flagged tree, while a nested unsized tree's failure rejects; a nested box's registers are read
     under the enclosing tree's version (in a v0 tree, a v3 box's SHeader register has no serializer and
+    rejects; in a v3 tree, a v0 box's UnsignedBigInt register over 32 bytes fails its size bound and
     rejects); SigmaAnd, Apply and constants
     counts above 100000 and collection counts above `0xFFFF` reject (below that the parser reads on, and
     an input that ends first rejects even a sized tree); a constants count that wraps negative means
