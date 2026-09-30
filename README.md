@@ -127,7 +127,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     constraints; `BitOr` needs numeric operands; a `ConcreteCollection` item of the wrong type fails an
     `assert` (an `AssertionError`). The `TrueLeaf`/`FalseLeaf` opcodes `7f`/`80` parse and come back as the
     Boolean constants `01 01`/`01 00`, a non-identity round-trip; `SContext` method 11 parses and fails only
-    when evaluated
+    when evaluated. `Upcast`/`Downcast` need a numeric input and target type; below tree v3 the builder
+    upcasts mixed numeric operands (`Coll[Long](Plus(Int, Long))` parses there, not at v3) and a `ByIndex`
+    index to `Int` (a `Long` index rejects there); a `BlockValue` item must be a `ValDef`; a register id
+    must be 0 to 9; from v3 a `MethodCall` needs arguments (below v3 one without comes back as a
+    `PropertyCall`). A node is built as soon as its bytes are read, so its failure rejects even where a
+    later read would have degraded the tree
   - **nested failures and counts:** a `ValidationException` inside a Box constant degrades the outer
     size-flagged tree, while a nested unsized tree's failure rejects; SigmaAnd, Apply and constants
     counts above 100000 and collection counts above `0xFFFF` reject (below that the parser reads on, and
@@ -180,6 +185,17 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - inside the creating transaction, an output that declares its tree size wrongly keeps its tree as received in
     `propositionBytes`, while its `bytes`, its id and the signing message are re-encoded. A deterministic Schnorr
     proof pins the signing message.
+
+  **Deserialize substitution** (`deserialize-substitution-spend`, 24 entries): how a spend replaces
+  `DeserializeRegister` and `DeserializeContext` nodes.
+  - A `ClassCastException` while decoding or typing the script, or from a register that is not a `Coll[Byte]`, is
+    swallowed: the node stays, and throws only if it is evaluated.
+  - An absent register's default replaces the node untyped. The node's ancestors are rebuilt through their
+    constructors, so an `If`, `Negation`, `Plus` or `OptionGet` that reads the default's type rejects, even in a
+    branch never evaluated.
+  - A decoded `NoType` against a declared `SAny` rejects. `R1` is the box's own proposition bytes. A Boolean root is
+    wrapped in `sigmaProp`.
+  - A decode is charged twice its length once it completes.
 
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +

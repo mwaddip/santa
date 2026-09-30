@@ -175,19 +175,57 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
     "080ad193b18301040502" + "0402" -> true,   // the same, sized
     "00d193b18301040402" + "0402" -> false,    // EQ(SizeOf(Coll[Int](Int 1)), Int 1)
     "00d1e6dc650bfe010200" -> false,           // MethodCall(CONTEXT, SContext method 11 getVar, [Byte 0]).isDefined
-    "0809d1e6dc650bfe010200" -> false)         // the same, sized
+    "0809d1e6dc650bfe010200" -> false,         // the same, sized
+    // ergots' node-construction requests (2026-09-30). Upcast = 7e, Downcast = 7d: input, then the target type.
+    "0804" + "7e010105" -> true,               // sized root Upcast(true, Long)
+    "0804" + "7e100005" -> true,               // sized root Upcast(Coll[Int](), Long)
+    "0804" + "7d010102" -> true,               // sized root Downcast(true, Byte)
+    "0804" + "7d100002" -> true,               // sized root Downcast(Coll[Int](), Byte)
+    "0804" + "7e040205" -> false,              // sized root Upcast(Int 1, Long): a Long root, rule 1001 degrades it
+    "0804" + "7e040201" -> true,               // sized root Upcast(Int 1, Boolean): a non-numeric target
+    // EQ(SizeOf(Coll[Long](Plus(Int 1, Long 2))), Int 1): v0 upcasts the Int, v3 keeps Plus an Int
+    "00" + "d193b1830105" + "9a04020504" + "0402" -> false,
+    "0b0d" + "d193b1830105" + "9a04020504" + "0402" -> true,
+    "00" + "d1b20d0101050000" -> true,         // ByIndex(Coll(true), Long 0): v0 upcasts the index to Int, and fails
+    "0b08" + "d1b20d0101050000" -> false,      // the same at v3: the index is not checked
+    "00" + "d8010402" + "08d3" -> true,        // BlockValue([Int 1], SigmaProp(true)): an item that is not a ValDef
+    "0806" + "d8010402" + "08d3" -> true,      // the same, sized
+    "00" + "d801d6010402" + "08d3" -> false,   // BlockValue([ValDef(1, Int 1)], SigmaProp(true))
+    "00" + "d1e6c6a70a04" -> true,             // SELF.R10[Int].isDefined
+    "00" + "d1e6c6a78004" -> true,             // register id 0x80
+    "00" + "d1e6c6a70904" -> false,            // SELF.R9[Int].isDefined
+    "00" + "d50a0800" -> true,                 // root DeserializeRegister(R10, SigmaProp)
+    "00" + "d5090800" -> false,                // root DeserializeRegister(R9, SigmaProp)
+    "0b07" + "d1e6dc650bfe00" -> true,         // v3 MethodCall(CONTEXT, method 11) with no arguments
+    "00" + "d1e6dc650bfe00" -> false,          // the same at v0: parses, written back as a PropertyCall (db)
+    "0b09" + "d1e6dc650bfe010200" -> false)    // v3 with its argument, Byte 0
+
+  // The ordering pair (#46, #47): a size-flagged v0 tree declared 12 bytes, BoolToSigmaProp(If(EQ(Upcast(<input>, Long),
+  // Long 0), Coll[Byte](4083), ...)). The Upcast is built at candidate offset 10; the Coll[Byte]'s bulk read runs from
+  // 17 to 4100, past the tree window (4099), so the read of If's third child trips it. After the degrade the box
+  // resumes at 17: height 1, no tokens, R4 = Coll[Byte](4077). vlq(4083) = f3 1f, vlq(4077) = ed 1f.
+  private def orderingCand(input: String): String = Value + "08" + "0c" + "d1" + "95" + "93" + "7e" + input + "05" +
+    "0500" + "0e" + "f31f" + "01" + "00" + "01" + "0e" + "ed1f" + zeros(4077)
 
   Seq(AuthoredWireBoxTreeParse.OpBoxAcceptance -> "Box", AuthoredWireBoxTreeParse.OpTxAcceptance -> "Transaction").foreach {
     case (op, kind) =>
       test(s"$kind parse acceptance: unchecked nodes parse; erased casts, builder constraints and a mistyped item reject") {
         val es = entries(op)
-        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2))
+        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2) ++ List(true, false))
         AcceptanceTrees.zip(es).foreach { case ((tree, _), e) =>
           assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
         }
+        // The ordering pair differs only in the Upcast's input: true (01 01), then Int 1 (04 02).
+        val Seq(order, orderTwin) = es.drop(AcceptanceTrees.size)
+        assertEquals(orderingCand("0101").length, 2 * 4100)
+        assert(bytesHex(order).contains(orderingCand("0101")), "the Upcast(true) candidate")
+        assert(bytesHex(orderTwin).contains(orderingCand("0402")), "the Upcast(Int 1) candidate")
+        assertEquals(bytesHex(order).replace(orderingCand("0101"), orderingCand("0402")), bytesHex(orderTwin))
         // TrueLeaf and FalseLeaf are Boolean constants: the JVM writes them back as 01 01 and 01 00, not 7f and 80.
+        // A v0 MethodCall with no arguments is written back as a PropertyCall: dc and the argument count become db.
         def rewritten(e: Json): Option[String] = e.hcursor.get[String]("expected_bytes_hex").toOption
-        val want = Map(2 -> ("00d17f", "00d10101"), 3 -> ("00d180", "00d10100"))
+        val want = Map(2 -> ("00d17f", "00d10101"), 3 -> ("00d180", "00d10100"),
+          44 -> ("00d1e6dc650bfe00", "00d1e6db650bfe"))
         es.zipWithIndex.foreach { case (e, i) =>
           want.get(i) match {
             case Some((from, to)) =>

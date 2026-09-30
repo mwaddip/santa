@@ -44,6 +44,16 @@ package santa
 //      (`ConcreteCollectionSerializer.scala:38`, a Scala `assert` the build does not elide): an AssertionError, which
 //      no handler in deserializeErgoTree catches.
 //    None of these is a ValidationException, so a size-flagged tree rejects too.
+// 7. More construction and serializer checks at parse (ergots' node-construction requests, 2026-09-30): Upcast and
+//    Downcast require a numeric input (`trees.scala:398`, `:431`) and NumericCastSerializer casts the target type
+//    with asNumType (`:22`); below tree v3 the builder upcasts mixed numeric operands (`SigmaBuilder.scala:674-683`,
+//    a no-op from v3, `:757-758`), so Coll[Long](Plus(Int, Long)) passes the item assert at v0 and fails it at v3, and
+//    ByIndexSerializer upcasts the index to Int (`ByIndexSerializer.scala:29-33`), which a Long fails; BlockValue
+//    casts each item to BlockItem (`BlockValueSerializer.scala:39`); ExtractRegisterAs and DeserializeRegister look
+//    the register id up with `findRegisterByIndex(id).get`; from tree v3 a MethodCall must have arguments
+//    (`MethodCallSerializer.scala:52-55`), and below v3 one without them is written back as a PropertyCall
+//    (`values.scala:1350`). A node is built right after its own bytes are read, so a construction failure rejects even
+//    when a later read would have degraded the tree.
 //
 // Box entries are a bare box; Transaction entries carry the candidate as an output (BoxTreeWireFixtures).
 // extract() re-derives each blessing through WireCanonicalize under the node's v6 parse context (3, 3) and fails
@@ -345,7 +355,9 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
     }
 
     // Trees wrap the node under test in BoolToSigmaProp (d1), so the root is a SigmaProp. v0 unsized unless noted.
-    def acceptanceEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+    // `wrapMid` (for the ordering pair) puts something after the candidate, as windowEntries does.
+    def acceptanceEntries(kind: String, wrap: Array[Byte] => Array[Byte],
+                          wrapMid: Array[Byte] => Array[Byte]): Seq[Json] = {
       val k = kind.toLowerCase
       val subject = if (kind == "Box") "A bare box" else "A transaction output"
       def cand(tree: String): Array[Byte] = wrap(Value ++ b(tree) ++ Fields)
@@ -461,7 +473,148 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
           cand("00" + m11Body), degrade = None),
         accept(s"$k-context-getvar-v5-method-sized-accept#24", kind,
           s"$subject whose tree is the same, size-flagged: it parses as well. Round-trip identity.",
-          cand(sizedV0(m11Body)), degrade = None))
+          cand(sizedV0(m11Body)), degrade = None)) ++ constructionEntries(kind, wrap, wrapMid)
+    }
+
+    // ergots' node-construction requests (2026-09-30), entries #25 on.
+    def constructionEntries(kind: String, wrap: Array[Byte] => Array[Byte],
+                            wrapMid: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val subject = if (kind == "Box") "A bare box" else "A transaction output"
+      def cand(tree: Array[Byte]): Array[Byte] = wrap(Value ++ tree ++ Fields)
+      def sized(header: Int, content: String): Array[Byte] = sizedTree(header, b(content))
+      val notValidation = "deserializeErgoTree rethrows an IllegalArgumentException as a SerializerException " +
+        "(ErgoTreeSerializer.scala:191-195), and only a ValidationException degrades a size-flagged tree (:197)"
+      val collPlus  = "d193b1" + "830105" + "9a04020504" + "0402"
+      val byIdxLong = "d1b2" + "0d0101" + "0500" + "00"
+      val m11NoArgs = "d1e6" + "dc650bfe" + "00"
+      /** The ordering candidate: a size-flagged v0 tree declared 12 bytes, BoolToSigmaProp(If(EQ(Upcast(input,
+        * Long), Long 0), Coll[Byte](n), ...)), whose bulk read runs from candidate offset 17 to 4100; after a degrade
+        * the box resumes at 17: height 1, no tokens, R4 = Coll[Byte](n - 6). */
+      def orderingCand(input: String): Array[Byte] = {
+        val n = MaxSize - 13                          // 4083: the bulk read ends at offset 4100
+        val boxFields = b("01" + "00" + "01" + "0e") ++ vlq(n - 6) ++ zeros(n - 6)
+        val body = b("d1" + "95" + "93" + "7e" + input + "05" + "0500" + "0e") ++ vlq(n)
+        require(boxFields.length == n && body.length == 12)
+        Value ++ b("08") ++ vlq(body.length) ++ body ++ boxFields
+      }
+      Seq(
+        reject(s"$k-upcast-true-long-sized-root-reject#25", kind,
+          s"$subject whose size-flagged v0 tree is the root Upcast(true, Long) (08 04 7e 01 01 05). Upcast's " +
+          "constructor requires a numeric input (trees.scala:398): an IllegalArgumentException as the node is built. " +
+          s"$notValidation, so the JVM rejects. An impl that checks the root only after reading the body degrades " +
+          "the tree (its root is not a SigmaProp: rule 1001) and accepts: the over-accept.",
+          cand(sized(0x08, "7e" + "0101" + "05")), mention = Seq("Cannot create Upcast node for non-numeric type")),
+        reject(s"$k-upcast-coll-int-long-sized-root-reject#26", kind,
+          s"$subject whose size-flagged v0 tree is the root Upcast(Coll[Int](), Long) (08 04 7e 10 00 05): rejected " +
+          "the same way.",
+          cand(sized(0x08, "7e" + "1000" + "05")), mention = Seq("Cannot create Upcast node for non-numeric type")),
+        reject(s"$k-downcast-true-byte-sized-root-reject#27", kind,
+          s"$subject whose size-flagged v0 tree is the root Downcast(true, Byte) (08 04 7d 01 01 02). Downcast has " +
+          "the same require (trees.scala:431): rejected.",
+          cand(sized(0x08, "7d" + "0101" + "02")), mention = Seq("Cannot create Downcast node for non-numeric type")),
+        reject(s"$k-downcast-coll-int-byte-sized-root-reject#28", kind,
+          s"$subject whose size-flagged v0 tree is the root Downcast(Coll[Int](), Byte) (08 04 7d 10 00 02): rejected.",
+          cand(sized(0x08, "7d" + "1000" + "02")), mention = Seq("Cannot create Downcast node for non-numeric type")),
+        accept(s"$k-upcast-int-long-sized-root-degrade-accept#29", kind,
+          s"The twin for #25 to #28: $subject whose size-flagged v0 tree is the root Upcast(Int 1, Long) (08 04 7e 04 " +
+          "02 05). The node builds, and the root is a Long: rule 1001 degrades the tree, so the object is accepted. " +
+          "Round-trip identity.",
+          cand(sized(0x08, "7e" + "0402" + "05")), degrade = Some(1001)),
+        reject(s"$k-upcast-boolean-target-sized-root-reject#30", kind,
+          s"$subject whose size-flagged v0 tree is the root Upcast(Int 1, Boolean) (08 04 7e 04 02 01). " +
+          "NumericCastSerializer casts the target type with asNumType (NumericCastSerializer.scala:22): a " +
+          "ClassCastException for a non-numeric type, and the JVM rejects.",
+          cand(sized(0x08, "7e" + "0402" + "01")), mention = Seq("ClassCastException", "SNumericType")),
+        accept(s"$k-v0-coll-long-plus-int-long-accept#31", kind,
+          s"$subject whose unsized v0 tree is BoolToSigmaProp(EQ(SizeOf(Coll[Long](Plus(Int 1, Long 2))), Int 1)) " +
+          "(83 01 05 9a 04 02 05 04: one Long item). Below tree v3 the deserializing builder upcasts mixed numeric " +
+          "operands to the wider type (SigmaBuilder.scala:674-683, :707-712), so Plus is a Long and the item assert " +
+          "passes (ConcreteCollectionSerializer.scala:38). It parses. Round-trip identity: below v3 the serializer " +
+          "writes the Upcast of the constant Int 1 as the constant.",
+          cand(b("00" + collPlus)), degrade = None),
+        reject(s"$k-v3-coll-long-plus-int-long-reject#32", kind,
+          s"$subject whose size-flagged v3 tree (0b) is the same. From tree v3 the builder does not upcast " +
+          "(SigmaBuilder.scala:757-758), so Plus is typed as its left operand, an Int, and the item assert throws " +
+          "AssertionError: the JVM rejects. An impl that types Plus as the wider operand at v3, or does not compare " +
+          "item types, parses it.",
+          cand(sized(0x0b, collPlus)), mention = Seq("AssertionError", "Invalid type of collection value")),
+        reject(s"$k-v0-byindex-long-index-reject#33", kind,
+          s"$subject whose unsized v0 tree is BoolToSigmaProp(ByIndex(Coll[Boolean](true), Long 0)) (b2 0d 01 01 05 " +
+          "00 00). Below tree v3 ByIndexSerializer upcasts the index to Int as soon as it is read " +
+          "(ByIndexSerializer.scala:29-33), and upcastTo asserts that the target is at least as wide as the index " +
+          "(syntax.scala:168-177): a Long fails, an AssertionError, and the JVM rejects. An impl without the check " +
+          "parses it.",
+          cand(b("00" + byIdxLong)), mention = Seq("AssertionError", "target type should be larger than source type")),
+        accept(s"$k-v3-byindex-long-index-accept#34", kind,
+          s"The twin: $subject whose size-flagged v3 tree is the same ByIndex. From v3 the index is taken as it is " +
+          "(ByIndexSerializer.scala:29-30), so the tree parses. Round-trip identity.",
+          cand(sized(0x0b, byIdxLong)), degrade = None),
+        reject(s"$k-blockvalue-int-item-reject#35", kind,
+          s"$subject whose unsized v0 tree is BlockValue([Int 1], SigmaProp(true)) (d8 01 04 02 08 d3). " +
+          "BlockValueSerializer casts each item to BlockItem as it is read (BlockValueSerializer.scala:39), and a " +
+          "constant is not one: ClassCastException, the JVM rejects.",
+          cand(b("00" + "d8010402" + "08d3")), mention = Seq("ClassCastException", "sigma.ast.BlockItem")),
+        reject(s"$k-blockvalue-int-item-sized-reject#36", kind,
+          s"$subject whose tree is the same, size-flagged: a ClassCastException does not degrade, so rejected as well.",
+          cand(sized(0x08, "d8010402" + "08d3")), mention = Seq("ClassCastException", "sigma.ast.BlockItem")),
+        accept(s"$k-blockvalue-valdef-item-accept#37", kind,
+          s"The twin: $subject whose tree is BlockValue([ValDef(1, Int 1)], SigmaProp(true)). It parses. Round-trip " +
+          "identity.",
+          cand(b("00" + "d801d6010402" + "08d3")), degrade = None),
+        reject(s"$k-extract-register-as-id-10-reject#38", kind,
+          s"$subject whose unsized v0 tree is BoolToSigmaProp(OptionIsDefined(SELF.R10[Int])) (c6 a7 0a 04). " +
+          "ExtractRegisterAsSerializer looks the id up with ErgoBox.findRegisterByIndex(id).get right after reading it " +
+          "(ExtractRegisterAsSerializer.scala:28). The registers are R0 to R9, so id 10 is None.get: " +
+          "NoSuchElementException, and the JVM rejects.",
+          cand(b("00" + "d1e6c6a70a04")), mention = Seq("NoSuchElementException")),
+        reject(s"$k-extract-register-as-id-0x80-reject#39", kind,
+          s"$subject whose tree is the same with the id byte 0x80, the signed byte -128: rejected the same way.",
+          cand(b("00" + "d1e6c6a78004")), mention = Seq("NoSuchElementException")),
+        accept(s"$k-extract-register-as-id-9-accept#40", kind,
+          s"The twin: $subject whose tree reads SELF.R9[Int].isDefined (c6 a7 09 04). It parses. Round-trip identity.",
+          cand(b("00" + "d1e6c6a70904")), degrade = None),
+        reject(s"$k-deserialize-register-id-10-reject#41", kind,
+          s"$subject whose unsized v0 tree is the root DeserializeRegister(R10, SigmaProp) (d5 0a 08 00). " +
+          "DeserializeRegisterSerializer makes the same lookup (DeserializeRegisterSerializer.scala:28): rejected.",
+          cand(b("00" + "d50a0800")), mention = Seq("NoSuchElementException")),
+        accept(s"$k-deserialize-register-id-9-accept#42", kind,
+          s"The twin: $subject whose tree is the root DeserializeRegister(R9, SigmaProp) (d5 09 08 00). It parses. " +
+          "Round-trip identity.",
+          cand(b("00" + "d5090800")), degrade = None),
+        reject(s"$k-v3-methodcall-no-args-reject#43", kind,
+          s"$subject whose size-flagged v3 tree is BoolToSigmaProp(OptionIsDefined(MethodCall(CONTEXT, SContext " +
+          "method 11, []))) (dc 65 0b fe 00: no arguments). From tree v3 MethodCallSerializer asserts that there are " +
+          "arguments (MethodCallSerializer.scala:52-55), the check its serializer makes (:27): AssertionError, and the " +
+          "JVM rejects. An impl that checks the arity only when it evaluates parses it.",
+          cand(sized(0x0b, m11NoArgs)), mention = Seq("AssertionError")),
+        acceptRewritten(s"$k-v0-methodcall-no-args-propertycall-accept#44", kind,
+          s"$subject whose unsized v0 tree is the same MethodCall with no arguments. Below v3 there is no check, and " +
+          "it parses. NON-IDENTITY: a MethodCall with no arguments is written as a PropertyCall (its companion is " +
+          "PropertyCall when args is empty, values.scala:1350), so the tree comes back as 00 d1 e6 db 65 0b fe, " +
+          "one byte shorter.",
+          cand(b("00" + m11NoArgs)), rewritten = cand(b("00" + "d1e6" + "db650bfe"))),
+        accept(s"$k-v3-methodcall-one-arg-accept#45", kind,
+          s"The twin for #43: $subject whose size-flagged v3 tree is the MethodCall with its argument, Byte 0 " +
+          "(dc 65 0b fe 01 02 00). It parses. Round-trip identity.",
+          cand(sized(0x0b, "d1e6" + "dc650bfe" + "010200")), degrade = None),
+        reject(s"$k-order-upcast-true-then-window-reject#46", kind,
+          s"$subject whose size-flagged v0 tree is declared 12 bytes: BoolToSigmaProp(If(EQ(Upcast(true, Long), " +
+          "Long 0), Coll[Byte](4083), ...)). The Upcast is built at candidate offset 10, right after its input and " +
+          "target type, and its require throws (trees.scala:398): the JVM rejects before it reaches the window. An " +
+          "impl that makes its type checks only after reading the body meets the window first: the Coll[Byte]'s bulk " +
+          "read runs from offset 17 to 4100, past the tree window (4099), the next read trips rule 1014, and the " +
+          "size-flagged tree degrades, as #47 does.",
+          wrapMid(orderingCand("0101")), mention = Seq("Cannot create Upcast node for non-numeric type"),
+          forbid = Seq(Rule1014)),
+        accept(s"$k-order-upcast-int-then-window-degrade-accept#47", kind,
+          s"The twin: $subject with Upcast(Int 1, Long). The node builds, the Coll[Byte]'s bulk read crosses the tree " +
+          "window, and the read of If's third child trips rule 1014: the tree degrades to its declared 12 bytes. The " +
+          "box resumes at offset 17: height 1, no tokens, R4 = Coll[Byte](4077), whose bulk read starts in time and " +
+          "crosses the box window. Round-trip identity." +
+          (if (kind == "Transaction") " A second output follows, so the parser's unchecked peek before the trip " +
+            "lands on a real byte." else ""),
+          wrapMid(orderingCand("0402")), degrade = Some(1014)))
     }
 
     Map(
@@ -476,8 +629,9 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
       OpTxValUse  -> envelope(OpTxValUse, valUseEntries("Transaction", cand => txWith(cand))),
       OpBoxGate   -> envelope(OpBoxGate, gateEntries("Box", boxWith)),
       OpTxGate    -> envelope(OpTxGate, gateEntries("Transaction", cand => txWith(cand))),
-      OpBoxAcceptance -> envelope(OpBoxAcceptance, acceptanceEntries("Box", boxWith)),
-      OpTxAcceptance  -> envelope(OpTxAcceptance, acceptanceEntries("Transaction", cand => txWith(cand))))
+      OpBoxAcceptance -> envelope(OpBoxAcceptance, acceptanceEntries("Box", boxWith, boxWith)),
+      OpTxAcceptance  -> envelope(OpTxAcceptance, acceptanceEntries("Transaction", cand => txWith(cand),
+        cand => txWith(cand, Seq(candidate(1000000L, 2))))))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =
