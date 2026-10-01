@@ -33,9 +33,10 @@ import io.circe.Json
 import scorex.util.encode.Base16
 import sigma.VersionContext
 import sigma.ast.{BinAnd, BoolToSigmaProp, ByIndex, ByteArrayConstant, CalcBlake2b256, EQ, ErgoTree, ExtractBytes,
-  ExtractId, ExtractScriptBytes, IntConstant, Outputs, SigmaAnd, SigmaPropConstant, Slice}
+  ExtractId, ExtractScriptBytes, GetVar, IntConstant, OptionGet, Outputs, SigmaAnd, SigmaPropConstant, SOption,
+  SSigmaProp, Slice}
 import sigma.crypto.CryptoConstants.dlogGroup
-import sigma.data.AvlTreeData
+import sigma.data.{AvlTreeData, CAND, CTHRESHOLD, SigmaBoolean}
 import sigma.serialization.{ErgoTreeSerializer, SigSerializer}
 import sigmastate.{FiatShamirTree, UncheckedSchnorr, UnprovenSchnorr}
 import sigmastate.crypto.CryptoFunctions
@@ -51,6 +52,7 @@ import RentFixtures._
 object AuthoredTxSizedTreeRequests {
   val SpendPath       = "transaction/v6/authored/sized-tree-spend.json"
   val OutputBytesPath = "transaction/v6/authored/sized-tree-output-bytes.json"
+  val CountWrapPath   = "transaction/v6/authored/conjecture-child-count-wrap.json"
   private val V3: Byte = VersionContext.V6SoftForkVersion
   private val Activated = 3
   private val ErgoTreeV = 0
@@ -107,6 +109,43 @@ object AuthoredTxSizedTreeRequests {
     require(proof.length == 24, s"a leafless conjecture's proof is its 24-byte challenge, got ${proof.length}")
     proof
   }
+
+  /** Three deterministic dlog secrets for the 2-of-3 threshold (#13); the prover below holds the first two. */
+  private val thSecrets = Seq("a", "b", "c").map(s => DLogProverInput(scalar(s"santa:str:threshold:$s")))
+  /** CTHRESHOLD(2, [pk1, pk2, pk3]) as a SigmaProp constant — atLeast(2, Coll(pk1, pk2, pk3)). */
+  private def thTreeHex: String = VersionContext.withVersions(V3, V3) {
+    hex(ErgoTreeSerializer.DefaultSerializer.serializeErgoTree(
+      ErgoTree.fromProposition(ErgoTree.ZeroHeader, SigmaPropConstant(CTHRESHOLD(2, thSecrets.map(_.publicImage))))))
+  }
+
+  /** A real 2-of-3 threshold proof, built by the JVM prover from two of the three secrets over the same transaction
+    * leaflessProof builds (one input, one output of the box's value). */
+  private def thresholdRealProof(bx: ErgoBox): Array[Byte] = VersionContext.withVersions(V3, V3) {
+    val t = tx(Seq(input(bx, ext())), Seq(candidate(V, 1)))
+    val ctx = ErgoLikeContextTesting(currentHeight = H, lastBlockUtxoRoot = AvlTreeData.dummy,
+      minerPubkey = Array.fill(33)(2.toByte), boxesToSpend = IndexedSeq(bx), spendingTransaction = t, self = bx,
+      activatedVersion = V3)
+    new ContextEnrichingTestProvingInterpreter().withSecrets(thSecrets.take(2))
+      .prove(Map.empty[String, Any], bx.ergoTree, ctx, t.messageToSign, HintsBag.empty).get.proof
+  }
+
+  /** The Fiat-Shamir bytes of a conjecture node, for the crafted root-challenge proofs below.
+    *   CTHRESHOLD(0, [CAND()]): 00 (node) 02 (threshold) 00 (k) 00 01 (one child, a Short) + the CAND() child 00 00 00 00.
+    *   COR():                   00 (node) 01 (or) 00 00 (no children). */
+  private val FsCThresholdK0Cand = "000200000100000000"
+  private val FsCorEmpty         = "00010000"
+
+  /** A proof of just the root Fiat-Shamir challenge — hashFn(fsHex ++ messageToSign) — then `extra` trailing bytes.
+    * For a conjecture whose Fiat-Shamir bytes carry no challenge, this is what the node's own challenge hashes to, so
+    * an impl that checks only the root challenge accepts it. The JVM accepts the leafless CTHRESHOLD(0, [CAND()]) (it
+    * reads the missing coefficients leniently: readBytesChecked warns, GF2_192_Poly takes moreCoeffs.length / 24) but
+    * rejects the empty COR() (its last-child index is −1, which throws, caught as false). `extra` is any bytes after
+    * the 24-byte challenge (none, or half a coefficient). */
+  private def rootChallengeProof(fsHex: String, extra: Array[Byte] = Array.emptyByteArray)(bx: ErgoBox): Array[Byte] =
+    VersionContext.withVersions(V3, V3) {
+      val msg = tx(Seq(input(bx, ext())), Seq(candidate(V, 1))).messageToSign
+      CryptoFunctions.hashFn(b(fsHex) ++ msg) ++ extra
+    }
 
   private def spendEntry(i: Int, slug: String, description: String, treeHex: String, proof: ErgoBox => Array[Byte],
                          want: Boolean): Json = {
@@ -173,7 +212,39 @@ object AuthoredTxSizedTreeRequests {
         s"The SigmaAnd node of 256 × sigmaProp(true) (00 ea 80 02 08 d3…), which parses (no bound at 255). " +
         "CAND.normalized skips every TrueProp and returns TrueProp, so the box spends with no proof: valid. An impl that " +
         s"bounds the node's items, or the CAND it builds, at 255 rejects it. $spendNote",
-        "00" + "ea8002" + "08d3" * 256, none, want = true))
+        "00" + "ea8002" + "08d3" * 256, none, want = true),
+      spendEntry(13, "cthreshold-2of3-real-children-accept",
+        s"The spent box's tree is the SigmaProp constant CTHRESHOLD(2, [pk1, pk2, pk3]) (00 08 98 02 03 …), i.e. " +
+        "atLeast(2, Coll(pk1, pk2, pk3)), and the input carries a real 2-of-3 threshold proof the JVM prover built " +
+        "from two of the three secrets: valid. The crypto-verification cost is 11993 JitCost = 20 (parse the one " +
+        "coefficient) + 18 (evaluate the degree-1 polynomial at the three children) + 15 (the threshold node) + 3 × " +
+        "3980 (three ProveDlog leaves); an impl that omits the 15 for the node estimates 11978 and, after the /10 " +
+        "block-cost scale, reports a transaction cost 2 lower (1197 vs 1199). The only transaction vector with a " +
+        s"threshold over real children; the degenerate ones (#5, #6, #9) pin n = k = 0 only. $spendNote",
+        thTreeHex, thresholdRealProof, want = true),
+      spendEntry(14, "cthreshold-k0-cand-truncated-proof-no-coefficient-accept",
+        s"The spent box's tree is CTHRESHOLD(0, [CAND()]) (00 08 98 00 01 96 00): a threshold with one leafless child " +
+        "and no leaves of its own. The input carries a 24-byte proof — the root Fiat-Shamir challenge alone, with no " +
+        "polynomial coefficient. SigSerializer reads the n−k = 1 coefficient with readBytesChecked, which returns the " +
+        "zero bytes that are left and only warns (SigSerializer.scala:156-163, :247-253); GF2_192_Poly takes length / " +
+        "24 = 0 coefficients, a degree-0 polynomial equal to the root challenge, and the single child's challenge is " +
+        "that same value. A leafless tree's Fiat-Shamir bytes carry no challenge, so the recomputed root challenge " +
+        "matches: valid, where the JVM's own prover writes 48 bytes (the challenge and one coefficient). An impl that " +
+        s"reads the coefficients strictly and refuses a short proof rejects it. $spendNote",
+        "00" + "08" + "98" + "00" + "01" + "9600", rootChallengeProof(FsCThresholdK0Cand), want = true),
+      spendEntry(15, "cthreshold-k0-cand-truncated-proof-half-coefficient-accept",
+        s"The same CTHRESHOLD(0, [CAND()]) box with 12 more proof bytes: the 24-byte root challenge, then half of the " +
+        "24-byte coefficient. readBytesChecked again returns fewer bytes than requested; GF2_192_Poly takes 12 / 24 = " +
+        s"0 coefficients, so the proof verifies exactly as #14 does: valid. $spendNote",
+        "00" + "08" + "98" + "00" + "01" + "9600", rootChallengeProof(FsCThresholdK0Cand, Array.fill(12)(0.toByte)), want = true),
+      spendEntry(16, "cor-empty-fiat-shamir-proof-reject",
+        s"COR() (00 08 97 00) with a 24-byte proof equal to its own Fiat-Shamir challenge (hashFn(00 01 00 00 ++ " +
+        "message), the empty-OR node's challenge). The JVM still rejects: parseAndComputeChallenges reads an OR's last " +
+        "child as or.children(nChildren − 1) = children(−1) for the empty OR, which throws, and verifySignature " +
+        "catches every Throwable and returns false (SigSerializer.scala:234, Interpreter.scala:473-481). So COR() is " +
+        "unspendable with any proof, not only the empty one (#7). An impl that reads COR() like CAND() — no children, " +
+        s"only the root challenge checked — accepts this proof; #3 (CAND() with the same kind of proof) is its valid twin. $spendNote",
+        "00" + "08" + "9700", rootChallengeProof(FsCorEmpty), want = false))
   }
 
   // ── 2. output bytes ───────────────────────────────────────────────────────────────────────────────
@@ -245,6 +316,38 @@ object AuthoredTxSizedTreeRequests {
         "accepts.", "0803" + "08d3", "0803" + "08d3", "0803" + "08d3", want = false))
   }
 
+  // ── 3. conjecture child count wrap ──────────────────────────────────────────────────────────────────
+  /** Children in the wrapped-count conjecture: past the signed-Short range, so children.length.toShort is negative.
+    * 40000 = 0x9c40 -> -25536. */
+  private val CcwN = 40000
+  private def conjectureCountWrapEntries: Seq[Json] = {
+    // The box's script reads its proposition from a context variable, because a 40000-child CAND is ~80 KB and an
+    // ErgoTree deserializes under MaxPropositionBytes = 4096 (a context value does not).
+    val script = VersionContext.withVersions(V3, V3) {
+      ErgoTree.fromProposition(ErgoTree.ZeroHeader, OptionGet(GetVar(1.toByte, SOption(SSigmaProp))))
+    }
+    val prop  = CAND(Seq.fill(CcwN)(CAND(Seq.empty[SigmaBoolean])))
+    val fsHex = "0000" + f"${CcwN & 0xffff}%04x" + "00000000" * CcwN // 00(node)00(and)<n.toShort> + n x CAND()
+    val bx    = VersionContext.withVersions(V3, V3) { box("santa:str:ccw", V, 1, script) }
+    val extn  = ext((1.toByte, SigmaPropConstant(prop)))
+    val txHex = VersionContext.withVersions(V3, V3) {
+      val msg   = tx(Seq(input(bx, extn)), Seq(candidate(V, 1))).messageToSign
+      val proof = CryptoFunctions.hashFn(b(fsHex) ++ msg)
+      hex(txBytes(tx(Seq(input(bx, extn, proof)), Seq(candidate(V, 1)))))
+    }
+    Seq(entry("cand-child-count-wrap-fiat-shamir#0", "conjecture-count-wrap",
+      s"The spent box's script is getVar[SigmaProp](1).get, and context variable 1 holds the SigmaProp constant " +
+      s"CAND($CcwN x CAND()) — $CcwN empty-AND children, past the signed-Short range. The wire form reads the child " +
+      s"count with getUShort, a VLQ, so $CcwN parses (96 c0 b8 02); but FiatShamirTree.toBytes writes it as " +
+      s"children.length.toShort (UnprovenTree.scala:279-280), which wraps to a negative Short (0x" +
+      f"${CcwN & 0xffff}%04x" + "). The input carries the 24-byte root Fiat-Shamir challenge over that wrapped " +
+      "count, which the JVM recomputes the same way at verification: valid. A box tree cannot carry this proposition " +
+      "(ErgoTree deserialization caps at MaxPropositionBytes = 4096), so it rides a context variable. The crypto " +
+      s"cost is 15 + $CcwN x 15 JitCost. An impl that refuses the count, or writes the Fiat-Shamir count without the " +
+      "Short wrap, hashes a different root challenge and rejects this proof.",
+      txHex, Seq(bx), want = true))
+  }
+
   private def envelope(op: String, es: Seq[Json]): Json = Json.obj(
     "schema"     -> Json.fromString("santa-transaction/v1"),
     "op"         -> Json.fromString(op),
@@ -253,7 +356,8 @@ object AuthoredTxSizedTreeRequests {
 
   def blessAll(): Seq[(String, Json)] = Seq(
     SpendPath       -> envelope("tx:authored:sized-tree-spend", spendEntries),
-    OutputBytesPath -> envelope("tx:authored:sized-tree-output-bytes", outputBytesEntries))
+    OutputBytesPath -> envelope("tx:authored:sized-tree-output-bytes", outputBytesEntries),
+    CountWrapPath   -> envelope("tx:authored:conjecture-child-count-wrap", conjectureCountWrapEntries))
 
   def writeVectors(blessed: Seq[(String, Json)], vectorsRoot: java.nio.file.Path): Unit =
     blessed.foreach { case (rel, env) =>

@@ -35,12 +35,42 @@ class AuthoredTxSizedTreeRequestsTest extends munit.FunSuite {
       ("00" + "ea00", false, "00"),                            // the SigmaAnd() node: CAND.normalized requires items
       ("00" + "eb00", false, "00"),                            // the SigmaOr() node: COR.normalized, the same
       ("00" + "ea8002" + "08d3" * 256, true, "00"))            // SigmaAnd of 256 sigmaProp(true): TrueProp, no proof
-    assertEquals(es.map(valid), want.map(_._2))
+    assertEquals(es.take(13).map(valid), want.map(_._2))
     want.zip(es).foreach { case ((tree, _, len), e) =>
       // the spent box: value 1000000000 (5 VLQ bytes), then the tree
       assert(inputBox(e).startsWith("8094ebdc03" + tree), s"input box with tree $tree")
       assertEquals(proofLen(e), len, s"proof length for $tree")
     }
+  }
+
+  test("spend: a 2-of-3 threshold over real children (for its cost), a threshold proof truncated inside its " +
+    "coefficients still verifies, and COR() with its Fiat-Shamir challenge is still rejected") {
+    val es = entries(SpendPath)
+    // #13 CTHRESHOLD(2, [pk1, pk2, pk3]) with a real 2-of-3 proof: the one threshold vector over real children.
+    assert(valid(es(13)), "the 2-of-3 threshold spends")
+    assert(inputBox(es(13)).startsWith("8094ebdc03" + "0008980203"), "the tree is CTHRESHOLD(2, 3 children)")
+    assertEquals(str(es(13), "tx_bytes_hex").substring(66, 70), "9001",
+      "a 144-byte threshold proof: 24 challenge + 24 coefficient + 3 × 32 responses")
+    // #14, #15 CTHRESHOLD(0, [CAND()]) with a proof that ends before / inside the single coefficient.
+    List(14 -> "18", 15 -> "24").foreach { case (i, len) =>
+      assert(valid(es(i)), s"the truncated-coefficient proof verifies (#$i)")
+      assert(inputBox(es(i)).startsWith("8094ebdc03" + "00089800019600"), s"the tree is CTHRESHOLD(0, [CAND()]) (#$i)")
+      assertEquals(proofLen(es(i)), len, s"proof length (#$i)")
+    }
+    // #16 COR() with its own Fiat-Shamir challenge: still rejected (the empty OR throws), the stronger twin of #7.
+    assert(!valid(es(16)), "COR() with a crafted proof is still rejected")
+    assert(inputBox(es(16)).startsWith("8094ebdc03" + "00089700"), "the tree is COR()")
+    assertEquals(proofLen(es(16)), "18", "a 24-byte Fiat-Shamir proof")
+  }
+
+  test("conjecture child count wrap: a 40000-child CAND via a context variable spends with its wrapped-count challenge") {
+    val es = entries(CountWrapPath)
+    assertEquals(es.size, 1)
+    assert(valid(es.head), "the 40000-child CAND spends with its root Fiat-Shamir challenge")
+    assertEquals(proofLen(es.head), "18", "a 24-byte proof: the root challenge alone, no coefficient or responses")
+    assert(inputBox(es.head).contains("1000e4e30108"), "the box script is getVar[SigmaProp](1).get")
+    // context var 1 carries CAND(40000 x CAND()): the SSigmaProp constant 08, CAND 96, count c0 b8 02, then 40000 x 9600
+    assert(str(es.head, "tx_bytes_hex").contains("0896c0b802" + "9600" * 4), "the context var holds CAND(40000 x CAND())")
   }
 
   test("output bytes: propositionBytes are the tree as received, bytes and ids the re-encoded tree") {

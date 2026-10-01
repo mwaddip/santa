@@ -188,10 +188,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   A stratified **mainnet sample** (122 real rent spends, v5 and v6 eras) gates rent ports on real
   history.
 
-  **Sized-tree spends** (`sized-tree-spend`, `sized-tree-output-bytes`, on the same synthetic context):
+  **Sized-tree spends** (`sized-tree-spend`, `sized-tree-output-bytes`, `conjecture-child-count-wrap`, on the same
+  synthetic context):
   - a box whose tree degraded under rule 1001 does not spend;
   - a leafless `CAND()` or `CTHRESHOLD(0, [])` spends with its secret-free 24-byte Fiat-Shamir proof, and with no
-    proof does not;
+    proof does not; `COR()` never spends — with any proof it throws on its empty last child, caught as false;
+  - a real 2-of-3 `CTHRESHOLD` over `ProveDlog` children pins the threshold crypto cost (11993 JitCost, the node's 15
+    included); a threshold proof that ends before or inside its single coefficient still verifies, because the
+    coefficients are read leniently and a leafless child carries no challenge;
+  - a `CAND` of 40000 children — past the signed-Short range, carried by a context variable because an ErgoTree caps
+    at 4096 bytes — spends with the Fiat-Shamir challenge over its wrapped child count;
   - inside the creating transaction, an output that declares its tree size wrongly keeps its tree as received in
     `propositionBytes`, while its `bytes`, its id and the signing message are re-encoded. A deterministic Schnorr
     proof pins the signing message.
