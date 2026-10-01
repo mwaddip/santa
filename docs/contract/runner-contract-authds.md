@@ -403,13 +403,13 @@ Two further limits, surfaced building the runner arms:
 `avl_prove` (`AvlProve.ergots_corpus.json`), 37 `avl_verify`
 (`AvlVerify.ergots_corpus.json`) — `blessed_by: "jvm:scrypto-3.0.0"`. Mounted conformers:
 **rudolph** (control), **dasher** (ergots) and **vixen** (arkadianet, `avl_verify` only).
-`SANTA_TX_BLESSER=1 ./conform`, slice `authds/any/vendored`:
+`SANTA_TX_BLESSER=1 ./conform`, slice `authds/any/vendored` (the 2026-09-30 run):
 
 | Runner | proof | digest | accepted | results | red_total |
 |---|---|---|---|---|---|
 | rudolph (JVM control) | 10/10 | 43/43 | 37/37 | 33/33 | **0** |
-| dasher (ergots @ `f906eb2`) | 10/10 | 43/43 | 37/37 | 33/33 | **0** |
-| vixen (arkadianet) | n/a | 26/26 | 29/30 | 26/26 | **18** |
+| dasher (ergots @ `953e6b3c`) | 10/10 | 43/43 | 37/37 | 33/33 | **0** |
+| vixen (arkadianet @ `a36bbb47`) | n/a | 26/26 | 30/30 | 26/26 | **17** |
 
 **The corpus shrank from 60 to 47 on 2026-08-04**, when 13 `avl_verify` fixtures were
 retired to [`unreachable/`](../../unreachable/README.md): they exercise
@@ -419,16 +419,22 @@ constructed by any consensus path. With them gone dasher reaches red 0 — ergot
 the JVM on every graded entry — and the blesser's `KnownDivergences` pin is **empty**,
 since all 17 recorded JVM-vs-Rust divergences had that single unreachable root cause.
 
-vixen's 18 = **17 `not-implemented`** (10 `avl_prove`, since its arm is verify-only, plus
-7 `avl_verify` whose `Update`/`InsertOrUpdate` operations arkadianet's `AvlVerifier`
-cannot report a value for) **+ 1 genuine coal**: `adverse-malicious-extra-nodes`, where
-arkadianet accepts a proof carrying injected extra nodes that both the JVM and ergots
-reject. `proof` is `n/a` — no `avl_prove` arm is mounted for vixen (§6).
+vixen's 17 are all **`not-implemented`**: 10 `avl_prove` (its arm is verify-only), plus the
+7 `avl_verify` entries with an `Update` or `InsertOrUpdate` operation. The runner arm
+declared those 7 when arkadianet's `AvlVerifier` returned no old value for the two
+operations; since arkadianet `3fc2a07c` it returns one, and the arm does not use it yet.
+`proof` is `n/a` — no `avl_prove` arm is mounted for vixen (§6).
 
-(`digest` pools both kinds' contributions, §4: rudolph's 56 = 10 `avl_prove` entries
-always graded + 46 `avl_verify` entries that reach the digest dimension; dasher's 52 = the
-same 10 `avl_prove` entries + only 42 `avl_verify` entries, since 4 of its 46 non-adverse
-entries coal on `results` and suppress `digest` to `n/a`.)
+vixen's one genuine coal is closed. On `adverse-malicious-extra-nodes` arkadianet accepted
+a self-consistent proof padded with extra nodes, which the JVM and ergots reject: its
+wrapper built the verifier without the operation bounds. arkadianet reproduced the red
+from the board and now passes them (`19091d47`); the runner hands over the vector's
+declared bounds (santa-vixen `c263a58`), and `accepted` went from 29/30 to 30/30.
+
+(`digest` pools both kinds' contributions, §4: rudolph's and dasher's 43 = the 10
+`avl_prove` entries, always graded, + the 33 `avl_verify` entries that reach the digest
+dimension — the 4 adverse entries stop at `accepted`. vixen's 26 = its 30 graded
+`avl_verify` entries less those 4.)
 
 **Confirmed finding — `UnknownModification` key semantics.** scrypto's
 `UnknownModification` is a case *object* with a fixed **zero-length** key that sorts below

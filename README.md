@@ -247,8 +247,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   from its Rust-blessed origin — `blessed_by: "jvm:scrypto-3.0.0"`). Conformers: **rudolph
   control** and **dasher (ergots)** both `proof 10/10 · digest 43/43 · accepted 37/37 ·
   results 33/33`, **red 0** — ergots matches the JVM on every graded entry · **vixen
-  (arkadianet)** `accepted 29/30 · results 26/26 · digest 26/26`, red 1 + 17 not-implemented.
-  Two confirmed findings, **both now closed**, and a third open on vixen:
+  (arkadianet)** `accepted 30/30 · results 26/26 · digest 26/26`, red 0 + 17 not-implemented.
+  Three confirmed findings, **all now closed**:
   pushed ergots `master` seeded an empty AVL tree as two sentinel leaves instead of one (all
   10 `avl_prove` entries, red 24 at ship; ergots pushed the fix `b533fe5` and all 20
   prove-side reds cleared on the 2026-08-03 re-grade, confirmed by conform CI
@@ -273,8 +273,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   reachable corpus. The finding is kept and reframed — plus one prediction
   that did *not* land: the four adverse (malformed/mismatched/truncated/swapped-digest
   proof) fixtures were flagged as a possible reject-detection miss and came back fully
-  green, ergots independently agreeing with the JVM. blitzen-mwaddip / donner not yet
-  mounted (`avl_verify` only). Contract:
+  green, ergots independently agreeing with the JVM. The third finding was vixen's:
+  arkadianet accepted a self-consistent proof padded with extra nodes
+  (`adverse-malicious-extra-nodes`) that the JVM and ergots reject, because its wrapper
+  built the verifier without the operation bounds. arkadianet reproduced the red from the
+  board and fixed it (`19091d47`). blitzen-mwaddip / donner not yet mounted
+  (`avl_verify` only). Contract:
   [`docs/contract/runner-contract-authds.md`](docs/contract/runner-contract-authds.md).
 
 Still greenfield, and where help is most wanted (see below):
