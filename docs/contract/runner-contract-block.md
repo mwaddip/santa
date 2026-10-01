@@ -135,9 +135,8 @@ proves the grader against it.
 - **Proofs-section canonicality.** `blake2b256(proofBytes) == header.adProofsRoot` is part
   of validity — a proof that *replays correctly* but isn't byte-identical to the committed
   section is a consensus reject. This class is live in the wild: the rust AVL prover emits
-  valid-but-non-canonical proofs for data-input lookups
-  ([`ADPROOF-FINDING.md`](../findings/testnet-powhit-return-type/ADPROOF-FINDING.md)) —
-  the reason seed 28474 is not yet a vector.
+  valid-but-non-canonical proofs for data-input lookups — the reason seed 28474 is not yet
+  a vector.
 - **The version gate fires only at epoch boundaries.** The JVM compares the parameters'
   declared blockVersion to `header.version` only inside `processExtension`, which runs iff
   `header.votingStarts(votingEpochLength)` (`ErgoStateContext.scala:246`); mid-epoch the
@@ -162,8 +161,9 @@ Two provenances, distinguished by the `source` prefix (validate-guarded):
 - **`captured`** — primary corpus. `source: "testnet:<seed-dir>@<height>"`. Captured
   blocks are on-chain history ⇒ inherently `valid: true`; the blesser (`CapturedBlock`)
   hard-fails on any oracle rejection, and a committed captured vector with
-  `expected.valid: false` is a guard violation. Capture inputs (full block with verified
-  proofBytes, box bytes, headers window, epoch block) live in `docs/findings/<seed>/`.
+  `expected.valid: false` is a guard violation. `<seed-dir>` names the capture: its inputs
+  (full block with verified proofBytes, box bytes, headers window, epoch block) are kept
+  with the blesser's working files and are not published.
 - **`authored`** — the reject arm; `source: "santa:mutation:<class>:over:<donor>"`.
   Single-fault mutations over a captured donor, each blessed only after the oracle
   confirms rejection AND the recorded reason carries the intended class signal
@@ -195,8 +195,8 @@ boundary-height seed, so its accept arm exercises the epochStarts path and it do
 the version-gate mutation), each ADProofs-verified `parent_digest → header.stateRoot`
 at bless time.
 **Pending:** `powhit-return-type-28474` — blocked on a canonical (JVM-sourced) proof; the
-rust-regenerated proof verifies but is non-canonical for the data-input Lookup (the
-ADPROOF-FINDING). Joins when a JVM UTXO source regenerates it or the fork fix lands.
+rust-regenerated proof verifies but is non-canonical for the data-input Lookup. Joins
+when a JVM UTXO source regenerates it or the fork fix lands.
 
 **Authored (7):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
 `txs-reorder` · `pow-solution-flip` · `proofless` over the 2666 donor + **`version-gate`

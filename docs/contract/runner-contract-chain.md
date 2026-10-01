@@ -448,8 +448,8 @@ The universal provenance set, sparse per tier — chain plans three:
 
 - **`captured`** — primary corpus: real retarget points and real voting epochs off chain
   history (testnet first, from the local node). `source` follows the block tier's
-  convention (`testnet:<seed-dir>@<height>`), pointing at raw capture provenance under
-  `docs/findings/chain-captures/`. Captured ⇒ the blessed output **is** chain history, and
+  convention (`testnet:<seed-dir>@<height>`), naming the raw capture it was blessed from
+  (the captures are not published). Captured ⇒ the blessed output **is** chain history, and
   the blesser is FAIL-LOUD on it: a retargeting bless must equal the real target header's
   `nBits`; a voting bless must equal `Parameters.parseExtension` of the real boundary's
   extension — a mismatch is a blesser bug, never a vector. Target selection respects the

@@ -137,7 +137,7 @@ and passes `<impl-path>` — see §2/§3.)*
 3. Make `santa-run` executable and place the dir under `runners/` (in-tree or `git submodule add`).
 4. `./conform` discovers and runs it; the per-slice table shows its results.
 
-The JVM reference (Rudolph) is canonical (eval contract §6 / BOOTSTRAP decision 1): where a runner
+The JVM reference (Rudolph) is canonical (eval contract §6): where a runner
 diverges from the blessed `expected`, the runner is wrong — surfaced as RED, routed, never hidden.
 
 ## 7. Self-test kit (optional) — SANTA's published-data interface
@@ -164,5 +164,3 @@ oracle-checked comparator → gate. By construction the verdict equals `./confor
 **Badges are SANTA-minted, never self-reported.** SANTA's CI runs the canonical grid and publishes
 per-runner naughty/nice badges + a dashboard; a runner's README *references* the SANTA-hosted endpoint.
 A runner's own gate is for its dev loop; the public 🎁/🪨 is SANTA's to award, so it means something.
-
-Full design: [`docs/specs/phase-3-self-test-kit-and-scoreboard.md`](../specs/phase-3-self-test-kit-and-scoreboard.md).

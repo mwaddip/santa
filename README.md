@@ -4,9 +4,8 @@
 conformance test suite for Ergo consensus.
 
 > **Built in the open, slice by slice.** The design takes shape from working
-> deliveries rather than a big up-front spec — see **[SPEC.md](SPEC.md)** for the
-> current architecture + roadmap, and **[BOOTSTRAP.md](BOOTSTRAP.md)** for the
-> rationale behind each call.
+> deliveries rather than a big up-front spec. Its current state is written down in
+> the [runner contracts](docs/contract/).
 
 ## What this is
 
@@ -181,7 +180,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - the 50-unit `StorageContractCost`
 
   A stratified **mainnet sample** (122 real rent spends, v5 and v6 eras) gates rent ports on real
-  history ([`docs/findings/mainnet-rent-spotcheck.md`](docs/findings/mainnet-rent-spotcheck.md)).
+  history.
 
   **Sized-tree spends** (`sized-tree-spend`, `sized-tree-output-bytes`, on the same synthetic context):
   - a box whose tree degraded under rule 1001 does not spend;
@@ -214,8 +213,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   self-declared extension over the handed pre-state params).
   The 4th seed (28474) awaits a canonical proof — the rust AVL prover emits a
   valid-but-non-canonical proof for data-input lookups, a latent serve-side consensus
-  bug recorded in
-  [`ADPROOF-FINDING.md`](docs/findings/testnet-powhit-return-type/ADPROOF-FINDING.md).
+  bug.
   Conformers: **Rudolph control** `3/3·3/3·3/3 + 5/5` · **donner** (ergo-node-rust's
   digest-state seam) **live** — building it surfaced + fixed two real enr consensus
   bugs before mounting · **vixen** (arkadianet/ergo) grading too — its debut surfaced
@@ -272,12 +270,11 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   them. The 13 fixtures exercising them are retired to
   [`unreachable/`](unreachable/README.md) (preserved, not deleted — dead code can be
   revived), and with them gone the JVM and `ergo_avltree_rust` agree on **37/37** of the
-  reachable corpus. The finding is kept and reframed
-  ([finding](docs/findings/authds-unknownmodification-jvm-vs-rust.md)) — plus one prediction
+  reachable corpus. The finding is kept and reframed — plus one prediction
   that did *not* land: the four adverse (malformed/mismatched/truncated/swapped-digest
   proof) fixtures were flagged as a possible reject-detection miss and came back fully
-  green, ergots independently agreeing with the JVM. blitzen-eni / donner / vixen not yet
-  mounted (`avl_verify`-only arm routed). Contract:
+  green, ergots independently agreeing with the JVM. blitzen-mwaddip / donner not yet
+  mounted (`avl_verify` only). Contract:
   [`docs/contract/runner-contract-authds.md`](docs/contract/runner-contract-authds.md).
 
 Still greenfield, and where help is most wanted (see below):
@@ -290,11 +287,7 @@ Still greenfield, and where help is most wanted (see below):
 ## Layout
 
 ```
-SPEC.md            umbrella spec — architecture, tiers, contracts, roadmap, glossary
-BOOTSTRAP.md       design rationale + decision log (the *why*)
 docs/contract/     the frozen runner I/O contracts (eval · wire · transaction · block · chain · authds)
-docs/specs/        per-phase subspecs
-docs/findings/     recorded cross-implementation divergences
 docs/coverage/     standing corpus coverage manifest (what the vectors exercise)
 schema/            JSON Schemas for vectors + actuals, and the validator
 vectors/eval/      the canonical eval corpus — the "nice list" (v5/ and v6/)
@@ -349,9 +342,9 @@ genuinely wanted — especially:
 - **Design** — the vector schema, the runner I/O contract, CI topology.
 
 The eval-tier contract is frozen, but the wider design is still taking shape, so
-**a conversation beats a big PR** — read [SPEC.md](SPEC.md) + [BOOTSTRAP.md](BOOTSTRAP.md),
-look at `jvm-blesser/` and `ts-runner/`, and open an issue to talk through where you'd
-like to plug in.
+**a conversation beats a big PR** — read the [runner contracts](docs/contract/), look at
+`jvm-blesser/` and `ts-runner/`, and open an issue to talk through where you'd like to
+plug in.
 
 ## Related
 

@@ -9,8 +9,7 @@ instrument for ergots' v5 audit** — run the corpus before/after each ergots ch
 value or cost is caught.
 
 Contract: [`docs/contract/runner-contract.md`](../docs/contract/runner-contract.md) +
-[`schema/`](../schema/). Findings:
-[`docs/findings/eval-jvm-vs-ergots.md`](../docs/findings/eval-jvm-vs-ergots.md).
+[`schema/`](../schema/).
 
 ## Build / run / test
 
@@ -66,7 +65,7 @@ no "abstain"; scope is the input subset you run):
 | **panicked** (`"panicked"`) | an otherwise-uncaught throw on this entry, caught so the run continues — always coal, message in `note`; a runner must never abort the file. ergots failing on its *own* terms (e.g. its codec rejecting a Header ts > 2⁵³) lands here too — a faithful divergence, not pre-classified |
 
 A **cross-impl divergence is a finding, never silenced** — every RED is the runner doing its
-job. Record under `docs/findings/` and route to ergots. Never edit the ergots repo from a
+job. Record it as a finding and route it to ergots. Never edit the ergots repo from a
 SANTA session.
 
 ## Current conformance result (v5 gate)

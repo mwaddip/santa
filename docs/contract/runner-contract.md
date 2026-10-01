@@ -3,7 +3,7 @@
 > **Status: frozen for the eval tier (`santa-eval/v1`, `santa-eval/v2`).** This is a
 > committed, language-agnostic contract — independent Ergo implementations build their
 > runners against *this document + the JSON Schemas in [`/schema`](../../schema/)*, not
-> against any one implementation's source. Umbrella: [SPEC.md](../../SPEC.md).
+> against any one implementation's source.
 >
 > Per-tier contracts (each a lean companion inheriting totality, never-panic, faithful
 > outcomes, and this document's comparator topology): [wire](./runner-contract-wire.md) ·
@@ -122,6 +122,18 @@ reconstruction rules, which every conforming implementation of this schema must 
   (a pure unsigned-LEB128 codec, NOT the consensus header serializer — the PreHeader has
   no standalone `sigmaSerialize`). The `activated + 1` pin of the dummy context is
   **not** applied on this path; the real block version from the envelope is used directly.
+  The sub-encoding's fields, in order (the LEB128 is plain unsigned, not sigma-state's
+  ZigZag `putLong`):
+
+  | field | encoding |
+  |---|---|
+  | `version` | 1 raw byte |
+  | `parentId` | 32 raw bytes |
+  | `timestamp` | unsigned LEB128, u64 |
+  | `nBits` | unsigned LEB128, u32 |
+  | `height` | unsigned LEB128, u32 |
+  | `minerPk` | 33 raw bytes (SEC1) |
+  | `votes` | 3 raw bytes |
 - **`lastBlockUtxoRoot`** is derived from `headers[0].stateRoot` as
   `AvlTreeData{ digest = headers[0].stateRoot (33 bytes), flags = 0x07 (all ops),
   keyLength = 32, valueLengthOpt = None }` — serialized `<stateRoot 33B> 07 20 00`.
@@ -135,8 +147,6 @@ reconstruction rules, which every conforming implementation of this schema must 
 - **Consistency constraint:** `preHeader.parentId == headers[0].id`. Real harvested
   envelopes satisfy this inherently (the spending block's preHeader references its
   parent, which is `headers[0]`); the control surface-verifies it.
-
-The envelope contract is specified in `prompts/walker-jvm-oracle-santa.md` (2026-06-14).
 
 ## 3. Preconditions, postconditions, invariants
 

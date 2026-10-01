@@ -6,7 +6,6 @@
 > [`runner-contract.md`](./runner-contract.md). The wire tier is a *parallel track*, not a
 > successor; the eval contract is untouched and its §7 reserves exactly this companion.
 >
-> Design rationale (the *why* and the deferred arms): [`docs/specs/wire-tier.md`](../specs/wire-tier.md).
 > Machine-checkable schemas:
 > [`schema/santa-wire.vector.schema.json`](../../schema/santa-wire.vector.schema.json),
 > [`schema/santa-wire.actuals.schema.json`](../../schema/santa-wire.actuals.schema.json).
@@ -118,8 +117,7 @@ Unchanged from `runner-contract.md` §3:
 
 The eval contract is frozen and untouched; this companion adds the wire result shape beside
 it (the `schema` discriminator routes between them). The reject arm below is live; the other
-arms are named non-goals, to be specified when built (do not implement against them) — see
-`wire-tier.md` "Out of scope / Deferred":
+arms are named non-goals, to be specified when built (do not implement against them):
 
 - **Wire reject/mutation arm — LIVE** (§3; `error` in `schema/santa-wire.vector.schema.json`):
   bytes the JVM rejects at parse, each built so a lenient parser round-trips them cleanly and the

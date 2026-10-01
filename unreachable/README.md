@@ -88,5 +88,4 @@ coverage generally.
 `KnownDivergences` list pinned had a single root cause: `UnknownModification`'s
 zero-length key. With these fixtures retired, the JVM and `ergo_avltree_rust` agree on
 the whole reachable corpus. The finding that documented the disagreement is retained
-and reframed — see `docs/findings/authds-unknownmodification-jvm-vs-rust.md` — because
-"we checked, and it cannot be reached" is a result worth keeping.
+and reframed, because "we checked, and it cannot be reached" is a result worth keeping.

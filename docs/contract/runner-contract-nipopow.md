@@ -14,9 +14,7 @@
 > identically under 6.0.6 — driven by `jvm-blesser`'s `NipopowVectorGen`
 > (bless-time, §5) and `NipopowEngine` (rudolph's live control arm, §6) — both call the
 > same underlying `ergo-core` classes but are two independently-written call sites, not one
-> shared function (contrast authds, §6 below). **No separate `docs/specs/nipopow-tier.md`
-> design record exists for this tier** — unlike authds/block/chain, whose per-tier contracts
-> point at a companion spec doc, this document is the sole durable source.
+> shared function (contrast authds, §6 below).
 
 ## 1. Tier boundary
 

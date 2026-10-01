@@ -12,9 +12,7 @@
 > Oracle: scrypto — 3.1.1 (sigma-state 6.0.6's) since 2026-09-27; the committed vectors were
 > blessed under 3.0.0 (`blessed_by: "jvm:scrypto-3.0.0"`) and re-derive identically — via
 > `jvm-blesser`'s `AvlProofGenerator` / `AvlVerifierBlesser` — the authority for this tier is
-> scrypto, not sigma-state (contrast the eval tier, whose oracle is `sigma-state`). Design record:
-> [`docs/specs/authds-tier.md`](../specs/authds-tier.md) — read for rationale; this
-> document is the durable, current source on any divergence between the two.
+> scrypto, not sigma-state (contrast the eval tier, whose oracle is `sigma-state`).
 
 ## 1. Tier boundary
 
@@ -278,8 +276,7 @@ re-emitted, is a red gate, never a silent pass.
 
 ## 6. Conformer stances
 
-*(Copied verbatim from `docs/specs/authds-tier.md` "Conformers" — the spec is the design
-record for this table; §9 below carries the currently-mounted subset's real numbers.)*
+*(The stances as designed; §9 below carries the currently-mounted subset's real numbers.)*
 
 Prover surface verified by reading production code, not manifests:
 
@@ -355,9 +352,7 @@ fixture inputs and asserts the result equals the committed file — `VendoredAut
 
 ## 8. Honest limitations
 
-*(The first three points are the tier's design-time limitations, copied verbatim from
-`docs/specs/authds-tier.md`'s "Honest limitations" — the spec is the design record, this
-contract is the durable home.)*
+*(The first three points are the tier's design-time limitations.)*
 
 - **Thin prover diversity.** Three cells on the prove arm, but rudolph *is* the oracle and
   vixen runs the same Rust crate family as the fork. **dasher is the only genuinely
@@ -375,7 +370,7 @@ contract is the durable home.)*
   `maxNumOperations` bounds) reach library surface that consensus touches only through
   ErgoScript. That is a deliberate widening, accepted when this tier was scoped.
 
-Two further limits, surfaced building the runner arms (Task 9-10) and not yet in the spec:
+Two further limits, surfaced building the runner arms:
 
 - **The prove kind has no reject arm.** `avl_verify`'s actuals were deliberately enriched
   into three independently-gradable levels (§2, §4) so a clean rejection at any of them is
@@ -441,9 +436,7 @@ the tree's −inf sentinel, so the JVM fails the operation and poisons the verif
 and `ergo_avltree_rust` model it as **keyed** and short-circuit it like `Lookup`. Confirmed
 on both sides, ruled out as a SANTA defect at the type level (the non-`$` class has no
 constructor). Affects 4 `results` reds: `unknown-mod-3leaves-{absent,present}`,
-`batch-16ops-mixed` (from op 14), `batch-stress-mixed-100` (ops 90–99). Full writeup, not
-repeated here:
-[`docs/findings/authds-unknownmodification-jvm-vs-rust.md`](../findings/authds-unknownmodification-jvm-vs-rust.md).
+`batch-16ops-mixed` (from op 14), `batch-stress-mixed-100` (ops 90–99).
 
 **Confirmed finding, since RESOLVED — `ergots@master` shipped a broken AVL prover.**
 Retained as history: deleting a finding that produced a fix loses the reason it was
@@ -495,8 +488,8 @@ ergots fixtures could not themselves supply at authoring time. All four came bac
 the four rejections. Recorded because a prediction that fails to land is a result, not an
 omission to quietly drop.
 
-**Not yet mounted:** blitzen-eni, donner, vixen — `avl_verify` only, per §6. Routed at
-`prompts/authds-verify-arms.md` (untracked).
+**Not yet mounted:** donner, and blitzen-mwaddip (the sigma-rust fork's runner, which
+replaced the retired blitzen-eni of §6) — `avl_verify` only, per §6.
 
 ## 10. Worked example
 

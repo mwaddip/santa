@@ -186,7 +186,7 @@ Two provenances, distinguished by the `source` prefix on each entry:
   also test the accept arm for scripts not reachable via testnet captures. **Populated (Track B):**
   two no-re-sign, param-driven boundary pairs — `cost-limit-boundary` + `min-value-dust-boundary`
   (§8) — built over a captured seed by moving exactly one economic parameter. Conservation/body-level
-  rejects (Track A, re-signed) are deferred. Design: `docs/specs/transaction-reject-arm.md`.
+  rejects (Track A, re-signed) are deferred.
   **Storage rent** (`storage-rent-*`, §8): minted, not captured — every box is `sigmaProp(true)`, so
   no spend needs a signature, under a **synthetic** context. No captured chain reaches the
   `StoragePeriod` height on testnet, so the context is ten parent-linked v4 headers below height
@@ -233,7 +233,7 @@ bytes-anchored `getvarfrominput-92847`, `multi-input-3-402800`, `multi-input-10-
 **Authored (2 boundary pairs over `multi-input-3-402800` — a plain tx every impl accepts, so the
 reject entries test enforcement, not a base bug):** `cost-limit-boundary` (maxBlockCost = the seed's
 cost / cost − 1) and `min-value-dust-boundary` (minValuePerByte at the dust flip / + 1), each an
-accept control + a one-step reject. Design: `docs/specs/transaction-reject-arm.md`.
+accept control + a one-step reject.
 
 **Authored storage rent (6 files / 25 entries; `AuthoredTxStorageRent`, synthetic context at height
 1051200, §6).** Every box is `sigmaProp(true)`, so the script path accepts every one of these
@@ -288,9 +288,7 @@ The four register-equality entries came from the final code review.
   `ErgoTree` retains wire bytes. That is a known gap.
 
 **Mainnet storage-rent sample (captured, 15 files / 122 entries in `transaction/{v5,v6}/captured/`).**
-A stratified sample of real rent spends, the real-history gate for rent ports. Method, the
-978,026-input population and the strata are in
-[`docs/findings/mainnet-rent-spotcheck.md`](../findings/mainnet-rent-spotcheck.md).
+A stratified sample of real rent spends, the real-history gate for rent ports.
 - rudolph and blitzen-eni `bf4d6943`: 122/122, valid and cost
 - blitzen-eni `b438d520`: valid, and each rent input 50 short
 - blitzen-develop and dasher (ergots `f2a9c4b`): 122/122 valid
@@ -318,7 +316,7 @@ costing exactly `maxBlockCost` and rejects at `−1`; the cost ceiling splits th
   `maxBlockCost × 10` budget (`CostLimitExceeded(184150)` at `maxBlockCost 18415`) while reporting
   JVM-equal cost (18415), so it rejects a tx that fits its own reported cost.
 - **The dust floor is green on all four** — a cross-impl regression guard; cost-ceiling enforcement
-  is the live divergence. Routed per-impl via `prompts/`.
+  is the live divergence.
 
 This block is easy to update as the corpus grows or runners evolve.
 
