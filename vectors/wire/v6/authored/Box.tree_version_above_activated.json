@@ -1,0 +1,170 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.tree_version_above_activated",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "box-tree-v4-reject#0",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged tree has header 0c, version 4, and the body SigmaProp(true) (0c 02 08 d3). The JVM compares a tree's version with the activated script version before it reads the tree's constants (ErgoTreeSerializer.scala:150-155, VersionContext.scala:20). 4 is above 3: a SerializerException, not a ValidationException, so the size flag does not degrade the tree, and the JVM rejects. An impl without the check parses the tree and round-trips the object: the over-accept.",
+      "bytes_hex" : "c0843d0c0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v5-reject#1",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged tree has header 0d, version 5, and the body SigmaProp(true) (0d 02 08 d3). The JVM compares a tree's version with the activated script version before it reads the tree's constants (ErgoTreeSerializer.scala:150-155, VersionContext.scala:20). 5 is above 3: a SerializerException, not a ValidationException, so the size flag does not degrade the tree, and the JVM rejects. An impl without the check parses the tree and round-trips the object: the over-accept.",
+      "bytes_hex" : "c0843d0d0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v6-reject#2",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged tree has header 0e, version 6, and the body SigmaProp(true) (0e 02 08 d3). The JVM compares a tree's version with the activated script version before it reads the tree's constants (ErgoTreeSerializer.scala:150-155, VersionContext.scala:20). 6 is above 3: a SerializerException, not a ValidationException, so the size flag does not degrade the tree, and the JVM rejects. An impl without the check parses the tree and round-trips the object: the over-accept.",
+      "bytes_hex" : "c0843d0e0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v7-reject#3",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged tree has header 0f, version 7, and the body SigmaProp(true) (0f 02 08 d3). The JVM compares a tree's version with the activated script version before it reads the tree's constants (ErgoTreeSerializer.scala:150-155, VersionContext.scala:20). 7 is above 3: a SerializerException, not a ValidationException, so the size flag does not degrade the tree, and the JVM rejects. An impl without the check parses the tree and round-trips the object: the over-accept.",
+      "bytes_hex" : "c0843d0f0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v3-accept#4",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "The control: A bare box whose tree is the same at version 3 (0b 02 08 d3), the activated version. It parses. Round-trip identity.",
+      "bytes_hex" : "c0843d0b0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v4-soft-constant-reject#5",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged, segregated v4 tree (1c 02 08 d3) declares 8 constants, the first of type code 211, which is no type. The version is compared before any constant is read, so the JVM rejects on the version. An impl that reads the constants first meets the soft failure and degrades the tree, and so does one without the check: the over-accept.",
+      "bytes_hex" : "c0843d1c0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v3-soft-constant-degrade-accept#6",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "The twin: A bare box whose tree is the same at version 3 (1b 02 08 d3). The type code fails rule 1018, a ValidationException, and the size-flagged tree degrades. Round-trip identity.",
+      "bytes_hex" : "c0843d1b0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v4-unsized-reject#7",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose tree header is 04: version 4 without the size bit (04 08 d3). CheckHeaderSizeBit (rule 1012, ErgoTreeSerializer.scala:219) runs on the header before the version is compared, and here nothing above the tree can degrade: the JVM rejects, for the size bit. An impl that takes an unsized tree above version 0 round-trips the object: the over-accept. (Nested in a size-flagged tree, the same failure degrades the outer tree: #11.)",
+      "bytes_hex" : "c0843d0408d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-tree-v4-high-bits-reject#8",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged tree has header ec: version 4, with bits 5, 6 and 7 set (ec 02 08 d3). The version is the header's low three bits, and the other bits do not hide it (tree_header_bits #3 is header e8, version 0, which parses): the JVM rejects on the version.",
+      "bytes_hex" : "c0843dec0208d30100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-nested-tree-v4-reject#9",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged, segregated v3 tree has constant 0 = a Box, constant 1 = SigmaProp(true) and the body ConstantPlaceholder(1). The Box's own tree is v4 (0c 02 08 d3). A Box constant's tree goes through the same deserializer, under the same activated version. Its SerializerException is not a ValidationException, so it does not degrade the outer tree either: the JVM rejects. An impl that checks only the outermost tree's version round-trips the object: the over-accept.",
+      "bytes_hex" : "c0843d1b310263c0843d0c0208d301000000000000000000000000000000000000000000000000000000000000000000000008d373010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-nested-tree-v3-accept#10",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "The twin: A bare box with the same outer tree, whose Box's own tree is v3 (0b 02 08 d3). Everything parses. Round-trip identity.",
+      "bytes_hex" : "c0843d1b310263c0843d0b0208d301000000000000000000000000000000000000000000000000000000000000000000000008d373010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-nested-tree-v4-unsized-degrade-accept#11",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box with the same outer tree, whose Box's own tree header is 04: version 4 without the size bit (04 08 d3). Rule 1012 runs before the version is compared, and before the nested tree's own handler, so its ValidationException reaches the outer tree, which is size-flagged and degrades (as tree_nested_degrade #2 does for a v1 header). Round-trip identity. An impl that compares the version first raises a hard error and rejects: the over-reject.",
+      "bytes_hex" : "c0843d1b300263c0843d0408d301000000000000000000000000000000000000000000000000000000000000000000000008d373010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-register-box-tree-v4-reject#12",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box with the plain tree 00 08 d3, whose R4 is a Box constant (type 63) whose own tree is v4 (0c 02 08 d3). A register's value is read under the same activated version, and nothing here can degrade: the JVM rejects.",
+      "bytes_hex" : "c0843d0008d301000163c0843d0c0208d30100000000000000000000000000000000000000000000000000000000000000000000001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-register-box-tree-v3-accept#13",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "The twin: A bare box whose R4 is a Box constant whose own tree is v3 (0b 02 08 d3). It parses. Round-trip identity.",
+      "bytes_hex" : "c0843d0008d301000163c0843d0b0208d30100000000000000000000000000000000000000000000000000000000000000000000001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.tree_version_above_activated",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "transaction-tree-v3-reject#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-tree-version",
+      "description" : "A transaction output whose size-flagged tree is v3 (0b 02 08 d3), under (2, 2). The JVM compares a tree's version with the activated script version before it reads the tree's constants (ErgoTreeSerializer.scala:150-155, VersionContext.scala:20): 3 is above 2, and the JVM rejects, as it rejects v4 under (3, 3). (2, 2) is the context a node parsed a peer's transaction under while block version 3 was current (ergo ErgoNodeViewSynchronizer.scala:793). A block's own transactions were parsed outside any version context, where this tree parses: BlockTransactions.tree_version_above_activated #2 in this directory.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0b0208d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "transaction-tree-v2-accept#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-tree-version",
+      "description" : "The control: A transaction output whose tree is the same at version 2 (0a 02 08 d3), the activated version. It parses. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0a0208d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "transaction-tree-v4-reject#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-tree-version",
+      "description" : "A transaction output whose size-flagged tree is v4 (0c 02 08 d3), under (2, 2): above the activated version, and the JVM rejects.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0c0208d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "transaction-tree-v3-soft-constant-reject#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-tree-version",
+      "description" : "A transaction output whose size-flagged, segregated v3 tree (1b 02 08 d3) declares 8 constants, the first of type code 211, under (2, 2). The version is compared before any constant is read, so the JVM rejects on the version. Under (3, 3) the same tree degrades (the v6 file's #6).",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d1b0208d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "transaction-nested-tree-v3-reject#4",
+      "kind" : "Transaction",
+      "source" : "santa:authored-tree-version",
+      "description" : "A transaction output whose size-flagged, segregated v2 tree has constant 0 = a Box, constant 1 = SigmaProp(true) and the body ConstantPlaceholder(1). The Box's own tree is v3 (0b 02 08 d3), under (2, 2). A Box constant's tree goes through the same deserializer, under the same activated version, and its failure does not degrade the outer tree: the JVM rejects.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d1a310263c0843d0b0208d301000000000000000000000000000000000000000000000000000000000000000000000008d37301010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "transaction-nested-tree-v2-accept#5",
+      "kind" : "Transaction",
+      "source" : "santa:authored-tree-version",
+      "description" : "The twin: A transaction output with the same outer tree, whose Box's own tree is v2 (0a 02 08 d3). Everything parses. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d1a310263c0843d0a0208d301000000000000000000000000000000000000000000000000000000000000000000000008d37301010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    }
+  ]
+}

@@ -103,7 +103,15 @@ Unchanged from `runner-contract.md` §3:
   block, and re-serializes the section. The JVM gives each transaction a fresh reader (ergo v6.0.6
   `ErgoTransactionSerializer.parse`): no nesting level, constant or ValDef state carries from one
   transaction to the next. rudolph grades it through ergo-core's `BlockTransactionsSerializer`, which
-  needs the `SANTA_TX_BLESSER` build. An **`ErgoTree`-kind round-trip
+  needs the `SANTA_TX_BLESSER` build.
+  - **A section takes its version context from its own block version, not from the entry's `version`.**
+    From block version 4 the JVM parses each transaction under (blockVersion − 1, blockVersion − 1); below
+    that it parses them outside any version context (ergo v6.0.6 `BlockTransactions.scala:184-202`), on a
+    thread at the default (1, 1) (sigma-state `VersionContext.scala:58-61`). There a tree's version is not
+    compared with the activated one (`:20`), so a block of version 3 takes an output whose tree is v4, and a
+    block of version 4 does not. The entry's `version` is nominal for this kind: a runner must not apply it
+    to the section, and rudolph parses a section outside the entry's pair.
+- An **`ErgoTree`-kind round-trip
   MUST re-serialize the parsed tree from structure**, not emit a cached/preserved copy of the input
   bytes (the JVM's `ErgoTree.bytes` echo, sigma-rust's template-bytes cache) — else it does not
   exercise the type/name re-encode the kind exists to test (e.g. the STypeVar UTF-8 surrogate fork).
@@ -169,7 +177,13 @@ arms are named non-goals, to be specified when built (do not implement against t
   the reader's scope
   (a block's transactions each parse on a fresh reader, so neither leaked levels nor `ValDef` types
   reach the next transaction, while one transaction's outputs share theirs —
-  `BlockTransactions.reader_scope`, `Transaction.valdef_scope`); and the creation-height parse bound
+  `BlockTransactions.reader_scope`, `Transaction.valdef_scope`); a tree whose header version is above the
+  activated script version (a hard failure, so a size-flagged tree does not degrade: it rejects before its
+  constants are read and after the size-bit rule, also when the tree is nested in a Box constant, a register
+  or an extension, while a nested header without the size bit degrades the outer tree; under (2, 2) a v3
+  tree rejects, in `wire/v5/authored/`; a block section of version 4 rejects such an output and one of
+  version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); and the
+  creation-height parse bound
   (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the

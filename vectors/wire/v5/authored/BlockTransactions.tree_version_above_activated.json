@@ -1,0 +1,63 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.tree_version_above_activated",
+  "blessed_by" : "jvm:ergo-core-6.0.6-BlockTransactionsSerializer",
+  "entries" : [
+    {
+      "name" : "block-v3-output-tree-v4-accept#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "A block section of version 3 holding one transaction, whose output's tree is v4 (0c 02 08 d3). Below block version 4 the JVM parses a block's transactions outside any version context (ergo BlockTransactions.scala:184-202), on a thread at the default (1, 1) (VersionContext.scala:58-61), where a tree's version is not compared with anything (:20). The section parses. Round-trip identity. The entry's version pair is nominal: the section's own block version decides the context. An impl that compares the tree's version with the block's activated version, 2, rejects the section: the over-reject. (What fails is spending such a box: the transaction vectors tree-version-above-activated.)",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847983ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0c0208d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "block-v3-output-tree-v7-accept#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "The same with a v7 tree (0f 02 08 d3). Below block version 4 the JVM parses a block's transactions outside any version context (ergo BlockTransactions.scala:184-202), on a thread at the default (1, 1) (VersionContext.scala:58-61), where a tree's version is not compared with anything (:20). Round-trip identity.",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847983ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0f0208d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "block-v3-output-tree-v3-accept#2",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "A block section of version 3 whose transaction's output has a v3 tree (0b 02 08 d3), above the block's activated version, 2. Below block version 4 the JVM parses a block's transactions outside any version context (ergo BlockTransactions.scala:184-202), on a thread at the default (1, 1) (VersionContext.scala:58-61), where a tree's version is not compared with anything (:20). Round-trip identity. The same transaction parsed under (2, 2) rejects (Transaction.tree_version_above_activated #0 in this directory).",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847983ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0b0208d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "block-v3-output-tree-v4-soft-constant-degrade-accept#3",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "A block section of version 3 whose transaction's output has the size-flagged, segregated v4 tree 1c 02 08 d3: 8 constants declared, the first of type code 211. Below block version 4 the JVM parses a block's transactions outside any version context (ergo BlockTransactions.scala:184-202), on a thread at the default (1, 1) (VersionContext.scala:58-61), where a tree's version is not compared with anything (:20). So the constants are read: the type code fails rule 1008 (the rule's number outside a v6 context; 1018 inside one), and the size-flagged tree degrades. Round-trip identity.",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847983ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d1c0208d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "block-v3-output-tree-v4-unsized-reject#4",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "A block section of version 3 whose transaction's output has the tree header 04: version 4 without the size bit (04 08 d3). CheckHeaderSizeBit (rule 1012) does not depend on the version context: the JVM rejects. An impl that skips every header check outside a version context round-trips the section: the over-accept.",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847983ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0408d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    }
+  ]
+}

@@ -158,6 +158,24 @@ val ctx = UpcomingStateContext(headers, None, preHdr,
 tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L)
 ```
 
+**Parse contexts.** The transaction and the boxes are parsed as a node parses them when it validates a block
+(ergo v6.0.6). The blessed verdicts assume these contexts, so a runner parses the same way:
+
+| Bytes | Parsed under | JVM source |
+|---|---|---|
+| `tx_bytes_hex` | (blockVersion − 1, blockVersion − 1) from block version 4 (`preHeader.version`); outside any version context below that | `BlockTransactions.scala:184-202` |
+| `input_boxes_hex`, `data_input_boxes_hex` | outside any version context, as a box is read from the UTXO set | `UtxoStateReader.scala:122-124`, `DigestState.scala:48` |
+
+Outside a version context the JVM's threads run at the default (1, 1) (sigma-state
+`VersionContext.scala:58-61`), where a tree's version is not compared with the activated one (`:20`). So:
+- a box whose tree is above the activated version is read, and only its script spend fails
+  (`Interpreter.scala:325-328`);
+- a transaction of a block below version 4 may carry an output with a tree of any version;
+- a transaction of a block of version 4 with an output tree above v3 does not parse. That is a wire-tier
+  reject (`Transaction.tree_version_above_activated`): there is no verdict to bless in this tier.
+
+`validateStateful` itself runs outside any version context as well.
+
 **Version boundary for `santa-transaction/v1`.** The context is now carried, so context-reading
 scripts no longer force a bump. The next `santa-transaction/v2` trigger is a new *axis* — e.g. a
 tx-tier **cost** dimension once `validateStateful` exposes one — exactly the mechanism by which the
@@ -292,6 +310,25 @@ A stratified sample of real rent spends, the real-history gate for rent ports.
 - rudolph and blitzen-eni `bf4d6943`: 122/122, valid and cost
 - blitzen-eni `b438d520`: valid, and each rent input 50 short
 - blitzen-develop and dasher (ergots `f2a9c4b`): 122/122 valid
+
+**Authored tree-version spends (2 files / 12 entries; `AuthoredTxTreeVersion`).** A box whose tree is above
+the activated script version: the storage-rent synthetic context at block version 4, and the same ten headers
+re-linked at block version 3. Every tree is a `SigmaProp(true)` constant, so an impl that runs the script of
+such a tree accepts. JVM source: `Interpreter.checkSoftForkCondition`, sigma-state v6.0.6; the parse contexts
+are §5's.
+- **`transaction/v6/authored/tree-version-above-activated`** (8, block version 4):
+  - a spent box whose tree is v4, v5, v6 or v7 is invalid ("ErgoTree version N is higher than activated 3");
+    the v3 control is valid
+  - a data input whose tree is v7 is valid: its script never runs
+  - a v4-tree box whose value equals its storage fee is collected by the rent path, at cost 50: that path
+    runs before the version is compared. The same spend without var 127 is invalid
+- **`transaction/v5/authored/tree-version-above-activated`** (4, block version 3):
+  - a v3 tree does not spend ("ErgoTree version 3 is higher than activated 2"), and v2 does
+  - an output with a v3 or a v4 tree is valid: a block below version 4 parses its transactions outside any
+    version context, so such a box could be created, though not spent
+
+Rudolph is valid 12/12 · cost 6/6. blitzen-mwaddip (fork `d4cda68d`, costs equal on the six accepts),
+blitzen-develop (`1633e018`) and dasher (ergots `7e3bfb1a`) find all 12 valid: each over-accepts the six rejects.
 
 **Current 4-way result**, without the storage-rent files (comet grey — wire-only, no `transaction` tier):
 

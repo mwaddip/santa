@@ -10,7 +10,9 @@ import sigma.serialization.{ConstantSerializer, ErgoTreeSerializer, SigmaSeriali
 /** Parse `bytesHex` as `kind` under the (activated, ergoTree) version context and
   * reserialize — the JVM's canonical bytes for that object. The wire tier's bless +
   * round-trip core. Throws (loud) if the bytes don't parse as `kind`; the caller decides
-  * how to record that. Idempotent on canonical input.
+  * how to record that. Idempotent on canonical input. A `BlockTransactions` section is the
+  * one kind parsed outside that context: call this outside any version context, as rudolph's
+  * runner and the blessers do.
   *
   * Serializer access mirrors AuthoredSerialize.scala:
   *   ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(bytes)) / .toBytes(box)
@@ -34,7 +36,13 @@ object WireCanonicalize {
   }
 
   def canonicalize(kind: String, bytesHex: String, activated: Byte, ergoTree: Byte): String =
-    VersionContext.withVersions(activated, ergoTree) {
+    if (kind == "BlockTransactions") {
+      // A block section, parsed outside any version context, as a node parses one: every transaction on a fresh reader,
+      // under its block version's context from block version 4 and under none below that (see WireBlockTransactions).
+      // The entry's version pair does not reach it.
+      blockTransactionsFn.getOrElse(sys.error("WireCanonicalize: BlockTransactions needs the SANTA_TX_BLESSER " +
+        "build (ergo-core)"))(bytesHex)
+    } else VersionContext.withVersions(activated, ergoTree) {
       val bytes = Base16.decode(bytesHex).get
       val r = SigmaSerializer.startReader(bytes)
       kind match {
@@ -59,11 +67,6 @@ object WireCanonicalize {
           // See docs/specs/wire-roundtrip-nonidentity.md.
           Base16.encode(ErgoTreeSerializer.DefaultSerializer.serializeErgoTree(
             sigma.santa.LenientErgoTree.deserialize(bytes)))
-        case "BlockTransactions" =>
-          // A block section: every transaction on a fresh reader, under the block version's context (see
-          // WireBlockTransactions). The entry's version pair only frames the call.
-          blockTransactionsFn.getOrElse(sys.error("WireCanonicalize: BlockTransactions needs the SANTA_TX_BLESSER " +
-            "build (ergo-core)"))(bytesHex)
         case other =>
           sys.error(s"WireCanonicalize: unsupported kind '$other' " +
             "(Box/SigmaBoolean/Transaction/Constant/ErgoTree/BlockTransactions implemented; Header arrives with captures)")

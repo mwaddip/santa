@@ -15,6 +15,7 @@ import org.ergoplatform.modifiers.mempool.{ErgoTransaction, ErgoTransactionSeria
 import org.ergoplatform.nodeView.state.{ErgoStateContext, UpcomingStateContext, VotingData}
 import org.ergoplatform.settings.{ChainSettings, ChainSettingsReader, ErgoValidationSettings,
   ErgoValidationSettingsUpdate, Parameters, TestnetLaunchParameters}
+import org.ergoplatform.wallet.boxes.ErgoBoxSerializer
 import org.ergoplatform.wallet.interpreter.ErgoInterpreter
 
 /** The gated transaction-tier engine: ergo-core's `ErgoTransaction.validateStateful`
@@ -75,8 +76,16 @@ object TxEngine extends ApiCodecs {
   /** Bytes-anchored validate: tx + boxes from their sigma bytes, under the vector's PROVIDED context
     * (real last `headers` + `preHeader` + `parameters`) rather than a height-synthetic one. The
     * bytes path is the consensus-unambiguous form — it preserves context-extension wire order (which
-    * a JSON object key-reorders), so it's what dasher (and the order vector) ride. Parse only is
-    * wrapped in the v-context so v6 box trees deserialize; `validateStateful` manages its own. */
+    * a JSON object key-reorders), so it's what dasher (and the order vector) ride.
+    *
+    * The transaction and the boxes are parsed as a node parses them when it validates a block (ergo v6.0.6). Call
+    * this outside any version context, as rudolph's runner and the blessers do:
+    *  - the transaction, as a block's transactions are: under (blockVersion - 1, blockVersion - 1) from block version
+    *    4, and outside any version context before that (`BlockTransactions.scala:184-202`);
+    *  - a box, as it is read from the UTXO set: outside any version context (`UtxoStateReader.scala:122-124`,
+    *    `DigestState.scala:48`).
+    * Outside a context a tree's version is not compared with the activated one (sigma-state `VersionContext.scala:20`),
+    * so a box whose tree is above the activated version is read, and only its spend fails (`Interpreter.scala:325`). */
   def validateBytes(txHex: String, inputBoxesHex: Seq[String], dataInputBoxesHex: Seq[String],
                     headersHex: Seq[String], preHeader: Json, parameters: Json): Verdict = {
     implicit val chainSettings: ChainSettings =
@@ -115,12 +124,15 @@ object TxEngine extends ApiCodecs {
     val ctx = UpcomingStateContext(headers, None, preHdr, chainSettings.genesisStateDigest,
       params, ErgoValidationSettings.initial, VotingData.empty)
 
-    val (tx, boxesToSpend, dataBoxes) = VersionContext.withVersions(version, version) {
-      def box(hex: String): ErgoBox =
-        ErgoBox.sigmaSerializer.parse(SigmaSerializer.startReader(Base16.decode(hex).get))
-      (ErgoTransactionSerializer.parseBytes(Base16.decode(txHex).get),
-        inputBoxesHex.map(box).toIndexedSeq, dataInputBoxesHex.map(box).toIndexedSeq)
-    }
+    val txBytes = Base16.decode(txHex).get
+    val tx =
+      if (blockVersion >= Header.Interpreter60Version) {
+        val v = Header.scriptAndTreeFromBlockVersions(blockVersion)
+        VersionContext.withVersions(v.activatedVersion, v.ergoTreeVersion)(ErgoTransactionSerializer.parseBytes(txBytes))
+      } else ErgoTransactionSerializer.parseBytes(txBytes)
+    def box(hex: String): ErgoBox = ErgoBoxSerializer.parseBytes(Base16.decode(hex).get)
+    val boxesToSpend = inputBoxesHex.map(box).toIndexedSeq
+    val dataBoxes    = dataInputBoxesHex.map(box).toIndexedSeq
     verdict(tx, boxesToSpend, dataBoxes, ctx)(ErgoInterpreter(params))
   }
 

@@ -154,6 +154,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **reader scope:** in the `BlockTransactions` kind (a block's transactions section), each
     transaction parses on a fresh reader, so no leaked levels or `ValDef` types reach the next one;
     one transaction's outputs share theirs
+  - **tree version:** a tree whose header version is above the activated script version rejects, even
+    when size-flagged: before its constants are read and after the size-bit rule, and also when it is nested
+    in a Box constant, a register or an extension (a nested header without the size bit degrades the outer
+    tree instead). The activated version is the context's: under (2, 2) a v3 tree rejects, and a block
+    section of version 4 parses its transactions under (3, 3). A block below version 4 parses them outside
+    any version context, where a tree of any version parses
 
   Repeated extension ids pin the JVM's collapse (last value, first position) as a non-identity
   round-trip, and so does a size-flagged tree whose declared size is wrong: the JVM ignores it when
@@ -200,6 +206,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - A decoded `NoType` against a declared `SAny` rejects. `R1` is the box's own proposition bytes. A Boolean root is
     wrapped in `sigmaProp`.
   - A decode is charged twice its length once it completes.
+
+  **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
+  - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated
+    version is read, and only its script spend fails;
+  - a data input with such a tree is valid, and the storage-rent path collects one without comparing versions;
+  - below block version 4 a transaction may create an output with a tree of any version.
 
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +

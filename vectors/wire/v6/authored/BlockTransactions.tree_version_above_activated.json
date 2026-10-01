@@ -1,0 +1,42 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.tree_version_above_activated",
+  "blessed_by" : "jvm:ergo-core-6.0.6-BlockTransactionsSerializer",
+  "entries" : [
+    {
+      "name" : "block-v4-output-tree-v4-reject#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "A block section of version 4 holding one transaction, whose output's tree is v4 (0c 02 08 d3). From block version 4 the JVM parses each of a block's transactions under (blockVersion - 1, blockVersion - 1) (ergo BlockTransactions.scala:184-202), here (3, 3). The tree is above the activated version, so the section does not parse and the block is invalid. An impl without the check round-trips the section, and so does one that parses a v4 block's transactions under (4, 4) when the tree is v4: the over-accept.",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847984ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0c0208d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "block-v4-output-tree-v7-reject#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "A block section of version 4 holding one transaction, whose output's tree is v7 (0f 02 08 d3). From block version 4 the JVM parses each of a block's transactions under (blockVersion - 1, blockVersion - 1) (ergo BlockTransactions.scala:184-202), here (3, 3). The tree is above the activated version, so the section does not parse and the block is invalid. An impl without the check round-trips the section, and so does one that parses a v4 block's transactions under (4, 4) when the tree is v4: the over-accept.",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847984ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0f0208d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "block-v4-output-tree-v3-accept#2",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-tree-version",
+      "description" : "The control: a block section of version 4 whose transaction's output has a v3 tree (0b 02 08 d3). From block version 4 the JVM parses each of a block's transactions under (blockVersion - 1, blockVersion - 1) (ergo BlockTransactions.scala:184-202), here (3, 3). It parses. Round-trip identity.",
+      "bytes_hex" : "584c27d285d6adf99452ebc3c59555749ab01cce2137bc152bc81cb21e32847984ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0b0208d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
