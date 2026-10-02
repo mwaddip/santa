@@ -219,6 +219,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - a data input with such a tree is valid, and the storage-rent path collects one without comparing versions;
   - below block version 4 a transaction may create an output with a tree of any version.
 
+  **A tree deserialized while the script runs** (`tree-version-above-activated-eval`, 11 entries, block version 4):
+  a Box constant in a script a Deserialize node decodes, `Global.deserializeTo[Box]`, or a Box among a `SubstConstants`
+  template's constants — each re-parses the Box's tree through `deserializeErgoTree`, which compares it with the
+  activated version, so a nested v4 tree rejects mid-reduction where the v3 twin spends. A v4 *template header* (read
+  without `deserializeErgoTree`) is not compared — the asymmetry a parse-time check would miss.
+
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
