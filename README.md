@@ -225,6 +225,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   activated version, so a nested v4 tree rejects mid-reduction where the v3 twin spends. A v4 *template header* (read
   without `deserializeErgoTree`) is not compared — the asymmetry a parse-time check would miss.
 
+  **The block-version edges** (`tree-version-block-version-edges`, 11 entries at `transaction/any/`, block versions
+  0/2/5/128/200): the spend check has no floor at activated 2 (a v2 tree at block version 2 rejects); above the max
+  supported version 3 a tree is accepted *unverified* at the initial cost alone, its proposition not reduced (the
+  `SigmaProp(false)` twin spends); and the activated version is a signed byte, so block version 0 (−1) and 129–255
+  (−128 to −2) reject every script spend.
+
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +

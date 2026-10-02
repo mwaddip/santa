@@ -1100,7 +1100,8 @@ fn chain_actuals_guards(v: &Validator) -> u32 {
 }
 
 /// Transaction taxonomy path <-> in-data envelope guard. tier "transaction" => schema
-/// "santa-transaction/v1"; version v5 => activated 2, v6 => activated 3; provenance captured =>
+/// "santa-transaction/v1"; version v5 => activated 2, v6 => activated 3, "any" => version-agnostic
+/// (per-entry activated unconstrained, e.g. the block-version edges); provenance captured =>
 /// every entry source starts with "testnet:" or "mainnet:" (chain history) AND expected.valid ==
 /// true; provenance authored => every entry source starts with "santa:".
 fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
@@ -1130,21 +1131,26 @@ fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
         }
-        // version -> activated: unknown version fires [WRONG] unconditionally (mirrors wire).
-        let want = version_activated(version);
-        let off: Vec<&str> = doc["entries"]
-            .as_array()
-            .map(|es| {
-                es.iter()
-                    .filter(|e| e["version"]["activated"].as_i64() != want)
-                    .filter_map(|e| e["name"].as_str())
-                    .collect()
-            })
-            .unwrap_or_default();
-        if want.is_none() || !off.is_empty() {
-            let head = &off[..off.len().min(3)];
-            g += 1;
-            println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+        // version -> activated: v5/v6 pin every entry to one activated version. "any" is
+        // version-agnostic (per-entry activated varies, e.g. the block-version edges span -57..127),
+        // so it skips the pin (mirrors chain_path_guard). Any other version fires [WRONG]
+        // unconditionally (mirrors wire).
+        if version != "any" {
+            let want = version_activated(version);
+            let off: Vec<&str> = doc["entries"]
+                .as_array()
+                .map(|es| {
+                    es.iter()
+                        .filter(|e| e["version"]["activated"].as_i64() != want)
+                        .filter_map(|e| e["name"].as_str())
+                        .collect()
+                })
+                .unwrap_or_default();
+            if want.is_none() || !off.is_empty() {
+                let head = &off[..off.len().min(3)];
+                g += 1;
+                println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+            }
         }
         // Provenance: captured => source starts with "testnet:" or "mainnet:" AND expected.valid ==
         // true. authored => source starts with "santa:".

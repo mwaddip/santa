@@ -33,7 +33,7 @@
           "type": "object", "required": ["version", "parentId", "timestamp", "nBits", "height", "minerPk", "votes"],
           "additionalProperties": false,
           "properties": {
-            "version":   { "type": "integer", "minimum": 0, "maximum": 127 },
+            "version":   { "type": "integer", "minimum": 0, "maximum": 255, "description": "The block version, an unsigned byte 0..255 (the activated script version it implies is (version - 1).toByte)." },
             "parentId":  { "$ref": "#/$defs/hex" },
             "timestamp": { "type": "string", "pattern": "^[0-9]+$", "$comment": "u64 as a string (lossless)." },
             "nBits":     { "type": "integer", "minimum": 0 },
@@ -79,7 +79,7 @@
     "version": {
       "type": "object", "required": ["activated", "ergoTree"], "additionalProperties": false,
       "properties": {
-        "activated": { "type": "integer", "minimum": 0, "maximum": 127 },
+        "activated": { "type": "integer", "minimum": -128, "maximum": 127, "description": "The activated script version = (blockVersion - 1).toByte, a signed byte: block version 0 gives -1, and versions 129..255 give -128..-2 (e.g. block version 200 -> -57)." },
         "ergoTree": { "type": "integer", "minimum": 0, "maximum": 127 }
       }
     },

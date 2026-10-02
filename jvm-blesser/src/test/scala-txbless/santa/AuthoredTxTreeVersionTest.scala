@@ -69,7 +69,7 @@ class AuthoredTxTreeVersionTest extends munit.FunSuite {
   }
 
   test("envelopes and contexts: santa-transaction/v1; block version 4 at activated 3, block version 3 at activated 2") {
-    assertEquals(blessed.keySet, Set(V6Path, V5Path))
+    assertEquals(blessed.keySet, Set(V6Path, V5Path, EdgesPath))
     for ((path, blockVersion) <- Seq(V6Path -> 4, V5Path -> 3)) {
       val env = blessed(path)
       assertEquals(env.hcursor.get[String]("schema").toOption, Some("santa-transaction/v1"))
@@ -84,6 +84,19 @@ class AuthoredTxTreeVersionTest extends munit.FunSuite {
         assert(str(e, "source").startsWith("santa:"))
       }
     }
+  }
+
+  test("block-version edges: the spend check at block versions 2, 5, 0 and above 128") {
+    val es = entries(EdgesPath)
+    assertEquals(es.map(valid), List(false, true, true, true, true, true, false, false, true, true, false))
+    // the unverified accepts (a v>3 tree, activated above the max supported 3) cost the initial cost alone, 12100
+    List(2, 3, 5, 9).foreach(i => assertEquals(cost(es(i)), Some(12100L), s"#$i unverified at 12100"))
+    // the verified accepts (a tree at most the activated version) cost 12105
+    List(1, 4, 8).foreach(i => assertEquals(cost(es(i)), Some(ScriptCost), s"#$i verified at 12105"))
+    // the version rejects name the signed-byte activated version
+    assert(reason(es(0)).contains(above(2, 1)), reason(es(0)))
+    assert(reason(es(7)).contains(above(0, -1)), reason(es(7)))
+    assert(reason(es(10)).contains(above(0, -57)), reason(es(10)))
   }
 
   test("write vectors") {

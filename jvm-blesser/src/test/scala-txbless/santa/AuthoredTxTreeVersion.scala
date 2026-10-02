@@ -37,15 +37,19 @@ import RentFixtures._
 object AuthoredTxTreeVersion {
   val V6Path = "transaction/v6/authored/tree-version-above-activated.json"
   val V5Path = "transaction/v5/authored/tree-version-above-activated.json"
+  // Version-agnostic: its entries span activated -57..127 across block versions 0/2/5/128/200, so it is not a v6
+  // vector. It lives under any/ (the taxonomy label for vectors that are not tied to one ErgoTree version).
+  val EdgesPath = "transaction/any/authored/tree-version-block-version-edges.json"
   private val V = 1000000000L // the value of every box and output but the rent box's
   private val H = AuthoredTxStorageRent.H
   private val PlainTree = "0008d3"
 
   // 10000 to start, 2000 for the input, 100 for the output; then 5 for a SigmaProp constant's script, or
   // StorageContractCost = 50 for a storage-rent spend; 100 more for a data input.
-  private val ScriptCost    = 12105L
-  private val DataInputCost = 12205L
-  private val RentCost      = 12150L
+  private val ScriptCost     = 12105L
+  private val DataInputCost  = 12205L
+  private val RentCost       = 12150L
+  private val UnverifiedCost = 12100L // accepted without verification (soft fork): the initial cost alone
 
   private def b(h: String): Array[Byte] = Base16.decode(h).get
 
@@ -61,6 +65,18 @@ object AuthoredTxTreeVersion {
     val newestFirst = relinked.reverse
     Ctx(3, newestFirst.map(h => hex(HeaderSerializer.toBytes(h))), AuthoredTxStorageRent.preHeader.mapObject(
       _.add("version", Json.fromInt(3)).add("parentId", Json.fromString(newestFirst.head.id))))
+  }
+
+  /** The ten headers re-linked at `version`, the preHeader set to it (block-version edges: 2, 5, 0, 128, 200). Block
+    * version 1 is not representable — UpcomingStateContext's build throws before any verdict — so it is not here. */
+  private def blockCtx(version: Int): Ctx = {
+    val oldestFirst = AuthoredTxStorageRent.headersHex.map(h => HeaderSerializer.parseBytes(b(h))).reverse
+    val relinked = oldestFirst.tail.foldLeft(Vector(oldestFirst.head.copy(version = version.toByte))) { (acc, h) =>
+      acc :+ h.copy(version = version.toByte, parentId = acc.last.id)
+    }
+    val newestFirst = relinked.reverse
+    Ctx(version, newestFirst.map(h => hex(HeaderSerializer.toBytes(h))), AuthoredTxStorageRent.preHeader.mapObject(
+      _.add("version", Json.fromInt(version)).add("parentId", Json.fromString(newestFirst.head.id))))
   }
 
   /** A box's bytes: a plain sigmaProp(true) box of `value` created at `height`, its tree (00 08 d3) swapped for `tree`. */
@@ -115,7 +131,10 @@ object AuthoredTxTreeVersion {
       "preHeader"            -> c.preHeader,
       "parameters"           -> AuthoredTxStorageRent.params,
       "context"              -> Json.obj("height" -> Json.fromInt(H)),
-      "version"              -> Json.obj("activated" -> Json.fromInt(c.blockVersion - 1), "ergoTree" -> Json.fromInt(0)),
+      // The activated script version the JVM uses is (blockVersion - 1).toByte — a SIGNED byte, so block version 0
+      // gives -1 and block versions 129..255 give -128..-2 (block version 200 -> -57), not 128..254.
+      "version"              -> Json.obj("activated" -> Json.fromInt((c.blockVersion - 1).toByte.toInt),
+                                         "ergoTree" -> Json.fromInt(0)),
       "expected"             -> Json.obj(
         "valid"  -> Json.fromBoolean(v.valid),
         "cost"   -> v.cost.map(Json.fromLong).getOrElse(Json.Null),
@@ -212,13 +231,71 @@ object AuthoredTxTreeVersion {
         "(the wire vectors tree_version_above_activated)."))
   }
 
-  private def envelope(es: Seq[Json]): Json = Json.obj(
+  /** One block-version-edge spend of a `SigmaProp(true/false)` tree, with no proof, into one plain output. */
+  private def edge(c: Ctx, i: Int, slug: String, description: String, tree: String, want: Either[String, Long]): Json = {
+    val raw = boxBytes(s"santa:ttv:edge:$i", tree, 1)
+    entry(c, s"$slug#$i", "block-version", description, spendTx(raw), Seq(raw), Nil, want)
+  }
+
+  private def edgeEntries: Seq[Json] = {
+    val note = "The input spends a box of value 1000000000 into one plain output of the same value, with no proof. The " +
+      "block version sets the activated version to (blockVersion - 1).toByte (ergo ErgoContext), and " +
+      "checkSoftForkCondition compares Bytes. Above the max supported script version (3) a tree above v3 is accepted " +
+      "unverified at the initial cost alone (12100) — its proposition is not reduced."
+    Seq(
+      // 1. Block version 2 (activated 1): the check has no floor at activated 2.
+      edge(blockCtx(2), 0, "bv2-tree-v2-reject",
+        s"Block version 2, activated 1. The spent box's tree is v2 (0a 02 08 d3), above it. checkSoftForkCondition " +
+        s"compares below activated 2 as well (Interpreter.scala:321-328): 'ErgoTree version 2 is higher than activated " +
+        s"1', invalid. The fork over-accepts. $note", "0a0208d3", Left(above(2, 1))),
+      edge(blockCtx(2), 1, "bv2-tree-v1-accept",
+        s"The control: block version 2, a v1 tree (09 02 08 d3), the activated version. Valid. $note", "090208d3",
+        Right(ScriptCost)),
+      // 2. Block version 5 (activated 4, above the max supported 3): accepted unverified.
+      edge(blockCtx(5), 2, "bv5-tree-v4-unverified-accept",
+        s"Block version 5, activated 4 (above the max supported script version 3). The tree is v4 (0c 02 08 d3): " +
+        s"accepted unverified at 12100 — the proposition is not reduced. The fork charges 12105 here. $note", "0c0208d3",
+        Right(UnverifiedCost)),
+      edge(blockCtx(5), 3, "bv5-tree-v5-unverified-accept",
+        s"The same with a v5 tree (0d 02 08 d3): accepted unverified at 12100. $note", "0d0208d3", Right(UnverifiedCost)),
+      edge(blockCtx(5), 4, "bv5-tree-v3-verified-accept",
+        s"A v3 tree (0b 02 08 d3) at block version 5: v3 is at most the max supported, so it is verified as usual, at " +
+        s"12105. $note", "0b0208d3", Right(ScriptCost)),
+      edge(blockCtx(5), 5, "bv5-tree-v4-false-unverified-accept",
+        s"The twin that shows a v>3 tree is not reduced: a v4 SigmaProp(false) tree (0c 02 08 d2) at block version 5 is " +
+        s"accepted unverified at 12100 too, where its verified v3 counterpart (#6) is invalid. $note", "0c0208d2",
+        Right(UnverifiedCost)),
+      edge(blockCtx(5), 6, "bv5-tree-v3-false-reject",
+        s"A v3 SigmaProp(false) tree (0b 02 08 d2) at block version 5: verified, reduces to false, invalid. The " +
+        s"contrast with #5 pins that a v>3 tree is accepted without reduction. $note", "0b0208d2",
+        Left("Scripts of all transaction inputs")),
+      // 3. Block version 0 and above 128: the activated version is a signed byte.
+      edge(blockCtx(0), 7, "bv0-tree-v0-reject",
+        s"Block version 0, so activated = (0 - 1).toByte = -1. Even a v0 tree is above -1: 'ErgoTree version 0 is " +
+        s"higher than activated -1', invalid. Every script spend is invalid at block version 0. $note", "0008d3",
+        Left(above(0, -1))),
+      edge(blockCtx(128), 8, "bv128-tree-v0-verified-accept",
+        s"Block version 128, so activated = (128 - 1).toByte = 127. A v0 tree is at most 127, so it is verified as " +
+        s"usual, at 12105. $note", "0008d3", Right(ScriptCost)),
+      edge(blockCtx(128), 9, "bv128-tree-v4-unverified-accept",
+        s"Block version 128 (activated 127, above the max supported 3): a v4 tree (0c 02 08 d3) is accepted unverified " +
+        s"at 12100. $note", "0c0208d3", Right(UnverifiedCost)),
+      edge(blockCtx(200), 10, "bv200-tree-v0-reject",
+        s"Block version 200, so activated = (200 - 1).toByte = 199 = -57. Even a v0 tree is above -57: 'ErgoTree " +
+        s"version 0 is higher than activated -57', invalid. Block versions 129-255 reject every script spend. $note",
+        "0008d3", Left(above(0, -57))))
+  }
+
+  private def envelope(op: String, es: Seq[Json]): Json = Json.obj(
     "schema"     -> Json.fromString("santa-transaction/v1"),
-    "op"         -> Json.fromString("tx:authored:tree-version-above-activated"),
+    "op"         -> Json.fromString(op),
     "blessed_by" -> Json.fromString(AuthoredTxStorageRent.BlessedBy),
     "entries"    -> Json.arr(es: _*))
 
-  def blessAll(): Seq[(String, Json)] = Seq(V6Path -> envelope(v6Entries), V5Path -> envelope(v5Entries))
+  def blessAll(): Seq[(String, Json)] = Seq(
+    V6Path    -> envelope("tx:authored:tree-version-above-activated", v6Entries),
+    V5Path    -> envelope("tx:authored:tree-version-above-activated", v5Entries),
+    EdgesPath -> envelope("tx:authored:tree-version-block-version-edges", edgeEntries))
 
   def writeVectors(blessed: Seq[(String, Json)], vectorsRoot: java.nio.file.Path): Unit =
     blessed.foreach { case (rel, env) =>
