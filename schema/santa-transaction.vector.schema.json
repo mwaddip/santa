@@ -53,7 +53,8 @@
             "inputCost":       { "type": "integer", "minimum": 0 },
             "dataInputCost":   { "type": "integer", "minimum": 0 },
             "outputCost":      { "type": "integer", "minimum": 0 },
-            "tokenAccessCost": { "type": "integer", "minimum": 0 }
+            "tokenAccessCost": { "type": "integer", "minimum": 0 },
+            "blockVersion":    { "type": "integer", "minimum": 0, "maximum": 255, "description": "The voted block version (currentParameters.blockVersion), an unsigned byte 0..255. Drives the activated script version and the monotonic creation-height rule. Optional; defaults to preHeader.version (they are equal in every vector that omits it)." }
           }
         },
         "context": {

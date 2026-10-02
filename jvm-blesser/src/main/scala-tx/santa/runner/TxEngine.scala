@@ -102,12 +102,17 @@ object TxEngine extends ApiCodecs {
 
     // Honor the vector's provided `parameters` (contract §5): override the launch table's economic
     // entries. A no-op for captured seeds (their params == launch), the seam the reject arm rides.
-    val blockVersion = version
     val pc = parameters.hcursor
+    // The activated script version AND the monotonic creation-height rule are judged by the VOTED PARAMETERS' block
+    // version (ErgoStateContext.blockVersion = currentParameters.blockVersion), not the header's. So it is its own
+    // optional field, parameters.blockVersion, defaulting to the pre-header's version — every vector before this set
+    // them equal, so the default preserves their behaviour. The pre-header keeps the header's version, which a script
+    // reads as CONTEXT.preHeader.version and which otherwise feeds only PoW and serialization.
+    val paramsBlockVersion = pc.get[Int]("blockVersion").toOption.getOrElse(version.toInt)
     def pInt(k: String): Int = pc.get[Int](k).toOption.getOrElse(sys.error(s"parameters.$k"))
     val params = new Parameters(height,
       TestnetLaunchParameters.parametersTable
-        .updated(Parameters.BlockVersion,             blockVersion.toInt)
+        .updated(Parameters.BlockVersion,             paramsBlockVersion)
         .updated(Parameters.MaxBlockCostIncrease,     pInt("maxBlockCost"))
         .updated(Parameters.MinValuePerByteIncrease,  pInt("minValuePerByte"))
         .updated(Parameters.StorageFeeFactorIncrease, pInt("storageFeeFactor"))
@@ -120,14 +125,18 @@ object TxEngine extends ApiCodecs {
     // which is exactly headers_hex's order — so no reverse. preHeader.parentId must be the tip = head.
     val headers   = headersHex.map(h => HeaderSerializer.parseBytes(Base16.decode(h).get)).toIndexedSeq
     val parentId  = if (headers.nonEmpty) headers.head.id else Header.GenesisParentId
-    val preHdr    = CPreHeader(blockVersion, parentId, timestamp, nBits, height, votes, minerPk)
+    val preHdr    = CPreHeader(version, parentId, timestamp, nBits, height, votes, minerPk)
     val ctx = UpcomingStateContext(headers, None, preHdr, chainSettings.genesisStateDigest,
       params, ErgoValidationSettings.initial, VotingData.empty)
 
     val txBytes = Base16.decode(txHex).get
+    // A block's transactions are parsed under the block's version (BlockTransactions.scala); here that is the
+    // parameters' block version, the voted version the block is validated under. No vector's tx bytes carry
+    // version-sensitive content where it differs from the pre-header's, so this axis is observable only through the
+    // state context above.
     val tx =
-      if (blockVersion >= Header.Interpreter60Version) {
-        val v = Header.scriptAndTreeFromBlockVersions(blockVersion)
+      if (paramsBlockVersion >= Header.Interpreter60Version) {
+        val v = Header.scriptAndTreeFromBlockVersions(paramsBlockVersion.toByte)
         VersionContext.withVersions(v.activatedVersion, v.ergoTreeVersion)(ErgoTransactionSerializer.parseBytes(txBytes))
       } else ErgoTransactionSerializer.parseBytes(txBytes)
     def box(hex: String): ErgoBox = ErgoBoxSerializer.parseBytes(Base16.decode(hex).get)

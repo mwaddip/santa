@@ -141,7 +141,7 @@ minimal-context model carried, where each impl had to build the same zeroed `Erg
 |---|---|
 | last headers (`ErgoStateContext.lastHeaders`) | `headers_hex` — the real last (≤10) headers, **NEWEST-first** (head = tip / pre-header parent) |
 | pre-header | `preHeader` — real `{version, parentId, timestamp, nBits, height, minerPk, votes}` |
-| parameters | `parameters` — the economic table at the capture height; **honored** (`TxEngine.validateBytes` overrides the launch table's 7 economic params from this field), the seam the authored param-driven reject arm (§6) rides |
+| parameters | `parameters` — the economic table at the capture height; **honored** (`TxEngine.validateBytes` overrides the launch table's 7 economic params from this field), the seam the authored param-driven reject arm (§6) rides. An optional 8th field, `blockVersion`, sets the voted block version (`currentParameters.blockVersion`) that drives the activated script version and the monotonic creation-height rule; it defaults to `preHeader.version` (equal in every vector that omits it) |
 | state digest | the JVM reads `chain-testnet.conf`'s `genesisStateDigestHex` (`cb63aa…`); stateful tx validation does not consult the UTXO root |
 
 Because the real headers are carried, a script that reads `CONTEXT.headers` **is** representable
@@ -163,7 +163,7 @@ tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L)
 
 | Bytes | Parsed under | JVM source |
 |---|---|---|
-| `tx_bytes_hex` | (blockVersion − 1, blockVersion − 1) from block version 4 (`preHeader.version`); outside any version context below that | `BlockTransactions.scala:184-202` |
+| `tx_bytes_hex` | (blockVersion − 1, blockVersion − 1) from the parameters' block version (`parameters.blockVersion`, default `preHeader.version`) at 4 and up; outside any version context below that | `BlockTransactions.scala:184-202` |
 | `input_boxes_hex`, `data_input_boxes_hex` | outside any version context, as a box is read from the UTXO set | `UtxoStateReader.scala:122-124`, `DigestState.scala:48` |
 
 Outside a version context the JVM's threads run at the default (1, 1) (sigma-state
@@ -338,12 +338,24 @@ are §5's.
   a signed byte, so block version 0 (−1) and 129–255 (−128 to −2) reject every script spend, while 128 (127) is the
   §2 branch. Block version 1 is not representable from the v2+ header donor (its re-linked headers fail the chain
   check), so §1's v1/v0-at-block-version-1 rows stay unvectored.
+- **`transaction/any/authored/block-version-source`** (8): which block version activates scripts — the voted
+  **parameters'** block version, not the header's. The JVM judges both the activated script version
+  (`ErgoContext`: activated = `(stateContext.blockVersion − 1).toByte`, `stateContext.blockVersion` =
+  `currentParameters.blockVersion`) and the monotonic creation-height rule (`ErgoTransaction.scala:379-384`, gated on
+  `blockVersion > Header.HardeningVersion = 2`) by the parameters; the header's version only feeds PoW, serialization
+  and `CONTEXT.preHeader`. Each entry sets `parameters.blockVersion` (the field TxEngine now reads) apart from
+  `preHeader.version`: five activated-version rows, two creation-height rows, and one `CONTEXT.preHeader.version == 3`
+  script (which stays valid — the script reads the header's version, where the spend-check uses the parameters').
 
 Rudolph is valid 12/12 · cost 6/6. blitzen-mwaddip (fork `d4cda68d`, costs equal on the six accepts),
 blitzen-develop (`1633e018`) and dasher (ergots `7e3bfb1a`) find all 12 valid: each over-accepts the six rejects.
 For the block-version edges (11): rudolph is valid 11/11 · cost 7/7; the fork `14aad9c0` has seven reds (the three
 sections — §1/§3 over-accepts, §2 costs 12105 not 12100, and it reduces the v4 `SigmaProp(false)`), develop six
 (three of those, plus errors on the bv128/bv200 headers), ergots four (the valid-dimension divergences).
+For block-version-source (8): rudolph green on all 8; the fork, develop and ergots each have 3 reds (R5 — params 5
+unverified; the two creation-height rows) — each derives the block version from the pre-header, not the parameters.
+The blitzen adapter now sets `Parameter::BlockVersion` from `parameters.blockVersion` (both branches), so a fork fixed
+to read the parameters grades green instead of false-red; dasher already passes the whole `parameters` object.
 
 **Current 4-way result**, without the storage-rent files (comet grey — wire-only, no `transaction` tier):
 

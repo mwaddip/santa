@@ -231,6 +231,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   `SigmaProp(false)` twin spends); and the activated version is a signed byte, so block version 0 (−1) and 129–255
   (−128 to −2) reject every script spend.
 
+  **Which block version activates scripts** (`block-version-source`, 8 entries at `transaction/any/`): the voted
+  **parameters'** block version, not the header's. The JVM judges both the activated script version and the monotonic
+  creation-height rule by `currentParameters.blockVersion`; the header's version only feeds PoW, serialization and
+  `CONTEXT.preHeader`. These set the two apart (`parameters.blockVersion` ≠ `preHeader.version`) — an impl that reads
+  the header's version diverges, and a script `CONTEXT.preHeader.version == 3` still sees the header's.
+
   Contract: [`docs/contract/runner-contract-transaction.md`](docs/contract/runner-contract-transaction.md).
 - ✅ **Block tier live** — `santa-block/v1`, the **digest-state** shape: parent digest +
   ≤10 headers + parameters + block-with-ADProofs → `valid` + computed `post_digest` +
