@@ -9,7 +9,7 @@
 > [`schema/santa-authds.vector.schema.json`](../../schema/santa-authds.vector.schema.json),
 > [`schema/santa-authds.actuals.schema.json`](../../schema/santa-authds.actuals.schema.json).
 >
-> Oracle: scrypto — 3.1.1 (sigma-state 6.0.6's) since 2026-09-27; the committed vectors were
+> Oracle: scrypto — 3.1.1 (sigma-state 6.0.7's) since 2026-11-06; the committed vectors were
 > blessed under 3.0.0 (`blessed_by: "jvm:scrypto-3.0.0"`) and re-derive identically — via
 > `jvm-blesser`'s `AvlProofGenerator` / `AvlVerifierBlesser` — the authority for this tier is
 > scrypto, not sigma-state (contrast the eval tier, whose oracle is `sigma-state`).

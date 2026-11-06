@@ -37,13 +37,13 @@ class AuthoredWireContextExtensionParseTest extends munit.FunSuite {
     }
   }
 
-  test("depth: Coll^109[Byte] accepts at the 110-level cap, Coll^110[Byte] rejects") {
+  test("depth: Coll^10[Byte] accepts at the type depth cap of 8, Coll^11[Byte] rejects") {
     val es = entries(AuthoredWireContextExtensionParse.OpDepth)
     assertEquals(es.map(isReject), List(false, true))
     // Coll^n[Byte] type: (n-2) generic Coll 0x0c, then Coll[Coll[Byte]] 0x1a. Data: (n-1) outer
     // lengths of 1, then the empty innermost Coll[Byte].
     def collN(n: Int): String = "0c" * (n - 2) + "1a" + "01" * (n - 1) + "00"
-    Seq(0 -> 109, 1 -> 110).foreach { case (i, n) =>
+    Seq(0 -> 10, 1 -> 11).foreach { case (i, n) =>
       val ext = "0101" + collN(n)
       assertEquals(extAt(str(es(i), "bytes_hex"), ext.length / 2), ext, s"Coll^$n[Byte]")
     }
@@ -69,13 +69,13 @@ class AuthoredWireContextExtensionParseTest extends munit.FunSuite {
     }
   }
 
-  test("envelopes: santa-wire/v1, the node's v6 tx parse context (3, 3), authored source, 6.0.6 blessing") {
+  test("envelopes: santa-wire/v1, the node's v6 tx parse context (3, 3), authored source, 6.0.7 blessing") {
     assertEquals(vectors.keySet, Set(AuthoredWireContextExtensionParse.OpV6Type,
       AuthoredWireContextExtensionParse.OpDepth, AuthoredWireContextExtensionParse.OpDupIds))
     vectors.values.foreach { env =>
       val c = env.hcursor
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))
-      assertEquals(c.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.6"))
+      assertEquals(c.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.7"))
       c.downField("entries").as[List[Json]].getOrElse(Nil).foreach { e =>
         assertEquals(e.hcursor.get[String]("kind").toOption, Some("Transaction"))
         assertEquals(e.hcursor.downField("version").get[Int]("activated").toOption, Some(3))

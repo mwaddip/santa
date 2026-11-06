@@ -1,29 +1,32 @@
 package santa
 
-// Authored wire vectors — one accept/reject pair for each path the JVM's parse-depth counter runs through.
+// Authored wire vectors — one accept/reject pair for each path the JVM's parse-depth counters run through.
 //
-// The reader carries one level for the whole transaction (sigmastate v6.0.6 `CoreByteReader.scala:127-129`:
-// a level above MaxTreeDepth = 110 throws DeserializeCallDepthExceeded). Three sites raise it on entry and
-// lower it on normal exit: `ValueSerializer.deserialize` (every value/expression node, :396-409),
-// `CoreDataSerializer.deserialize` (every data value, :94-148; `DataSerializer` once around a Box or Header),
-// and `SigmaBoolean.serializer.parse` (every node, :72-103). Type descriptors are not counted, and segregated
-// tree constants are read without a value level (`ErgoTreeSerializer.scala:256`). Box trees parse on the
-// transaction's reader (`ErgoBoxCandidate.scala:194`), so levels carry into them.
+// TWO independent depth limits apply (sigmastate v6.0.7):
+//   1. TYPE depth: TypeSerializer.MaxTypeDepth = 8 (SigmaConstants, TypeSerializer.scala:134-136).
+//      Coll[Coll[Byte]] is embeddable (code 0x1a, no recursion), so Coll^n[Byte] recurses n-2 times
+//      through generic-Coll 0x0c and the boundary is n-2 > 8, i.e. n=10 accept / n=11 reject.
+//   2. VALUE depth: MaxTreeDepth = 110 (CoreByteReader.scala:127-129). Three sites raise it on entry and
+//      lower it on normal exit: ValueSerializer.deserialize (every value/expression node, :396-409),
+//      CoreDataSerializer.deserialize (every data value, :94-148; DataSerializer once around a Box or
+//      Header), and SigmaBoolean.serializer.parse (every node, :72-103). Segregated tree constants are read
+//      without a value level (ErgoTreeSerializer.scala:256). Box trees parse on the transaction's reader
+//      (ErgoBoxCandidate.scala:194), so levels carry into them.
 //
 // DeserializeCallDepthExceeded is a SerializerException, never a ValidationException, so a too-deep
 // size-flagged tree is a hard reject, not a soft-fork degrade. The degrade path itself (a ValidationException,
 // e.g. an unknown opcode) does NOT lower the level again: `deserializeErgoTree`'s `finally` restores only the
-// position limit (`ErgoTreeSerializer.scala:209-211`) and `ValueSerializer.deserialize` has no `finally`, so a
+// position limit (ErgoTreeSerializer.scala:209-211) and ValueSerializer.deserialize has no `finally`, so a
 // tree degrading k levels deep leaves k levels on the reader for the rest of the transaction.
 //
 // Pairs, as the node parses a v6 tx (version context (3, 3)):
-//   register        output R4 = Coll^n[Byte]: 1 + n levels                       n = 109 / 110
+//   register        output R4 = Coll^n[Byte]: type depth n-2                         n = 10 / 11
 //   tree body       BoolToSigmaProp(LogicalNot^m(placeholder)), size-flagged: m + 2   m = 108 / 109
-//   segregated      unflagged tree with an unused constant Coll^n[Byte]: n levels   n = 110 / 111
-//   SigmaBoolean    extension SigmaProp, k nested CAND(inner, TrueProp): k + 3      k = 107 / 108
-//   nested box      extension Box whose size-flagged tree carries Coll^n: 2 + n     n = 108 / 109
-//   degrade leak    output 0 degrades 10 deep; output 1 R4 = Coll^n: 10 + 1 + n      n = 99 / 100
-//   nested degrade  output 0's tree parses, but a Box constant in it degrades 10 deep: 10 + 1 + n   n = 99 / 100
+//   segregated      unflagged tree with an unused constant Coll^n[Byte]: type depth n-2   n = 10 / 11
+//   SigmaBoolean    extension SigmaProp, k nested CAND(inner, TrueProp): k + 3       k = 107 / 108
+//   nested box      extension Box whose size-flagged tree carries Coll^n: type depth n-2   n = 10 / 11
+//   degrade leak    output 0 degrades 10 deep; output 1 tree body LogicalNot^m: 10 + m + 2   m = 98 / 99
+//   nested degrade  output 0's tree parses, but a Box constant in it degrades 10 deep: 10 + m + 2   m = 98 / 99
 //
 // extract() re-derives every verdict through WireCanonicalize — the path rudolph grades with — and fails loud
 // if a reject is rejected for any reason other than the depth cap, if an accept is not canonical, or if a
@@ -79,7 +82,7 @@ object AuthoredWireParseDepth {
         ConstantPlaceholder(1, SSigmaProp).asInstanceOf[SigmaPropValue])
     }
 
-  /** BoolToSigmaProp(LogicalNot^m(placeholder 0 = true)), size-flagged: its deepest node is at level m + 2. */
+  /** BoolToSigmaProp(LogicalNot^m(placeholder 0 = true)), size-flagged: its deepest node is at value level m + 2. */
   private def notChainTree(m: Int): ErgoTree =
     VersionContext.withVersions(V3, V3) {
       val leaf: Value[SBoolean.type] = ConstantPlaceholder(0, SBoolean)
@@ -125,33 +128,36 @@ object AuthoredWireParseDepth {
     entry(name, description, in)
   }
 
-  /** A reject entry: the JVM must throw at parse because of the depth cap. */
-  private def reject(name: String, description: String, bytes: Array[Byte]): Json = {
+  /** A reject entry: the JVM must throw at parse because of a depth cap. */
+  private def reject(name: String, description: String, bytes: Array[Byte], depthMsg: String = DepthMsg): Json = {
     val in = hex(bytes)
     Try(canonical(in)) match {
       case Success(out) =>
         sys.error(s"$name: the JVM must REJECT at parse, but it round-tripped to $out")
       case Failure(t) =>
-        require(causes(t).exists(_.contains(DepthMsg)),
-          s"$name: rejected for the wrong reason (want '$DepthMsg'): ${causes(t).mkString(" <- ")}")
+        require(causes(t).exists(_.contains(depthMsg)),
+          s"$name: rejected for the wrong reason (want '$depthMsg'): ${causes(t).mkString(" <- ")}")
     }
     entry(name, description, in, "error" -> Json.fromString("errored"))
   }
 
-  private val DepthMsg = "nested value deserialization call depth"
+  private val DepthMsg     = "nested value deserialization call depth"
+  private val TypeDepthMsg = "nested type deserialization call depth"
 
   def extract(): Map[String, Json] = {
     def withR4(n: Int): ErgoBoxCandidate = candidate(spent.value, 1, regs = Map(R4 -> nestedCollOfBytes(n)))
     val registerEntries = Seq(
-      accept("register-coll109-accept#0",
-        "Output R4 = Coll^109[Byte] (each outer collection holding one element, the innermost empty). The register " +
-        "is read with getValue (ErgoBoxCandidate.scala:231): one value level plus one per collection level, 110 = " +
-        "MaxTreeDepth. Round-trip identity.",
-        tx(ContextExtension.empty, Seq(withR4(109)))),
-      reject("register-coll110-reject#1",
-        "Output R4 = Coll^110[Byte]: 111 levels, and the JVM throws DeserializeCallDepthExceeded at parse. An impl " +
-        "without the counter round-trips it: the over-accept.",
-        tx(ContextExtension.empty, Seq(withR4(110)))))
+      accept("register-coll10-accept#0",
+        "Output R4 = Coll^10[Byte] (each outer collection holding one element, the innermost empty). " +
+        "Coll[Coll[Byte]] is embeddable (code 0x1a, no recursion in TypeSerializer), so Coll^10 recurses " +
+        "8 times through the generic-Coll path (0x0c): type depth 8 = MaxTypeDepth " +
+        "(TypeSerializer.scala:134-136). Round-trip identity.",
+        tx(ContextExtension.empty, Seq(withR4(10)))),
+      reject("register-coll11-reject#1",
+        "Output R4 = Coll^11[Byte]: type depth 9 > MaxTypeDepth = 8, and the JVM throws " +
+        "DeserializeCallDepthExceeded at type parse. An impl with a higher type depth limit, or none, " +
+        "round-trips it: the over-accept.",
+        tx(ContextExtension.empty, Seq(withR4(11))), TypeDepthMsg))
 
     def withTree(t: ErgoTree): Seq[ErgoBoxCandidate] = Seq(candidate(spent.value, 1, tree = t))
     val bodyAccept = tx(ContextExtension.empty, withTree(notChainTree(108)))
@@ -170,15 +176,15 @@ object AuthoredWireParseDepth {
         tx(ContextExtension.empty, withTree(notChainTree(109)))))
 
     val segregatedEntries = Seq(
-      accept("segregated-coll110-accept#0",
-        "Output tree, segregated without the size flag (header 0x10), constants [Coll^110[Byte], SigmaProp(true)], " +
-        "body placeholder 1. Segregated constants are read without a value level (ErgoTreeSerializer.scala:256), so " +
-        "Coll^110 takes exactly 110 data levels. Round-trip identity.",
-        tx(ContextExtension.empty, withTree(treeCarrying(SegregationHeader, nestedCollOfBytes(110))))),
-      reject("segregated-coll111-reject#1",
-        "The same tree with constant Coll^111[Byte]: 111 levels, rejected at parse. An impl that also charges a value " +
-        "level here rejects the accept entry instead.",
-        tx(ContextExtension.empty, withTree(treeCarrying(SegregationHeader, nestedCollOfBytes(111))))))
+      accept("segregated-coll10-accept#0",
+        "Output tree, segregated without the size flag (header 0x10), constants [Coll^10[Byte], SigmaProp(true)], " +
+        "body placeholder 1. Type depth 8 = MaxTypeDepth (the segregated constant path reads types through " +
+        "TypeSerializer like any other path). Round-trip identity.",
+        tx(ContextExtension.empty, withTree(treeCarrying(SegregationHeader, nestedCollOfBytes(10))))),
+      reject("segregated-coll11-reject#1",
+        "The same tree with constant Coll^11[Byte]: type depth 9, rejected at type parse. An impl without " +
+        "the type depth limit round-trips it: the over-accept.",
+        tx(ContextExtension.empty, withTree(treeCarrying(SegregationHeader, nestedCollOfBytes(11)))), TypeDepthMsg))
 
     def candExt(k: Int): ContextExtension = ext(Id -> SigmaPropConstant(nestedCand(k)))
     val sigmaBooleanEntries = Seq(
@@ -196,42 +202,48 @@ object AuthoredWireParseDepth {
       val inner = box("santa:cpd:inner-box", 1000000L, 1, tree = treeCarrying(SizedSegregationHeader, nestedCollOfBytes(n)))
       ext(Id -> Constant[SType](CBox(inner).asInstanceOf[SType#WrappedType], SBox))
     }
-    val nestedAccept = tx(boxExt(108), Seq(plainOutput))
+    val nestedAccept = tx(boxExt(10), Seq(plainOutput))
     val nestedBox = parsed(nestedAccept).inputs(0).spendingProof.extension.values(Id)
       .asInstanceOf[Constant[SType]].value.asInstanceOf[CBox].ebox
     require(nestedBox.ergoTree.root.isRight,
-      "the Coll^108 box tree must parse, not degrade — else the accept tests nothing")
+      "the Coll^10 box tree must parse, not degrade — else the accept tests nothing")
     val nestedEntries = Seq(
-      accept("nested-box-coll108-accept#0",
+      accept("nested-box-coll10-accept#0",
         "Spending-proof extension {1: Box} whose tree is size-flagged and segregated (header 0x18), constants " +
-        "[Coll^108[Byte], SigmaProp(true)]. The Box is read on the transaction's reader: getValue and the Box data " +
-        "value take 2 levels, the constant 108 more, 110 = MaxTreeDepth. Round-trip identity.",
+        "[Coll^10[Byte], SigmaProp(true)]. The Box is read on the transaction's reader, but the type depth " +
+        "counter is per-type-deserialization (resets for each new type read), so the binding constraint is " +
+        "MaxTypeDepth = 8, not the accumulated value depth. Round-trip identity.",
         nestedAccept),
-      reject("nested-box-coll109-reject#1",
-        "The same Box with constant Coll^109[Byte]: 111 levels, rejected at parse. An impl that parses a size-flagged " +
-        "tree on a fresh reader counts only 109 and round-trips the tx: the over-accept.",
-        tx(boxExt(109), Seq(plainOutput))))
+      reject("nested-box-coll11-reject#1",
+        "The same Box with constant Coll^11[Byte]: type depth 9 > 8, rejected at type parse. An impl without " +
+        "the type depth limit round-trips it: the over-accept.",
+        tx(boxExt(11), Seq(plainOutput)), TypeDepthMsg))
 
-    def leakOutputs(n: Int, first: ErgoBoxCandidate): Seq[ErgoBoxCandidate] =
-      Seq(first, candidate(spent.value - 1000000L, 1, regs = Map(R4 -> nestedCollOfBytes(n))))
+    // Degrade leak: output 0 degrades, leaking value levels; output 1 probes the leak with tree body nesting.
+    // LogicalNot chains are pure value depth (no type nesting), so the type depth cap doesn't interfere.
+    def leakOutputs(m: Int, first: ErgoBoxCandidate): Seq[ErgoBoxCandidate] =
+      Seq(first, candidate(spent.value - 1000000L, 1, tree = notChainTree(m)))
     val degradedFirst = new ErgoBoxCandidate(1000000L, degradingTree, 1)
-    val leakAccept = tx(ContextExtension.empty, leakOutputs(99, degradedFirst))
+    val leakAccept = tx(ContextExtension.empty, leakOutputs(98, degradedFirst))
     require(parsed(leakAccept).outputCandidates(0).ergoTree.root.isLeft, "output 0 must degrade in the tx")
+    require(parsed(leakAccept).outputCandidates(1).ergoTree.root.isRight,
+      "the 98-LogicalNot tree must parse, not degrade — else the accept tests nothing")
     // Control: behind a normally parsing output 0, the reject's output 1 must accept — the leak is the cause.
-    val control = hex(tx(ContextExtension.empty, leakOutputs(100, candidate(1000000L, 1))))
-    require(canonical(control) == control, "control: Coll^100 in output 1 must accept on a fresh level")
+    val control = hex(tx(ContextExtension.empty, leakOutputs(99, candidate(1000000L, 1))))
+    require(canonical(control) == control, "control: LogicalNot^99 in output 1 must accept on a fresh level")
     val leakEntries = Seq(
-      accept("degrade-leak-coll99-accept#0",
+      accept("degrade-leak-not98-accept#0",
         s"Output 0's tree is size-flagged v3 ($DegradingTreeHex): BoolToSigmaProp, 8 LogicalNot, then unknown opcode " +
         "0xfd at depth 10. CheckValidOpCode throws a ValidationException, the tree degrades to UnparsedErgoTree, and " +
         "the 10 levels are never lowered again (ErgoTreeSerializer.scala:209-211 restores only the position limit). " +
-        "Output 1 R4 = Coll^99[Byte] then takes 10 + 1 + 99 = 110. Round-trip identity.",
+        "Output 1's tree body is BoolToSigmaProp(LogicalNot^98(placeholder)): 10 + 98 + 2 = 110 = MaxTreeDepth. " +
+        "Round-trip identity.",
         leakAccept),
-      reject("degrade-leak-coll100-reject#1",
-        "The same tx with output 1 R4 = Coll^100[Byte]: 10 leaked + 1 + 100 = 111, rejected at parse. On a fresh " +
-        "level it would take 101 and parse (the blesser's control), so an impl that restores the level after the " +
-        "degrade round-trips the tx: the over-accept.",
-        tx(ContextExtension.empty, leakOutputs(100, degradedFirst))))
+      reject("degrade-leak-not99-reject#1",
+        "The same tx with output 1's tree body LogicalNot^99: 10 + 99 + 2 = 111 > MaxTreeDepth, rejected at parse. " +
+        "On a fresh level it would take 101 and parse (the blesser's control), so an impl that restores the level " +
+        "after the degrade round-trips the tx: the over-accept.",
+        tx(ContextExtension.empty, leakOutputs(99, degradedFirst))))
 
     // The same degrade, nested: output 0's size-flagged tree parses, but its segregated constant 0 is a Box whose
     // tree degrades. Each enclosing frame lowers the level by one from wherever it is, so the 10 levels outlive the
@@ -239,29 +251,29 @@ object AuthoredWireParseDepth {
     val degradingBox = box("santa:cpd:nested-degrade", 1000000L, 1, tree = degradingTree)
     val nestingFirst = candidate(1000000L, 1, tree = treeCarrying(SizedSegregationHeader,
       Constant[SType](CBox(degradingBox).asInstanceOf[SType#WrappedType], SBox)))
-    val nestedLeakAccept = tx(ContextExtension.empty, leakOutputs(99, nestingFirst))
+    val nestedLeakAccept = tx(ContextExtension.empty, leakOutputs(98, nestingFirst))
     val nestingTree = parsed(nestedLeakAccept).outputCandidates(0).ergoTree
     require(nestingTree.root.isRight, "output 0's tree must parse — the degrade is nested inside it")
     require(nestingTree.constants.head.value.asInstanceOf[CBox].ebox.ergoTree.root.isLeft,
       "the Box constant's tree must degrade")
     val nestedLeakEntries = Seq(
-      accept("nested-degrade-leak-coll99-accept#0",
+      accept("nested-degrade-leak-not98-accept#0",
         "Output 0's tree is size-flagged and segregated (header 0x18) and parses: constants [Box, SigmaProp(true)], " +
         s"body placeholder 1. The Box constant's own tree is $DegradingTreeHex, which degrades at depth 10 as in " +
         "degraded_tree_depth_leak. Nested inside a tree that parses, the degrade still leaves its 10 levels on the " +
-        "reader: every enclosing frame lowers the level by one from wherever it is. Output 1 R4 = Coll^99[Byte] then " +
-        "takes 10 + 1 + 99 = 110. Round-trip identity.",
+        "reader: every enclosing frame lowers the level by one from wherever it is. Output 1's tree body is " +
+        "BoolToSigmaProp(LogicalNot^98(placeholder)): 10 + 98 + 2 = 110. Round-trip identity.",
         nestedLeakAccept),
-      reject("nested-degrade-leak-coll100-reject#1",
-        "The same tx with output 1 R4 = Coll^100[Byte]: 111, rejected at parse. An impl that restores the level once " +
-        "the outer tree parses (for instance a forked reader for the sized body that hands back only its own level) " +
-        "round-trips the tx: the over-accept.",
-        tx(ContextExtension.empty, leakOutputs(100, nestingFirst))))
+      reject("nested-degrade-leak-not99-reject#1",
+        "The same tx with output 1's tree body LogicalNot^99: 111 > MaxTreeDepth, rejected at parse. An impl that " +
+        "restores the level once the outer tree parses (for instance a forked reader for the sized body that hands " +
+        "back only its own level) round-trips the tx: the over-accept.",
+        tx(ContextExtension.empty, leakOutputs(99, nestingFirst))))
 
     def envelope(op: String, entries: Seq[Json]): Json = Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
-      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.6"),
+      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.7"),
       "entries"    -> Json.arr(entries: _*))
     Map(
       OpRegister           -> envelope(OpRegister, registerEntries),

@@ -100,13 +100,13 @@ Unchanged from `runner-contract.md` §3:
 - **`BlockTransactions`** is a block's transactions section as the JVM frames it: the 32-byte header
   id, `VLQ(10,000,000 + blockVersion)` (block version > 1), the VLQ tx count, then the transactions.
   The runner parses the transactions one after another from the section's bytes, as a node parses a
-  block, and re-serializes the section. The JVM gives each transaction a fresh reader (ergo v6.0.6
+  block, and re-serializes the section. The JVM gives each transaction a fresh reader (ergo v6.0.7
   `ErgoTransactionSerializer.parse`): no nesting level, constant or ValDef state carries from one
   transaction to the next. rudolph grades it through ergo-core's `BlockTransactionsSerializer`, which
   needs the `SANTA_TX_BLESSER` build.
   - **A section takes its version context from its own block version, not from the entry's `version`.**
     From block version 4 the JVM parses each transaction under (blockVersion − 1, blockVersion − 1); below
-    that it parses them outside any version context (ergo v6.0.6 `BlockTransactions.scala:184-202`), on a
+    that it parses them outside any version context (ergo v6.0.7 `BlockTransactions.scala:184-202`), on a
     thread at the default (1, 1) (sigma-state `VersionContext.scala:58-61`). There a tree's version is not
     compared with the activated one (`:20`), so a block of version 3 takes an output whose tree is v4, and a
     block of version 4 does not. The entry's `version` is nominal for this kind: a runner must not apply it

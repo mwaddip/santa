@@ -36,11 +36,11 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.ivy2/local/org.ergoplatform
-          key: ergo-core-v6.0.6
-      - name: publish ergo-core @ v6.0.6
+          key: ergo-core-v6.0.7
+      - name: publish ergo-core @ v6.0.7
         if: steps.ergo-core.outputs.cache-hit != 'true'
         run: |
-          git clone --depth 1 --branch v6.0.6 https://github.com/ergoplatform/ergo.git /tmp/ergo
+          git clone --depth 1 --branch v6.0.7 https://github.com/ergoplatform/ergo.git /tmp/ergo
           mise trust runners/rudolph/mise.toml
           mise --cd runners/rudolph install
           # Activate rudolph's toolchain into THIS shell (mise --cd exec would also

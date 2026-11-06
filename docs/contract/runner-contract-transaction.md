@@ -159,7 +159,7 @@ tx.validateStateful(boxesToSpend, dataBoxes, ctx, 0L)
 ```
 
 **Parse contexts.** The transaction and the boxes are parsed as a node parses them when it validates a block
-(ergo v6.0.6). The blessed verdicts assume these contexts, so a runner parses the same way:
+(ergo v6.0.7). The blessed verdicts assume these contexts, so a runner parses the same way:
 
 | Bytes | Parsed under | JVM source |
 |---|---|---|
@@ -220,11 +220,11 @@ Two provenances, distinguished by the `source` prefix on each entry:
 **Re-blessing.** Producing actuals requires no oracle dependency (§3) — a runner needs only
 its own implementation. Re-producing the committed vectors requires the blesser:
 `SANTA_TX_BLESSER=1 sbt test` inside `jvm-blesser/` with a `publishLocal`'d ergo-core
-6.0.6 (locally from an `ergoplatform/ergo@v6.0.6` clone; the conform CI workflow
+6.0.7 (locally from an `ergoplatform/ergo@v6.0.7` clone; the conform CI workflow
 publishes the same artifacts itself, cached by tag). The README carries the full
 prerequisite. The committed vectors were blessed under ergo-core 6.0.2.1 (their
-`blessed_by` says so) and re-derived identically under 6.0.6 when the oracle moved
-(2026-09-27).
+`blessed_by` says so) and re-derived identically under 6.0.7 when the oracle moved
+(2026-11-06).
 
 **Never-panic invariant.** The runner wraps each entry; a would-be crash is caught and
 surfaces as `panicked` + `note`, and the run continues. An implementation crash is faithfully
@@ -260,7 +260,7 @@ accept control + a one-step reject.
 **Authored storage rent (6 files / 25 entries; `AuthoredTxStorageRent`, synthetic context at height
 1051200, §6).** Every box is `sigmaProp(true)`, so the script path accepts every one of these
 transactions. A reject can only come from the rent verdict. JVM source:
-`ErgoInterpreter.verify` / `checkExpiredBox`, ergo v6.0.6.
+`ErgoInterpreter.verify` / `checkExpiredBox`, ergo v6.0.7.
 - **`storage-rent-recreation`:**
   - the correct recreation accepts, and so does a token-bearing twin
   - five final rejects, each breaking one property: creation height, value, R1 (script),
@@ -318,7 +318,7 @@ A stratified sample of real rent spends, the real-history gate for rent ports.
 **Authored tree-version spends (3 files / 23 entries; `AuthoredTxTreeVersion`).** A box whose tree is above
 the activated script version: the storage-rent synthetic context at block version 4, and the same ten headers
 re-linked at block version 3. Every tree is a `SigmaProp(true)` constant, so an impl that runs the script of
-such a tree accepts. JVM source: `Interpreter.checkSoftForkCondition`, sigma-state v6.0.6; the parse contexts
+such a tree accepts. JVM source: `Interpreter.checkSoftForkCondition`, sigma-state v6.0.7; the parse contexts
 are §5's.
 - **`transaction/v6/authored/tree-version-above-activated`** (8, block version 4):
   - a spent box whose tree is v4, v5, v6 or v7 is invalid ("ErgoTree version N is higher than activated 3");

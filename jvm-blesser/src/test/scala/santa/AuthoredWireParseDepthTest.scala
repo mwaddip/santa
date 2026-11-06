@@ -2,11 +2,11 @@ package santa
 
 import io.circe.Json
 
-/** Anchors the parse-depth wire vectors: one accept/reject pair per path the reader's level counter
-  * (MaxTreeDepth 110) runs through. extract() re-derives every verdict through WireCanonicalize and fails loud
-  * on a wrong-reason reject, a non-canonical accept, or a size-flagged tree that degraded instead of parsing;
-  * this pins each entry's verdict and the nested bytes, hand-derived from the sigmastate v6.0.6 encodings.
-  * A failure means sigma-state changed where it counts a level, or the blesser built a different nesting. */
+/** Anchors the parse-depth wire vectors: one accept/reject pair per path the reader's depth counters
+  * run through. Type-nesting vectors pin MaxTypeDepth = 8 (TypeSerializer, sigma-state v6.0.7);
+  * value-nesting vectors pin MaxTreeDepth = 110 (CoreByteReader). extract() re-derives every verdict
+  * through WireCanonicalize and fails loud on a wrong-reason reject, a non-canonical accept, or a
+  * size-flagged tree that degraded instead of parsing. */
 class AuthoredWireParseDepthTest extends munit.FunSuite {
   private lazy val vectors = AuthoredWireParseDepth.extract()
 
@@ -20,9 +20,6 @@ class AuthoredWireParseDepthTest extends munit.FunSuite {
     * 1 then the empty innermost Coll[Byte]. */
   private def collN(n: Int): String = "0c" * (n - 2) + "1a" + "01" * (n - 1) + "00"
 
-  /** Input 0's extension starts at byte 34 (inputs count + boxId + empty-proof length), hex offset 68. */
-  private def extAt(hex: String, len: Int): String = hex.substring(68, 68 + len)
-
   /** Each op holds [accept, reject]; `accept`/`reject` must occur in the respective entry's bytes. */
   private def pair(op: String)(check: (String, Boolean) => Unit): Unit = {
     val es = entries(op)
@@ -30,9 +27,9 @@ class AuthoredWireParseDepthTest extends munit.FunSuite {
     es.foreach(e => check(bytesHex(e), isReject(e)))
   }
 
-  test("register: output R4 = Coll^109[Byte] accepts, Coll^110 rejects (getValue + n data levels)") {
+  test("register: output R4 = Coll^10[Byte] accepts at type depth 8, Coll^11 rejects") {
     pair(AuthoredWireParseDepth.OpRegister) { (hex, reject) =>
-      val n = if (reject) 110 else 109
+      val n = if (reject) 11 else 10
       // the only output is the last thing in the tx: [1 register][R4 value]
       assert(hex.endsWith("01" + collN(n)), s"Coll^$n[Byte] in R4")
     }
@@ -48,9 +45,9 @@ class AuthoredWireParseDepthTest extends munit.FunSuite {
     }
   }
 
-  test("segregated constant: Coll^110[Byte] accepts, Coll^111 rejects (data levels only)") {
+  test("segregated constant: Coll^10[Byte] accepts at type depth 8, Coll^11 rejects") {
     pair(AuthoredWireParseDepth.OpSegregatedConstant) { (hex, reject) =>
-      val n = if (reject) 111 else 110
+      val n = if (reject) 11 else 10
       // header 0x10 (v0, segregation, no size); constants [Coll^n[Byte], SigmaProp(true)]; body placeholder 1
       assert(hex.contains("10" + "02" + collN(n) + "08d3" + "7301"), s"segregated Coll^$n[Byte]")
     }
@@ -61,42 +58,49 @@ class AuthoredWireParseDepthTest extends munit.FunSuite {
       val k = if (reject) 108 else 107
       // [count 01][id 01][SigmaProp 08] then CAND(inner, TrueProp) k deep: (96 02)^k d3 (d3)^k
       val ext = "0101" + "08" + "9602" * k + "d3" + "d3" * k
-      assertEquals(extAt(hex, ext.length), ext, s"$k nested CAND")
+      assertEquals(hex.substring(68, 68 + ext.length), ext, s"$k nested CAND")
     }
   }
 
-  test("nested box: a Box extension value's size-flagged tree constant Coll^108 accepts, Coll^109 rejects") {
+  test("nested box: a Box extension value's size-flagged tree constant Coll^10 accepts, Coll^11 rejects") {
     pair(AuthoredWireParseDepth.OpNestedBox) { (hex, reject) =>
-      val n = if (reject) 109 else 108
-      // [count 01][id 01][Box 63] ... the box's tree: header 0x18, size 2n+4 (VLQ), constants, placeholder 1
-      assertEquals(extAt(hex, 6), "010163")
-      val size = if (reject) "de01" else "dc01"
-      assert(hex.contains("18" + size + "02" + collN(n) + "08d3" + "7301"), s"box tree with Coll^$n[Byte]")
+      val n = if (reject) 11 else 10
+      // [count 01][id 01][Box 63] ... the box's tree: header 0x18, size VLQ, 2 constants, placeholder 1
+      assertEquals(hex.substring(68, 74), "010163")
+      // size = constants_count(1) + Coll^n type+data + SigmaProp(08 d3) + body(73 01)
+      val collBytes = collN(n).length / 2
+      val size = "%02x".format(1 + collBytes + 2 + 2)
+      assert(hex.contains("18" + size + "02" + collN(n) + "08d3" + "7301"),
+        s"box tree with Coll^$n[Byte]")
     }
   }
 
-  test("degraded tree leak: output 0 degrades 10 levels deep; output 1 R4 Coll^99 accepts, Coll^100 rejects") {
+  test("degraded tree leak: output 0 degrades 10 levels deep; output 1 LogicalNot^98 accepts, 99 rejects") {
     pair(AuthoredWireParseDepth.OpDegradeLeak) { (hex, reject) =>
-      val n = if (reject) 100 else 99
+      val m = if (reject) 99 else 98
       // output 0: header 0x0b (v3, size), size 10, BoolToSigmaProp, 8 LogicalNot, unknown opcode 0xfd
       assert(hex.contains("0b" + "0a" + "d1" + "ef" * 8 + "fd"), "degrading tree")
-      assert(hex.endsWith("01" + collN(n)), s"output 1 R4 Coll^$n[Byte]")
+      // output 1's tree: header 0x18, size = m + 6, one constant Boolean true, body
+      val size = if (reject) "69" else "68"
+      val tree = "18" + size + "01" + "0101" + "d1" + "ef" * m + "7300"
+      assert(hex.contains(tree), s"output 1 tree with $m LogicalNot")
     }
   }
 
-  test("nested degrade leak: a degrade inside output 0's parsing tree leaves 10 levels; Coll^99 accepts, 100 rejects") {
+  test("nested degrade leak: a degrade inside output 0's parsing tree leaves 10 levels; LogicalNot^98 accepts, 99 rejects") {
     pair(AuthoredWireParseDepth.OpNestedDegradeLeak) { (hex, reject) =>
-      val n = if (reject) 100 else 99
-      // output 0's tree: header 0x18 (v0, size, segregation), size 0x39 = 57, two constants: a Box (type 0x63:
-      // value 1000000, the degrading tree, height 1, no tokens or registers, ...) and SigmaProp(true); body
-      // placeholder 1
+      val m = if (reject) 99 else 98
+      // output 0's tree: header 0x18 (v0, size, segregation), carries the degrading box
       val degrading = "0b" + "0a" + "d1" + "ef" * 8 + "fd"
-      assert(hex.contains("18" + "39" + "02" + "63" + "c0843d" + degrading + "01" + "0000"), "tree carrying the box")
-      assert(hex.endsWith("01" + collN(n)), s"output 1 R4 Coll^$n[Byte]")
+      assert(hex.contains(degrading), "degrading tree inside output 0's box constant")
+      // output 1's tree: same LogicalNot chain
+      val size = if (reject) "69" else "68"
+      val tree = "18" + size + "01" + "0101" + "d1" + "ef" * m + "7300"
+      assert(hex.contains(tree), s"output 1 tree with $m LogicalNot")
     }
   }
 
-  test("envelopes: santa-wire/v1, the node's v6 tx parse context (3, 3), Transaction kind, 6.0.6 blessing") {
+  test("envelopes: santa-wire/v1, the node's v6 tx parse context (3, 3), Transaction kind, 6.0.7 blessing") {
     assertEquals(vectors.keySet, Set(AuthoredWireParseDepth.OpRegister, AuthoredWireParseDepth.OpTreeBody,
       AuthoredWireParseDepth.OpSegregatedConstant, AuthoredWireParseDepth.OpSigmaBoolean,
       AuthoredWireParseDepth.OpNestedBox, AuthoredWireParseDepth.OpDegradeLeak,
@@ -104,7 +108,7 @@ class AuthoredWireParseDepthTest extends munit.FunSuite {
     vectors.values.foreach { env =>
       val c = env.hcursor
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))
-      assertEquals(c.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.6"))
+      assertEquals(c.get[String]("blessed_by").toOption, Some("jvm:sigma-state-6.0.7"))
       c.downField("entries").as[List[Json]].getOrElse(Nil).foreach { e =>
         assertEquals(e.hcursor.get[String]("kind").toOption, Some("Transaction"), name(e))
         assertEquals(e.hcursor.downField("version").get[Int]("activated").toOption, Some(3))

@@ -1,25 +1,25 @@
 {
   "schema" : "santa-wire/v1",
   "op" : "Transaction.segregated_constant_depth_bound",
-  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
   "entries" : [
     {
-      "name" : "segregated-coll110-accept#0",
+      "name" : "segregated-coll10-accept#0",
       "kind" : "Transaction",
       "source" : "santa:authored-parse-depth",
-      "description" : "Output tree, segregated without the size flag (header 0x10), constants [Coll^110[Byte], SigmaProp(true)], body placeholder 1. Segregated constants are read without a value level (ErgoTreeSerializer.scala:256), so Coll^110 takes exactly 110 data levels. Round-trip identity.",
-      "bytes_hex" : "0155e925cba0a46aaee2ccbf49d5fa861ec5978b4810d3506e996e1d4e70ee0d9800000000018094ebdc0310020c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c1a010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010008d37301010000",
+      "description" : "Output tree, segregated without the size flag (header 0x10), constants [Coll^10[Byte], SigmaProp(true)], body placeholder 1. Type depth 8 = MaxTypeDepth (the segregated constant path reads types through TypeSerializer like any other path). Round-trip identity.",
+      "bytes_hex" : "0155e925cba0a46aaee2ccbf49d5fa861ec5978b4810d3506e996e1d4e70ee0d9800000000018094ebdc0310020c0c0c0c0c0c0c0c1a0101010101010101010008d37301010000",
       "version" : {
         "activated" : 3,
         "ergoTree" : 3
       }
     },
     {
-      "name" : "segregated-coll111-reject#1",
+      "name" : "segregated-coll11-reject#1",
       "kind" : "Transaction",
       "source" : "santa:authored-parse-depth",
-      "description" : "The same tree with constant Coll^111[Byte]: 111 levels, rejected at parse. An impl that also charges a value level here rejects the accept entry instead.",
-      "bytes_hex" : "0155e925cba0a46aaee2ccbf49d5fa861ec5978b4810d3506e996e1d4e70ee0d9800000000018094ebdc0310020c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c1a01010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010008d37301010000",
+      "description" : "The same tree with constant Coll^11[Byte]: type depth 9, rejected at type parse. An impl without the type depth limit round-trips it: the over-accept.",
+      "bytes_hex" : "0155e925cba0a46aaee2ccbf49d5fa861ec5978b4810d3506e996e1d4e70ee0d9800000000018094ebdc0310020c0c0c0c0c0c0c0c0c1a010101010101010101010008d37301010000",
       "error" : "errored",
       "version" : {
         "activated" : 3,

@@ -1,18 +1,21 @@
 package santa
 
 // Authored wire vectors — the parse-time rules for a spending proof's ContextExtension VALUES (sigmastate
-// v6.0.6 `data/shared/src/main/scala/sigma/interpreter/ContextExtension.scala:52-66`), beside the
+// v6.0.7 `data/shared/src/main/scala/sigma/interpreter/ContextExtension.scala:52-66`), beside the
 // count/id bounds of AuthoredWireContextExtensionBounds:
 //   - CheckV6Type (rule 1019, `ValidationRules.scala:165-205`, applied at ContextExtension.scala:62): a
 //     value whose type contains Option, Header or UnsignedBigInt, also inside collections and tuples, is
 //     rejected at parse. The empty-collection forms carry no element data, so the type alone decides.
-//   - value depth: each getValue and each nested data value takes one level of the reader's
-//     MaxTreeDepth (110, `CoreByteReader.scala:127-129`), so Coll^109[Byte] is the deepest value that parses.
+//   - type depth: each recursive type nesting takes one level of the TypeSerializer's MaxTypeDepth
+//     (8, `TypeSerializer.scala:134-136`). Coll[Coll[Byte]] is embeddable (single-byte code 0x1a, depth 0),
+//     so Coll^n[Byte] recurses n-2 times and the boundary is n-2 > 8, i.e. Coll^10[Byte] accepts (depth 8)
+//     and Coll^11[Byte] rejects (depth 9). This is tighter than the reader's MaxTreeDepth = 110 value
+//     depth, which is unreachable through type nesting alone.
 //   - repeated ids: the parsed pairs go through `values.toMap`, so a repeated id keeps its LAST value at
 //     its FIRST position (Scala Map1..Map4). The JVM re-serializes the collapsed map; the tx id follows.
 //
 // Version context (3, 3) is the node's own for a v6 tx: a v4 block's txs parse under
-// `Header.scriptAndTreeFromBlockVersions(4)` (ergo v6.0.6 `BlockTransactions.scala:195`), the post-6.0
+// `Header.scriptAndTreeFromBlockVersions(4)` (ergo v6.0.7 `BlockTransactions.scala:195`), the post-6.0
 // mempool under (activatedScriptVersion, activatedScriptVersion). The tree version matters here:
 // UnsignedBigInt types and data exist only at ergoTree >= 3, so under (3, 0) the UnsignedBigInt rejects
 // would fire at type parse instead of in CheckV6Type.
@@ -118,8 +121,8 @@ object AuthoredWireContextExtensionParse {
     entry(name, description, in, "expected_bytes_hex" -> Json.fromString(out))
   }
 
-  private val V6TypeMsg = "V6 type used in register or context var extension"
-  private val DepthMsg  = "nested value deserialization call depth"
+  private val V6TypeMsg    = "V6 type used in register or context var extension"
+  private val TypeDepthMsg = "nested type deserialization call depth"
 
   def extract(): Map[String, Json] = {
     val ubi = UnsignedBigIntConstant(1L)
@@ -154,17 +157,17 @@ object AuthoredWireContextExtensionParse {
         txWith(ext(Id -> pair(1, CBigInt(java.math.BigInteger.ONE), STuple(SInt, SBigInt))))))
 
     val depthEntries = Seq(
-      accept("ext-depth-coll109-accept#0",
-        "Spending-proof extension {1: Coll^109[Byte]}, each outer collection holding one element and the " +
-        "innermost Coll[Byte] empty. getValue takes one level and each collection level one more, so the value " +
-        "uses exactly MaxTreeDepth = 110 (ValueSerializer.scala:396-398, CoreDataSerializer.scala:95-96). " +
-        "Round-trip identity.",
-        txWith(ext(Id -> nestedCollOfBytes(109)))),
-      reject("ext-depth-coll110-reject#1",
-        "Spending-proof extension {1: Coll^110[Byte]}: one level deeper, 111 > 110, and the JVM throws " +
-        "DeserializeCallDepthExceeded at parse (CoreByteReader.scala:127-129). An impl with a higher depth limit, " +
-        "or none, round-trips it: the over-accept.",
-        txWith(ext(Id -> nestedCollOfBytes(110))), DepthMsg))
+      accept("ext-depth-coll10-accept#0",
+        "Spending-proof extension {1: Coll^10[Byte]}, each outer collection holding one element and the " +
+        "innermost Coll[Byte] empty. Coll[Coll[Byte]] is embeddable (code 0x1a, no recursion in " +
+        "TypeSerializer), so Coll^10 recurses 8 times through the generic-Coll path (0x0c): depth 8 = " +
+        "MaxTypeDepth (TypeSerializer.scala:134-136, SigmaConstants.MaxTypeDepth = 8). Round-trip identity.",
+        txWith(ext(Id -> nestedCollOfBytes(10)))),
+      reject("ext-depth-coll11-reject#1",
+        "Spending-proof extension {1: Coll^11[Byte]}: one recursion deeper, type depth 9 > 8, and the JVM " +
+        "throws DeserializeCallDepthExceeded at type parse. An impl with a higher type depth limit, or none, " +
+        "round-trips it: the over-accept.",
+        txWith(ext(Id -> nestedCollOfBytes(11))), TypeDepthMsg))
 
     def repeated(ids: Seq[Byte]): Array[Byte] = txWithRawExtension(
       Array(ids.size.toByte) ++ ids.zipWithIndex.flatMap { case (id, i) => entryBytes(id, IntConstant(i + 1)) })
@@ -183,7 +186,7 @@ object AuthoredWireContextExtensionParse {
     def envelope(op: String, entries: Seq[Json]): Json = Json.obj(
       "schema"     -> Json.fromString("santa-wire/v1"),
       "op"         -> Json.fromString(op),
-      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.6"),
+      "blessed_by" -> Json.fromString("jvm:sigma-state-6.0.7"),
       "entries"    -> Json.arr(entries: _*))
     Map(
       OpV6Type -> envelope(OpV6Type, v6TypeEntries),
