@@ -1,0 +1,65 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "SigmaProp.methodcall_ids",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-sigmaprop-methodcall",
+  "entries" : [
+    {
+      "name" : "propbytes-propertycall-errored#0",
+      "script" : "{ sigmaProp(sigmaProp(true).propBytes.size > 0) }  // JVM: PARSES and then throws at eval: `propBytes` has a PerItemCost cost kind and no `propBytes_eval` handler, so MethodCall.eval takes the non-FixedCost branch and genericMethod.evalMethod raises RuntimeException(\"Cannot find eval method\") — values.scala:1364-1390, SMethod.scala:138-159. sigma-rust has no SigmaProp method container at all and refuses this at PARSE instead, which shows up on the wire arm.",
+      "tree_bytes_hex" : "0b0bd191b1db0801d101010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "isproven-propertycall-errored#1",
+      "script" : "{ sigmaProp(sigmaProp(true).isProven) }  // JVM: PARSES and then throws at eval: `isProven` has a cost kind of plain `null` and no `isProven_eval` handler, so MethodCall.eval takes the non-FixedCost branch and genericMethod.evalMethod raises RuntimeException(\"Cannot find eval method\") — values.scala:1364-1390, SMethod.scala:138-159. sigma-rust has no SigmaProp method container at all and refuses this at PARSE instead, which shows up on the wire arm. The null cost kind still takes the `case _` branch — a type pattern does not match null — so this is the same missing-handler throw and not an NPE.",
+      "tree_bytes_hex" : "0b07d1db0802d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "propbytes-dedicated-node-accept#2",
+      "script" : "{ sigmaProp(sigmaProp(true).propBytes.size > 0) with propBytes as the DEDICATED node }  // JVM: the CONTROL — the same property reached through opcode 0xd0 (SigmaPropBytes) EVALUATES, to SigmaProp d3. So #0 is not about propBytes being unimplemented: it is the MethodCall encoding of it that cannot evaluate. A red here would mean the implementation lacks the node too, and #0/#1 would stop meaning anything.",
+      "tree_bytes_hex" : "0b09d191b1d0d101010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 115,
+        "error" : null
+      }
+    }
+  ]
+}

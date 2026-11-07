@@ -1,0 +1,62 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.sigmaprop_methodcall_ids",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "propBytes-v3-sized#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sigmaprop-methodcall",
+      "description" : "SSigmaProp method id 1, `propBytes`, as a PropertyCall (db 08 01). The JVM resolves it, parses the tree and re-encodes it byte-identically; it then has no `${n}_eval` handler and throws at EVAL, which the eval arm pins separately. Size-flagged (forced above tree version 0, ErgoTree.scala:104): an implementation that has no SigmaProp method container DEGRADES this tree and echoes these bytes, which a byte round-trip cannot tell from a real parse — the v0 unsized twin is what separates them.",
+      "bytes_hex" : "0b0bd191b1db0801d101010400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "isProven-v3-sized#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sigmaprop-methodcall",
+      "description" : "SSigmaProp method id 2, `isProven`, as a PropertyCall (db 08 02). The JVM resolves it, parses the tree and re-encodes it byte-identically; it then has no `${n}_eval` handler and throws at EVAL, which the eval arm pins separately. Size-flagged (forced above tree version 0, ErgoTree.scala:104): an implementation that has no SigmaProp method container DEGRADES this tree and echoes these bytes, which a byte round-trip cannot tell from a real parse — the v0 unsized twin is what separates them.",
+      "bytes_hex" : "0b07d1db0802d10101",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "propBytes-v0-unsized#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sigmaprop-methodcall",
+      "description" : "SSigmaProp method id 1, `propBytes`, as a PropertyCall (db 08 01). The JVM resolves it, parses the tree and re-encodes it byte-identically; it then has no `${n}_eval` handler and throws at EVAL, which the eval arm pins separately. UNSIZED, at tree version 0 because that is the only version where a tree may omit the size flag. With no size flag a parse failure cannot degrade, so an implementation without the SigmaProp container REJECTS outright and goes red here. This is the entry that actually catches the missing method id.",
+      "bytes_hex" : "00d191b1db0801d101010400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "isProven-v0-unsized#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sigmaprop-methodcall",
+      "description" : "SSigmaProp method id 2, `isProven`, as a PropertyCall (db 08 02). The JVM resolves it, parses the tree and re-encodes it byte-identically; it then has no `${n}_eval` handler and throws at EVAL, which the eval arm pins separately. UNSIZED, at tree version 0 because that is the only version where a tree may omit the size flag. With no size flag a parse failure cannot degrade, so an implementation without the SigmaProp container REJECTS outright and goes red here. This is the entry that actually catches the missing method id.",
+      "bytes_hex" : "00d1db0802d10101",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "propBytes-v0-sized#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-sigmaprop-methodcall",
+      "description" : "id 1 at tree version 0, SIZE-FLAGGED — the control separating the two dimensions. It shares the v0 header family with the unsized entries and the size flag with the v3 ones, so a red here with `propBytes-v3-sized#0` green would mean the VERSION matters to method resolution, while a red on the unsized entries alone means only the SIZE FLAG does. Size-flagged (forced above tree version 0, ErgoTree.scala:104): an implementation that has no SigmaProp method container DEGRADES this tree and echoes these bytes, which a byte round-trip cannot tell from a real parse — the v0 unsized twin is what separates them.",
+      "bytes_hex" : "080bd191b1db0801d101010400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    }
+  ]
+}
