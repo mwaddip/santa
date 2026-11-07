@@ -79,8 +79,8 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 
 | surface | pinned value |
 |---|---|
-| `SELF` box | `value = 1000000`, `ergoTree` = the entry's own tree, `transactionId` = 32 zero bytes, `index = 0`, `creationHeight = 0`, no tokens; registers beyond the mandatory ones only via `santa-eval/v4` `selfRegisters` |
-| `INPUTS` / `boxesToSpend` | exactly `[SELF]` (so `selfBoxIndex = 0`) |
+| `SELF` box | `value = 1000000`, `ergoTree` = the entry's own tree, `transactionId` = 32 zero bytes, `index = 0`, `creationHeight = 0`, no tokens; **R4–R9 ABSENT** — a read of one must return `None`, never an arbitrary value — except on `santa-eval/v4`, whose `selfRegisters` replaces them (see the SELF-registers note) |
+| `INPUTS` / `boxesToSpend` | exactly `[SELF]` (so `selfBoxIndex = 0`) — and the SAME box VALUE as `SELF`, not merely one of equal shape (see the note) |
 | `OUTPUTS` / spending tx | empty (no outputs, no other inputs) |
 | `dataInputs` | empty |
 | `headers` | empty |
@@ -93,6 +93,30 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 | `preHeader.votes` | 3 zero bytes (chain-faithful width — `Votes` is fixed-size in byte-oriented models) |
 | `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (33-byte all-zero digest = 32-byte root hash + height byte; flags 0x07 = all operations allowed; keyLength 32; no value-length — serialized `00`×33 `07 20 00`) |
 | extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions; `santa-eval/v5` a full top-level self extension keyed 0..255 — a key ≥ 0x80 is a signed-negative `Byte` that crashes `toSigmaContext` before eval) |
+
+*SELF-registers note (added 2026-11-07, after a runner broke it).* The table always meant R4–R9
+to be absent — "registers beyond the mandatory ones only via `santa-eval/v4`" — but it did not say
+so in those words, and it did not say what `INPUTS = [SELF]` costs. Both halves are now explicit,
+because a runner satisfied neither and the corpus could not see it:
+
+- **Absent, not arbitrary.** A runner that clones a *generated* context (proptest `Arbitrary`,
+  a fixture, a captured box) inherits whatever registers it happens to carry. Nothing fails until
+  a vector reads one — and then it grades against a random value. The first vectors to read SELF's
+  registers on the `santa-eval/v2` arm (`eval/v6/authored/Value.checkType_lazy_default.json`,
+  entries #3/#6/#7) found blitzen doing exactly that: two entries red and one falsely GREEN, all
+  for the runner's reason. A falsely-green entry is the dangerous half — it reports agreement that
+  was never tested. The two controls in that family (`#6` an honest default, `#7` the bare
+  `SELF.R4[Int].isDefined`) exist to catch this, and are what localised it.
+- **The same box value, not an equal-looking one.** A box id is a hash over the serialized box,
+  registers included, so *changing* SELF's registers yields a different box. If a runner fixes
+  SELF's registers but leaves `INPUTS[0]` as it was, `CONTEXT.selfBoxIndex` breaks: the JVM's
+  `selfBoxIndex` is a full-value search of `INPUTS` for SELF, and so is sigma-rust's. Whatever a
+  runner does to SELF it must do to `INPUTS[0]`. This is the half a `Context.properties` red caught
+  during the fix, not reasoning.
+
+`OUTPUTS` is empty here, so it has no registers to pin — but a future vector reading
+`OUTPUTS(i).R4` would need the same treatment stated for outputs, and the premise that no vector
+reads them is exactly the one that just failed for SELF.
 
 *Version note:* the JVM carries `activatedScriptVersion` as its own context field and
 treats `preHeader.version` as data, while sigma-rust DERIVES script activation from the
