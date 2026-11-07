@@ -1,0 +1,248 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.hof_element_type_mismatch",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-checktype-gates",
+  "entries" : [
+    {
+      "name" : "exists-runtime-elem-accept#0",
+      "script" : "{ CX.exists({ (x: Long) => true }) }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say. The lambda declares the RUNTIME element type, so it passes: true",
+      "tree_bytes_hex" : "0b14ae95010083010404028301050504d90101050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "forall-runtime-elem-accept#1",
+      "script" : "{ CX.forall({ (x: Long) => true }) }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say. The lambda declares the RUNTIME element type, so it passes: true",
+      "tree_bytes_hex" : "0b14af95010083010404028301050504d90101050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-runtime-elem-accept#2",
+      "script" : "{ CX.map({ (x: Long) => x }).size == 1 }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say. Map's own result element type comes from the MAPPER's range (transformers.scala:38), not from the input, so a Long mapper over a Coll[Int]-typed input is coherent: true",
+      "tree_bytes_hex" : "0b1893b1ad95010083010404028301050504d901010572010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 98,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-runtime-elem-accept#3",
+      "script" : "{ CX.filter({ (x: Long) => true }).size == 1 }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say. The lambda declares the RUNTIME element type, so it passes: true",
+      "tree_bytes_hex" : "0b1893b1b595010083010404028301050504d901010501010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 98,
+        "error" : null
+      }
+    },
+    {
+      "name" : "exists-node-elem-errored#4",
+      "script" : "{ CX.exists({ (x: Int) => true }) }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say — and here the lambda declares the NODE's element type, so its argument check rejects the Long element (values.scala:1074). The gate is the lambda's, not the transformer's",
+      "tree_bytes_hex" : "0b14ae95010083010404028301050504d90101040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "forall-node-elem-errored#5",
+      "script" : "{ CX.forall({ (x: Int) => true }) }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say — the lambda declares the NODE's element type and its argument check rejects the Long element (values.scala:1074)",
+      "tree_bytes_hex" : "0b14af95010083010404028301050504d90101040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "map-node-elem-errored#6",
+      "script" : "{ CX.map({ (x: Int) => x }).size == 1 }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say — the lambda declares the NODE's element type and its argument check rejects the Long element (values.scala:1074)",
+      "tree_bytes_hex" : "0b1893b1ad95010083010404028301050504d901010472010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "filter-node-elem-errored#7",
+      "script" : "{ CX.filter({ (x: Int) => true }).size == 1 }  // JVM: the JVM's Exists/ForAll/Map/Filter have no element-type check at all (transformers.scala:33-46, :117-128, :155-165, :182-192); the node declares Coll[Int] and the value is a Coll[Long], and only the lambda's own argument check (values.scala:1074) has a say — the lambda declares the NODE's element type and its argument check rejects the Long element (values.scala:1074)",
+      "tree_bytes_hex" : "0b1893b1b595010083010404028301050504d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "exists-empty-accept#8",
+      "script" : "{ CE.exists({ (x: Int) => true }) == false }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: there is no element, so the lambda never runs and no check of any kind fires. exists over an empty collection is false, so the comparison is true. An implementation that gates on the element type instead rejects this with nothing to inspect",
+      "tree_bytes_hex" : "0b1593ae9501008301040402830005d901010401010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 52,
+        "error" : null
+      }
+    },
+    {
+      "name" : "forall-empty-accept#9",
+      "script" : "{ CE.forall({ (x: Int) => true }) }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: no element, no lambda call, no check — and forall over an empty collection is true",
+      "tree_bytes_hex" : "0b12af9501008301040402830005d90101040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-empty-accept#10",
+      "script" : "{ CE.map({ (x: Int) => x }).size == 0 }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: no element, no lambda call, no check, and an empty result. This is the row that ISOLATES Map's gate — with no element the mapper cannot be the thing that objects",
+      "tree_bytes_hex" : "0b1693b1ad9501008301040402830005d901010472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 83,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-empty-accept#11",
+      "script" : "{ CE.filter({ (x: Int) => true }).size == 0 }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: no element, no lambda call, no check, and an empty result",
+      "tree_bytes_hex" : "0b1693b1b59501008301040402830005d901010401010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 83,
+        "error" : null
+      }
+    }
+  ]
+}

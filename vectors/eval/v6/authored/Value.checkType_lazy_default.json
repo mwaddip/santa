@@ -1,0 +1,164 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Value.checkType_lazy_default",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-checktype-gates",
+  "entries" : [
+    {
+      "name" : "byindex-v3-out-of-range-errored#0",
+      "script" : "{ Coll[Int]().getOrElse(0, if (false) 1 else 2L) == 2 }  // JVM: ByIndex at ErgoTree v3 evaluates its default only when the index is OUT of range, and then checks it (transformers.scala:268) — Value.checkType -> SType.isValueOfType compares the value against the node's STATIC type; the Long that `if (false) 1 else 2L` returns is not an Int",
+      "tree_bytes_hex" : "0b1193b2830004040001950100040205040404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "byindex-v3-in-range-accept#1",
+      "script" : "{ Coll(5).getOrElse(0, if (false) 1 else 2L) == 5 }  // JVM: the LAZY control — at ErgoTree v3 an in-range index returns the element and never evaluates the default, so the ill-typed default is never checked: true. The same tree one version lower rejects, which is what proves the laziness",
+      "tree_bytes_hex" : "0b1393b2830104040a04000195010004020504040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 68,
+        "error" : null
+      }
+    },
+    {
+      "name" : "byindex-v2-in-range-errored#2",
+      "script" : "{ Coll(5).getOrElse(0, if (false) 1 else 2L) == 5 }  // JVM: the SAME tree at ErgoTree v2, where ByIndex's default is EAGER: it is evaluated and checked before the index is even consulted (transformers.scala:273) — Value.checkType -> SType.isValueOfType compares the value against the node's STATIC type; the Long that `if (false) 1 else 2L` returns is not an Int",
+      "tree_bytes_hex" : "0a1393b2830104040a04000195010004020504040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "optiongetorelse-v3-none-errored#3",
+      "script" : "{ SELF.R4[Int].getOrElse(if (false) 1 else 2L) == 2 }  // JVM: OptionGetOrElse at ErgoTree v3 evaluates its default only when the Option is None, and then checks it (transformers.scala:634) — Value.checkType -> SType.isValueOfType compares the value against the node's STATIC type; the Long that `if (false) 1 else 2L` returns is not an Int. R4 is absent on the canonical eval context's SELF box, so the Option is None",
+      "tree_bytes_hex" : "0b0f93e5c6a70404950100040205040404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "optiongetorelse-v3-some-accept#4",
+      "script" : "{ SELF.R0[Long].getOrElse(if (false) 1L else 2) == SELF.value }  // JVM: the LAZY control — R0 is the box value, so the Option is Some and at ErgoTree v3 the ill-typed default is never evaluated: true. sigma-rust has NO check at this site at all, so this row and its v2 twin are the pair that shows it",
+      "tree_bytes_hex" : "0b0f93e5c6a7000595010005020404c1a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 101,
+        "error" : null
+      }
+    },
+    {
+      "name" : "optiongetorelse-v2-some-errored#5",
+      "script" : "{ SELF.R0[Long].getOrElse(if (false) 1L else 2) == SELF.value }  // JVM: the SAME tree at ErgoTree v2, where OptionGetOrElse's default is EAGER: it is evaluated and checked even though the Option is Some (transformers.scala:640). Here the lie runs the other way — the node is declared SLong and returns an Int",
+      "tree_bytes_hex" : "0a0f93e5c6a7000595010005020404c1a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "optiongetorelse-v3-none-control-accept#6",
+      "script" : "{ SELF.R4[Int].getOrElse(7) == 7 }  // JVM: the SEPARATING control for entry #3 — the same site and the same absent register, with an HONEST default. The JVM returns 7: true, at cost 93. #3 is the only row of this batch that blitzen-mwaddip already rejects, and since the fork has no check at this site the reject cannot be the type lie; this row says whether the cause is the site itself (red here too) or something that only the ill-typed default triggers (green here). Without it, a fix would leave #3 green for an unknown reason",
+      "tree_bytes_hex" : "0b0a93e5c6a70404040e040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 93,
+        "error" : null
+      }
+    },
+    {
+      "name" : "selfr4-absent-isdefined-accept#7",
+      "script" : "{ SELF.R4[Int].isDefined == false }  // JVM: the register read ALONE, with no OptionGetOrElse above it: true, at cost 78. This splits what entry #6 leaves open — whether an implementation red on #6 fails at the absent-register READ (red here too, in which case check the runner's SELF box before blaming the impl) or at getOrElse over a NONE (green here, which localises it to that node, since #4 proves the same box and the same node work when the Option is Some)",
+      "tree_bytes_hex" : "0b0893e6c6a704040100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 78,
+        "error" : null
+      }
+    }
+  ]
+}
