@@ -1,0 +1,97 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.zero_width_collection",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "zero-width-sized-coll-unit-3#0",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "A size-flagged tree whose segregated constant 0 is Coll[Unit] of declared length 3. Rule 1020 raises a ValidationException, the size bit turns it into a degrade, and the tree becomes UnparsedErgoTree: the carrier parses and re-serializes to its own bytes. An implementation without the rule parses the constant instead and round-trips the same bytes — so this entry is green either way, and the UNSIZED twin is what separates them.",
+      "bytes_hex" : "c0843d1808020c620308d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-sized-coll-unit-0#1",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "A size-flagged tree whose segregated constant 0 is Coll[Unit]() — declared length 0, so no element is read at all. Rule 1020 raises a ValidationException, the size bit turns it into a degrade, and the tree becomes UnparsedErgoTree: the carrier parses and re-serializes to its own bytes. An implementation without the rule parses the constant instead and round-trips the same bytes — so this entry is green either way, and the UNSIZED twin is what separates them.",
+      "bytes_hex" : "c0843d1808020c620008d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-sized-coll-coll-unit#2",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "A size-flagged tree whose segregated constant 0 is Coll[Coll[Unit]] — one outer element whose inner length is 2. Rule 1020 raises a ValidationException, the size bit turns it into a degrade, and the tree becomes UnparsedErgoTree: the carrier parses and re-serializes to its own bytes. An implementation without the rule parses the constant instead and round-trips the same bytes — so this entry is green either way, and the UNSIZED twin is what separates them.",
+      "bytes_hex" : "c0843d180a020c0c62010208d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-sized-coll-tuple-unit-unit#3",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "A size-flagged tree whose segregated constant 0 is Coll[(Unit, Unit)] — one element, a tuple of two zero-width items. Rule 1020 raises a ValidationException, the size bit turns it into a degrade, and the tree becomes UnparsedErgoTree: the carrier parses and re-serializes to its own bytes. An implementation without the rule parses the constant instead and round-trips the same bytes — so this entry is green either way, and the UNSIZED twin is what separates them.",
+      "bytes_hex" : "c0843d180a020c3c62620108d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-unsized-coll-unit-3#4",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "The same Coll[Unit] of declared length 3 in an UNSIZED tree (no size bit). There is no degrade path, so the ValidationException surfaces as a SerializerException and the carrier is REJECTED. An implementation that accepts a zero-width collection parses it and round-trips: the over-accept.",
+      "bytes_hex" : "c0843d10020c620308d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-control-coll-tuple-unit-int#5",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "Negative control: a size-flagged tree whose constant 0 is Coll[(Unit, Int)] — one element (Unit, Int 5); the tuple is NOT wholly zero-width, so the rule does not fire. The tree PARSES — it does not degrade — so an implementation that over-applies the rule rejects this and the family catches it.",
+      "bytes_hex" : "c0843d180a020c4c62010a08d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-control-bare-unit#6",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "Negative control: a size-flagged tree whose constant 0 is a bare SUnit constant — not a collection element, so the rule does not reach it. The tree PARSES — it does not degrade — so an implementation that over-applies the rule rejects this and the family catches it.",
+      "bytes_hex" : "c0843d1806026208d373010100009c557f6a0c98f2320480ca5299285cb0c2d87101e206c6b1f52b203bad49c7ab00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "zero-width-register-coll-unit-3#7",
+      "kind" : "Box",
+      "source" : "santa:authored-zero-width-collection",
+      "description" : "Coll[Unit] of declared length 3 as a box register R4, not inside a tree. It is read by CoreDataSerializer outside deserializeErgoTree's try, so the ValidationException escapes and the carrier is REJECTED with no degrade. An implementation without the rule accepts it.",
+      "bytes_hex" : "c0843d0008d30100010c62038810805fff2b8ab24d3c53a163b31089164aedcd55358657aa965bd29f944a5300",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
