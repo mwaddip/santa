@@ -21,8 +21,16 @@ package santa
 //   indexOf with a surplus argument    -> invalid (reflection refuses the count)
 //   indexOf as a PropertyCall, no args -> invalid (same reason, zero instead of surplus)
 //
-// An implementation that refuses every wrong arity at parse rejects all four, the control included.
-// One that refuses every wrong arity at EVAL over-rejects row 1 only.
+// This tier is where the family actually discriminates. The wire arm cannot: the JVM parses these
+// trees, an implementation that fails to parse them DEGRADES instead (every tree above version 0
+// carries the size flag, so a parse failure is soft), and a degraded tree echoes its received
+// bytes — identical either way.
+//
+// Here the two shapes come apart, but only on row 1. A tree that degraded cannot be spent, which
+// happens to agree with the JVM on rows 2 and 3: those are green on a degrading implementation for
+// a DIFFERENT reason than the JVM's, and the board cannot tell. Row 1 is the one row where the JVM
+// spends and a degrading implementation does not — measured on fork `65c94a03`, which degrades all
+// three wrong-arity trees and takes exactly this one red.
 
 import io.circe.Json
 import scorex.util.encode.Base16
@@ -96,11 +104,13 @@ object AuthoredTxMethodCallArity {
     "reflective-extra-arg" ->
       ("`Coll(1, 2).indexOf(2, 0, 7)` — SCollection method 26 is PerItemCost, so it is invoked " +
        "through `evalMethod`, and reflection refuses an argument count that is not the method's: " +
-       "the spend is INVALID. The tree still parses (the wire arm), so an impl that gates arity " +
-       "at parse rejects it for the wrong reason, one stage too early."),
+       "the spend is INVALID. The JVM reaches that refusal by PARSING the tree and failing at " +
+       "eval. An implementation that instead degrades the tree at parse is also invalid here, for " +
+       "a different reason, and this entry cannot tell the two apart — row 1 is the one that can."),
     "property-call-of-arg-taking-method" ->
       ("`Coll(1, 2).indexOf` as a PropertyCall — the method takes arguments and is given none. " +
-       "Reflection refuses the count exactly as above: INVALID at eval, parsed at wire."),
+       "Reflection refuses the count exactly as above: INVALID at eval on a tree the JVM parsed. " +
+       "Same caveat as the row above: a degrading implementation agrees for the wrong reason."),
     "legal-arity-control" ->
       ("`1.bitwiseOr(2)` — the same shape at the declared arity. VALID, and the cost the surplus- " +
        "argument row must match. The control is what makes the family about arity rather than " +

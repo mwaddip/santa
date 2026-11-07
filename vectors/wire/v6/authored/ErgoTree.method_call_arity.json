@@ -7,7 +7,7 @@
       "name" : "method-call-arity-user-defined-invoke-extra-arg#0",
       "kind" : "ErgoTree",
       "source" : "santa:authored-method-call-arity",
-      "description" : "`1.bitwiseOr(2, 4)` — SInt method 9, a FixedCost method with a `userDefinedInvoke` handler, given one argument more than it takes. The parser builds the call at any arity. Script: { val x = 1.bitwiseOr(2, 4); sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM parses this tree and re-serializes it to the same bytes; an implementation that gates arity at parse rejects it — an over-reject on a tree the JVM accepts. Whether it EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
+      "description" : "`1.bitwiseOr(2, 4)` — SInt method 9, a FixedCost method with a `userDefinedInvoke` handler, given one argument more than it takes. The parser builds the call at any arity. Script: { val x = 1.bitwiseOr(2, 4); sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM PARSES this tree — the root is a real node, not an UnparsedErgoTree — and re-serializes from structure to the same bytes. Note what this entry can and cannot catch: an implementation whose parse fails here but DEGRADES echoes the received bytes and is green too, so byte round-trip cannot separate parsed from degraded. Only a hard reject shows red. Whether the call EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
       "bytes_hex" : "0b10d801d601dc04090402020404040808d3",
       "version" : {
         "activated" : 3,
@@ -18,7 +18,7 @@
       "name" : "method-call-arity-reflective-extra-arg#1",
       "kind" : "ErgoTree",
       "source" : "santa:authored-method-call-arity",
-      "description" : "`Coll(1, 2).indexOf(2, 0, 7)` — SCollection method 26, a PerItemCost method with no `userDefinedInvoke` handler, so it is invoked reflectively. Parses all the same. Script: { val x = Coll(1, 2).indexOf(2, 0, 7); sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM parses this tree and re-serializes it to the same bytes; an implementation that gates arity at parse rejects it — an over-reject on a tree the JVM accepts. Whether it EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
+      "description" : "`Coll(1, 2).indexOf(2, 0, 7)` — SCollection method 26, a PerItemCost method with no `userDefinedInvoke` handler, so it is invoked reflectively. Parses all the same. Script: { val x = Coll(1, 2).indexOf(2, 0, 7); sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM PARSES this tree — the root is a real node, not an UnparsedErgoTree — and re-serializes from structure to the same bytes. Note what this entry can and cannot catch: an implementation whose parse fails here but DEGRADES echoes the received bytes and is green too, so byte round-trip cannot separate parsed from degraded. Only a hard reject shows red. Whether the call EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
       "bytes_hex" : "0b14d801d601dc0c1a100202040304040400040e08d3",
       "version" : {
         "activated" : 3,
@@ -29,7 +29,7 @@
       "name" : "method-call-arity-property-call-of-arg-taking-method#2",
       "kind" : "ErgoTree",
       "source" : "santa:authored-method-call-arity",
-      "description" : "`Coll(1, 2).indexOf` written as a PropertyCall — a method that takes arguments, called with none at all. `PropertyCallSerializer` reads no arguments and does not check that the method wants any. Script: { val x = Coll(1, 2).<indexOf as a PropertyCall>; sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM parses this tree and re-serializes it to the same bytes; an implementation that gates arity at parse rejects it — an over-reject on a tree the JVM accepts. Whether it EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
+      "description" : "`Coll(1, 2).indexOf` written as a PropertyCall — a method that takes arguments, called with none at all. `PropertyCallSerializer` reads no arguments and does not check that the method wants any. Script: { val x = Coll(1, 2).<indexOf as a PropertyCall>; sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM PARSES this tree — the root is a real node, not an UnparsedErgoTree — and re-serializes from structure to the same bytes. Note what this entry can and cannot catch: an implementation whose parse fails here but DEGRADES echoes the received bytes and is green too, so byte round-trip cannot separate parsed from degraded. Only a hard reject shows red. Whether the call EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
       "bytes_hex" : "0b0dd801d601db0c1a1002020408d3",
       "version" : {
         "activated" : 3,
@@ -40,7 +40,7 @@
       "name" : "method-call-arity-legal-arity-control#3",
       "kind" : "ErgoTree",
       "source" : "santa:authored-method-call-arity",
-      "description" : "`1.bitwiseOr(2)` — the same shape at the arity the method declares. The family pins ARITY, not the construct: an implementation that gates arity at parse rejects this too. Script: { val x = 1.bitwiseOr(2); sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM parses this tree and re-serializes it to the same bytes; an implementation that gates arity at parse rejects it — an over-reject on a tree the JVM accepts. Whether it EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
+      "description" : "`1.bitwiseOr(2)` — the same shape at the arity the method declares. The family pins ARITY, not the construct: an implementation that refuses a wrong arity must still take this one, so a blanket refusal of the shape shows up here. Script: { val x = 1.bitwiseOr(2); sigmaProp(true) }. The call is bound in a block and the tree returns sigmaProp(true), so nothing reads the call's type at parse. The JVM PARSES this tree — the root is a real node, not an UnparsedErgoTree — and re-serializes from structure to the same bytes. Note what this entry can and cannot catch: an implementation whose parse fails here but DEGRADES echoes the received bytes and is green too, so byte round-trip cannot separate parsed from degraded. Only a hard reject shows red. Whether the call EVALUATES is graded by transaction/v6/authored/method-call-arity.json.",
       "bytes_hex" : "0b0ed801d601dc0409040201040408d3",
       "version" : {
         "activated" : 3,

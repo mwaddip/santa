@@ -14,8 +14,21 @@ package santa
 // refuse first. The encodings came from the sigma-rust session (2026-11-07); the blesser
 // re-derives every round-trip through WireCanonicalize.
 //
-// An implementation that gates arity at PARSE rejects all four trees — including the control,
-// whose arity is legal — and so refuses trees the JVM accepts.
+// WHAT THIS ARM CAN AND CANNOT SEE. The JVM PARSES these trees — the root is a real node, not an
+// `UnparsedErgoTree` — and re-serializes from structure to the same bytes. An implementation whose
+// parse instead FAILS on them produces the same bytes anyway, as long as it degrades: a degraded
+// tree keeps its received bytes and echoes them. And degrading is the norm rather than the
+// exception here, because every tree above version 0 must carry the size flag
+// (`ErgoTree.scala:104`, `require(version == 0 || hasSize)`), which is what makes a parse failure
+// soft. So byte round-trip CANNOT separate "parsed" from "degraded" for this family.
+//
+// Measured (sigma-rust session, 2026-11-07): fork `65c94a03` degrades all three wrong-arity trees
+// with `TypeUnificationError("items lists are different sizes")` — signature unification failing on
+// the count — and is green on every entry here for exactly that reason.
+//
+// These entries therefore pin one fact — the JVM parses a wrong-arity call rather than degrading
+// it — and go red only on an implementation that HARD-rejects, with no degrade. The eval-side
+// difference is what the transaction tier grades.
 
 import io.circe.Json
 
@@ -53,7 +66,8 @@ object AuthoredWireMethodCallArity {
        "the method wants any."),
     "legal-arity-control" ->
       ("`1.bitwiseOr(2)` — the same shape at the arity the method declares. The family pins " +
-       "ARITY, not the construct: an implementation that gates arity at parse rejects this too."))
+       "ARITY, not the construct: an implementation that refuses a wrong arity must still take " +
+       "this one, so a blanket refusal of the shape shows up here."))
 
   private def version: Json =
     Json.obj("activated" -> Json.fromInt(V3.toInt), "ergoTree" -> Json.fromInt(V3.toInt))
@@ -74,10 +88,13 @@ object AuthoredWireMethodCallArity {
     val entries = Trees.zipWithIndex.map { case ((name, script, treeHex), i) =>
       accept(s"method-call-arity-$name#$i",
         s"${Descriptions(name)} Script: $script. The call is bound in a block and the tree " +
-        "returns sigmaProp(true), so nothing reads the call's type at parse. The JVM parses " +
-        "this tree and re-serializes it to the same bytes; an implementation that gates arity " +
-        "at parse rejects it — an over-reject on a tree the JVM accepts. Whether it EVALUATES " +
-        "is graded by transaction/v6/authored/method-call-arity.json.",
+        "returns sigmaProp(true), so nothing reads the call's type at parse. The JVM PARSES this " +
+        "tree — the root is a real node, not an UnparsedErgoTree — and re-serializes from " +
+        "structure to the same bytes. Note what this entry can and cannot catch: an " +
+        "implementation whose parse fails here but DEGRADES echoes the received bytes and is " +
+        "green too, so byte round-trip cannot separate parsed from degraded. Only a hard reject " +
+        "shows red. Whether the call EVALUATES is graded by " +
+        "transaction/v6/authored/method-call-arity.json.",
         treeHex)
     }
     Map(Op -> Json.obj(
