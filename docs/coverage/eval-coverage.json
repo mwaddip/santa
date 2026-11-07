@@ -5551,6 +5551,35 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Numeric.methodcall_ids.json" : {
+      "accepts" : 0,
+      "entries" : 3,
+      "methods" : [
+        "106:1 SigmaDslBuilder.groupGenerator",
+        "4:1 Int.toByte",
+        "4:5 Int.toBigInt"
+      ],
+      "op" : "Numeric.methodcall_ids",
+      "ops" : [
+        "Const",
+        "GroupGenerator$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Rule1012_header_size_bit.json" : {
       "accepts" : 0,
       "entries" : 1,
@@ -11176,7 +11205,8 @@
     },
     "106:1" : {
       "families" : [
-        "v5/spec/groupGenerator_equivalence.json"
+        "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/Numeric.methodcall_ids.json"
       ],
       "name" : "SigmaDslBuilder.groupGenerator"
     },
@@ -11517,6 +11547,12 @@
       ],
       "name" : "Short.bitwiseOr"
     },
+    "4:1" : {
+      "families" : [
+        "v6/authored/Numeric.methodcall_ids.json"
+      ],
+      "name" : "Int.toByte"
+    },
     "4:10" : {
       "families" : [
         "v6/spec/Int_6.0_methods.json"
@@ -11540,6 +11576,12 @@
         "v6/spec/Int_6.0_methods.json"
       ],
       "name" : "Int.shiftRight"
+    },
+    "4:5" : {
+      "families" : [
+        "v6/authored/Numeric.methodcall_ids.json"
+      ],
+      "name" : "Int.toBigInt"
     },
     "4:6" : {
       "families" : [
@@ -12952,6 +12994,7 @@
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -14239,7 +14282,8 @@
     "GroupGenerator$" : {
       "families" : [
         "v5/spec/groupGenerator_equivalence.json",
-        "v6/authored/Coll.append_runtime_item_type.json"
+        "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Numeric.methodcall_ids.json"
       ],
       "op_codes" : [
         "0x82"
@@ -14652,6 +14696,7 @@
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
+        "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
@@ -16031,11 +16076,11 @@
   "tier" : "eval",
   "totals" : {
     "accepts" : 2246,
-    "distinct_methods" : 147,
+    "distinct_methods" : 149,
     "distinct_ops" : 83,
-    "entries" : 2529,
-    "files" : 296,
-    "rejects" : 283,
+    "entries" : 2532,
+    "files" : 297,
+    "rejects" : 286,
     "unwalked" : 10
   }
 }

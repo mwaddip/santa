@@ -1,0 +1,62 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Numeric.methodcall_ids",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-numeric-methodcall-gate",
+  "entries" : [
+    {
+      "name" : "int-tobyte-id1-errored#0",
+      "script" : "{ (1: Int).toByte }  // JVM: PARSES at tree version 3 and throws at eval: `toByte` is in the 38-method parse-then-fail set — neither a FixedCost nor carrying a `toByte_eval` handler, so MethodCall.eval's non-FixedCost branch raises RuntimeException(\"Cannot find eval method\"). sigma-rust refuses method id 1 at PARSE instead, which the wire arm pins.",
+      "tree_bytes_hex" : "0b05db04010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "int-tobigint-id5-errored#1",
+      "script" : "{ (1: Int).toBigInt }  // JVM: PARSES at tree version 3 and throws at eval: `toBigInt` is in the 38-method parse-then-fail set — neither a FixedCost nor carrying a `toBigInt_eval` handler, so MethodCall.eval's non-FixedCost branch raises RuntimeException(\"Cannot find eval method\"). sigma-rust refuses method id 5 at PARSE instead, which the wire arm pins. This is the id sigma-rust leaves out of its numeric table ALTOGETHER, so it refuses this at parse at every version while the JVM parses it at v3 — a parse-side divergence, the opposite direction to the spend one the probe expected.",
+      "tree_bytes_hex" : "0b05db04050402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sglobal-id1-on-int-errored#2",
+      "script" : "{ SGlobal method 1 (groupGenerator) invoked on an Int receiver, db 6a 01 }  // JVM: PARSES — 0x6a is SGlobal, which has method 1 at every tree version, so rule 1016 passes — and then throws IllegalArgumentException \"object is not an instance of declaring class\" in reflection, the receiver being an Integer and not a SigmaDslBuilder. A DIFFERENT failure class from #0 and #1, and the tree the JVM's own below-v3 serializer emits for a numeric method call.",
+      "tree_bytes_hex" : "0b05db6a010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

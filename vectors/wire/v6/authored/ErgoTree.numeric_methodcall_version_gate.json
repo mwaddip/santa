@@ -1,0 +1,86 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.numeric_methodcall_version_gate",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "tobytes-v3-sized#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "`sigmaProp((1: Int).toBytes.size == 4)`, id 6 at tree version 3, where the method IS parser-visible: parses and round-trips byte-identically (and evaluates to SigmaProp d3 at cost 51 — already pinned at v3 by eval/v6/spec/Int_6.0_methods.json). The upper side of the gate, and the control for the two entries below.",
+      "bytes_hex" : "0b0ad193b1db040604020408",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "tobytes-v0-sized-degrades#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "The version gate: rule 1016 CheckAndGetMethod resolves a method id through getMethodById, which returns None for EVERY numeric id below tree version 3 — 7 ids listed in SIntMethods.methods, 0 parser-visible. At v0 this tree is size-flagged, so the failure is SOFT: the JVM degrades it to an unparsed tree and ECHOES these bytes, which is why this is an identity entry and not a reject. A byte round-trip cannot tell that degrade from a parse — #2 is what can.",
+      "bytes_hex" : "080ad193b1db040604020408",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "tobytes-v0-unsized-reject#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "The version gate: rule 1016 CheckAndGetMethod resolves a method id through getMethodById, which returns None for EVERY numeric id below tree version 3 — 7 ids listed in SIntMethods.methods, 0 parser-visible. UNSIZED at v0, so the failure cannot degrade and the JVM REJECTS outright. This is the entry that actually witnesses the gate. sigma-rust's min_version V3 makes it reject here too, so this one AGREES — it is a regression guard for the gate, not a divergence.",
+      "bytes_hex" : "00d193b1db040604020408",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "tobyte-v0-unsized-reject#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "The version gate: rule 1016 CheckAndGetMethod resolves a method id through getMethodById, which returns None for EVERY numeric id below tree version 3 — 7 ids listed in SIntMethods.methods, 0 parser-visible. The same gate on id 1 rather than id 6, unsized at v0: rejected. Together with #2 this shows the gate is not specific to the two ids the probe asked about — it covers all of 1-7.",
+      "bytes_hex" : "00db04010402",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "tobigint-v3-sized#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "`(1: Int).toBigInt`, id 5 at tree version 3: the JVM PARSES it (identity) and then throws at eval. sigma-rust omits id 5 from its numeric table at every version and so refuses it at parse — making this the one genuine parse-side divergence of this round. The eval arm carries the throw.",
+      "bytes_hex" : "0b05db04050402",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "sglobal-id1-on-int-v0-unsized#5",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "`db 6a 01` — SGlobal method 1 (groupGenerator) invoked on an Int receiver — UNSIZED at tree version 0, and it PARSES: 0x6a is SGlobal, which has method 1 at every version, so rule 1016 passes where every numeric id fails. Identity round-trip. The only parseable-below-v3 tree in this area, and the shape the JVM's own serializer emits for a below-v3 numeric method call — so the JVM writes a numeric call that reads back as an SGlobal one. An implementation keying the lookup off the concrete receiver type rejects it.",
+      "bytes_hex" : "00db6a010402",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "sglobal-id1-on-int-v3-sized#6",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-numeric-methodcall-gate",
+      "description" : "The same `db 6a 01` tree at version 3, size-flagged: also parses, also identity. The pair with #5 shows this one is NOT version-gated, unlike every numeric id — which is what makes it the counterexample that keeps the gate claim honest.",
+      "bytes_hex" : "0b05db6a010402",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
