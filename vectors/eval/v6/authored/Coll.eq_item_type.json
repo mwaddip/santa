@@ -1,0 +1,176 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.eq_item_type",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-coll-eq-item-type",
+  "entries" : [
+    {
+      "name" : "pair-items-mismatch-false#0",
+      "script" : "{ If(false, Coll[(Int, Int)](), Coll[(Long, Long)]()) == Coll[(Int, Int)]() }  // JVM: false. equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323). Both sides are EMPTY, so an implementation that compares items one by one finds nothing to disagree about and answers true — PAIR items are one of the composite kinds sigma-rust does not item-type-check. Value.checkType cannot stop the tree getting here: isValueOfType asks only isInstanceOf[Coll[_]] for a collection (SType.scala:198), so the declared Coll[Int] is satisfied by a Coll[Long]",
+      "tree_bytes_hex" : "0b0d93950100830058830059830058",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 56,
+        "error" : null
+      }
+    },
+    {
+      "name" : "nested-coll-mismatch-false#1",
+      "script" : "{ If(false, Coll[Coll[Int]](), Coll[Coll[Long]]()) == Coll[Coll[Int]]() }  // JVM: false. equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323). The NESTED-collection twin of #0, the other composite kind that goes item-by-item in sigma-rust. Value.checkType cannot stop the tree getting here: isValueOfType asks only isInstanceOf[Coll[_]] for a collection (SType.scala:198), so the declared Coll[Int] is satisfied by a Coll[Long]",
+      "tree_bytes_hex" : "0b0d93950100830010830011830010",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 56,
+        "error" : null
+      }
+    },
+    {
+      "name" : "primitive-items-mismatch-false#2",
+      "script" : "{ If(false, Coll[Int](), Coll[Long]()) == Coll[Int]() }  // JVM: false. The PRIMITIVE-item control: equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323), and sigma-rust does check item types for primitives, so this row is false on both and is what rules the If shape out as the cause of #0 and #1",
+      "tree_bytes_hex" : "0b0d93950100830004830005830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 56,
+        "error" : null
+      }
+    },
+    {
+      "name" : "same-item-types-true#3",
+      "script" : "{ Coll[(Int, Int)]() == Coll[(Int, Int)]() }  // JVM: true. The same-item-type control — two empty pair collections ARE equal, so #0's false is the item-type difference and not emptiness. NOTE this tree has no If, so its cost is not the counterpart of #0's; #7 is",
+      "tree_bytes_hex" : "0b0793830058830058",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 51,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-keeps-input-item-type-false#4",
+      "script" : "{ If(false, Coll[Int](1), Coll[Long](2L)).filter({ (x: Long) => false }) == Coll[Int]() }  // JVM: false. Coll.filter keeps the INPUT's item type, so filtering a Coll[Long] down to nothing yields an empty Coll[LONG], which is unequal to an empty Coll[Int]. equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323). This is the row that needs the element-type gate gone first — see Coll.hof_element_type_mismatch — so an implementation still gating Filter rejects here instead of answering false",
+      "tree_bytes_hex" : "0b1893b595010083010404028301050504d90101050100830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 97,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-items-mismatch-neq-true#5",
+      "script" : "{ If(false, Coll[(Int, Int)](), Coll[(Long, Long)]()) != Coll[(Int, Int)]() }  // JVM: true — #0 under NEQ. equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323), and NEQ negates it",
+      "tree_bytes_hex" : "0b0d94950100830058830059830058",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 56,
+        "error" : null
+      }
+    },
+    {
+      "name" : "nested-coll-mismatch-neq-true#6",
+      "script" : "{ If(false, Coll[Coll[Int]](), Coll[Coll[Long]]()) != Coll[Coll[Int]]() }  // JVM: true — #1 under NEQ. equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323), and NEQ negates it",
+      "tree_bytes_hex" : "0b0d94950100830010830011830010",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 56,
+        "error" : null
+      }
+    },
+    {
+      "name" : "same-shape-honest-true#7",
+      "script" : "{ If(false, Coll[(Int, Int)](), Coll[(Int, Int)]()) == Coll[(Int, Int)]() }  // JVM: true. The SAME-SHAPE honest twin of #0 — identical tree but for the false branch's item types, so the cost difference against #0 is the item-type mismatch alone and nothing else. This is the row to read #0's cost against, not #3",
+      "tree_bytes_hex" : "0b0d93950100830058830058830058",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    }
+  ]
+}
