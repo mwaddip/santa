@@ -1,0 +1,55 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.method_call_arity_degrade_witness",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "arity-degrade-witness-legal-arity-control#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-arity-degrade-witness",
+      "description" : "`1.bitwiseOr(2)` at the arity the method declares — the control that rules the lossy name out as the cause of any red here. The JVM parses it and so does an implementation with no arity gate at all, so both re-encode and both are green. Beside the call the tree binds a ValDef whose type parameter is named with the invalid UTF-8 byte ff. The JVM PARSES the tree, lossy-decodes that name to U+FFFD and re-encodes it as three bytes, so the canonical form is LONGER than the input and the declared size grows with it. An implementation that degrades this tree instead — which is what a parse-time arity refusal does, since the size flag makes the failure soft — echoes the bytes it received and does not reach expected_bytes_hex: RED. This is what ErgoTree.method_call_arity cannot show, because there a degrade and a parse emit the same bytes. Lenient parsing does not blunt it: the leniency flag reaches only the root-type check, and the size-flagged degrade runs either way.",
+      "bytes_hex" : "0b1cd802d701016701ffd901026701ff7202d603dc0409040201040408d3",
+      "expected_bytes_hex" : "0b20d802d701016703efbfbdd901026703efbfbd7202d603dc0409040201040408d3",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "arity-degrade-witness-user-defined-invoke-extra-arg#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-arity-degrade-witness",
+      "description" : "`1.bitwiseOr(2, 4)` — one argument more than the method takes. Beside the call the tree binds a ValDef whose type parameter is named with the invalid UTF-8 byte ff. The JVM PARSES the tree, lossy-decodes that name to U+FFFD and re-encodes it as three bytes, so the canonical form is LONGER than the input and the declared size grows with it. An implementation that degrades this tree instead — which is what a parse-time arity refusal does, since the size flag makes the failure soft — echoes the bytes it received and does not reach expected_bytes_hex: RED. This is what ErgoTree.method_call_arity cannot show, because there a degrade and a parse emit the same bytes. Lenient parsing does not blunt it: the leniency flag reaches only the root-type check, and the size-flagged degrade runs either way.",
+      "bytes_hex" : "0b1ed802d701016701ffd901026701ff7202d603dc04090402020404040808d3",
+      "expected_bytes_hex" : "0b22d802d701016703efbfbdd901026703efbfbd7202d603dc04090402020404040808d3",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "arity-degrade-witness-reflective-extra-arg#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-arity-degrade-witness",
+      "description" : "`Coll(1, 2).indexOf(2, 0, 7)` — one argument more than the method takes, on a method with no userDefinedInvoke handler. Beside the call the tree binds a ValDef whose type parameter is named with the invalid UTF-8 byte ff. The JVM PARSES the tree, lossy-decodes that name to U+FFFD and re-encodes it as three bytes, so the canonical form is LONGER than the input and the declared size grows with it. An implementation that degrades this tree instead — which is what a parse-time arity refusal does, since the size flag makes the failure soft — echoes the bytes it received and does not reach expected_bytes_hex: RED. This is what ErgoTree.method_call_arity cannot show, because there a degrade and a parse emit the same bytes. Lenient parsing does not blunt it: the leniency flag reaches only the root-type check, and the size-flagged degrade runs either way.",
+      "bytes_hex" : "0b25d802d701016701ffd901026701ff7202d603dc0c1a830204040204040304040400040e08d3",
+      "expected_bytes_hex" : "0b29d802d701016703efbfbdd901026703efbfbd7202d603dc0c1a830204040204040304040400040e08d3",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "arity-degrade-witness-property-call-of-arg-taking-method#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-arity-degrade-witness",
+      "description" : "`Coll(1, 2).indexOf` with no arguments at all, written as a PropertyCall. Beside the call the tree binds a ValDef whose type parameter is named with the invalid UTF-8 byte ff. The JVM PARSES the tree, lossy-decodes that name to U+FFFD and re-encodes it as three bytes, so the canonical form is LONGER than the input and the declared size grows with it. An implementation that degrades this tree instead — which is what a parse-time arity refusal does, since the size flag makes the failure soft — echoes the bytes it received and does not reach expected_bytes_hex: RED. This is what ErgoTree.method_call_arity cannot show, because there a degrade and a parse emit the same bytes. Lenient parsing does not blunt it: the leniency flag reaches only the root-type check, and the size-flagged degrade runs either way.",
+      "bytes_hex" : "0b1ed802d701016701ffd901026701ff7202d603db0c1a8302040402040408d3",
+      "expected_bytes_hex" : "0b22d802d701016703efbfbdd901026703efbfbd7202d603db0c1a8302040402040408d3",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
