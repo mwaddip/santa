@@ -41,6 +41,7 @@ jobs:
         if: steps.ergo-core.outputs.cache-hit != 'true'
         run: |
           git clone --depth 1 --branch v6.0.7 https://github.com/ergoplatform/ergo.git /tmp/ergo
+          git -C /tmp/ergo tag v6.0.7
           mise trust runners/rudolph/mise.toml
           mise --cd runners/rudolph install
           # Activate rudolph's toolchain into THIS shell (mise --cd exec would also
