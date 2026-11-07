@@ -1,0 +1,176 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.prefix_suffix_runtime_item_type",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-coll-runtime-item-types",
+  "entries" : [
+    {
+      "name" : "startswith-left-lies-true#0",
+      "script" : "{ X.startsWith(Coll(1)) }  // JVM: TRUE — and this is the answer the probe could not read off the source. The comparison reaches Scala's `==` on boxed numerics, where 1L == 1, so a Coll[LONG] does start with a Coll[INT] of equal values. No throw, no false: an implementation that refuses a mismatched item type here OVER-REJECTS",
+      "tree_bytes_hex" : "0b1adc0c1f9501008302040402040483020505020504018301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "endswith-left-lies-true#1",
+      "script" : "{ X.endsWith(Coll(2)) }  // JVM: TRUE, the endsWith twin of #0 — same numeric-equality comparison",
+      "tree_bytes_hex" : "0b1adc0c209501008302040402040483020505020504018301040404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith-arg-lies-true#2",
+      "script" : "{ Coll(1, 2).startsWith(If(false, Coll(1), Coll(1L))) }  // JVM: TRUE with the lie on the ARGUMENT instead of the receiver — the comparison is symmetric",
+      "tree_bytes_hex" : "0b18dc0c1f830204040204040195010083010404028301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith-empty-receiver-false#3",
+      "script" : "{ E.startsWith(Coll(1)) }  // JVM: FALSE — an empty receiver cannot start with a one-element prefix. False for the LENGTH, not for the item type: the type mismatch is still invisible here",
+      "tree_bytes_hex" : "0b14dc0c1f9501008301040402830005018301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "endswith-empty-receiver-false#4",
+      "script" : "{ E.endsWith(Coll(1)) }  // JVM: FALSE, the endsWith twin of #3",
+      "tree_bytes_hex" : "0b14dc0c209501008301040402830005018301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith-empty-arg-true#5",
+      "script" : "{ X.startsWith(Coll[Int]()) }  // JVM: TRUE — every collection starts with the empty one, mismatched items or not",
+      "tree_bytes_hex" : "0b18dc0c1f950100830204040204048302050502050401830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 80,
+        "error" : null
+      }
+    },
+    {
+      "name" : "endswith-empty-arg-true#6",
+      "script" : "{ X.endsWith(Coll[Int]()) }  // JVM: TRUE, the endsWith twin of #5",
+      "tree_bytes_hex" : "0b18dc0c20950100830204040204048302050502050401830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 80,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith-both-empty-true#7",
+      "script" : "{ E.startsWith(Coll[Int]()) }  // JVM: TRUE — empty starts with empty. The cheapest row of the family, and the one an element-type gate would still reject",
+      "tree_bytes_hex" : "0b12dc0c1f950100830104040283000501830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 70,
+        "error" : null
+      }
+    }
+  ]
+}

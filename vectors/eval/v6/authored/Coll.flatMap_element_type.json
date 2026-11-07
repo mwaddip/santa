@@ -1,0 +1,80 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.flatMap_element_type",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-coll-runtime-item-types",
+  "entries" : [
+    {
+      "name" : "flatmap-nested-lie-accept#0",
+      "script" : "{ If(false, Coll(Coll(1)), Coll(Coll(2L))).flatMap({ (x: Coll[Int]) => x.indices }) }  // JVM: Coll(0). A Coll[Long] element satisfies the declared Coll[Int] because the lambda's argument check is SHALLOW (isValueOfType asks only isInstanceOf[Coll[_]] for a collection, SType.scala:198), and flatMap_eval reads no element type of its own. An implementation gating flatMap on the element type rejects this instead",
+      "tree_bytes_hex" : "0b20dc0c0f9501008301108301040402830111830105050401d9010110db0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 175,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatmap-empty-accept#1",
+      "script" : "{ If(false, Coll(Coll(1)), Coll[Coll[Long]]()).flatMap({ (x: Coll[Int]) => x.indices }) }  // JVM: an empty Coll — no element, so the lambda never runs and no check of any kind fires",
+      "tree_bytes_hex" : "0b1bdc0c0f950100830110830104040283001101d9010110db0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 114,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatmap-long-element-errored#2",
+      "script" : "{ If(false, Coll(Coll(1)), Coll(2L)).flatMap({ (x: Coll[Int]) => x.indices }) }  // JVM: REJECTS. Here the element is a plain Long, and a Long is no Coll — the shallow check does stop this one. So flatMap's gate is not absent, it is just shallower than the node's declared element type",
+      "tree_bytes_hex" : "0b1ddc0c0f9501008301108301040402830104050401d9010110db0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
