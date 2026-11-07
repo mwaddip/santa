@@ -1,0 +1,73 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.explicit_type_args",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "explicit-type-args-none-box#0",
+      "kind" : "Box",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.none[Int].isDefined) — PropertyCall (no arguments): the type byte follows the object directly (PropertyCallSerializer.scala:24). The same tree inside a box. An implementation that leaves the type byte unread takes it as the creation height and every later field shifts by one: the box does not parse at all — an over-reject on a box the JVM accepts.",
+      "bytes_hex" : "c0843d1b0800d1e6db6a0add04010000cf1c7558ff524edd17b4d5ce9e80042a49ad566bf522d8089e147c29522307cc00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-some-box#1",
+      "kind" : "Box",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.some[Int](5).isDefined) — MethodCall with one argument: the type byte follows the arguments (MethodCallSerializer.scala:29). The same tree inside a box. An implementation that leaves the type byte unread takes it as the creation height and every later field shifts by one: the box does not parse at all — an over-reject on a box the JVM accepts.",
+      "bytes_hex" : "c0843d1b0d01040ad1e6dc6a09dd01730004010000a66b4e70ff8bf3d9dc7c600e4980ededaaeeaadfba7e47e84ec865211f4ae2a000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-deserializeTo-box#2",
+      "kind" : "Box",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.deserializeTo[Int](Coll(1,2,3,4)) == 7) — MethodCall over Coll[Byte]. Only the parse is graded here; the call need not evaluate. The same tree inside a box. An implementation that leaves the type byte unread takes it as the creation height and every later field shifts by one: the box does not parse at all — an over-reject on a box the JVM accepts.",
+      "bytes_hex" : "c0843d1b15020e0401020304040ed193dc6a04dd017300047301010000ddb5f606503f64e2add0068af719464c3d37bbca01b92af73eec38b5ba76137600",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-fromBigEndianBytes-box#3",
+      "kind" : "Box",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.fromBigEndianBytes[Int](Coll(1,2,3,4)) == 7) — MethodCall over Coll[Byte]. The same tree inside a box. An implementation that leaves the type byte unread takes it as the creation height and every later field shifts by one: the box does not parse at all — an over-reject on a box the JVM accepts.",
+      "bytes_hex" : "c0843d1b15020e0401020304040ed193dc6a05dd0173000473010100003034616b64022cf0e222fd92143d0ccdbb0fb688b046d490471c006773e71c4800",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-getReg-box#4",
+      "kind" : "Box",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(SELF.getReg[Int](4).isDefined) — MethodCall on a Box object, not Global: the explicit type argument is a property of the method, not of its owner. The same tree inside a box. An implementation that leaves the type byte unread takes it as the creation height and every later field shifts by one: the box does not parse at all — an over-reject on a box the JVM accepts.",
+      "bytes_hex" : "c0843d1b0d010408d1e6dc6313a701730004010000ce3aa39f5856033998ca4f06f418c75b3de4a81e5f691f8ab4adf232f7e9eeb800",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-getVarFromInput-box#5",
+      "kind" : "Box",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(CONTEXT.getVarFromInput[Int](0, 1).isDefined) — MethodCall on CONTEXT with TWO arguments: the type byte still follows them both. The same tree inside a box. An implementation that leaves the type byte unread takes it as the creation height and every later field shifts by one: the box does not parse at all — an over-reject on a box the JVM accepts.",
+      "bytes_hex" : "c0843d1b110203000201d1e6dc650cfe027300730104010000114fc5347ad3f707ced989311e60b6c502e5aa9f64598d3ca1c105403f69b48700",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

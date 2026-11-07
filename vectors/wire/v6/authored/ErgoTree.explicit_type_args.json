@@ -1,0 +1,73 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.explicit_type_args",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "explicit-type-args-none-tree#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.none[Int].isDefined) — PropertyCall (no arguments): the type byte follows the object directly (PropertyCallSerializer.scala:24). An implementation that does not read the trailing type re-serializes the tree without it, one byte shorter, and the declared size shrinks: a NON-identity round-trip and a different script hash.",
+      "bytes_hex" : "1b0800d1e6db6a0add04",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-some-tree#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.some[Int](5).isDefined) — MethodCall with one argument: the type byte follows the arguments (MethodCallSerializer.scala:29). An implementation that does not read the trailing type re-serializes the tree without it, one byte shorter, and the declared size shrinks: a NON-identity round-trip and a different script hash.",
+      "bytes_hex" : "1b0d01040ad1e6dc6a09dd01730004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-deserializeTo-tree#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.deserializeTo[Int](Coll(1,2,3,4)) == 7) — MethodCall over Coll[Byte]. Only the parse is graded here; the call need not evaluate. An implementation that does not read the trailing type re-serializes the tree without it, one byte shorter, and the declared size shrinks: a NON-identity round-trip and a different script hash.",
+      "bytes_hex" : "1b15020e0401020304040ed193dc6a04dd017300047301",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-fromBigEndianBytes-tree#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.fromBigEndianBytes[Int](Coll(1,2,3,4)) == 7) — MethodCall over Coll[Byte]. An implementation that does not read the trailing type re-serializes the tree without it, one byte shorter, and the declared size shrinks: a NON-identity round-trip and a different script hash.",
+      "bytes_hex" : "1b15020e0401020304040ed193dc6a05dd017300047301",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-getReg-tree#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(SELF.getReg[Int](4).isDefined) — MethodCall on a Box object, not Global: the explicit type argument is a property of the method, not of its owner. An implementation that does not read the trailing type re-serializes the tree without it, one byte shorter, and the declared size shrinks: a NON-identity round-trip and a different script hash.",
+      "bytes_hex" : "1b0d010408d1e6dc6313a701730004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-getVarFromInput-tree#5",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(CONTEXT.getVarFromInput[Int](0, 1).isDefined) — MethodCall on CONTEXT with TWO arguments: the type byte still follows them both. An implementation that does not read the trailing type re-serializes the tree without it, one byte shorter, and the declared size shrinks: a NON-identity round-trip and a different script hash.",
+      "bytes_hex" : "1b110203000201d1e6dc650cfe027300730104",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

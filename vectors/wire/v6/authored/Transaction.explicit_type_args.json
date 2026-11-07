@@ -1,0 +1,73 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.explicit_type_args",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "explicit-type-args-none-tx#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.none[Int].isDefined) — PropertyCall (no arguments): the type byte follows the object directly (PropertyCallSerializer.scala:24). The same tree as a transaction's only output. The unread type byte shifts the rest of the output and the transaction does not parse: an over-reject in block validation, reachable since v6 activated.",
+      "bytes_hex" : "0147623256f4e5b1cb9a35db412d50d1d358dee0dc41424024bac40bba7f5573ef0000000001c0843d1b0800d1e6db6a0add04010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-some-tx#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.some[Int](5).isDefined) — MethodCall with one argument: the type byte follows the arguments (MethodCallSerializer.scala:29). The same tree as a transaction's only output. The unread type byte shifts the rest of the output and the transaction does not parse: an over-reject in block validation, reachable since v6 activated.",
+      "bytes_hex" : "0147623256f4e5b1cb9a35db412d50d1d358dee0dc41424024bac40bba7f5573ef0000000001c0843d1b0d01040ad1e6dc6a09dd01730004010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-deserializeTo-tx#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.deserializeTo[Int](Coll(1,2,3,4)) == 7) — MethodCall over Coll[Byte]. Only the parse is graded here; the call need not evaluate. The same tree as a transaction's only output. The unread type byte shifts the rest of the output and the transaction does not parse: an over-reject in block validation, reachable since v6 activated.",
+      "bytes_hex" : "0147623256f4e5b1cb9a35db412d50d1d358dee0dc41424024bac40bba7f5573ef0000000001c0843d1b15020e0401020304040ed193dc6a04dd017300047301010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-fromBigEndianBytes-tx#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(Global.fromBigEndianBytes[Int](Coll(1,2,3,4)) == 7) — MethodCall over Coll[Byte]. The same tree as a transaction's only output. The unread type byte shifts the rest of the output and the transaction does not parse: an over-reject in block validation, reachable since v6 activated.",
+      "bytes_hex" : "0147623256f4e5b1cb9a35db412d50d1d358dee0dc41424024bac40bba7f5573ef0000000001c0843d1b15020e0401020304040ed193dc6a05dd017300047301010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-getReg-tx#4",
+      "kind" : "Transaction",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(SELF.getReg[Int](4).isDefined) — MethodCall on a Box object, not Global: the explicit type argument is a property of the method, not of its owner. The same tree as a transaction's only output. The unread type byte shifts the rest of the output and the transaction does not parse: an over-reject in block validation, reachable since v6 activated.",
+      "bytes_hex" : "0147623256f4e5b1cb9a35db412d50d1d358dee0dc41424024bac40bba7f5573ef0000000001c0843d1b0d010408d1e6dc6313a701730004010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "explicit-type-args-getVarFromInput-tx#5",
+      "kind" : "Transaction",
+      "source" : "santa:authored-explicit-type-args",
+      "description" : "sigmaProp(CONTEXT.getVarFromInput[Int](0, 1).isDefined) — MethodCall on CONTEXT with TWO arguments: the type byte still follows them both. The same tree as a transaction's only output. The unread type byte shifts the rest of the output and the transaction does not parse: an over-reject in block validation, reachable since v6 activated.",
+      "bytes_hex" : "0147623256f4e5b1cb9a35db412d50d1d358dee0dc41424024bac40bba7f5573ef0000000001c0843d1b110203000201d1e6dc650cfe027300730104010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
