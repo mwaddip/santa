@@ -1,0 +1,203 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "MethodCall.v5_methods_missing_in_rust",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-v5-methods-missing",
+  "entries" : [
+    {
+      "name" : "group_element_exp-accept#0",
+      "script" : "`groupGenerator.exp(BigInt 5)` — SGroupElement id 3, `Exponentiate.costKind` Fixed 900. EVALUATES to g^5 at cost 928. The dedicated `Exponentiate` node costs 915, so the MethodCall encoding adds 13.  // row 1 of the probe",
+      "tree_bytes_hex" : "0b0bdc0703db6a01dd01060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "022f8bde4d1a07209355b4a7250a5c5128e88b84bddc619ab7cba8d569b240efe4"
+        },
+        "cost" : 928,
+        "error" : null
+      }
+    },
+    {
+      "name" : "group_element_multiply-accept#1",
+      "script" : "`groupGenerator.multiply(groupGenerator)` — SGroupElement id 4, `MultiplyGroup` Fixed 40. EVALUATES to g^2 at cost 82, against the dedicated `MultiplyGroup` node's 60.  // row 2 of the probe",
+      "tree_bytes_hex" : "0b0cdc0704db6a01dd01db6a01dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5"
+        },
+        "cost" : 82,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box_r0_is_defined-errored#2",
+      "script" : "`SELF.R0.isDefined` with R0 as a PropertyCall (SBox id 9). **The JVM PARSES it and CANNOT INVOKE it:** `NoSuchMethodException: sigma.Box.R0()`. The descriptor is `R0[T](implicit cT: RType[T])`, so a reflective lookup for a no-arg `R0()` finds nothing — the probe's own suspicion, confirmed. The dedicated `ExtractRegisterAs` node does the same job at cost 60.  // row 3 of the probe",
+      "tree_bytes_hex" : "0b05e6db6309a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box_r4_is_defined-errored#3",
+      "script" : "`SELF.R4.isDefined` (SBox id 13). Same `NoSuchMethodException: sigma.Box.R4()`. R0 is mandatory and R4 is not, and it makes NO difference — the failure is the lookup, before any register is read, so all ten of R0..R9 are dead the same way.  // row 4 of the probe",
+      "tree_bytes_hex" : "0b05e6db630da7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "option_is_defined_some-accept#4",
+      "script" : "`Global.some[Int](5).isDefined` — SOption id 2, Fixed 10. EVALUATES to `true` at cost 33.  // row 5 of the probe",
+      "tree_bytes_hex" : "0b0bdb2402dc6a09dd01040a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 33,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option_is_defined_none-accept#5",
+      "script" : "`Global.none[Int].isDefined`. EVALUATES to `false` at cost 28 — 5 less than the `some` row, since `none` costs less to build.  // row 6 of the probe",
+      "tree_bytes_hex" : "0b08db2402db6a0add04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 28,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option_get_some-accept#6",
+      "script" : "`Global.some[Int](5).get` — SOption id 3, Fixed 15. EVALUATES to `5` at cost 38.  // row 7 of the probe",
+      "tree_bytes_hex" : "0b0bdb2403dc6a09dd01040a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 5
+        },
+        "cost" : 38,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option_get_none-errored#7",
+      "script" : "`Global.none[Int].get` — the method INVOKES and then throws, as Scala's `Option.get` does on `None`: `InvocationTargetException`. Note the contrast with rows 3/4/9/10, where the lookup itself fails — this row reached the method and that one did not, and only the class tells them apart.  // row 8 of the probe",
+      "tree_bytes_hex" : "0b08db2403db6a0add04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "option_get_or_else_some-errored#8",
+      "script" : "`Global.some[Int](5).getOrElse(9)` — SOption id 4, Fixed 20. **PARSES and CANNOT BE INVOKED:** `NoSuchMethodException: scala.Option.getOrElse(int)`. Scala's `getOrElse` takes a BY-NAME default (`Function0`), so no `getOrElse(int)` exists — the probe's second suspicion, also confirmed. The dedicated `OptionGetOrElse` node works, at cost 30.  // row 9 of the probe",
+      "tree_bytes_hex" : "0b0edc2404dc6a09dd01040a04010412",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "option_get_or_else_none-errored#9",
+      "script" : "`Global.none[Int].getOrElse(9)`. The same `NoSuchMethodException` — the receiver being `none` changes nothing, because the lookup fails before the receiver is used.  // row 10 of the probe",
+      "tree_bytes_hex" : "0b0bdc2404db6a0add04010412",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
