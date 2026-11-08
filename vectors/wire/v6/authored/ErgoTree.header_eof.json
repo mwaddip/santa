@@ -1,0 +1,89 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.header_eof",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "header-eof-nested-box-complete-v1-accept#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "CONTROL: a COMPLETE size-flagged v1 tree carrying a nested Box constant inline — `sigmaProp(box.value == 1000000)`. It parses and round-trips verbatim, which is what makes the rejects below say something: the shape is legal, and only the missing bytes are not. Without this row the family would just assert that truncated input fails.",
+      "bytes_hex" : "0932d193c163c0843d0008d30100004e7166ab475f4200b93f5e9b4ea80a8ab0322f488fd64f3e61a15765e74228f8000580897a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      }
+    },
+    {
+      "name" : "header-eof-nested-box-complete-v3-accept#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "CONTROL: the same complete tree size-flagged at v3. Pairs with the v1 row to show the version plays no part in any of this — the JVM's answer is identical at both.",
+      "bytes_hex" : "0b32d193c163c0843d0008d30100004e7166ab475f4200b93f5e9b4ea80a8ab0322f488fd64f3e61a15765e74228f8000580897a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "header-eof-ends-at-nested-tree-header-v1-reject#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "The input ENDS exactly where the nested Box's own tree header byte belongs: `09` (v1, size-flagged), declared size 2, body = a Box constant (`63`) whose value VLQ is `01`, and then nothing. The nested read is `deserializeErgoTree(r, MaxPropositionSize)`, which overwrites positionLimit with `position + 4096`, so the enclosing declared size does not bound it and the `getByte()` for the nested header runs off the BUFFER — a `BufferUnderflowException`, which is not a ValidationException, so the size bit cannot degrade it. REJECTED. **THE SEPARATING ROW:** an implementation that maps this read error to a soft IO-error kind keeps the tree as `Unparsed` and hands the bytes back, accepting a tree the JVM refuses.",
+      "bytes_hex" : "09026301",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      }
+    },
+    {
+      "name" : "header-eof-ends-at-nested-tree-header-v3-reject#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "The same input at v3 (`0b`), size-flagged. REJECTED identically — the second half of the pair that shows the degrade gate, not the version, is what decides this. **ALSO A SEPARATING ROW.**",
+      "bytes_hex" : "0b026301",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "header-eof-ends-at-box-value-v1-reject#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "CONTROL for the reject side: the input ends one byte earlier, at the Box constant's VALUE rather than at its tree header (declared size 1, body `63`). Also a `BufferUnderflowException` and also REJECTED, and the probe reports that sigma-rust already refuses this one — so a red here would mean something quite different from a red on the two rows above, and a green here is not evidence that they pass.",
+      "bytes_hex" : "090163",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      }
+    },
+    {
+      "name" : "header-eof-truncated-body-v1-reject#5",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "The SECOND failure class. The complete v1 tree's body cut after `d193`, leaving the declared size (50) describing bytes that are not there. The overrun now happens in a VLQ / array read rather than a `getByte()`, so the JVM raises an `ArrayIndexOutOfBoundsException` instead — a DIFFERENT class, equally fatal, equally not a ValidationException. This row exists because the fix shape matters: the correct gate is `anything that is not a ValidationException is hard`, not an enumeration of IO error kinds, and an allow-list that learns `BufferUnderflowException` from the rows above would still get this one wrong.",
+      "bytes_hex" : "0932d193",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      }
+    },
+    {
+      "name" : "header-eof-truncated-body-v3-reject#6",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-header-eof",
+      "description" : "The same truncation at v3. REJECTED identically; the pair pins that neither failure class degrades at either version.",
+      "bytes_hex" : "0b32d193",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
