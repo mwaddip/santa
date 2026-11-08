@@ -5306,6 +5306,35 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.serialize_small_tuple.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize_small_tuple",
+      "ops" : [
+        "BoolToSigmaProp",
+        "Const",
+        "EQ",
+        "Global$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Global.some_none.json" : {
       "accepts" : 4,
       "entries" : 4,
@@ -5750,6 +5779,34 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Tuple.small_tuples.json" : {
+      "accepts" : 3,
+      "entries" : 10,
+      "methods" : [
+      ],
+      "op" : "Tuple.small_tuples",
+      "ops" : [
+        "BoolToSigmaProp",
+        "Const",
+        "EQ",
+        "SelectField",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 7,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 1,
       "version" : "v6"
     },
     "v6/authored/Unevaluated.node_kinds.json" : {
@@ -11274,6 +11331,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_small_tuple.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_Byte.json",
         "v6/spec/Global.serialize_Coll_Byte.json",
@@ -12693,7 +12751,9 @@
         "v5/spec/or_sigma_equivalence.json",
         "v5/spec/sigmaProp_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -13058,9 +13118,11 @@
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
@@ -13339,7 +13401,9 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
@@ -14326,6 +14390,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Global.some_none.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/captured/h33615-7f2709218327.json",
@@ -14760,6 +14825,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/Header.property_accessors.json",
@@ -15343,6 +15409,7 @@
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -15726,6 +15793,7 @@
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-84ecb7431b61.json",
@@ -16176,12 +16244,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2246,
+    "accepts" : 2251,
     "distinct_methods" : 149,
     "distinct_ops" : 89,
-    "entries" : 2546,
-    "files" : 298,
-    "rejects" : 300,
-    "unwalked" : 10
+    "entries" : 2558,
+    "files" : 300,
+    "rejects" : 307,
+    "unwalked" : 11
   }
 }
