@@ -5752,6 +5752,48 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Unevaluated.node_kinds.json" : {
+      "accepts" : 0,
+      "entries" : 14,
+      "methods" : [
+      ],
+      "op" : "Unevaluated.node_kinds",
+      "ops" : [
+        "BitInversion",
+        "BitOp",
+        "BoolToSigmaProp",
+        "Const",
+        "CreateAvlTree",
+        "EQ",
+        "GetVar",
+        "ModQ",
+        "ModQArithOp",
+        "SigmaPropIsProven",
+        "TaggedVariableNode"
+      ],
+      "provenance" : "authored",
+      "rejects" : 14,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 13,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/UnsignedBigInt.mod_toSigned.json" : {
       "accepts" : 5,
       "entries" : 5,
@@ -12529,6 +12571,27 @@
         "0xf4"
       ]
     },
+    "BitInversion" : {
+      "families" : [
+        "v6/authored/Unevaluated.node_kinds.json"
+      ],
+      "op_codes" : [
+        "0xf1"
+      ]
+    },
+    "BitOp" : {
+      "families" : [
+        "v6/authored/Unevaluated.node_kinds.json"
+      ],
+      "op_codes" : [
+        "0xf2",
+        "0xf3",
+        "0xf5",
+        "0xf6",
+        "0xf7",
+        "0xf8"
+      ]
+    },
     "BlockValue" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
@@ -12631,6 +12694,7 @@
         "v5/spec/sigmaProp_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -12997,6 +13061,7 @@
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/spec/decode-point.json"
@@ -13194,7 +13259,8 @@
     },
     "CreateAvlTree" : {
       "families" : [
-        "v6/authored/AvlTree.unsupported_eval_nodes_v6.json"
+        "v6/authored/AvlTree.unsupported_eval_nodes_v6.json",
+        "v6/authored/Unevaluated.node_kinds.json"
       ],
       "op_codes" : [
         "0xb6"
@@ -13274,6 +13340,7 @@
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -14153,6 +14220,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
+        "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -14799,6 +14867,23 @@
       ],
       "op_codes" : [
         "0xac"
+      ]
+    },
+    "ModQ" : {
+      "families" : [
+        "v6/authored/Unevaluated.node_kinds.json"
+      ],
+      "op_codes" : [
+        "0xe7"
+      ]
+    },
+    "ModQArithOp" : {
+      "families" : [
+        "v6/authored/Unevaluated.node_kinds.json"
+      ],
+      "op_codes" : [
+        "0xe8",
+        "0xe9"
       ]
     },
     "MultiplyGroup" : {
@@ -15470,6 +15555,14 @@
         "0xd0"
       ]
     },
+    "SigmaPropIsProven" : {
+      "families" : [
+        "v6/authored/Unevaluated.node_kinds.json"
+      ],
+      "op_codes" : [
+        "0xcf"
+      ]
+    },
     "SizeOf" : {
       "families" : [
         "v5/authored/Box.token_window_const.json",
@@ -15591,6 +15684,14 @@
       ],
       "op_codes" : [
         "0x74"
+      ]
+    },
+    "TaggedVariableNode" : {
+      "families" : [
+        "v6/authored/Unevaluated.node_kinds.json"
+      ],
+      "op_codes" : [
+        "0x71"
       ]
     },
     "TreeLookup" : {
@@ -16077,10 +16178,10 @@
   "totals" : {
     "accepts" : 2246,
     "distinct_methods" : 149,
-    "distinct_ops" : 83,
-    "entries" : 2532,
-    "files" : 297,
-    "rejects" : 286,
+    "distinct_ops" : 89,
+    "entries" : 2546,
+    "files" : 298,
+    "rejects" : 300,
     "unwalked" : 10
   }
 }
