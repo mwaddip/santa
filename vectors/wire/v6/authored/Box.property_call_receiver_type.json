@@ -1,0 +1,41 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.property_call_receiver_type",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "receiver-type-none-over-filter-box#0",
+      "kind" : "Box",
+      "source" : "santa:authored-property-call-receiver-type",
+      "description" : "sigmaProp(Filter(1, (x: Int) => true).none[Int].isDefined) — a PropertyCall to SGlobal.none (method 10, one explicit type argument T = SInt, the trailing `04`) whose RECEIVER is a Filter over an Int. The explicit-type branch reads one type after the object and never reads the object's own type, so the ill-typed receiver is invisible: the tree PARSES. (The spend would fail at eval — `none`'s invoke needs a Global receiver — which the wire tier does not reach.) The same tree inside a full ErgoBox — the form block validation meets it in, and the form an implementation that reads the receiver's type on the explicit-type branch refuses.",
+      "bytes_hex" : "c0843d0b0fd1e6db6a0ab50402d901010401010401000096568d1b448c47138d3cf1bf67956bb4e26e7eeb4f21f6cd0d5a4aaa232a7d8400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "receiver-type-getreg-propcall-box#1",
+      "kind" : "Box",
+      "source" : "santa:authored-property-call-receiver-type",
+      "description" : "sigmaProp(SELF.getReg[Int].isDefined) written as a ZERO-ARGUMENT PropertyCall (`a7` is SELF, `04` is T = SInt) — the same branch with a well-typed receiver, the type byte read. The positive control for the branch itself: an implementation that refuses this refuses the branch, not the receiver. (Eval throws on arity — getReg takes a register index.) The same tree inside a full ErgoBox — the form block validation meets it in, and the form an implementation that reads the receiver's type on the explicit-type branch refuses.",
+      "bytes_hex" : "c0843d0b07d1e6db6313a704010000547a496e30447b38684c9aae58bc4e198314d8479430a93d0d2f12d88d3a1a8000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "receiver-type-indices-over-filter-box#2",
+      "kind" : "Box",
+      "source" : "santa:authored-property-call-receiver-type",
+      "description" : "CONTROL sigmaProp(Filter(1, (x: Int) => true).indices.size == 0) — `SCollection.indices` (method 14) as a PropertyCall with NO explicit type arguments, over the SAME receiver as the first entry. Parse takes the other branch, `specializeFor(obj.tpe, …)` READS the receiver's type, and `Filter.tpe` casts SInt to SCollection: a ClassCastException, not a ValidationException, so the size bit does NOT degrade it. REJECTED outright. Both sides should agree here — it is what separates the two branches. The same tree inside a full ErgoBox — the form block validation meets it in, and the form an implementation that reads the receiver's type on the explicit-type branch refuses.",
+      "bytes_hex" : "c0843d0b11d193b1db0c0eb50402d90101040101010400010000503809892e087dbcc19aa9197d3af34492477160c88fc699ec691a18a5c6f86200",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

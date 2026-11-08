@@ -1,0 +1,41 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.property_call_receiver_type",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "receiver-type-none-over-filter-tx#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-property-call-receiver-type",
+      "description" : "sigmaProp(Filter(1, (x: Int) => true).none[Int].isDefined) — a PropertyCall to SGlobal.none (method 10, one explicit type argument T = SInt, the trailing `04`) whose RECEIVER is a Filter over an Int. The explicit-type branch reads one type after the object and never reads the object's own type, so the ill-typed receiver is invisible: the tree PARSES. (The spend would fail at eval — `none`'s invoke needs a Global receiver — which the wire tier does not reach.) The same tree as a transaction's only output: a refusal here costs the whole transaction, not one box.",
+      "bytes_hex" : "01b0bc9baad3d6707ba5906e2a61fc77fde62892d602656e52fda444187ef72fff0000000001c0843d0b0fd1e6db6a0ab50402d9010104010104010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "receiver-type-getreg-propcall-tx#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-property-call-receiver-type",
+      "description" : "sigmaProp(SELF.getReg[Int].isDefined) written as a ZERO-ARGUMENT PropertyCall (`a7` is SELF, `04` is T = SInt) — the same branch with a well-typed receiver, the type byte read. The positive control for the branch itself: an implementation that refuses this refuses the branch, not the receiver. (Eval throws on arity — getReg takes a register index.) The same tree as a transaction's only output: a refusal here costs the whole transaction, not one box.",
+      "bytes_hex" : "01b0bc9baad3d6707ba5906e2a61fc77fde62892d602656e52fda444187ef72fff0000000001c0843d0b07d1e6db6313a704010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "receiver-type-indices-over-filter-tx#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-property-call-receiver-type",
+      "description" : "CONTROL sigmaProp(Filter(1, (x: Int) => true).indices.size == 0) — `SCollection.indices` (method 14) as a PropertyCall with NO explicit type arguments, over the SAME receiver as the first entry. Parse takes the other branch, `specializeFor(obj.tpe, …)` READS the receiver's type, and `Filter.tpe` casts SInt to SCollection: a ClassCastException, not a ValidationException, so the size bit does NOT degrade it. REJECTED outright. Both sides should agree here — it is what separates the two branches. The same tree as a transaction's only output: a refusal here costs the whole transaction, not one box.",
+      "bytes_hex" : "01b0bc9baad3d6707ba5906e2a61fc77fde62892d602656e52fda444187ef72fff0000000001c0843d0b11d193b1db0c0eb50402d90101040101010400010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
