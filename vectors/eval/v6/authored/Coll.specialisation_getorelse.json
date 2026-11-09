@@ -1,0 +1,206 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.specialisation_getorelse",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "bool_constant_int_default_oob-errored#0",
+      "script" : "[Z1] `Coll[Boolean](true,false,true)` as a CONSTANT — the deserializer's OTHER specialised item type (`CoreDataSerializer.scala:172`, `fromArray(r.getBits(len))`) — with `.getOrElse(5, 1)`, an Int default. The specialised bridge unboxes the default to Boolean and throws `ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean`. **SEPARATING:** it proves B1/B2 are about SPECIALISATION and not about Byte — the same mechanism on the only other item type the wire specialises.",
+      "tree_bytes_hex" : "0b0bdc0c020d030502040a0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "bool_constant_int_default_in_range-errored#1",
+      "script" : "[Z2] The same at index 0, IN range: still throws, because the unboxing precedes the index. **SEPARATING.**",
+      "tree_bytes_hex" : "0b0bdc0c020d03050204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "bool_concrete_int_default_oob-accept#2",
+      "script" : "[Z3] The GENERIC twin — a `ConcreteCollection` of the same three booleans (`values.scala:897` calls `fromArray` at an abstract type) — `.getOrElse(5, 1)` RETURNS the mistyped default, `Int 1` at cost 79, out of a collection declared `Coll[Boolean]`. The other half of the pair: same declared type, same call, opposite outcome.",
+      "tree_bytes_hex" : "0b0bdc0c0285030502040a0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bool_concrete_int_default_in_range-accept#3",
+      "script" : "[Z4] The same at index 0: returns the element `true` at cost 79, where Z2 throws.",
+      "tree_bytes_hex" : "0b0bdc0c028503050204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bool_constant_bool_default_oob-accept#4",
+      "script" : "[Z5] **CONTROL for Z1/Z2:** the specialised receiver with a WELL-TYPED default returns `false` at cost 49. It is what shows Z1/Z2 fail on the default's type and not on the receiver.",
+      "tree_bytes_hex" : "0b0bdc0c020d030502040a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "indices_bool_default_oob-errored#5",
+      "script" : "[I1] `Coll[Byte](1,2,3).indices.getOrElse(5, true)`. `indices` is the ONLY in-script route to a specialised `Coll[Int]` (`CollsOverArrays.scala:68` builds it from a concrete `Array[Int]`; no deserializer ever specialises Int), so this is a `$mcI$sp` receiver with a Boolean default: `ClassCastException` to `java.lang.Integer`. **SEPARATING, and the third specialised kind** — the separation is the specialisation itself, on every kind that exists.",
+      "tree_bytes_hex" : "0b10dc0c02db0c0e0e0301020302040a0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "indices_bool_default_in_range-errored#6",
+      "script" : "[I2] The same at index 0, IN range. **SEPARATING.**",
+      "tree_bytes_hex" : "0b10dc0c02db0c0e0e030102030204000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "int_concrete_bool_default_oob-accept#7",
+      "script" : "[I3] The GENERIC twin, a `ConcreteCollection` of the SAME three ints `(0,1,2)` that `indices` produces: `.getOrElse(5, true)` RETURNS `true` at cost 79. Same declared `Coll[Int]`, same items, same call — and the opposite verdict from I1.",
+      "tree_bytes_hex" : "0b11dc0c0283030404000402040402040a0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int_concrete_bool_default_in_range-accept#8",
+      "script" : "[I4] The same at index 0: returns the element `Int 0` at cost 79, where I2 throws.",
+      "tree_bytes_hex" : "0b11dc0c028303040400040204040204000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "indices_int_default_oob-accept#9",
+      "script" : "[I5] **CONTROL for I1/I2:** the specialised `indices` receiver with a well-typed Int default returns `9` at cost 75.",
+      "tree_bytes_hex" : "0b10dc0c02db0c0e0e0301020302040a0412",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    }
+  ]
+}

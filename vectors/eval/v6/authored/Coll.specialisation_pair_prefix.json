@@ -1,0 +1,128 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.specialisation_pair_prefix",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "pair_spec_side_startswith_lie_ls-errored#0",
+      "script" : "[P1] `Coll[Byte] CONSTANT .zip(Coll(0,1,2))` — a `PairOfCols` whose **ls is specialised** (`zip` keeps both sides as they are, `CollsOverArrays.scala:42`) — `.startsWith(ys)` where `ys` is a pair collection whose own ls is declared `Coll[Byte]` and evaluates to `Coll[Long]`. `PairOfCols.startsWith` (`:398-406`) DELEGATES to `ls.startsWith(yp.ls)`, so the specialised side's array cast fires: `ClassCastException`. **SEPARATING, and the row that distinguishes pair collections from the A-family:** `getOrElse`/`updated` on a pair cast the whole default to `Tuple2` first and are blind to the sides' classes, but startsWith/endsWith are not.",
+      "tree_bytes_hex" : "0b30dc0c1fdc0c1d0e030102030183030404000402040401dc0c1d9501008301020201830105050201830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair_gen_side_startswith_lie_ls-accept#1",
+      "script" : "[P2] The same with a GENERIC ls (a ConcreteCollection of the same bytes): returns **`true`** at cost 190 — the delegated `startsWith` compares boxed elements and `1L == 1`, exactly as in the flat S2 row. The pair's rs is identical on both sides, so the only difference is the ls's runtime class.",
+      "tree_bytes_hex" : "0b34dc0c1fdc0c1d8303020201020202030183030404000402040401dc0c1d9501008301020201830105050201830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 190,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair_spec_side_startswith_wellformed-accept#2",
+      "script" : "[P3] **CONTROL:** the specialised-ls receiver with a well-typed pair argument returns `true` at cost 155.",
+      "tree_bytes_hex" : "0b2cdc0c1fdc0c1d0e030102030183030404000402040401dc0c1d83030202010202020301830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 155,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair_gen_side_startswith_wellformed-accept#3",
+      "script" : "[P4] **CONTROL:** the generic-ls receiver, same argument, `true` at cost 185.",
+      "tree_bytes_hex" : "0b30dc0c1fdc0c1d8303020201020202030183030404000402040401dc0c1d83030202010202020301830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 185,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair_spec_side_endswith_lie_ls-errored#4",
+      "script" : "[P5] `endsWith` on the same pair receiver: the same delegation, the same cast. **SEPARATING.**",
+      "tree_bytes_hex" : "0b30dc0c20dc0c1d0e030102030183030404000402040401dc0c1d9501008301020201830105050201830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair_gen_side_endswith_lie_ls-accept#5",
+      "script" : "[P6] Its generic twin returns **`false`** at cost 190 — the same argument that made P2 `true`, because `(1,2,3)` does not END with `1L`. The P2/P6 asymmetry pins the comparison as numeric rather than refused, inside a pair.",
+      "tree_bytes_hex" : "0b34dc0c20dc0c1d8303020201020202030183030404000402040401dc0c1d9501008301020201830105050201830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 190,
+        "error" : null
+      }
+    }
+  ]
+}

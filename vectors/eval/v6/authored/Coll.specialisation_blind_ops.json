@@ -1,0 +1,113 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.specialisation_blind_ops",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "eq_byte_constant_vs_concrete-accept#0",
+      "script" : "[Q1] **CONTROL:** a specialised `Coll[Byte]` CONSTANT `==` a `ConcreteCollection` of the same three bytes is **`true`** at cost 58. Equality is NOT provenance-sensitive, so an implementation that models the two shapes must still compare them equal. Without this row the family could be 'passed' by making the shapes unequal.",
+      "tree_bytes_hex" : "0b0f930e03010203830302020102020203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 58,
+        "error" : null
+      }
+    },
+    {
+      "name" : "eq_bool_constant_vs_concrete-accept#1",
+      "script" : "[Q2] **CONTROL:** the same on the `$mcZ$sp` kind, `true` at cost 58.",
+      "tree_bytes_hex" : "0b07930d0305850305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 58,
+        "error" : null
+      }
+    },
+    {
+      "name" : "eq_indices_vs_concrete-accept#2",
+      "script" : "[Q3] **CONTROL:** `indices` (`$mcI$sp`) `==` a ConcreteCollection of the same ints, `true` at cost 84.",
+      "tree_bytes_hex" : "0b1293db0c0e0e03010203830304040004020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 84,
+        "error" : null
+      }
+    },
+    {
+      "name" : "indexof_indices_cross_width-accept#3",
+      "script" : "[X1] `indices.indexOf(x, 0)` where `x` is declared Int and evaluates to `1L`: **finds it at index 1**, cost 96 — the same answer as the well-typed control. `indexOf` is NOT defined on `CollOverArray`: `Colls.scala:199` is a trait default, `indexWhere(x => elem == x)`, so the item is compared with boxed `==` (numerically, across widths) and never cast. **CONTROL for the whole round:** a specialised receiver does NOT make every ill-typed argument fatal, and the rule is which methods the specialised class overrides.",
+      "tree_bytes_hex" : "0b15dc0c1adb0c0e0e0301020302950100040205020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 96,
+        "error" : null
+      }
+    },
+    {
+      "name" : "indexof_int_concrete_cross_width-accept#4",
+      "script" : "[X2] The generic twin answers identically, `1` at cost 100. No separation, by design of the trait default.",
+      "tree_bytes_hex" : "0b16dc0c1a83030404000402040402950100040205020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "EQ.cross_width_numeric",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "eq_int_as_long_vs_long-errored#0",
+      "script" : "[W1] `EQ(x, 1L)` where `x` is declared `Long` and evaluates to an `Int` (the `If` lie). It never reaches `DataValueComparer`: `Value.checkType` refuses first — `InterpreterException: Invalid type returned by evaluator`. **SEPARATING, and a REFUTATION of the natural reading:** a cross-width comparison cannot be built at the SCALAR level at all, because `EQ`'s operand is a checkType site. The widening that boxed `==` would do is unreachable here.",
+      "tree_bytes_hex" : "0b0a93950100050204020502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "neq_int_as_long_vs_long-errored#1",
+      "script" : "[W2] `NEQ` of the same operands: the same refusal, same site. **SEPARATING.**",
+      "tree_bytes_hex" : "0b0a94950100050204020502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "eq_long_as_int_vs_int-errored#2",
+      "script" : "[W3] The lie the other way round (declared `Int`, runs as `Long`). **SEPARATING.**",
+      "tree_bytes_hex" : "0b0a93950100040205020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "eq_int_as_long_vs_long_unequal-errored#3",
+      "script" : "[W4] The same with operands that are NOT numerically equal (2 vs 1L) — it still throws, so the refusal is about the TYPE and not about the comparison's outcome. **SEPARATING.**",
+      "tree_bytes_hex" : "0b0a93950100050204040502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "eq_pair_with_cross_width_component-errored#4",
+      "script" : "[W5] Inside a PAIR: `(x, 2) == (1, 2)` with `x` declared `Int` and running as `Long`. The pair's component is a checkType site too, so this throws rather than comparing. **SEPARATING.**",
+      "tree_bytes_hex" : "0b12938602950100040205020404860204020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "eq_coll_with_cross_width_items-accept#5",
+      "script" : "[W6] Inside a COLLECTION the lie survives — a collection's ITEM type is not a checkType site (the element-type gate round) — so the comparer does run, and it answers **`false`** at cost 66: `DataValueComparer` bails on a runtime item-type difference before comparing any item. So the JVM's answer for a cross-width collection comparison is FALSE, not the numeric TRUE that `indexOf`/`startsWith` give for the same values. **The sharpest statement of the round's asymmetry:** `==` widens where the item is passed as an ARGUMENT (X1, S2) and does not where two collections are COMPARED.",
+      "tree_bytes_hex" : "0b1393950100830104040283010505028301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    }
+  ]
+}

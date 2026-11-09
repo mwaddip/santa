@@ -1,0 +1,224 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.producer_specialisation_witness",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "self_bytes_bool_default-errored#0",
+      "script" : "[H1] `SELF.bytes.getOrElse(99, true)`. `ExtractBytes` builds its result with `Colls.fromArray(Array[Byte])` at a concrete static type, so it is **specialised** and the Boolean default is unboxed: throws. **SEPARATING, and half of the producer pair** — compare H2, the same declared `Coll[Byte]`, off the SAME BOX, which returns.",
+      "tree_bytes_hex" : "0b0bdc0c02c3a70204c6010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "self_creation_info_bytes_bool_default-accept#1",
+      "script" : "[H2] `SELF.creationInfo._2.getOrElse(99, true)` — also a `Coll[Byte]`, also off SELF, but it arrives through the TUPLE machinery and is the **generic** class, so the same call RETURNS `true` at cost 80. **THE OTHER HALF:** within one box, two `Coll[Byte]` values with opposite verdicts on an identical call. Nothing about the declared type or the method distinguishes them — only which producer built the collection.",
+      "tree_bytes_hex" : "0b0ddc0c028cc7a7020204c6010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 80,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int_tobytes_bool_default-accept#2",
+      "script" : "[H3] `5.toBytes.getOrElse(99, true)` RETURNS `true` at cost 58: the numeric `toBytes` is the **generic** class.",
+      "tree_bytes_hex" : "0b0edc0c02db0406040a0204c6010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 58,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bigint_tobytes_bool_default-errored#3",
+      "script" : "[H4] `bigInt(5).toBytes.getOrElse(99, true)` THROWS — **the same method id 6, one container over, and the opposite verdict**, because `SBigIntMethods.toBytes` yields a specialised collection where the fixed-width numerics do not. **SEPARATING**, and the row that shows the producer map has to be learned per method, not per method NAME.",
+      "tree_bytes_hex" : "0b0fdc0c02db06060601050204c6010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "int_tobits_int_default-errored#4",
+      "script" : "[H5] `5.toBits.getOrElse(99, 1)` THROWS: every `toBits` returns the specialised Boolean class (`$mcZ$sp`), so an Int default is unboxed to Boolean. **SEPARATING**, and the third specialised kind reached through yet another producer.",
+      "tree_bytes_hex" : "0b0edc0c02db0407040a0204c6010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "self_bytes_good_default-accept#5",
+      "script" : "[H6] **CONTROL for H1:** a well-typed `Byte 7` default returns at cost 66. The index is **9999**, out of range for any box, so this row tests the default's type and nothing else — at index 99 it was confounded by the box's serialized LENGTH (see H10/H11).",
+      "tree_bytes_hex" : "0b0cdc0c02c3a702049e9c010207",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Byte",
+          "value" : 7
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int_tobytes_good_default-accept#6",
+      "script" : "[H7] **CONTROL for H3/H4:** `5.toBytes.getOrElse(99, 7)` returns `Byte 7` at cost 58.",
+      "tree_bytes_hex" : "0b0edc0c02db0406040a0204c6010207",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Byte",
+          "value" : 7
+        },
+        "cost" : 58,
+        "error" : null
+      }
+    },
+    {
+      "name" : "self_proposition_bytes_bool_default-errored#7",
+      "script" : "[H8] `SELF.propositionBytes.getOrElse(99, true)` throws — another specialised producer off the same box. **SEPARATING.**",
+      "tree_bytes_hex" : "0b0bdc0c02c2a70204c6010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "self_bytes_size-accept#8",
+      "script" : "[H10] `SELF.bytes.size` = **46** at cost 40 — the canonical eval context's SELF box serialized length, which contract §2 fully determines (value 1000000, this tree, no tokens, no registers, txId 32x00, index 0, creationHeight 0). **A DIAGNOSTIC ROW, not a specialisation one:** it exists because the first cut of H6 read index 99 and a runner answered with a byte instead of the default, which can only mean its SELF.bytes is longer. Any divergence here invalidates every row that reads SELF.bytes, so grade it first.",
+      "tree_bytes_hex" : "0b05db0c01c3a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 46
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "self_bytes_good_default_in_box_range-accept#9",
+      "script" : "[H11] `SELF.bytes.getOrElse(99, 7)` — index 99 is OUT of range for a 46-byte box, so the JVM returns the default `Byte 7` at cost 66. **The consequence row for H10**, and deliberately confounded with it: an implementation whose SELF box serializes longer than 99 bytes returns a byte of its own box here instead. Read it together with H10, never alone.",
+      "tree_bytes_hex" : "0b0bdc0c02c3a70204c6010207",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Byte",
+          "value" : 7
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    },
+    {
+      "name" : "blake2b256_bool_default-errored#10",
+      "script" : "[H9] `blake2b256(SELF.bytes).getOrElse(99, true)` throws: every hash, `Xor`, `LongToByteArray`, `minerPubKey`, `AvlTree.digest` and `GroupElement.getEncoded` is specialised. **SEPARATING**, and the cheapest row to reproduce from a fresh implementation.",
+      "tree_bytes_hex" : "0b0cdc0c02cbc3a70204c6010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
