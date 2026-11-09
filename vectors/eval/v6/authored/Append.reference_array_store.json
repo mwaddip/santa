@@ -1,0 +1,117 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Append.reference_array_store",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "append_ge_empty_box_arg-accept#0",
+      "script" : "[K1] `Append(Coll[GroupElement](g), ys)` where `ys` is declared `Coll[GroupElement]` and evaluates to an EMPTY `Coll[Box]`: **ACCEPTED**, cost 87, and the result is a `Coll[GroupElement]`. `safeConcatArrays_v5` allocates by the receiver's ClassTag and `System.arraycopy` between two REFERENCE arrays checks each element — and there is none. **The contrast that makes it worth having:** the same shape on a PRIMITIVE-backed receiver throws even for an empty ill-typed operand (the array itself is cast), so emptiness saves a reference append and not a primitive one.",
+      "tree_bytes_hex" : "0b0eb383010782950100830007830063",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SGroupElement"
+          },
+          "items" : [
+            {
+              "kind" : "GroupElement",
+              "bytes_hex" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+            }
+          ]
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append_ge_one_box_arg-errored#1",
+      "script" : "[K2] **CONTROL / the bound:** one `Box` in that argument and the same append throws `ArrayStoreException`. **SEPARATING:** an implementation that refuses K1 over-rejects, and one that accepts K2 over-accepts — both halves are needed to state the rule.",
+      "tree_bytes_hex" : "0b10b38301078295010083010782830163a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append_empty_box_recv_ge_arg-accept#2",
+      "script" : "[K3] The EMPTY ill-typed collection on the LEFT: accepted at cost 87, because `CollOverArray.append` returns `other` unchanged when the receiver is empty (`CollsOverArrays.scala:49`) — a different reason from K1's, and the same answer.",
+      "tree_bytes_hex" : "0b0eb395010083000783006383010782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SGroupElement"
+          },
+          "items" : [
+            {
+              "kind" : "GroupElement",
+              "bytes_hex" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+            }
+          ]
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append_ge_ge-accept#3",
+      "script" : "[K4] **CONTROL:** the well-typed append, cost 82. K1's 87 is the `If` that carries the lie, not the append.",
+      "tree_bytes_hex" : "0b09b38301078283010782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SGroupElement"
+          },
+          "items" : [
+            {
+              "kind" : "GroupElement",
+              "bytes_hex" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+            },
+            {
+              "kind" : "GroupElement",
+              "bytes_hex" : "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+            }
+          ]
+        },
+        "cost" : 82,
+        "error" : null
+      }
+    }
+  ]
+}

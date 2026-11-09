@@ -1,0 +1,155 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.prefix_cross_type_equality",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-coll-specialisation",
+  "entries" : [
+    {
+      "name" : "startswith_short_recv_int_arg-accept#0",
+      "script" : "[J1] `Coll[Short](1,2).startsWith(ys)` where `ys` is declared `Coll[Short]` and evaluates to `Coll[Int](1)`: **`true`** at cost 85. `BoxesRunTime.equalsNumNum` widens every integral box, so Short-vs-Int compares equal by VALUE — the receiver's declared item type does not enter into it. Pairs with the S2 row's Byte-vs-Long: the widening is general.",
+      "tree_bytes_hex" : "0b18dc0c1f830203030203040195010083010303028301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith_short_recv_short_arg-accept#1",
+      "script" : "[J2] **CONTROL:** the well-typed argument also answers `true`, at cost 70.",
+      "tree_bytes_hex" : "0b10dc0c1f83020303020304018301030302",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 70,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith_bigint_recv_long_arg-accept#2",
+      "script" : "[J3] The same shape with a `Coll[BigInt]` receiver and a `Coll[Long](1)` argument of the same numeric value: **`false`** at cost 80. `CBigInt` is not a `java.lang.Number`, so `equalsNumNum` never runs and the boxed comparison simply fails. **The boundary of J1** — widening is not 'numeric equality' in general, it is the integral-box rule.",
+      "tree_bytes_hex" : "0b18dc0c1f830106060101019501008301060601018301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 80,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith_bigint_recv_bigint_arg-accept#3",
+      "script" : "[J4] **CONTROL:** the well-typed BigInt argument answers `true` at cost 65, so J3 is about the argument's runtime type and not about BigInt collections.",
+      "tree_bytes_hex" : "0b10dc0c1f83010606010101830106060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith_nested_int_recv_long_arg-accept#4",
+      "script" : "[J5] A NESTED receiver: `Coll[Coll[Int]](Coll(1)).startsWith(ys)` where `ys` evaluates to `Coll[Coll[Long]](Coll(1))` — equal inner values, different inner item type: **`false`** at cost 120. The elements are collections, so the comparison is `CollOverArray.equals`, which compares `tItem` BEFORE any item. The item-type gate from the collection-equality round, reached through startsWith.",
+      "tree_bytes_hex" : "0b1fdc0c1f83011083010404020195010083011083010404028301118301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 120,
+        "error" : null
+      }
+    },
+    {
+      "name" : "startswith_nested_int_recv_int_arg-accept#5",
+      "script" : "[J6] **CONTROL:** the well-typed nested argument answers `true` at cost 105.",
+      "tree_bytes_hex" : "0b14dc0c1f8301108301040402018301108301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 105,
+        "error" : null
+      }
+    },
+    {
+      "name" : "endswith_nested_int_recv_long_arg-accept#6",
+      "script" : "[J7] `endsWith` on the same pair answers `false` at the same cost 120 — with a single-item receiver the two ends coincide, so this pins that the verdict comes from the comparison and not from the end chosen.",
+      "tree_bytes_hex" : "0b1fdc0c2083011083010404020195010083011083010404028301118301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 120,
+        "error" : null
+      }
+    }
+  ]
+}

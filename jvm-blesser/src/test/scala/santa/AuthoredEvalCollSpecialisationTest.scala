@@ -28,7 +28,7 @@ class AuthoredEvalCollSpecialisationTest extends munit.FunSuite {
     case other   => fail(s"want one row [$id], got ${other.map(str(_, "name"))}")
   }
 
-  test("92 rows over nine families, and every id is unique") {
+  test("111 rows over twelve families, and every id is unique") {
     assertEquals(entries(B.OpGetOrElse).size, 10)
     assertEquals(entries(B.OpPrefix).size, 13)
     assertEquals(entries(B.OpByIndex).size, 12)
@@ -36,12 +36,15 @@ class AuthoredEvalCollSpecialisationTest extends munit.FunSuite {
     assertEquals(entries(B.OpPairPrefix).size, 6)
     assertEquals(entries(B.OpItemStore).size, 12)
     assertEquals(entries(B.OpCrossWidth).size, 6)
-    assertEquals(entries(B.OpProducer).size, 11)
+    assertEquals(entries(B.OpProducer).size, 13)
     assertEquals(entries(B.OpPairShape).size, 17)
-    assertEquals(all.size, 92)
+    assertEquals(entries(B.OpCrossType).size, 7)
+    assertEquals(entries(B.OpRefAppend).size, 4)
+    assertEquals(entries(B.OpPairRestore).size, 6)
+    assertEquals(all.size, 111)
     val ids = all.map(e => str(e, "script").takeWhile(_ != ']').drop(1))
     assertEquals(ids.distinct.size, ids.size, s"duplicate row ids: $ids")
-    assertEquals(all.map(e => str(e, "tree_bytes_hex")).distinct.size, 92, "duplicate tree bytes")
+    assertEquals(all.map(e => str(e, "tree_bytes_hex")).distinct.size, 111, "duplicate tree bytes")
   }
 
   test("A: the specialised/generic pairs stay OPPOSITE on all three specialised kinds") {
@@ -177,13 +180,51 @@ class AuthoredEvalCollSpecialisationTest extends munit.FunSuite {
       .foreach(id => assert(str(row(id), "script").contains("CONTROL"), s"$id must be marked"))
   }
 
+  test("J/K: what the generic class's boxed == does across types, and the reference store") {
+    // the integral-box widening, its boundary, and the nested item-type gate
+    assertEquals(boolValue(row("J1")), Some(true), "Short vs Int widens")
+    assertEquals(boolValue(row("J3")), Some(false), "BigInt vs Long does NOT (CBigInt is no Number)")
+    assertEquals(boolValue(row("J5")), Some(false), "nested: tItem is compared before any item")
+    assertEquals(boolValue(row("J7")), Some(false))
+    Seq("J2", "J4", "J6").foreach(id => assertEquals(boolValue(row(id)), Some(true), s"$id control"))
+    // J1 and J3 must stay OPPOSITE: together they say widening is the integral-box rule
+    assertNotEquals(boolValue(row("J1")), boolValue(row("J3")))
+    // the reference append: empty passes, one element does not
+    assert(!errored(row("K1")), "an EMPTY ill-typed reference operand is accepted")
+    assert(errored(row("K2")), "one ill-typed element throws ArrayStoreException")
+    assert(!errored(row("K3")) && !errored(row("K4")))
+    assertEquals(cost(row("K1")), Some(87L))
+    assertEquals(cost(row("K4")), Some(82L))
+  }
+
+  test("L: the pair shape is destroyed and restored, and the verdict follows") {
+    // map INTO pairs installs the bridge; map OVER pairs removes it (M3). Both must hold, or
+    // the family has collapsed into one direction.
+    assert(errored(row("Y1")), "map into pairs -> PairOfCols -> throws")
+    assert(!errored(row("M3")), "map over pairs -> Tuple2 array -> returns")
+    assert(errored(row("Y3")), "flatMap into pairs does the same as map")
+    // reverse RESTORES the PairOfCols: Y4 throws where M7, the same collection one operation
+    // earlier, returns. (Y4's control lives in the other family because the trees would be
+    // byte-identical — the duplicate-tree guard caught that when both were authored.)
+    assert(errored(row("Y4")) && !errored(row("M7")),
+      "reverse of a mapped pair collection brings the Tuple2 bridge back")
+    assertEquals(cost(row("M7")), Some(164L))
+    // a specialised SIDE is lost by updateMany and by Filter, so P1's throw becomes an answer
+    assertEquals(boolValue(row("Y8")), Some(false))
+    assertEquals(boolValue(row("Y11")), Some(true))
+    assert(errored(row("P1")), "P1 is the un-rebuilt twin of Y8/Y11 and must still throw")
+    // the toBytes row is complete: both arbitrary-precision containers specialise
+    assert(errored(row("H12")) && errored(row("H4")) && !errored(row("H3")))
+  }
+
   test("every errored row claims SEPARATING; every control says so") {
     all.foreach { e =>
       val d = str(e, "script")
       if (errored(e)) assert(d.contains("SEPARATING"), s"${str(e, "name")} does not say why: $d")
     }
     Seq("Z5", "I5", "S9", "S10", "E3", "N5", "N6", "N11", "N12", "Q1", "Q2", "Q3", "X1",
-        "P3", "P4", "H6", "H7", "M8", "M9", "M10", "M11", "M12", "M13", "M16", "M17")
+        "P3", "P4", "H6", "H7", "M8", "M9", "M10", "M11", "M12", "M13", "M16", "M17",
+        "J2", "J4", "J6", "K2", "K4", "Y2", "H13")
       .foreach(id => assert(str(row(id), "script").contains("CONTROL"), s"$id must be marked"))
   }
 
@@ -195,7 +236,8 @@ class AuthoredEvalCollSpecialisationTest extends munit.FunSuite {
     val outDir = java.nio.file.Paths.get("target", "eval-authored")
     B.writeVectors(outDir)
     Seq(B.OpGetOrElse, B.OpPrefix, B.OpByIndex, B.OpBlind, B.OpPairPrefix, B.OpItemStore,
-        B.OpCrossWidth, B.OpProducer, B.OpPairShape)
+        B.OpCrossWidth, B.OpProducer, B.OpPairShape, B.OpCrossType, B.OpRefAppend,
+        B.OpPairRestore)
       .foreach(op => assert(java.nio.file.Files.exists(outDir.resolve(s"$op.json")), op))
   }
 }

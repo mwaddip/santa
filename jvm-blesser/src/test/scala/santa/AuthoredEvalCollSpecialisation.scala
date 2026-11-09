@@ -54,6 +54,9 @@ object AuthoredEvalCollSpecialisation {
   val OpCrossWidth = "EQ.cross_width_numeric"
   val OpProducer   = "Coll.producer_specialisation_witness"
   val OpPairShape  = "Coll.pair_shape_map"
+  val OpCrossType  = "Coll.prefix_cross_type_equality"
+  val OpRefAppend  = "Append.reference_array_store"
+  val OpPairRestore = "Coll.pair_shape_restored"
 
   private val V3: Byte = 3
 
@@ -366,6 +369,13 @@ object AuthoredEvalCollSpecialisation {
       "returns the default `Byte 7` at cost 66. **The consequence row for H10**, and deliberately " +
       "confounded with it: an implementation whose SELF box serializes longer than 99 bytes " +
       "returns a byte of its own box here instead. Read it together with H10, never alone."),
+    ("H12", "unsigned_bigint_tobytes_bool_default", "0b0fdc0c02db09060901050204c6010101", false, 3,
+      "`unsignedBigInt(5).toBytes.getOrElse(99, true)` THROWS: `SUnsignedBigIntMethods.toBytes` " +
+      "is specialised like `SBigIntMethods.toBytes` (H4) and unlike the fixed-width numerics " +
+      "(H3). **SEPARATING**, and it completes the toBytes row: the two arbitrary-precision " +
+      "containers specialise and the four fixed-width ones do not."),
+    ("H13", "unsigned_bigint_tobytes_good_default", "0b0fdc0c02db09060901050204c6010207", true, 3,
+      "**CONTROL for H12:** a well-typed default returns `Byte 7` at cost 58."),
     ("H9", "blake2b256_bool_default", "0b0cdc0c02cbc3a70204c6010101", false, 3,
       "`blake2b256(SELF.bytes).getOrElse(99, true)` throws: every hash, `Xor`, " +
       "`LongToByteArray`, `minerPubKey`, `AvlTree.digest` and `GroupElement.getEncoded` is " +
@@ -440,6 +450,100 @@ object AuthoredEvalCollSpecialisation {
       "**CONTROL:** `SELF.tokens == Coll[(Coll[Byte],Long)]()` is `true` at cost 60 — the empty " +
       "Tuple2-array shape compares equal to an empty `ConcreteCollection` of the same type."))
 
+
+  // ── J. startsWith/endsWith on a GENERIC receiver: what Scala's `==` does across TYPES ───
+  // The generic class compares boxed elements, so the answer is the ELEMENTS' answer rather
+  // than a refusal — and which pairs of types compare equal is decided by
+  // `BoxesRunTime.equalsNumNum` (every integral box widens), by whether the value is a
+  // `java.lang.Number` at all (`CBigInt` is not), and for nested collections by
+  // `CollOverArray.equals`, which compares `tItem` before any item.
+  private val crossTypeRows: Seq[Row] = Seq(
+    ("J1", "startswith_short_recv_int_arg", "0b18dc0c1f830203030203040195010083010303028301040402", true, 3,
+      "`Coll[Short](1,2).startsWith(ys)` where `ys` is declared `Coll[Short]` and evaluates to " +
+      "`Coll[Int](1)`: **`true`** at cost 85. `BoxesRunTime.equalsNumNum` widens every integral " +
+      "box, so Short-vs-Int compares equal by VALUE — the receiver's declared item type does not " +
+      "enter into it. Pairs with the S2 row's Byte-vs-Long: the widening is general."),
+    ("J2", "startswith_short_recv_short_arg", "0b10dc0c1f83020303020304018301030302", true, 3,
+      "**CONTROL:** the well-typed argument also answers `true`, at cost 70."),
+    ("J3", "startswith_bigint_recv_long_arg", "0b18dc0c1f830106060101019501008301060601018301050502", true, 3,
+      "The same shape with a `Coll[BigInt]` receiver and a `Coll[Long](1)` argument of the same " +
+      "numeric value: **`false`** at cost 80. `CBigInt` is not a `java.lang.Number`, so " +
+      "`equalsNumNum` never runs and the boxed comparison simply fails. **The boundary of J1** — " +
+      "widening is not 'numeric equality' in general, it is the integral-box rule."),
+    ("J4", "startswith_bigint_recv_bigint_arg", "0b10dc0c1f83010606010101830106060101", true, 3,
+      "**CONTROL:** the well-typed BigInt argument answers `true` at cost 65, so J3 is about the " +
+      "argument's runtime type and not about BigInt collections."),
+    ("J5", "startswith_nested_int_recv_long_arg", "0b1fdc0c1f83011083010404020195010083011083010404028301118301050502", true, 3,
+      "A NESTED receiver: `Coll[Coll[Int]](Coll(1)).startsWith(ys)` where `ys` evaluates to " +
+      "`Coll[Coll[Long]](Coll(1))` — equal inner values, different inner item type: **`false`** " +
+      "at cost 120. The elements are collections, so the comparison is " +
+      "`CollOverArray.equals`, which compares `tItem` BEFORE any item. The item-type gate from " +
+      "the collection-equality round, reached through startsWith."),
+    ("J6", "startswith_nested_int_recv_int_arg", "0b14dc0c1f8301108301040402018301108301040402", true, 3,
+      "**CONTROL:** the well-typed nested argument answers `true` at cost 105."),
+    ("J7", "endswith_nested_int_recv_long_arg", "0b1fdc0c2083011083010404020195010083011083010404028301118301050502", true, 3,
+      "`endsWith` on the same pair answers `false` at the same cost 120 — with a single-item " +
+      "receiver the two ends coincide, so this pins that the verdict comes from the comparison " +
+      "and not from the end chosen."))
+
+  // ── K. Append into a REFERENCE-backed array: only the elements are checked ───────────────
+  private val refAppendRows: Seq[Row] = Seq(
+    ("K1", "append_ge_empty_box_arg", "0b0eb383010782950100830007830063", true, 3,
+      "`Append(Coll[GroupElement](g), ys)` where `ys` is declared `Coll[GroupElement]` and " +
+      "evaluates to an EMPTY `Coll[Box]`: **ACCEPTED**, cost 87, and the result is a " +
+      "`Coll[GroupElement]`. `safeConcatArrays_v5` allocates by the receiver's ClassTag and " +
+      "`System.arraycopy` between two REFERENCE arrays checks each element — and there is none. " +
+      "**The contrast that makes it worth having:** the same shape on a PRIMITIVE-backed " +
+      "receiver throws even for an empty ill-typed operand (the array itself is cast), so " +
+      "emptiness saves a reference append and not a primitive one."),
+    ("K2", "append_ge_one_box_arg", "0b10b38301078295010083010782830163a7", false, 3,
+      "**CONTROL / the bound:** one `Box` in that argument and the same append throws " +
+      "`ArrayStoreException`. **SEPARATING:** an implementation that refuses K1 over-rejects, " +
+      "and one that accepts K2 over-accepts — both halves are needed to state the rule."),
+    ("K3", "append_empty_box_recv_ge_arg", "0b0eb395010083000783006383010782", true, 3,
+      "The EMPTY ill-typed collection on the LEFT: accepted at cost 87, because " +
+      "`CollOverArray.append` returns `other` unchanged when the receiver is empty " +
+      "(`CollsOverArrays.scala:49`) — a different reason from K1's, and the same answer."),
+    ("K4", "append_ge_ge", "0b09b38301078283010782", true, 3,
+      "**CONTROL:** the well-typed append, cost 82. K1's 87 is the `If` that carries the lie, " +
+      "not the append."))
+
+
+  // ── L. the pair shape is DESTROYED and RESTORED by ordinary operations ──────────────────
+  // `map` OVER a pair collection gives the Tuple2-array form (family I), and `map` INTO pairs
+  // gives a `PairOfCols` — `CollOverArray.map` calls `builder.fromArray` with a PAIR RType, so
+  // `fromBoxedPairs` runs. `reverse` of a mapped pair collection is a `PairOfCols` again. So the
+  // verdict on an item-typed default flips with each operation, and an implementation has to
+  // track the shape through a pipeline rather than at construction.
+  private val pairRestoreRows: Seq[Row] = Seq(
+    ("Y1", "map_into_pairs_bool_default", "0b1fdc0c02dc0c0383030404000402040401d901010486027201720102040a0101", false, 3,
+      "`Coll[Int](0,1,2).map(x => (x, x)).getOrElse(5, true)` THROWS. Mapping INTO pairs builds " +
+      "a `PairOfCols` (`CollOverArray.map` -> `builder.fromArray` at a PAIR RType -> " +
+      "`fromBoxedPairs`), so the Tuple2 bridge is back. **SEPARATING, and the exact INVERSE of " +
+      "M3:** `map` over a pair collection removes the bridge and `map` into one installs it."),
+    ("Y2", "map_into_pairs_pair_default", "0b23dc0c02dc0c0383030404000402040401d901010486027201720102040a860204120412", true, 3,
+      "**CONTROL for Y1:** a pair default returns `(9,9)` at cost 219."),
+    ("Y3", "flatmap_into_pairs_bool_default", "0b22dc0c02dc0c0f83030404000402040401d901010483015886027201720102040a0101", false, 3,
+      "`flatMap` into pairs does the same: a `PairOfCols` and a throw. **SEPARATING**, and it " +
+      "shows the rule is about the BUILDER call's static type and not about `map` specifically."),
+    ("Y4", "reverse_of_mapped_pair_bool_default", "0b24dc0c02db0c1edc0c0383025886020402040486020406040801d9010158720102040a0101", false, 3,
+      "`pairCC.map(x => x).reverse.getOrElse(5, true)` THROWS, where the same collection WITHOUT " +
+      "the `reverse` returns (Y5). `CollOverArray.reverse` goes through `builder.fromArray` with " +
+      "the pair RType, so the `PairOfCols` is RESTORED. **SEPARATING, and the sharpest statement " +
+      "of the round:** two ordinary operations in sequence flip the verdict twice — its control " +
+      "is M7 in `Coll.pair_shape_map`, the SAME collection one operation earlier, which returns " +
+      "`true` at cost 164."),
+    ("Y8", "updatemany_loses_specialised_side", "0b43dc0c1fdc0c15dc0c1d0e030102030183030404000402040402830104040083013e0486020209041201dc0c1d9501008301020201830105050201830304040004020404", true, 3,
+      "`specB.zip(genI).updateMany(…).startsWith(ys)` with a lying ls argument answers **`false`** " +
+      "at cost 256, where the same `startsWith` on the un-updated collection THROWS (P1). " +
+      "`updateMany` rebuilds both sides through `pairCollFromArrays` at an abstract type, so the " +
+      "SPECIALISED ls is lost and the delegated `ls.startsWith` no longer casts. The verdict " +
+      "follows the pipeline, not the construction."),
+    ("Y11", "filter_node_loses_specialised_side", "0b38dc0c1fb5dc0c1d0e0301020301830304040004020404d901013e04010101dc0c1d9501008301020201830105050201830304040004020404", true, 3,
+      "The same through the `Filter` NODE: `true` at cost 216 where P1 throws. (`filter` as a " +
+      "MethodCall has no `_eval` handler at all — the node is its only reachable form, which is " +
+      "why this row is a node and P1 is a method call.)"))
+
   private def entriesOf(op: String, rows: Seq[Row]): Json = {
     val entries = rows.zipWithIndex.map { case ((id, slug, tree, accepts, etv, what), i) =>
       val name   = s"$slug-${if (accepts) "accept" else "errored"}#$i"
@@ -460,7 +564,10 @@ object AuthoredEvalCollSpecialisation {
     OpItemStore  -> entriesOf(OpItemStore, itemStoreRows),
     OpCrossWidth -> entriesOf(OpCrossWidth, crossWidthRows),
     OpProducer   -> entriesOf(OpProducer, producerWitnessRows),
-    OpPairShape  -> entriesOf(OpPairShape, pairShapeRows))
+    OpPairShape  -> entriesOf(OpPairShape, pairShapeRows),
+    OpCrossType  -> entriesOf(OpCrossType, crossTypeRows),
+    OpRefAppend  -> entriesOf(OpRefAppend, refAppendRows),
+    OpPairRestore -> entriesOf(OpPairRestore, pairRestoreRows))
 
   def writeVectors(outDir: java.nio.file.Path): Unit =
     SpecExtract.writeStaging("AuthoredEvalCollSpecialisation", extract(), outDir)
