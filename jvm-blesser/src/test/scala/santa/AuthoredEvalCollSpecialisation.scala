@@ -251,7 +251,58 @@ object AuthoredEvalCollSpecialisation {
     ("P6", "pair_gen_side_endswith_lie_ls", "0b34dc0c20dc0c1d8303020201020202030183030404000402040401dc0c1d9501008301020201830105050201830304040004020404", true, 3,
       "Its generic twin returns **`false`** at cost 190 — the same argument that made P2 `true`, " +
       "because `(1,2,3)` does not END with `1L`. The P2/P6 asymmetry pins the comparison as " +
-      "numeric rather than refused, inside a pair."))
+      "numeric rather than refused, inside a pair."),
+    // P7-P16: the argument is NOT a pair collection at all (the shapes round's final review).
+    // Then `PairOfCols.startsWith` cannot delegate side by side and falls back to
+    // `toArray.startsWith(ys.toArray)` (`CollsOverArrays.scala:400`, `endsWith` `:405`), whose
+    // bytecode checkcasts `ys.toArray()` to `[Ljava/lang/Object;`.
+    ("P7", "startswith_pair_empty_primitive_arg", "0b14dc0c1f0c58020204060801950100830058830004", false, 3,
+      "`Coll[(Int,Int)]` CONSTANT — a `PairOfCols` — `.startsWith(ys)` where `ys` is declared " +
+      "`Coll[(Int,Int)]` and evaluates to an EMPTY `Coll[Int]`. With a NON-pair argument the " +
+      "side-by-side delegation is unavailable and the fallback casts the argument's array, so " +
+      "this throws `ClassCastException` BEFORE any length test. **An empty argument is not a " +
+      "free pass:** the array is cast, not read. **SEPARATING:** an implementation that holds a " +
+      "pair collection as two columns, or that tests the argument's LENGTH before its class, " +
+      "answers `true` here — an over-accept of a comparison the JVM refuses."),
+    ("P8", "startswith_pair_nonempty_primitive_arg", "0b16dc0c1f0c580202040608019501008300588301040402", false, 3,
+      "The same with ONE Int in the argument: the same `ClassCastException`. It is what says P7 " +
+      "is about the array's class and not about an empty-prefix shortcut. **SEPARATING**, and " +
+      "the row an implementation that compares element-wise answers `false` on."),
+    ("P9", "startswith_pair_specialised_byte_arg", "0b15dc0c1f0c580202040608019501008300580e020102", false, 3,
+      "The same with a `Coll[Byte]` CONSTANT argument — the deserializer's specialised " +
+      "`$mcB$sp` over `[B` (`CoreDataSerializer.scala:174`): also `ClassCastException`. Any " +
+      "primitive backing does it, and the argument's own specialisation adds nothing. " +
+      "**SEPARATING.**"),
+    ("P10", "startswith_pair_empty_reference_arg", "0b14dc0c1f0c58020204060801950100830058830010", true, 3,
+      "The REFERENCE-array half: an argument declared `Coll[(Int,Int)]` that evaluates to an " +
+      "EMPTY `Coll[Coll[Int]]` is ACCEPTED and answers **`true`** at cost 55 — a `[Lsigma/Coll;` " +
+      "casts to `[Ljava/lang/Object;`, and an empty prefix is a prefix. **The P7/P10 pair is the " +
+      "row to read:** same receiver, same call, both arguments EMPTY, and the verdict turns on " +
+      "whether the argument's array is primitive."),
+    ("P11", "startswith_pair_nonempty_reference_arg", "0b19dc0c1f0c580202040608019501008300588301108301040402", true, 3,
+      "One `Coll[Int]` in that argument and the answer is **`false`** at cost 80: the cast " +
+      "succeeds and the comparison then fails on the element, a `Coll` being no `Tuple2`. The " +
+      "bound on P10 — the reference argument is answered, not waved through."),
+    ("P12", "endswith_pair_empty_primitive_arg", "0b14dc0c200c58020204060801950100830058830004", false, 3,
+      "`endsWith` takes the identical path (`:405`) and throws on the empty primitive argument " +
+      "too. **SEPARATING**, and it doubles P7 on the other end of the collection."),
+    ("P13", "endswith_pair_empty_reference_arg", "0b14dc0c200c58020204060801950100830058830010", true, 3,
+      "**CONTROL:** `endsWith` with the empty REFERENCE argument answers `true` at cost 55, the " +
+      "mirror of P10 — so P12 is the argument's array and not the end chosen."),
+    ("P14", "startswith_pair_prefix_arg_control", "0b14dc0c1f0c58020204060801830158860204020404", true, 3,
+      "**CONTROL:** an honest pair-collection prefix `Coll((1,2))` answers `true` at cost 65 " +
+      "through the side-by-side delegation P1-P6 exercise. It is what shows P7-P9 are about the " +
+      "argument's KIND and not about the receiver."),
+    ("P15", "startswith_pair_empty_pair_arg_control", "0b0edc0c1f0c58020204060801830058", true, 3,
+      "**CONTROL:** an EMPTY pair argument answers `true` at cost 40 — the delegated path has " +
+      "its own empty case, so emptiness is fatal only when the argument is a non-pair over a " +
+      "primitive array."),
+    ("P16", "mapped_receiver_empty_primitive_arg", "0b1edc0c1fdc0c030c58020204060801d9010158720101950100830058830004", true, 3,
+      "**THE PAIR SHAPE DECIDES IT, NOT THE ITEM TYPE:** `pairConst.map(x => x)` is a plain " +
+      "`CollOverArray` over `[Lscala.Tuple2;` (family I), and the SAME empty primitive argument " +
+      "now answers **`true`** at cost 105 where P7 throws. One identity `map` on the RECEIVER " +
+      "flips the verdict — the fourth operation the pair shape decides, after `getOrElse`, " +
+      "`ByIndex` and the item-typed stores, and the one where the argument is what gets cast."))
 
   // ── F. the item STORE: a primitive array rejects any wrong item, an Object array only a
   //       wrong CLASS. Neither is about specialisation — both classes behave alike — but Rust
@@ -484,7 +535,44 @@ object AuthoredEvalCollSpecialisation {
     ("J7", "endswith_nested_int_recv_long_arg", "0b1fdc0c2083011083010404020195010083011083010404028301118301050502", true, 3,
       "`endsWith` on the same pair answers `false` at the same cost 120 — with a single-item " +
       "receiver the two ends coincide, so this pins that the verdict comes from the comparison " +
-      "and not from the end chosen."))
+      "and not from the end chosen."),
+    // J8-J15: the same question ONE LEVEL DOWN, inside an Option (the shapes round's review).
+    // `Some.equals` compares its contents with `BoxesRunTime.equals`, so the widening of J1
+    // reappears through a wrapper the declared type cannot see past.
+    ("J8", "startswith_option_long_recv_option_int_arg", "0b20dc0c1f830129dc6a09dd0105020501950100830029830128dc6a09dd01040204", true, 3,
+      "`Coll[Option[Long]](Global.some[Long](1))` — a generic collection over " +
+      "`[Lscala.Option;` — `.startsWith(ys)` where `ys` is declared `Coll[Option[Long]]` and " +
+      "evaluates to `Coll[Option[Int]](Global.some[Int](1))`: **`true`** at cost 108. The " +
+      "elements are `Option`s, so the boxed comparison is `Some.equals`, which compares its " +
+      "CONTENTS through `BoxesRunTime.equals` — and `1L == 1` there exactly as at the top level. " +
+      "The widening is not special to collection items; it follows Scala's `==` wherever the " +
+      "comparison lands."),
+    ("J9", "startswith_option_none_recv_none_int_arg", "0b1adc0c1f830129db6a0add0501950100830029830128db6a0add04", true, 3,
+      "`None` against `None`, a `Coll[Option[Long]]` receiver and a `Coll[Option[Int]]` " +
+      "argument: **`true`** at cost 98. `None` is a singleton, so the declared type parameter " +
+      "cannot enter into it — the one row where the two item types are indistinguishable by " +
+      "construction."),
+    ("J10", "startswith_option_some_recv_none_int_arg", "0b1ddc0c1f830129dc6a09dd0105020501950100830029830128db6a0add04", true, 3,
+      "`Some(1L)` against the Int-typed `None`: **`false`** at cost 103 — so J8/J9 are value " +
+      "equality and not a blanket acceptance of `Option` items."),
+    ("J11", "startswith_option_none_recv_some_int_arg", "0b1ddc0c1f830129db6a0add0501950100830029830128dc6a09dd01040204", true, 3,
+      "The mirror: `None` against `Some(1)`, **`false`** at cost 103. With J10 it pins the " +
+      "answer to the ELEMENTS rather than to which side carries the lie."),
+    ("J12", "startswith_option_some_long_control", "0b1adc0c1f830129dc6a09dd0105020501830129dc6a09dd01050205", true, 3,
+      "**CONTROL:** the honest `Coll[Option[Long]](Some(1L))` argument answers `true` at cost " +
+      "93. J8's 108 is the `If` that carries the lie, not the comparison."),
+    ("J13", "startswith_option_none_long_control", "0b17dc0c1f830129dc6a09dd0105020501830129db6a0add05", true, 3,
+      "**CONTROL:** an honest `None` argument against the `Some(1L)` receiver answers `false` " +
+      "at cost 88."),
+    ("J14", "startswith_option_some_long_2_control", "0b1adc0c1f830129dc6a09dd0105020501830129dc6a09dd01050405", true, 3,
+      "**CONTROL:** `Some(2L)` answers `false` at cost 93 — same types, different value, so " +
+      "J12's `true` is the value's doing and not the shape's."),
+    ("J15", "eq_option_long_option_int", "0b1d93830129dc6a09dd01050205950100830029830128dc6a09dd01040204", true, 3,
+      "**THE ASYMMETRY, one level down:** `EQ` on the SAME two collections answers **`false`** " +
+      "at cost 94 where `startsWith` answers `true` (J8). `DataValueComparer` bails on the " +
+      "runtime item type before it reaches any item (`:323`, the collection-equality round), " +
+      "while `startsWith` reaches Scala's `==`. The split the census found for scalars, now with " +
+      "`Option` items: the SITE decides, not the values."))
 
   // ── K. Append into a REFERENCE-backed array: only the elements are checked ───────────────
   private val refAppendRows: Seq[Row] = Seq(
@@ -506,7 +594,39 @@ object AuthoredEvalCollSpecialisation {
       "(`CollsOverArrays.scala:49`) — a different reason from K1's, and the same answer."),
     ("K4", "append_ge_ge", "0b09b38301078283010782", true, 3,
       "**CONTROL:** the well-typed append, cost 82. K1's 87 is the `If` that carries the lie, " +
-      "not the append."))
+      "not the append."),
+    // K5-K12: three item types that are reference-backed on the JVM but are the least likely to
+    // be modelled that way — `Context`, `Global` and FUNCTIONS (`Evaluation.scala:30-31`,
+    // `:51-53`; `RType.scala:75-76`). The `SizeOf` wrapper is not decoration: a `Coll[Context]`
+    // has NO canonical SValue encoding (contract §4), so the append is counted rather than
+    // returned, and it still has to materialise to be counted.
+    ("K5", "append_context_size", "0b0ab1b3830165fe830165fe", true, 3,
+      "`Append(Coll[Context](CONTEXT), Coll[Context](CONTEXT)).size` is **2** at cost 78 — " +
+      "ACCEPTED. The collection is `[Lsigma/Context;`, so `System.arraycopy` takes it like any " +
+      "object array."),
+    ("K6", "append_global_size", "0b0ab1b383016add83016add", true, 3,
+      "The same for `Coll[Global]`, backed by `[Lsigma/SigmaDslBuilder;`: **2** at cost 86."),
+    ("K7", "append_function_size", "0b1cb1b383017001040400d9010104040283017001040400d90101040404", true, 3,
+      "And for `Coll[Int => Int]` of two lambdas, backed by `[Lscala/Function1;`: **2** at cost " +
+      "86. A collection of FUNCTIONS appends."),
+    ("K8", "context_size_control", "0b05b1830165fe", true, 3,
+      "**CONTROL:** the same `SizeOf` with no append is **1** at cost 35 — the baseline that " +
+      "makes K5's 2 the append's doing."),
+    ("K9", "global_size_control", "0b05b183016add", true, 3,
+      "**CONTROL** for K6: **1** at cost 39."),
+    ("K10", "function_size_control", "0b0eb183017001040400d90101040402", true, 3,
+      "**CONTROL** for K7: **1** at cost 39."),
+    ("K11", "append_context_global_item", "0b10b1b3830165fe95010083006583016add", false, 3,
+      "**THE BOUND:** one `Global` inside a collection declared `Coll[Context]` and the append " +
+      "throws `ArrayStoreException` — the element store checks the class even between two " +
+      "REFERENCE arrays. Note the class arrives BARE, not inside an " +
+      "`InvocationTargetException`: `Append` is a dedicated node and not a reflective " +
+      "MethodCall. **SEPARATING:** an implementation that reaches K5-K7 by dropping the element " +
+      "check reaches this too, and over-accepts."),
+    ("K12", "append_context_empty_global_item", "0b0fb1b3830165fe95010083006583006a", true, 3,
+      "The EMPTY ill-typed operand is ACCEPTED, **1** at cost 92 — K1's asymmetry reproduced on " +
+      "a second pair of reference item types. So \"emptiness saves a reference append\" is the " +
+      "rule, not a `GroupElement`/`Box` accident."))
 
 
   // ── L. the pair shape is DESTROYED and RESTORED by ordinary operations ──────────────────

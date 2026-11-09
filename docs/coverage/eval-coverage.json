@@ -4112,8 +4112,8 @@
       "version" : "v5"
     },
     "v6/authored/Append.reference_array_store.json" : {
-      "accepts" : 3,
-      "entries" : 4,
+      "accepts" : 10,
+      "entries" : 12,
       "methods" : [
       ],
       "op" : "Append.reference_array_store",
@@ -4121,19 +4121,23 @@
         "Append",
         "ConcreteCollection",
         "Const",
+        "Context$",
+        "FuncValue",
+        "Global$",
         "GroupGenerator$",
         "If",
-        "Self$"
+        "Self$",
+        "SizeOf"
       ],
       "provenance" : "authored",
-      "rejects" : 1,
+      "rejects" : 2,
       "tree_shapes" : [
         {
-          "accepts" : 3,
+          "accepts" : 10,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 1,
+          "rejects" : 2,
           "tree_version" : 3
         }
       ],
@@ -4726,9 +4730,11 @@
       "version" : "v6"
     },
     "v6/authored/Coll.prefix_cross_type_equality.json" : {
-      "accepts" : 7,
-      "entries" : 7,
+      "accepts" : 15,
+      "entries" : 15,
       "methods" : [
+        "106:10 SigmaDslBuilder.none",
+        "106:9 SigmaDslBuilder.some",
         "12:31 SCollection.startsWith",
         "12:32 SCollection.endsWith"
       ],
@@ -4736,6 +4742,8 @@
       "ops" : [
         "ConcreteCollection",
         "Const",
+        "EQ",
+        "Global$",
         "If",
         "MethodCall"
       ],
@@ -4743,7 +4751,7 @@
       "rejects" : 0,
       "tree_shapes" : [
         {
-          "accepts" : 7,
+          "accepts" : 15,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -4909,10 +4917,11 @@
       "version" : "v6"
     },
     "v6/authored/Coll.specialisation_pair_prefix.json" : {
-      "accepts" : 4,
-      "entries" : 6,
+      "accepts" : 10,
+      "entries" : 16,
       "methods" : [
         "12:29 SCollection.zip",
+        "12:3 SCollection.map",
         "12:31 SCollection.startsWith",
         "12:32 SCollection.endsWith"
       ],
@@ -4920,18 +4929,21 @@
       "ops" : [
         "ConcreteCollection",
         "Const",
+        "FuncValue",
         "If",
-        "MethodCall"
+        "MethodCall",
+        "Tuple",
+        "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 2,
+      "rejects" : 6,
       "tree_shapes" : [
         {
-          "accepts" : 4,
+          "accepts" : 10,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 2,
+          "rejects" : 6,
           "tree_version" : 3
         }
       ],
@@ -11827,6 +11839,7 @@
     },
     "106:10" : {
       "families" : [
+        "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json"
@@ -11906,6 +11919,7 @@
     },
     "106:9" : {
       "families" : [
+        "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json"
       ],
@@ -12019,7 +12033,8 @@
       "families" : [
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
-        "v6/authored/Coll.pair_shape_restored.json"
+        "v6/authored/Coll.pair_shape_restored.json",
+        "v6/authored/Coll.specialisation_pair_prefix.json"
       ],
       "name" : "SCollection.map"
     },
@@ -13934,6 +13949,7 @@
       "families" : [
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
+        "v6/authored/Append.reference_array_store.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/MethodCall.receiver_kind.json",
@@ -14035,6 +14051,7 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.pair_shape_map.json",
+        "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
@@ -14586,12 +14603,14 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
+        "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -15017,6 +15036,8 @@
     "Global$" : {
       "families" : [
         "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/Append.reference_array_store.json",
+        "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
@@ -16318,6 +16339,7 @@
       "families" : [
         "v5/authored/Box.token_window_const.json",
         "v5/spec/Coll.size_equivalence.json",
+        "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
@@ -16480,6 +16502,7 @@
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.runtime_shapes_methodcall.json",
+        "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Value.checkType_sites.json",
@@ -16782,6 +16805,7 @@
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
+        "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -16934,12 +16958,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2341,
+    "accepts" : 2362,
     "distinct_methods" : 156,
     "distinct_ops" : 89,
-    "entries" : 2706,
+    "entries" : 2732,
     "files" : 316,
-    "rejects" : 365,
+    "rejects" : 370,
     "unwalked" : 11
   }
 }

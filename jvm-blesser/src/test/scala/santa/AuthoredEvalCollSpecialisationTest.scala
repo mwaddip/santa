@@ -22,29 +22,31 @@ class AuthoredEvalCollSpecialisationTest extends munit.FunSuite {
     e.hcursor.downField("expected").downField("value").get[String]("kind").toOption
   private def boolValue(e: Json): Option[Boolean] =
     e.hcursor.downField("expected").downField("value").get[Boolean]("value").toOption
+  private def intValue(e: Json): Option[Long] =
+    e.hcursor.downField("expected").downField("value").get[Long]("value").toOption
   private def ergoTree(e: Json): Option[Int] = e.hcursor.downField("version").get[Int]("ergoTree").toOption
   private def row(id: String): Json = all.filter(e => str(e, "script").startsWith(s"[$id]")) match {
     case List(e) => e
     case other   => fail(s"want one row [$id], got ${other.map(str(_, "name"))}")
   }
 
-  test("111 rows over twelve families, and every id is unique") {
+  test("137 rows over twelve families, and every id is unique") {
     assertEquals(entries(B.OpGetOrElse).size, 10)
     assertEquals(entries(B.OpPrefix).size, 13)
     assertEquals(entries(B.OpByIndex).size, 12)
     assertEquals(entries(B.OpBlind).size, 5)
-    assertEquals(entries(B.OpPairPrefix).size, 6)
+    assertEquals(entries(B.OpPairPrefix).size, 16)
     assertEquals(entries(B.OpItemStore).size, 12)
     assertEquals(entries(B.OpCrossWidth).size, 6)
     assertEquals(entries(B.OpProducer).size, 13)
     assertEquals(entries(B.OpPairShape).size, 17)
-    assertEquals(entries(B.OpCrossType).size, 7)
-    assertEquals(entries(B.OpRefAppend).size, 4)
+    assertEquals(entries(B.OpCrossType).size, 15)
+    assertEquals(entries(B.OpRefAppend).size, 12)
     assertEquals(entries(B.OpPairRestore).size, 6)
-    assertEquals(all.size, 111)
+    assertEquals(all.size, 137)
     val ids = all.map(e => str(e, "script").takeWhile(_ != ']').drop(1))
     assertEquals(ids.distinct.size, ids.size, s"duplicate row ids: $ids")
-    assertEquals(all.map(e => str(e, "tree_bytes_hex")).distinct.size, 111, "duplicate tree bytes")
+    assertEquals(all.map(e => str(e, "tree_bytes_hex")).distinct.size, 137, "duplicate tree bytes")
   }
 
   test("A: the specialised/generic pairs stay OPPOSITE on all three specialised kinds") {
@@ -224,8 +226,56 @@ class AuthoredEvalCollSpecialisationTest extends munit.FunSuite {
     }
     Seq("Z5", "I5", "S9", "S10", "E3", "N5", "N6", "N11", "N12", "Q1", "Q2", "Q3", "X1",
         "P3", "P4", "H6", "H7", "M8", "M9", "M10", "M11", "M12", "M13", "M16", "M17",
-        "J2", "J4", "J6", "K2", "K4", "Y2", "H13")
+        "J2", "J4", "J6", "K2", "K4", "Y2", "H13",
+        "P13", "P14", "P15", "J12", "J13", "J14", "K8", "K9", "K10")
       .foreach(id => assert(str(row(id), "script").contains("CONTROL"), s"$id must be marked"))
+  }
+
+  // ── the shapes round's final-review cases (P7-P16, J8-J15, K5-K12) ────────────────────
+  test("P: a PairOfCols answers or throws by the ARGUMENT's array kind") {
+    // the three primitive-backed arguments all throw, EMPTY INCLUDED — that is the finding
+    Seq("P7", "P8", "P9").foreach(id => assert(errored(row(id)), s"$id must ERROR"))
+    // the reference-backed ones are answered, and the answers are the elements' answers
+    Seq("P10", "P11", "P13", "P14", "P15").foreach(id =>
+      assert(!errored(row(id)), s"$id must RETURN"))
+    assertEquals(boolValue(row("P10")), Some(true), "an empty reference prefix IS a prefix")
+    assertEquals(boolValue(row("P11")), Some(false), "a Coll is no Tuple2")
+    assertEquals(boolValue(row("P13")), Some(true))
+    // P7 vs P10: both arguments EMPTY, opposite verdicts
+    assert(errored(row("P7")) && !errored(row("P10")),
+      "P7/P10 must stay opposite — the pair is the whole point")
+    // P7 vs P16: the identity map on the RECEIVER flips the throw to an answer
+    assert(errored(row("P7")) && !errored(row("P16")),
+      "P16 must RETURN where P7 throws — the pair shape, not the item type")
+    assertEquals(boolValue(row("P16")), Some(true))
+    assertEquals(cost(row("P13")), cost(row("P10")), "endsWith takes the same path as startsWith")
+  }
+
+  test("J: Scala's == reaches inside an Option, and EQ does not") {
+    Seq("J8", "J9", "J10", "J11", "J15").foreach(id =>
+      assert(!errored(row(id)), s"$id must RETURN — the generic class answers, it does not refuse"))
+    assertEquals(boolValue(row("J8")), Some(true), "Some(1L) == Some(1) through BoxesRunTime")
+    assertEquals(boolValue(row("J9")), Some(true), "None == None whatever the declared type")
+    assertEquals(boolValue(row("J10")), Some(false))
+    assertEquals(boolValue(row("J11")), Some(false))
+    // the asymmetry: the SAME two collections, opposite answers from startsWith and EQ
+    assertEquals(boolValue(row("J15")), Some(false),
+      "EQ bails on the item type where startsWith (J8) reaches the values")
+    assert(boolValue(row("J8")) != boolValue(row("J15")),
+      "J8/J15 must stay opposite — the site decides, not the values")
+  }
+
+  test("K: Context / Global / function collections append, and the store still checks") {
+    Seq(("K5", "K8"), ("K6", "K9"), ("K7", "K10")).foreach { case (appended, base) =>
+      assert(!errored(row(appended)), s"$appended must ACCEPT — these item types are reference-backed")
+      assertEquals(intValue(row(appended)), Some(2L), s"$appended appends two collections of one")
+      assertEquals(intValue(row(base)), Some(1L), s"$base is the un-appended baseline")
+      assertEquals(valueKind(row(appended)), Some("Int"))
+    }
+    // the bound, and the empty-operand asymmetry on a SECOND pair of reference item types
+    assert(errored(row("K11")), "one ill-typed element must still throw ArrayStoreException")
+    assert(!errored(row("K12")), "an EMPTY ill-typed operand is accepted, as in K1")
+    assertEquals(intValue(row("K12")), Some(1L))
   }
 
   test("envelope + write") {
