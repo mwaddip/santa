@@ -40,15 +40,41 @@ schema is `santa-block/v1` and whose entries each carry the full determination s
   self-contained AND mutable (the cheapest cost mutation shrinks `maxBlockCost` here; a
   version-gate mutation shrinks `123`/blockVersion — meaningful only on an
   epoch-boundary donor, see §5).
-- **`block`** — the full node-API block: `header`, `blockTransactions`, `extension`,
-  `adProofs`. `proofBytes` is lowercase hex, **non-empty on every entry except the
-  `proofless` mutation class**, where the empty string encodes a block carrying no usable
-  ADProofs section (§8). This is schema-enforced: the base pattern is `^[0-9a-f]*$` (it must
-  permit empty, or the class is not representable at all) and a top-level `if`/`else` adds
-  `minLength: 1` for every file whose `op` is not `block:mutation:proofless`. The exemption
-  keys on the **controlled `op` discriminator**, never on the free-text `source` — a vector
-  merely *mentioning* proofless buys nothing. `tools/validate`'s block guard applies the same
-  rule as belt-and-braces; both layers are pinned by tests in `tools/validate`.
+- **`block`** — the block: `header`, `extension` and `adProofs` as node-API JSON, and
+  **`blockTransactions` as the section's bytes** — lowercase hex, framed exactly as ergo-core's
+  `BlockTransactionsSerializer` frames it: the 32-byte header id, the VLQ
+  `10,000,000 + blockVersion` marker above block version 1, the VLQ transaction count, then
+  the transactions (ergo v6.0.7 `BlockTransactions.scala:138-205`). Parse it as a node does:
+  **outside any version context**, each transaction under `(blockVersion − 1, blockVersion − 1)`
+  from block version 4 and under none below that — the same reading the wire tier's
+  `BlockTransactions` kind grades ([`runner-contract-wire.md`](./runner-contract-wire.md)).
+  - *Why bytes, not JSON* (changed 2026-11-11; until then the field was the node-API JSON
+    object). A transaction's JSON **re-writes** every tree, as the JVM's box writer does, so an
+    encoding the transaction arrived with cannot survive a runner that rebuilds the section
+    through a writer — and the JVM keeps that encoding: a box created and spent in the same
+    block is resolved from the block's own outputs, whose trees keep the bytes they were read
+    from, and a script reads them through `propositionBytes`. donner rebuilt the
+    `kept-tree-bytes-in-block` section through sigma-rust's (correct, re-writing) writer and
+    went red on three rows for that reason alone. The bytes are what a node actually receives.
+  - Transaction and box ids do **not** move with the encoding: ergo-core hashes a
+    re-serialization (`ErgoTransaction.serializedId = hash(messageToSign)`), so the
+    transactions root is the same whichever encoding a tree arrived in.
+  - The oracle checks the section against the header through the **transactions root only**
+    (`bsCorrespondsToHeader`, over `header.version`). The section's own header id and version
+    marker are read but not compared — no vector varies them.
+  - **Captured seeds** carry the JVM writer's form of the captured transactions: the local
+    node serves block transactions as JSON only, so a captured section is derived through
+    `BlockTransactionsSerializer` rather than copied off the wire. An on-chain tree in a
+    non-canonical encoding would therefore reach a captured vector re-written; the
+    as-received class is authored (`kept-tree-bytes-in-block`, §6).
+  - `proofBytes` is lowercase hex, **non-empty on every entry except the
+    `proofless` mutation class**, where the empty string encodes a block carrying no usable
+    ADProofs section (§8). This is schema-enforced: the base pattern is `^[0-9a-f]*$` (it must
+    permit empty, or the class is not representable at all) and a top-level `if`/`else` adds
+    `minLength: 1` for every file whose `op` is not `block:mutation:proofless`. The exemption
+    keys on the **controlled `op` discriminator**, never on the free-text `source` — a vector
+    merely *mentioning* proofless buys nothing. `tools/validate`'s block guard applies the same
+    rule as belt-and-braces; both layers are pinned by tests in `tools/validate`.
 - **`boxes`** — raw serialized bytes (`{boxId, bytes}`, hash-self-verifying) of every
   external input/data-input box. **Engines may ignore this field**: a digest-native
   validator extracts spent-box values from the proof's `Remove` leaves; the field exists
@@ -169,12 +195,23 @@ Two provenances, distinguished by the `source` prefix (validate-guarded):
   confirms rejection AND the recorded reason carries the intended class signal
   (`AuthoredBlockMutations` — wrong-reason rejection fails the bless). `expected.reason`
   is the oracle's reason **verbatim** (diagnostic-only).
+  **One authored family is not a mutation:** `kept-tree-bytes-in-block`
+  (`source: "santa:authored-block-kept-tree-bytes:<row>"`, `AuthoredBlockKeptTreeBytes`), a
+  SYNTHETIC block at testnet's own initial difficulty 1 whose first transaction creates a
+  box with a non-canonically encoded tree and whose second spends it. Its section carries
+  that encoding as received — the writer's bytes with the as-received tree spliced back
+  over the re-written one — and it has accept rows, so it is the one authored file with
+  `valid: true` entries. It is the reason `blockTransactions` is bytes (§2).
 
 **Re-blessing.** Producing actuals needs no oracle dependency; re-producing committed
 vectors needs the gated blesser: `SANTA_TX_BLESSER=1 sbt test` in `jvm-blesser/` with
 ergo-core 6.0.7 available (the gate name is historical — it admits ergo-core to the
-build and gates the tx **and** block engines alike). The committed vectors were blessed under
+build and gates the tx **and** block engines alike). The vectors were first blessed under
 ergo-core 6.0.2.1 and re-derived identically under 6.0.7 when the oracle moved (2026-11-06).
+All twelve were re-blessed under 6.0.7 on 2026-11-11, when the transactions moved to bytes (§2),
+with `blessed_by` brought up to date. Every verdict, cost, post-digest and reason came out
+identical to the JSON-form bless, except `proofless`, whose hand-typed reason became the oracle's
+own. The section is the one field that changed.
 
 ## 7. Conformer stances
 
@@ -198,7 +235,8 @@ at bless time.
 rust-regenerated proof verifies but is non-canonical for the data-input Lookup. Joins
 when a JVM UTXO source regenerates it or the fork fix lands.
 
-**Authored (7):** `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
+**Authored (8):** the four rows of `kept-tree-bytes-in-block` (§6 — a synthetic block, not a
+mutation) and seven mutation classes: `params-shrink-maxBlockCost` · `stateroot-flip` · `adproof-tamper` ·
 `txs-reorder` · `pow-solution-flip` · `proofless` over the 2666 donor + **`version-gate`
 over the epoch-boundary-2560 donor** (its first, mid-epoch authoring was retired by the §5
 finding; over a boundary the gate genuinely fires on-chain). The mutation shrinks the
@@ -208,8 +246,11 @@ params, not the block's self-declared extension (the JVM rejects via `exBlockVer
 and `exMatchParameters` would fire too: written ≠ calculated).
 
 **`proofless`** (added 2026-07-07) is the odd one out: every other class *corrupts* a
-field, this one *removes* a section — `adProofs.proofBytes` and `.digest` both empty,
-expected `reason: "MissingProof"`. It is the degenerate limit of §5's proofs-section
+field, this one *removes* a section — `adProofs.proofBytes` and `.digest` both empty. It was
+hand-made with a hand-typed `reason: "MissingProof"`; since 2026-11-11 `AuthoredBlockMutations`
+generates it, so its reason is the oracle's verbatim (`proofs: bsCorrespondsToHeader:
+blake2b256(proofBytes) … != header.adProofsRoot` — diagnostic-only, so no grade moved), and the
+entry keeps its committed name `proofless-2666`. It is the degenerate limit of §5's proofs-section
 canonicality bullet (no proof at all rather than a non-canonical one), and it is the class
 that forced the schema's `proofBytes` pattern from `+` to `*`.
 
@@ -254,7 +295,7 @@ A green donner row is only as old as that fix — re-read it, don't assume conti
   "parent_digest": "ac66508bc8d423d8…ce11bd6d0d", // stateRoot of header H-1 (33 bytes hex)
   "headers": [ { "height": 2665, … }, … ],     // newest-first, ≤10
   "parameters": { "table": { "4": 1000000, "123": 4, … } },
-  "block": { "header": { … }, "blockTransactions": { … }, "extension": { … },
+  "block": { "header": { … }, "blockTransactions": "2de342ec…", "extension": { … }, // section bytes (§2): header id first
              "adProofs": { "proofBytes": "03…" } },
   "boxes": [ { "boxId": "b98a06…", "bytes": "80…" }, … ],
   "version": { "activated": 3, "ergoTree": 3 },

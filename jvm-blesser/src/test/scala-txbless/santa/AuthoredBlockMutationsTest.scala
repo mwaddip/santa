@@ -15,7 +15,7 @@ class AuthoredBlockMutationsTest extends munit.FunSuite {
 
   private val Classes = Seq(
     "params-shrink-maxBlockCost", "stateroot-flip", "adproof-tamper",
-    "txs-reorder", "pow-solution-flip", "version-gate")
+    "txs-reorder", "pow-solution-flip", "version-gate", "proofless")
 
   /** Per-class donor (the source-string assertion below): version-gate rides the
     * epoch-boundary donor — exBlockVersion fires only at epochStarts. */
@@ -40,7 +40,7 @@ class AuthoredBlockMutationsTest extends munit.FunSuite {
 
   test("blessed class set matches spec §7 exactly") {
     assertEquals(blessed.map(_._1), Classes,
-      "mutation classes drifted from the spec §7 ranking")
+      "mutation classes drifted from the committed set (spec §7 ranking, then proofless)")
   }
 
   // ── per-class vector shape ────────────────────────────────────────────────
@@ -76,6 +76,34 @@ class AuthoredBlockMutationsTest extends munit.FunSuite {
       assertEquals(entry(name).downField("version").get[Int]("ergoTree").toOption,
         Some(3), s"$name: ergoTree must be 3")
     }
+  }
+
+  // ── the section's bytes (runner-contract-block §2) ───────────────────────
+
+  private def section(name: String): String =
+    entry(name).downField("block").get[String]("blockTransactions")
+      .getOrElse(fail(s"$name: block.blockTransactions must be the section's hex"))
+
+  test("every class carries the transactions as the section's bytes, framed for its own header") {
+    Classes.foreach { name =>
+      val bt = BlockSectionBytes.parse(section(name))
+      assertEquals(bt.headerId.toString,
+        entry(name).downField("block").downField("header").get[String]("id").getOrElse(fail("header.id")),
+        s"$name: the section's header id")
+    }
+  }
+
+  test("txs-reorder holds the donor's transactions with only the first two swapped") {
+    val ids = BlockSectionBytes.parse(section("txs-reorder")).txs.map(_.id)
+    val donorIds = BlockSectionBytes.parse(section("params-shrink-maxBlockCost")).txs.map(_.id)
+    assert(donorIds.size >= 2, "the donor needs two transactions to swap")
+    assertEquals(ids, donorIds.updated(0, donorIds(1)).updated(1, donorIds(0)))
+  }
+
+  test("proofless removes the ADProofs section: bytes and digest both empty") {
+    val ap = entry("proofless").downField("block").downField("adProofs")
+    assertEquals(ap.get[String]("proofBytes").toOption, Some(""))
+    assertEquals(ap.get[String]("digest").toOption, Some(""))
   }
 
   // ── summary + vector write + file presence ───────────────────────────────

@@ -26,14 +26,17 @@ package santa
 // digests and ASSERTS the embedded header commits to exactly what it derived — so any drift fails
 // loudly with "re-mine", instead of silently re-mining or silently disagreeing.
 //
-// THE SPLICE. A transaction's JSON encoding canonicalizes the tree (the box writer re-writes), so
-// the as-received form is spliced into the transaction JSON. The transactions ROOT is unaffected —
-// it is computed over the SERIALIZED transactions, which re-write the tree either way — and so is
-// the proof, because `ErgoState.boxChanges` drops a created-then-spent box entirely
-// (BlockEngine reproduces that at :176-177), so the created box never reaches the AVL state.
+// THE SPLICE. The JVM writer re-writes the tree when it frames the transactions section (as the box
+// writer does everywhere), so the as-received form is spliced back into the section's BYTES — what
+// a node actually receives (runner-contract-block §2). Until 2026-11-11 the splice went into the
+// transactions' node-API JSON, which a runner rebuilding the section through a writer re-wrote
+// again: donner went red on #0/#1/#3 for that reason alone. The transactions ROOT is unaffected —
+// the ids hash a RE-SERIALIZATION, which re-writes the tree either way (measured: every id parsed
+// off the spliced section is the writer's) — and so is the proof, because `ErgoState.boxChanges`
+// drops a created-then-spent box entirely (BlockEngine reproduces that), so the created box never
+// reaches the AVL state.
 
 import io.circe.Json
-import io.circe.syntax._
 import io.circe.parser.parse
 import scorex.util.encode.Base16
 
@@ -125,9 +128,32 @@ object AuthoredBlockKeptTreeBytes {
 
   // ── the block, derived ────────────────────────────────────────────────────────────────────
   private final case class Built(parentDigest: String, postDigest: String, proofHex: String,
-                                 txsCanonicalJson: Json, txsSplicedJson: Json, boxA: ErgoBox,
+                                 canonical: String, variant: String, boxA: ErgoBox,
                                  boxXCanonicalBytes: String, boxXId: String, header: Json,
-                                 txs: Seq[ErgoTransaction])
+                                 txs: Seq[ErgoTransaction]) {
+    private def headerId: String = header.hcursor.get[String]("id").fold(e => sys.error(s"header id: $e"), identity)
+
+    /** The section as the JVM writer frames it: the created box's tree RE-WRITTEN. Lazy, so it is
+      * framed where it is first read — in `rows`, outside the version context `build` runs in, as
+      * BlockSectionBytes requires. */
+    lazy val sectionCanonical: String = {
+      val s = BlockSectionBytes.hexOf(headerId, BlockVersion.toByte, txs)
+      require(s.sliding(canonical.length).count(_ == canonical) == 1,
+        "the written tree must appear exactly once in the section")
+      s
+    }
+
+    /** The section AS RECEIVED: `variant` spliced back over the re-written tree. Checked to reach the
+      * parsed tree and nothing else — the same transactions (ids), the created box reading `variant`. */
+    lazy val sectionSpliced: String = {
+      val s = sectionCanonical.replace(canonical, variant)
+      val back = BlockSectionBytes.parse(s)
+      require(back.txs.map(_.id) == txs.map(_.id), "the splice moved a transaction id")
+      require(hx(back.txs.head.outputs.head.ergoTree.bytes) == variant,
+        "the parsed created box does not read the spliced bytes")
+      s
+    }
+  }
 
   /** Build the block for one arm: tx1 spends a stored box and creates the box whose tree is
     * `variant`; tx2 spends that box in the same block. Asserts the embedded header commits to
@@ -153,12 +179,6 @@ object AuthoredBlockKeptTreeBytes {
       val proofHex = hx(prover.generateProof())
       val postDigest = hx(prover.digest)
 
-      val raw = Json.arr(txs.map(_.asJson): _*).noSpaces
-      require(raw.sliding(canonical.length).count(_ == canonical) == 1,
-        "the canonical tree must appear exactly once in the transactions JSON")
-      val canonicalJson = parse(raw).fold(e => sys.error(s"tx json: $e"), identity)
-      val splicedJson = parse(raw.replace(canonical, variant)).fold(e => sys.error(s"tx json: $e"), identity)
-
       val header = parse(headerJson).fold(e => sys.error(s"header json: $e"), identity)
       def hdr(f: String): String = header.hcursor.get[String](f)
         .fold(e => sys.error(s"header.$f: $e"), identity)
@@ -171,7 +191,7 @@ object AuthoredBlockKeptTreeBytes {
         hx(BlockTransactions.transactionsRoot(txs, BlockVersion.toByte)),
         s"header.transactionsRoot ${hdr("transactionsRoot")} != derived — re-mine (spike 4b)")
 
-      Built(parentDigest, postDigest, proofHex, canonicalJson, splicedJson, boxA,
+      Built(parentDigest, postDigest, proofHex, canonical, variant, boxA,
         hx(boxX.bytes), hx(boxX.id), header, txs)
     }
 
@@ -179,16 +199,11 @@ object AuthoredBlockKeptTreeBytes {
   private lazy val rejectBlock = build(rejectCanonical, rejectVariant, RejectHeaderJson)
 
   // ── blessing ──────────────────────────────────────────────────────────────────────────────
-  private def blockJsonOf(b: Built, txsJson: Json): Json = {
+  private def blockJsonOf(b: Built, section: String): Json = {
     val id = b.header.hcursor.get[String]("id").getOrElse(sys.error("header id"))
     Json.obj(
       "header"            -> b.header,
-      "blockTransactions" -> Json.obj(
-        "headerId"     -> Json.fromString(id),
-        "blockVersion" -> Json.fromInt(BlockVersion),
-        "size"         -> Json.fromInt(
-          BlockTransactions(scorex.util.ModifierId @@ id, BlockVersion.toByte, b.txs).size),
-        "transactions" -> txsJson),
+      "blockTransactions" -> Json.fromString(section),
       "adProofs"          -> Json.obj("headerId" -> Json.fromString(id),
                                       "proofBytes" -> Json.fromString(b.proofHex)),
       "extension"         -> Json.obj("headerId" -> Json.fromString(id),
@@ -203,12 +218,12 @@ object AuthoredBlockKeptTreeBytes {
     * with no prose field, unlike the eval tier's `script` and the transaction tier's
     * `description` — so a block row's reasoning lives in its blesser, as the mutation rows' does.
     * Raised with the user as a possible schema addition; not changed unilaterally. */
-  private def entry(name: String, rationale: String, b: Built, txsJson: Json,
+  private def entry(name: String, rationale: String, b: Built, section: String,
                     extraBoxes: Seq[(String, String)], want: Boolean): Json = {
     require(rationale.nonEmpty, s"$name: every row states its role in-source")
     val boxes = ((hx(b.boxA.id) -> hx(b.boxA.bytes)) +: extraBoxes).map { case (id, hex) =>
       Json.obj("boxId" -> Json.fromString(id), "bytes" -> Json.fromString(hex)) }
-    val block = blockJsonOf(b, txsJson)
+    val block = blockJsonOf(b, section)
     val v = BlockEngine.validate(block, Vector(parse(ParentHeaderJson)
       .fold(e => sys.error(s"parent header json: $e"), identity)),
       ParamsTable.map { case (k, x) => k.toInt -> x },
@@ -251,7 +266,7 @@ object AuthoredBlockKeptTreeBytes {
   private def entriesWithRationale: Seq[(Json, String)] = rows.map { case (n, r, b, t, x, w) =>
     (entry(n, r, b, t, x, w), r) }
 
-  private def rows: Seq[(String, String, Built, Json, Seq[(String, String)], Boolean)] = Seq(
+  private def rows: Seq[(String, String, Built, String, Seq[(String, String)], Boolean)] = Seq(
     ("in-block-created-as-received-accept#0",
       "tx1 creates a box whose tree is a NON-CANONICAL encoding (an overlong VLQ constants count, " +
       s"`${acceptVariant.take(6)}…` for `${acceptCanonical.take(6)}…`) and tx2 SPENDS it in the " +
@@ -260,7 +275,7 @@ object AuthoredBlockKeptTreeBytes {
       "own outputs first, and that box is the in-memory box derived from the PARSED creating " +
       "transaction, whose tree keeps that transaction's bytes. **This is the row that makes the " +
       s"whole kept-bytes class reachable on chain** — a box in a store never holds this encoding, " +
-      s"because the box writer re-writes. $note", acceptBlock, acceptBlock.txsSplicedJson, Nil, true),
+      s"because the box writer re-writes. $note", acceptBlock, acceptBlock.sectionSpliced, Nil, true),
 
     ("in-block-created-rewritten-expectation-reject#1",
       "The reject twin: the identical block shape, with the created box's script expecting the " +
@@ -268,16 +283,16 @@ object AuthoredBlockKeptTreeBytes {
       "is false, the spend fails and the BLOCK is invalid. **SEPARATING:** an implementation that " +
       "re-writes a tree on parse compares its own output, finds it equal, and accepts this block — " +
       s"and it also rejects #0, so it is wrong in both directions on the pair. $note",
-      rejectBlock, rejectBlock.txsSplicedJson, Nil, false),
+      rejectBlock, rejectBlock.sectionSpliced, Nil, false),
 
     ("in-block-created-canonical-control-reject#2",
       "**CONTROL** for #0: the SAME block, with the created box's tree left in the writer's own " +
-      "form in the transaction JSON. The script still requires the as-received window, so the " +
+      "form in the section. The script still requires the as-received window, so the " +
       "comparison is now false and the block is invalid. The transactions root is unchanged — it " +
       "is computed over the SERIALIZED transactions, which re-write the tree either way, which is " +
       "also why #0's splice is invisible to the header. Without this row #0 could be matching a " +
       "constant that happens to agree.",
-      acceptBlock, acceptBlock.txsCanonicalJson, Nil, false),
+      acceptBlock, acceptBlock.sectionCanonical, Nil, false),
 
     ("in-block-shadowed-by-store-copy-accept#3",
       "**THE LOOKUP ORDER, graded.** The same valid block as #0, but the vector ALSO supplies the " +
@@ -287,7 +302,7 @@ object AuthoredBlockKeptTreeBytes {
       "(`UtxoState.scala:77-81`, `DigestState.scala:47-49`) and so still sees the as-received " +
       "bytes: VALID. **SEPARATING:** an implementation that consults its store first sees the " +
       "canonical bytes and rejects. It is the only row in the corpus that grades that precedence.",
-      acceptBlock, acceptBlock.txsSplicedJson,
+      acceptBlock, acceptBlock.sectionSpliced,
       Seq(acceptBlock.boxXId -> acceptBlock.boxXCanonicalBytes), true))
 
   def blessAll(): Seq[(String, Json)] = Seq(Path -> Json.obj(

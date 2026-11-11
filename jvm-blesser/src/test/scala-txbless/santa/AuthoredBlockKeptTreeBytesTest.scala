@@ -23,15 +23,16 @@ class AuthoredBlockKeptTreeBytesTest extends munit.FunSuite {
     es.foreach { e =>
       val b = e.hcursor.downField("block")
       assert(b.downField("adProofs").get[String]("proofBytes").toOption.exists(_.nonEmpty), name(e))
-      assertEquals(b.downField("blockTransactions").downField("transactions").values.map(_.size),
-        Some(2), s"${name(e)}: create-then-spend needs exactly two transactions")
+      val section = BlockSectionBytes.parse(b.get[String]("blockTransactions")
+        .getOrElse(fail(s"${name(e)}: block.blockTransactions must be the section's hex")))
+      assertEquals(section.txs.size, 2, s"${name(e)}: create-then-spend needs exactly two transactions")
       assert(e.hcursor.downField("boxes").values.exists(_.nonEmpty), name(e))
       // difficulty 1 is the whole reason this block is mineable; height 2 keeps it off the
       // voting-start path (height % 1024 == 1) and gives donner a non-empty headers window
       assertEquals(b.downField("header").get[Int]("height").toOption, Some(2), name(e))
       assertEquals(b.downField("header").get[String]("difficulty").toOption, Some("1"), name(e))
       assertEquals(e.hcursor.downField("headers").values.map(_.size), Some(1), name(e))
-      assertEquals(b.downField("blockTransactions").get[Int]("blockVersion").toOption, Some(4), name(e))
+      assertEquals(section.blockVersion.toInt, 4, name(e))
     }
   }
 
@@ -39,7 +40,15 @@ class AuthoredBlockKeptTreeBytesTest extends munit.FunSuite {
     assert(valid(row("as-received-accept")), "#0 must be VALID — the in-block box keeps its bytes")
     assert(!valid(row("rewritten-expectation-reject")), "#1 must be INVALID")
     assert(!valid(row("canonical-control-reject")), "#2 must be INVALID")
-    // #0 and #2 differ ONLY in the transaction JSON's tree encoding
+    // #0 and #2 differ ONLY in the section's encoding of the created box's tree: the same
+    // transactions (the ids hash a re-serialization), with #0 reading the as-received bytes
+    def txIds(sub: String) = BlockSectionBytes.parse(row(sub).hcursor.downField("block")
+      .get[String]("blockTransactions").getOrElse(fail(s"$sub: section"))).txs.map(_.id)
+    assertEquals(txIds("as-received-accept"), txIds("canonical-control-reject"),
+      "#0 and #2 must carry the same transactions — the splice is invisible to the ids")
+    assertNotEquals(row("as-received-accept").hcursor.downField("block").get[String]("blockTransactions").toOption,
+      row("canonical-control-reject").hcursor.downField("block").get[String]("blockTransactions").toOption,
+      "#0 must carry the as-received encoding and #2 the written one")
     assertEquals(row("as-received-accept").hcursor.downField("block").downField("header")
       .get[String]("id").toOption,
       row("canonical-control-reject").hcursor.downField("block").downField("header")

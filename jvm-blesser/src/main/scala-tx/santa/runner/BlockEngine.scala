@@ -4,7 +4,7 @@ import scala.util.{Failure, Success, Try}
 import io.circe.Json
 import org.ergoplatform.ErgoBox
 import org.ergoplatform.http.api.ApiCodecs
-import org.ergoplatform.modifiers.history.{ADProofs, BlockTransactions, CPreHeader}
+import org.ergoplatform.modifiers.history.{ADProofs, BlockTransactions, BlockTransactionsSerializer, CPreHeader}
 import org.ergoplatform.modifiers.history.header.Header
 import org.ergoplatform.modifiers.mempool.ErgoTransaction
 import org.ergoplatform.modifiers.state.StateChanges
@@ -47,9 +47,20 @@ object BlockEngine extends ApiCodecs {
     val header = blockJson.hcursor.downField("header").focus
       .getOrElse(sys.error("block: no header"))
       .as[Header].fold(e => sys.error(s"header decode: $e"), identity)
-    val txs = blockJson.hcursor.downField("blockTransactions").downField("transactions")
-      .focus.flatMap(_.asArray).getOrElse(sys.error("block: no transactions"))
-      .map(_.as[ErgoTransaction].fold(e => sys.error(s"tx decode: $e"), identity))
+    // The transactions section as a node receives it: the bytes `BlockTransactionsSerializer` frames
+    // (header id, the version marker above block version 1, the count, the transactions), parsed as a
+    // node parses them — outside any version context, the serializer setting the block's own from
+    // block version 4 (see WireBlockTransactions). Not JSON: a transaction's JSON re-writes every tree,
+    // so an as-received encoding cannot survive any runner that rebuilds the section through a writer
+    // (runner-contract-block §2). A section that does not parse is a harness error here, as a JSON
+    // decode failure was: no vector authors an unparseable section.
+    val txs: IndexedSeq[ErgoTransaction] = {
+      val sectionHex = blockJson.hcursor.get[String]("blockTransactions")
+        .fold(e => sys.error(s"block.blockTransactions: want the section's hex: $e"), identity)
+      val section = scorex.util.encode.Base16.decode(sectionHex)
+        .getOrElse(sys.error("block.blockTransactions: hex decode failed"))
+      BlockTransactionsSerializer.parseBytes(section).txs.toIndexedSeq
+    }
 
     val lastHeaders = headersJson
       .map(_.as[Header].fold(e => sys.error(s"window header decode: $e"), identity))

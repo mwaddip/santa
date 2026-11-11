@@ -43,7 +43,12 @@
             "required": ["header", "blockTransactions", "extension", "adProofs"],
             "properties": {
               "header": { "type": "object" },
-              "blockTransactions": { "type": "object" },
+              "blockTransactions": {
+                "type": "string",
+                "pattern": "^([0-9a-f]{2})+$",
+                "minLength": 66,
+                "description": "the transactions section as a node receives it, lowercase hex, framed as BlockTransactionsSerializer frames it: the 32-byte header id, the VLQ 10,000,000 + blockVersion marker above block version 1, the VLQ transaction count, the transactions. Bytes, not node-API JSON: a transaction's JSON re-writes its trees, so an as-received encoding cannot survive a runner that rebuilds the section through a writer"
+              },
               "extension": { "type": "object" },
               "adProofs": {
                 "type": "object",
@@ -51,7 +56,7 @@
                 "properties": { "proofBytes": { "type": "string", "pattern": "^[0-9a-f]*$" } }
               }
             },
-            "description": "full node-API block; adProofs non-null, with real proofBytes outside the proofless class"
+            "description": "the block: header, extension and adProofs as node-API JSON, blockTransactions as the section's bytes; adProofs non-null, with real proofBytes outside the proofless class"
           },
           "boxes": {
             "type": "array",

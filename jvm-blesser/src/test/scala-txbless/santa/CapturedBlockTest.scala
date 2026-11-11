@@ -84,6 +84,16 @@ class CapturedBlockTest extends munit.FunSuite {
       assertEquals(got, pinnedDigest, s"$slug: post_digest mismatch")
     }
 
+    test(s"$slug: transactions travel as the section's bytes, framed for this header") {
+      val hex = entry(slug).downField("block").get[String]("blockTransactions")
+        .getOrElse(fail(s"$slug: block.blockTransactions must be the section's hex"))
+      val bt = BlockSectionBytes.parse(hex)
+      assertEquals(bt.headerId.toString,
+        entry(slug).downField("block").downField("header").get[String]("id").getOrElse(fail("header.id")),
+        s"$slug: the section's header id")
+      assert(bt.txs.nonEmpty, s"$slug: no transactions")
+    }
+
     test(s"$slug: activated=3, ergoTree=3") {
       assertEquals(entry(slug).downField("version").get[Int]("activated").toOption,
         Some(3), s"$slug: activated must be 3")

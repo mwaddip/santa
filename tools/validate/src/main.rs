@@ -2287,7 +2287,8 @@ mod tests {
                 "parameters": { "table": {} },
                 "block": {
                     "header": {},
-                    "blockTransactions": {},
+                    // the section's bytes: a 32-byte header id and a zero transaction count
+                    "blockTransactions": format!("{}00", "cd".repeat(32)),
                     "extension": {},
                     "adProofs": { "proofBytes": proof_bytes }
                 },
@@ -2307,6 +2308,23 @@ mod tests {
         let doc = minimal_block_vector(
             "block:mutation:stateroot-flip", "santa:mutation:stateroot-flip:over:2666", "0102ab");
         assert!(v.is_valid(&doc), "non-empty proofBytes must pass the block schema");
+    }
+
+    /// The transactions travel as the section's BYTES. The node-API JSON form they had until
+    /// 2026-11-11 must fail: a JSON transaction re-writes its trees, so a runner rebuilding the
+    /// section through a writer lost an as-received encoding (donner on kept-tree-bytes-in-block).
+    #[test]
+    fn block_vector_json_transactions_fail_the_schema() {
+        let v = block_vec_validator();
+        let mut doc = minimal_block_vector(
+            "block:mutation:stateroot-flip", "santa:mutation:stateroot-flip:over:2666", "0102ab");
+        doc["entries"][0]["block"]["blockTransactions"] =
+            json!({ "headerId": "cd".repeat(32), "blockVersion": 4, "transactions": [] });
+        assert!(!v.is_valid(&doc), "a node-API JSON transactions section must fail the block schema");
+        doc["entries"][0]["block"]["blockTransactions"] = json!("cd".repeat(32));
+        assert!(!v.is_valid(&doc), "a section without even a transaction count must fail");
+        doc["entries"][0]["block"]["blockTransactions"] = json!(format!("{}0", "cd".repeat(32)));
+        assert!(!v.is_valid(&doc), "an odd-length hex section must fail");
     }
 
     /// Empty proofBytes on a NON-proofless op must be rejected by the schema itself.

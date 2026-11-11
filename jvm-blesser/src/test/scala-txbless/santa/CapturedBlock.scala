@@ -42,7 +42,7 @@ object CapturedBlock {
 
   /** Provenance stamp for the envelope `blessed_by`. Per-entry `source` is
     * `testnet:<seed.dir>@<height>` (captured provenance). */
-  private val BlessedBy = "jvm:ergo-core-6.0.2.1-execTransactions-model"
+  private val BlessedBy = "jvm:ergo-core-6.0.7-execTransactions-model"
 
   /** docs/findings/ lives at repo root; blesser runs from jvm-blesser/ cwd. */
   private val FindingsDir = "../docs/findings"
@@ -171,8 +171,21 @@ object CapturedBlock {
     * including a proofless/tampered capture, which the engine's proofs arm rejects). */
   private def blessSeed(seed: BlockSeed): (String, Json) = {
     val seedDir  = s"$FindingsDir/${seed.dir}"
-    val block    = parseFile(s"$seedDir/block-${seed.height}-full.json")
+    val captured = parseFile(s"$seedDir/block-${seed.height}-full.json")
     val epochBlk = parseFile(s"$seedDir/epoch-block-${seed.epochBoundary}.json")
+
+    // The capture's transactions are node-API JSON; the vector carries the section's BYTES
+    // (runner-contract-block §2), derived through the JVM writer and checked against everything the
+    // capture states about the section (BlockSectionBytes.fromNodeJson).
+    val block: Json = {
+      val c = captured.hcursor
+      val section = BlockSectionBytes.fromNodeJson(
+        c.downField("blockTransactions").focus.getOrElse(sys.error(s"CapturedBlock[${seed.slug}]: no blockTransactions")),
+        c.downField("header").focus.getOrElse(sys.error(s"CapturedBlock[${seed.slug}]: no header")),
+        s"CapturedBlock[${seed.slug}]")
+      c.downField("blockTransactions").set(Json.fromString(section)).top
+        .getOrElse(sys.error(s"CapturedBlock[${seed.slug}]: blockTransactions set failed"))
+    }
 
     val (headerWindow, parentDigest) = headersWindow(seedDir, seed.height)
     val (tableScala, tableJson)      = extractParams(epochBlk, seed.epochBoundary)

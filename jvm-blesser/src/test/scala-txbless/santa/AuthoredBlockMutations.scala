@@ -22,17 +22,19 @@ object AuthoredBlockMutations {
 
   private val MidEpochDonor = "bigint-downcast-2666"
   private val BoundaryDonor = "epoch-boundary-2560"
-  private val BlessedBy = "jvm:ergo-core-6.0.2.1-execTransactions-model"
+  private val BlessedBy = "jvm:ergo-core-6.0.7-execTransactions-model"
 
   private def donorPath(slug: String) = s"../vectors/block/v6/captured/$slug.json"
 
   /** One mutation class: vector name + the marker the engine's reject reason must
     * contain (the recipe-intent check) + the entry transform + the captured donor
     * it mutates (mid-epoch 2666 by default; version-gate needs the boundary donor —
-    * the gate only fires at epochStarts). */
+    * the gate only fires at epochStarts). `entryName` is the committed entry's name where it
+    * is not the class name: entry names are identities results are keyed by, never renamed. */
   private final case class Mutation(name: String, reasonMustContain: String,
                                     mutate: Json => Json,
-                                    donorSlug: String = MidEpochDonor)
+                                    donorSlug: String = MidEpochDonor,
+                                    entryName: Option[String] = None)
 
   // ── hex tampering helpers (length-preserving, stay lowercase hex) ──────────
 
@@ -66,16 +68,28 @@ object AuthoredBlockMutations {
       .getOrElse(sys.error(s"mutation path ${path.mkString(".")}: cursor set failed"))
   }
 
-  /** Swap the first two transactions of the blockTransactions section. */
+  /** Swap the first two transactions of the blockTransactions section — in its BYTES: parse the donor's
+    * section, swap, frame it again. The donor's section is the writer's own form, so re-framing changes
+    * nothing but the order; that is asserted rather than assumed. */
   private def swapFirstTwoTxs(entry: Json): Json = {
-    val path = Seq("block", "blockTransactions", "transactions")
+    val path = Seq("block", "blockTransactions")
     val c = cursorAt(entry, path)
-    val arr = c.focus.flatMap(_.asArray)
-      .getOrElse(sys.error("txs-reorder: transactions not an array"))
-    if (arr.size < 2) sys.error(s"txs-reorder: need >=2 txs, donor has ${arr.size}")
-    val swapped = arr.updated(0, arr(1)).updated(1, arr(0))
-    c.set(Json.arr(swapped: _*)).top.getOrElse(sys.error("txs-reorder: cursor set failed"))
+    val section = c.focus.flatMap(_.asString)
+      .getOrElse(sys.error("txs-reorder: blockTransactions is not the section's hex"))
+    val bt = BlockSectionBytes.parse(section)
+    require(BlockSectionBytes.hexOf(bt.headerId, bt.blockVersion, bt.txs) == section,
+      "txs-reorder: the donor's section does not re-frame to itself — a swap would change more than the order")
+    if (bt.txs.size < 2) sys.error(s"txs-reorder: need >=2 txs, donor has ${bt.txs.size}")
+    val swapped = bt.txs.updated(0, bt.txs(1)).updated(1, bt.txs(0))
+    c.set(Json.fromString(BlockSectionBytes.hexOf(bt.headerId, bt.blockVersion, swapped))).top
+      .getOrElse(sys.error("txs-reorder: cursor set failed"))
   }
+
+  /** Remove the ADProofs section: its bytes and its digest both empty. Hand-made in July 2026 with a
+    * hand-typed reason; generated since 2026-11-11, so its reason is the oracle's. */
+  private def dropProofs(entry: Json): Json =
+    setIn(setIn(entry, Seq("block", "adProofs", "proofBytes"), Json.fromString("")),
+      Seq("block", "adProofs", "digest"), Json.fromString(""))
 
   // ── the classes (spec §7 priority order) ────────────────────────────────────
   //
@@ -114,7 +128,10 @@ object AuthoredBlockMutations {
     //    (boundary donor — the only place the JVM makes this comparison)
     Mutation("version-gate", "exBlockVersion",
       e => setIn(e, Seq("parameters", "table", "123"), Json.fromInt(3)),
-      donorSlug = BoundaryDonor))
+      donorSlug = BoundaryDonor),
+    // 7. no ADProofs section at all — the degenerate limit of adproof-tamper (contract §8):
+    //    the empty bytes cannot hash to the header's adProofsRoot
+    Mutation("proofless", "blake2b256(proofBytes)", dropProofs, entryName = Some("proofless-2666")))
 
   // ── donor loading ───────────────────────────────────────────────────────────
 
@@ -135,7 +152,7 @@ object AuthoredBlockMutations {
       sys.error(s"AuthoredBlockMutations[${m.name}]: donor ${m.donorSlug} not loaded"))
     val mutated = m.mutate(donor)
     val named = setIn(
-      setIn(mutated, Seq("name"), Json.fromString(m.name)),
+      setIn(mutated, Seq("name"), Json.fromString(m.entryName.getOrElse(m.name))),
       Seq("source"), Json.fromString(s"santa:mutation:${m.name}:over:${m.donorSlug}"))
 
     val (_, actuals) = santa.runner.BlockEngine.blockEntry(named)
