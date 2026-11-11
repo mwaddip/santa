@@ -6421,9 +6421,10 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.non_pair_value_ops.json" : {
-      "accepts" : 40,
-      "entries" : 47,
+      "accepts" : 43,
+      "entries" : 50,
       "methods" : [
+        "12:21 SCollection.updateMany"
       ],
       "op" : "Tuple.non_pair_value_ops",
       "ops" : [
@@ -6445,6 +6446,7 @@
         "FuncValue",
         "GT",
         "MapCollection",
+        "MethodCall",
         "OR",
         "SelectField",
         "SizeOf",
@@ -6457,7 +6459,7 @@
       "rejects" : 7,
       "tree_shapes" : [
         {
-          "accepts" : 40,
+          "accepts" : 43,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -6469,14 +6471,16 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.non_pair_value_producers.json" : {
-      "accepts" : 10,
-      "entries" : 10,
+      "accepts" : 11,
+      "entries" : 11,
       "methods" : [
         "106:4 SigmaDslBuilder.deserializeTo"
       ],
       "op" : "Tuple.non_pair_value_producers",
       "ops" : [
+        "BoolToSigmaProp",
         "ByIndex",
+        "ConcreteCollection",
         "Const",
         "EQ",
         "Global$",
@@ -6490,7 +6494,7 @@
       "rejects" : 0,
       "tree_shapes" : [
         {
-          "accepts" : 10,
+          "accepts" : 11,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -6503,7 +6507,7 @@
     },
     "v6/authored/Tuple.non_pair_value_type_directed.json" : {
       "accepts" : 4,
-      "entries" : 7,
+      "entries" : 8,
       "methods" : [
         "106:3 SigmaDslBuilder.serialize"
       ],
@@ -6517,14 +6521,14 @@
         "SubstConstants"
       ],
       "provenance" : "authored",
-      "rejects" : 3,
+      "rejects" : 4,
       "tree_shapes" : [
         {
           "accepts" : 4,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 3,
+          "rejects" : 4,
           "tree_version" : 3
         }
       ],
@@ -12260,7 +12264,8 @@
       "families" : [
         "v5/spec/Coll_updateMany_method_equivalence.json",
         "v6/authored/Coll.pair_shape_restored.json",
-        "v6/authored/Coll.updateMany_runtime_item_type.json"
+        "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/Tuple.non_pair_value_ops.json"
       ],
       "name" : "SCollection.updateMany"
     },
@@ -13635,6 +13640,7 @@
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/substConstants_declared_size_u32.json",
@@ -13942,6 +13948,7 @@
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
@@ -15832,6 +15839,7 @@
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
+        "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
@@ -17290,12 +17298,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2446,
+    "accepts" : 2450,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2858,
+    "entries" : 2863,
     "files" : 323,
-    "rejects" : 412,
+    "rejects" : 413,
     "unwalked" : 11
   }
 }

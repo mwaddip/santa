@@ -32,11 +32,11 @@ class AuthoredEvalNonPairTupleOpsTest extends munit.FunSuite {
   private val ArrayNeeded = Seq("T12", "T13", "T17", "T18", "T21", "T22")
   private val InterfaceOnly =
     Seq("T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11",
-        "T14", "T15", "T16", "T19", "T20")
+        "T14", "T15", "T16", "T19", "T20", "T23")
 
-  test("47 rows: 22 tuple rows each with a control, plus P1, Z1, Z2") {
-    assertEquals(entries.size, 47)
-    (1 to 22).foreach { n =>
+  test("50 rows: 23 tuple rows each with a control, plus P1, Z1, Z2, U3") {
+    assertEquals(entries.size, 50)
+    (1 to 23).foreach { n =>
       val t = row(s"T$n"); val c = row(s"C$n")
       assertNotEquals(str(t, "tree_bytes_hex"), str(c, "tree_bytes_hex"), s"T$n/C$n must differ")
       assert(str(c, "script").contains("CONTROL"), s"C$n must say it is a control")

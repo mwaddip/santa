@@ -240,6 +240,27 @@
         "cost" : 43,
         "error" : null
       }
+    },
+    {
+      "name" : "eq_coll_of_pair_holding_tuple_vs_concrete-accept#10",
+      "script" : "[V1] `sigmaProp(Coll[((Int,Int,Int),Int)](((1,2,3),4)) == ConcreteCollection(((1,2,3),4)))` — **`SigmaProp` true at cost 91.** A DATA collection of pairs-holding-a-tuple compared with a collection EXPRESSION of the same shape. Both carry the same DECLARED type, so the builder's `SameType` check passes and the comparison is actually reached. It belongs beside E1-E3 because it is the fourth container in which that comparison is exercised, and the nesting is what makes it the deepest. **SEPARATING, and graded so rather than assumed:** ergots answers **78, exactly 13 LOW**, which is the SAME 13 it is low by on E1/E2/E3 (49/40/43 against 36/27/30) — so the undercharge is a CONSTANT offset in its model of this comparison and not a function of the shape, and this deepest container is the fourth place that shows it. arkadianet ERRORS, having no such nested comparison at all. The sigma-rust fork is GREEN: it read 13 low here before its tuple-values round, fixed it, and has pinned this very tree and cost as a unit test on its own branch. **I authored this row expecting it to be a regression guard on all four and the grading refuted that** — which row separates is a fact about two implementations and never derivable from the oracle, so it is recorded here from the conform run and not from the measurement.",
+      "tree_bytes_hex" : "0b1dd1930c4c48040404010204060883014c480404044c4804040402040608",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 91,
+        "error" : null
+      }
     }
   ]
 }

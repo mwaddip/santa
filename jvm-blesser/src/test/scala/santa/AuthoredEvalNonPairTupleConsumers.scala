@@ -126,8 +126,24 @@ object AuthoredEvalNonPairTupleConsumers {
     ("E3", "eq_two_pairs_holding_tuples", "0b13934c48040404020406084c4804040402040608", true,
       "`((1,2,3), 4) == ((1,2,3), 4)` — **true at cost 43**, the third container. **SEPARATING** " +
       "(sigma-rust: 30, the same 13). The three E rows together say the undercharge is in the " +
-      "tuple's own comparison and not in any one container."))
-
+      "tuple's own comparison and not in any one container."),
+    ("V1", "eq_coll_of_pair_holding_tuple_vs_concrete",
+      "0b1dd1930c4c48040404010204060883014c480404044c4804040402040608", true,
+      "`sigmaProp(Coll[((Int,Int,Int),Int)](((1,2,3),4)) == ConcreteCollection(((1,2,3),4)))` — " +
+      "**`SigmaProp` true at cost 91.** A DATA collection of pairs-holding-a-tuple compared with a " +
+      "collection EXPRESSION of the same shape. Both carry the same DECLARED type, so the " +
+      "builder's `SameType` check passes and the comparison is actually reached. It belongs beside " +
+      "E1-E3 because it is the fourth container in which that comparison is exercised, and the " +
+      "nesting is what makes it the deepest. **SEPARATING, and graded so rather than assumed:** " +
+      "ergots answers **78, exactly 13 LOW**, which is the SAME 13 it is low by on E1/E2/E3 " +
+      "(49/40/43 against 36/27/30) — so the undercharge is a CONSTANT offset in its model of this " +
+      "comparison and not a function of the shape, and this deepest container is the fourth place " +
+      "that shows it. arkadianet ERRORS, having no such nested comparison at all. The sigma-rust " +
+      "fork is GREEN: it read 13 low here before its tuple-values round, fixed it, and has pinned " +
+      "this very tree and cost as a unit test on its own branch. **I authored this row expecting " +
+      "it to be a regression guard on all four and the grading refuted that** — which row " +
+      "separates is a fact about two implementations and never derivable from the oracle, so it is " +
+      "recorded here from the conform run and not from the measurement."))
   private val typeDirected: Seq[(String, String, String, Boolean, String)] = Seq(
     ("W1", "serialize_tuple", "0b0cdc6a03dd0148040404020406", true,
       "`Global.serialize((1,2,3))` — **`020406` at cost 33.** `DataSerializer` writes the ITEMS and " +
@@ -173,8 +189,22 @@ object AuthoredEvalNonPairTupleConsumers {
       "substituting `Coll[Int](9)`: it RETURNS the re-serialized script at cost 315. Note what is " +
       "NOT the control: substituting an `Int` into S1's tuple-constant script fails the SAME " +
       "requirement, so that comparison would be circular and prove nothing. This one shows the " +
-      "machinery works and only the tuple case cannot be expressed."))
-
+      "machinery works and only the tuple case cannot be expressed."),
+    ("S2", "subst_constants_positions_as_tuple",
+      "0b17740e0d1b0b02040e040ed1937300730160010400100112", false,
+      "`SubstConstants(script, (0), Coll[Int](9))` — the POSITIONS argument given as a 1-item " +
+      "TUPLE instead of a `Coll[Int]`. **Throws `ClassCastException: [Ljava.lang.Object; cannot be " +
+      "cast to [I`.** The positions parameter is a primitive `Array[Int]`, and a 1-item tuple's " +
+      "value is a generic `Coll[Any]` over an Object array, so the cast fails before any " +
+      "substitution is attempted. This is the THIRD distinct way `SubstConstants` meets a non-pair " +
+      "tuple, after S1 (the new VALUES cannot be lifted to the old constant's type) and C2 (the " +
+      "machinery working over honest `Int` arguments) — and the only one that fails on the " +
+      "POSITIONS side. **C2 is its control too**, being the identical call with the positions as a " +
+      "real `Coll[Int]`: that returns the re-serialized script at 315, so the difference here is " +
+      "the argument's representation and nothing else. **REGRESSION GUARD by expectation, and the " +
+      "grading is what settles it:** the sigma-rust fork refuses positions-as-a-tuple too (its own " +
+      "PR 77 relay), so every eval-arm conformer is expected to match. If any accepts it, this row " +
+      "SEPARATING is the correction to make — a role is never derivable from the oracle alone."))
   private def entriesOf(op: String, rows: Seq[(String, String, String, Boolean, String)]): Json = {
     val entries = rows.zipWithIndex.map { case ((id, slug, tree, accepts, what), i) =>
       val name = s"$slug-${if (accepts) "accept" else "errored"}#$i"

@@ -221,7 +221,24 @@ object AuthoredEvalNonPairTupleOps {
       "NEVER writable, since `TypeSerializer.serialize` refuses any tuple type with fewer than 2 " +
       "items (`TypeSerializer.scala:95`), so there is no box and no spend arm for it either. The " +
       "pair Z1/Z2 pins that the reader accepts a count the writer refuses, at both ends of the " +
-      "gap. **SEPARATING.**"))
+      "gap. **SEPARATING.**"),
+    ("T23", "update_many_tuple_receiver", "0b12b1dc0c15480404040204060210010010010e", true,
+      "`SizeOf(updateMany((1,2,3), Coll(0), Coll(1)))` — **3 at cost 55.** `updateMany` over a " +
+      "non-pair tuple RECEIVER. Pair it with U2: identical in value AND cost, so the operation is " +
+      "entirely REPRESENTATION-BLIND and the tuple's backing `Coll[Any]` costs nothing extra. " +
+      "**SEPARATING:** sigma-rust refuses this on a 2021 item-type guard, which the identical cost " +
+      "against C23 shows to be an over-reject rather than a conservative choice."),
+    ("C23", "update_many_plain_coll_control", "0b10b1dc0c1510030204060210010010010e", true,
+      "**CONTROL for T23** — the same `updateMany` over an ordinary `Coll[Int]` of the same items: " +
+      "3 at cost 55, the SAME NUMBER. That identity is the whole point; read U1 alone and a " +
+      "refusal could be argued for, read the pair and it cannot. T23/C23 is this family's 23rd " +
+      "pair and its newest instance of the central claim."),
+    ("U3", "update_many_one_item_tuple_updates", "0b11b1dc0c151003020406021001006001040e", true,
+      "`updateMany` with the UPDATES collection given as a 1-item TUPLE — **also 3 at cost 55.** " +
+      "Hand-crafted, since the writer refuses a tuple TYPE of fewer than 2 items and so no " +
+      "round-trip could produce it. So the blindness holds on the ARGUMENT side as well as the " +
+      "receiver's, which is what makes the rule about the operation rather than about one " +
+      "position. **SEPARATING** on the same sigma-rust guard as T23."))
 
   def extract(): Map[String, Json] = {
     val entries = rows.zipWithIndex.map { case ((id, slug, tree, accepts, what), i) =>

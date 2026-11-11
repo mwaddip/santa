@@ -25,11 +25,11 @@ class AuthoredEvalNonPairTupleConsumersTest extends munit.FunSuite {
       case other   => fail(s"want one [$id] in $op, got ${other.map(str(_, "name"))}")
     }
 
-  test("10 producer rows, 7 type-directed rows") {
-    assertEquals(entries(B.OpProducers).size, 10)
-    assertEquals(entries(B.OpTypeDirected).size, 7)
+  test("11 producer rows, 8 type-directed rows") {
+    assertEquals(entries(B.OpProducers).size, 11)
+    assertEquals(entries(B.OpTypeDirected).size, 8)
     assertEquals(entries(B.OpProducers).count(errored), 0, "every route ANSWERS")
-    assertEquals(entries(B.OpTypeDirected).count(errored), 3, "R2, R3 and S1")
+    assertEquals(entries(B.OpTypeDirected).count(errored), 4, "R2, R3, S1 and S2")
   }
 
   test("the five routes answer 3, at the costs measured") {
@@ -52,7 +52,11 @@ class AuthoredEvalNonPairTupleConsumersTest extends munit.FunSuite {
       "family's first answer said otherwise and probe 3 refuted it")
   }
 
-  test("THE COST SET: the three equality rows, which sigma-rust answers 13 low") {
+  // The 13-low undercharge was sigma-rust's when this family was written; its tuple-values round
+  // fixed it and ergots now carries it (E1/E2/E3 and V1 all exactly 13 low, 2026-11-11). Naming a
+  // runner in a test name is how that went stale, so this one names the ORACLE's numbers, which are
+  // the only part a blesser test can own.
+  test("THE COST SET: the oracle's four equality costs, and the control's") {
     assertEquals(cost(row(B.OpProducers, "E1")), Some(49L))
     assertEquals(cost(row(B.OpProducers, "E2")), Some(40L))
     assertEquals(cost(row(B.OpProducers, "E3")), Some(43L))
@@ -61,6 +65,10 @@ class AuthoredEvalNonPairTupleConsumersTest extends munit.FunSuite {
     }
     // the control compares the same nesting with a declared item type
     assertEquals(cost(row(B.OpProducers, "C2")), Some(41L))
+    // V1 is the fourth and deepest container of the same comparison. Pinning it here is what
+    // makes ergots' uniform -13 legible: 49/40/43/91 against its 36/27/30/78.
+    assertEquals(cost(row(B.OpProducers, "V1")), Some(91L))
+    assertEquals(value(row(B.OpProducers, "V1")).noSpaces, """{"kind":"SigmaProp","raw_hex":"d3"}""")
   }
 
   test("serialize writes the ITEMS, and the two shapes that reach it fail") {

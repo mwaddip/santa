@@ -1089,6 +1089,69 @@
         "cost" : 19,
         "error" : null
       }
+    },
+    {
+      "name" : "update_many_tuple_receiver-accept#47",
+      "script" : "[T23] `SizeOf(updateMany((1,2,3), Coll(0), Coll(1)))` — **3 at cost 55.** `updateMany` over a non-pair tuple RECEIVER. Pair it with U2: identical in value AND cost, so the operation is entirely REPRESENTATION-BLIND and the tuple's backing `Coll[Any]` costs nothing extra. **SEPARATING:** sigma-rust refuses this on a 2021 item-type guard, which the identical cost against C23 shows to be an over-reject rather than a conservative choice.",
+      "tree_bytes_hex" : "0b12b1dc0c15480404040204060210010010010e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 55,
+        "error" : null
+      }
+    },
+    {
+      "name" : "update_many_plain_coll_control-accept#48",
+      "script" : "[C23] **CONTROL for T23** — the same `updateMany` over an ordinary `Coll[Int]` of the same items: 3 at cost 55, the SAME NUMBER. That identity is the whole point; read U1 alone and a refusal could be argued for, read the pair and it cannot. T23/C23 is this family's 23rd pair and its newest instance of the central claim.",
+      "tree_bytes_hex" : "0b10b1dc0c1510030204060210010010010e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 55,
+        "error" : null
+      }
+    },
+    {
+      "name" : "update_many_one_item_tuple_updates-accept#49",
+      "script" : "[U3] `updateMany` with the UPDATES collection given as a 1-item TUPLE — **also 3 at cost 55.** Hand-crafted, since the writer refuses a tuple TYPE of fewer than 2 items and so no round-trip could produce it. So the blindness holds on the ARGUMENT side as well as the receiver's, which is what makes the rule about the operation rather than about one position. **SEPARATING** on the same sigma-rust guard as T23.",
+      "tree_bytes_hex" : "0b11b1dc0c151003020406021001006001040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 55,
+        "error" : null
+      }
     }
   ]
 }
