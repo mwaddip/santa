@@ -1,0 +1,236 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "BigInt.range_check_tree_version",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-bigint-range-check",
+  "entries" : [
+    {
+      "name" : "min-div-minus-one-minus-one-v3-errored#0",
+      "script" : "[G0] `(BigInt.MIN / -1) - 1` at tree v3 — THROWS `ArithmeticException: Too big bigint value 2^255` from the quotient's own construction: CBigInt's constructor checks bitLength > 255 only from TREE version 3 (CBigInt.scala:18).",
+      "tree_bytes_hex" : "0b2a999d062080000000000000000000000000000000000000000000000000000000000000000601ff060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "min-div-minus-one-minus-one-v0-accept#1",
+      "script" : "[G0] `(BigInt.MIN / -1) - 1` at tree v0 — 2^255 - 1 at cost 60. Below v3 the constructor does not check and `divide` adds nothing (CBigInt.scala:45), so the quotient is 2^255, out of range; `subtract`'s unconditional toSignedBigIntValueExact (:41) then passes 2^255 - 1. THE SAME BODY as the v3 row, one header byte apart.",
+      "tree_bytes_hex" : "00999d062080000000000000000000000000000000000000000000000000000000000000000601ff060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "min-div-minus-one-v3-errored#2",
+      "script" : "[G1] `BigInt.MIN / -1` alone at tree v3 — throws, the same construction check.",
+      "tree_bytes_hex" : "0b269d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "min-div-minus-one-v0-accept#3",
+      "script" : "[G1] `BigInt.MIN / -1` alone at tree v0 — RETURNS 2^255 at cost 35, a BigInt OUTSIDE the 256-bit signed range, as the script's value. The JVM's real answer below v3: an implementation whose BigInt type is 256 bits cannot represent it, and that red is the divergence. G0 is the in-range form of the same fact.",
+      "tree_bytes_hex" : "009d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "twin-div-minus-one-minus-one-v3-accept#4",
+      "script" : "[G2] `(BigInt(6) / -1) - 1` at tree v3 — THE HONEST TWIN of G0: in-range values in the same shape, -7 at cost 60. It makes G0's v3 throw the RANGE check's and not the shape's.",
+      "tree_bytes_hex" : "0b0b999d0601060601ff060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "twin-div-minus-one-minus-one-v0-accept#5",
+      "script" : "[G2] `(BigInt(6) / -1) - 1` at tree v0 — -7 at 60, unchanged: G0's v0 cost is the twin's, so magnitude costs nothing.",
+      "tree_bytes_hex" : "00999d0601060601ff060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "negate-min-v3-errored#6",
+      "script" : "[G3] `-(BigInt.MIN)` at tree v3 — throws `BigInteger out of 256 bit range`: `negate` checks UNCONDITIONALLY (CBigInt.scala:55).",
+      "tree_bytes_hex" : "0b23f006208000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "negate-min-v0-errored#7",
+      "script" : "[G3] `-(BigInt.MIN)` at tree v0 — throws at v0 TOO, where G1 returns the same 2^255: below v3 `divide` and `negate` DIFFER.",
+      "tree_bytes_hex" : "00f006208000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "min-mod-minus-one-v3-errored#8",
+      "script" : "[G4] `BigInt.MIN % -1` at tree v3 — throws `BigInteger: modulus not positive`. Not a MIN effect: BigInt `%` is BigInteger.mod by design (BigIntegerOps.scala:84-97), see G5.",
+      "tree_bytes_hex" : "0b269e062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "min-mod-minus-one-v0-errored#9",
+      "script" : "[G4] `BigInt.MIN % -1` at tree v0 — the same at v0.",
+      "tree_bytes_hex" : "009e062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "small-mod-negative-v3-errored#10",
+      "script" : "[G5] `BigInt(7) % BigInt(-2)` at tree v3 — throws `modulus not positive`: ANY negative divisor, which is what G4's throw is.",
+      "tree_bytes_hex" : "0b079e0601070601fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "small-mod-negative-v0-errored#11",
+      "script" : "[G5] `BigInt(7) % BigInt(-2)` at tree v0 — the same at v0.",
+      "tree_bytes_hex" : "009e0601070601fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

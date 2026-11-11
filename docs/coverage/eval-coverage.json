@@ -4435,6 +4435,42 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/BigInt.range_check_tree_version.json" : {
+      "accepts" : 4,
+      "entries" : 12,
+      "methods" : [
+      ],
+      "op" : "BigInt.range_check_tree_version",
+      "ops" : [
+        "%",
+        "-",
+        "/",
+        "Const",
+        "Negation"
+      ],
+      "provenance" : "authored",
+      "rejects" : 8,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 3,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 5,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Box.getReg_adversarial.json" : {
       "accepts" : 1,
       "entries" : 3,
@@ -13018,6 +13054,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v6/authored/ArithOp.division_overflow.json",
+        "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/captured/h231432-fb4744c753de.json",
@@ -13163,6 +13200,7 @@
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -13215,6 +13253,7 @@
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/ArithOp.division_overflow.json",
+        "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/captured/h1542-1b5c260a496a.json",
@@ -14099,6 +14138,7 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
+        "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
@@ -16088,6 +16128,7 @@
     "Negation" : {
       "families" : [
         "v5/spec/Numeric_Negation_equivalence.json",
+        "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/Negation.mixed_width.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
@@ -17372,12 +17413,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2474,
+    "accepts" : 2478,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2895,
-    "files" : 325,
-    "rejects" : 421,
+    "entries" : 2907,
+    "files" : 326,
+    "rejects" : 429,
     "unwalked" : 11
   }
 }
