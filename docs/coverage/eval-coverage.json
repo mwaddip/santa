@@ -6181,6 +6181,40 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Negation.mixed_width.json" : {
+      "accepts" : 6,
+      "entries" : 10,
+      "methods" : [
+      ],
+      "op" : "Negation.mixed_width",
+      "ops" : [
+        "Const",
+        "If",
+        "Negation"
+      ],
+      "provenance" : "authored",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 2,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Numeric.methodcall_ids.json" : {
       "accepts" : 0,
       "entries" : 3,
@@ -14052,6 +14086,7 @@
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
+        "v6/authored/Negation.mixed_width.json",
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_type_check.json",
@@ -15468,6 +15503,7 @@
         "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
+        "v6/authored/Negation.mixed_width.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -16015,6 +16051,7 @@
     "Negation" : {
       "families" : [
         "v5/spec/Numeric_Negation_equivalence.json",
+        "v6/authored/Negation.mixed_width.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
         "v6/captured/h257245-6b21a028a98c.json",
@@ -17298,12 +17335,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2450,
+    "accepts" : 2456,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2863,
-    "files" : 323,
-    "rejects" : 413,
+    "entries" : 2873,
+    "files" : 324,
+    "rejects" : 417,
     "unwalked" : 11
   }
 }
