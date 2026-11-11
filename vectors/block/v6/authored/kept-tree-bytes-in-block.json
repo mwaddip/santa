@@ -1,0 +1,707 @@
+{
+  "schema" : "santa-block/v1",
+  "op" : "block:authored:kept-tree-bytes-in-block",
+  "blessed_by" : "jvm:ergo-core-6.0.7-execTransactions-model",
+  "entries" : [
+    {
+      "name" : "in-block-created-as-received-accept#0",
+      "source" : "santa:authored-block-kept-tree-bytes:in-block-created-as-received-accept#0",
+      "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+      "headers" : [
+        {
+          "extensionId" : "8afcf61bf235861610ac5cd670e91af09d6927839839fe2e5db4666b8d46b653",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459000,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+          "height" : 1,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558",
+          "adProofsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "transactionsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "extensionHash" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "0311e47c79ee48fb575f30f78aa0a365adb71cea6aa8c375ae13bcac6c3ddf2259",
+            "n" : "0000000000000000",
+            "d" : 114616123637486601195580591850373309733781900411427054376049470819295223820013
+          },
+          "adProofsId" : "a0fe3a57e10a2b3cc25f5a8f66deaf89328ac5c35304ec41f0a049c717f19305",
+          "transactionsId" : "9a82cf0a5b79b7ef5064ef72bf60cbb4d8a31fe953e1399c2ce7daf6be4ef30a",
+          "parentId" : "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "parameters" : {
+        "table" : {
+          "1" : 1250000,
+          "2" : 360,
+          "3" : 524288,
+          "4" : 1000000,
+          "5" : 100,
+          "6" : 2000,
+          "7" : 100,
+          "8" : 100,
+          "9" : 30,
+          "123" : 4
+        }
+      },
+      "block" : {
+        "header" : {
+          "extensionId" : "9f7138106b432e37a9f4c6cea9af78a3c1e7bfbf264c02cb2ce751754982d60c",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459310,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "5ea5544cccd2b8ae51d16b8f28c0457dffc843fc8182203102b73b2a943b110f01",
+          "height" : 2,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "adProofsRoot" : "7628bc77f07caab8283936e02cc447d63f801c112b86d02f211a42869f72a7dc",
+          "transactionsRoot" : "ab5a6f9700a80d6cefddbada6394351203cb83f61f9e35c4bdf4364d6ee61f21",
+          "extensionHash" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "036a2d96051157a9316ef6d663da48f2a55ec1c9450a1a93dcd7bf22c817121f7a",
+            "n" : "0000000000000000",
+            "d" : 55839302299244085448913780307369928664600744824066643028317507815954236020079
+          },
+          "adProofsId" : "303a45c85760bb77a964ddfd4557661f500e49e33f17d8e7847af1fb9d334cd0",
+          "transactionsId" : "cfa2ffd809de333241c3a2938f453cf2f8f27ffa363fbcf45616d709235d4411",
+          "parentId" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+        },
+        "blockTransactions" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "blockVersion" : 4,
+          "size" : 154,
+          "transactions" : [
+            {
+              "id" : "edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e5",
+              "inputs" : [
+                {
+                  "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+                  "value" : 1000000000,
+                  "ergoTree" : "108300040004060e03108300d193b4c2a7730073017302",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e5",
+                  "index" : 0
+                }
+              ],
+              "size" : 68
+            },
+            {
+              "id" : "19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67",
+              "inputs" : [
+                {
+                  "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "ceb65ce19980cfe0a31add54f37305ec572a89900f5aae8f0ca383b5d8af6bde",
+                  "value" : 1000000000,
+                  "ergoTree" : "0008d3",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67",
+                  "index" : 0
+                }
+              ],
+              "size" : 49
+            }
+          ]
+        },
+        "adProofs" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "proofBytes" : "0200000000000000000000000000000000000000000000000000000000000000005a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d60870000000002ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000002c8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500000400"
+        },
+        "extension" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "digest" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "fields" : [
+            [
+              "0100",
+              "01cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+            ]
+          ]
+        }
+      },
+      "boxes" : [
+        {
+          "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+          "bytes" : "8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500"
+        }
+      ],
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "valid" : true,
+        "post_digest" : "5ea5544cccd2b8ae51d16b8f28c0457dffc843fc8182203102b73b2a943b110f01",
+        "cost" : 24211,
+        "reason" : null
+      }
+    },
+    {
+      "name" : "in-block-created-rewritten-expectation-reject#1",
+      "source" : "santa:authored-block-kept-tree-bytes:in-block-created-rewritten-expectation-reject#1",
+      "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+      "headers" : [
+        {
+          "extensionId" : "8afcf61bf235861610ac5cd670e91af09d6927839839fe2e5db4666b8d46b653",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459000,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+          "height" : 1,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558",
+          "adProofsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "transactionsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "extensionHash" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "0311e47c79ee48fb575f30f78aa0a365adb71cea6aa8c375ae13bcac6c3ddf2259",
+            "n" : "0000000000000000",
+            "d" : 114616123637486601195580591850373309733781900411427054376049470819295223820013
+          },
+          "adProofsId" : "a0fe3a57e10a2b3cc25f5a8f66deaf89328ac5c35304ec41f0a049c717f19305",
+          "transactionsId" : "9a82cf0a5b79b7ef5064ef72bf60cbb4d8a31fe953e1399c2ce7daf6be4ef30a",
+          "parentId" : "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "parameters" : {
+        "table" : {
+          "1" : 1250000,
+          "2" : 360,
+          "3" : 524288,
+          "4" : 1000000,
+          "5" : 100,
+          "6" : 2000,
+          "7" : 100,
+          "8" : 100,
+          "9" : 30,
+          "123" : 4
+        }
+      },
+      "block" : {
+        "header" : {
+          "extensionId" : "1ff1786ee9758558c7d9e040b53c835447c0052ff2d3b7d479e39109afd6e802",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459310,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "b8b71af6782245b0bbcae33a967254719c6285eaa0f357ebd48dc2ec7dc1811d01",
+          "height" : 2,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "4044b61e44d6c51eb132133f19b09eadaf440292fa3372a81177a9949fe40386",
+          "adProofsRoot" : "7628bc77f07caab8283936e02cc447d63f801c112b86d02f211a42869f72a7dc",
+          "transactionsRoot" : "660dee133ecff527bc2be46c495d6fad422f0f318748341dd5b76222c4e361ea",
+          "extensionHash" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "027469498b1d708e781d89cb1e55c982dd70f92471137f17b3076ea4718f87193a",
+            "n" : "0000000000000000",
+            "d" : 2861583847894408181104244427486736741934340725652418647444126705076385357277
+          },
+          "adProofsId" : "c71c0c6f1399b6da82789f367866368bc341df7070822e4b6c3586aa62f55903",
+          "transactionsId" : "0c24ca19184bececd5b452cd2630617ed967905af11682384100b114e211a6ec",
+          "parentId" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+        },
+        "blockTransactions" : {
+          "headerId" : "4044b61e44d6c51eb132133f19b09eadaf440292fa3372a81177a9949fe40386",
+          "blockVersion" : 4,
+          "size" : 154,
+          "transactions" : [
+            {
+              "id" : "0cd08a98b89392c6cd9ad3de53b72e31f76fce6f047372eb68b80e20403b346a",
+              "inputs" : [
+                {
+                  "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "08671cf7ed1b0fd9729c2e17f2526457a383b33aaaae28379a73ef0f14430622",
+                  "value" : 1000000000,
+                  "ergoTree" : "108300040004060e03100304d193b4c2a7730073017302",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "0cd08a98b89392c6cd9ad3de53b72e31f76fce6f047372eb68b80e20403b346a",
+                  "index" : 0
+                }
+              ],
+              "size" : 68
+            },
+            {
+              "id" : "8bd8cbc06984135ba8f97aa6e6c5ccb684672a1ca601c68988fe5f697a5218fc",
+              "inputs" : [
+                {
+                  "boxId" : "08671cf7ed1b0fd9729c2e17f2526457a383b33aaaae28379a73ef0f14430622",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "42e6253f802b56fe368b3ce066757ed9791eed633b18719f8a5b541d8ea1c8d7",
+                  "value" : 1000000000,
+                  "ergoTree" : "0008d3",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "8bd8cbc06984135ba8f97aa6e6c5ccb684672a1ca601c68988fe5f697a5218fc",
+                  "index" : 0
+                }
+              ],
+              "size" : 49
+            }
+          ]
+        },
+        "adProofs" : {
+          "headerId" : "4044b61e44d6c51eb132133f19b09eadaf440292fa3372a81177a9949fe40386",
+          "proofBytes" : "0200000000000000000000000000000000000000000000000000000000000000005a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d60870000000002ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000002c8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500000400"
+        },
+        "extension" : {
+          "headerId" : "4044b61e44d6c51eb132133f19b09eadaf440292fa3372a81177a9949fe40386",
+          "digest" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "fields" : [
+            [
+              "0100",
+              "01cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+            ]
+          ]
+        }
+      },
+      "boxes" : [
+        {
+          "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+          "bytes" : "8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500"
+        }
+      ],
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "valid" : false,
+        "post_digest" : null,
+        "cost" : null,
+        "reason" : "tx[1]: org.ergoplatform.validation.MalformedModifierError: Scripts of all transaction inputs should pass verification. 8bd8cbc06984135ba8f97aa6e6c5ccb684672a1ca601c68988fe5f697a5218fc: #0 => Success((false,6))"
+      }
+    },
+    {
+      "name" : "in-block-created-canonical-control-reject#2",
+      "source" : "santa:authored-block-kept-tree-bytes:in-block-created-canonical-control-reject#2",
+      "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+      "headers" : [
+        {
+          "extensionId" : "8afcf61bf235861610ac5cd670e91af09d6927839839fe2e5db4666b8d46b653",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459000,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+          "height" : 1,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558",
+          "adProofsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "transactionsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "extensionHash" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "0311e47c79ee48fb575f30f78aa0a365adb71cea6aa8c375ae13bcac6c3ddf2259",
+            "n" : "0000000000000000",
+            "d" : 114616123637486601195580591850373309733781900411427054376049470819295223820013
+          },
+          "adProofsId" : "a0fe3a57e10a2b3cc25f5a8f66deaf89328ac5c35304ec41f0a049c717f19305",
+          "transactionsId" : "9a82cf0a5b79b7ef5064ef72bf60cbb4d8a31fe953e1399c2ce7daf6be4ef30a",
+          "parentId" : "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "parameters" : {
+        "table" : {
+          "1" : 1250000,
+          "2" : 360,
+          "3" : 524288,
+          "4" : 1000000,
+          "5" : 100,
+          "6" : 2000,
+          "7" : 100,
+          "8" : 100,
+          "9" : 30,
+          "123" : 4
+        }
+      },
+      "block" : {
+        "header" : {
+          "extensionId" : "9f7138106b432e37a9f4c6cea9af78a3c1e7bfbf264c02cb2ce751754982d60c",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459310,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "5ea5544cccd2b8ae51d16b8f28c0457dffc843fc8182203102b73b2a943b110f01",
+          "height" : 2,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "adProofsRoot" : "7628bc77f07caab8283936e02cc447d63f801c112b86d02f211a42869f72a7dc",
+          "transactionsRoot" : "ab5a6f9700a80d6cefddbada6394351203cb83f61f9e35c4bdf4364d6ee61f21",
+          "extensionHash" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "036a2d96051157a9316ef6d663da48f2a55ec1c9450a1a93dcd7bf22c817121f7a",
+            "n" : "0000000000000000",
+            "d" : 55839302299244085448913780307369928664600744824066643028317507815954236020079
+          },
+          "adProofsId" : "303a45c85760bb77a964ddfd4557661f500e49e33f17d8e7847af1fb9d334cd0",
+          "transactionsId" : "cfa2ffd809de333241c3a2938f453cf2f8f27ffa363fbcf45616d709235d4411",
+          "parentId" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+        },
+        "blockTransactions" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "blockVersion" : 4,
+          "size" : 154,
+          "transactions" : [
+            {
+              "id" : "edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e5",
+              "inputs" : [
+                {
+                  "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+                  "value" : 1000000000,
+                  "ergoTree" : "1003040004060e03108300d193b4c2a7730073017302",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e5",
+                  "index" : 0
+                }
+              ],
+              "size" : 68
+            },
+            {
+              "id" : "19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67",
+              "inputs" : [
+                {
+                  "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "ceb65ce19980cfe0a31add54f37305ec572a89900f5aae8f0ca383b5d8af6bde",
+                  "value" : 1000000000,
+                  "ergoTree" : "0008d3",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67",
+                  "index" : 0
+                }
+              ],
+              "size" : 49
+            }
+          ]
+        },
+        "adProofs" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "proofBytes" : "0200000000000000000000000000000000000000000000000000000000000000005a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d60870000000002ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000002c8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500000400"
+        },
+        "extension" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "digest" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "fields" : [
+            [
+              "0100",
+              "01cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+            ]
+          ]
+        }
+      },
+      "boxes" : [
+        {
+          "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+          "bytes" : "8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500"
+        }
+      ],
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "valid" : false,
+        "post_digest" : null,
+        "cost" : null,
+        "reason" : "tx[1]: org.ergoplatform.validation.MalformedModifierError: Scripts of all transaction inputs should pass verification. 19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67: #0 => Success((false,6))"
+      }
+    },
+    {
+      "name" : "in-block-shadowed-by-store-copy-accept#3",
+      "source" : "santa:authored-block-kept-tree-bytes:in-block-shadowed-by-store-copy-accept#3",
+      "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+      "headers" : [
+        {
+          "extensionId" : "8afcf61bf235861610ac5cd670e91af09d6927839839fe2e5db4666b8d46b653",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459000,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
+          "height" : 1,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558",
+          "adProofsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "transactionsRoot" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "extensionHash" : "0000000000000000000000000000000000000000000000000000000000000000",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "0311e47c79ee48fb575f30f78aa0a365adb71cea6aa8c375ae13bcac6c3ddf2259",
+            "n" : "0000000000000000",
+            "d" : 114616123637486601195580591850373309733781900411427054376049470819295223820013
+          },
+          "adProofsId" : "a0fe3a57e10a2b3cc25f5a8f66deaf89328ac5c35304ec41f0a049c717f19305",
+          "transactionsId" : "9a82cf0a5b79b7ef5064ef72bf60cbb4d8a31fe953e1399c2ce7daf6be4ef30a",
+          "parentId" : "0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "parameters" : {
+        "table" : {
+          "1" : 1250000,
+          "2" : 360,
+          "3" : 524288,
+          "4" : 1000000,
+          "5" : 100,
+          "6" : 2000,
+          "7" : 100,
+          "8" : 100,
+          "9" : 30,
+          "123" : 4
+        }
+      },
+      "block" : {
+        "header" : {
+          "extensionId" : "9f7138106b432e37a9f4c6cea9af78a3c1e7bfbf264c02cb2ce751754982d60c",
+          "difficulty" : "1",
+          "votes" : "000000",
+          "timestamp" : 1763375459310,
+          "size" : 218,
+          "unparsedBytes" : "",
+          "stateRoot" : "5ea5544cccd2b8ae51d16b8f28c0457dffc843fc8182203102b73b2a943b110f01",
+          "height" : 2,
+          "nBits" : 16842752,
+          "version" : 4,
+          "id" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "adProofsRoot" : "7628bc77f07caab8283936e02cc447d63f801c112b86d02f211a42869f72a7dc",
+          "transactionsRoot" : "ab5a6f9700a80d6cefddbada6394351203cb83f61f9e35c4bdf4364d6ee61f21",
+          "extensionHash" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "powSolutions" : {
+            "pk" : "03f01d6b9018ab421dd410404cb869072065522bf85734008f105cf385a023a80f",
+            "w" : "036a2d96051157a9316ef6d663da48f2a55ec1c9450a1a93dcd7bf22c817121f7a",
+            "n" : "0000000000000000",
+            "d" : 55839302299244085448913780307369928664600744824066643028317507815954236020079
+          },
+          "adProofsId" : "303a45c85760bb77a964ddfd4557661f500e49e33f17d8e7847af1fb9d334cd0",
+          "transactionsId" : "cfa2ffd809de333241c3a2938f453cf2f8f27ffa363fbcf45616d709235d4411",
+          "parentId" : "cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+        },
+        "blockTransactions" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "blockVersion" : 4,
+          "size" : 154,
+          "transactions" : [
+            {
+              "id" : "edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e5",
+              "inputs" : [
+                {
+                  "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+                  "value" : 1000000000,
+                  "ergoTree" : "108300040004060e03108300d193b4c2a7730073017302",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e5",
+                  "index" : 0
+                }
+              ],
+              "size" : 68
+            },
+            {
+              "id" : "19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67",
+              "inputs" : [
+                {
+                  "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+                  "spendingProof" : {
+                    "proofBytes" : "",
+                    "extension" : {
+                      
+                    }
+                  }
+                }
+              ],
+              "dataInputs" : [
+              ],
+              "outputs" : [
+                {
+                  "boxId" : "ceb65ce19980cfe0a31add54f37305ec572a89900f5aae8f0ca383b5d8af6bde",
+                  "value" : 1000000000,
+                  "ergoTree" : "0008d3",
+                  "assets" : [
+                  ],
+                  "creationHeight" : 1,
+                  "additionalRegisters" : {
+                    
+                  },
+                  "transactionId" : "19027f60abb11042dc731e7173bcd7838624b1f6db3212bb968a118324367a67",
+                  "index" : 0
+                }
+              ],
+              "size" : 49
+            }
+          ]
+        },
+        "adProofs" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "proofBytes" : "0200000000000000000000000000000000000000000000000000000000000000005a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d60870000000002ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000002c8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500000400"
+        },
+        "extension" : {
+          "headerId" : "edd5f289fceedd14b37f7080d2c070731efb01d3ab5e0d86f94f5e57da3be37e",
+          "digest" : "21ff60b0778516417dbe5787577eb501ec03ba2aa82d80ecf68d44acf13edbf0",
+          "fields" : [
+            [
+              "0100",
+              "01cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558"
+            ]
+          ]
+        }
+      },
+      "boxes" : [
+        {
+          "boxId" : "5a3aaf0e0b30a672d5f8820f71ae223483c0ff65d5ee5bf7ca1e973b800d6087",
+          "bytes" : "8094ebdc030008d301000078d4bd76c6309a9e4b6b00981a8bbff2c006bf6273403cfbe49b889cb2967ce500"
+        },
+        {
+          "boxId" : "c95f1ea0d726121528d49b0c85a5a76978c9753b84c8d9e986711e98aa90f56d",
+          "bytes" : "8094ebdc031003040004060e03108300d193b4c2a7730073017302010000edfb040a0d101d1ef4fe178a682cb0e31414fbbeff8079b81f91682119aa36e500"
+        }
+      ],
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "valid" : true,
+        "post_digest" : "5ea5544cccd2b8ae51d16b8f28c0457dffc843fc8182203102b73b2a943b110f01",
+        "cost" : 24211,
+        "reason" : null
+      }
+    }
+  ]
+}
