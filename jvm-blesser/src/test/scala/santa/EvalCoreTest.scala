@@ -25,6 +25,53 @@ class EvalCoreTest extends munit.FunSuite {
     assertEquals(json.noSpaces, """{"tag":"STuple","items":[{"tag":"SInt"},{"tag":"SLong"}]}""")
   }
 
+  // ── decodeInputConstant: a tuple INPUT, by arity ───────────────────────────
+  // The JVM holds a pair as a Scala Tuple2 and every other tuple as a generic Coll[Any]
+  // (CoreDataSerializer -> Evaluation.toDslTuple, which pairs up only at arity 2). A decoder
+  // that got this backwards would surface a Coll where a script expects a pair, or a pair
+  // where it expects a collection — a silently WRONG VALUE, not a break, which is why both
+  // arms are pinned here rather than left to a vector to notice.
+  test("decodeInputConstant: a PAIR input decodes to a Scala Tuple2") {
+    val c = EvalCore.decodeInputConstant(parse(
+      """{"kind":"Tuple","items":[{"kind":"Int","value":1},{"kind":"Long","value":"2"}]}"""))
+    assertEquals(c.tpe, STuple(IndexedSeq(SInt, SLong)))
+    assert(c.value.isInstanceOf[Tuple2[_, _]], s"a pair must be a Tuple2, got ${c.value.getClass}")
+    assertEquals(c.value.asInstanceOf[Tuple2[Any, Any]], ((1: Any), (2L: Any)))
+    // and the encode direction is its inverse, for a pair
+    assertEquals(EvalCore.valueToJson(c.value).noSpaces,
+      """{"kind":"Tuple","items":[{"kind":"Int","value":1},{"kind":"Long","value":"2"}]}""")
+  }
+
+  test("decodeInputConstant: a NON-PAIR tuple input decodes to a generic Coll[Any]") {
+    val c = EvalCore.decodeInputConstant(parse(
+      """{"kind":"Tuple","items":[{"kind":"Int","value":1},{"kind":"Int","value":2},{"kind":"Int","value":3}]}"""))
+    assertEquals(c.tpe, STuple(IndexedSeq(SInt, SInt, SInt)))
+    val coll = c.value.asInstanceOf[sigma.Coll[Any]]
+    assertEquals(coll.length, 3)
+    assertEquals(coll.tItem, sigma.AnyType, "the item type MUST be Any — isCorrectType requires it")
+    assertEquals(coll.toArray.toList, List(1, 2, 3))
+    // THE ASYMMETRY, and it belongs to the JVM rather than to this decoder: decode-then-encode
+    // is the identity for a pair and is NOT for any other arity, because valueToJson dispatches
+    // on the runtime class and this value IS a collection.
+    assertEquals(EvalCore.valueToJson(c.value).noSpaces,
+      """{"kind":"Coll","elem":{"tag":"SAny"},"items":[{"kind":"Int","value":1},{"kind":"Int","value":2},{"kind":"Int","value":3}]}""")
+  }
+
+  test("decodeInputConstant: a non-pair tuple input is wire-encodable, and 0/1 items are refused") {
+    val c = EvalCore.decodeInputConstant(parse(
+      """{"kind":"Tuple","items":[{"kind":"Int","value":1},{"kind":"Int","value":2},{"kind":"Int","value":3}]}"""))
+    // the JVM's own DataSerializer writes it at v3, so such a value is a legal register /
+    // context-extension payload and not merely an in-memory shape
+    assert(EvalCore.isWireEncodable(c, 3.toByte), "a 3-item tuple constant must be wire-encodable")
+    // a 0- or 1-item tuple TYPE parses but can never be written back (TypeSerializer refuses
+    // fewer than 2 items), so it has no input form at all
+    Seq("""{"kind":"Tuple","items":[]}""",
+        """{"kind":"Tuple","items":[{"kind":"Int","value":1}]}""").foreach { j =>
+      val thrown = intercept[RuntimeException](EvalCore.decodeInputConstant(parse(j)))
+      assert(thrown.getMessage.contains("at least 2 items"), thrown.getMessage)
+    }
+  }
+
   // ── stypeFromJson: SBox / SHeader / SPreHeader type tags (Task 3 part b) ────
   // These tags appear as the `elem` of Coll[Box]/Coll[Header]/Coll[PreHeader] inputs
   // to the collection-op properties (exists/filter/forall/...). Before Task 3 they

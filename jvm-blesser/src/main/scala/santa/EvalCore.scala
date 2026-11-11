@@ -330,18 +330,35 @@ object EvalCore {
       case "Tuple" =>
         val itemsJson = cur.downField("items").as[List[Json]]
           .fold(e => sys.error(s"decodeInputConstant Tuple: missing items: $e"), identity)
-        if (itemsJson.size != 2)
-          sys.error(s"decodeInputConstant Tuple: expected pair, got ${itemsJson.size} items")
-        // The runtime value of a pair MUST be a Scala Tuple2, not a Coll[Any].
-        // valueToJson emits pairs via `case (a, b)` (a Scala Tuple2), so the decode
-        // inverse must produce a Tuple2 too. Building `Tuple(items)` here is WRONG:
-        // sigma.ast.Tuple's `.value` (read when this is bound as a context-var) is a
-        // Coll[Object], so getVar[(A,B)] would surface a Coll — a silent wrong value.
-        // Instead wrap the Scala pair directly as a Constant[STuple].
-        val a = decodeInputConstant(itemsJson(0))
-        val b = decodeInputConstant(itemsJson(1))
-        val pair: Any = (a.value, b.value)
-        mkConstant[STuple](pair, STuple(a.tpe, b.tpe))
+        if (itemsJson.size < 2)
+          sys.error(s"decodeInputConstant Tuple: need at least 2 items, got ${itemsJson.size}" +
+            " — a 0/1-item tuple TYPE parses but can never be written (TypeSerializer refuses it)")
+        val decoded = itemsJson.map(decodeInputConstant)
+        val tpe = STuple(decoded.map(_.tpe).toIndexedSeq)
+        if (decoded.size == 2) {
+          // ARITY 2: the runtime value MUST be a Scala Tuple2, not a Coll[Any].
+          // valueToJson emits pairs via `case (a, b)` (a Scala Tuple2), so the decode
+          // inverse must produce a Tuple2 too. Building `Tuple(items)` here is WRONG:
+          // sigma.ast.Tuple's `.value` (read when this is bound as a context-var) is a
+          // Coll[Object], so getVar[(A,B)] would surface a Coll — a silent wrong value.
+          // Instead wrap the Scala pair directly as a Constant[STuple].
+          mkConstant[STuple]((decoded(0).value, decoded(1).value), tpe)
+        } else {
+          // ANY OTHER ARITY: the runtime value is a GENERIC Coll[Any], which is what the
+          // JVM's own data path produces — CoreDataSerializer reads a tuple's items into
+          // `Colls.fromArray(arr)(sigma.AnyType)` and hands them to `Evaluation.toDslTuple`,
+          // which pairs up ONLY at arity 2 (`Evaluation.scala:98-101`). `Platform.isCorrectType`
+          // enforces it from the other side: a Coll under an STuple type must have
+          // `tItem == AnyType` and exactly the declared length (`Platform.scala:176`), so a
+          // wrong representation here cannot even be wrapped as a Constant.
+          //
+          // NOTE THE ASYMMETRY, which is a fact about the JVM and not about this decoder:
+          // decode-then-encode is the identity for a pair and NOT for any other arity. Such a
+          // value, if it is ever an OUTPUT, encodes as {"kind":"Coll","elem":{"tag":"SAny"}}
+          // because valueToJson dispatches on the runtime class. Runner contract §4.
+          val coll: Any = Colls.fromArray[Any](decoded.map(_.value).toArray[Any])(sigma.AnyType)
+          mkConstant[STuple](coll, tpe)
+        }
 
       case "UnsignedBigInt" =>
         // decimal string, like BigInt; CUnsignedBigInt's ctor throws on negative / >256-bit

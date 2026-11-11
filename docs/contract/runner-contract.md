@@ -312,8 +312,31 @@ these shapes. The asymmetries are deliberate — mirror them exactly.
 | AvlTree | `{"kind":"AvlTree","bytes_hex":"<hex>"}` | `AvlTreeData.serializer` bytes (digest+flags+keyLength+optValueLen), lower-case hex |
 | Coll | `{"kind":"Coll","elem":<SType>,"items":[<SValue>,…]}` | `elem` = element SType tag; `items` positional |
 | Coll[Byte] | `{"kind":"Coll[Byte]","value_hex":"<hex>"}` | the COMPACT byte-collection form, semantically identical to `Coll`/`SByte` per-item — added for large payloads (per-item JSON is ~35× the bytes; the SBox token-window family carries >4KB box bytes as context input). INPUT-side only: results still encode as `Coll` (the JVM's `valueToJson` is unchanged), and a vector MAY keep using per-item `Coll` for byte collections — both decode identically. |
-| Tuple | `{"kind":"Tuple","items":[<SValue>,…]}` | ≥2 items, positional. Today's corpus is all pairs; the encoding admits higher arity (sigma-state has arity-3+ tuples). |
+| Tuple | `{"kind":"Tuple","items":[<SValue>,…]}` | ≥2 items, positional. **The runtime representation is decided by the ARITY, and it decides verdicts** — see the note below. |
 | Option | `{"kind":"Option","value":<SValue> \| null}` | `null` = `None`; otherwise the inner SValue |
+
+**A tuple's runtime representation, by arity (read this before implementing the Tuple kind).**
+A **pair** is held as a language-level PAIR (a Scala `Tuple2` on the JVM); a tuple of **any other
+arity** is held as a **generic collection of `Any`** — `CoreDataSerializer` reads a tuple's items
+into `Colls.fromArray(arr)(sigma.AnyType)` and hands them to `Evaluation.toDslTuple`, which pairs
+up only at arity 2, and `Platform.isCorrectType` enforces it from the other side (a collection
+under a tuple type must have item type `Any` and exactly the declared length). This is not an
+implementation detail: `STuple extends SCollection[SAny]`, so a non-pair tuple VALUE is accepted
+wherever a collection is wanted — `SizeOf`, `ByIndex`, `Exists`, `Fold`, `AND`/`OR`, `Xor` and the
+`Coll` methods all answer on one — while an operation that needs the backing ARRAY of a class
+(`Append` against a primitive-backed operand, `AtLeast`, the hashes, `ByteArrayToBigInt`, the
+`AvlTree` key/proof arguments) throws. A runner that holds every tuple in one dedicated node
+cannot reproduce both halves. Vectors: `eval/v6/authored/Tuple.non_pair_value_{ops,gates}.json`,
+`wire/v6/authored/*.non_pair_tuple_operand.json`,
+`transaction/v6/authored/non-pair-tuple-spend.json`.
+
+**And the decode/encode asymmetry that follows from it.** `{"kind":"Tuple",…}` is an INPUT form at
+every arity, but decode-then-encode is the identity only for a **pair**. A non-pair tuple value, if
+it is ever an OUTPUT, encodes as `{"kind":"Coll","elem":{"tag":"SAny"},"items":[…]}` with each item
+by its own runtime kind — because the encoder dispatches on the runtime representation, and that
+representation IS a collection. A runner must not assume the two directions mirror each other.
+(A 0- or 1-item tuple TYPE parses but can never be written back — `TypeSerializer` refuses fewer
+than 2 items — so it has no input form at all, and no box can carry a script containing one.)
 
 **The Long-vs-cost asymmetry (read this twice).** An SValue **`Long` value** is a decimal
 **string**, but the entry's **`cost`** (§5) — also a 64-bit quantity — is a bare JSON
