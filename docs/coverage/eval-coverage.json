@@ -5044,6 +5044,45 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Comparison.mixed_width.json" : {
+      "accepts" : 2,
+      "entries" : 18,
+      "methods" : [
+      ],
+      "op" : "Comparison.mixed_width",
+      "ops" : [
+        "Const",
+        "EQ",
+        "GE",
+        "GT",
+        "If",
+        "LE",
+        "LT",
+        "min"
+      ],
+      "provenance" : "authored",
+      "rejects" : 16,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 8,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 8,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Context.getVarFromInput.json" : {
       "accepts" : 4,
       "entries" : 4,
@@ -14000,6 +14039,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/MethodCall.receiver_kind.json",
@@ -14298,6 +14338,7 @@
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
@@ -14973,6 +15014,7 @@
         "v5/spec/Int_LE_GE.json",
         "v5/spec/Long_LE_GE.json",
         "v5/spec/Short_LE_GE.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15049,6 +15091,7 @@
         "v5/spec/Long_LT_GT_NEQ.json",
         "v5/spec/Short_LT_GT_NEQ.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -15414,6 +15457,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
@@ -15541,6 +15585,7 @@
         "v5/spec/Int_LE_GE.json",
         "v5/spec/Long_LE_GE.json",
         "v5/spec/Short_LE_GE.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-84ecb7431b61.json",
         "v6/captured/h112342-f439fa4182cf.json",
@@ -15579,6 +15624,7 @@
         "v5/spec/Int_LT_GT_NEQ.json",
         "v5/spec/Long_LT_GT_NEQ.json",
         "v5/spec/Short_LT_GT_NEQ.json",
+        "v6/authored/Comparison.mixed_width.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112291-84ecb7431b61.json",
@@ -17230,6 +17276,7 @@
     },
     "min" : {
       "families" : [
+        "v6/authored/Comparison.mixed_width.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/captured/h318040-089df53dc16b.json",
         "v6/captured/h321624-5cfe5a53ceda.json",
@@ -17243,12 +17290,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2444,
+    "accepts" : 2446,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2840,
-    "files" : 322,
-    "rejects" : 396,
+    "entries" : 2858,
+    "files" : 323,
+    "rejects" : 412,
     "unwalked" : 11
   }
 }
