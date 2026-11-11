@@ -4144,6 +4144,42 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/ArithOp.mixed_width.json" : {
+      "accepts" : 9,
+      "entries" : 18,
+      "methods" : [
+      ],
+      "op" : "ArithOp.mixed_width",
+      "ops" : [
+        "+",
+        "ByIndex",
+        "Const",
+        "If",
+        "Upcast"
+      ],
+      "provenance" : "authored",
+      "rejects" : 9,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 3,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/AvlTree.bad_proof_bytes_v6.json" : {
       "accepts" : 1,
       "entries" : 1,
@@ -12946,6 +12982,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -13636,6 +13673,7 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/spec/Coll_apply_method_equivalence.json",
         "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
@@ -13943,6 +13981,7 @@
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v6/authored/Append.reference_array_store.json",
+        "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
@@ -15362,6 +15401,7 @@
         "v5/spec/Coll_map_with_nested_if.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/Append.reference_array_store.json",
+        "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
@@ -16795,6 +16835,7 @@
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long.toBigInt_method.json",
         "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -17202,12 +17243,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2435,
+    "accepts" : 2444,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2822,
-    "files" : 321,
-    "rejects" : 387,
+    "entries" : 2840,
+    "files" : 322,
+    "rejects" : 396,
     "unwalked" : 11
   }
 }
