@@ -1,0 +1,177 @@
+package santa
+
+// Authored eval vectors — where a non-pair tuple VALUE comes from, and what the TYPE-DIRECTED
+// consumers do with one. Request: `~/projects/sigma-rust/prompts/santa-probe-tuple-values.md`
+// (rows S1-S4, E1-E3, W1/W2, measured in that round but not authored with the operations) and
+// `santa-probe-tuple-values-2.md` §1-§3. Measured by `santa.spike.TupleValuesProbe`.
+// Companions: `Tuple.non_pair_value_ops` (the operations), `Tuple.non_pair_value_gates` (the
+// refusals), `wire/…/non_pair_tuple_operand` (where each refusal happens).
+//
+// TWO OPS, because the two questions are different.
+//
+// `Tuple.non_pair_value_producers` — a script can meet such a value by five routes, and all five
+// answer: a nested tuple's field (`SelectField`), an item of a data COLLECTION of tuples, an
+// `Option`'s content, `Global.deserializeTo`, and the collection itself as the root. The last is
+// the probe's §1 question and the row to read twice: a data `Coll[(Int,Int,Int)]` carries
+// `tItem = collRType(AnyType)` (`CoreDataSerializer`'s generic branch), NOT the tuple type, so the
+// blesser writes `elem` = `{"tag":"SColl","elem":{"tag":"SAny"}}` and each item as a `Coll[SAny]`.
+// Measured, not read: the parsed constant's value is a `CollOverArray` with
+// `tItem=CollType(GeneralType(Any))` whose item 0 is a `CollOverArray` with `tItem=GeneralType(Any)`.
+//
+// **Is that item type observable to a script? No — and the reason is a second gate.** Equality
+// compares item types before any item, so a comparison against a differently-typed collection
+// would expose it; but the operands' STATIC types must agree first, and
+// `EQ(Coll[(Int,Int,Int)], Coll[Coll[Int]])` is refused AT PARSE by the builder's SameType check
+// (`ConstraintFailed`). Since the only route to such a collection is data, any two of them share
+// the item type. So the item type is invisible at eval and visible only in the VECTOR — which is
+// exactly why E1 and its control are both here: they pin that two such collections compare EQUAL
+// (`true` @49) while the shape that would separate them cannot be written at all.
+//
+// The three E rows are also the round's one COST divergence: sigma-rust answers all three correctly
+// and **13 low** in every container (36/27/30 against 49/40/43), which is one number to find rather
+// than three bugs.
+//
+// `Tuple.non_pair_value_type_directed` — `Global.serialize` writes by the ARGUMENT's static type
+// (`serialize_eval` uses `mc.args(0).tpe`, `methods.scala:1982`), so the tuple itself serializes
+// (`020406` @33 — the items, not the type) while two shapes that reach it fail:
+//   · an `SAny`-typed argument — `SerializerException: Don't know how to serialize (1, SAny)`;
+//   · a tuple type whose VALUE is shorter than the type declares, which `Slice` produces —
+//     `AssertionError: Type (SInt,SInt,SInt) doesn't correspond to value`, the length assert.
+// The second is the sharpest consequence of the declared type lying about the length
+// (`Tuple.non_pair_value_ops` T4/T5 are the same `Slice`, read through `SizeOf` instead).
+//
+// AND `SubstConstants` CANNOT SUBSTITUTE ONE, BY CONSTRUCTION. `toArrayOfConstants` lifts each item
+// by the collection's `tItem` (`eval/Extensions.scala:53-64`), and for a collection of non-pair
+// tuples that lift yields a **`Coll[SAny]`-typed constant** — measured directly, not inferred from
+// the error. `SubstConstants` then requires the new constant's type to equal the one it replaces,
+// which is the tuple type, so the two can never agree however the script is built. Substituting an
+// `Int` into the same script fails the same requirement, which is why that is NOT the control: the
+// control is the identical machinery over a script whose constant 0 IS an `Int`, where it returns
+// the re-serialized script at cost 315.
+
+import io.circe.Json
+
+object AuthoredEvalNonPairTupleConsumers {
+  val OpProducers    = "Tuple.non_pair_value_producers"
+  val OpTypeDirected = "Tuple.non_pair_value_type_directed"
+  val Source         = "santa:authored-non-pair-tuple-consumers"
+  private val V3: Byte = 3
+
+  private val dummyInput: Json =
+    Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0))
+
+  /** `(id, slug, treeHex, accepts, what)` — hexes dumped from the probe (tests P2/P3b/P4). */
+  private val producers: Seq[(String, String, String, Boolean, String)] = Seq(
+    ("P1", "select_field_of_nested_tuple", "0b0cb18c4c480404040204060801", true,
+      "`SizeOf(SelectField(((1,2,3), 4), 1))` — **3 at cost 29.** The first route: a non-pair tuple " +
+      "nested inside a PAIR, pulled out by `SelectField`. `checkType` is shallow, so the outer " +
+      "pair's field access never inspects the inner tuple's arity. **SEPARATING.**"),
+    ("C1", "select_field_of_nested_coll_control", "0b0cb18c86021003020406040801", true,
+      "**CONTROL for P1** — the same shape with a `Coll[Int]` in the field instead of a tuple: 3 at " +
+      "cost 49. Dearer than P1 by 20 because the field is built by a `Tuple` NODE here rather than " +
+      "read out of a constant, which is what shows P1's cost belongs to the constant."),
+    ("P2", "item_of_data_collection", "0b0eb1b20c4804040401020406040000", true,
+      "`SizeOf(ByIndex(Coll((1,2,3)), 0))` — **3 at cost 54.** The second route: an ITEM of a data " +
+      "collection of tuples. The item's runtime type is `Coll[Any]`, so `SizeOf` reads it. " +
+      "**SEPARATING.**"),
+    ("P3", "content_of_an_option", "0b0bb1e4244804040401020406", true,
+      "`SizeOf(OptionGet(Some((1,2,3))))` — **3 at cost 34.** The third route. Note the v0 twin of " +
+      "this row does not exist: `SOption` data requires ErgoTree v3, and an unsized tree has no " +
+      "size bit to degrade behind, so the v0 form is REJECTED outright. **SEPARATING.**"),
+    ("P4", "deserialize_to_tuple", "0b0fb1dc6a04dd010e0302040648040404", true,
+      "`SizeOf(Global.deserializeTo[(Int,Int,Int)](020406))` — **3 at cost 160**, the dearest route " +
+      "and the fourth: the value is built by the DATA deserializer at eval time from three bytes, " +
+      "which is the path `CoreDataSerializer` takes on a register or an extension. **SEPARATING.**"),
+    ("P5", "data_collection_root", "0b090c4804040401020406", true,
+      "`Coll((1,2,3))` as the ROOT — **cost 5**, and the row to read for its VALUE rather than its " +
+      "cost: `{\"kind\":\"Coll\",\"elem\":{\"tag\":\"SColl\",\"elem\":{\"tag\":\"SAny\"}},…}` with " +
+      "each item a `Coll[SAny]`. A data collection of non-pair tuples carries " +
+      "`tItem = collRType(AnyType)` and NOT the tuple type, so this is the second place the corpus " +
+      "writes `{\"tag\":\"SAny\"}` (the first being `Tuple.non_pair_value_ops` T5). **SEPARATING:** " +
+      "an implementation that keeps the tuple type as the item type writes a different `elem` here " +
+      "and is red for the encoding, which is the only place that difference is observable at all — " +
+      "see the family's note on why a script cannot see it."),
+    ("E1", "eq_two_data_collections", "0b13930c48040404010204060c4804040401020406", true,
+      "`Coll((1,2,3)) == Coll((1,2,3))` — **true at cost 49.** `DataValueComparer` compares item " +
+      "types before any item, and two data collections of non-pair tuples share `Coll[Any]`, so " +
+      "they compare equal. **SEPARATING, and the round's one COST divergence:** sigma-rust answers " +
+      "`true` at 36 — correct value, 13 low — and the same 13 on E2 and E3, so it is one number."),
+    ("C2", "eq_two_coll_of_coll_control", "0b0d931c01030204061c0103020406", true,
+      "**CONTROL for E1** — `Coll(Coll[Int](1,2,3)) == Coll(Coll[Int](1,2,3))`, the same nesting " +
+      "with a declared item type: true at cost 41. The 8 between them is the tuple collection's " +
+      "own encoding, not a different comparison. (The cross pair — a tuple collection against this " +
+      "one — cannot be written: the operands' static types disagree and the builder's SameType " +
+      "check refuses it at PARSE, which is why the item type is invisible to a script.)"),
+    ("E2", "eq_two_options", "0b1393244804040401020406244804040401020406", true,
+      "`Some((1,2,3)) == Some((1,2,3))` — **true at cost 40.** Scala's `==` reaches inside the " +
+      "`Option` and then compares two `Coll[Any]`s. **SEPARATING** (sigma-rust: 27, the same 13)."),
+    ("E3", "eq_two_pairs_holding_tuples", "0b13934c48040404020406084c4804040402040608", true,
+      "`((1,2,3), 4) == ((1,2,3), 4)` — **true at cost 43**, the third container. **SEPARATING** " +
+      "(sigma-rust: 30, the same 13). The three E rows together say the undercharge is in the " +
+      "tuple's own comparison and not in any one container."))
+
+  private val typeDirected: Seq[(String, String, String, Boolean, String)] = Seq(
+    ("W1", "serialize_tuple", "0b0cdc6a03dd0148040404020406", true,
+      "`Global.serialize((1,2,3))` — **`020406` at cost 33.** `DataSerializer` writes the ITEMS and " +
+      "not the type, which is why a tuple and a one-item collection of it differ by exactly the " +
+      "length byte (W2). **REGRESSION GUARD, not a separating row:** sigma-rust already matches " +
+      "this one in value AND cost, which is itself worth knowing — its serializer is right where " +
+      "its evaluator is not — and the guard is what catches a representation port breaking it."),
+    ("W2", "serialize_collection_of_tuple", "0b0edc6a03dd010c4804040401020406", true,
+      "`Global.serialize(Coll((1,2,3)))` — **`01020406` at cost 36**: the same three bytes behind a " +
+      "length. **REGRESSION GUARD** for the same reason as W1: already matching, and the row that " +
+      "would catch the port writing the tuple's TYPE instead of its items."),
+    ("C1", "serialize_coll_int_control", "0b0adc6a03dd011003020406", true,
+      "**CONTROL for W1/W2** — `Global.serialize(Coll[Int](1,2,3))` is `03020406` at cost 36. The " +
+      "same 36 as W2 and the same three value bytes: a collection of three Ints and a collection " +
+      "holding one triple serialize identically but for the length, which is what shows W1/W2 are " +
+      "about the ITEMS reaching the writer."),
+    ("R2", "serialize_any_typed_argument", "0b10dc6a03dd01b248040404020406040000", false,
+      "`Global.serialize(ByIndex((1,2,3), 0))` — **throws `SerializerException: Don't know how to " +
+      "serialize (1, SAny)`** (in the cause of an `InvocationTargetException`). `serialize_eval` " +
+      "writes by the ARGUMENT's static type, `ByIndex` over a tuple is typed `SAny`, and " +
+      "`DataSerializer` has no `SAny` arm. **SEPARATING:** an implementation that serializes by the " +
+      "runtime value rather than the declared type answers here and over-accepts."),
+    ("R3", "serialize_length_lying_tuple", "0b11dc6a03dd01b44804040402040604000404", false,
+      "`Global.serialize(Slice((1,2,3), 0, 2))` — **throws `AssertionError: Type " +
+      "(SInt,SInt,SInt) doesn't correspond to value`.** `Slice`'s static type stays the 3-item " +
+      "tuple while its value holds 2, and the tuple arm of the writer asserts the two agree. THE " +
+      "SHARPEST CONSEQUENCE of the declared type lying about the length — `Tuple.non_pair_value_ops` " +
+      "T4/T5 are this same `Slice` read through `SizeOf`, where the lie is harmless. " +
+      "**SEPARATING.**"),
+    ("S1", "subst_constants_tuple_new_values",
+      "0b22740e131b1102480404040204060406d193b1730073011001000c4804040401020406", false,
+      "`SubstConstants(script, Coll(0), Coll((1,2,3)))` where the script is SEGREGATED and its " +
+      "constant 0 IS the tuple — **throws `IllegalArgumentException: expected new constant to have " +
+      "the same (SInt,SInt,SInt) tpe`.** `toArrayOfConstants` lifts each item by the collection's " +
+      "`tItem`, which for a collection of non-pair tuples yields a **`Coll[SAny]`-typed constant** " +
+      "(measured directly), and `SubstConstants` requires the new constant's type to equal the old " +
+      "one's. **So substituting a non-pair tuple constant is impossible BY CONSTRUCTION**, not " +
+      "merely refused: no script can be built whose constant type the lift could match. " +
+      "**SEPARATING:** an implementation that lifts by the DECLARED tuple type instead substitutes " +
+      "successfully and over-accepts."),
+    ("C2", "subst_constants_int_script_control", "0b16740e0d1b0b02040e040ed19373007301100100100112", true,
+      "**CONTROL for S1** — the identical machinery over a script whose constant 0 is an `Int`, " +
+      "substituting `Coll[Int](9)`: it RETURNS the re-serialized script at cost 315. Note what is " +
+      "NOT the control: substituting an `Int` into S1's tuple-constant script fails the SAME " +
+      "requirement, so that comparison would be circular and prove nothing. This one shows the " +
+      "machinery works and only the tuple case cannot be expressed."))
+
+  private def entriesOf(op: String, rows: Seq[(String, String, String, Boolean, String)]): Json = {
+    val entries = rows.zipWithIndex.map { case ((id, slug, tree, accepts, what), i) =>
+      val name = s"$slug-${if (accepts) "accept" else "errored"}#$i"
+      val script = s"[$id] $what"
+      if (accepts) SpecExtract.authoredEntry(op, script, tree, name, dummyInput, V3)
+      else SpecExtract.authoredRejectEntry(op, script, tree, name, dummyInput, V3)
+    }
+    SpecExtract.authoredEnvelope(op, entries, Source)
+      .mapObject(_.add("blessed_by", Json.fromString("jvm:sigma-state-6.0.7")))
+  }
+
+  def extract(): Map[String, Json] = Map(
+    OpProducers    -> entriesOf(OpProducers, producers),
+    OpTypeDirected -> entriesOf(OpTypeDirected, typeDirected))
+
+  def writeVectors(outDir: java.nio.file.Path): Unit =
+    SpecExtract.writeStaging("AuthoredEvalNonPairTupleConsumers", extract(), outDir)
+}
