@@ -6393,6 +6393,69 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Tuple.non_pair_value_producers.json" : {
+      "accepts" : 10,
+      "entries" : 10,
+      "methods" : [
+        "106:4 SigmaDslBuilder.deserializeTo"
+      ],
+      "op" : "Tuple.non_pair_value_producers",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "EQ",
+        "Global$",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "SizeOf",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Tuple.non_pair_value_type_directed.json" : {
+      "accepts" : 4,
+      "entries" : 7,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Tuple.non_pair_value_type_directed",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Global$",
+        "MethodCall",
+        "Slice",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Tuple.small_tuples.json" : {
       "accepts" : 3,
       "entries" : 10,
@@ -6647,6 +6710,34 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 12,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Xor.per_item_cost_base.json" : {
+      "accepts" : 10,
+      "entries" : 10,
+      "methods" : [
+        "106:2 SigmaDslBuilder.xor"
+      ],
+      "op" : "Xor.per_item_cost_base",
+      "ops" : [
+        "Const",
+        "Global$",
+        "MethodCall",
+        "Xor"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
           "tree_version" : 3
         }
       ],
@@ -11932,6 +12023,12 @@
       ],
       "name" : "SigmaDslBuilder.none"
     },
+    "106:2" : {
+      "families" : [
+        "v6/authored/Xor.per_item_cost_base.json"
+      ],
+      "name" : "SigmaDslBuilder.xor"
+    },
     "106:3" : {
       "families" : [
         "v6/authored/Global.serialize_AvlTree.json",
@@ -11948,6 +12045,7 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_Byte.json",
         "v6/spec/Global.serialize_Coll_Byte.json",
@@ -11963,6 +12061,7 @@
       "families" : [
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/captured/h33615-7f2709218327.json",
         "v6/spec/Global.deserializeTo_group_element.json",
@@ -13542,6 +13641,8 @@
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -13870,10 +13971,13 @@
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/Xor.per_item_cost_base.json",
         "v6/spec/decode-point.json"
       ],
       "op_codes" : [
@@ -14161,6 +14265,7 @@
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -15173,6 +15278,9 @@
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
+        "v6/authored/Xor.per_item_cost_base.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/captured/h33615-7f2709218327.json",
         "v6/spec/Global.decodeNbits.json",
@@ -15638,8 +15746,11 @@
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
+        "v6/authored/Xor.per_item_cost_base.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15948,6 +16059,7 @@
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -16225,6 +16337,7 @@
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
@@ -16463,6 +16576,7 @@
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -16524,6 +16638,7 @@
       "families" : [
         "v5/spec/Coll_slice_method_equivalence.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-52c30165e5d5.json",
@@ -16570,6 +16685,7 @@
       "families" : [
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/authored/substConstants_version_source_outer_v3.json",
@@ -16625,6 +16741,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
+        "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -17054,7 +17171,8 @@
     "Xor" : {
       "families" : [
         "v5/spec/Global.xor_equivalence.json",
-        "v6/authored/Tuple.non_pair_value_ops.json"
+        "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/Xor.per_item_cost_base.json"
       ],
       "op_codes" : [
         "0x9b"
@@ -17084,12 +17202,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2411,
-    "distinct_methods" : 156,
+    "accepts" : 2435,
+    "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2795,
-    "files" : 318,
-    "rejects" : 384,
+    "entries" : 2822,
+    "files" : 321,
+    "rejects" : 387,
     "unwalked" : 11
   }
 }
