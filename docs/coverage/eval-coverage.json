@@ -4144,6 +4144,40 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/ArithOp.division_overflow.json" : {
+      "accepts" : 18,
+      "entries" : 22,
+      "methods" : [
+      ],
+      "op" : "ArithOp.division_overflow",
+      "ops" : [
+        "%",
+        "/",
+        "Const"
+      ],
+      "provenance" : "authored",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 2,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/ArithOp.mixed_width.json" : {
       "accepts" : 9,
       "entries" : 18,
@@ -12983,6 +13017,7 @@
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/captured/h231432-fb4744c753de.json",
@@ -13179,6 +13214,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/captured/h1542-1b5c260a496a.json",
@@ -14061,6 +14097,7 @@
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v6/authored/Append.reference_array_store.json",
+        "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.append_runtime_item_type.json",
@@ -17335,12 +17372,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2456,
+    "accepts" : 2474,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2873,
-    "files" : 324,
-    "rejects" : 417,
+    "entries" : 2895,
+    "files" : 325,
+    "rejects" : 421,
     "unwalked" : 11
   }
 }
