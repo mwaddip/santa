@@ -111,7 +111,7 @@
     },
     {
       "name" : "data_collection_root-accept#5",
-      "script" : "[P5] `Coll((1,2,3))` as the ROOT — **cost 5**, and the row to read for its VALUE rather than its cost: `{\"kind\":\"Coll\",\"elem\":{\"tag\":\"SColl\",\"elem\":{\"tag\":\"SAny\"}},…}` with each item a `Coll[SAny]`. A data collection of non-pair tuples carries `tItem = collRType(AnyType)` and NOT the tuple type, so this is the second place the corpus writes `{\"tag\":\"SAny\"}` (the first being `Tuple.non_pair_value_ops` T5). **SEPARATING:** an implementation that keeps the tuple type as the item type writes a different `elem` here and is red for the encoding, which is the only place that difference is observable at all — see the family's note on why a script cannot see it.",
+      "script" : "[P5] `Coll((1,2,3))` as the ROOT — **cost 5**, and the row to read for its VALUE rather than its cost: `{\"kind\":\"Coll\",\"elem\":{\"tag\":\"SColl\",\"elem\":{\"tag\":\"SAny\"}},…}` with each item a `Coll[SAny]`. A data collection of non-pair tuples carries `tItem = collRType(AnyType)` and NOT the tuple type, so this is the second place the corpus writes `{\"tag\":\"SAny\"}` (the first being `Tuple.non_pair_value_ops` T5). **SEPARATING:** an implementation that keeps the tuple type as the item type writes a different `elem` here and is red for the encoding. All three conformers with an eval arm do exactly that. **And the item type IS observable to a script, through a second producer** — a collection EXPRESSION in a register carries the TUPLE type, so it compares `false` against this data form where another data collection compares `true`; see the family header, which corrects an earlier claim of mine that it could not be seen.",
       "tree_bytes_hex" : "0b090c4804040401020406",
       "input" : {
         "kind" : "Int",
@@ -180,7 +180,7 @@
     },
     {
       "name" : "eq_two_coll_of_coll_control-accept#7",
-      "script" : "[C2] **CONTROL for E1** — `Coll(Coll[Int](1,2,3)) == Coll(Coll[Int](1,2,3))`, the same nesting with a declared item type: true at cost 41. The 8 between them is the tuple collection's own encoding, not a different comparison. (The cross pair — a tuple collection against this one — cannot be written: the operands' static types disagree and the builder's SameType check refuses it at PARSE, which is why the item type is invisible to a script.)",
+      "script" : "[C2] **CONTROL for E1** — `Coll(Coll[Int](1,2,3)) == Coll(Coll[Int](1,2,3))`, the same nesting with a declared item type: true at cost 41. The 8 between them is the tuple collection's own encoding, not a different comparison. (This cross pair — a tuple collection against THIS one — cannot be written: the operands' static types disagree and the builder's SameType check refuses it at PARSE. That does NOT make the item type unobservable: two collections of the same declared type and different item types are writable, and they separate — see the family header.)",
       "tree_bytes_hex" : "0b0d931c01030204061c0103020406",
       "input" : {
         "kind" : "Int",

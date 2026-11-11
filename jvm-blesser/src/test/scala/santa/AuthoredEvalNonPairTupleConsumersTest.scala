@@ -47,8 +47,9 @@ class AuthoredEvalNonPairTupleConsumersTest extends munit.FunSuite {
       s"the item type must be Coll[SAny] and NOT the tuple type: $j")
     assert(j.contains("""{"kind":"Coll","elem":{"tag":"SAny"},"items":[{"kind":"Int","value":1}"""),
       s"and each item is itself a Coll[SAny]: $j")
-    assert(str(p5, "script").contains("cannot see it"),
-      "P5 must record that the item type is invisible to a script")
+    assert(str(p5, "script").contains("IS observable"),
+      "P5 must record that the item type IS observable through the expression producer — the " +
+      "family's first answer said otherwise and probe 3 refuted it")
   }
 
   test("THE COST SET: the three equality rows, which sigma-rust answers 13 low") {

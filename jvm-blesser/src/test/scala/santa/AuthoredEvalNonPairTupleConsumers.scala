@@ -18,14 +18,27 @@ package santa
 // Measured, not read: the parsed constant's value is a `CollOverArray` with
 // `tItem=CollType(GeneralType(Any))` whose item 0 is a `CollOverArray` with `tItem=GeneralType(Any)`.
 //
-// **Is that item type observable to a script? No — and the reason is a second gate.** Equality
-// compares item types before any item, so a comparison against a differently-typed collection
-// would expose it; but the operands' STATIC types must agree first, and
-// `EQ(Coll[(Int,Int,Int)], Coll[Coll[Int]])` is refused AT PARSE by the builder's SameType check
-// (`ConstraintFailed`). Since the only route to such a collection is data, any two of them share
-// the item type. So the item type is invisible at eval and visible only in the VECTOR — which is
-// exactly why E1 and its control are both here: they pin that two such collections compare EQUAL
-// (`true` @49) while the shape that would separate them cannot be written at all.
+// **Is that item type observable to a script? YES, and my first answer here was wrong.** When this
+// family was written I reasoned that it is not: equality compares item types before any item, but
+// the operands' STATIC types must agree first, and `EQ(Coll[(Int,Int,Int)], Coll[Coll[Int]])` is
+// refused AT PARSE by the builder's SameType check — so with data as *the only route* to such a
+// collection, any two would share the item type. **The premise was false.** The sigma-rust session's
+// branch review (probe 3, 2026-11-11) found a SECOND producer: a collection EXPRESSION in a
+// register or a context variable is built at `stypeToRType(elementType)`
+// (`ConcreteCollection.value`, `values.scala:879-884`), which for a non-pair tuple is `TupleType`
+// and NOT `Coll[Any]` — measured. Both collections then have the same DECLARED type, so the
+// comparison passes SameType and the item types differ: a register holding the expression form
+// compares **`false` @81** against this data constant, where the data form compares **`true`
+// @119** (the early bail saves 38). So the item type IS observable, by comparing the two
+// producers; what cannot be written is a comparison between two differently-DECLARED collections.
+//
+// E1 and its control stay exactly as they were — two data collections compare equal at 49 — and
+// the pair that exposes the difference is NOT in this family, because our own register surface can
+// only express one of the two producers: `decodeColl` falls into its nested-collection arm for an
+// `STuple` element (STuple extends SCollection) and builds `tItem = stypeToRType(elem)` = the
+// TUPLE type, i.e. the EXPRESSION route. The data route is not expressible as a register at all,
+// and the two are indistinguishable in the vector JSON — so authoring that pair would bury a
+// premise the vector cannot state. On the taskboard as an envelope decision.
 //
 // The three E rows are also the round's one COST divergence: sigma-rust answers all three correctly
 // and **13 low** in every container (36/27/30 against 49/40/43), which is one number to find rather
@@ -89,8 +102,11 @@ object AuthoredEvalNonPairTupleConsumers {
       "`tItem = collRType(AnyType)` and NOT the tuple type, so this is the second place the corpus " +
       "writes `{\"tag\":\"SAny\"}` (the first being `Tuple.non_pair_value_ops` T5). **SEPARATING:** " +
       "an implementation that keeps the tuple type as the item type writes a different `elem` here " +
-      "and is red for the encoding, which is the only place that difference is observable at all — " +
-      "see the family's note on why a script cannot see it."),
+      "and is red for the encoding. All three conformers with an eval arm do exactly that. **And " +
+      "the item type IS observable to a script, through a second producer** — a collection " +
+      "EXPRESSION in a register carries the TUPLE type, so it compares `false` against this data " +
+      "form where another data collection compares `true`; see the family header, which corrects " +
+      "an earlier claim of mine that it could not be seen."),
     ("E1", "eq_two_data_collections", "0b13930c48040404010204060c4804040401020406", true,
       "`Coll((1,2,3)) == Coll((1,2,3))` — **true at cost 49.** `DataValueComparer` compares item " +
       "types before any item, and two data collections of non-pair tuples share `Coll[Any]`, so " +
@@ -99,9 +115,11 @@ object AuthoredEvalNonPairTupleConsumers {
     ("C2", "eq_two_coll_of_coll_control", "0b0d931c01030204061c0103020406", true,
       "**CONTROL for E1** — `Coll(Coll[Int](1,2,3)) == Coll(Coll[Int](1,2,3))`, the same nesting " +
       "with a declared item type: true at cost 41. The 8 between them is the tuple collection's " +
-      "own encoding, not a different comparison. (The cross pair — a tuple collection against this " +
-      "one — cannot be written: the operands' static types disagree and the builder's SameType " +
-      "check refuses it at PARSE, which is why the item type is invisible to a script.)"),
+      "own encoding, not a different comparison. (This cross pair — a tuple collection against " +
+      "THIS one — cannot be written: the operands' static types disagree and the builder's " +
+      "SameType check refuses it at PARSE. That does NOT make the item type unobservable: two " +
+      "collections of the same declared type and different item types are writable, and they " +
+      "separate — see the family header.)"),
     ("E2", "eq_two_options", "0b1393244804040401020406244804040401020406", true,
       "`Some((1,2,3)) == Some((1,2,3))` — **true at cost 40.** Scala's `==` reaches inside the " +
       "`Option` and then compares two `Coll[Any]`s. **SEPARATING** (sigma-rust: 27, the same 13)."),
