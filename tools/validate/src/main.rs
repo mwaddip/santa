@@ -1289,13 +1289,30 @@ mod tests {
         jsonschema::validator_for(&schema).expect("tx actuals schema invalid")
     }
 
+    /// A santa-transaction/v1 entry in the schema's current shape: the transaction, its boxes and
+    /// its headers travel as BYTES (since 2026-06-16). The schema checks those fields' SHAPE
+    /// (lower-case whole-byte hex), never their content, so the hex here is filler.
     fn minimal_tx_entry(source: &str, valid: bool, reason: Option<&str>) -> Value {
         json!({
             "name": "test-entry",
             "source": source,
-            "tx": { "id": "abc", "inputs": [], "dataInputs": [], "outputs": [] },
-            "inputBoxes": [{}],
-            "dataInputBoxes": [],
+            "tx_bytes_hex": "ab".repeat(48),
+            "input_boxes_hex": ["cd".repeat(40)],
+            "data_input_boxes_hex": [],
+            "headers_hex": [],
+            "preHeader": {
+                "version": 4,
+                "parentId": "11".repeat(32),
+                "timestamp": "1690001200000",
+                "nBits": 117440512,
+                "height": 100,
+                "minerPk": "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+                "votes": "000000"
+            },
+            "parameters": {
+                "maxBlockCost": 1000000, "storageFeeFactor": 1250000, "minValuePerByte": 360,
+                "inputCost": 2000, "dataInputCost": 100, "outputCost": 100, "tokenAccessCost": 100
+            },
             "context": { "height": 100 },
             "version": { "activated": 3, "ergoTree": 1 },
             "expected": {
@@ -1327,8 +1344,28 @@ mod tests {
     #[test]
     fn tx_vector_valid_true_with_reason_fails() {
         let v = tx_vec_validator();
+        // The same document without the defect must pass, or this test proves nothing: while the
+        // fixture kept the pre-bytes JSON shape, it went green on the stale fields, not on this rule.
+        assert!(v.is_valid(&minimal_tx_vector("testnet:chain-xyz", true, None)));
         let doc = minimal_tx_vector("testnet:chain-xyz", true, Some("spurious reason"));
         assert!(!v.is_valid(&doc), "valid:true + non-null reason must fail schema");
+    }
+
+    /// The transaction travels as BYTES. The node-API JSON form it had until 2026-06-16 must fail:
+    /// the bytes keep a context extension's wire order, which a JSON object key-reorders.
+    #[test]
+    fn tx_vector_node_api_json_fails_the_schema() {
+        let v = tx_vec_validator();
+        let mut doc = minimal_tx_vector("testnet:chain-xyz", true, None);
+        let entry = doc["entries"][0].as_object_mut().unwrap();
+        entry.remove("tx_bytes_hex");
+        entry.insert("tx".into(), json!({ "id": "ab".repeat(32), "inputs": [], "dataInputs": [], "outputs": [] }));
+        assert!(!v.is_valid(&doc), "a node-API JSON tx in place of tx_bytes_hex must fail the tx schema");
+        let mut doc = minimal_tx_vector("testnet:chain-xyz", true, None);
+        doc["entries"][0]["tx_bytes_hex"] = json!("ABCD");
+        assert!(!v.is_valid(&doc), "upper-case hex must fail");
+        doc["entries"][0]["tx_bytes_hex"] = json!("abc");
+        assert!(!v.is_valid(&doc), "an odd-length hex must fail");
     }
 
     /// Actuals: error null AND valid null — no verdict — must fail.
