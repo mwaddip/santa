@@ -4992,14 +4992,15 @@
       "version" : "v6"
     },
     "v6/authored/Coll.reference_store_ops.json" : {
-      "accepts" : 18,
-      "entries" : 33,
+      "accepts" : 22,
+      "entries" : 40,
       "methods" : [
         "12:15 SCollection.flatMap",
         "12:19 SCollection.patch",
         "12:20 SCollection.updated",
         "12:21 SCollection.updateMany",
-        "12:29 SCollection.zip"
+        "12:29 SCollection.zip",
+        "12:30 SCollection.reverse"
       ],
       "op" : "Coll.reference_store_ops",
       "ops" : [
@@ -5018,14 +5019,14 @@
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 15,
+      "rejects" : 18,
       "tree_shapes" : [
         {
-          "accepts" : 18,
+          "accepts" : 22,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 15,
+          "rejects" : 18,
           "tree_version" : 3
         }
       ],
@@ -12766,6 +12767,7 @@
     "12:30" : {
       "families" : [
         "v6/authored/Coll.pair_shape_restored.json",
+        "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/spec/Coll.reverse.json"
       ],
@@ -17846,12 +17848,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2532,
+    "accepts" : 2536,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 3001,
+    "entries" : 3008,
     "files" : 337,
-    "rejects" : 469,
+    "rejects" : 472,
     "unwalked" : 11
   }
 }

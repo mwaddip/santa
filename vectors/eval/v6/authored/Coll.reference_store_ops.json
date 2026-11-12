@@ -651,6 +651,144 @@
         "cost" : null,
         "error" : "errored"
       }
+    },
+    {
+      "name" : "map-pair-component-lie-errored#33",
+      "script" : "[G1] `Coll(1).map({x => If(false, (1, SELF), (1, g))})` — THROWS `ArrayStoreException: sigma.data.CGroupElement`, UNWRAPPED: the closure's result check passes (a Tuple2 is a Tuple2), and the MapCollection node's `fromArray` at a pair type goes through `fromBoxedPairs`, which stores each COMPONENT into its side's typed array. SEPARATING: an implementation that checks only the pair, or nothing, returns 1.",
+      "tree_bytes_hex" : "0b16b1ad100102d901010495010086020402a78602040282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair-map-pair-component-lie-accept#34",
+      "script" : "[G2] `Coll(1).zip(Coll(1)).map({p => If(false, (1, SELF), (1, g))})` — 1 at cost 115: a PairOfCols' `map` builds a generic collection over a `Tuple2[]` directly, so the lie is never stored into a typed side. The setup of G3/G4.",
+      "tree_bytes_hex" : "0b1db1addc0c1d10010201100102d901015895010086020402a78602040282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 115,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-map-lie-reverse-errored#35",
+      "script" : "[G3] `G2.reverse` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): `reverse` rebuilds through `fromArray`, and the misfit component meets the typed side there. SEPARATING: an implementation that never rebuilds returns 1.",
+      "tree_bytes_hex" : "0b20b1db0c1eaddc0c1d10010201100102d901015895010086020402a78602040282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair-map-lie-updated-accept#36",
+      "script" : "[G4] `G2.updated(0, (1, SELF))` — 1 at cost 175: the only misfit is replaced before the rebuild, so nothing that does not fit is stored. CONTROL for G3.",
+      "tree_bytes_hex" : "0b28b1dc0c14addc0c1d10010201100102d901015895010086020402a7860204028202040086020402a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 175,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatmap-empty-groupelement-part-accept#37",
+      "script" : "[H1] `Coll(1).flatMap({x => If(false, Coll[Box](SELF), Coll[GroupElement]())})` — 0 at cost 138: flatMap copies item by item, and an EMPTY part of another class stores nothing.",
+      "tree_bytes_hex" : "0b16b1dc0c0f10010201d9010104950100830163a7830007",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 138,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatmap-empty-long-part-into-bytes-accept#38",
+      "script" : "[H2] `Coll(1).flatMap({x => If(false, Coll[Byte] constant (1), ConcreteCollection[Long]())})` — 0 at cost 138: an empty long[] part into a byte[] result is never read. The Append node refuses the same pair of arrays (Coll.append_node_array_class P1). SEPARATING: an implementation that reads each part as the result's item type before looking at its items refuses.",
+      "tree_bytes_hex" : "0b15b1dc0c0f10010201d90101049501000e0101830005",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 138,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatmap-long-item-into-bytes-errored#39",
+      "script" : "[H4] `Coll(1).flatMap({x => If(false, Coll[Byte] constant (1), ConcreteCollection[Long](1L))})` — THROWS `ClassCastException: Long cannot be cast to Byte` (in an InvocationTargetException): a Long item into the byte[] result unboxes. CONTROL for H2: a part with an item is checked.",
+      "tree_bytes_hex" : "0b17b1dc0c0f10010201d90101049501000e01018301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
     }
   ]
 }

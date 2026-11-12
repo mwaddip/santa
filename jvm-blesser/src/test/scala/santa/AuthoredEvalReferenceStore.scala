@@ -17,7 +17,10 @@ package santa
 //    left out, being U12 of Coll.item_store_type_check in a SizeOf), plus item classes the rows never used
 //    (BigInt, Option, a function) and receivers they never used (a specialised Coll[Byte], INPUTS). B5/B8
 //    RETURN — `patch` copies the patch's ITEMS, never its array — and F1-F3 pin `patch`'s cost, which counts
-//    both collections (methods.scala:1026: 10 + 1 items is two chunks).
+//    both collections (methods.scala:1026: 10 + 1 items is two chunks). Appended from the second probe
+//    (santa-probe-reference-store-2, spike ReferenceStoreProbe2): a pair's COMPONENT is stored into its
+//    side's typed array (`fromBoxedPairs`, G1-G4), and flatMap's parts are copied item by item, so an empty
+//    part of another class passes even into a primitive result (H1/H2) while a Long item into byte[] throws.
 //  * `Coll.store_runtime_array_class`: the store follows the RUNTIME array, not the static type, so a
 //    WELL-TYPED item is refused when the two disagree. `append` with an empty receiver returns `other`
 //    unchanged (:49), so `Coll[Box]() ++ Coll[GroupElement](g)` is a Coll[Box] over GroupElement[] with no
@@ -198,6 +201,39 @@ object AuthoredEvalReferenceStore {
     Row(OpOps, "X5", "`INPUTS.updated(0, groupGenerator)` — " + throwsItem("sigma.data.CGroupElement") +
       " A receiver from the context, not built by the script. " + sep,
       Right(() => size(updated(any(Inputs), G))), accept = false, "inputs-groupelement-errored"),
+    // ── probe 2 (santa-probe-reference-store-2): a pair's component, flatMap's parts. Appended. ──
+    Row(OpOps, "G1", "`Coll(1).map({x => If(false, (1, SELF), (1, g))})` — THROWS `ArrayStoreException: " +
+      "sigma.data.CGroupElement`, UNWRAPPED: the closure's result check passes (a Tuple2 is a Tuple2), and the " +
+      "MapCollection node's `fromArray` at a pair type goes through `fromBoxedPairs`, which stores each " +
+      "COMPONENT into its side's typed array. SEPARATING: an implementation that checks only the pair, or " +
+      "nothing, returns 1.",
+      Left("0b16b1ad100102d901010495010086020402a78602040282"), accept = false, "map-pair-component-lie-errored"),
+    Row(OpOps, "G2", "`Coll(1).zip(Coll(1)).map({p => If(false, (1, SELF), (1, g))})` — 1 at cost 115: a " +
+      "PairOfCols' `map` builds a generic collection over a `Tuple2[]` directly, so the lie is never stored into " +
+      "a typed side. The setup of G3/G4.",
+      Left("0b1db1addc0c1d10010201100102d901015895010086020402a78602040282"), accept = true,
+      "pair-map-pair-component-lie-accept"),
+    Row(OpOps, "G3", "`G2.reverse` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an " +
+      "InvocationTargetException): `reverse` rebuilds through `fromArray`, and the misfit component meets the " +
+      "typed side there. SEPARATING: an implementation that never rebuilds returns 1.",
+      Left("0b20b1db0c1eaddc0c1d10010201100102d901015895010086020402a78602040282"), accept = false,
+      "pair-map-lie-reverse-errored"),
+    Row(OpOps, "G4", "`G2.updated(0, (1, SELF))` — 1 at cost 175: the only misfit is replaced before the rebuild, " +
+      "so nothing that does not fit is stored. CONTROL for G3.",
+      Left("0b28b1dc0c14addc0c1d10010201100102d901015895010086020402a7860204028202040086020402a7"), accept = true,
+      "pair-map-lie-updated-accept"),
+    Row(OpOps, "H1", "`Coll(1).flatMap({x => If(false, Coll[Box](SELF), Coll[GroupElement]())})` — 0 at cost 138: " +
+      "flatMap copies item by item, and an EMPTY part of another class stores nothing.",
+      Left("0b16b1dc0c0f10010201d9010104950100830163a7830007"), accept = true, "flatmap-empty-groupelement-part-accept"),
+    Row(OpOps, "H2", "`Coll(1).flatMap({x => If(false, Coll[Byte] constant (1), ConcreteCollection[Long]())})` — 0 " +
+      "at cost 138: an empty long[] part into a byte[] result is never read. The Append node refuses the same " +
+      "pair of arrays (Coll.append_node_array_class P1). SEPARATING: an implementation that reads each part as " +
+      "the result's item type before looking at its items refuses.",
+      Left("0b15b1dc0c0f10010201d90101049501000e0101830005"), accept = true, "flatmap-empty-long-part-into-bytes-accept"),
+    Row(OpOps, "H4", "`Coll(1).flatMap({x => If(false, Coll[Byte] constant (1), ConcreteCollection[Long](1L))})` — " +
+      "THROWS `ClassCastException: Long cannot be cast to Byte` (in an InvocationTargetException): a Long item " +
+      "into the byte[] result unboxes. CONTROL for H2: a part with an item is checked.",
+      Left("0b17b1dc0c0f10010201d90101049501000e01018301050502"), accept = false, "flatmap-long-item-into-bytes-errored"),
 
     // ── the runtime array class ──
     Row(OpRuntime, "R1", "`Coll[Box]() ++ Coll[GroupElement](g)` — 1 at cost 86: `append` with an EMPTY " +

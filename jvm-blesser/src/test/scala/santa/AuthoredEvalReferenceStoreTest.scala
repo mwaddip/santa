@@ -43,11 +43,11 @@ class AuthoredEvalReferenceStoreTest extends munit.FunSuite {
       r => fail(s"expected a throw, got $r"))
   }
 
-  test("41 rows: 33 / 4 / 4, with 15 / 2 / 2 refusals; every root a SizeOf at tree v3") {
-    assertEquals(entries(B.OpOps).size, 33)
+  test("48 rows: 40 / 4 / 4, with 18 / 2 / 2 refusals; every root a SizeOf at tree v3") {
+    assertEquals(entries(B.OpOps).size, 40)
     assertEquals(entries(B.OpRuntime).size, 4)
     assertEquals(entries(B.OpAppend).size, 4)
-    assertEquals(entries(B.OpOps).count(errored), 15)
+    assertEquals(entries(B.OpOps).count(errored), 18)
     assertEquals(entries(B.OpRuntime).count(errored), 2)
     assertEquals(entries(B.OpAppend).count(errored), 2)
     List(B.OpOps, B.OpRuntime, B.OpAppend).flatMap(entries).foreach { e =>
@@ -83,7 +83,8 @@ class AuthoredEvalReferenceStoreTest extends munit.FunSuite {
       "A3" -> (1, 124), "A4" -> (3, 59), "B2" -> (1, 110), "B3" -> (2, 150), "B5" -> (6, 70), "B6" -> (6, 100),
       "B7" -> (4, 90), "B8" -> (3, 85), "B10" -> (2, 110), "C2" -> (1, 135), "C3" -> (1, 95), "C5" -> (1, 175),
       "D2" -> (1, 90), "D4" -> (1, 163), "D8" -> (1, 80), "F1" -> (11, 72), "F2" -> (10, 70), "F3" -> (12, 72),
-      "R1" -> (1, 86), "R4" -> (1, 80), "P2" -> (4, 66), "P4" -> (1, 86))
+      "R1" -> (1, 86), "R4" -> (1, 80), "P2" -> (4, 66), "P4" -> (1, 86),
+      "G2" -> (1, 115), "G4" -> (1, 175), "H1" -> (0, 138), "H2" -> (0, 138))
     val accepts = B.Rows.filter(_.accept)
     assertEquals(accepts.map(_.id).toSet, want.keySet)
     accepts.foreach { r =>
@@ -103,7 +104,10 @@ class AuthoredEvalReferenceStoreTest extends munit.FunSuite {
       "R2" -> Seq("ArrayStoreException: sigma.data.CBox"),
       "R3" -> Seq("ClassCastException", "java.lang.Integer", "java.lang.Long"),
       "P1" -> Seq("ArrayStoreException", "can not copy long[] into int[]"),
-      "P3" -> Seq("ArrayStoreException", "arraycopy")) ++
+      "P3" -> Seq("ArrayStoreException", "arraycopy"),
+      "G1" -> Seq("ArrayStoreException: sigma.data.CGroupElement"),
+      "G3" -> Seq("InvocationTargetException", "ArrayStoreException: sigma.data.CGroupElement"),
+      "H4" -> Seq("ClassCastException", "java.lang.Long", "java.lang.Byte")) ++
       Seq("A2", "B1", "C1", "C4", "D3", "X1", "X2", "X3", "X5").map(_ -> Seq("ArrayStoreException: sigma.data.CGroupElement"))
     val refusals = B.Rows.filterNot(_.accept)
     assertEquals(refusals.map(_.id).toSet, want.keySet)
@@ -111,6 +115,9 @@ class AuthoredEvalReferenceStoreTest extends munit.FunSuite {
       val c = chain(row(r.op, r.id).hcursor.get[String]("tree_bytes_hex").toOption.get)
       want(r.id).foreach(s => assert(c.contains(s), s"${r.id} must show '$s', got: ${c.take(240)}"))
     }
+    // G1's store is in the MapCollection NODE's fromArray, with no reflective invoke around it
+    val g1 = chain(row(B.OpOps, "G1").hcursor.get[String]("tree_bytes_hex").toOption.get)
+    assert(g1.startsWith("java.lang.ArrayStoreException"), s"G1 must be unwrapped, got: ${g1.take(160)}")
   }
 
   test("envelope + write staging files") {
