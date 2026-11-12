@@ -6148,6 +6148,40 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/MethodCall.numeric_receiver_width.json" : {
+      "accepts" : 2,
+      "entries" : 12,
+      "methods" : [
+        "2:6 Byte.toBytes",
+        "4:6 Int.toBytes",
+        "4:7 Int.toBits",
+        "4:8 Int.bitwiseInverse",
+        "5:12 Long.shiftLeft",
+        "5:13 Long.shiftRight",
+        "5:6 Long.toBytes",
+        "5:9 Long.bitwiseOr",
+        "6:6 BigInt.toBytes"
+      ],
+      "op" : "MethodCall.numeric_receiver_width",
+      "ops" : [
+        "Const",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 10,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 10,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/MethodCall.receiver_kind.json" : {
       "accepts" : 4,
       "entries" : 10,
@@ -12594,6 +12628,7 @@
     },
     "2:6" : {
       "families" : [
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Byte_methods_6.0_features.json",
         "v6/spec/Global_fromBigEndianBytes.json"
       ],
@@ -12729,6 +12764,7 @@
     "4:6" : {
       "families" : [
         "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Global_fromBigEndianBytes.json",
         "v6/spec/Int_6.0_methods.json"
       ],
@@ -12737,12 +12773,14 @@
     "4:7" : {
       "families" : [
         "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Int_6.0_methods.json"
       ],
       "name" : "Int.toBits"
     },
     "4:8" : {
       "families" : [
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Int_6.0_methods.json"
       ],
       "name" : "Int.bitwiseInverse"
@@ -12767,18 +12805,21 @@
     },
     "5:12" : {
       "families" : [
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Long_6.0_methods.json"
       ],
       "name" : "Long.shiftLeft"
     },
     "5:13" : {
       "families" : [
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Long_6.0_methods.json"
       ],
       "name" : "Long.shiftRight"
     },
     "5:6" : {
       "families" : [
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Global_fromBigEndianBytes.json",
         "v6/spec/Long_6.0_methods.json"
       ],
@@ -12798,6 +12839,7 @@
     },
     "5:9" : {
       "families" : [
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Long_6.0_methods.json"
       ],
       "name" : "Long.bitwiseOr"
@@ -12843,6 +12885,7 @@
     "6:6" : {
       "families" : [
         "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/BigInt_6.0_features.json",
         "v6/spec/Global_fromBigEndianBytes.json"
       ],
@@ -14250,6 +14293,7 @@
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
@@ -16043,6 +16087,7 @@
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
+        "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Numeric.methodcall_ids.json",
@@ -17518,12 +17563,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2490,
+    "accepts" : 2492,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2919,
-    "files" : 329,
-    "rejects" : 429,
+    "entries" : 2931,
+    "files" : 330,
+    "rejects" : 439,
     "unwalked" : 11
   }
 }

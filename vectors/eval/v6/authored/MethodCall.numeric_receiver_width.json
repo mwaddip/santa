@@ -1,0 +1,266 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "MethodCall.numeric_receiver_width",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-numeric-receiver-width",
+  "entries" : [
+    {
+      "name" : "long-tobytes-on-long-accept#0",
+      "script" : "[N0] `SLong.toBytes on Long 1` — the 8 big-endian bytes 00…01, at cost 14. CONTROL: the receiver is the owner's width.",
+      "tree_bytes_hex" : "0b05db05060502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            }
+          ]
+        },
+        "cost" : 14,
+        "error" : null
+      }
+    },
+    {
+      "name" : "slong-tobytes-on-int-1-errored#1",
+      "script" : "[N1] `SLong.toBytes on Int 1` — THROWS `ClassCastException` to java.lang.Long: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b05db05060402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sint-tobytes-on-long-1-errored#2",
+      "script" : "[N2] `SInt.toBytes on Long 1` — THROWS `ClassCastException` to java.lang.Integer: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b05db04060502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sint-tobits-on-long-1-errored#3",
+      "script" : "[N3] `SInt.toBits on Long 1` — THROWS `ClassCastException` to java.lang.Integer: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b05db04070502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sint-bitwiseinverse-on-long-1-errored#4",
+      "script" : "[N4] `SInt.bitwiseInverse on Long 1` — THROWS `ClassCastException` to java.lang.Integer: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b05db04080502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "long-shiftleft-on-long-accept#5",
+      "script" : "[N5] `SLong.shiftLeft(1) on Long 1` — Long 2, at cost 19. CONTROL: the receiver is the owner's width.",
+      "tree_bytes_hex" : "0b08dc050c0502010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "2"
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "slong-shiftleft-1-on-int-1-errored#6",
+      "script" : "[N6] `SLong.shiftLeft(1) on Int 1` — THROWS `ClassCastException` to java.lang.Long: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b08dc050c0402010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "slong-shiftright-1-on-int-1-errored#7",
+      "script" : "[N7] `SLong.shiftRight(1) on Int 1` — THROWS `ClassCastException` to java.lang.Long: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b08dc050d0402010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sbigint-tobytes-on-int-1-errored#8",
+      "script" : "[N8] `SBigInt.toBytes on Int 1` — THROWS `ClassCastException` to sigma.BigInt: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b05db06060402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sbyte-tobytes-on-int-1-errored#9",
+      "script" : "[N9] `SByte.toBytes on Int 1` — THROWS `ClassCastException` to java.lang.Byte: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b05db02060402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "slong-bitwiseor-1-on-int-1-errored#10",
+      "script" : "[N10] `SLong.bitwiseOr(1) on Int 1` — THROWS `ClassCastException` to java.lang.Long: the handler casts the receiver with the owner's `obj.asInstanceOf[…]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b08dc05090402010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "slong-bitwiseor-int-1-on-long-1-errored#11",
+      "script" : "[A1] `SLong.bitwiseOr(Int 1) on Long 1` — THROWS `ClassCastException` to java.lang.Long: the handler casts the ARGUMENT with `other.head.asInstanceOf[Long]` (methods.scala:312-449), and the owner is the type code in the bytes, not the operand's type. SEPARATING: an evaluator that picks its implementation by the VALUE's kind returns a value.",
+      "tree_bytes_hex" : "0b08dc05090502010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
