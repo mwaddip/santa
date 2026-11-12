@@ -1,0 +1,188 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "BigInt.shift_and_inverse_range_edges",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-bigint-wide-values",
+  "entries" : [
+    {
+      "name" : "one-shiftleft-255-errored#0",
+      "script" : "[H1] `BigInt(1).shiftLeft(255)` at tree v3 — THROWS `ArithmeticException: BigInteger out of 256 bit range`: `shiftLeft` checks its result with toSignedBigIntValueExact (CBigInt.scala:67), before the constructor does. SEPARATING: a 256-bit shift that wraps returns BigInt.MIN.",
+      "tree_bytes_hex" : "0b0adc060c0601010104fe03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "two-shiftleft-255-errored#1",
+      "script" : "[H2] `BigInt(2).shiftLeft(255)` at tree v3 — THROWS, as H1. SEPARATING: a wrapping shift returns 0.",
+      "tree_bytes_hex" : "0b0adc060c0601020104fe03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "max-shiftleft-1-errored#2",
+      "script" : "[H3] `BigInt.MAX.shiftLeft(1)` at tree v3 — THROWS, as H1. SEPARATING: a wrapping shift returns -2.",
+      "tree_bytes_hex" : "0b28dc060c06207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "one-shiftleft-254-accept#3",
+      "script" : "[H4] `BigInt(1).shiftLeft(254)` at tree v3 — 2^254 at cost 19. CONTROL: the largest power of two in range.",
+      "tree_bytes_hex" : "0b0adc060c0601010104fc03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "28948022309329048855892746252171976963317496166410141009864396001978282409984"
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "minus-one-shiftleft-255-accept#4",
+      "script" : "[H5] `BigInt(-1).shiftLeft(255)` at tree v3 — BigInt.MIN at cost 19. CONTROL: the result has bitLength 255 and fits, so the check is on the RANGE, not on the shift amount or the sign bit.",
+      "tree_bytes_hex" : "0b0adc060c0601ff0104fe03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "min-shiftright-255-accept#5",
+      "script" : "[R1] `BigInt.MIN.shiftRight(255)` at tree v3 — -1 at cost 19: an in-range value shifted right stays in range.",
+      "tree_bytes_hex" : "0b29dc060d062080000000000000000000000000000000000000000000000000000000000000000104fe03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-1"
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "max-shiftright-255-accept#6",
+      "script" : "[R2] `BigInt.MAX.shiftRight(255)` at tree v3 — 0 at cost 19.",
+      "tree_bytes_hex" : "0b29dc060d06207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0104fe03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "min-bitwiseinverse-accept#7",
+      "script" : "[I1] `BigInt.MIN.bitwiseInverse` at tree v3 — BigInt.MAX at cost 14: `~x = -x - 1` maps the range onto itself, so the inverse of either edge is the other.",
+      "tree_bytes_hex" : "0b25db060806208000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 14,
+        "error" : null
+      }
+    },
+    {
+      "name" : "max-bitwiseinverse-accept#8",
+      "script" : "[I2] `BigInt.MAX.bitwiseInverse` at tree v3 — BigInt.MIN at cost 14.",
+      "tree_bytes_hex" : "0b25db060806207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 14,
+        "error" : null
+      }
+    }
+  ]
+}

@@ -4471,6 +4471,34 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/BigInt.shift_and_inverse_range_edges.json" : {
+      "accepts" : 6,
+      "entries" : 9,
+      "methods" : [
+        "6:12 BigInt.shiftLeft",
+        "6:13 BigInt.shiftRight",
+        "6:8 BigInt.bitwiseInverse"
+      ],
+      "op" : "BigInt.shift_and_inverse_range_edges",
+      "ops" : [
+        "Const",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 6,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Box.getReg_adversarial.json" : {
       "accepts" : 1,
       "entries" : 3,
@@ -5958,6 +5986,43 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/GroupElement.exp_methodcall_wide_exponent.json" : {
+      "accepts" : 4,
+      "entries" : 5,
+      "methods" : [
+        "7:3 GroupElement.exp"
+      ],
+      "op" : "GroupElement.exp_methodcall_wide_exponent",
+      "ops" : [
+        "/",
+        "Const",
+        "Exponentiate",
+        "GroupGenerator$",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/HOF_FunDef_polymorphic_identity.json" : {
       "accepts" : 1,
       "entries" : 1,
@@ -6484,6 +6549,33 @@
           "has_size" : true,
           "rejects" : 2,
           "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SubstConstants.wide_new_value.json" : {
+      "accepts" : 5,
+      "entries" : 7,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.wide_new_value",
+      "ops" : [
+        "/",
+        "ConcreteCollection",
+        "Const",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 2,
+          "tree_version" : 0
         }
       ],
       "unwalked" : 0,
@@ -12858,12 +12950,14 @@
     },
     "6:12" : {
       "families" : [
+        "v6/authored/BigInt.shift_and_inverse_range_edges.json",
         "v6/spec/BigInt_6.0_features.json"
       ],
       "name" : "BigInt.shiftLeft"
     },
     "6:13" : {
       "families" : [
+        "v6/authored/BigInt.shift_and_inverse_range_edges.json",
         "v6/spec/BigInt_6.0_features.json"
       ],
       "name" : "BigInt.shiftRight"
@@ -12899,6 +12993,7 @@
     },
     "6:8" : {
       "families" : [
+        "v6/authored/BigInt.shift_and_inverse_range_edges.json",
         "v6/spec/BigInt_6.0_features.json"
       ],
       "name" : "BigInt.bitwiseInverse"
@@ -12923,6 +13018,7 @@
     },
     "7:3" : {
       "families" : [
+        "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json"
       ],
       "name" : "GroupElement.exp"
@@ -13386,6 +13482,8 @@
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/BigInt.range_check_tree_version.json",
+        "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
+        "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
         "v6/captured/h1542-1b5c260a496a.json",
@@ -14188,6 +14286,7 @@
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -14272,6 +14371,7 @@
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/BigInt.range_check_tree_version.json",
+        "v6/authored/BigInt.shift_and_inverse_range_edges.json",
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
@@ -14293,6 +14393,7 @@
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
@@ -14300,6 +14401,7 @@
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_type_check.json",
@@ -14711,6 +14813,7 @@
       "families" : [
         "v5/spec/GroupElement.exp_equivalence.json",
         "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json"
       ],
       "op_codes" : [
@@ -15648,6 +15751,7 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.item_store_type_check.json",
+        "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Numeric.methodcall_ids.json"
@@ -16045,6 +16149,7 @@
         "v6/authored/AvlTree.insert_wrong_tree.json",
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
+        "v6/authored/BigInt.shift_and_inverse_range_edges.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Coll.flatMap_element_type.json",
@@ -16085,6 +16190,7 @@
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
+        "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
@@ -17044,6 +17150,7 @@
       "families" : [
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -17563,12 +17670,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2492,
+    "accepts" : 2507,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2931,
-    "files" : 330,
-    "rejects" : 439,
+    "entries" : 2952,
+    "files" : 333,
+    "rejects" : 445,
     "unwalked" : 11
   }
 }

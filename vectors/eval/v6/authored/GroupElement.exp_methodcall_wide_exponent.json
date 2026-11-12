@@ -1,0 +1,110 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "GroupElement.exp_methodcall_wide_exponent",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-bigint-wide-values",
+  "entries" : [
+    {
+      "name" : "x-exponent-v0-accept#0",
+      "script" : "[M1] `MethodCall(groupGenerator, GroupElement.exp, X)` at tree v0 — g^(2^255) at cost 949: `ExponentiateMethod` (id 3) is in the table below v3 and `invokeFixed` applies no range check, so the call returns the point the node returns (E1). SEPARATING: an implementation that refuses a BigInt outside the range as an exponent throws.",
+      "tree_bytes_hex" : "00dc070382019d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02b23790a42be63e1b251ad6c94fdef07271ec0aada31db6c3e8bd32043f8be384"
+        },
+        "cost" : 949,
+        "error" : null
+      }
+    },
+    {
+      "name" : "x-exponent-v3-errored#1",
+      "script" : "[M1] `MethodCall(groupGenerator, GroupElement.exp, X)` at tree v3 — THROWS at X itself, `ArithmeticException: Too big bigint value` (the CBigInt constructor checks from v3).",
+      "tree_bytes_hex" : "0b2bdc070382019d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "y-exponent-v0-accept#2",
+      "script" : "[M2] `MethodCall(groupGenerator, GroupElement.exp, Y)` at tree v0 — the in-range twin: g^(-6) at cost 949, M1's cost.",
+      "tree_bytes_hex" : "00dc070382019d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02fff97bd5755eeea420453a14355235d382f6472f8568a18b2f057a1460297556"
+        },
+        "cost" : 949,
+        "error" : null
+      }
+    },
+    {
+      "name" : "y-exponent-v3-accept#3",
+      "script" : "[M2] `MethodCall(groupGenerator, GroupElement.exp, Y)` at tree v3 — the same point at 949.",
+      "tree_bytes_hex" : "0b0cdc070382019d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02fff97bd5755eeea420453a14355235d382f6472f8568a18b2f057a1460297556"
+        },
+        "cost" : 949,
+        "error" : null
+      }
+    },
+    {
+      "name" : "x-exponent-node-v0-accept#4",
+      "script" : "[E1] `groupGenerator.exp(X)`, the `Exponentiate` NODE, at tree v0 — the same g^(2^255) as M1, at cost 945: the method-call form costs 4 more, and the exponent's range moves neither.",
+      "tree_bytes_hex" : "009f829d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02b23790a42be63e1b251ad6c94fdef07271ec0aada31db6c3e8bd32043f8be384"
+        },
+        "cost" : 945,
+        "error" : null
+      }
+    }
+  ]
+}

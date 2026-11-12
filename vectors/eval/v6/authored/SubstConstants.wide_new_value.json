@@ -1,0 +1,409 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "SubstConstants.wide_new_value",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-bigint-wide-values",
+  "entries" : [
+    {
+      "name" : "x-at-position-0-errored#0",
+      "script" : "[S1] `substConstants(t, Coll(0), Coll(X))` at tree v0 — THROWS `IllegalArgumentException: requirement failed: BigInt value 2^255 doesn't fit into 256 bits`, the constant WRITER's `fitsIn256Bits` requirement: X is written at position 0, the tree's one constant. SEPARATING: a lifter that range-checks every new value throws on S2-S4 too.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f827300821001008301069d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "x-at-position-past-the-constants-accept#1",
+      "script" : "[S2] `substConstants(t, Coll(5), Coll(X))` at tree v0 — `t` UNCHANGED at cost 265: position 5 names no constant of `t`, so X is never written and the writer's range check never runs. SEPARATING: an implementation that range-checks the lifted values throws.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f8273008210010a8301069d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : -109
+            },
+            {
+              "kind" : "Byte",
+              "value" : -97
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            }
+          ]
+        },
+        "cost" : 265,
+        "error" : null
+      }
+    },
+    {
+      "name" : "x-at-negative-position-accept#2",
+      "script" : "[S3] `substConstants(t, Coll(-1), Coll(X))` at tree v0 — `t` UNCHANGED at cost 265: a negative position names no constant either. SEPARATING, as S2.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f827300821001018301069d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : -109
+            },
+            {
+              "kind" : "Byte",
+              "value" : -97
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            }
+          ]
+        },
+        "cost" : 265,
+        "error" : null
+      }
+    },
+    {
+      "name" : "y-then-x-at-position-0-accept#3",
+      "script" : "[S4] `substConstants(t, Coll(0, 0), Coll(Y, X))` at tree v0 — `t` with -6, `10010601fad1939f82730082`, at cost 300: the FIRST value to name a position is the one written, so Y is written and X is not. SEPARATING: an implementation that writes the last value, or range-checks every value, throws.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f82730082100200008302069d0601060601ff9d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : -6
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : -109
+            },
+            {
+              "kind" : "Byte",
+              "value" : -97
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            }
+          ]
+        },
+        "cost" : 300,
+        "error" : null
+      }
+    },
+    {
+      "name" : "x-then-y-at-position-0-errored#4",
+      "script" : "[S5] `substConstants(t, Coll(0, 0), Coll(X, Y))` at tree v0 — THROWS, as S1: X is first, so X is written and the constant WRITER's `fitsIn256Bits` requirement fires.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f82730082100200008302069d062080000000000000000000000000000000000000000000000000000000000000000601ff9d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "twin-y-at-position-past-the-constants-accept#5",
+      "script" : "[S2t] `substConstants(t, Coll(5), Coll(Y))` at tree v0 — THE TWIN of S2, in range: `t` unchanged at 265, the same cost, so X's magnitude costs nothing.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f8273008210010a8301069d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : -109
+            },
+            {
+              "kind" : "Byte",
+              "value" : -97
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            }
+          ]
+        },
+        "cost" : 265,
+        "error" : null
+      }
+    },
+    {
+      "name" : "twin-y-then-y-at-position-0-accept#6",
+      "script" : "[S4t] `substConstants(t, Coll(0, 0), Coll(Y, Y))` at tree v0 — THE TWIN of S4: the same -6 tree at 300, the same cost.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f82730082100200008302069d0601060601ff9d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : -6
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : -109
+            },
+            {
+              "kind" : "Byte",
+              "value" : -97
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            }
+          ]
+        },
+        "cost" : 300,
+        "error" : null
+      }
+    }
+  ]
+}
