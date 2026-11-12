@@ -66,13 +66,13 @@ class AuthoredBlockKeptTreeBytesTest extends munit.FunSuite {
   }
 
   test("every reject states why it separates, and the control is marked") {
-    // The block vector schema carries no prose field, so a row's role is in-source documentation
-    // (AuthoredBlockKeptTreeBytes.rationales) rather than a vector field. Held to the same
-    // discipline as the eval and transaction families.
-    val r = AuthoredBlockKeptTreeBytes.rationales
+    // A row's role is its entry's `description`, held to the same discipline as the eval and
+    // transaction families.
+    val r = es.map(e => name(e) ->
+      e.hcursor.get[String]("description").getOrElse(fail(s"no description for ${name(e)}"))).toMap
     assertEquals(r.size, 4)
     es.filter(e => !valid(e)).foreach { e =>
-      val d = r.getOrElse(name(e), fail(s"no rationale for ${name(e)}"))
+      val d = r(name(e))
       assert(d.contains("SEPARATING") || d.contains("CONTROL"), s"${name(e)}: $d")
     }
     assert(r.collect { case (k, v) if k.contains("canonical-control") => v }

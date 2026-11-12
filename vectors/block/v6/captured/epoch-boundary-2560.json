@@ -6,6 +6,7 @@
     {
       "name" : "epoch-boundary-2560",
       "source" : "testnet:testnet-epoch-boundary-2560@2560",
+      "description" : "Testnet block 2560, captured with its ADProofs: an epoch boundary (2560 % 128 == 0), and the corpus's only one. At an epoch's first block the node compares the epoch's declared block version with the header's (`exBlockVersion`); it passes here, so an implementation that applies the gate wrongly at a boundary fails this block. The in-force parameters come from the previous boundary, 2432. It is the donor of the version-gate mutation.",
       "parent_digest" : "c0d70c7a1008fef090973b2a6c80c5ff86f581cebb8397614b6bb321192ea2ab0d",
       "headers" : [
         {

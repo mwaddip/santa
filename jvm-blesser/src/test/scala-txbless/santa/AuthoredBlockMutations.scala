@@ -30,11 +30,13 @@ object AuthoredBlockMutations {
     * contain (the recipe-intent check) + the entry transform + the captured donor
     * it mutates (mid-epoch 2666 by default; version-gate needs the boundary donor —
     * the gate only fires at epochStarts). `entryName` is the committed entry's name where it
-    * is not the class name: entry names are identities results are keyed by, never renamed. */
+    * is not the class name: entry names are identities results are keyed by, never renamed.
+    * `description` is the entry's prose (it replaces the donor's own). */
   private final case class Mutation(name: String, reasonMustContain: String,
                                     mutate: Json => Json,
                                     donorSlug: String = MidEpochDonor,
-                                    entryName: Option[String] = None)
+                                    entryName: Option[String] = None,
+                                    description: String)
 
   // ── hex tampering helpers (length-preserving, stay lowercase hex) ──────────
 
@@ -55,6 +57,14 @@ object AuthoredBlockMutations {
 
   private def cursorAt(entry: Json, path: Seq[String]): io.circe.ACursor =
     path.foldLeft(entry.hcursor: io.circe.ACursor)((c, p) => c.downField(p))
+
+  /** `entry` with its `description` set, placed right after `source` (the donor's own is dropped). */
+  private def withDescription(entry: Json, d: String): Json = entry.mapObject { o =>
+    io.circe.JsonObject.fromIterable(o.toList.filterNot(_._1 == "description").flatMap {
+      case ("source", v) => List("source" -> v, "description" -> Json.fromString(d))
+      case kv            => List(kv)
+    })
+  }
 
   private def setIn(entry: Json, path: Seq[String], value: Json): Json =
     cursorAt(entry, path).set(value).top
@@ -111,27 +121,50 @@ object AuthoredBlockMutations {
   private val Mutations: Seq[Mutation] = Seq(
     // 1. shrink maxBlockCost below the block's real cost (39379) → aggregation reject
     Mutation("params-shrink-maxBlockCost", "cost",
-      e => setIn(e, Seq("parameters", "table", "4"), Json.fromInt(10000))),
+      e => setIn(e, Seq("parameters", "table", "4"), Json.fromInt(10000)),
+      description = "Block 2666 with the in-force `maxBlockCost` (parameter 4) shrunk to 10000, below the " +
+        "block's real cost: the transactions' accumulated cost exceeds the limit and the block is INVALID. " +
+        "Every other byte is the captured donor's (bigint-downcast-2666, a mid-epoch block)."),
     // 2. corrupt the declared post-state — header tamper, dies at PoW on the JVM;
     //    probes the post-digest comparison on conformers without a PoW check
     Mutation("stateroot-flip", "hdrPoW",
-      e => updateHexIn(e, Seq("block", "header", "stateRoot"), flipLastNibble)),
+      e => updateHexIn(e, Seq("block", "header", "stateRoot"), flipLastNibble),
+      description = "Block 2666 with the last nibble of the header's declared post-state root (`stateRoot`) " +
+        "flipped. Autolykos hashes the header, so the JVM rejects at PoW (`hdrPoW`) before it compares " +
+        "digests; an implementation without a PoW check reaches the post-digest comparison instead. Either " +
+        "way the block is INVALID."),
     // 3. tamper proof bytes → proofs-section digest no longer matches adProofsRoot
     Mutation("adproof-tamper", "bsCorrespondsToHeader: blake2b256",
-      e => updateHexIn(e, Seq("block", "adProofs", "proofBytes"), flipMidByte)),
+      e => updateHexIn(e, Seq("block", "adProofs", "proofBytes"), flipMidByte),
+      description = "Block 2666 with one byte flipped in the middle of the ADProofs bytes: the proofs " +
+        "section no longer hashes to the header's `adProofsRoot`, so the block is INVALID before any proof " +
+        "is applied. The header and its PoW are untouched."),
     // 4. reorder the txs section → computed transactionsRoot != sealed commitment
-    Mutation("txs-reorder", "transactionsRoot mismatch", swapFirstTwoTxs),
+    Mutation("txs-reorder", "transactionsRoot mismatch", swapFirstTwoTxs,
+      description = "Block 2666 with its first two transactions swapped in the transactions section " +
+        "(re-framed bytes; nothing but the order changes): the computed `transactionsRoot` no longer matches " +
+        "the header's, and the block is INVALID. The header and its PoW are untouched, so the section-digest " +
+        "check itself fires."),
     // 5. corrupt the Autolykos solution nonce → PoW invalid (the intended PoW probe)
     Mutation("pow-solution-flip", "hdrPoW",
-      e => updateHexIn(e, Seq("block", "header", "powSolutions", "n"), flipMidByte)),
+      e => updateHexIn(e, Seq("block", "header", "powSolutions", "n"), flipMidByte),
+      description = "Block 2666 with one byte of the Autolykos solution's nonce (`powSolutions.n`) flipped: " +
+        "the header's PoW fails (`hdrPoW`) and the block is INVALID."),
     // 6. shrink the epoch's declared blockVersion below the header's → version gate
     //    (boundary donor — the only place the JVM makes this comparison)
     Mutation("version-gate", "exBlockVersion",
       e => setIn(e, Seq("parameters", "table", "123"), Json.fromInt(3)),
-      donorSlug = BoundaryDonor),
+      donorSlug = BoundaryDonor,
+      description = "Block 2560, an epoch boundary, with the epoch's declared block version (parameter 123) " +
+        "set to 3, below the header's version 4: `exBlockVersion` fails and the block is INVALID. The node " +
+        "makes this comparison only at an epoch's first block, so the mutation needs a boundary donor; at a " +
+        "mid-epoch block it would encode a rule stricter than consensus."),
     // 7. no ADProofs section at all — the degenerate limit of adproof-tamper (contract §8):
     //    the empty bytes cannot hash to the header's adProofsRoot
-    Mutation("proofless", "blake2b256(proofBytes)", dropProofs, entryName = Some("proofless-2666")))
+    Mutation("proofless", "blake2b256(proofBytes)", dropProofs, entryName = Some("proofless-2666"),
+      description = "Block 2666 with no ADProofs section: its bytes and its digest both empty. The empty " +
+        "bytes cannot hash to the header's `adProofsRoot`, so the block is INVALID: the degenerate limit of " +
+        "adproof-tamper."))
 
   // ── donor loading ───────────────────────────────────────────────────────────
 
@@ -151,9 +184,10 @@ object AuthoredBlockMutations {
     val donor = donors.getOrElse(m.donorSlug,
       sys.error(s"AuthoredBlockMutations[${m.name}]: donor ${m.donorSlug} not loaded"))
     val mutated = m.mutate(donor)
-    val named = setIn(
+    require(m.description.nonEmpty, s"AuthoredBlockMutations[${m.name}]: every mutation states what it breaks")
+    val named = withDescription(setIn(
       setIn(mutated, Seq("name"), Json.fromString(m.entryName.getOrElse(m.name))),
-      Seq("source"), Json.fromString(s"santa:mutation:${m.name}:over:${m.donorSlug}"))
+      Seq("source"), Json.fromString(s"santa:mutation:${m.name}:over:${m.donorSlug}")), m.description)
 
     val (_, actuals) = santa.runner.BlockEngine.blockEntry(named)
     val ac = actuals.hcursor

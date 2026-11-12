@@ -6,6 +6,7 @@
     {
       "name" : "atleast-degenerate-bound-184137",
       "source" : "testnet:testnet-atleast-degenerate-bound@184137",
+      "description" : "Testnet block 184,137, captured with its ADProofs while the spent box was still unspent. Transaction 1's input 0 spends a V0 self-replicating contract (10 ERG, R4-R7) whose script has `atLeast(1, conditions)` over an EMPTY `Coll[SigmaProp]`. The JVM reduces the degenerate bound to `FalseProp`, which the surrounding logic accommodates, so the spend is VALID. The network (JVM 6.0.x) accepted it; ergo-node-rust, riding the sigma-rust fork, rejected it (`Atleast: bound 1 > input size 0`) and stopped at 184,136.",
       "parent_digest" : "70f31f6736f8b99fd77815671b95dfa7da2672933eaa69affcd40de942e5cc4316",
       "headers" : [
         {

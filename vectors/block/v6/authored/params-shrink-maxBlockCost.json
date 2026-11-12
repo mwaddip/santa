@@ -6,6 +6,7 @@
     {
       "name" : "params-shrink-maxBlockCost",
       "source" : "santa:mutation:params-shrink-maxBlockCost:over:bigint-downcast-2666",
+      "description" : "Block 2666 with the in-force `maxBlockCost` (parameter 4) shrunk to 10000, below the block's real cost: the transactions' accumulated cost exceeds the limit and the block is INVALID. Every other byte is the captured donor's (bigint-downcast-2666, a mid-epoch block).",
       "parent_digest" : "ac66508bc8d423d8cd722b006f109b47d877338250017421ef810cc4ce11bd6d0d",
       "headers" : [
         {

@@ -6,6 +6,7 @@
     {
       "name" : "adproof-tamper",
       "source" : "santa:mutation:adproof-tamper:over:bigint-downcast-2666",
+      "description" : "Block 2666 with one byte flipped in the middle of the ADProofs bytes: the proofs section no longer hashes to the header's `adProofsRoot`, so the block is INVALID before any proof is applied. The header and its PoW are untouched.",
       "parent_digest" : "ac66508bc8d423d8cd722b006f109b47d877338250017421ef810cc4ce11bd6d0d",
       "headers" : [
         {

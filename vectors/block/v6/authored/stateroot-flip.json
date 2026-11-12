@@ -6,6 +6,7 @@
     {
       "name" : "stateroot-flip",
       "source" : "santa:mutation:stateroot-flip:over:bigint-downcast-2666",
+      "description" : "Block 2666 with the last nibble of the header's declared post-state root (`stateRoot`) flipped. Autolykos hashes the header, so the JVM rejects at PoW (`hdrPoW`) before it compares digests; an implementation without a PoW check reaches the post-digest comparison instead. Either way the block is INVALID.",
       "parent_digest" : "ac66508bc8d423d8cd722b006f109b47d877338250017421ef810cc4ce11bd6d0d",
       "headers" : [
         {

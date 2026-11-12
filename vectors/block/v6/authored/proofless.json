@@ -6,6 +6,7 @@
     {
       "name" : "proofless-2666",
       "source" : "santa:mutation:proofless:over:bigint-downcast-2666",
+      "description" : "Block 2666 with no ADProofs section: its bytes and its digest both empty. The empty bytes cannot hash to the header's `adProofsRoot`, so the block is INVALID: the degenerate limit of adproof-tamper.",
       "parent_digest" : "ac66508bc8d423d8cd722b006f109b47d877338250017421ef810cc4ce11bd6d0d",
       "headers" : [
         {

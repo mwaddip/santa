@@ -6,6 +6,7 @@
     {
       "name" : "deserialize-context-111927",
       "source" : "testnet:testnet-deserialize-context@111927",
+      "description" : "Testnet block 111,927, captured with its ADProofs. Transaction 2's input 0 spends a V3 box whose tree is `if (upcast(HEIGHT) < SELF.R7.get + 50) { ... deserializeContext(0) } else { ... }`. At this height the condition is false, so the live branch never reads context variable 0, and the input's empty proof and empty extension reduce to `sigmaProp(true)`: VALID. The network (JVM 6.0.x) accepted it; ergo-node-rust, riding the sigma-rust fork, rejected it and stopped at 111,926, because its eager substitution evaluated the dead branch's `deserializeContext(0)` over the absent variable.",
       "parent_digest" : "9cfebb3ff10c37078fad0801db84d8c340ef5a3aeef79f4de4edca1a3c282ed115",
       "headers" : [
         {

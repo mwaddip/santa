@@ -119,6 +119,11 @@ hardcoded count (currently Rudolph · Dasher · Blitzen develop & eni · Comet);
 **1705/1705**, matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared
 verdict.)
 
+**Prose travels with the vector and is never graded.** An entry may carry free prose saying why it exists and
+what it pins: `script` in the eval tier, an optional `description` in every other tier. A runner ignores it and
+no comparator reads it, so editing prose cannot change a verdict. (`conform` copies an eval entry's `script`
+into its red-entry detail, for the scoreboard.)
+
 ## 5. Deferred (named, not silent)
 
 - **Rendered report** (HTML/SVG) — `./conform` prints a per-slice terminal table; an exported report is not built.

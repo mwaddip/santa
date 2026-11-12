@@ -48,8 +48,10 @@ object CapturedBlock {
   private val FindingsDir = "../docs/findings"
 
   /** One block seed. epochBoundary = the height of the epoch-boundary block
-    * whose extension carries the in-force system parameters. */
-  private final case class BlockSeed(slug: String, dir: String, height: Int, epochBoundary: Int)
+    * whose extension carries the in-force system parameters; description = the
+    * entry's prose, why the block is in the corpus. */
+  private final case class BlockSeed(slug: String, dir: String, height: Int, epochBoundary: Int,
+                                     description: String)
 
   // powhit-return-type-28474 is EXCLUDED: no canonical proof exists yet — the rust
   // AVL prover serializes its lone data-input Lookup non-canonically (verifies, but
@@ -62,10 +64,32 @@ object CapturedBlock {
   // and it donates the version-gate mutation, the one class only meaningful at a
   // boundary. In-force params for validating it come from the PREVIOUS boundary, 2432.
   private val Seeds: Seq[BlockSeed] = Seq(
-    BlockSeed("bigint-downcast-2666", "testnet-bigint-downcast-v3", 2666, 2560),
-    BlockSeed("deserialize-context-111927", "testnet-deserialize-context", 111927, 111872),
-    BlockSeed("atleast-degenerate-bound-184137", "testnet-atleast-degenerate-bound", 184137, 184064),
-    BlockSeed("epoch-boundary-2560", "testnet-epoch-boundary-2560", 2560, 2432))
+    BlockSeed("bigint-downcast-2666", "testnet-bigint-downcast-v3", 2666, 2560,
+      "Testnet block 2666, captured with its ADProofs. Transaction 1's input 0 runs `Downcast(BigInt, SLong)` " +
+      "on 67,500,000,000 under ErgoTree V3; the value fits a Long, so the downcast returns it and the block " +
+      "is VALID. The network (JVM sigma-state 6.0.3) accepted the block; ergo-node-rust, riding the sigma-rust " +
+      "fork, rejected it (`cannot downcast BigInt(BigInt256(67500000000)) to Long`) and stopped at 2665. It " +
+      "is also the donor of the block tier's mid-epoch mutations."),
+    BlockSeed("deserialize-context-111927", "testnet-deserialize-context", 111927, 111872,
+      "Testnet block 111,927, captured with its ADProofs. Transaction 2's input 0 spends a V3 box whose tree " +
+      "is `if (upcast(HEIGHT) < SELF.R7.get + 50) { ... deserializeContext(0) } else { ... }`. At this height " +
+      "the condition is false, so the live branch never reads context variable 0, and the input's empty proof " +
+      "and empty extension reduce to `sigmaProp(true)`: VALID. The network (JVM 6.0.x) accepted it; " +
+      "ergo-node-rust, riding the sigma-rust fork, rejected it and stopped at 111,926, because its eager " +
+      "substitution evaluated the dead branch's `deserializeContext(0)` over the absent variable."),
+    BlockSeed("atleast-degenerate-bound-184137", "testnet-atleast-degenerate-bound", 184137, 184064,
+      "Testnet block 184,137, captured with its ADProofs while the spent box was still unspent. Transaction " +
+      "1's input 0 spends a V0 self-replicating contract (10 ERG, R4-R7) whose script has `atLeast(1, " +
+      "conditions)` over an EMPTY `Coll[SigmaProp]`. The JVM reduces the degenerate bound to `FalseProp`, " +
+      "which the surrounding logic accommodates, so the spend is VALID. The network (JVM 6.0.x) accepted " +
+      "it; ergo-node-rust, riding the sigma-rust fork, rejected it (`Atleast: bound 1 > input size 0`) and " +
+      "stopped at 184,136."),
+    BlockSeed("epoch-boundary-2560", "testnet-epoch-boundary-2560", 2560, 2432,
+      "Testnet block 2560, captured with its ADProofs: an epoch boundary (2560 % 128 == 0), and the corpus's " +
+      "only one. At an epoch's first block the node compares the epoch's declared block version with the " +
+      "header's (`exBlockVersion`); it passes here, so an implementation that applies the gate wrongly at a " +
+      "boundary fails this block. The in-force parameters come from the previous boundary, 2432. It is the " +
+      "donor of the version-gate mutation."))
 
   // ── file / JSON helpers ────────────────────────────────────────────────────
 
@@ -210,9 +234,11 @@ object CapturedBlock {
       sys.error(s"CapturedBlock[${seed.slug}]: valid:true but no post_digest returned"))
 
     val source = s"testnet:${seed.dir}@${seed.height}"
+    require(seed.description.nonEmpty, s"CapturedBlock[${seed.slug}]: every seed states why it is here")
     val entry  = Json.obj(
       "name"          -> Json.fromString(seed.slug),
       "source"        -> Json.fromString(source),
+      "description"   -> Json.fromString(seed.description),
       "parent_digest" -> Json.fromString(parentDigest),
       "headers"       -> Json.arr(headerWindow: _*),
       "parameters"    -> Json.obj("table" -> tableJson),

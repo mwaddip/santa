@@ -6,6 +6,7 @@
     {
       "name" : "in-block-created-as-received-accept#0",
       "source" : "santa:authored-block-kept-tree-bytes:in-block-created-as-received-accept#0",
+      "description" : "tx1 creates a box whose tree is a NON-CANONICAL encoding (an overlong VLQ constants count, `108300…` for `100304…`) and tx2 SPENDS it in the same block. Its script requires the first 3 bytes of `SELF.propositionBytes` to be the AS-RECEIVED window, and the block is VALID: the node resolves a spent box among the block's own outputs first, and that box is the in-memory box derived from the PARSED creating transaction, whose tree keeps that transaction's bytes. **This is the row that makes the whole kept-bytes class reachable on chain** — a box in a store never holds this encoding, because the box writer re-writes. The block is synthetic: height 1 at testnet's own initial difficulty 1, mined in milliseconds (a captured donor cannot carry authored transactions — the header is PoW-sealed over the transactions and ADProofs roots). The created box DROPS OUT of the state changes entirely, so the AVL proof covers only the stored input and the final output.",
       "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
       "headers" : [
         {
@@ -110,6 +111,7 @@
     {
       "name" : "in-block-created-rewritten-expectation-reject#1",
       "source" : "santa:authored-block-kept-tree-bytes:in-block-created-rewritten-expectation-reject#1",
+      "description" : "The reject twin: the identical block shape, with the created box's script expecting the RE-WRITTEN window instead. The JVM reads the span the transaction carried, the comparison is false, the spend fails and the BLOCK is invalid. **SEPARATING:** an implementation that re-writes a tree on parse compares its own output, finds it equal, and accepts this block — and it also rejects #0, so it is wrong in both directions on the pair. The block is synthetic: height 1 at testnet's own initial difficulty 1, mined in milliseconds (a captured donor cannot carry authored transactions — the header is PoW-sealed over the transactions and ADProofs roots). The created box DROPS OUT of the state changes entirely, so the AVL proof covers only the stored input and the final output.",
       "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
       "headers" : [
         {
@@ -214,6 +216,7 @@
     {
       "name" : "in-block-created-canonical-control-reject#2",
       "source" : "santa:authored-block-kept-tree-bytes:in-block-created-canonical-control-reject#2",
+      "description" : "**CONTROL** for #0: the SAME block, with the created box's tree left in the writer's own form in the section. The script still requires the as-received window, so the comparison is now false and the block is invalid. The transactions root is unchanged — it is computed over the SERIALIZED transactions, which re-write the tree either way, which is also why #0's splice is invisible to the header. Without this row #0 could be matching a constant that happens to agree.",
       "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
       "headers" : [
         {
@@ -318,6 +321,7 @@
     {
       "name" : "in-block-shadowed-by-store-copy-accept#3",
       "source" : "santa:authored-block-kept-tree-bytes:in-block-shadowed-by-store-copy-accept#3",
+      "description" : "**THE LOOKUP ORDER, graded.** The same valid block as #0, but the vector ALSO supplies the created box in `boxes` — the store side — under the same id, carrying the CANONICAL encoding. The two encodings share a box id (the id is over the writer's form), so a store copy can shadow a block output. The JVM resolves the block's own outputs FIRST (`UtxoState.scala:77-81`, `DigestState.scala:47-49`) and so still sees the as-received bytes: VALID. **SEPARATING:** an implementation that consults its store first sees the canonical bytes and rejects. It is the only row in the corpus that grades that precedence.",
       "parent_digest" : "e3640fcda960994cd814c2864723be5754a72d58816e00d9c542f5de358b7e1401",
       "headers" : [
         {

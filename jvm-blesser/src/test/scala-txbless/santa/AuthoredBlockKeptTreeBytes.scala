@@ -214,13 +214,10 @@ object AuthoredBlockKeptTreeBytes {
                                         Json.fromString("01cdfe9f0c0bd0c631431c236de2aabc04aab4f236e090ca32e85a5ae064145558")))))
   }
 
-  /** NOTE: `rationale` is NOT emitted. The block vector schema is `additionalProperties: false`
-    * with no prose field, unlike the eval tier's `script` and the transaction tier's
-    * `description` — so a block row's reasoning lives in its blesser, as the mutation rows' does.
-    * Raised with the user as a possible schema addition; not changed unilaterally. */
-  private def entry(name: String, rationale: String, b: Built, section: String,
+  /** One row; `description` is its role, emitted as the entry's prose. */
+  private def entry(name: String, description: String, b: Built, section: String,
                     extraBoxes: Seq[(String, String)], want: Boolean): Json = {
-    require(rationale.nonEmpty, s"$name: every row states its role in-source")
+    require(description.nonEmpty, s"$name: every row states its role")
     val boxes = ((hx(b.boxA.id) -> hx(b.boxA.bytes)) +: extraBoxes).map { case (id, hex) =>
       Json.obj("boxId" -> Json.fromString(id), "bytes" -> Json.fromString(hex)) }
     val block = blockJsonOf(b, section)
@@ -236,6 +233,7 @@ object AuthoredBlockKeptTreeBytes {
     Json.obj(
       "name"          -> Json.fromString(name),
       "source"        -> Json.fromString(s"santa:authored-block-kept-tree-bytes:$name"),
+      "description"   -> Json.fromString(description),
       "parent_digest" -> Json.fromString(b.parentDigest),
       "headers"       -> Json.arr(parse(ParentHeaderJson)
         .fold(e => sys.error(s"parent header json: $e"), identity)),
@@ -257,14 +255,7 @@ object AuthoredBlockKeptTreeBytes {
     "transactions and ADProofs roots). The created box DROPS OUT of the state changes entirely, so " +
     "the AVL proof covers only the stored input and the final output."
 
-  /** Each row's role, by name — in-source documentation, asserted by the test, not emitted. */
-  def rationales: Map[String, String] = entriesWithRationale.map { case (j, r) =>
-    j.hcursor.get[String]("name").getOrElse("?") -> r }.toMap
-
-  def entries: Seq[Json] = entriesWithRationale.map(_._1)
-
-  private def entriesWithRationale: Seq[(Json, String)] = rows.map { case (n, r, b, t, x, w) =>
-    (entry(n, r, b, t, x, w), r) }
+  def entries: Seq[Json] = rows.map { case (n, d, b, t, x, w) => entry(n, d, b, t, x, w) }
 
   private def rows: Seq[(String, String, Built, String, Seq[(String, String)], Boolean)] = Seq(
     ("in-block-created-as-received-accept#0",

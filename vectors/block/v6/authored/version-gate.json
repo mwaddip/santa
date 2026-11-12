@@ -6,6 +6,7 @@
     {
       "name" : "version-gate",
       "source" : "santa:mutation:version-gate:over:epoch-boundary-2560",
+      "description" : "Block 2560, an epoch boundary, with the epoch's declared block version (parameter 123) set to 3, below the header's version 4: `exBlockVersion` fails and the block is INVALID. The node makes this comparison only at an epoch's first block, so the mutation needs a boundary donor; at a mid-epoch block it would encode a rule stricter than consensus.",
       "parent_digest" : "c0d70c7a1008fef090973b2a6c80c5ff86f581cebb8397614b6bb321192ea2ab0d",
       "headers" : [
         {
