@@ -12,6 +12,8 @@ import {
   type AvlTreeConfig, type Operation,
 } from '@ergots/avltree'
 import { decodeSValue } from './decode'
+import { extensionBinding, registerBinding, BindingRefused, NoExtensionReader, type ExtensionReader } from './binding'
+import { isWireCodecError } from './codec-errors'
 import { encodeSValue, type Json } from './encode'
 import { hexToBytes, bytesToHex } from './hex'
 
@@ -74,9 +76,9 @@ const NOT_IMPL: Result = Object.freeze({ value: null, cost: null, error: 'not-im
  *  otherwise-uncaught throw — a malformed entry, an unexpected codec or internal error — is
  *  caught here and surfaced as the `panicked` outcome (coal, message in `note`) so the run
  *  continues; a crash on one entry never aborts the file. The inner `throw err` sites land here. */
-export function runEntry(schema: string, e: Entry): Result {
+export function runEntry(schema: string, e: Entry, readExt: ExtensionReader = null): Result {
   try {
-    return runEntryInner(schema, e)
+    return runEntryInner(schema, e, readExt)
   } catch (err) {
     const note = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
     return { value: null, cost: null, error: 'panicked', note }
@@ -85,7 +87,7 @@ export function runEntry(schema: string, e: Entry): Result {
 
 /** The per-entry pipeline ([0] parse → [1] decode/bind → [2] eval/encode). Unrecognized throws
  *  propagate to runEntry's panic-net above (→ `panicked`). */
-function runEntryInner(schema: string, e: Entry): Result {
+function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Result {
   const treeVersion = e.version.ergoTree
 
   // [0] parseTree — ergots' TYPED parse refusals are the library deciding the TREE is
@@ -125,11 +127,15 @@ function runEntryInner(schema: string, e: Entry): Result {
   //           (EvalCore.evalWithInputExtensions);
   //       v4: v2's single `input` (var 1) PLUS `selfRegisters` on SELF's additional registers
   //           R4-R9 — read by dynamic-index Box.getReg (EvalCore.evalWithSelfRegistersAndVar1).
-  //     ANY decode failure — including an input ergots' own codec rejects at runtime (e.g. a
-  //     Header timestamp > 2⁵³, which @ergots/scorex throws on as ReaderError 'vlq-overflow')
-  //     — falls through to runEntry's panic-net ⇒ `panicked`. We record ergots' ACTUAL failure
-  //     (message in `note`); we do not pre-classify it into a softer "unrepresentable" bucket
-  //     on ergots' behalf.
+  //     ANY decode failure of a JSON binding — including an input ergots' own codec rejects at
+  //     runtime (e.g. a Header timestamp > 2⁵³, which @ergots/scorex throws on as ReaderError
+  //     'vlq-overflow') — falls through to runEntry's panic-net ⇒ `panicked`. We record ergots'
+  //     ACTUAL failure (message in `note`); we do not pre-classify it into a softer
+  //     "unrepresentable" bucket on ergots' behalf.
+  //     A `Value` binding (contract §4) is different: it is the bytes a node reads, read by ergots'
+  //     OWN reader for that position (binding.ts), so the reader refusing them is the impl's
+  //     verdict ⇒ `errored` (BindingRefused), and an impl with no extension reader to call is
+  //     `not-implemented` (NoExtensionReader) — never a rebuild from an SValue.
 
   // Canonical eval context (contract §2 pin table) — shared across all schema arms.
   // Built once here; schema-specific opts are merged per arm below.
@@ -160,24 +166,25 @@ function runEntryInner(schema: string, e: Entry): Result {
   }
 
   let ctx
+  try {
   if (schema === 'santa-eval/v2') {
     if (!e.input) throw new Error(`missing input in v2 entry '${e.name}'`)
-    const { value, tpe } = decodeSValue(e.input, treeVersion)
+    const { value, tpe } = extensionBinding(e.input, treeVersion, readExt)
     // ConstPlaceholder resolution needs the tree's segregated constants; evaluateWith
     // (unlike evaluate) does NOT auto-populate them — pass explicitly.
     ctx = makeContext({ ...ctxBase, extension: { values: { 1: { tpe, value } } } })
   } else if (schema === 'santa-eval/v3') {
     if (!e.inputs) throw new Error(`missing inputs in v3 entry '${e.name}'`)
-    const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion))
+    const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion, readExt))
     // Top-level extension stays empty (self-getVar reads nothing), exactly as EvalCore's
     // contextWithInputExtensions passes ContextExtension.empty.
     ctx = makeContext({ ...ctxBase, inputExtensions })
   } else if (schema === 'santa-eval/v4') {
     if (!e.input) throw new Error(`missing input in v4 entry '${e.name}'`)
     if (!e.selfRegisters) throw new Error(`missing selfRegisters in v4 entry '${e.name}'`)
-    const { value, tpe } = decodeSValue(e.input, treeVersion)
+    const { value, tpe } = extensionBinding(e.input, treeVersion, readExt)
     // v4 replaces selfBox with the register-carrying variant; inputs[0] must track it
-    const selfBoxWithRegs = dummySelfBox(e.selfRegisters, treeBytes, treeVersion)
+    const selfBoxWithRegs = dummySelfBox(e.selfRegisters, treeBytes, treeVersion, e.version.activated)
     ctx = makeContext({
       ...ctxBase,
       selfBox: selfBoxWithRegs,
@@ -192,7 +199,7 @@ function runEntryInner(schema: string, e: Entry): Result {
     // GetVar(absent) that should be None. ergots/sigma-rust treat keys as unsigned 0..255, so a key
     // ≥ 0x80 builds fine here and the spend ACCEPTS — the consensus fork vs the JVM, whose signed-Byte
     // `new Array(maxKey+1)` crashes toSigmaContext (the reject arm's divergence, graded red by conform).
-    ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion) })
+    ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion, readExt) })
   } else if (schema === 'santa-eval/v6-fullctx') {
     if (!e.context) throw new Error(`missing context in v6-fullctx entry '${e.name}'`)
     // Reconstruct the REAL ErgoLikeContext from the envelope (contract §2): real boxes (held
@@ -203,13 +210,18 @@ function runEntryInner(schema: string, e: Entry): Result {
     // runEntry's panic-net ⇒ `panicked` (the runner's own failure). Mirrors the blitzen-eni /
     // EvalCore.evalFullContext reconstruction and its Refused/Malformed split.
     try {
-      ctx = makeContext(buildFullCtxOpts(e.context, tree, treeVersion))
+      ctx = makeContext(buildFullCtxOpts(e.context, tree, treeVersion, readExt))
     } catch (err) {
       if (err instanceof FullCtxRefused) return { value: null, cost: null, error: 'errored' }
       throw err
     }
   } else {
     ctx = makeContext(ctxBase)
+  }
+  } catch (err) {
+    if (err instanceof BindingRefused) return { value: null, cost: null, error: 'errored' }
+    if (err instanceof NoExtensionReader) return NOT_IMPL
+    throw err
   }
 
   // [2] eval ⇒ [3] encode ⇒ [4] capture.
@@ -244,11 +256,13 @@ const ORACLE_UNBOUND = /\btypeId=99, methodId=7\b/
 /** SANTA `{<varId 0-255>: SValue}` map → an ergots ContextExtension. Keys are the unsigned
  *  wire byte on both sides (the 101:12 handler normalizes its signed Byte operand to this
  *  domain), so `Number(id)` is the identity bridge. */
-function decodeExtension(ext: { [varId: string]: SValueJson }, treeVersion: number): ContextExtension {
+function decodeExtension(
+  ext: { [varId: string]: SValueJson }, treeVersion: number, readExt: ExtensionReader,
+): ContextExtension {
   // master's ContextExtension['values'] is a Map<number, {tpe, value}>.
   const values = new Map<number, ReturnType<typeof decodeSValue>>()
   for (const [id, j] of Object.entries(ext)) {
-    const { value, tpe } = decodeSValue(j, treeVersion)
+    const { value, tpe } = extensionBinding(j, treeVersion, readExt)
     values.set(Number(id), { tpe, value })
   }
   return { values }
@@ -294,13 +308,14 @@ function dummySelfBoxBase(treeBytes: Uint8Array): ErgoBox {
  *  txId, index 0, creationHeight 0) carrying `selfRegisters` as its additional registers.
  *  Ids outside 4..9 are dropped, mirroring EvalCore.evalWithSelfRegistersAndVar1's collect —
  *  mandatory R0-R3 are synthesized from the box fields by both the JVM and ergots. */
-function dummySelfBox(regs: { [regId: string]: SValueJson }, treeBytes: Uint8Array, treeVersion: number): ErgoBox {
+function dummySelfBox(
+  regs: { [regId: string]: SValueJson }, treeBytes: Uint8Array, treeVersion: number, activated: number,
+): ErgoBox {
   const registers: ErgoBox['registers'] = {}
   for (const [id, j] of Object.entries(regs)) {
     const n = Number(id)
     if (n < 4 || n > 9) continue
-    const { value, tpe } = decodeSValue(j, treeVersion)
-    registers[n] = { tpe, value }
+    registers[n] = registerBinding(j, treeVersion, activated)
   }
   return {
     value: 1000000n,
@@ -395,7 +410,7 @@ function decodePreHeader(bytes: Uint8Array): PreHeader {
  *  §2). Library refusals of consensus bytes throw FullCtxRefused (→ errored); envelope
  *  defects throw plain Error (→ panicked). */
 function buildFullCtxOpts(
-  c: FullCtxEnvelope, tree: ReturnType<typeof parseTree>, treeVersion: number,
+  c: FullCtxEnvelope, tree: ReturnType<typeof parseTree>, treeVersion: number, readExt: ExtensionReader,
 ): Parameters<typeof makeContext>[0] {
   // Parse a hex-array box field (inputs / data_inputs / outputs). Bad hex / wrong shape is
   // an envelope defect (Malformed ⇒ panicked); a codec rejection of valid-hex bytes the JVM
@@ -462,7 +477,7 @@ function buildFullCtxOpts(
 
   // Per-input ContextExtensions (read by getVarFromInput by index); the SELF input's is also
   // the top-level context.extension (bare getVar), per EvalCore.fullContext.
-  const inputExtensions = (c.input_extensions ?? []).map((ext) => decodeExtension(ext, treeVersion))
+  const inputExtensions = (c.input_extensions ?? []).map((ext) => decodeExtension(ext, treeVersion, readExt))
   const extension = inputExtensions[c.self_index] ?? { values: new Map() }
 
   // master's parseTree returns ParsedErgoTree | UnparsedErgoTree; a fullctx eval golden is always a
@@ -486,10 +501,10 @@ function buildFullCtxOpts(
 
 /** run(vector) → actuals: exactly one Result per entry, keyed by name. Total — never omits
  *  an entry, never aborts the file (runner-contract §3). No scope logic, no buckets. */
-export function runVector(doc: Vector): Record<string, Result> {
+export function runVector(doc: Vector, readExt: ExtensionReader = null): Record<string, Result> {
   const actuals: Record<string, Result> = {}
   for (const e of doc.entries) {
-    actuals[e.name] = runEntry(doc.schema ?? 'santa-eval/v1', e)
+    actuals[e.name] = runEntry(doc.schema ?? 'santa-eval/v1', e, readExt)
   }
   return actuals
 }
@@ -509,25 +524,6 @@ type WireResult = {
 
 const SBOX: SType = { tag: 'SBox' }
 
-/** ergots' typed wire-codec error classes — a codec REJECTION of the bytes (a faithful reject ⇒
- *  `errored`), distinct from an untyped throw (a library/runner defect ⇒ the panic-net). The ErgoTree
- *  round-trip COMPOSES the SValue/SType/Expr/tree codecs, so a tree with a bad constant or type throws
- *  the constituent codec's typed error (e.g. an SHeader-typed segregated constant ⇒ SValueParseError),
- *  not ErgoTreeParseError. Mirrors ergots' own test/conformance/_santa.ts isWireParseError set. */
-function isWireCodecError(err: unknown): boolean {
-  return err instanceof SValueParseError || err instanceof SValueSerializeError
-    || err instanceof STypeParseError
-    || err instanceof ErgoTreeParseError || err instanceof ErgoTreeSerializeError
-    || err instanceof SigmaBooleanParseError || err instanceof SigmaBooleanSerializeError
-    || err instanceof ExprParseError
-    || err instanceof ReaderError
-    // @ergots/transaction's TxParseError is loaded lazily (variable specifier), so match by name
-    // rather than instanceof — a tx-codec rejection of the bytes is a faithful `errored`.
-    || (err instanceof Error && err.name === 'TxParseError')
-    // ExprTpeError: a node the JVM refuses to build (ergots' sized-tree work lets it propagate as a
-    // hard reject). By name too: ergots master does not export the class from the package root.
-    || (err instanceof Error && err.name === 'ExprTpeError')
-}
 
 /** The wire-tier slice of the lazily-loaded @ergots/transaction codec (null if ergots-impl
  *  predates the tx tier — then a Transaction entry degrades to not-implemented). */
@@ -715,6 +711,8 @@ async function loadTxModule(): Promise<{
   parseTransaction: (b: Uint8Array) => unknown
   serializeTransaction: (tx: unknown) => Uint8Array
   validateStateful: (tx: unknown, deps: unknown) => void
+  /** Present once ergots exports its context-extension reader from the package root. */
+  parseContextExtension?: Exclude<ExtensionReader, null>
 } | null> {
   try {
     const spec = '@ergots/transaction'
@@ -964,7 +962,7 @@ async function main(argv: string[]): Promise<void> {
     ? await runTransactionVector(raw as TxVector)
     : schema.startsWith('santa-authds/')
     ? runAuthdsVector(raw as unknown as AuthdsVector)
-    : runVector(raw as Vector)
+    : runVector(raw as Vector, (await loadTxModule())?.parseContextExtension ?? null)
   const json = JSON.stringify(actuals, null, 2)
   const outPath = argv[3]
   if (outPath) {

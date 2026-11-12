@@ -48,7 +48,12 @@ each (read by `Context.getVarFromInput`; SELF = input 0); **v4** — v2's var 1 
 `treeVersion = version.ergoTree` (read `ctx.jitCost`; catch `EvalError`) → encode `SValue` →
 canonical SANTA JSON → capture `{value, cost, error}`. The **encode/decode bridge** (`src/encode.ts`,
 `src/decode.ts`, `src/stype.ts`) is the substance; `ergots` `parseSValue`/`serializeSValue` are
-the wire codec for the bytes-kinds (Box/Header/SigmaProp), not the JSON bridge.
+the wire codec for the bytes-kinds (Box/Header/SigmaProp), not the JSON bridge. A **`Value`**
+binding (`{kind:"Value", bytes_hex}`, runner contract §4) bypasses the bridge entirely
+(`src/binding.ts`): the bytes are read by ergots' OWN reader for the position — a register by
+`parseAdditionalRegisters`, an extension value by `@ergots/transaction`'s `parseContextExtension` —
+so the reader refusing them is `errored`, and an extension `Value` is `not-implemented` while
+ergots does not export that reader from its package root.
 
 ## Scope & the four per-entry outcomes
 
