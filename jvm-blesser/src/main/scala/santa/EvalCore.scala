@@ -47,7 +47,7 @@ object EvalCore {
   // pinned to activated+1 (block-version convention) because sigma-rust DERIVES script
   // activation from the block version — version 0 would break its gating; the JVM treats
   // it as data (activation rides the separate activatedScriptVersion field either way).
-  private def dummyPreHeader(height: Int, activated: Byte): PreHeader = CPreHeader(
+  private[santa] def dummyPreHeader(height: Int, activated: Byte): PreHeader = CPreHeader(
     version = (activated + 1).toByte,
     parentId = Colls.fromArray(Array.fill(32)(0: Byte)), // chain wire width (BlockId)
     timestamp = 3L,
@@ -250,7 +250,8 @@ object EvalCore {
     Constant(value.asInstanceOf[S#WrappedType], tpe)
 
   /** Decode a `{"kind":"…", …}` SValue JSON (as emitted by valueToJson) back to an
-    * EvaluatedValue so it can be used as a context-var binding in evalApplied.
+    * EvaluatedValue so it can be used as a context-var binding in evalApplied. It is never bound
+    * as built: every context builder passes it through `offTheWire` first.
     *
     * Covered kinds: Boolean, Byte, Short, Int, Long, BigInt, UnsignedBigInt,
     * GroupElement, Coll (with `elem` SType tag, incl. nested Coll[Coll[_]]), Tuple (pair),
@@ -542,11 +543,41 @@ object EvalCore {
       true
     } catch { case _: Throwable => false }
 
+  // ── Bindings come off the wire ─────────────────────────────────────────────
+
+  /** `c` as a node holds it: written as a constant and read back with `getValue`, the call a node
+    * makes for a box register (`ErgoBoxCandidate.scala:231` at v6.0.7) and for a context-extension
+    * value (`ContextExtension.scala:61`). Every value a script can read from a register or a context
+    * variable enters its context through here, because the value `decodeInputConstant` builds is not
+    * always the one the reader builds. Two measured gaps: `Colls.fromArray` is `@specialized`, so a
+    * `Coll[Short|Int|Long]` built at its concrete element type is a `CollOverArray$mc?$sp` where
+    * `CoreDataSerializer.deserializeColl` builds the plain `CollOverArray` over the same primitive
+    * array (a mistyped `getOrElse` default throws on the first and comes back from the second); and
+    * a collection of non-pair tuples gets the item type `TupleType` where the reader gives `Coll[Any]`.
+    * Pinned per builder in `BindingOffTheWireTest`.
+    *
+    * Versions: from block version 4 a node parses a transaction (its outputs' registers, its inputs'
+    * extensions) under `scriptAndTreeFromBlockVersions` = `(activated, activated)` (ergo-core
+    * `BlockTransactions.scala:195`, `Header.scala:154` at v6.0.7), and so does the mempool; before
+    * that, under no version context at all, the default `(1, 1)`. Every data-serializer gate is
+    * `isV3OrLaterErgoTreeVersion`, so `(activated, activated)` reads what a node reads at every
+    * activated version. A value the reader refuses throws here, inside the caller's verdict. */
+  private[santa] def offTheWire(c: EvaluatedValue[_ <: SType], activated: Byte): EvaluatedValue[_ <: SType] =
+    VersionContext.withVersions(activated, activated) {
+      val w = SigmaSerializer.startWriter()
+      w.putValue(c)
+      SigmaSerializer.startReader(w.toBytes).getValue().asInstanceOf[EvaluatedValue[_ <: SType]]
+    }
+
+  private def extensionOffTheWire(ext: scala.collection.Map[Byte, EvaluatedValue[_ <: SType]],
+      activated: Byte): Map[Byte, EvaluatedValue[_ <: SType]] =
+    ext.map { case (k, v) => k -> offTheWire(v, activated) }.toMap
+
   // ── Context with var 1 bound to an input value ─────────────────────────────
 
   /** Dummy context identical to dummyContext but with var 1 bound to `varBinding`.
     * Used by evalApplied to supply the function input via ContextExtension. */
-  private def contextWithVar1(tree: ErgoTree, activatedVersion: Byte,
+  private[santa] def contextWithVar1(tree: ErgoTree, activatedVersion: Byte,
                               varBinding: EvaluatedValue[_ <: SType]): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
@@ -563,7 +594,7 @@ object EvalCore {
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
       selfIndex = 0,
-      extension = ContextExtension(Map(1.toByte -> varBinding)),
+      extension = ContextExtension(Map(1.toByte -> offTheWire(varBinding, activatedVersion))),
       validationSettings = ValidationRules.currentSettings,
       costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
       initCost = 0L,
@@ -606,14 +637,14 @@ object EvalCore {
   /** Build a context whose SELF box has custom `additionalRegisters` AND whose ContextExtension
     * carries var 1 = `varBinding`. Used for santa-eval/v4 vectors: the tree reads SELF (with known
     * registers) and a dynamic index from context var 1. */
-  private def contextWithSelfRegistersAndVar1(tree: ErgoTree, activatedVersion: Byte,
+  private[santa] def contextWithSelfRegistersAndVar1(tree: ErgoTree, activatedVersion: Byte,
       additionalRegisters: Map[ErgoBox.NonMandatoryRegisterId, sigma.ast.EvaluatedValue[_ <: SType]],
       varBinding: EvaluatedValue[_ <: SType]): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
       ergoTree = tree,
       additionalTokens = sigma.Colls.emptyColl,
-      additionalRegisters = additionalRegisters,
+      additionalRegisters = additionalRegisters.map { case (id, v) => id -> offTheWire(v, activatedVersion) },
       transactionId = bytesToId(Array.fill(32)(0: Byte)),
       index = 0.toShort,
       creationHeight = 0
@@ -626,7 +657,7 @@ object EvalCore {
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
       selfIndex = 0,
-      extension = ContextExtension(Map(1.toByte -> varBinding)),
+      extension = ContextExtension(Map(1.toByte -> offTheWire(varBinding, activatedVersion))),
       validationSettings = ValidationRules.currentSettings,
       costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
       initCost = 0L,
@@ -680,13 +711,13 @@ object EvalCore {
   /** Dummy context whose spending-tx inputs each carry a ContextExtension (read by
     * getVarFromInput). Mirrors contextWithVar1, but the extensions go on the inputs,
     * not the top-level (var 1). */
-  private def contextWithInputExtensions(tree: ErgoTree, activatedVersion: Byte,
+  private[santa] def contextWithInputExtensions(tree: ErgoTree, activatedVersion: Byte,
       inputExtensions: Seq[Map[Byte, EvaluatedValue[_ <: SType]]]): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L, ergoTree = tree,
       transactionId = bytesToId(Array.fill(32)(0: Byte)), index = 0.toShort, creationHeight = 0)
     val inputs = inputExtensions.map(ext =>
-      Input(selfBox.id, new ProverResult(Array.emptyByteArray, ContextExtension(ext)))).toIndexedSeq
+      Input(selfBox.id, new ProverResult(Array.emptyByteArray, ContextExtension(extensionOffTheWire(ext, activatedVersion))))).toIndexedSeq
     new ErgoLikeContext(
       lastBlockUtxoRoot = AvlTreeData.dummy,
       headers = Colls.emptyColl[Header],
@@ -735,7 +766,7 @@ object EvalCore {
     * (`new Array(maxKey+1)`, then `res(id)=v`) throws at construction — `NegativeArraySizeException`
     * (max key) or `ArrayIndexOutOfBoundsException` (id == -1) — BEFORE any bytecode. Parallel to
     * `contextWithVar1`, but the key is the variable (not hardcoded 1). */
-  private def contextWithTopExtension(tree: ErgoTree, activatedVersion: Byte,
+  private[santa] def contextWithTopExtension(tree: ErgoTree, activatedVersion: Byte,
       extension: Map[Byte, EvaluatedValue[_ <: SType]]): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
@@ -752,7 +783,7 @@ object EvalCore {
       boxesToSpend = IndexedSeq(selfBox),
       spendingTransaction = ErgoLikeTransaction(IndexedSeq(), IndexedSeq()),
       selfIndex = 0,
-      extension = ContextExtension(extension),
+      extension = ContextExtension(extensionOffTheWire(extension, activatedVersion)),
       validationSettings = ValidationRules.currentSettings,
       costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
       initCost = 0L,
@@ -828,7 +859,7 @@ object EvalCore {
       votes     = Colls.fromArray(f.votes))
   }
 
-  private def fullContext(
+  private[santa] def fullContext(
       tree: ErgoTree, activated: Byte, selfIndex: Int,
       inputs: IndexedSeq[ErgoBox], dataInputs: IndexedSeq[ErgoBox],
       outputs: IndexedSeq[ErgoBox], headers: Coll[Header], preHeader: PreHeader,
@@ -836,9 +867,10 @@ object EvalCore {
     // Each spending input carries ITS OWN ContextExtension — getVarFromInput(i, var) reads
     // input i's (SContext methodId 12). The top-level context.extension (bare getVar) is the
     // SELF input's. Missing entries default to empty.
+    val exts = inputExtensions.map(e => ContextExtension(extensionOffTheWire(e.values, activated)))
     val txInputs = inputs.indices.map { i =>
       Input(inputs(i).id, new ProverResult(Array.emptyByteArray,
-        inputExtensions.lift(i).getOrElse(ContextExtension.empty)))
+        exts.lift(i).getOrElse(ContextExtension.empty)))
     }.toIndexedSeq
     val txDataInputs = dataInputs.map(b => DataInput(b.id))
     // ErgoBox <: ErgoBoxCandidate; the tx recomputes output ids from its (proof-free) id —
@@ -852,7 +884,7 @@ object EvalCore {
       boxesToSpend = inputs,
       spendingTransaction = new ErgoLikeTransaction(txInputs, txDataInputs, outCandidates),
       selfIndex = selfIndex,
-      extension = inputExtensions.lift(selfIndex).getOrElse(ContextExtension.empty),
+      extension = exts.lift(selfIndex).getOrElse(ContextExtension.empty),
       validationSettings = ValidationRules.currentSettings,
       costLimit = DefaultEvalSettings.scriptCostLimitInEvaluator,
       initCost = 0L,
