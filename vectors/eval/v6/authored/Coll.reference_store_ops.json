@@ -1,0 +1,656 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.reference_store_ops",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-reference-store",
+  "entries" : [
+    {
+      "name" : "pair-box-side-groupelement-errored#0",
+      "script" : "[A2] `Coll(1).zip(Coll[Box](SELF)).updated(0, (1, groupGenerator))` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. A `PairOfCols` stores each side into its own array. SEPARATING.",
+      "tree_bytes_hex" : "0b17b1dc0c14dc0c1d10010201830163a70204008602040282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair-box-side-box-accept#1",
+      "script" : "[A3] `Coll(1).zip(Coll[Box](SELF)).updated(0, (1, SELF))` — 1 at cost 124. CONTROL for A2.",
+      "tree_bytes_hex" : "0b17b1dc0c14dc0c1d10010201830163a702040086020402a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 124,
+        "error" : null
+      }
+    },
+    {
+      "name" : "tuple-receiver-groupelement-accept#2",
+      "script" : "[A4] `(1,2,3).updated(0, groupGenerator)` — 3 at cost 59: a non-pair tuple's array is `Object[]`, so any item fits.",
+      "tree_bytes_hex" : "0b0fb1dc0c144804040402040602040082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-coll-int-item-errored#3",
+      "script" : "[A5] `Coll[Box](SELF).updated(0, 1)` — THROWS `ArrayStoreException: java.lang.Integer` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b0db1dc0c14830163a70204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-coll-groupelement-patch-errored#4",
+      "script" : "[B1] `Coll[Box](SELF).patch(0, Coll[GroupElement](g), 0)` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b11b1dc0c13830163a7030400830107820400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-coll-empty-groupelement-patch-accept#5",
+      "script" : "[B2] `Coll[Box](SELF).patch(0, Coll[GroupElement](), 0)` — 1 at cost 110: an EMPTY patch stores nothing, so nothing is checked.",
+      "tree_bytes_hex" : "0b10b1dc0c13830163a70304008300070400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 110,
+        "error" : null
+      }
+    },
+    {
+      "name" : "coll-of-coll-long-patch-accept#6",
+      "script" : "[B3] `Coll[Coll[Int]](Coll(1)).patch(0, Coll[Coll[Long]](Coll(1L)), 0)` — 2 at cost 150: the array is `Coll[]`, and a Coll[Long] is a Coll, so it is stored whatever its item type.",
+      "tree_bytes_hex" : "0b19b1dc0c13830110830104040203040083011183010505020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 150,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-coll-int-patch-errored#7",
+      "script" : "[B4] `Coll[Box](SELF).patch(0, Coll[Int] constant (1), 0)` — THROWS `ArrayStoreException: java.lang.Integer` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b10b1dc0c13830163a70304001001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "int-coll-tuple-patch-accept#8",
+      "script" : "[B5] `Coll[Int] constant (1,2,3).patch(0, (7,8,9), 0)` — 6 at cost 70: `patch` copies the patch's ITEMS through Scala's builder (CollsOverArrays.scala:94-98), never its array, and the tuple's boxed Integers unbox into int[]. Not the array-class rule of the Append node (Coll.append_node_array_class).",
+      "tree_bytes_hex" : "0b15b1dc0c131003020406030400480404040e10120400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 6
+        },
+        "cost" : 70,
+        "error" : null
+      }
+    },
+    {
+      "name" : "generic-int-coll-tuple-patch-accept#9",
+      "script" : "[B6] `ConcreteCollection[Int](1,2,3).patch(0, (7,8,9), 0)` — 6 at cost 100, as B5 from a generic receiver.",
+      "tree_bytes_hex" : "0b19b1dc0c13830304040204040406030400480404040e10120400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 6
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int-coll-int-patch-accept#10",
+      "script" : "[B7] `Coll[Int] constant (1,2,3).patch(0, ConcreteCollection[Int](7), 0)` — 4 at cost 90. CONTROL.",
+      "tree_bytes_hex" : "0b13b1dc0c131003020406030400830104040e0400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int-coll-empty-long-patch-accept#11",
+      "script" : "[B8] `Coll[Int] constant (1,2,3).patch(0, ConcreteCollection[Long](), 0)` — 3 at cost 85: an empty long[] patch stores nothing. The Append NODE refuses the same shape (an arraycopy of long[] into int[]); `patch` does not.",
+      "tree_bytes_hex" : "0b11b1dc0c1310030204060304008300050400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-coll-empty-nonpair-patch-errored#12",
+      "script" : "[B9] `Coll(1).zip(Coll(1)).patch(0, Coll[Int] constant (), 0)` — THROWS `ClassCastException: PrimitiveType cannot be cast to PairType`: a PairOfCols unzips its patch, casting the patch's item type, so a non-pair patch throws EMPTY or not. SEPARATING: an implementation that skips an empty patch returns 1.",
+      "tree_bytes_hex" : "0b15b1dc0c13dc0c1d1001020110010203040010000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair-coll-pair-patch-accept#13",
+      "script" : "[B10] `Coll(1).zip(Coll(1)).patch(0, Coll(1).zip(Coll(1)), 0)` — 2 at cost 110. CONTROL for B9.",
+      "tree_bytes_hex" : "0b1db1dc0c13dc0c1d10010201100102030400dc0c1d100102011001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 110,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-coll-groupelement-updatemany-errored#14",
+      "script" : "[C1] `Coll[Box](SELF).updateMany(Coll(0), Coll[GroupElement](g))` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b10b1dc0c15830163a70210010083010782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-of-coll-long-updatemany-accept#15",
+      "script" : "[C2] `Coll[Coll[Int]](Coll(1)).updateMany(Coll(0), Coll[Coll[Long]](Coll(1L)))` — 1 at cost 135: stored into `Coll[]`, no item-type comparison. SEPARATING: an implementation that compares the two collections' types refuses.",
+      "tree_bytes_hex" : "0b18b1dc0c158301108301040402021001008301118301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 135,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-coll-nothing-stored-updatemany-accept#16",
+      "script" : "[C3] `Coll[Box](SELF).updateMany(Coll[Int](), Coll[GroupElement]())` — 1 at cost 95: nothing is stored. SEPARATING: an implementation that compares the two collections' types refuses.",
+      "tree_bytes_hex" : "0b0eb1dc0c15830163a7021000830007",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 95,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-coll-groupelement-side-updatemany-errored#17",
+      "script" : "[C4] `Coll(1).zip(Coll[Box](SELF)).updateMany(Coll(0), Coll(1).zip(Coll[GroupElement](g)))` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. Per side, as `updated`.",
+      "tree_bytes_hex" : "0b1eb1dc0c15dc0c1d10010201830163a702100100dc0c1d1001020183010782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair-coll-coll-long-side-updatemany-accept#18",
+      "script" : "[C5] `Coll(1).zip(Coll[Coll[Int]](Coll(1))).updateMany(Coll(0), Coll(1).zip(Coll[Coll[Long]](Coll(1L))))` — 1 at cost 175: per side, class-compatible.",
+      "tree_bytes_hex" : "0b26b1dc0c15dc0c1d10010201830110830104040202100100dc0c1d100102018301118301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 175,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-lambda-box-typed-groupelement-errored#19",
+      "script" : "[D1] `Coll(1).map({x => If(false, SELF, groupGenerator)})` — THROWS `InterpreterException: Invalid type returned by evaluator`: the closure checks the body's value against the body's type (values.scala:1080) before map stores anything.",
+      "tree_bytes_hex" : "0b0eb1ad100102d9010104950100a782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "map-lambda-class-compatible-lie-accept#20",
+      "script" : "[D2] `Coll(1).map({x => If(false, Coll(1), Coll(1L))})` — 1 at cost 90: the body's check is by class, and a Coll[Long] is a Coll.",
+      "tree_bytes_hex" : "0b16b1ad100102d901010495010083010404028301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatmap-box-typed-groupelement-errored#21",
+      "script" : "[D3] `Coll(1).flatMap({x => If(false, Coll[Box](SELF), Coll[GroupElement](g))})` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. flatMap copies each part into an array of the result's item class (CollsOverArrays.scala:70). SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b17b1dc0c0f10010201d9010104950100830163a783010782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flatmap-coll-of-coll-long-accept#22",
+      "script" : "[D4] `Coll(1).flatMap({x => If(false, Coll[Coll[Int]](Coll(1)), Coll[Coll[Long]](Coll(1L)))})` — 1 at cost 163: class-compatible.",
+      "tree_bytes_hex" : "0b1fb1dc0c0f10010201d901010495010083011083010404028301118301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 163,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-map-lambda-box-typed-groupelement-errored#23",
+      "script" : "[D7] `Coll(1).zip(Coll(1)).map({p => If(false, SELF, groupGenerator)})` — THROWS, as D1, on a PairOfCols receiver.",
+      "tree_bytes_hex" : "0b15b1addc0c1d10010201100102d9010158950100a782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "pair-map-lambda-self-accept#24",
+      "script" : "[D8] `Coll(1).zip(Coll(1)).map({p => SELF})` — 1 at cost 80. CONTROL for D7.",
+      "tree_bytes_hex" : "0b11b1addc0c1d10010201100102d9010158a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 80,
+        "error" : null
+      }
+    },
+    {
+      "name" : "patch-cost-10-plus-1-accept#25",
+      "script" : "[F1] `(1..10).patch(0, Coll(1), 0)` — 11 at cost 72: `patch` charges PerItemCost(30, 2, 10) on BOTH collections (methods.scala:1026, nItems = 10 + 1 = two chunks). SEPARATING on cost: an implementation that counts the receiver alone charges 70.",
+      "tree_bytes_hex" : "0b18b1dc0c13100a020406080a0c0e1012140304001001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 11
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "patch-cost-9-plus-1-accept#26",
+      "script" : "[F2] `(1..9).patch(0, Coll(1), 0)` — 10 at cost 70: 9 + 1 items, one chunk. CONTROL for F1.",
+      "tree_bytes_hex" : "0b17b1dc0c131009020406080a0c0e10120304001001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 10
+        },
+        "cost" : 70,
+        "error" : null
+      }
+    },
+    {
+      "name" : "patch-cost-11-plus-1-accept#27",
+      "script" : "[F3] `(1..11).patch(0, Coll(1), 0)` — 12 at cost 72: 11 + 1 items, two chunks either way. CONTROL for F1.",
+      "tree_bytes_hex" : "0b19b1dc0c13100b020406080a0c0e101214160304001001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 12
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bigint-coll-groupelement-errored#28",
+      "script" : "[X1] `Coll[BigInt](BigInt(1)).updated(0, groupGenerator)` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. The item class BigInt. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b0eb1dc0c1483010606010102040082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "option-coll-groupelement-errored#29",
+      "script" : "[X2] `Coll[Option[Int]](getVar[Int](7)).updated(0, groupGenerator)` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. The item class Option. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b0eb1dc0c14830128e3070402040082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "function-coll-groupelement-errored#30",
+      "script" : "[X3] `Coll[Int => Int](x => x).updated(0, groupGenerator)` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. The item class: a function. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b15b1dc0c1483017001040400d9010104720102040082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "byte-coll-groupelement-errored#31",
+      "script" : "[X4] `Coll[Byte] constant (1).updated(0, groupGenerator)` — THROWS `ClassCastException: CGroupElement cannot be cast to java.lang.Byte` (in an InvocationTargetException): a specialised byte[] receiver unboxes. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b0bb1dc0c140e010102040082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "inputs-groupelement-errored#32",
+      "script" : "[X5] `INPUTS.updated(0, groupGenerator)` — THROWS `ArrayStoreException: sigma.data.CGroupElement` (in an InvocationTargetException): the store into the receiver's array is by the ITEM's class. A receiver from the context, not built by the script. SEPARATING: an implementation that checks the item against the collection's static item type, or does not check at all, returns.",
+      "tree_bytes_hex" : "0b09b1dc0c14a402040082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
