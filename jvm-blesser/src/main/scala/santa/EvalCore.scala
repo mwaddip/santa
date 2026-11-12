@@ -431,6 +431,32 @@ object EvalCore {
     }
   }
 
+  /** Decode a BINDING — a register or context-variable value, the vector schema's `$defs/binding`:
+    * any SValue (`decodeInputConstant`), or `{"kind":"Value","bytes_hex":…}`, the bytes a node itself
+    * reads for that position. Those are read with `getValue`, exactly one value with no bytes left
+    * over, and must come back an `EvaluatedValue` — the cast a node makes for a box register
+    * (`ErgoBoxCandidate.scala:231` at v6.0.7) and for an extension value (`ContextExtension.scala:61`):
+    * a constant, or an evaluated expression such as a `Tuple` of constants. A refusal throws, inside
+    * the caller's verdict. Read at v3 (every data gate is `isV3OrLaterErgoTreeVersion`), so decoding
+    * never refuses on version alone: the builders' `offTheWire` re-reads every binding under the
+    * entry's `(activated, activated)`, which is where a version gate takes effect, as in a node.
+    * Only a binding position takes `Value`; it cannot nest inside a Coll, Tuple or Option. */
+  def decodeBinding(j: Json): EvaluatedValue[_ <: SType] =
+    j.hcursor.get[String]("kind").toOption match {
+      case Some("Value") =>
+        val hex = j.hcursor.get[String]("bytes_hex")
+          .fold(e => sys.error(s"decodeBinding Value: $e"), identity)
+        val bytes = Base16.decode(hex).getOrElse(sys.error("decodeBinding Value: bytes_hex decode failed"))
+        VersionContext.withVersions(VersionContext.V6SoftForkVersion, VersionContext.V6SoftForkVersion) {
+          val r = SigmaSerializer.startReader(bytes)
+          val v = r.getValue().asInstanceOf[EvaluatedValue[_ <: SType]]
+          if (r.position != bytes.length)
+            sys.error(s"decodeBinding Value: ${bytes.length - r.position} byte(s) left after the value")
+          v
+        }
+      case _ => decodeInputConstant(j)
+    }
+
   /** Build a CollectionConstant from the given element SType and decoded items.
     * Dispatches on the concrete element type to produce the correctly-typed
     * CollectionConstant without unchecked casts at the call site.
@@ -617,7 +643,7 @@ object EvalCore {
       val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
       val treeVer = tree.version
       try {
-        val input   = decodeInputConstant(inputJson)
+        val input   = decodeBinding(inputJson)
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
           val ctx = contextWithVar1(tree, activated, input)
           val acc = new CostAccumulator(
@@ -677,7 +703,7 @@ object EvalCore {
       val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
       val treeVer = tree.version
       try {
-        val var1 = decodeInputConstant(var1Json)
+        val var1 = decodeBinding(var1Json)
         // Build additionalRegisters: only non-mandatory (R4-R9, ids 4-9). Mandatory R0-R3 are
         // auto-populated by ErgoBox from its value/ergoTree/creationInfo fields.
         val additionalRegisters: Map[ErgoBox.NonMandatoryRegisterId, sigma.ast.EvaluatedValue[_ <: SType]] =
@@ -690,7 +716,7 @@ object EvalCore {
               case 8 => ErgoBox.R8
               case 9 => ErgoBox.R9
             }
-            regId -> decodeInputConstant(j).asInstanceOf[sigma.ast.EvaluatedValue[_ <: SType]]
+            regId -> decodeBinding(j)
           }
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
           val ctx = contextWithSelfRegistersAndVar1(tree, activated, additionalRegisters, var1)
@@ -739,13 +765,27 @@ object EvalCore {
   def evalWithInputExtensions(treeBytesHex: String,
       inputExtensions: Seq[Map[Byte, EvaluatedValue[_ <: SType]]],
       activated: Byte): (Byte, Either[String, (Json, Long)]) =
+    evalWithInputExtensionsOf(treeBytesHex, inputExtensions, activated)
+
+  /** The same, from each input's {varId (0..255) -> binding JSON} map — decoded INSIDE the verdict,
+    * so a reader that refuses a binding is the entry's `Left` (errored), as it is in every other
+    * binding position, rather than an exception that escapes to the runner as `panicked`. */
+  def evalWithInputExtensionsJson(treeBytesHex: String, inputExtensionsJson: Seq[Map[Int, Json]],
+      activated: Byte): (Byte, Either[String, (Json, Long)]) =
+    evalWithInputExtensionsOf(treeBytesHex,
+      inputExtensionsJson.map(_.map { case (k, j) => k.toByte -> decodeBinding(j) }), activated)
+
+  private def evalWithInputExtensionsOf(treeBytesHex: String,
+      inputExtensions: => Seq[Map[Byte, EvaluatedValue[_ <: SType]]],
+      activated: Byte): (Byte, Either[String, (Json, Long)]) =
     try {
       val bytes   = Base16.decode(treeBytesHex).get
       val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
       val treeVer = tree.version
       try {
+        val exts = inputExtensions
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
-          val ctx = contextWithInputExtensions(tree, activated, inputExtensions)
+          val ctx = contextWithInputExtensions(tree, activated, exts)
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
@@ -805,7 +845,7 @@ object EvalCore {
       val treeVer = tree.version
       try {
         val extension: Map[Byte, EvaluatedValue[_ <: SType]] =
-          extensionJson.map { case (k, j) => k.toByte -> decodeInputConstant(j) }
+          extensionJson.map { case (k, j) => k.toByte -> decodeBinding(j) }
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
           val ctx = contextWithTopExtension(tree, activated, extension)
           val acc = new CostAccumulator(
@@ -926,7 +966,7 @@ object EvalCore {
           .getOrElse(if (ergoHeaders.nonEmpty) avlTreeFromStateRoot(ergoHeaders.head.stateRoot)
                      else AvlTreeData.dummy)
         val inputExts  = inputExtensionsJson.map(m =>
-          ContextExtension(m.map { case (k, j) => k.toByte -> decodeInputConstant(j) }))
+          ContextExtension(m.map { case (k, j) => k.toByte -> decodeBinding(j) }))
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
           val ctx = fullContext(tree, activated, selfIndex, inputs, dataInputs, outputs,
             headers, preHeader, lastRoot, inputExts)

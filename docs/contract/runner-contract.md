@@ -314,6 +314,7 @@ these shapes. The asymmetries are deliberate — mirror them exactly.
 | Coll[Byte] | `{"kind":"Coll[Byte]","value_hex":"<hex>"}` | the COMPACT byte-collection form, semantically identical to `Coll`/`SByte` per-item — added for large payloads (per-item JSON is ~35× the bytes; the SBox token-window family carries >4KB box bytes as context input). INPUT-side only: results still encode as `Coll` (the JVM's `valueToJson` is unchanged), and a vector MAY keep using per-item `Coll` for byte collections — both decode identically. |
 | Tuple | `{"kind":"Tuple","items":[<SValue>,…]}` | ≥2 items, positional. **The runtime representation is decided by the ARITY, and it decides verdicts** — see the note below. |
 | Option | `{"kind":"Option","value":<SValue> \| null}` | `null` = `None`; otherwise the inner SValue |
+| **Value** | `{"kind":"Value","bytes_hex":"<hex>"}` | **a binding only**: the bytes a node itself reads for a register or a context-extension value, bound as YOUR implementation's reader builds them — see the note below. Never nested inside another SValue, never an expected value. |
 
 **A tuple's runtime representation, by arity (read this before implementing the Tuple kind).**
 A **pair** is held as a language-level PAIR (a Scala `Tuple2` on the JVM); a tuple of **any other
@@ -337,6 +338,23 @@ by its own runtime kind — because the encoder dispatches on the runtime repres
 representation IS a collection. A runner must not assume the two directions mirror each other.
 (A 0- or 1-item tuple TYPE parses but can never be written back — `TypeSerializer` refuses fewer
 than 2 items — so it has no input form at all, and no box can carry a script containing one.)
+
+**A binding as the bytes a node reads (`Value`).** Every binding position — `input`,
+`selfRegisters`, `inputs[].extension`, `extension`, and a full context's `extension` /
+`input_extensions` — takes any SValue above, or `{"kind":"Value","bytes_hex":…}`: the bytes a node
+itself reads for that position. Bind what your implementation's **own reader for that position**
+builds from them, under the entry's activated version, consuming **exactly one value with no bytes
+left over**. On the JVM that reader is `getValue`, cast to `EvaluatedValue` as `ErgoBoxCandidate` and
+`ContextExtension` cast it, so the bytes may hold a constant or an evaluated expression such as a
+`Tuple` of constants. If your reader refuses them, the entry is `errored`: a node would reject the
+transaction. **Never decode them into an SValue and rebuild the value from that** — the point of the
+form is that the reader decides the value's runtime shape. A vector uses it when its verdict depends
+on how the bound value was built or encoded, or for content no SValue can say (a register holding a
+`Tuple` expression; an encoding a reader normalises). The JSON forms remain for everything else.
+SANTA's oracle binds those through its reader as well (`EvalCore.offTheWire`), because its own
+JSON-built values were measured to differ from it — a `Coll[Short|Int|Long]`'s class, a collection of
+non-pair tuples' item type — and a script can see the difference; a runner whose JSON-built value
+can differ from its reader's should do the same.
 
 **The Long-vs-cost asymmetry (read this twice).** An SValue **`Long` value** is a decimal
 **string**, but the entry's **`cost`** (§5) — also a 64-bit quantity — is a bare JSON

@@ -144,14 +144,14 @@
           "$ref": "#/$defs/hex"
         },
         "input": {
-          "description": "The input SValue, bound to context var 1 at eval time. REQUIRED for santa-eval/v2 and santa-eval/v4, ABSENT for santa-eval/v1 (enforced at the top level, where the schema discriminator is visible).",
-          "$ref": "#/$defs/svalue"
+          "description": "The input binding (an SValue, or a Value: the bytes a node reads), bound to context var 1 at eval time. REQUIRED for santa-eval/v2 and santa-eval/v4, ABSENT for santa-eval/v1 (enforced at the top level, where the schema discriminator is visible).",
+          "$ref": "#/$defs/binding"
         },
         "selfRegisters": {
           "description": "santa-eval/v4: non-mandatory SELF box registers, keyed by register id (0-based integer as string, valid: 4-9). Values are SValue JSON.",
           "type": "object",
           "propertyNames": { "pattern": "^[4-9]$" },
-          "additionalProperties": { "$ref": "#/$defs/svalue" }
+          "additionalProperties": { "$ref": "#/$defs/binding" }
         },
         "inputs": {
           "description": "santa-eval/v3: per-spending-tx-input ContextExtensions, in input order. Read by getVarFromInput.",
@@ -164,7 +164,7 @@
               "extension": {
                 "type": "object",
                 "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
-                "additionalProperties": { "$ref": "#/$defs/svalue" }
+                "additionalProperties": { "$ref": "#/$defs/binding" }
               }
             }
           }
@@ -173,7 +173,7 @@
           "description": "santa-eval/v5: the SELF box's TOP-LEVEL ContextExtension (the source toSigmaContext builds the contextVars array from), keyed by the unsigned wire byte 0..255. A key >= 128 is a signed-negative Byte that crashes context construction before any bytecode.",
           "type": "object",
           "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
-          "additionalProperties": { "$ref": "#/$defs/svalue" }
+          "additionalProperties": { "$ref": "#/$defs/binding" }
         },
         "context": { "$ref": "#/$defs/fullCtx" },
         "provenance": {
@@ -202,7 +202,7 @@
           "description": "Legacy SELF-only top-level extension (fallback when input_extensions absent), key 0..255 -> SValue.",
           "type": "object",
           "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
-          "additionalProperties": { "$ref": "#/$defs/svalue" }
+          "additionalProperties": { "$ref": "#/$defs/binding" }
         },
         "input_extensions": {
           "description": "Per-input ContextExtensions in input order (authoritative when present); index i = input i's extension.",
@@ -210,7 +210,7 @@
           "items": {
             "type": "object",
             "propertyNames": { "pattern": "^(0|[1-9][0-9]?|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" },
-            "additionalProperties": { "$ref": "#/$defs/svalue" }
+            "additionalProperties": { "$ref": "#/$defs/binding" }
           }
         },
         "last_block_utxo_root_hex": {
@@ -272,6 +272,21 @@
       "type": "string",
       "pattern": "^([0-9a-f]{2})*$",
       "$comment": "lower-case hex, even length (whole bytes)."
+    },
+    "binding": {
+      "description": "A context binding: a register or context-extension value (runner-contract.md §4). Either any SValue, or a Value — the bytes a node itself reads for that position (with getValue on the JVM: a constant, or an evaluated expression such as a Tuple of constants), which a runner binds as its implementation's reader for that position builds them. Value is a BINDING form only: it never nests inside a Coll, Tuple or Option, and is never an expected value.",
+      "oneOf": [
+        { "$ref": "#/$defs/svalue" },
+        {
+          "type": "object",
+          "properties": {
+            "kind": { "const": "Value" },
+            "bytes_hex": { "$ref": "#/$defs/hex", "minLength": 2 }
+          },
+          "required": ["kind", "bytes_hex"],
+          "additionalProperties": false
+        }
+      ]
     },
     "svalue": {
       "description": "Canonical SValue encoding (see runner-contract.md §4). The Int-as-number / Long-as-string asymmetry is intentional and enforced here.",

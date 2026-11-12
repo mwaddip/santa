@@ -2435,4 +2435,54 @@ mod tests {
         assert!(block_guard_on(doc, "hole") > 0,
             "a 'proofless' substring in source must not exempt a non-proofless op");
     }
+
+    // ---- eval: the Value binding kind ---------------------------------------------------
+    //
+    // A register or context-variable value may travel as the bytes a node itself reads
+    // (`{"kind":"Value","bytes_hex":…}`, runner contract §4). It is a BINDING form: accepted at a
+    // binding position, refused nested inside an SValue and as an expected value.
+
+    fn eval_vec_validator() -> Validator {
+        let schema = load(&schema_dir().join("santa-eval.vector.schema.json"));
+        jsonschema::validator_for(&schema).expect("eval vector schema invalid")
+    }
+
+    fn eval_entry(binding_field: (&str, Value)) -> Value {
+        let mut e = json!({
+            "name": "e#0", "tree_bytes_hex": "0b0e",
+            "version": { "activated": 3, "ergoTree": 3 },
+            "expected": { "value": { "kind": "Int", "value": 1 }, "cost": 10, "error": null }
+        });
+        e[binding_field.0] = binding_field.1;
+        e
+    }
+
+    fn eval_vector(schema: &str, entry: Value) -> Value {
+        json!({ "schema": schema, "op": "test-op", "blessed_by": "test", "source": "test", "entries": [entry] })
+    }
+
+    #[test]
+    fn eval_value_binding_is_accepted_only_at_a_binding_position() {
+        let v = eval_vec_validator();
+        let value = json!({ "kind": "Value", "bytes_hex": "0e020102" });
+        let int7 = json!({ "kind": "Int", "value": 7 });
+        let v2 = |input: Value| eval_vector("santa-eval/v2", eval_entry(("input", input)));
+        let v3 = |b: Value| eval_vector("santa-eval/v3",
+            eval_entry(("inputs", json!([{ "extension": { "11": b } }]))));
+
+        assert!(v.is_valid(&v2(int7.clone())), "the SValue baseline must pass");
+        assert!(v.is_valid(&v2(value.clone())), "a Value binding must pass as a v2 input");
+        assert!(v.is_valid(&v3(int7.clone())), "the v3 SValue baseline must pass");
+        assert!(v.is_valid(&v3(value.clone())), "a Value binding must pass in a v3 input extension");
+
+        let nested = json!({ "kind": "Coll", "elem": { "tag": "SInt" }, "items": [value.clone()] });
+        assert!(!v.is_valid(&v2(nested)), "a Value must not nest inside a Coll");
+        let mut doc = v2(int7.clone());
+        doc["entries"][0]["expected"]["value"] = value.clone();
+        assert!(!v.is_valid(&doc), "a Value is never an expected value");
+        assert!(!v.is_valid(&v2(json!({ "kind": "Value", "bytes_hex": "" }))), "empty bytes must fail");
+        assert!(!v.is_valid(&v2(json!({ "kind": "Value", "bytes_hex": "0E" }))), "upper-case hex must fail");
+        assert!(!v.is_valid(&v2(json!({ "kind": "Value", "bytes_hex": "0e", "tpe": "SInt" }))),
+            "a Value carries its bytes only: the type is in them");
+    }
 }

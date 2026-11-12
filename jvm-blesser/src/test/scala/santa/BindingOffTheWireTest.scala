@@ -6,12 +6,12 @@ import scorex.util.encode.Base16
 import org.ergoplatform.ErgoBox
 import org.ergoplatform.ErgoBox.R4
 
-import sigma.Colls
+import sigma.{Colls, VersionContext}
 import sigma.ast._
 import sigma.ast.ErgoTree.ZeroHeader
 import sigma.data.AvlTreeData
 import sigma.interpreter.ContextExtension
-import sigma.serialization.ErgoTreeSerializer
+import sigma.serialization.{ErgoTreeSerializer, SigmaSerializer}
 
 /** A value a script reads from a register or a context variable must be the value a NODE's reader
   * builds from its bytes, not the one `decodeInputConstant` builds from JSON. The two differ in
@@ -106,5 +106,58 @@ class BindingOffTheWireTest extends munit.FunSuite {
       collIntJson, A)._2.map(_._1)
     assertEquals(fromConstant, Right(json("""{"kind":"Boolean","value":true}""")), "the reference itself moved")
     assertEquals(fromVar1, fromConstant)
+  }
+
+  // ── the Value kind: a binding as the bytes a node reads ──────────────────────────────────
+
+  private def anyV(v: Value[_ <: SType]): Value[SType] = v.asInstanceOf[Value[SType]]
+  private def valueHex(v: Value[_ <: SType]): String = VersionContext.withVersions(3, 3) {
+    val w = SigmaSerializer.startWriter()
+    w.putValue(anyV(v))
+    Base16.encode(w.toBytes)
+  }
+  private def valueJson(hex: String): io.circe.Json = json(s"""{"kind":"Value","bytes_hex":"$hex"}""")
+
+  test("a Value binding of a constant binds exactly what the JSON form of the same value binds") {
+    val viaValue = EvalCore.contextWithVar1(tree, A,
+      EvalCore.decodeBinding(valueJson(valueHex(IntArrayConstant(Array(1, 2)))))).extension.values(1.toByte)
+    val viaJson = EvalCore.contextWithVar1(tree, A, collInt).extension.values(1.toByte)
+    assertEquals(viaValue, viaJson)
+    assertReaderShape(viaValue.value, "var 1 from Value bytes")
+  }
+
+  test("a Value binding may be an evaluated EXPRESSION, as a register or extension value can be") {
+    val tup = Tuple(IndexedSeq(IntConstant(1), IntConstant(2), IntConstant(3)).map(anyV))
+    val b = EvalCore.decodeBinding(valueJson(valueHex(tup)))
+    assert(!b.isInstanceOf[Constant[_]], s"getValue should hand back the Tuple node, got ${b.getClass}")
+    assertEquals[SType, SType](b.tpe, STuple(IndexedSeq(SInt, SInt, SInt)))
+    assertEquals[SType, SType](EvalCore.contextWithVar1(tree, A, b).extension.values(1.toByte).tpe, b.tpe)
+  }
+
+  test("a Value binding a node would refuse is refused: not an EvaluatedValue, or bytes left over") {
+    intercept[ClassCastException](EvalCore.decodeBinding(valueJson(
+      valueHex(ArithOp(IntConstant(1), IntConstant(2), sigma.serialization.OpCodes.PlusCode)))))
+    val e = intercept[RuntimeException](EvalCore.decodeBinding(valueJson(valueHex(IntConstant(7)) + "00")))
+    assert(e.getMessage.contains("left after the value"), e.getMessage)
+  }
+
+  test("a Value binding's version gate takes effect at the entry's activated version, as in a node") {
+    val b = EvalCore.decodeBinding(valueJson(valueHex(UnsignedBigIntConstant(java.math.BigInteger.ONE))))
+    EvalCore.contextWithVar1(tree, 3, b) // v6 holds an UnsignedBigInt
+    intercept[Throwable](EvalCore.contextWithVar1(tree, 2, b)) // v5's reader refuses one
+  }
+
+  // getVarFromInput[Boolean](0,11) over input 0's extension: a readable Value evaluates, an unreadable
+  // one is the entry's errored verdict (it used to escape the decode as panicked).
+  test("santa-eval/v3: a Value binding is read inside the verdict, and a refused one is errored") {
+    def run(bytesHex: String) = santa.runner.Runner.evalEntry("santa-eval/v3", json(
+      s"""{"name":"t","tree_bytes_hex":"1b0f020300020bdc650cfe027300730101",""" +
+      s""""inputs":[{"extension":{"11":{"kind":"Value","bytes_hex":"$bytesHex"}}}],""" +
+      """"version":{"activated":3,"ergoTree":3},"expected":{"value":null,"cost":null,"error":"errored"}}"""))._2
+    val readable = run(valueHex(BooleanConstant(true)))
+    assertEquals(readable.hcursor.downField("value").focus,
+      Some(json("""{"kind":"Option","value":{"kind":"Boolean","value":true}}""")), readable.noSpaces)
+    val refused = run(valueHex(BooleanConstant(true)) + "00")
+    assertEquals(refused.hcursor.get[String]("error").toOption, Some("errored"), refused.noSpaces)
   }
 }

@@ -127,14 +127,14 @@ object Runner {
 
       val (_, outcome) = schema match {
         case "santa-eval/v3" =>
-          val inputs = c.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
-            val ext = inp.hcursor.downField("extension")
-            ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
-              k.toInt.toByte -> EvalCore.decodeInputConstant(
-                ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
-            }.toMap
-          }
-          EvalCore.evalWithInputExtensions(hex, inputs, activated)
+          // The bindings stay JSON here: EvalCore decodes them inside the verdict, so a binding the
+          // reader refuses is `errored` (the JVM's answer) rather than an escaped exception.
+          val inputs: Seq[Map[Int, io.circe.Json]] =
+            c.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
+              inp.hcursor.downField("extension").focus.flatMap(_.asObject)
+                .map(_.toMap.map { case (k, v) => k.toInt -> v }).getOrElse(Map.empty)
+            }
+          EvalCore.evalWithInputExtensionsJson(hex, inputs, activated)
         case "santa-eval/v4" =>
           val regsObj = c.downField("selfRegisters").focus
             .getOrElse(sys.error(s"missing selfRegisters in v4 entry '$name'"))
