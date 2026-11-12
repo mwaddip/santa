@@ -15,10 +15,11 @@ package santa
 //    Interpreter.verify (ergo-wallet `ErgoInterpreter.scala:72-84`), so a box above the activated version is still
 //    collected once its value no longer covers its fee.
 //
-// Contexts. Block version 4: the storage-rent vectors' synthetic context (AuthoredTxStorageRent: ten v4 headers below
-// H = 1051200, the launch parameters). Block version 3: the same ten headers at version 3, re-linked, and the
-// preHeader at version 3 on top. Every tree here is a SigmaProp(true) constant, so a spend needs no proof, and an impl
-// that runs the script of a tree above the activated version accepts.
+// Contexts. Block version 4: the storage-rent vectors' synthetic context (AuthoredTxStorageRent: nine v4 headers below
+// H = 1051200, the launch parameters). Block version 3: the same headers at version 3 (the ten-header window
+// re-linked, then the newest nine), and the preHeader at version 3 on top. Every tree here is a SigmaProp(true)
+// constant, so a spend needs no proof, and an impl that runs the script of a tree above the activated version
+// accepts.
 
 import io.circe.Json
 import scorex.crypto.authds.ADKey
@@ -53,28 +54,21 @@ object AuthoredTxTreeVersion {
 
   private def b(h: String): Array[Byte] = Base16.decode(h).get
 
-  /** A block context: its version, the ten headers below H (NEWEST-first) and the preHeader. */
+  /** A block context: its version, the nine headers a script at H sees (NEWEST-first) and the preHeader. */
   private final case class Ctx(blockVersion: Int, headersHex: Seq[String], preHeader: Json)
   private val Block4 = Ctx(4, AuthoredTxStorageRent.headersHex, AuthoredTxStorageRent.preHeader)
-  /** The same ten headers at version 3. A header's id covers its version, so they are re-linked oldest first. */
-  private val Block3: Ctx = {
-    val oldestFirst = AuthoredTxStorageRent.headersHex.map(h => HeaderSerializer.parseBytes(b(h))).reverse
-    val relinked = oldestFirst.tail.foldLeft(Vector(oldestFirst.head.copy(version = 3.toByte))) { (acc, h) =>
-      acc :+ h.copy(version = 3.toByte, parentId = acc.last.id)
-    }
-    val newestFirst = relinked.reverse
-    Ctx(3, newestFirst.map(h => hex(HeaderSerializer.toBytes(h))), AuthoredTxStorageRent.preHeader.mapObject(
-      _.add("version", Json.fromInt(3)).add("parentId", Json.fromString(newestFirst.head.id))))
-  }
+  private val Block3: Ctx = blockCtx(3)
 
-  /** The ten headers re-linked at `version`, the preHeader set to it (block-version edges: 2, 5, 0, 128, 200). Block
-    * version 1 is not representable — UpcomingStateContext's build throws before any verdict — so it is not here. */
+  /** The rent context at `version` (block 3 above; block-version edges: 2, 5, 0, 128, 200), the preHeader set to it.
+    * A header's id covers its version, so the whole ten-header window is re-linked oldest first before the newest
+    * nine are taken. Block version 1 is not representable — UpcomingStateContext's build throws before any
+    * verdict — so it is not here. */
   private def blockCtx(version: Int): Ctx = {
-    val oldestFirst = AuthoredTxStorageRent.headersHex.map(h => HeaderSerializer.parseBytes(b(h))).reverse
+    val oldestFirst = AuthoredTxStorageRent.windowHex.map(h => HeaderSerializer.parseBytes(b(h))).reverse
     val relinked = oldestFirst.tail.foldLeft(Vector(oldestFirst.head.copy(version = version.toByte))) { (acc, h) =>
       acc :+ h.copy(version = version.toByte, parentId = acc.last.id)
     }
-    val newestFirst = relinked.reverse
+    val newestFirst = relinked.reverse.take(AuthoredTxStorageRent.ScriptHeaders)
     Ctx(version, newestFirst.map(h => hex(HeaderSerializer.toBytes(h))), AuthoredTxStorageRent.preHeader.mapObject(
       _.add("version", Json.fromInt(version)).add("parentId", Json.fromString(newestFirst.head.id))))
   }

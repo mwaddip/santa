@@ -1,7 +1,7 @@
 package santa
 
 /** Re-blesses all 8 tx seeds to the bytes-anchored full-context shape and writes staging vectors.
-  * Needs the testnet node (:9053) for the 4 originals' + the order-ext seed's headers/preHeader.
+  * Needs no node: every seed's context comes from its fixture or its committed vector.
   * Green ⇒ every captured tx accepts under its provided real context via the bytes path (the
   * order-ext tx accepting proves the JVM preserves the non-ascending extension order). */
 class CapturedTxFullTest extends munit.FunSuite {
@@ -12,10 +12,11 @@ class CapturedTxFullTest extends munit.FunSuite {
       val e = env.hcursor.downField("entries").downArray
       assertEquals(e.downField("expected").get[Boolean]("valid").toOption, Some(true), s"$slug must accept")
       assert(e.get[String]("tx_bytes_hex").toOption.exists(_.nonEmpty), s"$slug missing tx_bytes_hex")
-      assertEquals(e.downField("headers_hex").values.map(_.size), Some(10), s"$slug must carry 10 headers")
+      assertEquals(e.downField("headers_hex").values.map(_.size), Some(AuthoredTxStorageRent.ScriptHeaders),
+        s"$slug must carry the headers a script sees")
       val cost = e.downField("expected").get[Long]("cost").toOption.getOrElse(-1L)
       val nIn  = e.downField("input_boxes_hex").values.map(_.size).getOrElse(0)
-      println(s"[$slug] accept · cost=$cost · inputs=$nIn · headers=10")
+      println(s"[$slug] accept · cost=$cost · inputs=$nIn · headers=${AuthoredTxStorageRent.ScriptHeaders}")
     }
   }
 

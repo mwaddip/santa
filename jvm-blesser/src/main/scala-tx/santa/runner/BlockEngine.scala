@@ -9,7 +9,7 @@ import org.ergoplatform.modifiers.history.header.Header
 import org.ergoplatform.modifiers.mempool.ErgoTransaction
 import org.ergoplatform.modifiers.state.StateChanges
 import org.ergoplatform.nodeView.state.{UpcomingStateContext, VotingData}
-import org.ergoplatform.settings.{ChainSettings, ChainSettingsReader, ErgoValidationSettings,
+import org.ergoplatform.settings.{ChainSettings, ChainSettingsReader, Constants, ErgoValidationSettings,
   ErgoValidationSettingsUpdate, Parameters}
 import org.ergoplatform.wallet.interpreter.ErgoInterpreter
 import scorex.crypto.authds.avltree.batch.{Insert, Lookup, Remove}
@@ -89,8 +89,12 @@ object BlockEngine extends ApiCodecs {
       ErgoValidationSettingsUpdate.empty)
     val preHeader = CPreHeader(header.version, header.parentId, header.timestamp, header.nBits,
       header.height, header.votes, header.powSolution.pk)
-    val ctx = UpcomingStateContext(lastHeaders, None, preHeader, chainSettings.genesisStateDigest,
-      params, ErgoValidationSettings.initial, VotingData.empty)
+    // A script sees the nine headers below the block. When the node validates the block, its window holds the
+    // block's own header and the nine below it, and a script gets `lastHeaders.drop(1)`
+    // (ErgoStateContext.sigmaLastHeaders). UpcomingStateContext exposes all it is given, so it gets the newest
+    // nine of the vector's window, as `upcoming()` builds it from `lastHeaders.take(LastHeadersInContext - 1)`.
+    val ctx = UpcomingStateContext(lastHeaders.take(Constants.LastHeadersInContext - 1), None, preHeader,
+      chainSettings.genesisStateDigest, params, ErgoValidationSettings.initial, VotingData.empty)
     implicit val verifier: ErgoInterpreter = ErgoInterpreter(params)
 
     // ── header/section tier (node order: version → PoW → section digests) ─────

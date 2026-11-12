@@ -34,7 +34,8 @@ schema is `santa-block/v1` and whose entries each carry the full determination s
   pre-state. The replay MUST be anchored here — a conformer that instead trusts the root
   embedded in the proof bytes accepts forged pre-states.
 - **`headers`** — the ≤10 preceding headers, node-API JSON, **newest-first** (entry 0 is
-  height H−1). Genesis-window entries (fewer than 10) are legal.
+  height H−1). Genesis-window entries (fewer than 10) are legal. A script in the block sees the
+  newest nine (the *Headers window* note in §5).
 - **`parameters.table`** — the in-force `parametersTable` (id-string → int) read from the
   governing epoch-boundary block's extension. Carried explicitly so the vector is
   self-contained AND mutable (the cheapest cost mutation shrinks `maxBlockCost` here; a
@@ -141,7 +142,12 @@ proves the grader against it.
 - **Checkpoint-free rule.** Conformers with checkpoint shortcuts must run checkpoint-free
   (`checkpoint = 0`); a vector below a checkpoint height must still be fully validated.
 - **Headers window.** The ≤10 headers are the full chain context handed over. Anything
-  needing deeper history is out of scope for `santa-block/v1`.
+  needing deeper history is out of scope for `santa-block/v1`. A script in the block sees the
+  newest **nine** (`CONTEXT.headers`): when the node validates the block, its window holds the block's
+  own header and the nine below it, and a script gets `lastHeaders.drop(1)`
+  (`ErgoStateContext.sigmaLastHeaders`). An implementation that builds the script context from the
+  window itself, as a node does, gets the nine from it; a runner that builds the context for a library
+  takes the newest nine.
 - **Difficulty-retarget exclusion.** PoW is checked against **the header's own `nBits`**,
   not the retarget schedule — the window is too shallow to recompute difficulty. A block
   with self-consistent PoW but a wrong difficulty would not be caught; that class needs a

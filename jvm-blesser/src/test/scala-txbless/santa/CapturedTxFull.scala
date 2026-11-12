@@ -1,30 +1,28 @@
 package santa
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CapturedTxFull — re-bless ALL 7 captured tx seeds into the BYTES-anchored
+// CapturedTxFull — re-bless ALL 8 captured tx seeds into the BYTES-anchored
 // santa-transaction/v1 shape: tx_bytes_hex + input/data box hex + the PROVIDED real
 // context (headers_hex newest-first + preHeader + parameters), graded by
 // TxEngine.validateBytes. Bytes are the consensus-unambiguous form (they preserve
 // context-extension wire order, which a JSON object key-reorders) — so dasher and
 // any bytes-first conformer ride them. JSON tx/boxes are dropped.
 //
-//   3 ergots seeds  — tx/boxes/context all from their stateful fixtures (hex).
-//   4 original seeds — tx/boxes re-serialized from their committed JSON vectors;
-//                      the 10 last headers + preHeader fetched from the testnet node
-//                      (ergo-node-rust @ :9053) and re-serialized to bytes.
+//   3 ergots seeds   — tx/boxes/context all from their stateful fixtures (hex).
+//   4 original seeds — tx/boxes/context from their committed vectors.
+//   the order-ext seed — tx/boxes from its capture (docs/findings), context from its
+//                      committed vector.
+// The originals' and the order-ext seed's contexts were fetched once from a testnet
+// node; a re-bless reaches no node. headers_hex is the newest nine of each captured
+// window: the headers a script in the block sees (AuthoredTxStorageRent.ScriptHeaders).
 // parameters = the testnet launch table (what validateBytes uses; the fixtures carry
 // exactly these). FAIL-LOUD on a non-accept (captured ⇒ chain-valid).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import io.circe.Json
 import io.circe.parser.parse
-import scorex.util.encode.Base16
 
-import org.ergoplatform.http.api.ApiCodecs
-import org.ergoplatform.modifiers.history.header.{Header, HeaderSerializer}
-
-object CapturedTxFull extends ApiCodecs {
-  private val Node      = "http://127.0.0.1:9053"
+object CapturedTxFull {
   private val BlessedBy = "jvm:ergo-core-6.0.2.1-validateStateful"
   private val ErgoTreeV = 3 // v6 scripts
 
@@ -40,7 +38,7 @@ object CapturedTxFull extends ApiCodecs {
     ("multi-input-10-402900", "testnet-multi-input-10"),
     ("multi-input-3-402800",  "testnet-multi-input-3"))
 
-  // (slug, height) — tx/boxes re-serialized from the committed vector; context from the node.
+  // (slug, height) — tx/boxes/context from the committed vector.
   private val OriginalSeeds = Seq(
     ("bigint-downcast-2666",           2666),
     ("powhit-return-type-28474",       28474),
@@ -48,38 +46,16 @@ object CapturedTxFull extends ApiCodecs {
     ("atleast-degenerate-bound-184137",184137))
 
   private def slurp(p: String): String = { val s = scala.io.Source.fromFile(p); try s.mkString finally s.close() }
-  private def httpGet(url: String): String = { val s = scala.io.Source.fromURL(url); try s.mkString finally s.close() }
-  private def jget(url: String): Json = parse(httpGet(url)).fold(e => sys.error(s"GET $url: $e"), identity)
 
-  /** Fetch the header at `id`, re-serialize to faithful bytes (id round-trips). */
-  private def headerHex(id: String): String = {
-    val h = jget(s"$Node/blocks/$id/header").as[Header].fold(e => sys.error(s"Header $id: $e"), identity)
-    Base16.encode(HeaderSerializer.toBytes(h))
-  }
+  /** A committed captured vector's single entry. */
+  private def committedEntry(slug: String): io.circe.ACursor =
+    parse(slurp(s"../vectors/transaction/v6/captured/$slug.json")).fold(e => sys.error(e.toString), identity)
+      .hcursor.downField("entries").downArray
 
-  /** From the node: the 10 last headers (newest-first) + the preHeader for the block at `height`. */
-  private def fetchContext(height: Int): (Seq[String], Json) = {
-    val hid = jget(s"$Node/blocks/at/$height").hcursor.downArray.as[String].fold(e => sys.error(s"at $height: $e"), identity)
-    val h   = jget(s"$Node/blocks/$hid/header").hcursor
-    val preHeader = Json.obj(
-      "version"   -> Json.fromInt(h.get[Int]("version").toOption.get),
-      "parentId"  -> Json.fromString(h.get[String]("parentId").toOption.get),
-      "timestamp" -> Json.fromString(h.get[Long]("timestamp").toOption.get.toString),
-      "nBits"     -> Json.fromLong(h.get[Long]("nBits").toOption.get),
-      "height"    -> Json.fromInt(h.get[Int]("height").toOption.get),
-      "minerPk"   -> Json.fromString(h.downField("powSolutions").get[String]("pk").toOption.get),
-      "votes"     -> Json.fromString(h.get[String]("votes").toOption.getOrElse("000000")))
-    var cur = h.get[String]("parentId").toOption.get
-    val hexes = (1 to 10).map { _ =>
-      val hex = headerHex(cur)
-      cur = jget(s"$Node/blocks/$cur/header").hcursor.get[String]("parentId").toOption.get
-      hex
-    }
-    (hexes, preHeader)
-  }
-
+  /** `capturedHeaders` is the captured window, newest-first; the entry carries its newest nine. */
   private def entry(slug: String, height: Int, txHex: String, inHex: Seq[String], dtHex: Seq[String],
-                    headersHex: Seq[String], preHeader: Json): Json = {
+                    capturedHeaders: Seq[String], preHeader: Json): Json = {
+    val headersHex = capturedHeaders.take(AuthoredTxStorageRent.ScriptHeaders)
     val v = santa.runner.TxEngine.validateBytes(txHex, inHex, dtHex, headersHex, preHeader, LaunchParams)
     if (!v.valid) sys.error(s"CapturedTxFull[$slug]: oracle REJECTED a captured tx — reason=${v.reason.getOrElse("?")}")
     val cost = v.cost.getOrElse(sys.error(s"[$slug] valid:true but no cost"))
@@ -115,8 +91,7 @@ object CapturedTxFull extends ApiCodecs {
   private def fromOriginal(slug: String, height: Int): (String, Json) = {
     // The originals are already bytes-shape (migrated to `e9ad8da`); re-bless them from the
     // committed tx_bytes_hex + box hex + provided context — no JSON re-serialize, no node fetch.
-    val e0 = parse(slurp(s"../vectors/transaction/v6/captured/$slug.json")).fold(e => sys.error(e.toString), identity)
-      .hcursor.downField("entries").downArray
+    val e0 = committedEntry(slug)
     val txHex      = e0.get[String]("tx_bytes_hex").toOption.getOrElse(sys.error(s"$slug tx_bytes_hex"))
     val inHex      = e0.downField("input_boxes_hex").as[List[String]].fold(er => sys.error(s"$slug input_boxes_hex: $er"), identity)
     val dtHex      = e0.downField("data_input_boxes_hex").as[List[String]].getOrElse(Nil)
@@ -137,7 +112,9 @@ object CapturedTxFull extends ApiCodecs {
     val txHex  = c.get[String]("tx_bytes_hex").toOption.getOrElse(sys.error("order-ext tx_bytes_hex"))
     val inHex  = c.downField("input_boxes_hex").as[List[String]].fold(e => sys.error(s"order-ext input_boxes_hex: $e"), identity)
     val dtHex  = c.downField("data_input_boxes_hex").as[List[String]].getOrElse(Nil)
-    val (headersHex, preHeader) = fetchContext(height)
+    val e0 = committedEntry(slug)
+    val headersHex = e0.downField("headers_hex").as[List[String]].fold(er => sys.error(s"$slug headers_hex: $er"), identity)
+    val preHeader  = e0.downField("preHeader").focus.getOrElse(sys.error(s"$slug preHeader"))
     envelope(slug, entry(slug, height, txHex, inHex, dtHex, headersHex, preHeader))
   }
 

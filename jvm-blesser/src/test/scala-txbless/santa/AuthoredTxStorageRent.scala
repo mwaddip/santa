@@ -17,10 +17,10 @@ package santa
 // over-accept surfaces as a verdict, not an incidental error).
 //
 // Context: SYNTHETIC but internally consistent — no captured chain reaches the StoragePeriod height on
-// testnet. Ten v4 headers at heights H-10..H-1 (NEWEST-first, parent-linked), preHeader at H with
-// parentId = headers(0).id; H = StoragePeriod, so a height-0 box is exactly old enough (the gate's
-// boundary). Scripts never read the headers. Parameters: the launch table (storageFeeFactor 1250000,
-// the live mainnet value).
+// testnet. Nine v4 headers at heights H-9..H-1 (NEWEST-first, parent-linked), the nine a script at H sees;
+// preHeader at H with parentId = headers(0).id; H = StoragePeriod, so a height-0 box is exactly old enough
+// (the gate's boundary). Scripts never read the headers. Parameters: the launch table (storageFeeFactor
+// 1250000, the live mainnet value).
 //
 // blessAll() FAILS LOUD unless the oracle agrees with the arm, for the arm's reason: a rent reject must
 // carry the JVM's `#i => Success((false,50))` (the rent verdict, final); every accept's cost must equal the
@@ -39,6 +39,7 @@ import sigma.serialization.{ErgoTreeSerializer, GroupElementSerializer, SigmaSer
 import org.ergoplatform.{ErgoBox, ErgoBoxCandidate, ErgoLikeTransaction, Input}
 import org.ergoplatform.mining.AutolykosSolution
 import org.ergoplatform.modifiers.history.header.{Header, HeaderSerializer}
+import org.ergoplatform.settings.Constants
 import santa.runner.TxEngine
 
 import RentFixtures._
@@ -62,9 +63,10 @@ object AuthoredTxStorageRent {
   private val BaseTs = 1690000000000L  // ms; two-minute blocks
   private val minerPk = org.ergoplatform.mining.group.generator
 
-  /** Ten parent-linked v4 headers below `tip`, NEWEST-first (ErgoStateContext.lastHeaders order). */
+  /** The node's `lastHeaders` window below `tip`: `Constants.LastHeadersInContext` (10) parent-linked v4 headers,
+    * NEWEST-first (ErgoStateContext.lastHeaders order). */
   private def headersBelow(tip: Int): Seq[Header] = {
-    val firstHeight = tip - 10
+    val firstHeight = tip - Constants.LastHeadersInContext
     var parent: ModifierId = scorex.util.bytesToId(digest(s"santa:rent-ctx:parent-of:$firstHeight"))
     val oldestFirst = (firstHeight until tip).map { h =>
       val hdr = Header(
@@ -87,12 +89,21 @@ object AuthoredTxStorageRent {
     oldestFirst.reverse
   }
 
-  private val headers: Seq[Header] = headersBelow(H)
-  private[santa] val headersHex: Seq[String] = headers.map(h => hex(HeaderSerializer.toBytes(h)))
+  /** How many headers a script sees, and so how many a vector's `headers_hex` carries: block validation gives a
+    * script `lastHeaders.drop(1)` (ErgoStateContext.sigmaLastHeaders), and `upcoming()` builds the candidate's
+    * context from `lastHeaders.take(LastHeadersInContext - 1)`. */
+  private[santa] val ScriptHeaders: Int = Constants.LastHeadersInContext - 1
+
+  private val window: Seq[Header] = headersBelow(H)
+  /** The whole window, H-10..H-1. AuthoredTxTreeVersion re-links it at other block versions. */
+  private[santa] val windowHex: Seq[String] = window.map(h => hex(HeaderSerializer.toBytes(h)))
+  /** The newest nine, H-1..H-9: what a script at H sees. The window's oldest header is the parent of the oldest
+    * one here, so every header a script sees has a real parent. */
+  private[santa] val headersHex: Seq[String] = windowHex.take(ScriptHeaders)
   private[santa] val preHeader: Json = Json.obj(
     "version"   -> Json.fromInt(4),
-    "parentId"  -> Json.fromString(headers.head.id),
-    "timestamp" -> Json.fromString((headers.head.timestamp + 120000L).toString),
+    "parentId"  -> Json.fromString(window.head.id),
+    "timestamp" -> Json.fromString((window.head.timestamp + 120000L).toString),
     "nBits"     -> Json.fromLong(NBits),
     "height"    -> Json.fromInt(H),
     "minerPk"   -> Json.fromString(hex(GroupElementSerializer.toBytes(minerPk))),

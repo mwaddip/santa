@@ -79,7 +79,7 @@ class AuthoredTxTreeVersionTest extends munit.FunSuite {
         assertEquals(e.hcursor.downField("preHeader").get[Int]("version").toOption, Some(blockVersion))
         assertEquals(e.hcursor.downField("context").get[Int]("height").toOption, Some(AuthoredTxStorageRent.H))
         val headers = boxes(e, "headers_hex")
-        assertEquals(headers.size, 10)
+        assertEquals(headers.size, AuthoredTxStorageRent.ScriptHeaders)
         headers.foreach(h => assertEquals(h.take(2), f"$blockVersion%02x", "each header carries the block version"))
         assert(str(e, "source").startsWith("santa:"))
       }

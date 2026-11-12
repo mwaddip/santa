@@ -39,13 +39,14 @@ class AuthoredTxStorageRentTest extends munit.FunSuite {
     }
   }
 
-  test("one synthetic context: ten parent-linked headers below StoragePeriod, preHeader on top") {
+  test("one synthetic context: the nine parent-linked headers a script sees below StoragePeriod, preHeader on top") {
     val ctxs = all.map(e => (e.hcursor.downField("headers_hex").focus, e.hcursor.downField("preHeader").focus)).distinct
     assertEquals(ctxs.size, 1, "every entry must share the context")
     val e0 = all.head.hcursor
     val headers = e0.downField("headers_hex").as[List[String]].toOption.get
       .map(h => HeaderSerializer.parseBytes(Base16.decode(h).get))
-    assertEquals(headers.map(_.height), (1 to 10).map(AuthoredTxStorageRent.H - _).toList, "NEWEST-first heights")
+    assertEquals(headers.map(_.height), (1 to AuthoredTxStorageRent.ScriptHeaders).map(AuthoredTxStorageRent.H - _).toList,
+      "NEWEST-first heights")
     headers.sliding(2).foreach { case List(newer, older) => assertEquals(newer.parentId, older.id) }
     assertEquals(e0.downField("preHeader").get[String]("parentId").toOption, Some(headers.head.id: String))
     assertEquals(e0.downField("preHeader").get[Int]("height").toOption, Some(AuthoredTxStorageRent.H))

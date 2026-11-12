@@ -28,7 +28,7 @@
         "tx_bytes_hex": { "$ref": "#/$defs/hex", "description": "The signed transaction, canonical sigma bytes (parseTransaction input)." },
         "input_boxes_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "minItems": 1, "description": "Spent input boxes as ErgoBox bytes, in tx-input order." },
         "data_input_boxes_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "description": "Data-input boxes as ErgoBox bytes (may be empty)." },
-        "headers_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "description": "The last (up to 10) headers, NEWEST-first, as scorex bytes." },
+        "headers_hex": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "maxItems": 9, "description": "The headers a script in the block sees (CONTEXT.headers), at most nine, NEWEST-first, as scorex bytes: the node gives a script lastHeaders.drop(1) at block validation, and upcoming() builds the candidate context from lastHeaders.take(9)." },
         "preHeader": {
           "type": "object", "required": ["version", "parentId", "timestamp", "nBits", "height", "minerPk", "votes"],
           "additionalProperties": false,

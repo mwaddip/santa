@@ -6,7 +6,8 @@ package santa
 // Input: `src/test/resources/mainnet-rent/captures.json`, built off-line from a mainnet node + its indexer
 // (every byte string verified against its id: tx signing message -> tx id, box bytes -> box id, header
 // bytes -> header id), carrying for each tx its bytes, all input and data-input boxes, the 10 parent
-// headers (NEWEST-first), the block's preHeader and the voting-epoch parameter table in effect.
+// headers (NEWEST-first), the block's preHeader and the voting-epoch parameter table in effect. A vector
+// carries the newest nine of those headers: what a script in the block sees (AuthoredTxStorageRent.ScriptHeaders).
 //
 // A captured tx is chain history, so the oracle MUST accept it: a rejection fails the bless loudly. The
 // blesser also re-derives, from the bytes alone, which inputs take the rent path (ErgoInterpreter.scala:
@@ -77,7 +78,8 @@ object CapturedTxMainnetRent {
     val derived = rentPathInputs(cap)
     require(derived == cap.rentInputs,
       s"${cap.name}: the JVM's rent-path inputs are $derived, the capture recorded ${cap.rentInputs}")
-    val v = TxEngine.validateBytes(cap.txHex, cap.inputBoxes, cap.dataBoxes, cap.headers, cap.preHeader, cap.parameters)
+    val headers = cap.headers.take(AuthoredTxStorageRent.ScriptHeaders)
+    val v = TxEngine.validateBytes(cap.txHex, cap.inputBoxes, cap.dataBoxes, headers, cap.preHeader, cap.parameters)
     if (!v.valid) sys.error(s"CapturedTxMainnetRent[${cap.name}]: oracle REJECTED a mainnet tx — ${v.reason.getOrElse("?")}")
     val cost = v.cost.getOrElse(sys.error(s"${cap.name}: valid but no cost"))
     Json.obj(
@@ -89,7 +91,7 @@ object CapturedTxMainnetRent {
       "tx_bytes_hex"         -> Json.fromString(cap.txHex),
       "input_boxes_hex"      -> Json.arr(cap.inputBoxes.map(Json.fromString): _*),
       "data_input_boxes_hex" -> Json.arr(cap.dataBoxes.map(Json.fromString): _*),
-      "headers_hex"          -> Json.arr(cap.headers.map(Json.fromString): _*),
+      "headers_hex"          -> Json.arr(headers.map(Json.fromString): _*),
       "preHeader"            -> cap.preHeader,
       "parameters"           -> cap.parameters,
       "context"              -> Json.obj("height" -> Json.fromInt(cap.height)),

@@ -18,7 +18,8 @@ class CapturedTxMainnetRentTest extends munit.FunSuite {
       assertEquals(c.downField("expected").get[Boolean]("valid").toOption, Some(true))
       assert(c.downField("expected").get[Long]("cost").isRight, "cost")
       assert(c.get[String]("source").toOption.exists(_.startsWith("mainnet:rent-")), "source")
-      assertEquals(c.downField("headers_hex").as[List[String]].map(_.size).toOption, Some(10), "ten headers")
+      assertEquals(c.downField("headers_hex").as[List[String]].map(_.size).toOption,
+        Some(AuthoredTxStorageRent.ScriptHeaders), "the headers a script sees")
     }
   }
 

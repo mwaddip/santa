@@ -38,8 +38,8 @@ ergots — decodes bytes faithfully; no impl can re-order or truncate them.
   `ErgoTransactionSerializer`, identical by construction.
 - **`input_boxes_hex`** — spent input boxes as `ErgoBox` bytes, in tx-input order.
 - **`data_input_boxes_hex`** — data-input boxes as `ErgoBox` bytes (may be empty).
-- **`headers_hex`** — the last (up to 10) headers, **NEWEST-first** (scorex bytes) — the provided
-  block context (`ErgoStateContext.lastHeaders`).
+- **`headers_hex`** — the headers a script in the block sees (`CONTEXT.headers`): at most **nine**,
+  **NEWEST-first** (scorex bytes), head = the pre-header's parent (§5).
 - **`preHeader`** — the validating block's pre-header: `{version, parentId, timestamp` (u64 string)
   `, nBits, height, minerPk, votes}`.
 - **`parameters`** — `{maxBlockCost, storageFeeFactor, minValuePerByte, inputCost, dataInputCost,
@@ -139,7 +139,7 @@ minimal-context model carried, where each impl had to build the same zeroed `Erg
 
 | Field | Source |
 |---|---|
-| last headers (`ErgoStateContext.lastHeaders`) | `headers_hex` — the real last (≤10) headers, **NEWEST-first** (head = tip / pre-header parent) |
+| the headers a script sees (`ErgoStateContext.sigmaLastHeaders`) | `headers_hex` — the real ≤9 headers below the block, **NEWEST-first** (head = tip / pre-header parent) |
 | pre-header | `preHeader` — real `{version, parentId, timestamp, nBits, height, minerPk, votes}` |
 | parameters | `parameters` — the economic table at the capture height; **honored** (`TxEngine.validateBytes` overrides the launch table's 7 economic params from this field), the seam the authored param-driven reject arm (§6) rides. An optional 8th field, `blockVersion`, sets the voted block version (`currentParameters.blockVersion`) that drives the activated script version and the monotonic creation-height rule; it defaults to `preHeader.version` (equal in every vector that omits it) |
 | state digest | the JVM reads `chain-testnet.conf`'s `genesisStateDigestHex` (`cb63aa…`); stateful tx validation does not consult the UTXO root |
@@ -149,9 +149,20 @@ under `santa-transaction/v1` — it was not under the prior synthetic model (an 
 The capture provides the exact on-chain headers; the NEWEST-first order matches
 `ErgoStateContext.lastHeaders` (`ErgoStateContext.scala:85/113/233`).
 
+**Nine, not the node's ten-header window.** When the node validates block N, its window holds N's own
+header and the nine below it, and a script gets `lastHeaders.drop(1)` (`sigmaLastHeaders`,
+`ErgoStateContext.scala:92-93` at ergo v6.0.7). The candidate and mempool path reaches the same nine:
+`upcoming()` builds the `UpcomingStateContext` from `lastHeaders.take(LastHeadersInContext - 1)` (`:138`,
+ergo `681a1842d`, first in v6.0.4), and `UpcomingStateContext` logs an error when handed more. So a vector
+carries the nine, and a runner hands them to its implementation as they are, neither cutting nor padding.
+An implementation whose state context holds exactly ten headers cannot build this context: upstream sigma-rust
+`develop` declares `Headers = [Header; 10]` (`ergo-lib/src/chain/ergo_state_context.rs`, at `688511df`), and its
+runner reports `errored` on every entry. That is a divergence, not a runner gap: a node built on it must hand a
+script ten headers. The fork's `BoundedVec<Header, 1, 10>` takes nine.
+
 **Oracle recipe (compact).** `TxEngine.validateBytes` builds the real context:
 ```scala
-val headers = headers_hex.map(HeaderSerializer.parseBytes)   // newest-first; .head == tip
+val headers = headers_hex.map(HeaderSerializer.parseBytes)   // newest-first, ≤ 9; .head == tip
 val preHdr  = CPreHeader(version, headers.head.id, timestamp, nBits, height, votes, minerPk)
 val ctx = UpcomingStateContext(headers, None, preHdr,
   chainSettings.genesisStateDigest, params, ErgoValidationSettings.initial, VotingData.empty)
@@ -211,8 +222,9 @@ Two provenances, distinguished by the `source` prefix on each entry:
   rejects (Track A, re-signed) are deferred.
   **Storage rent** (`storage-rent-*`, §8): minted, not captured — every box is `sigmaProp(true)`, so
   no spend needs a signature, under a **synthetic** context. No captured chain reaches the
-  `StoragePeriod` height on testnet, so the context is ten parent-linked v4 headers below height
-  1051200 with the preHeader on top (`parentId` = the newest header's id). Scripts never read the
+  `StoragePeriod` height on testnet, so the context is nine parent-linked v4 headers below height
+  1051200 with the preHeader on top (`parentId` = the newest header's id). They are the newest nine of a
+  generated ten-header window, so the oldest of them has a real parent. Scripts never read the
   headers. `AuthoredTxStorageRent` fails the bless unless each verdict is the arm's, for the arm's
   reason: a rent reject must carry the JVM's `#i => Success((false,50))`, and every accept's cost
   must decompose exactly into initial + assets + 50 per rent input + the script cost per script input.
@@ -316,8 +328,8 @@ A stratified sample of real rent spends, the real-history gate for rent ports.
 - blitzen-develop and dasher (ergots `f2a9c4b`): 122/122 valid
 
 **Authored tree-version spends (3 files / 23 entries; `AuthoredTxTreeVersion`).** A box whose tree is above
-the activated script version: the storage-rent synthetic context at block version 4, and the same ten headers
-re-linked at block version 3. Every tree is a `SigmaProp(true)` constant, so an impl that runs the script of
+the activated script version: the storage-rent synthetic context at block version 4, and the same headers
+re-linked at block version 3 (the whole ten-header window re-linked, then the newest nine). Every tree is a `SigmaProp(true)` constant, so an impl that runs the script of
 such a tree accepts. JVM source: `Interpreter.checkSoftForkCondition`, sigma-state v6.0.7; the parse contexts
 are §5's.
 - **`transaction/v6/authored/tree-version-above-activated`** (8, block version 4):
@@ -394,7 +406,7 @@ This block is easy to update as the corpus grows or runners evolve.
   "tx_bytes_hex": "0296bbdd…",                       // canonical sigma tx bytes
   "input_boxes_hex": [ "c0843d…", … ],               // ErgoBox bytes, in tx-input order
   "data_input_boxes_hex": [],
-  "headers_hex": [ "04d43a…", … ],                   // 10 headers, NEWEST-first
+  "headers_hex": [ "04d43a…", … ],                   // 9 headers, NEWEST-first
   "preHeader": { "version": 4, "parentId": "8b09b7…", "timestamp": "1768…",
                  "nBits": 84141514, "height": 2666, "minerPk": "02339b…", "votes": "000000" },
   "parameters": { "maxBlockCost": 1000000, "storageFeeFactor": 1250000, "minValuePerByte": 360,

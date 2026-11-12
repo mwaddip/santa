@@ -24,7 +24,7 @@
           "headers": {
             "type": "array", "minItems": 0, "maxItems": 10,
             "items": { "type": "object" },
-            "description": "preceding headers, newest-first, node-API JSON"
+            "description": "preceding headers, newest-first, node-API JSON: the node's window below the block. A script sees the newest nine (CONTEXT.headers = the node's lastHeaders.drop(1) once the block's own header is in the window)."
           },
           "parameters": {
             "type": "object",

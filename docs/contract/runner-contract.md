@@ -168,6 +168,9 @@ reconstruction rules, which every conforming implementation of this schema must 
   accessed via `getVarFromInput(i, key)`. The top-level `context.extension` is the
   SELF-input's extension and serves as a legacy single-input fallback; runners
   implementing the full schema use `input_extensions` for all inputs.
+- **`headers`** are `CONTEXT.headers` as given: at most **nine**, newest-first, the headers a script in a
+  block sees (the node's `lastHeaders.drop(1)`, `ErgoStateContext.sigmaLastHeaders`). A captured entry carries
+  the nine below its spending block; an implementation presents them as they are, neither cutting nor padding.
 - **Consistency constraint:** `preHeader.parentId == headers[0].id`. Real harvested
   envelopes satisfy this inherently (the spending block's preHeader references its
   parent, which is `headers[0]`); the control surface-verifies it.

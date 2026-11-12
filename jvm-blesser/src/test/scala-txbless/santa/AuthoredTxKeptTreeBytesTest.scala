@@ -72,7 +72,8 @@ class AuthoredTxKeptTreeBytesTest extends munit.FunSuite {
       env.hcursor.downField("entries").as[List[Json]].getOrElse(Nil).foreach { e =>
         assertEquals(e.hcursor.downField("version").get[Int]("activated").toOption, Some(3))
         assertEquals(e.hcursor.downField("context").get[Int]("height").toOption, Some(AuthoredTxStorageRent.H))
-        assertEquals(e.hcursor.downField("headers_hex").as[List[String]].toOption.map(_.size), Some(10))
+        assertEquals(e.hcursor.downField("headers_hex").as[List[String]].toOption.map(_.size),
+          Some(AuthoredTxStorageRent.ScriptHeaders))
       }
     }
   }

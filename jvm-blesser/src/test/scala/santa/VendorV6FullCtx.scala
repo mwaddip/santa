@@ -14,7 +14,8 @@ import io.circe.parser.{parse => parseJson}
   *   one file per golden, one entry per file, name = <basename-without-.json>#in<input_index>
   *   version.activated = 3 (v6 path-guard constant; non-behavioural metadata)
   *   version.ergoTree  = golden.expected.tree_version
-  *   context copied verbatim (field names match the schema)
+  *   context copied verbatim (field names match the schema), except `headers`: the golden carries the
+  *     node's ten-header window, the vector the newest nine (see ScriptHeaders)
   *   expected = { value, cost, error: null }   (tree_version promoted to version.ergoTree)
   *
   * Run: sbt "Test/runMain santa.VendorV6FullCtx"
@@ -22,6 +23,11 @@ import io.circe.parser.{parse => parseJson}
 object VendorV6FullCtx {
 
   val ActivatedVersion = 3
+  /** The headers a script in the block sees: block validation gives it `lastHeaders.drop(1)`
+    * (ergo-core ErgoStateContext.sigmaLastHeaders), LastHeadersInContext (10) - 1. ergo-core is not on the eval
+    * tier's classpath, so its constant cannot be referenced here; AuthoredTxStorageRent.ScriptHeaders is the tx
+    * tier's copy of the same rule. */
+  val ScriptHeaders    = 9
   val BlessedBy        = "jvm:sigma-state-6.0.3"
   val CapturedDir      = "/home/mwaddip/projects/ergots/tools/mainnet-validate/captured"
   val OutDir           = "/home/mwaddip/projects/santa/vectors/eval/v6/captured"
@@ -57,7 +63,10 @@ object VendorV6FullCtx {
       val treeBytesHex = c.get[String]("tree_bytes_hex")
         .fold(e => sys.error(s"$basename tree_bytes_hex: $e"), identity)
 
-      val context = c.downField("context").focus
+      val context = c.downField("context").withFocus(_.mapObject(ctx => ctx("headers").flatMap(_.asArray) match {
+          case Some(hs) => ctx.add("headers", Json.fromValues(hs.take(ScriptHeaders)))
+          case None     => sys.error(s"$basename: context.headers missing or not an array")
+        })).focus
         .getOrElse(sys.error(s"$basename: missing context"))
 
       val expectedC   = c.downField("expected")

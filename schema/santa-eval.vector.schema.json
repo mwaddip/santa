@@ -195,7 +195,7 @@
         "inputs": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "minItems": 1 },
         "data_inputs": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
         "outputs": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
-        "headers": { "type": "array", "items": { "$ref": "#/$defs/hex" } },
+        "headers": { "type": "array", "items": { "$ref": "#/$defs/hex" }, "maxItems": 9, "description": "CONTEXT.headers, at most nine, NEWEST-first, as scorex bytes: the headers a script in a block sees (the node's lastHeaders.drop(1))." },
         "pre_header_hex": { "$ref": "#/$defs/hex" },
         "height": { "type": "integer", "minimum": 0 },
         "extension": {
