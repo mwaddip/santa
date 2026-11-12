@@ -1,0 +1,33 @@
+name: tools
+
+# The tooling's unit tests (conform, santa-check, scoreboard, validate) on every push. They take
+# seconds, unlike the conformance grid (conform.yml, run on demand), and they are what catches a
+# test fixture going stale against a schema: validate's tx fixture sat red from 2026-06-16 to
+# 2026-11-12 because nothing ran them. No paths filter: the tests read schema/, vectors/ and
+# oracle/ as well as tools/, and a path list would be one more thing to go stale.
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: tools-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cargo-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install mise (binary only — tools/mise.toml pins the toolchain)
+        uses: jdx/mise-action@v4
+        with:
+          version: 2026.5.18
+          install: false
+      - name: cargo test (tools workspace)
+        run: |
+          mise trust tools/mise.toml
+          mise --cd tools install
+          mise --cd tools exec -- cargo test --workspace --locked --no-fail-fast

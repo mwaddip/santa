@@ -89,7 +89,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   subset it claims; dasher's manifest declares version ≤ v6). **A divergence is the deliverable** — surfaced
   and routed, never silenced; a red gate means the suite is working.
 - ✅ **Machine-checkable gates** — a JSON-Schema validator over the whole corpus (155 eval + 4 wire + 4 tx)
-  and an end-to-end conformance gate. The CI seed.
+  and an end-to-end conformance gate. The CI seed: the tooling's unit tests run on every push (the
+  `tools` workflow), the conformance grid on demand (`conform`).
 - ✅ **A standing coverage manifest** ([`docs/coverage/eval-coverage.json`](docs/coverage/eval-coverage.json),
   `santa-coverage/v1`) — the per-family op / method / arm map of the eval corpus, read
   off each entry's **deserialized tree** (never script text): every node's op, every
