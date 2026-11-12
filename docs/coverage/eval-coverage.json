@@ -6976,6 +6976,37 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json" : {
+      "accepts" : 3,
+      "entries" : 8,
+      "methods" : [
+        "9:12 UnsignedBigInt.shiftLeft"
+      ],
+      "op" : "UnsignedBigInt.shiftLeft_past_256_bits",
+      "ops" : [
+        "Apply",
+        "FuncValue",
+        "GetVar",
+        "MethodCall",
+        "OptionGet",
+        "SelectField",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 5,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 5,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/UnsignedBigInt_arith_domain_rejects.json" : {
       "accepts" : 0,
       "entries" : 5,
@@ -13179,6 +13210,7 @@
     },
     "9:12" : {
       "families" : [
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/spec/UnsignedBigInt_methods.json"
       ],
       "name" : "UnsignedBigInt.shiftLeft"
@@ -13699,6 +13731,7 @@
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -15290,6 +15323,7 @@
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -15611,6 +15645,7 @@
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Unevaluated.node_kinds.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -16206,6 +16241,7 @@
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/UnsignedBigInt.mod_toSigned.json",
         "v6/authored/UnsignedBigInt.mod_toSigned_domain_rejects.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Xor.per_item_cost_base.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -16521,6 +16557,7 @@
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -16800,6 +16837,7 @@
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -17535,6 +17573,7 @@
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -17670,12 +17709,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2507,
+    "accepts" : 2510,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2952,
-    "files" : 333,
-    "rejects" : 445,
+    "entries" : 2960,
+    "files" : 334,
+    "rejects" : 450,
     "unwalked" : 11
   }
 }
