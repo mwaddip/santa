@@ -588,7 +588,7 @@ function runWireEntryInner(e: WireEntry, tx: WireTxCodec): WireResult {
       const bytes = hexToBytes(e.bytes_hex)
       try {
         const r = new ByteReader(bytes)
-        const type = parseSType(r)
+        const type = parseSType(r, treeVersion)
         const value = parseSValue(type, treeVersion, r)
         const w = new ByteWriter()
         serializeSType(type, w)

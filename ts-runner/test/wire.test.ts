@@ -85,6 +85,16 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
       .toEqual({ bytes_hex: null, error: 'errored' })
   })
 
+  it('Constant: the type is read under the entry\'s tree version (rule 1017: UnsignedBigInt, code 9, only from v3)', () => {
+    // The JVM reads a bare Constant under withVersions(activated, ergoTree) (WireCanonicalize), and
+    // TypeSerializer gates code 9 on isV3OrLaterErgoTreeVersion. A read with no version took every
+    // v3 gate as closed, so a v6-only type was refused for the runner's reason.
+    expect(runWireEntry({ name: 'v3', kind: 'Constant', bytes_hex: '090105', version: { activated: 3, ergoTree: 3 } }))
+      .toEqual({ bytes_hex: '090105', error: null })
+    expect(runWireEntry({ name: 'v2', kind: 'Constant', bytes_hex: '090105', version: { activated: 3, ergoTree: 2 } }))
+      .toEqual({ bytes_hex: null, error: 'errored' })
+  })
+
   it('an ExprTpeError is a typed rejection, matched by name (ergots master does not export the class)', () => {
     // ergots' sized-tree work lets ExprTpeError propagate as a hard reject (a node the JVM refuses to build). A stub tx
     // codec throws one, so the classification is tested without depending on which ergots paths raise it.
