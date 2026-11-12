@@ -141,10 +141,25 @@ class BindingOffTheWireTest extends munit.FunSuite {
     assert(e.getMessage.contains("left after the value"), e.getMessage)
   }
 
-  test("a Value binding's version gate takes effect at the entry's activated version, as in a node") {
-    val b = EvalCore.decodeBinding(valueJson(valueHex(UnsignedBigIntConstant(java.math.BigInteger.ONE))))
-    EvalCore.contextWithVar1(tree, 3, b) // v6 holds an UnsignedBigInt
-    intercept[Throwable](EvalCore.contextWithVar1(tree, 2, b)) // v5's reader refuses one
+  // Rule 1019 (CheckV6Type) is part of BOTH of a node's readers, at every version — so it applies to a
+  // Value binding, and deliberately NOT to the JSON forms, which feed exactly these types into var 1.
+  test("a Value binding passes rule 1019, as a node's register and extension readers do; JSON does not") {
+    val ubi = UnsignedBigIntConstant(java.math.BigInteger.ONE)
+    intercept[sigma.validation.ValidationException](EvalCore.decodeBinding(valueJson(valueHex(ubi))))
+    val inTuple = Tuple(IndexedSeq(IntConstant(1), ubi).map(anyV))
+    intercept[sigma.validation.ValidationException](EvalCore.decodeBinding(valueJson(valueHex(inTuple))))
+    val viaJson = EvalCore.decodeBinding(json("""{"kind":"UnsignedBigInt","value":"1"}"""))
+    EvalCore.contextWithVar1(tree, 3, viaJson) // the harness feed still binds one
+  }
+
+  // The version a Value is read under is the entry's: an empty Coll[Int => Int] has a function type,
+  // which the type reader takes from v3 only.
+  test("a Value binding is read under the entry's activated version") {
+    val fnColl = ConstantNode(Colls.emptyColl[Any](sigma.AnyType).asInstanceOf[SType#WrappedType],
+      SCollection(SFunc(IndexedSeq(SInt), SInt))).asInstanceOf[Value[SType]]
+    val b = EvalCore.decodeBinding(valueJson(valueHex(fnColl)))
+    EvalCore.contextWithVar1(tree, 3, b) // v6 reads it
+    intercept[Throwable](EvalCore.contextWithVar1(tree, 2, b)) // v5 refuses it
   }
 
   // getVarFromInput[Boolean](0,11) over input 0's extension: a readable Value evaluates, an unreadable

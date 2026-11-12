@@ -343,18 +343,23 @@ than 2 items — so it has no input form at all, and no box can carry a script c
 `selfRegisters`, `inputs[].extension`, `extension`, and a full context's `extension` /
 `input_extensions` — takes any SValue above, or `{"kind":"Value","bytes_hex":…}`: the bytes a node
 itself reads for that position. Bind what your implementation's **own reader for that position**
-builds from them, under the entry's activated version, consuming **exactly one value with no bytes
-left over**. On the JVM that reader is `getValue`, cast to `EvaluatedValue` as `ErgoBoxCandidate` and
-`ContextExtension` cast it, so the bytes may hold a constant or an evaluated expression such as a
-`Tuple` of constants. If your reader refuses them, the entry is `errored`: a node would reject the
-transaction. **Never decode them into an SValue and rebuild the value from that** — the point of the
-form is that the reader decides the value's runtime shape. A vector uses it when its verdict depends
-on how the bound value was built or encoded, or for content no SValue can say (a register holding a
-`Tuple` expression; an encoding a reader normalises). The JSON forms remain for everything else.
-SANTA's oracle binds those through its reader as well (`EvalCore.offTheWire`), because its own
-JSON-built values were measured to differ from it — a `Coll[Short|Int|Long]`'s class, a collection of
-non-pair tuples' item type — and a script can see the difference; a runner whose JSON-built value
-can differ from its reader's should do the same.
+builds from them — the whole reader, its validation rules included — under the entry's activated
+version, consuming **exactly one value with no bytes left over**. On the JVM both readers (a box
+register, `ErgoBoxCandidate.scala:231-232`; an extension value, `ContextExtension.scala:61-62`) are
+`getValue`, cast to `EvaluatedValue` — so the bytes may hold a constant or an evaluated expression
+such as a `Tuple` of constants — then **rule 1019 `CheckV6Type`**, which refuses a type holding an
+Option, a Header or an UnsignedBigInt anywhere, at every version. If your reader refuses them, the
+entry is `errored`: a node would reject the transaction. **Never decode them into an SValue and
+rebuild the value from that** — the point of the form is that the reader decides the value's runtime
+shape. A vector uses it when its verdict depends on how the bound value was built or encoded, or for
+content no SValue can say (a register holding a `Tuple` expression; an encoding a reader
+normalises). The JSON forms remain for everything else, and they are **not** subject to rule 1019:
+they are the harness's way of handing a function its input, and the corpus binds exactly those types
+into var 1, where no real register or extension could hold them. SANTA's oracle binds the JSON forms
+through its reader's `getValue` as well (`EvalCore.offTheWire`), because its own JSON-built values
+were measured to differ from it — a `Coll[Short|Int|Long]`'s class, a collection of non-pair tuples'
+item type — and a script can see the difference; a runner whose JSON-built value can differ from its
+reader's should do the same.
 
 **The Long-vs-cost asymmetry (read this twice).** An SValue **`Long` value** is a decimal
 **string**, but the entry's **`cost`** (§5) — also a 64-bit quantity — is a bare JSON

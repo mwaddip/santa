@@ -433,11 +433,14 @@ object EvalCore {
 
   /** Decode a BINDING — a register or context-variable value, the vector schema's `$defs/binding`:
     * any SValue (`decodeInputConstant`), or `{"kind":"Value","bytes_hex":…}`, the bytes a node itself
-    * reads for that position. Those are read with `getValue`, exactly one value with no bytes left
-    * over, and must come back an `EvaluatedValue` — the cast a node makes for a box register
-    * (`ErgoBoxCandidate.scala:231` at v6.0.7) and for an extension value (`ContextExtension.scala:61`):
-    * a constant, or an evaluated expression such as a `Tuple` of constants. A refusal throws, inside
-    * the caller's verdict. Read at v3 (every data gate is `isV3OrLaterErgoTreeVersion`), so decoding
+    * reads for that position. Those are read the way both of a node's readers read them — a box
+    * register (`ErgoBoxCandidate.scala:231-232` at v6.0.7) and an extension value
+    * (`ContextExtension.scala:61-62`): `getValue`, exactly one value with no bytes left over, cast to
+    * `EvaluatedValue` (a constant, or an evaluated expression such as a `Tuple` of constants), then
+    * rule 1019 `CheckV6Type`, which refuses a value whose type holds an Option, a Header or an
+    * UnsignedBigInt at every version. A refusal throws, inside the caller's verdict. (The JSON forms
+    * skip rule 1019 on purpose: they are the harness's way of handing a function its input, and the
+    * corpus binds exactly those types into var 1, where no real register or extension could hold them.) Read at v3 (every data gate is `isV3OrLaterErgoTreeVersion`), so decoding
     * never refuses on version alone: the builders' `offTheWire` re-reads every binding under the
     * entry's `(activated, activated)`, which is where a version gate takes effect, as in a node.
     * Only a binding position takes `Value`; it cannot nest inside a Coll, Tuple or Option. */
@@ -450,6 +453,7 @@ object EvalCore {
         VersionContext.withVersions(VersionContext.V6SoftForkVersion, VersionContext.V6SoftForkVersion) {
           val r = SigmaSerializer.startReader(bytes)
           val v = r.getValue().asInstanceOf[EvaluatedValue[_ <: SType]]
+          ValidationRules.CheckV6Type(v)
           if (r.position != bytes.length)
             sys.error(s"decodeBinding Value: ${bytes.length - r.position} byte(s) left after the value")
           v
