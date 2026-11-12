@@ -6455,6 +6455,93 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Tuple.binding_provenance_input_var.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+        "101:12 Context.getVarFromInput"
+      ],
+      "op" : "Tuple.binding_provenance_input_var",
+      "ops" : [
+        "Const",
+        "Context$",
+        "MethodCall",
+        "OptionGet",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Tuple.binding_provenance_register.json" : {
+      "accepts" : 8,
+      "entries" : 8,
+      "methods" : [
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Tuple.binding_provenance_register",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "EQ",
+        "ExtractRegisterAs",
+        "MethodCall",
+        "OptionGet",
+        "Self$",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Tuple.binding_provenance_var.json" : {
+      "accepts" : 2,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "Tuple.binding_provenance_var",
+      "ops" : [
+        "GetVar",
+        "OptionGet",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Tuple.non_pair_type_check.json" : {
       "accepts" : 3,
       "entries" : 6,
@@ -12015,6 +12102,7 @@
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h92839-ef080dcdc493.json"
       ],
@@ -12387,6 +12475,7 @@
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/captured/h261770-5dad90a5021b.json",
         "v6/captured/h264948-bf31b3635b88.json",
         "v6/captured/h265399-83f7c92a5d39.json",
@@ -13831,6 +13920,7 @@
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -14166,6 +14256,8 @@
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/Tuple.binding_provenance_input_var.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -14357,6 +14449,7 @@
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112379-8c12d3f6ce28.json",
@@ -14461,6 +14554,7 @@
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -14726,6 +14820,7 @@
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -15367,6 +15462,7 @@
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -15951,6 +16047,8 @@
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/Tuple.binding_provenance_input_var.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -16268,6 +16366,9 @@
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/Tuple.binding_provenance_input_var.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
@@ -16636,6 +16737,7 @@
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -16783,6 +16885,9 @@
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/Tuple.binding_provenance_input_var.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -17413,11 +17518,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2478,
+    "accepts" : 2490,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 2907,
-    "files" : 326,
+    "entries" : 2919,
+    "files" : 329,
     "rejects" : 429,
     "unwalked" : 11
   }

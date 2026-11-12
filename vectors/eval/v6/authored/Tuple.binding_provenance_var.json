@@ -1,0 +1,50 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Tuple.binding_provenance_var",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-tuple-binding-provenance",
+  "entries" : [
+    {
+      "name" : "getvar-tuple-constant-accept#0",
+      "script" : "[C1] `getVar[(Int, Int, Int)](1).get.size`, var 1 = the tuple CONSTANT (1, 2, 3) — `3` at cost 39. CONTROL for X1: a constant reads the same in every reader. (TupleValuesProbe G1.)",
+      "tree_bytes_hex" : "0b08b1e4e30148040404",
+      "input" : {
+        "kind" : "Value",
+        "bytes_hex" : "48040404020406"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 39,
+        "error" : null
+      }
+    },
+    {
+      "name" : "getvar-tuple-expression-accept#1",
+      "script" : "[X1] the same tree, var 1 = the Tuple EXPRESSION (opcode 0x86) — `3` at 39, identical to its constant twin: `Tuple.value` is the same Coll[Any] the data decoder builds (values.scala:818-822). SEPARATING: a node's extension reader is `getValue` (ContextExtension.scala:61), which takes an evaluated expression; a reader that reads only a constant there refuses it.",
+      "tree_bytes_hex" : "0b08b1e4e30148040404",
+      "input" : {
+        "kind" : "Value",
+        "bytes_hex" : "8603040204040406"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 39,
+        "error" : null
+      }
+    }
+  ]
+}

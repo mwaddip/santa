@@ -70,14 +70,14 @@ class EvalConformanceTest extends munit.FunSuite {
 
       val (_, outcome) = schema match {
         case "santa-eval/v3" =>
-          val inputs = ec.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
-            val ext = inp.hcursor.downField("extension")
-            ext.keys.getOrElse(Iterable.empty).iterator.map { k =>
-              k.toInt.toByte -> EvalCore.decodeInputConstant(
-                ext.downField(k).focus.getOrElse(sys.error(s"v3 entry '$name': missing extension value for key $k")))
-            }.toMap
-          }
-          EvalCore.evalWithInputExtensions(treeHex, inputs, activated)
+          // The bindings stay JSON, as rudolph's Runner passes them: EvalCore decodes each one (an
+          // SValue or a `Value`'s bytes) inside the verdict.
+          val inputs: Seq[Map[Int, io.circe.Json]] =
+            ec.downField("inputs").values.getOrElse(Vector.empty).toVector.map { inp =>
+              inp.hcursor.downField("extension").focus.flatMap(_.asObject)
+                .map(_.toMap.map { case (k, j) => k.toInt -> j }).getOrElse(Map.empty)
+            }
+          EvalCore.evalWithInputExtensionsJson(treeHex, inputs, activated)
         case "santa-eval/v4" =>
           // SELF box carries selfRegisters (id (0-based Int) -> SValue JSON) + var 1 = input.
           val regsObj = ec.downField("selfRegisters").focus
