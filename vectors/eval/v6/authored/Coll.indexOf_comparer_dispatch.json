@@ -1,0 +1,386 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.indexOf_comparer_dispatch",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-comparer-dispatch",
+  "entries" : [
+    {
+      "name" : "long-item-int-arg-accept#0",
+      "script" : "[A3] `Coll(1L).indexOf(lie(1L, 1), 0)` — 0 at cost 87: `indexOf` compares each ITEM, the comparer's LEFT value, with the argument (methods.scala:1091) and never type-checks the argument. A Long item takes the primitive case (`EQ_Prim` 3, Scala's boxed `l == r`), where two integers compare by VALUE across widths, so Long 1 equals Int 1. SEPARATING: a width-aware comparison answers -1.",
+      "tree_bytes_hex" : "0b12dc0c1a830105050202950100050204020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-item-long-arg-control-accept#1",
+      "script" : "[A3c] `Coll(1L).indexOf(1L, 0)` — 0 at cost 72. CONTROL for A3.",
+      "tree_bytes_hex" : "0b0ddc0c1a83010505020205020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "byte-item-long-arg-accept#2",
+      "script" : "[A4] `Coll[Byte] constant (1).indexOf(lie(1.toByte, 1L), 0)` — 0 at cost 67: a Byte item against a Long argument, equal by value as in A3, on a specialised Coll[Byte] receiver. SEPARATING, as A3.",
+      "tree_bytes_hex" : "0b10dc0c1a0e010102950100020105020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 67,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-item-long-arg-accept#3",
+      "script" : "[D1] `Coll[Box](SELF).indexOf(lie(SELF, 1L), 0)` — -1 at cost 95: a Box item takes the Box case (`EQ_Box` 6), and a Long right is unequal. SEPARATING on cost: a comparison dispatched on the Long instead costs 92.",
+      "tree_bytes_hex" : "0b10dc0c1a830163a702950100a705020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 95,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-item-box-arg-control-accept#4",
+      "script" : "[D1c] `Coll[Box](SELF).indexOf(SELF, 0)` — 0 at cost 85. CONTROL for D1.",
+      "tree_bytes_hex" : "0b0bdc0c1a830163a702a70400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bigint-item-long-arg-accept#5",
+      "script" : "[D2] `Coll[BigInt](1).indexOf(lie(BigInt(1), 1L), 0)` — -1 at cost 89: a BigInt item takes the BigInt case (`EQ_BigInt` 5), and `CBigInt(1) == 1L` is false: a BigInt is not a `java.lang.Number`, so the primitive case's cross-width equality never reaches it. SEPARATING on cost: a comparison dispatched on the Long instead costs 87; a comparer that equates BigInt 1 with Long 1 answers 0.",
+      "tree_bytes_hex" : "0b14dc0c1a8301060601010295010006010105020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 89,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bigint-item-bigint-arg-control-accept#6",
+      "script" : "[D2c] `Coll[BigInt](1).indexOf(BigInt(1), 0)` — 0 at cost 74. CONTROL for D2.",
+      "tree_bytes_hex" : "0b0fdc0c1a830106060101020601010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 74,
+        "error" : null
+      }
+    },
+    {
+      "name" : "coll-item-long-arg-accept#7",
+      "script" : "[D3] `Coll[Coll[Int]](Coll(1)).indexOf(lie(Coll(1), 1L), 0)` — -1 at cost 105: a Coll item charges `MatchType` 1, then finds the right value is not a Coll. SEPARATING on cost: a comparison dispatched on the Long instead costs 107.",
+      "tree_bytes_hex" : "0b18dc0c1a830110830104040202950100830104040205020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 105,
+        "error" : null
+      }
+    },
+    {
+      "name" : "coll-item-coll-arg-control-accept#8",
+      "script" : "[D3c] `Coll[Coll[Int]](Coll(1)).indexOf(Coll(1), 0)` — 0 at cost 127. CONTROL for D3: equal collections go on to the length, the item type and the per-class comparison.",
+      "tree_bytes_hex" : "0b13dc0c1a83011083010404020283010404020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 127,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-item-long-arg-accept#9",
+      "script" : "[D4] `Coll((1,2)).indexOf(lie((1,2), 1L), 0)` — -1 at cost 108: a pair item charges `EQ_Tuple` 4, and a Long is not a pair. SEPARATING on cost: a comparison dispatched on the Long instead costs 107.",
+      "tree_bytes_hex" : "0b1adc0c1a8301588602040204040295010086020402040405020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 108,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-item-pair-arg-control-accept#10",
+      "script" : "[D4c] `Coll((1,2)).indexOf((1,2), 0)` — 0 at cost 119. CONTROL for D4.",
+      "tree_bytes_hex" : "0b15dc0c1a830158860204020404028602040204040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 119,
+        "error" : null
+      }
+    },
+    {
+      "name" : "groupelement-item-long-arg-accept#11",
+      "script" : "[D5] `Coll[GroupElement](g).indexOf(lie(g, 1L), 0)` — -1 at cost 261: a GroupElement item charges `EQ_GroupElement` 172 whatever the right value is. SEPARATING on cost: a comparison dispatched on the Long instead costs 92.",
+      "tree_bytes_hex" : "0b10dc0c1a83010782029501008205020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 261,
+        "error" : null
+      }
+    },
+    {
+      "name" : "groupelement-item-groupelement-arg-control-accept#12",
+      "script" : "[D5c] `Coll[GroupElement](g).indexOf(g, 0)` — 0 at cost 251. CONTROL for D5.",
+      "tree_bytes_hex" : "0b0bdc0c1a8301078202820400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 251,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int-item-groupelement-arg-accept#13",
+      "script" : "[D6] `Coll(1).indexOf(lie(1, g), 0)` — -1 at cost 92: the MIRROR of D5, an Int item against a GroupElement argument: the primitive case charges 3, and `1 == g` is false. SEPARATING on cost: a comparison dispatched on the GroupElement argument charges 172 and costs 261.",
+      "tree_bytes_hex" : "0b11dc0c1a8301040402029501000402820400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 92,
+        "error" : null
+      }
+    },
+    {
+      "name" : "boolean-item-int-arg-accept#14",
+      "script" : "[D7] `Coll(true).indexOf(lie(true, 1), 0)` — -1 at cost 87: a Boolean item takes the primitive case, and Scala's boxed `==` never equates a Boolean with a number. SEPARATING: a comparer that reads `true` as 1 answers 0.",
+      "tree_bytes_hex" : "0b12dc0c1a830101010102950100010104020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "int-item-boolean-arg-accept#15",
+      "script" : "[D8] `Coll(1).indexOf(lie(1, true), 0)` — -1 at cost 87: the mirror of D7, an Int item against a Boolean argument. SEPARATING, as D7.",
+      "tree_bytes_hex" : "0b12dc0c1a830104040202950100040201010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option-item-long-arg-accept#16",
+      "script" : "[O3] `Coll(getVar[Int](1)).indexOf(lie(getVar[Int](1), 1L), 0)`, var 1 = Int 0 — -1 at cost 93: the item is `Some(0)`, an Option left (`EQ_Option` 4), and a Long is not an Option. The receiver is a `ConcreteCollection` of `GetVar` nodes, item type `Option[Int]`. SEPARATING on cost: a comparison dispatched on the Long instead costs 92.",
+      "tree_bytes_hex" : "0b14dc0c1a830128e3010402950100e3010405020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : -1
+        },
+        "cost" : 93,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option-item-option-arg-control-accept#17",
+      "script" : "[O3c] `Coll(getVar[Int](1)).indexOf(getVar[Int](1), 0)` — 0 at cost 86. CONTROL for O3.",
+      "tree_bytes_hex" : "0b0fdc0c1a830128e3010402e301040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 86,
+        "error" : null
+      }
+    }
+  ]
+}

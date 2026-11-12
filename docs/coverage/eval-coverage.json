@@ -4746,6 +4746,38 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Coll.indexOf_comparer_dispatch.json" : {
+      "accepts" : 18,
+      "entries" : 18,
+      "methods" : [
+        "12:26 SCollection.indexOf"
+      ],
+      "op" : "Coll.indexOf_comparer_dispatch",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "GetVar",
+        "GroupGenerator$",
+        "If",
+        "MethodCall",
+        "Self$",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 18,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Coll.item_store_type_check.json" : {
       "accepts" : 1,
       "entries" : 12,
@@ -5359,6 +5391,44 @@
           "has_deserialize" : true,
           "has_size" : true,
           "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/EQ.comparer_dispatch.json" : {
+      "accepts" : 31,
+      "entries" : 37,
+      "methods" : [
+        "101:3 Context.preHeader",
+        "12:33 SCollection.get"
+      ],
+      "op" : "EQ.comparer_dispatch",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "EQ",
+        "GetVar",
+        "Global$",
+        "GroupGenerator$",
+        "If",
+        "LastBlockUtxoRootHash$",
+        "MethodCall",
+        "NEQ",
+        "OptionGet",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 6,
+      "tree_shapes" : [
+        {
+          "accepts" : 31,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
           "tree_version" : 3
         }
       ],
@@ -12378,6 +12448,7 @@
     "101:3" : {
       "families" : [
         "v5/authored/Context.preHeader_accessors.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/captured/h1542-1b5c260a496a.json"
       ],
       "name" : "Context.preHeader"
@@ -12730,6 +12801,7 @@
     "12:26" : {
       "families" : [
         "v5/spec/Coll_indexOf_method_equivalence.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
         "v6/captured/h231432-fddb21e1303e.json"
       ],
@@ -12797,6 +12869,7 @@
     },
     "12:33" : {
       "families" : [
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/spec/Coll.get.json"
       ],
       "name" : "SCollection.get"
@@ -14419,6 +14492,7 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
@@ -14433,6 +14507,7 @@
         "v6/authored/Coll.specialisation_prefix_suffix.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
@@ -14528,6 +14603,7 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
@@ -14544,6 +14620,7 @@
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Comparison.mixed_width.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
@@ -14747,6 +14824,7 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -14850,6 +14928,7 @@
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
         "v6/authored/Comparison.mixed_width.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
@@ -15746,7 +15825,9 @@
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.reference_store_ops.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -15856,6 +15937,7 @@
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
@@ -15908,9 +15990,11 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
@@ -15973,6 +16057,7 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
@@ -15984,6 +16069,7 @@
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/DeserializeContext_over_absent_wrong_typed_var.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Negation.mixed_width.json",
@@ -16192,7 +16278,8 @@
     "LastBlockUtxoRootHash$" : {
       "families" : [
         "v5/authored/Context.op_forms.json",
-        "v5/authored/Context.properties.json"
+        "v5/authored/Context.properties.json",
+        "v6/authored/EQ.comparer_dispatch.json"
       ],
       "op_codes" : [
         "0xa6"
@@ -16317,6 +16404,7 @@
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
@@ -16334,6 +16422,7 @@
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
@@ -16516,6 +16605,7 @@
         "v5/spec/NEQ_of_tuples_of_pre_defined_types.json",
         "v5/spec/Short_LT_GT_NEQ.json",
         "v6/authored/Coll.eq_item_type.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -16666,6 +16756,7 @@
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -17053,6 +17144,7 @@
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
@@ -17376,11 +17468,13 @@
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.runtime_shapes_methodcall.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
+        "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -17848,12 +17942,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2536,
+    "accepts" : 2585,
     "distinct_methods" : 157,
     "distinct_ops" : 89,
-    "entries" : 3008,
-    "files" : 337,
-    "rejects" : 472,
+    "entries" : 3063,
+    "files" : 339,
+    "rejects" : 478,
     "unwalked" : 11
   }
 }

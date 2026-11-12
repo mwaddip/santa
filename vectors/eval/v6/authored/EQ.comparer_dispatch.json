@@ -1,0 +1,767 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "EQ.comparer_dispatch",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-eval-comparer-dispatch",
+  "entries" : [
+    {
+      "name" : "pair-long-item-left-accept#0",
+      "script" : "[B3] `lie((1,2), (1L,2)) == (1,2)` — true at cost 75: `EQ` checks each operand's ROOT class only (`Value.checkType`; a pair passes), so the lie reaches the comparer, which descends the pair (`EQ_Tuple` 4) and compares Long 1 with Int 1 by VALUE (`EQ_Prim` 3). SEPARATING: a width-aware comparison answers false at 72.",
+      "tree_bytes_hex" : "0b1693950100860204020404860205020404860204020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-control-accept#1",
+      "script" : "[B3c] `(1,2) == (1,2)` — true at cost 60. CONTROL for B3.",
+      "tree_bytes_hex" : "0b0d93860204020404860204020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-long-item-right-accept#2",
+      "script" : "[B4] `(1,2) == lie((1,2), (1L,2))` — true at cost 75: the lie on the RIGHT; an Int 1 left equals Long 1 the same way. SEPARATING, as B3.",
+      "tree_bytes_hex" : "0b1693860204020404950100860204020404860205020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "neq-pair-long-item-left-accept#3",
+      "script" : "[B5] `lie((1,2), (1L,2)) != (1,2)` — false at cost 75: `NEQ` calls the same comparer (trees.scala:1229). SEPARATING, as B3.",
+      "tree_bytes_hex" : "0b1694950100860204020404860205020404860204020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-unequal-long-item-accept#4",
+      "script" : "[B6] `lie((1,2), (2L,2)) == (1,2)` — false at cost 72: the lie's value is not numerically equal, so every rule answers false, and the first item's false short-circuits the second (75 − 3). CONTROL for B3: the cost of an unequal first item.",
+      "tree_bytes_hex" : "0b1693950100860204020404860205040404860204020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-long-vs-byte-item-accept#5",
+      "script" : "[B7] `lie((1.toByte,2), (1L,2)) == (1.toByte,2)` — true at cost 75: Long 1 equals Byte 1 by value. SEPARATING, as B3.",
+      "tree_bytes_hex" : "0b1693950100860202010404860205020404860202010404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-int-vs-boolean-item-accept#6",
+      "script" : "[B8] `lie((true,2), (1,2)) == (true,2)` — false at cost 72: an Int left against a Boolean right, which the boxed `==` never equates. SEPARATING: a comparer that reads `true` as 1 answers true.",
+      "tree_bytes_hex" : "0b1693950100860201010404860204020404860201010404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option-long-content-left-accept#7",
+      "script" : "[B9] `lie(Coll(1).get(0), Coll(1L).get(0)) == Coll(1).get(0)` — true at cost 150: an Option passes the operand check by its root class; an Option left (`EQ_Option` 4) descends to its contents, `Some(1L)` against `Some(1)`, and compares them by value. SEPARATING, as B3.",
+      "tree_bytes_hex" : "0b2593950100dc0c218301040402010400dc0c218301050502010400dc0c218301040402010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 150,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option-control-accept#8",
+      "script" : "[B9c] `Coll(1).get(0) == Coll(1).get(0)` — true at cost 135. CONTROL for B9.",
+      "tree_bytes_hex" : "0b1793dc0c218301040402010400dc0c218301040402010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 135,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bigint-left-long-right-accept#9",
+      "script" : "[C1] `(BigInt(1), 2) == lie((BigInt(1),2), (1L,2))` — false at cost 74: a BigInt left charges `EQ_BigInt` 5, and `CBigInt(1) == 1L` is false: a BigInt is not a `java.lang.Number`, so the primitive case's cross-width equality never reaches it. SEPARATING on cost: a comparison dispatched on the Long instead costs 72; a comparer that equates BigInt 1 with Long 1 answers true.",
+      "tree_bytes_hex" : "0b18938602060101040495010086020601010404860205020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 74,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bigint-pair-control-accept#10",
+      "script" : "[C1c] `(BigInt(1), 2) == (BigInt(1), 2)` — true at cost 62. CONTROL for C1.",
+      "tree_bytes_hex" : "0b0f938602060101040486020601010404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 62,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-bigint-right-accept#11",
+      "script" : "[C2] `lie((BigInt(1),2), (1L,2)) == (BigInt(1), 2)` — false at cost 72: the MIRROR of C1, a Long left (`EQ_Prim` 3) against a BigInt right, unequal from this side too. C1 − C2 = 5 − 3. SEPARATING on value, as C1.",
+      "tree_bytes_hex" : "0b18939501008602060101040486020502040486020601010404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "groupelement-left-long-right-accept#12",
+      "script" : "[C3] `(g, 2) == lie((g,2), (1L,2))` — false at cost 246: a GroupElement left charges `EQ_GroupElement` 172 whatever the right value is. SEPARATING on cost: a comparison dispatched on the Long instead costs 77 (C4).",
+      "tree_bytes_hex" : "0b149386028204049501008602820404860205020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 246,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-groupelement-right-accept#13",
+      "script" : "[C4] `lie((g,2), (1L,2)) == (g, 2)` — false at cost 77: the MIRROR of C3, a Long left. C3 − C4 = 172 − 3.",
+      "tree_bytes_hex" : "0b149395010086028204048602050204048602820404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 77,
+        "error" : null
+      }
+    },
+    {
+      "name" : "header-left-long-right-accept#14",
+      "script" : "[H1] `(h, 2) == lie((h,2), (1L,2))`, h = `getVar[Header](1).get`, var 1 a mainnet v2 header — false at cost 95: a Header left charges `EQ_Header` 6, and a Long is not a Header, so the pair is unequal. SEPARATING on cost: a comparison dispatched on the Long instead costs 92 (H2).",
+      "tree_bytes_hex" : "0b1a938602e4e3016804049501008602e4e301680404860205020404",
+      "input" : {
+        "kind" : "Header",
+        "bytes_hex" : "02ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 95,
+        "error" : null
+      }
+    },
+    {
+      "name" : "header-pair-control-accept#15",
+      "script" : "[H1c] `(h, 2) == (h, 2)` — true at cost 103. CONTROL for H1.",
+      "tree_bytes_hex" : "0b11938602e4e3016804048602e4e301680404",
+      "input" : {
+        "kind" : "Header",
+        "bytes_hex" : "02ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 103,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-header-right-accept#16",
+      "script" : "[H2] `lie((h,2), (1L,2)) == (h, 2)` — false at cost 92: the MIRROR of H1, a Long left (`EQ_Prim` 3) against a Header right. The two evaluate the same nodes, so H1 − H2 = 6 − 3.",
+      "tree_bytes_hex" : "0b1a939501008602e4e3016804048602050204048602e4e301680404",
+      "input" : {
+        "kind" : "Header",
+        "bytes_hex" : "02ac2101807f0000ca01ff0119db227f202201007f62000177a080005d440896d05d3f80dcff7f5e7f59007294c180808d0158d1ff6ba10000f901c7f0ef87dcfff17fffacb6ff7f7f1180d2ff7f1e24ffffe1ff937f807f0797b9ff6ebdae007e5c8c00b8403d3701557181c8df800001b6d5009e2201c6ff807d71808c00019780f087adb3fcdbc0b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 92,
+        "error" : null
+      }
+    },
+    {
+      "name" : "preheader-left-long-right-accept#17",
+      "script" : "[P1] `(CONTEXT.preHeader, 2) == lie((CONTEXT.preHeader,2), (1L,2))` — false at cost 88: a PreHeader left charges `EQ_PreHeader` 4, and a Long is not a PreHeader, so the pair is unequal. SEPARATING on cost: a comparison dispatched on the Long instead costs 87 (P2).",
+      "tree_bytes_hex" : "0b1a938602db6503fe04049501008602db6503fe0404860205020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 88,
+        "error" : null
+      }
+    },
+    {
+      "name" : "preheader-pair-control-accept#18",
+      "script" : "[P1c] `(CONTEXT.preHeader, 2) == (CONTEXT.preHeader, 2)` — true at cost 91. CONTROL for P1.",
+      "tree_bytes_hex" : "0b11938602db6503fe04048602db6503fe0404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 91,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-preheader-right-accept#19",
+      "script" : "[P2] `lie((CONTEXT.preHeader,2), (1L,2)) == (CONTEXT.preHeader, 2)` — false at cost 87: the MIRROR of P1, a Long left (`EQ_Prim` 3) against a PreHeader right. The two evaluate the same nodes, so P1 − P2 = 4 − 3.",
+      "tree_bytes_hex" : "0b1a939501008602db6503fe04048602050204048602db6503fe0404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 87,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avltree-left-long-right-accept#20",
+      "script" : "[V1] `(LastBlockUtxoRootHash, 2) == lie((LastBlockUtxoRootHash,2), (1L,2))` — false at cost 85: a AvlTree left charges `EQ_AvlTree` 6, and a Long is not a AvlTree, so the pair is unequal. SEPARATING on cost: a comparison dispatched on the Long instead costs 82 (V2).",
+      "tree_bytes_hex" : "0b14938602a604049501008602a60404860205020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 85,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avltree-pair-control-accept#21",
+      "script" : "[V1c] `(LastBlockUtxoRootHash, 2) == (LastBlockUtxoRootHash, 2)` — true at cost 83. CONTROL for V1.",
+      "tree_bytes_hex" : "0b0b938602a604048602a60404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 83,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-avltree-right-accept#22",
+      "script" : "[V2] `lie((LastBlockUtxoRootHash,2), (1L,2)) == (LastBlockUtxoRootHash, 2)` — false at cost 82: the MIRROR of V1, a Long left (`EQ_Prim` 3) against a AvlTree right. The two evaluate the same nodes, so V1 − V2 = 6 − 3.",
+      "tree_bytes_hex" : "0b14939501008602a604048602050204048602a60404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 82,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option-left-long-right-accept#23",
+      "script" : "[O1] `(getVar[Int](1), 2) == lie((getVar[Int](1),2), (1L,2))`, var 1 = Int 0 so the left is `Some(0)` — false at cost 78: a Option left charges `EQ_Option` 4, and a Long is not a Option, so the pair is unequal. SEPARATING on cost: a comparison dispatched on the Long instead costs 77 (O2).",
+      "tree_bytes_hex" : "0b18938602e3010404049501008602e301040404860205020404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 78,
+        "error" : null
+      }
+    },
+    {
+      "name" : "option-pair-control-accept#24",
+      "script" : "[O1c] `(getVar[Int](1), 2) == (getVar[Int](1), 2)` — true at cost 74. CONTROL for O1.",
+      "tree_bytes_hex" : "0b0f938602e3010404048602e301040404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 74,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-option-right-accept#25",
+      "script" : "[O2] `lie((getVar[Int](1),2), (1L,2)) == (getVar[Int](1), 2)` — false at cost 77: the MIRROR of O1, a Long left (`EQ_Prim` 3) against a Option right. The two evaluate the same nodes, so O1 − O2 = 4 − 3.",
+      "tree_bytes_hex" : "0b18939501008602e3010404048602050204048602e301040404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 77,
+        "error" : null
+      }
+    },
+    {
+      "name" : "bare-string-operands-errored#26",
+      "script" : "[S0] `\"a\" == \"a\"`, two String constants — THROWS `RuntimeException: Unknown type SString` at `EQ`'s operand check, before the comparer: `SType.isValueOfType` has no String case. A different exception from the `InterpreterException` of a lie at the root (EQ.cross_width_numeric W3), though the eval tier grades both as errored; a String reaches the comparer only inside a pair (S1-S5). SEPARATING: an operand check with a String case answers true.",
+      "tree_bytes_hex" : "0b0793660161660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "string-pair-equal-accept#27",
+      "script" : "[S1] `(\"a\",1) == (\"a\",1)`, two `(String, Int)` pair constants — true at cost 35: a String left charges `MatchType` 1 and, the lengths being equal, `EQ_COA_Short` over the length (15 + 2 per 96-char chunk: 17), then the Int item 3. Pins the String case's cost.",
+      "tree_bytes_hex" : "0b0b934c660161024c66016102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "string-pair-unequal-accept#28",
+      "script" : "[S2] `(\"a\",1) == (\"b\",1)` — false at cost 32: the same charges, and the String's false short-circuits the Int (35 − 3).",
+      "tree_bytes_hex" : "0b0b934c660161024c66016202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 32,
+        "error" : null
+      }
+    },
+    {
+      "name" : "string-pair-length-bail-accept#29",
+      "script" : "[S3] `(\"a\",1) == (\"ab\",1)` — false at cost 15: the lengths differ, so the String case returns before charging `EQ_COA_Short` (32 − 17); only `MatchType` is paid.",
+      "tree_bytes_hex" : "0b0c934c660161024c6602616202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "string-left-long-right-accept#30",
+      "script" : "[S4] `(\"a\",1) == lie((\"a\",1), (1L,1))` — false at cost 50: a String left charges only `MatchType` 1 against a Long right. SEPARATING on cost: a comparison dispatched on the Long instead costs 52 (S5).",
+      "tree_bytes_hex" : "0b14934c660161029501004c66016102860205020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "long-left-string-right-accept#31",
+      "script" : "[S5] `lie((\"a\",1), (1L,1)) == (\"a\",1)` — false at cost 52: the MIRROR of S4, a Long left. S4 − S5 = 1 − 3.",
+      "tree_bytes_hex" : "0b14939501004c660161028602050204024c66016102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 52,
+        "error" : null
+      }
+    },
+    {
+      "name" : "context-operands-errored#32",
+      "script" : "[K1] `CONTEXT == CONTEXT` — THROWS `RuntimeException: Cannot compare … unknown type`: `EQ`'s operand check passes a Context, and the comparer has no case for it, so its default `sys.error` throws (DataValueComparer.scala:413). SEPARATING: an implementation that compares a Context answers true.",
+      "tree_bytes_hex" : "0b0393fefe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "global-operands-errored#33",
+      "script" : "[K2] `Global == Global` — THROWS the same, the comparer's default case on a `SigmaDslBuilder`. SEPARATING, as K1.",
+      "tree_bytes_hex" : "0b0393dddd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "context-pair-item-errored#34",
+      "script" : "[K3] `(CONTEXT, 1) == (CONTEXT, 1)` — THROWS the same, reached through the pair case's first item. SEPARATING, as K1.",
+      "tree_bytes_hex" : "0b0b938602fe04028602fe0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "global-pair-item-errored#35",
+      "script" : "[K4] `(Global, 1) == (Global, 1)` — THROWS the same, through the pair case. SEPARATING, as K1.",
+      "tree_bytes_hex" : "0b0b938602dd04028602dd0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "neq-context-operands-errored#36",
+      "script" : "[K5] `CONTEXT != CONTEXT` — THROWS the same: `NEQ` calls the same comparer (trees.scala:1229). SEPARATING, as K1.",
+      "tree_bytes_hex" : "0b0394fefe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
