@@ -1,0 +1,310 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Context.property_call_forms",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-context-property-calls",
+  "entries" : [
+    {
+      "name" : "inputs-propertycall-size-accept-t0#0",
+      "script" : "[I] `CONTEXT.INPUTS.size`, INPUTS as a PropertyCall (SContext 4, `db6504fe`) — Int 1 at cost 29: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Ic's 24 + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1db6504fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 29,
+        "error" : null
+      }
+    },
+    {
+      "name" : "inputs-node-size-accept-t0#1",
+      "script" : "[Ic] `INPUTS.size`, the `Inputs` node (`a4`) — Int 1 at cost 24. CONTROL for I.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1a4",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 24,
+        "error" : null
+      }
+    },
+    {
+      "name" : "outputs-propertycall-size-accept-t0#2",
+      "script" : "[O] `CONTEXT.OUTPUTS.size`, OUTPUTS as a PropertyCall (SContext 5, `db6505fe`) — Int 0 at cost 29: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Oc's 24 + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1db6505fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 29,
+        "error" : null
+      }
+    },
+    {
+      "name" : "outputs-node-size-accept-t0#3",
+      "script" : "[Oc] `OUTPUTS.size`, the `Outputs` node (`a5`) — Int 0 at cost 24. CONTROL for O.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1a5",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 24,
+        "error" : null
+      }
+    },
+    {
+      "name" : "height-propertycall-accept-t0#4",
+      "script" : "[H] `CONTEXT.HEIGHT`, HEIGHT as a PropertyCall (SContext 6, `db6506fe`) — Int 0 at cost 31: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Hc's 26 + 5 (Height's own cost kind is Fixed 26). SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00db6506fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "height-node-accept-t0#5",
+      "script" : "[Hc] `HEIGHT`, the `Height` node (`a3`) — Int 0 at cost 26. CONTROL for H.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00a3",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "self-propertycall-value-accept-t0#6",
+      "script" : "[S] `CONTEXT.SELF.value`, SELF as a PropertyCall (SContext 7, `db6507fe`) — Long 1000000 at cost 23: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Sc's 18 + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00c1db6507fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "1000000"
+        },
+        "cost" : 23,
+        "error" : null
+      }
+    },
+    {
+      "name" : "self-node-value-accept-t0#7",
+      "script" : "[Sc] `SELF.value`, the `Self` node (`a7`) — Long 1000000 at cost 18. CONTROL for S.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00c1a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "1000000"
+        },
+        "cost" : 18,
+        "error" : null
+      }
+    },
+    {
+      "name" : "outputs-propertycall-bare-accept-t0#8",
+      "script" : "[Ob] `CONTEXT.OUTPUTS`, bare — `Coll[Box]()` at cost 15, the `Outputs` node's 10 (Obc) + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00db6505fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SBox"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "outputs-node-bare-accept-t0#9",
+      "script" : "[Obc] `OUTPUTS`, the bare `Outputs` node — `Coll[Box]()` at cost 10. CONTROL for Ob.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00a5",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SBox"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 10,
+        "error" : null
+      }
+    },
+    {
+      "name" : "inputs-propertycall-eq-node-accept-t0#10",
+      "script" : "[I=] `CONTEXT.INPUTS == INPUTS` — true at cost 46: the call's value IS the node's. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0093db6504fea4",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "outputs-propertycall-eq-node-accept-t0#11",
+      "script" : "[O=] `CONTEXT.OUTPUTS == OUTPUTS` — true at cost 41. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0093db6505fea5",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "height-propertycall-eq-node-accept-t0#12",
+      "script" : "[H=] `CONTEXT.HEIGHT == HEIGHT` — true at cost 60. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0093db6506fea3",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "self-propertycall-eq-node-accept-t0#13",
+      "script" : "[S=] `CONTEXT.SELF == SELF` — true at cost 31. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0093db6507fea7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    }
+  ]
+}
