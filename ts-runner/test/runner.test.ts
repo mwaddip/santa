@@ -182,6 +182,24 @@ describe('runVector — outcome taxonomy (runner-contract §3)', () => {
     expect(actuals['key-0x80-present-errored#0']).toEqual({ value: null, cost: null, error: 'errored' })
   })
 
+  it('contract §2 HEIGHT: the canonical context carries HEIGHT = preHeader.height = 0 (the Height node, v0 and v3)', () => {
+    // The v2 context set preHeader.height but never ctx.height, which ergots' Height reads (GlobalVars.Height):
+    // every bare HEIGHT came back `errored` (context-field-missing) until Context.property_call_forms first read it.
+    const vec = {
+      schema: 'santa-eval/v2', op: 'Height', blessed_by: 'x', source: 's',
+      entries: [
+        { name: 'h0', tree_bytes_hex: '00a3', input: { kind: 'Int', value: 0 },
+          version: { activated: 3, ergoTree: 0 }, expected: { value: null, cost: null, error: null } },
+        { name: 'h3', tree_bytes_hex: '0b01a3', input: { kind: 'Int', value: 0 },
+          version: { activated: 3, ergoTree: 3 }, expected: { value: null, cost: null, error: null } },
+      ],
+    }
+    const actuals = runVector(vec)
+    for (const n of ['h0', 'h3']) {
+      expect(actuals[n], n).toEqual({ value: { kind: 'Int', value: 0 }, cost: 26, error: null })
+    }
+  })
+
   it('an unrecognized failure becomes `panicked` (note carries the message) and the run continues', () => {
     // Never-panic invariant (runner-contract §3): a failure the runner does NOT recognize as
     // a library verdict must NOT abort the file — it becomes the `panicked` outcome (coal,

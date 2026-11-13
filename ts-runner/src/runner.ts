@@ -148,6 +148,7 @@ function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Resu
     treeVersion,
     constants: tree.constants,
     preHeader,
+    height: preHeader.height,             // GlobalVars.Height; the JVM's HEIGHT is preHeader.height (0)
     selfBox: selfBoxBase,
     inputs: [selfBoxBase] as ErgoBox[],  // [SELF]; selfBoxIndex 0 via reference-equality indexOf
     outputs: [] as ErgoBox[],
