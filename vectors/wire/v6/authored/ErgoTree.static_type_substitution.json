@@ -1,0 +1,139 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.static_type_substitution",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "static-type-evaluated-none-T-Int-Int-isDefined#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[evaluated|none[[T](Int)=>Int].isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b0ed1e6db6a0add7001040401670154",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-untaken-if-true-true-else-none-T-Int-Int-isDefined#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[untaken|if(true)true-else-none[[T](Int)=>Int].isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b13d19501010101e6db6a0add7001040401670154",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-untaken-if-true-true-else-getReg-Coll-T-Int-Int-isDefined#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[untaken|if(true)true-else-getReg[Coll[[T](Int)=>Int]].isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b62d19501010101e6dc631363c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000000000000000000000000000000000000000000000000000000000000000000000000104080c7001040401670154",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-untaken-if-true-true-else-deserializeTo-Coll-T-Int-Int-size-#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[untaken|if(true)true-else-deserializeTo[Coll[[T](Int)=>Int]].size==0] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b1bd1950101010193b1dc6a04dd010e01000c70010404016701540400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-evaluated-some-T-T-Int-lambda-isDefined#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[evaluated|some[[T](T)=>Int](lambda).isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b17d1e6dc6a09dd01d9010104040270016701540401670154",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-untaken-some-U-Int-f-T-Int-Int-1-isDefined#5",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[untaken|some[(U)=>Int]({(f:[T](Int)=>Int)=>1}).isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b20d19501010101e6dc6a09dd01d901017001040401670154040270016701550400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-untaken-some-Coll-U-Coll-f-T-Int-Int-1-isDefined#6",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[untaken|some[Coll[U]](Coll({(f:[T](Int)=>Int)=>1})).isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b2bd19501010101e6dc6a09dd018301700170010404016701540400d90101700104040167015404020c670155",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-untaken-some-U-x-T-1-get-x-T-1-#7",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[untaken|some[U]({(x:T)=>1}).get=={(x:T)=>1}] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b20d1950101010193e4dc6a09dd01d901016701540402670155d901016701540402",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-lambda-not-applied-x-Int-none-T-Int-Int-isDefined-lambda#8",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[lambda-not-applied|{(x:Int)=>none[[T](Int)=>Int].isDefined}==lambda] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b19d193d9010104e6db6a0add7001040401670154d90101040101",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-unused-valdef-val-v-none-T-Int-Int-true-#9",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[unused-valdef|{val-v=none[[T](Int)=>Int];true}] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b13d1d801d601db6a0add70010404016701540101",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "static-type-5-tuple-untaken-none-Int-Int-Int-Int-T-Int-Int-isDefined#10",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-static-type",
+      "description" : "[5-tuple|untaken|none[(Int,Int,Int,Int,[T](Int)=>Int)].isDefined] A sized v3 tree whose call meets the explicit type substitution: kiama's throw (`dup illegal arguments`), or the node around the call refusing the twice-substituted type (`ConstraintFailed`), also where the call sits in a branch never taken — REJECTED: neither is a ValidationException, so the size bit does not degrade it. SEPARATING: an implementation that substitutes once, or without the throw, accepts the tree.",
+      "bytes_hex" : "0b19d19501010101e6db6a0add6005040404047001040401670154",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

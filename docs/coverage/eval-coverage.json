@@ -7095,6 +7095,52 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/MethodCall.static_type_substitution_v6.json" : {
+      "accepts" : 142,
+      "entries" : 593,
+      "methods" : [
+        "101:12 Context.getVarFromInput",
+        "106:10 SigmaDslBuilder.none",
+        "106:4 SigmaDslBuilder.deserializeTo",
+        "106:5 SigmaDslBuilder.fromBigEndianBytes",
+        "106:9 SigmaDslBuilder.some",
+        "12:30 SCollection.reverse",
+        "99:19 Box.getReg"
+      ],
+      "op" : "MethodCall.static_type_substitution_v6",
+      "ops" : [
+        "Apply",
+        "BlockValue",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "EQ",
+        "FuncValue",
+        "Global$",
+        "If",
+        "MethodCall",
+        "OptionGet",
+        "OptionIsDefined",
+        "SizeOf",
+        "Tuple",
+        "ValDef"
+      ],
+      "provenance" : "authored",
+      "rejects" : 451,
+      "tree_shapes" : [
+        {
+          "accepts" : 142,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 449,
+      "version" : "v6"
+    },
     "v6/authored/MethodCall.v5_methods_dedicated_node_control.json" : {
       "accepts" : 6,
       "entries" : 6,
@@ -13177,6 +13223,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h92839-ef080dcdc493.json"
@@ -13405,6 +13452,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.some_none.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Option.method_type_variable_names_v6.json"
       ],
@@ -13454,6 +13502,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/captured/h28474-527dd0cad822.json",
@@ -13466,6 +13515,7 @@
     },
     "106:5" : {
       "families" : [
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/spec/Global_fromBigEndianBytes.json"
       ],
@@ -13503,6 +13553,7 @@
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.some_none.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Option.method_type_variable_names_v6.json"
       ],
@@ -13661,6 +13712,7 @@
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/spec/Coll.reverse.json"
       ],
       "name" : "SCollection.reverse"
@@ -14122,7 +14174,8 @@
       "families" : [
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
-        "v6/authored/MethodCall.argument_widening_v6.json"
+        "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json"
       ],
       "name" : "Box.getReg"
     },
@@ -14764,6 +14817,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
@@ -14967,6 +15021,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/Tuple.non_pair_type_check.json",
@@ -15136,6 +15191,7 @@
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -15377,6 +15433,7 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -15506,6 +15563,7 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Negation.mixed_width.json",
@@ -15715,6 +15773,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -15832,6 +15891,7 @@
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -16431,6 +16491,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
@@ -16882,6 +16943,7 @@
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
@@ -17009,6 +17071,7 @@
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -17407,6 +17470,7 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
@@ -17740,6 +17804,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
@@ -17892,6 +17957,7 @@
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.some_none.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -18293,6 +18359,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -18475,6 +18542,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
@@ -18613,6 +18681,7 @@
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/Tuple.non_pair_type_check.json",
@@ -18953,12 +19022,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 3164,
+    "accepts" : 3306,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 4008,
-    "files" : 358,
-    "rejects" : 844,
-    "unwalked" : 164
+    "entries" : 4601,
+    "files" : 359,
+    "rejects" : 1295,
+    "unwalked" : 613
   }
 }
