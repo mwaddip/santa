@@ -1,0 +1,365 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.method_type_variable_names",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-method-type-variable-names",
+  "entries" : [
+    {
+      "name" : "patch-plus-t-int-errored#0",
+      "script" : "[P2] `as[Coll[T]](Coll(3,1,2)).patch(0, Coll(3,1), 1)(0) + 1` THROWS `KeyNotFoundException: key 103`. `T` stands where `patch: (Coll[IV], Int, Coll[IV], Int) => Coll[IV]` declares `IV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[IV]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `T` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c13950100b283000c67015404000010030602040304001002060204020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "patch-plus-iv-int-accept#1",
+      "script" : "[P4] `as[Coll[IV]](Coll(3,1,2)).patch(0, Coll(3,1), 1)(0) + 1` → 4 at cost 126. `IV` stands where `patch: (Coll[IV], Int, Coll[IV], Int) => Coll[IV]` declares `IV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `IV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c13950100b283000c6702495604000010030602040304001002060204020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 126,
+        "error" : null
+      }
+    },
+    {
+      "name" : "patch-plus-int-t-errored#2",
+      "script" : "[P6] `Coll(3,1,2).patch(0, as[Coll[T]](Coll(3,1)), 1)(0) + 1` THROWS `KeyNotFoundException: key 103`. `T` stands where `patch: (Coll[IV], Int, Coll[IV], Int) => Coll[IV]` declares `IV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[IV]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `T` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c131003060204030400950100b283000c6701540400001002060204020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "patch-plus-int-iv-accept#3",
+      "script" : "[P8] `Coll(3,1,2).patch(0, as[Coll[IV]](Coll(3,1)), 1)(0) + 1` → 4 at cost 126. `IV` stands where `patch: (Coll[IV], Int, Coll[IV], Int) => Coll[IV]` declares `IV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `IV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c131003060204030400950100b283000c670249560400001002060204020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 126,
+        "error" : null
+      }
+    },
+    {
+      "name" : "patch-plus-int-int-accept#4",
+      "script" : "[P10] `Coll(3,1,2).patch(0, Coll(3,1), 1)(0) + 1` → 4 at cost 111. CONTROL for P2/P4/P6/P8: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c1310030602040304001002060204020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 111,
+        "error" : null
+      }
+    },
+    {
+      "name" : "updated-plus-t-int-errored#5",
+      "script" : "[U2] `as[Coll[T]](Coll(3,1,2)).updated(1, 7)(0) + 1` THROWS `KeyNotFoundException: key 103`. `T` stands where `updated: (Coll[IV], Int, IV) => Coll[IV]` declares `IV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[IV]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `T` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c14950100b283000c6701540400001003060204020402040e0400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "updated-plus-iv-int-accept#6",
+      "script" : "[U4] `as[Coll[IV]](Coll(3,1,2)).updated(1, 7)(0) + 1` → 4 at cost 110. `IV` stands where `updated: (Coll[IV], Int, IV) => Coll[IV]` declares `IV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `IV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c14950100b283000c670249560400001003060204020402040e0400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 110,
+        "error" : null
+      }
+    },
+    {
+      "name" : "updated-plus-int-t-errored#7",
+      "script" : "[U6] `Coll(3,1,2).updated(1, as[T](7))(0) + 1` THROWS `KeyNotFoundException: key 103`. `T` stands where `updated: (Coll[IV], Int, IV) => Coll[IV]` declares `IV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[IV]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `T` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c141003060204020402950100b28300670154040000040e0400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "updated-plus-int-iv-accept#8",
+      "script" : "[U8] `Coll(3,1,2).updated(1, as[IV](7))(0) + 1` → 4 at cost 110. `IV` stands where `updated: (Coll[IV], Int, IV) => Coll[IV]` declares `IV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `IV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c141003060204020402950100b2830067024956040000040e0400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 110,
+        "error" : null
+      }
+    },
+    {
+      "name" : "updated-plus-int-int-accept#9",
+      "script" : "[U10] `Coll(3,1,2).updated(1, 7)(0) + 1` → 4 at cost 95. CONTROL for U2/U4/U6/U8: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c141003060204020402040e0400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 95,
+        "error" : null
+      }
+    },
+    {
+      "name" : "updateMany-plus-t-int-errored#10",
+      "script" : "[M2] `as[Coll[T]](Coll(3,1,2)).updateMany(Coll(0,1), Coll(3,1))(0) + 1` THROWS `KeyNotFoundException: key 103`. `T` stands where `updateMany: (Coll[IV], Coll[Int], Coll[IV]) => Coll[IV]` declares `IV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[IV]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `T` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c15950100b283000c67015404000010030602040210020002100206020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "updateMany-plus-iv-int-accept#11",
+      "script" : "[M4] `as[Coll[IV]](Coll(3,1,2)).updateMany(Coll(0,1), Coll(3,1))(0) + 1` → 4 at cost 111. `IV` stands where `updateMany: (Coll[IV], Coll[Int], Coll[IV]) => Coll[IV]` declares `IV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `IV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c15950100b283000c6702495604000010030602040210020002100206020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 111,
+        "error" : null
+      }
+    },
+    {
+      "name" : "updateMany-plus-int-t-errored#12",
+      "script" : "[M6] `Coll(3,1,2).updateMany(Coll(0,1), as[Coll[T]](Coll(3,1)))(0) + 1` THROWS `KeyNotFoundException: key 103`. `T` stands where `updateMany: (Coll[IV], Coll[Int], Coll[IV]) => Coll[IV]` declares `IV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[IV]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `T` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c1510030602040210020002950100b283000c670154040000100206020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "updateMany-plus-int-iv-accept#13",
+      "script" : "[M8] `Coll(3,1,2).updateMany(Coll(0,1), as[Coll[IV]](Coll(3,1)))(0) + 1` → 4 at cost 111. `IV` stands where `updateMany: (Coll[IV], Coll[Int], Coll[IV]) => Coll[IV]` declares `IV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `IV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c1510030602040210020002950100b283000c67024956040000100206020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 111,
+        "error" : null
+      }
+    },
+    {
+      "name" : "updateMany-plus-int-int-accept#14",
+      "script" : "[M10] `Coll(3,1,2).updateMany(Coll(0,1), Coll(3,1))(0) + 1` → 4 at cost 96. CONTROL for M2/M4/M6/M8: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009ab2dc0c1510030602040210020002100206020400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 96,
+        "error" : null
+      }
+    },
+    {
+      "name" : "zip-plus-int-iv-errored#15",
+      "script" : "[Z1] `Coll(3,1,2).zip(as[Coll[IV]](Coll(3,1)))(0)._1 + 1` THROWS `KeyNotFoundException: key 103`. `IV` stands where `zip: (Coll[IV], Coll[OV]) => Coll[(IV, OV)]` declares `OV`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Coll[(IV, OV)]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `IV` specialises and returns a value. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009a8cb2dc0c1d100306020401950100b283000c6702495604000010020602040000010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "zip-plus-int-ov-accept#16",
+      "script" : "[Z2] `Coll(3,1,2).zip(as[Coll[OV]](Coll(3,1)))(0)._1 + 1` → 4 at cost 105. `OV` stands where `zip: (Coll[IV], Coll[OV]) => Coll[(IV, OV)]` declares `OV` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed `Coll[(Int, OV)]` and `_1` reads the `Int`. SEPARATING: a table that names this position otherwise cannot unify it with `OV`, leaves the call unspecialised, and throws. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009a8cb2dc0c1d100306020401950100b283000c67024f5604000010020602040000010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 105,
+        "error" : null
+      }
+    },
+    {
+      "name" : "zip-plus-int-int-accept#17",
+      "script" : "[Z4] `Coll(3,1,2).zip(Coll(3,1))(0)._1 + 1` → 4 at cost 90. CONTROL for Z1/Z2: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call. Tree v0 under activated 2: the rule is not version-gated (the same value and cost at activated 3).",
+      "tree_bytes_hex" : "009a8cb2dc0c1d10030602040110020602040000010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 4
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    }
+  ]
+}

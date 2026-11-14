@@ -1,0 +1,87 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.method_type_variable_names",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "method-type-variable-names-none-coll-t-map-v3-box#0",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X1] `sigmaProp(if (true) true else Global.none[Coll[T]].map((x: Coll[T]) => 1).get == 1)` — REJECTED (`ConstraintFailed`, `SameType2`): the explicit argument names `none`'s own `T` and lands twice, so the receiver is `Option[Coll[Coll[T]]]`; `map` binds its `T` two ways, the call stays `Option[R]`, and `.get == 1` compares an `R` with an `Int`. The fork refuses it too. `ConstraintFailed` is a `BuilderException`, not a `ValidationException`, so the size bit does not degrade it: a REJECT.",
+      "bytes_hex" : "c0843d0b1fd1950101010193e4dc2407db6a0add0c67015401d901010c6701540402040201000045d1f075197ad9f7e2512f9eb7e8a181465779a1565b654811b6843867c5f78000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-type-variable-names-deserializeto-coll-t-reverse-index-v3-box#1",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X2] `sigmaProp(if (true) true else deserializeTo[Coll[T]](Coll(0.toByte)).reverse(0) == deserializeTo[T](Coll(0.toByte)))` — REJECTED (`ConstraintFailed`, `SameType2`): `deserializeTo[Coll[T]]` is typed `Coll[Coll[T]]` (the double substitution), `reverse` binds `IV := Coll[T]`, so `reverse(0)` is a `Coll[T]` against a `T`. The fork refuses it too. `ConstraintFailed` is a `BuilderException`, not a `ValidationException`, so the size bit does not degrade it: a REJECT.",
+      "bytes_hex" : "c0843d0b25d1950101010193b2db0c1edc6a04dd010e01000c670154040000dc6a04dd010e0100670154010000dfc72bb5ff59c639ec24d96c14eac470e6f6ddc62e4e35c97e869ffce892641b00",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-type-variable-names-deserializeto-coll-t-reverse-index-index-v3-box#2",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X3] `sigmaProp(if (true) true else deserializeTo[Coll[T]](Coll(0.toByte)).reverse(0)(0) == deserializeTo[T](Coll(0.toByte)))` — ACCEPTED, round-trips to its own bytes: X2 with one more `(0)`, a `T` against a `T`. CONTROL for X2.",
+      "bytes_hex" : "c0843d0b29d1950101010193b2b2db0c1edc6a04dd010e01000c670154040000040000dc6a04dd010e0100670154010000e5dff99107ae3aae8ea8dc5b62c4497e9387d5e1344ffef757b21e96d2dd2b2700",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-type-variable-names-none-t-map-v3-box#3",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X4] `sigmaProp(if (true) true else Global.none[T].map((x: T) => 1).get == 1)` — ACCEPTED, round-trips to its own bytes: `T` stands where `Option.map` declares `T`, they unify, `R := Int`, the call is `Option[Int]`. SEPARATING: a table that names `Option.map`'s item otherwise (the fork's `IV`) refuses it.",
+      "bytes_hex" : "c0843d0b1dd1950101010193e4dc2407db6a0add67015401d90101670154040204020100007fef29f7e37331eb75753f78c036115612a24febef405cc9164e106888b6d01e00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-type-variable-names-none-iv-map-v3-box#4",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X5] `sigmaProp(if (true) true else Global.none[IV].map((x: IV) => 1).get == 1)` — REJECTED (`ConstraintFailed`, `SameType2`): `IV` is not `Option.map`'s `T`, two type variables unify only when their names are equal, the call stays `Option[R]`, and `.get == 1` compares an `R` with an `Int`. SEPARATING: a table that names `Option.map`'s item `IV` builds it. `ConstraintFailed` is a `BuilderException`, not a `ValidationException`, so the size bit does not degrade it: a REJECT.",
+      "bytes_hex" : "c0843d0b1fd1950101010193e4dc2407db6a0add6702495601d901016702495604020402010000a2cf2b3680168f250a713d5c326613323f41e726cf22538eb59fe57c7ff5706600",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-type-variable-names-deserializeto-coll-u-reverse-vs-coll-iv-v3-box#5",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X6] `sigmaProp(if (true) true else deserializeTo[Coll[U]](Coll(0.toByte)).reverse == deserializeTo[Coll[IV]](Coll(0.toByte)))` — ACCEPTED, round-trips to its own bytes: `U` is not `reverse`'s `IV`, the call stays unspecialised, typed `Coll[IV]`, equal to the right side. SEPARATING: a table that names `reverse`'s variable otherwise (the fork's `T`) types the left side `Coll[T]` and refuses it.",
+      "bytes_hex" : "c0843d0b23d1950101010193db0c1edc6a04dd010e01000c670155dc6a04dd010e01000c67024956010000a4332c5e16e0ba5d55db4e9f6808eba84f9aaa5761052d38cffe3add6c9ddd0900",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-type-variable-names-deserializeto-coll-t-reverse-vs-coll-t-v3-box#6",
+      "kind" : "Box",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[X7] `sigmaProp(if (true) true else deserializeTo[Coll[T]](Coll(0.toByte)).reverse == deserializeTo[Coll[T]](Coll(0.toByte)))` — ACCEPTED, round-trips to its own bytes: both sides `Coll[Coll[T]]` (the double substitution; `reverse` binds `IV := Coll[T]`). SEPARATING for an implementation that substitutes the explicit argument once: `Coll[T]`, an unspecialised `Coll[IV]` against `Coll[T]`, refused.",
+      "bytes_hex" : "c0843d0b22d1950101010193db0c1edc6a04dd010e01000c670154dc6a04dd010e01000c6701540100009ea0abb8faece3882148e18159e3a9694607d8fab753fad853b16c4c408e0bf300",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,353 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Option.method_type_variable_names_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-method-type-variable-names",
+  "entries" : [
+    {
+      "name" : "map-ser-t-accept#0",
+      "script" : "[A1] `serialize(as[Option[T]](Global.some(1)).map((x: Int) => 7))` → Coll(1,14) at cost 96. `T` stands where `map: (Option[T], T => R) => Option[R]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws.",
+      "tree_bytes_hex" : "0b24dc6a03dd01dc2407950100b2830024670154040000dc6a09dd0104020401d9010104040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            }
+          ]
+        },
+        "cost" : 96,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-plus-t-accept#1",
+      "script" : "[A2] `as[Option[T]](Global.some(1)).map((x: Int) => 7).get + 1` → 8 at cost 108. `T` stands where `map: (Option[T], T => R) => Option[R]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws.",
+      "tree_bytes_hex" : "0b239ae4dc2407950100b2830024670154040000dc6a09dd0104020401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 8
+        },
+        "cost" : 108,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-ser-iv-errored#2",
+      "script" : "[A3] `serialize(as[Option[IV]](Global.some(1)).map((x: Int) => 7))` THROWS `SerializerException`. `IV` stands where `map: (Option[T], T => R) => Option[R]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[R]`; `serialize` writes by the static type and has no writer for a type variable. SEPARATING: a table that names this position `IV` specialises and returns a value.",
+      "tree_bytes_hex" : "0b25dc6a03dd01dc2407950100b283002467024956040000dc6a09dd0104020401d9010104040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "map-plus-iv-errored#3",
+      "script" : "[A4] `as[Option[IV]](Global.some(1)).map((x: Int) => 7).get + 1` THROWS `KeyNotFoundException: key 103`. `IV` stands where `map: (Option[T], T => R) => Option[R]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[R]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `IV` specialises and returns a value.",
+      "tree_bytes_hex" : "0b249ae4dc2407950100b283002467024956040000dc6a09dd0104020401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "map-ser-int-accept#4",
+      "script" : "[A5] `serialize(Global.some(1).map((x: Int) => 7))` → Coll(1,14) at cost 81. CONTROL for A1/A3: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call.",
+      "tree_bytes_hex" : "0b17dc6a03dd01dc2407dc6a09dd0104020401d9010104040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            }
+          ]
+        },
+        "cost" : 81,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-plus-int-accept#5",
+      "script" : "[A6] `Global.some(1).map((x: Int) => 7).get + 1` → 8 at cost 93. CONTROL for A2/A4: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call.",
+      "tree_bytes_hex" : "0b169ae4dc2407dc6a09dd0104020401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 8
+        },
+        "cost" : 93,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-ser-t-accept#6",
+      "script" : "[F1] `serialize(as[Option[T]](Global.some(1)).filter((x: Int) => true))` → Coll(1,2) at cost 96. `T` stands where `filter: (Option[T], T => Boolean) => Option[T]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws.",
+      "tree_bytes_hex" : "0b24dc6a03dd01dc2408950100b2830024670154040000dc6a09dd0104020401d90101040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 96,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-plus-t-accept#7",
+      "script" : "[F2] `as[Option[T]](Global.some(1)).filter((x: Int) => true).get + 1` → 2 at cost 108. `T` stands where `filter: (Option[T], T => Boolean) => Option[T]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws.",
+      "tree_bytes_hex" : "0b239ae4dc2408950100b2830024670154040000dc6a09dd0104020401d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 108,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-ser-iv-errored#8",
+      "script" : "[F3] `serialize(as[Option[IV]](Global.some(1)).filter((x: Int) => true))` THROWS `SerializerException`. `IV` stands where `filter: (Option[T], T => Boolean) => Option[T]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[T]`; `serialize` writes by the static type and has no writer for a type variable. SEPARATING: a table that names this position `IV` specialises and returns a value.",
+      "tree_bytes_hex" : "0b25dc6a03dd01dc2408950100b283002467024956040000dc6a09dd0104020401d90101040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "filter-plus-iv-errored#9",
+      "script" : "[F4] `as[Option[IV]](Global.some(1)).filter((x: Int) => true).get + 1` THROWS `KeyNotFoundException: key 103`. `IV` stands where `filter: (Option[T], T => Boolean) => Option[T]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[T]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `IV` specialises and returns a value.",
+      "tree_bytes_hex" : "0b249ae4dc2408950100b283002467024956040000dc6a09dd0104020401d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "filter-ser-int-accept#10",
+      "script" : "[F5] `serialize(Global.some(1).filter((x: Int) => true))` → Coll(1,2) at cost 81. CONTROL for F1/F3: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call.",
+      "tree_bytes_hex" : "0b17dc6a03dd01dc2408dc6a09dd0104020401d90101040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 81,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-plus-int-accept#11",
+      "script" : "[F6] `Global.some(1).filter((x: Int) => true).get + 1` → 2 at cost 93. CONTROL for F2/F4: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call.",
+      "tree_bytes_hex" : "0b169ae4dc2408dc6a09dd0104020401d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 93,
+        "error" : null
+      }
+    },
+    {
+      "name" : "parse-none-coll-t-map-errored#12",
+      "script" : "[X1] `if (true) true else Global.none[Coll[T]].map((x: Coll[T]) => 1).get == 1` — REFUSED AT PARSE (`ConstraintFailed`, `SameType2`): the explicit argument names `none`'s own `T` and lands twice (MethodCallSerializer.scala:84, values.scala:1355), so the receiver is `Option[Coll[Coll[T]]]`; `map` binds `T` to two different types, the unification fails, the call stays `Option[R]`, and `.get == 1` compares an `R` with an `Int`. Agrees with the fork. The v5 family's N4 builds the same call over a receiver substituted once, and it is BUILT.",
+      "tree_bytes_hex" : "0b1e950101010193e4dc2407db6a0add0c67015401d901010c67015404020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "parse-none-t-map-accept#13",
+      "script" : "[X4] `if (true) true else Global.none[T].map((x: T) => 1).get == 1` → true at cost 20: `T` stands where `map` declares `T`, so they unify, `R := Int`, the call is `Option[Int]`: BUILT. SEPARATING: a table that names `Option.map`'s item otherwise leaves the call unspecialised and refuses the tree at parse.",
+      "tree_bytes_hex" : "0b1c950101010193e4dc2407db6a0add67015401d9010167015404020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "parse-none-iv-map-errored#14",
+      "script" : "[X5] `if (true) true else Global.none[IV].map((x: IV) => 1).get == 1` — REFUSED AT PARSE (`ConstraintFailed`, `SameType2`): `IV` is not `map`'s `T`; two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so the call stays `Option[R]` and `.get == 1` compares an `R` with an `Int`. SEPARATING: a table that names `Option.map`'s item `IV` builds it.",
+      "tree_bytes_hex" : "0b1e950101010193e4dc2407db6a0add6702495601d901016702495604020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

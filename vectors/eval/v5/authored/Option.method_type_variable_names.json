@@ -1,0 +1,245 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Option.method_type_variable_names",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-method-type-variable-names",
+  "entries" : [
+    {
+      "name" : "map-plus-t-accept#0",
+      "script" : "[A2] `as[Option[T]](getVar[Int](1)).map((x: Int) => 7).get + 1` → 8 at cost 99. `T` stands where `map: (Option[T], T => R) => Option[R]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2407950100b2830024670154040000e3010401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 8
+        },
+        "cost" : 99,
+        "error" : null
+      }
+    },
+    {
+      "name" : "map-plus-iv-errored#1",
+      "script" : "[A4] `as[Option[IV]](getVar[Int](1)).map((x: Int) => 7).get + 1` THROWS `KeyNotFoundException: key 103`. `IV` stands where `map: (Option[T], T => R) => Option[R]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[R]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `IV` specialises and returns a value. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2407950100b283002467024956040000e3010401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "map-plus-r-errored#2",
+      "script" : "[A7] `as[Option[R]](getVar[Int](1)).map((x: Int) => 7).get + 1` THROWS `KeyNotFoundException: key 103`. `R` stands where `map: (Option[T], T => R) => Option[R]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[R]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). `R` is `map`'s OTHER variable, its result, so a table that swaps or reuses the two names answers here. SEPARATING: a table that names this position `R` specialises and returns a value. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2407950100b2830024670152040000e3010401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "map-plus-int-accept#3",
+      "script" : "[A6] `getVar[Int](1).map((x: Int) => 7).get + 1` → 8 at cost 99. CONTROL for A2/A4/A7: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2407950100b2830028040000e3010401d9010104040e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 8
+        },
+        "cost" : 99,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-plus-t-accept#4",
+      "script" : "[F2] `as[Option[T]](getVar[Int](1)).filter((x: Int) => true).get + 1` → 1 at cost 99. `T` stands where `filter: (Option[T], T => Boolean) => Option[T]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2408950100b2830024670154040000e3010401d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 99,
+        "error" : null
+      }
+    },
+    {
+      "name" : "filter-plus-iv-errored#5",
+      "script" : "[F4] `as[Option[IV]](getVar[Int](1)).filter((x: Int) => true).get + 1` THROWS `KeyNotFoundException: key 103`. `IV` stands where `filter: (Option[T], T => Boolean) => Option[T]` declares `T`: two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so `specializeFor` (SMethod.scala:193-199) returns the method unspecialised and the call is typed `Option[T]`; `+` is looked up by its left operand's type, a type variable, and finds no entry (key 103 = 0x67, STypeVar's type code). SEPARATING: a table that names this position `IV` specialises and returns a value. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2408950100b283002467024956040000e3010401d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "filter-plus-int-accept#6",
+      "script" : "[F6] `getVar[Int](1).filter((x: Int) => true).get + 1` → 1 at cost 99. CONTROL for F2/F4: every position `Int`, so the call specialises on any table and the consumer reads an `Int`-typed call. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`.",
+      "tree_bytes_hex" : "009ae4dc2408950100b2830028040000e3010401d901010401010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 99,
+        "error" : null
+      }
+    },
+    {
+      "name" : "parse-option-t-map-accept#7",
+      "script" : "[N1] `if (true) true else Coll[Option[T]]()(0).map((x: T) => 1).get == 1` → true at cost 20: `T` stands where `map` declares `T`, so they unify, `R := Int`, the call is `Option[Int]`: BUILT. SEPARATING: a table that names `Option.map`'s item otherwise leaves the call unspecialised and refuses the tree at parse. Tree v0 under activated 2 (the same at activated 3).",
+      "tree_bytes_hex" : "00950101010193e4dc2407b283002467015404000001d9010167015404020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "parse-option-iv-map-errored#8",
+      "script" : "[N2] `if (true) true else Coll[Option[IV]]()(0).map((x: IV) => 1).get == 1` — REFUSED AT PARSE (`ConstraintFailed`, `SameType2`): `IV` is not `map`'s `T`; two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so the call stays `Option[R]` and `.get == 1` compares an `R` with an `Int`. SEPARATING: a table that names `Option.map`'s item `IV` builds it. Tree v0 under activated 2 (the same at activated 3).",
+      "tree_bytes_hex" : "00950101010193e4dc2407b28300246702495604000001d901016702495604020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "parse-option-u-map-errored#9",
+      "script" : "[N3] `if (true) true else Coll[Option[U]]()(0).map((x: U) => 1).get == 1` — REFUSED AT PARSE, as N2: a name in no table. SEPARATING: an implementation that unifies two type variables whatever their names builds it. Tree v0 under activated 2 (the same at activated 3).",
+      "tree_bytes_hex" : "00950101010193e4dc2407b283002467015504000001d9010167015504020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "parse-option-coll-t-map-accept#10",
+      "script" : "[N4] `if (true) true else Coll[Option[Coll[T]]]()(0).map((x: Coll[T]) => 1).get == 1` → true at cost 20: `T := Coll[T]` from the receiver and again from the lambda, consistently, `R := Int`: BUILT. The v6 family's X1 is the same call over `Global.none[Coll[T]]`, whose receiver the reader substitutes twice, and it is refused. Tree v0 under activated 2 (the same at activated 3).",
+      "tree_bytes_hex" : "00950101010193e4dc2407b28300240c67015404000001d901010c67015404020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "parse-option-int-map-control-accept#11",
+      "script" : "[N5] `if (true) true else Coll[Option[Int]]()(0).map((x: Int) => 1).get == 1` → true at cost 20. CONTROL for N1-N4. Tree v0 under activated 2 (the same at activated 3).",
+      "tree_bytes_hex" : "00950101010193e4dc2407b283002804000001d901010404020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    }
+  ]
+}

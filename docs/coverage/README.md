@@ -50,9 +50,10 @@ vectors (or a conformer's risk acceptance) come from.
 ```
 
 `unwalked` counts entries whose committed bytes do not deserialize to a walkable root
-— e.g. an adversarial reject whose *parse* is the thing under test (the only current
-one: `v6/authored/Box.getReg_adversarial.json`'s v2-header tree). Such entries are
-counted in the arms but contribute no ops/shapes.
+— an adversarial reject whose *parse* is the thing under test, e.g.
+`v6/authored/Box.getReg_adversarial.json`'s v2-header tree, or the trees the reader refuses at
+parse in the `method_type_variable_names` families. Such entries are counted in the arms but
+contribute no ops/shapes.
 
 ## Caveats (honest limits)
 

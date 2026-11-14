@@ -1,0 +1,64 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.method_type_variable_names",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "method-type-variable-names-option-t-map-v0-tx#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[N1] `sigmaProp(if (true) true else Coll[Option[T]]()(0).map((x: T) => 1).get == 1)` — ACCEPTED, round-trips to its own bytes: `T` stands where `Option.map` declares `T`, `R := Int`. SEPARATING: a table that names `Option.map`'s item otherwise refuses it. Unsized tree v0 at activated 2: the rule is not version-gated.",
+      "bytes_hex" : "01d3a615c6221c3e54366b157d394e8430ba2458a3315b73793862be2be9cb4c5b00000000018094ebdc0300d1950101010193e4dc2407b283002467015404000001d9010167015404020402010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-type-variable-names-option-iv-map-v0-tx#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[N2] `sigmaProp(if (true) true else Coll[Option[IV]]()(0).map((x: IV) => 1).get == 1)` — REJECTED (`ConstraintFailed`, `SameType2`): `IV` is not `Option.map`'s `T`, the call stays `Option[R]`. SEPARATING: a table that names the item `IV` accepts it. Unsized tree v0 at activated 2: the rule is not version-gated.",
+      "bytes_hex" : "01d3a615c6221c3e54366b157d394e8430ba2458a3315b73793862be2be9cb4c5b00000000018094ebdc0300d1950101010193e4dc2407b28300246702495604000001d901016702495604020402010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-type-variable-names-option-u-map-v0-tx#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[N3] `sigmaProp(if (true) true else Coll[Option[U]]()(0).map((x: U) => 1).get == 1)` — REJECTED, as N2: a name in no table. SEPARATING: an implementation that unifies two type variables whatever their names accepts it. Unsized tree v0 at activated 2: the rule is not version-gated.",
+      "bytes_hex" : "01d3a615c6221c3e54366b157d394e8430ba2458a3315b73793862be2be9cb4c5b00000000018094ebdc0300d1950101010193e4dc2407b283002467015504000001d9010167015504020402010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-type-variable-names-option-coll-t-map-v0-tx#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[N4] `sigmaProp(if (true) true else Coll[Option[Coll[T]]]()(0).map((x: Coll[T]) => 1).get == 1)` — ACCEPTED, round-trips to its own bytes: `T := Coll[T]` from the receiver and from the lambda alike. X1 is the same call over `Global.none[Coll[T]]`, which the reader substitutes twice, and it is rejected. Unsized tree v0 at activated 2: the rule is not version-gated.",
+      "bytes_hex" : "01d3a615c6221c3e54366b157d394e8430ba2458a3315b73793862be2be9cb4c5b00000000018094ebdc0300d1950101010193e4dc2407b28300240c67015404000001d901010c67015404020402010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-type-variable-names-option-int-map-v0-tx#4",
+      "kind" : "Transaction",
+      "source" : "santa:authored-method-type-variable-names",
+      "description" : "[N5] `sigmaProp(if (true) true else Coll[Option[Int]]()(0).map((x: Int) => 1).get == 1)` — ACCEPTED, round-trips to its own bytes. CONTROL for N1-N4. Unsized tree v0 at activated 2: the rule is not version-gated.",
+      "bytes_hex" : "01d3a615c6221c3e54366b157d394e8430ba2458a3315b73793862be2be9cb4c5b00000000018094ebdc0300d1950101010193e4dc2407b283002804000001d901010404020402010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    }
+  ]
+}
