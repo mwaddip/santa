@@ -1,0 +1,1504 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "MethodCall.argument_widening_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-argument-widening",
+  "entries" : [
+    {
+      "name" : "w1c-accept#0",
+      "script" : "[W1c] `c.apply(1)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b0bdc0c0a1003000204010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w1-accept#1",
+      "script" : "[W1] `c.apply(lie(1, 1.toByte))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b10dc0c0a10030002040195010004020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w1d-accept#2",
+      "script" : "[W1d] `c.apply(1.toByte)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type. A Byte CONSTANT argument leaves `apply` unspecialised (its static type is `IV`, Q1/Q3), yet the call evaluates.",
+      "tree_bytes_hex" : "0b0bdc0c0a1003000204010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w1s-accept#3",
+      "script" : "[W1s] `c.apply(lie(1, 1.toShort))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b10dc0c0a10030002040195010004020302",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w1n-errored#4",
+      "script" : "[W1n] `c.apply(lie(1, 1L))` — THROWS `IllegalArgumentException`: reflection never NARROWS a Long to an Int. SEPARATING: an implementation that converts any integer answers 1.",
+      "tree_bytes_hex" : "0b10dc0c0a10030002040195010004020502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "w2c-accept#5",
+      "script" : "[W2c] `c.getOrElse(1, 7)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b0ddc0c021003000204020402040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w2-accept#6",
+      "script" : "[W2] `c.getOrElse(lie(1, 1.toByte), 7)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b12dc0c0210030002040295010004020201040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w2s-accept#7",
+      "script" : "[W2s] `c.getOrElse(1.toShort, 7)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b0ddc0c021003000204020302040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w3c-accept#8",
+      "script" : "[W3c] `c.get(1)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b0bdc0c211003000204010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "Int",
+            "value" : 1
+          }
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w3-accept#9",
+      "script" : "[W3] `c.get(lie(1, 1.toByte))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b10dc0c2110030002040195010004020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "Int",
+            "value" : 1
+          }
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w4c-accept#10",
+      "script" : "[W4c] `c.indexOf(1, 0)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b0ddc0c1a10030002040204020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 55,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w4-accept#11",
+      "script" : "[W4] `c.indexOf(1, lie(0, 0.toByte))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b12dc0c1a100300020402040295010004000200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 70,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w5c-accept#12",
+      "script" : "[W5c] `c.patch(0, Coll(7), 1)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b10dc0c13100300020403040010010e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 56,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w5a-accept#13",
+      "script" : "[W5a] `c.patch(lie(0, 0.toByte), Coll(7), 1)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b15dc0c131003000204039501000400020010010e0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 71,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w5b-accept#14",
+      "script" : "[W5b] `c.patch(0, Coll(7), lie(1, 1.toShort))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b15dc0c13100300020403040010010e95010004020302",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 71,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w6c-accept#15",
+      "script" : "[W6c] `c.updated(0, 7)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b0ddc0c141003000204020400040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w6-accept#16",
+      "script" : "[W6] `c.updated(lie(0, 0.toShort), 7)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b12dc0c1410030002040295010004000300040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 55,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w7c-accept#17",
+      "script" : "[W7c] `Global.decodeNbits(1L)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b07dc6a07dd010502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w7-accept#18",
+      "script" : "[W7] `Global.decodeNbits(lie(1L, 1))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b0cdc6a07dd0195010005020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w7b-accept#19",
+      "script" : "[W7b] `Global.decodeNbits(1.toByte)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b07dc6a07dd010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w8c-accept#20",
+      "script" : "[W8c] `Global.powHit(32, msg, nonce, h, 1024)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b1ddc6a08dd0504400e01010e0800000000000000010e0400000001048010",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "UnsignedBigInt",
+          "value" : "96566879392494624156397952267128259866519712759229477849069774825406061952798"
+        },
+        "cost" : 765,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w8a-accept#21",
+      "script" : "[W8a] `Global.powHit(lie(32, 32.toByte), msg, nonce, h, 1024)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b22dc6a08dd05950100044002200e01010e0800000000000000010e0400000001048010",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "UnsignedBigInt",
+          "value" : "96566879392494624156397952267128259866519712759229477849069774825406061952798"
+        },
+        "cost" : 780,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w8b-accept#22",
+      "script" : "[W8b] `Global.powHit(32, msg, nonce, h, lie(1024, 1024.toShort))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b23dc6a08dd0504400e01010e0800000000000000010e0400000001950100048010038010",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "UnsignedBigInt",
+          "value" : "96566879392494624156397952267128259866519712759229477849069774825406061952798"
+        },
+        "cost" : 780,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w9c-accept#23",
+      "script" : "[W9c] `SELF.getReg[Long](0)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b08dc6313a701040005",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "Long",
+            "value" : "1000000"
+          }
+        },
+        "cost" : 69,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w9-accept#24",
+      "script" : "[W9] `SELF.getReg[Long](lie(0, 0.toByte))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b0ddc6313a7019501000400020005",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "Long",
+            "value" : "1000000"
+          }
+        },
+        "cost" : 84,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w9s-accept#25",
+      "script" : "[W9s] `SELF.getReg[Long](0.toShort)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b08dc6313a701030005",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "Long",
+            "value" : "1000000"
+          }
+        },
+        "cost" : 69,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w10c-accept#26",
+      "script" : "[W10c] `CONTEXT.getVarFromInput[Int](0.toShort, 1.toByte)`. CONTROL: the declared type.",
+      "tree_bytes_hex" : "0b0adc650cfe020300020104",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "w10-accept#27",
+      "script" : "[W10] `CONTEXT.getVarFromInput[Int](lie(0.toShort, 0.toByte), 1.toByte)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type. (None here: the eval context has no input extension; the spend family reads Some(5).)",
+      "tree_bytes_hex" : "0b0fdc650cfe0295010003000200020104",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "x1-errored#28",
+      "script" : "[X1] `1.shiftLeft(lie(1, 1.toByte))` — THROWS `ClassCastException` (Byte → Integer): `shiftLeft` is a HANDLER (`userDefinedInvoke`), which casts its argument; nothing widens it. SEPARATING: an implementation that widens every argument answers 2.",
+      "tree_bytes_hex" : "0b0ddc040c04020195010004020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "x2-errored#29",
+      "script" : "[X2] `1L.shiftRight(1.toShort)` — THROWS `ClassCastException` (Short → Integer): a handler. SEPARATING, as X1.",
+      "tree_bytes_hex" : "0b08dc050d0502010302",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "x3-errored#30",
+      "script" : "[X3] `BigInt(1).shiftLeft(lie(1, 1.toByte))` — THROWS `ClassCastException`: a handler. SEPARATING, as X1.",
+      "tree_bytes_hex" : "0b0edc060c0601010195010004020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "x4-errored#31",
+      "script" : "[X4] `tree.updateOperations(lie(1.toByte, 1.toShort)).enabledOperations` — THROWS `IllegalArgumentException`: the parameter is a Byte, and nothing widens TO a Byte.",
+      "tree_bytes_hex" : "0b33db6402dc6408640000000000000000000000000000000000000000000000000000000000000000000720000195010002010302",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "x5-errored#32",
+      "script" : "[X5] `c.updateMany(lie(Coll[Int](0), Coll[Byte](0)), Coll(7))` — THROWS `InvocationTargetException` ← `ClassCastException` in `CollOverArray.updateMany`: a collection's ITEMS are not widened.",
+      "tree_bytes_hex" : "0b15dc0c151003000204029501001001000e010010010e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "q1-errored#33",
+      "script" : "[Q1] `c.apply(1.toByte) == 1` — REFUSED AT PARSE (`ConstraintFailed`, `SameType2`): the Byte constant leaves `apply` typed `IV`, and `==` checks its operands when built. SEPARATING: a fix that widens the argument AND specialises the call to Int over-accepts this tree.",
+      "tree_bytes_hex" : "0b0e93dc0c0a10030002040102010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "q1c-accept#34",
+      "script" : "[Q1c] `c.apply(1) == 1` → true. CONTROL for Q1.",
+      "tree_bytes_hex" : "0b0e93dc0c0a10030002040104020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 52,
+        "error" : null
+      }
+    },
+    {
+      "name" : "q3-errored#35",
+      "script" : "[Q3] `sigmaProp(c.apply(1.toByte) == c.apply(1.toByte))` — THROWS `RuntimeException: Unknown type IV` at evaluation: both operands are `IV`, so the tree parses, and `EQ`'s operand check has no case for a type variable.",
+      "tree_bytes_hex" : "0b18d193dc0c0a1003000204010201dc0c0a1003000204010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "q2-accept#36",
+      "script" : "[Q2] `sigmaProp(Coll(true, true).apply(1.toByte))` → sigmaProp(true): `sigmaProp` does not check its operand's static type, so the IV-typed widened call reaches a script. SEPARATING: an implementation that refuses the Byte argument errors.",
+      "tree_bytes_hex" : "0b0ad1dc0c0a0d0203010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "q2c-accept#37",
+      "script" : "[Q2c] `sigmaProp(Coll(true, true).apply(1))` → sigmaProp(true). CONTROL for Q2.",
+      "tree_bytes_hex" : "0b0ad1dc0c0a0d0203010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "k1-errored#38",
+      "script" : "[K1] `c.apply(lie(1, sigmaProp(true)))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b11dc0c0a1003000204019501000402d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k2-errored#39",
+      "script" : "[K2] `c.apply(lie(1, SELF))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b0fdc0c0a1003000204019501000402a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k3-errored#40",
+      "script" : "[K3] `c.apply(lie(1, CONTEXT.preHeader))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b12dc0c0a1003000204019501000402db6503fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k4-errored#41",
+      "script" : "[K4] `c.apply(lie(1, g))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b0fdc0c0a100300020401950100040282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k5-errored#42",
+      "script" : "[K5] `c.apply(lie(1, BigInt(1)))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b11dc0c0a1003000204019501000402060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k6-errored#43",
+      "script" : "[K6] `c.apply(lie(1, true))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b10dc0c0a10030002040195010004020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k7-errored#44",
+      "script" : "[K7] `c.apply(lie(1, ()))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b0fdc0c0a100300020401950100040262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k8-errored#45",
+      "script" : "[K8] `c.apply(lie(1, Coll[Byte](1)))` — THROWS `IllegalArgumentException`: a non-primitive is never converted to an Int. SEPARATING: an implementation that converts it, or reads it as an index, answers.",
+      "tree_bytes_hex" : "0b11dc0c0a10030002040195010004020e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k9-errored#46",
+      "script" : "[K9] `c.apply(lie(1, \"a\"))` — THROWS `RuntimeException: Unknown type SString` at the `If`: it checks the taken branch's value against THAT branch's type, and has no String case. A String cannot ride a lie.",
+      "tree_bytes_hex" : "0b11dc0c0a1003000204019501000402660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k10-errored#47",
+      "script" : "[K10] `c.apply(\"a\")` — THROWS `IllegalArgumentException: argument type mismatch`.",
+      "tree_bytes_hex" : "0b0cdc0c0a100300020401660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "u0-accept#48",
+      "script" : "[U0] `tree.updateDigest(33 bytes).keyLength` → 32. CONTROL.",
+      "tree_bytes_hex" : "0b4fdb6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000010e21010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 73,
+        "error" : null
+      }
+    },
+    {
+      "name" : "u1-errored#49",
+      "script" : "[U1] `tree.updateDigest(lie(33 bytes, sigmaProp(true))).keyLength` — THROWS `IllegalArgumentException`: a non-collection is refused by the reflective call.",
+      "tree_bytes_hex" : "0b55db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e21010101010101010101010101010101010101010101010101010101010101010101d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "u2-errored#50",
+      "script" : "[U2] `tree.updateDigest(lie(33 bytes, SELF)).keyLength` — THROWS `IllegalArgumentException`: a non-collection is refused by the reflective call.",
+      "tree_bytes_hex" : "0b53db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e21010101010101010101010101010101010101010101010101010101010101010101a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "u3-errored#51",
+      "script" : "[U3] `tree.updateDigest(lie(33 bytes, CONTEXT.preHeader)).keyLength` — THROWS `IllegalArgumentException`: a non-collection is refused by the reflective call.",
+      "tree_bytes_hex" : "0b56db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e21010101010101010101010101010101010101010101010101010101010101010101db6503fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "u4-errored#52",
+      "script" : "[U4] `tree.updateDigest(lie(33 bytes, 1)).keyLength` — THROWS `IllegalArgumentException`: a non-collection is refused by the reflective call.",
+      "tree_bytes_hex" : "0b54db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e210101010101010101010101010101010101010101010101010101010101010101010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "u5-accept#53",
+      "script" : "[U5] `tree.updateDigest(lie(33 bytes, Coll[Box](SELF))).keyLength` → 32: the reflective call asks only for a `Coll`, and `updateDigest` copies it unread. SEPARATING: an implementation that requires bytes refuses it.",
+      "tree_bytes_hex" : "0b56db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e21010101010101010101010101010101010101010101010101010101010101010101830163a7",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 113,
+        "error" : null
+      }
+    },
+    {
+      "name" : "u6-accept#54",
+      "script" : "[U6] `tree.updateDigest(lie(33 bytes, Coll[GroupElement](g))).keyLength` → 32: the reflective call asks only for a `Coll`, and `updateDigest` copies it unread. SEPARATING: an implementation that requires bytes refuses it.",
+      "tree_bytes_hex" : "0b56db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e2101010101010101010101010101010101010101010101010101010101010101010183010782",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 113,
+        "error" : null
+      }
+    },
+    {
+      "name" : "u7-accept#55",
+      "script" : "[U7] `tree.updateDigest(lie(33 bytes, Coll(1).zip(Coll(2)))).keyLength` → 32: the reflective call asks only for a `Coll`, and `updateDigest` copies it unread. SEPARATING: an implementation that requires bytes refuses it.",
+      "tree_bytes_hex" : "0b60db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e21010101010101010101010101010101010101010101010101010101010101010101dc0c1d8301040402018301040404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 148,
+        "error" : null
+      }
+    },
+    {
+      "name" : "u8-accept#56",
+      "script" : "[U8] `tree.updateDigest(lie(33 bytes, Coll[Boolean](true))).keyLength` → 32: the reflective call asks only for a `Coll`, and `updateDigest` copies it unread. SEPARATING: an implementation that requires bytes refuses it.",
+      "tree_bytes_hex" : "0b55db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e21010101010101010101010101010101010101010101010101010101010101010101850101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 108,
+        "error" : null
+      }
+    },
+    {
+      "name" : "u9-accept#57",
+      "script" : "[U9] `tree.updateDigest(lie(33 bytes, Coll[Coll[Byte]](Coll(1)))).keyLength` → 32: the reflective call asks only for a `Coll`, and `updateDigest` copies it unread. SEPARATING: an implementation that requires bytes refuses it.",
+      "tree_bytes_hex" : "0b58db6403dc640f64000000000000000000000000000000000000000000000000000000000000000000072000019501000e2101010101010101010101010101010101010101010101010101010101010101010183010e0e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 108,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r1-accept#58",
+      "script" : "[R1] `Coll[Byte] constant (0,1,2).apply(1.toByte)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b0bdc0c0a0e03000102010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Byte",
+          "value" : 1
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r1c-accept#59",
+      "script" : "[R1c] `Coll[Byte] constant (0,1,2).apply(1)`. CONTROL.",
+      "tree_bytes_hex" : "0b0bdc0c0a0e03000102010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Byte",
+          "value" : 1
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r2-accept#60",
+      "script" : "[R2] `Coll[Long] constant (0,1,2).apply(lie(1, 1.toByte))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b10dc0c0a11030002040195010004020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "1"
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r3-accept#61",
+      "script" : "[R3] `Coll(1,2).zip(Coll(3,4)).apply(1.toByte), a pair collection`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b18dc0c0adc0c1d830204040204040183020404060408010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            }
+          ]
+        },
+        "cost" : 114,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r3c-accept#62",
+      "script" : "[R3c] `Coll(1,2).zip(Coll(3,4)).apply(1)`. CONTROL.",
+      "tree_bytes_hex" : "0b18dc0c0adc0c1d830204040204040183020404060408010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Tuple",
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            }
+          ]
+        },
+        "cost" : 114,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r4t-accept#63",
+      "script" : "[R4t] `(1,2,3) CONSTANT .apply(1.toByte), a Coll[Any]`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b0ddc0c0a48040404020406010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r4tl-accept#64",
+      "script" : "[R4tl] `(1,2,3) CONSTANT .apply(lie(1, 1.toByte))`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b12dc0c0a480404040204060195010004020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r4tc-accept#65",
+      "script" : "[R4tc] `(1,2,3) CONSTANT .apply(1)`. CONTROL.",
+      "tree_bytes_hex" : "0b0ddc0c0a48040404020406010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r5-accept#66",
+      "script" : "[R5] `Coll[Box](SELF).apply(0.toByte), a reference receiver`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b0adc0c0a830163a7010200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Box",
+          "bytes_hex" : "c0843d0b0adc0c0a830163a7010200000000000000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "cost" : 69,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r6-accept#67",
+      "script" : "[R6] `ConcreteCollection[Int](0,1,2).getOrElse(1.toByte, 7)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b11dc0c02830304040004020404020201040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "r7-accept#68",
+      "script" : "[R7] `Coll[Byte] constant (0,1,2).getOrElse(lie(1, 1.toShort), 7.toByte)`. WIDENS: Java reflection converts the primitive argument to the declared parameter type.",
+      "tree_bytes_hex" : "0b12dc0c020e0300010202950100040203020207",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Byte",
+          "value" : 1
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    }
+  ]
+}

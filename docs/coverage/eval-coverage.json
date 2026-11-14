@@ -1337,6 +1337,48 @@
       "unwalked" : 2,
       "version" : "v5"
     },
+    "v5/authored/MethodCall.argument_widening.json" : {
+      "accepts" : 34,
+      "entries" : 52,
+      "methods" : [
+        "100:15 AvlTree.updateDigest",
+        "100:3 AvlTree.keyLength",
+        "101:3 Context.preHeader",
+        "12:10 SCollection.apply",
+        "12:19 SCollection.patch",
+        "12:2 SCollection.getOrElse",
+        "12:20 SCollection.updated",
+        "12:21 SCollection.updateMany",
+        "12:26 SCollection.indexOf",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "MethodCall.argument_widening",
+      "ops" : [
+        "BoolToSigmaProp",
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "EQ",
+        "GroupGenerator$",
+        "If",
+        "MethodCall",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 18,
+      "tree_shapes" : [
+        {
+          "accepts" : 34,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 17,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 1,
+      "version" : "v5"
+    },
     "v5/authored/Option.map.json" : {
       "accepts" : 3,
       "entries" : 3,
@@ -6813,6 +6855,59 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/MethodCall.argument_widening_v6.json" : {
+      "accepts" : 47,
+      "entries" : 69,
+      "methods" : [
+        "100:15 AvlTree.updateDigest",
+        "100:2 AvlTree.enabledOperations",
+        "100:3 AvlTree.keyLength",
+        "100:8 AvlTree.updateOperations",
+        "101:12 Context.getVarFromInput",
+        "101:3 Context.preHeader",
+        "106:7 SigmaDslBuilder.decodeNbits",
+        "106:8 SigmaDslBuilder.powHit",
+        "12:10 SCollection.apply",
+        "12:19 SCollection.patch",
+        "12:2 SCollection.getOrElse",
+        "12:20 SCollection.updated",
+        "12:21 SCollection.updateMany",
+        "12:26 SCollection.indexOf",
+        "12:29 SCollection.zip",
+        "12:33 SCollection.get",
+        "4:12 Int.shiftLeft",
+        "5:13 Long.shiftRight",
+        "6:12 BigInt.shiftLeft",
+        "99:19 Box.getReg"
+      ],
+      "op" : "MethodCall.argument_widening_v6",
+      "ops" : [
+        "BoolToSigmaProp",
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "EQ",
+        "Global$",
+        "GroupGenerator$",
+        "If",
+        "MethodCall",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 22,
+      "tree_shapes" : [
+        {
+          "accepts" : 47,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 21,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 1,
       "version" : "v6"
     },
     "v6/authored/MethodCall.numeric_receiver_width.json" : {
@@ -12844,7 +12939,9 @@
         "v5/authored/AvlTree.updateDigest_any_length.json",
         "v5/authored/AvlTree.updateDigest_then_contains.json",
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
-        "v6/authored/AvlTree.digest_any_collection_v6.json"
+        "v5/authored/MethodCall.argument_widening.json",
+        "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "AvlTree.updateDigest"
     },
@@ -12861,7 +12958,8 @@
     "100:2" : {
       "families" : [
         "v5/spec/AvlTree_properties_equivalence.json",
-        "v6/authored/AvlTree.digest_any_collection_v6.json"
+        "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "AvlTree.enabledOperations"
     },
@@ -12870,8 +12968,10 @@
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.keyLength_wrapped_negative.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/AvlTree_properties_equivalence.json",
-        "v6/authored/AvlTree.digest_any_collection_v6.json"
+        "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "AvlTree.keyLength"
     },
@@ -12907,7 +13007,8 @@
     "100:8" : {
       "families" : [
         "v5/authored/AvlTree.updateOperations_updateDigest.json",
-        "v6/authored/AvlTree.digest_any_collection_v6.json"
+        "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "AvlTree.updateOperations"
     },
@@ -12954,6 +13055,7 @@
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -12970,7 +13072,9 @@
     "101:3" : {
       "families" : [
         "v5/authored/Context.preHeader_accessors.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v6/authored/EQ.comparer_dispatch.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/captured/h1542-1b5c260a496a.json"
       ],
       "name" : "Context.preHeader"
@@ -13248,6 +13352,7 @@
     },
     "106:7" : {
       "families" : [
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/spec/Global.decodeNbits.json"
       ],
@@ -13258,6 +13363,7 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.powHit_require_boundary.json",
         "v6/authored/Global.powHit_varying_k.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/spec/Global.powHit.json"
@@ -13285,8 +13391,10 @@
     },
     "12:10" : {
       "families" : [
+        "v5/authored/MethodCall.argument_widening.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.runtime_shapes_methodcall.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/Tuple.non_pair_value_gates.json"
       ],
       "name" : "SCollection.apply"
@@ -13324,43 +13432,51 @@
     "12:19" : {
       "families" : [
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_patch_method_equivalence.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
-        "v6/authored/Coll.reference_store_ops.json"
+        "v6/authored/Coll.reference_store_ops.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "SCollection.patch"
     },
     "12:2" : {
       "families" : [
+        "v5/authored/MethodCall.argument_widening.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/Coll.runtime_shapes_methodcall.json",
-        "v6/authored/Coll.specialisation_getorelse.json"
+        "v6/authored/Coll.specialisation_getorelse.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "SCollection.getOrElse"
     },
     "12:20" : {
       "families" : [
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_updated_method_equivalence.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
-        "v6/authored/Coll.store_runtime_array_class.json"
+        "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "SCollection.updated"
     },
     "12:21" : {
       "families" : [
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_updateMany_method_equivalence.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json"
       ],
       "name" : "SCollection.updateMany"
@@ -13368,10 +13484,12 @@
     "12:26" : {
       "families" : [
         "v5/authored/AvlTree.digest_any_collection.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_indexOf_method_equivalence.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/captured/h231432-fddb21e1303e.json"
       ],
       "name" : "SCollection.indexOf"
@@ -13379,12 +13497,14 @@
     "12:29" : {
       "families" : [
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll.zip_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/captured/h261770-5dad90a5021b.json",
         "v6/captured/h264948-bf31b3635b88.json",
@@ -13444,6 +13564,7 @@
       "families" : [
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/spec/Coll.get.json"
       ],
       "name" : "SCollection.get"
@@ -13636,6 +13757,7 @@
     },
     "4:12" : {
       "families" : [
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/spec/Int_6.0_methods.json"
       ],
       "name" : "Int.shiftLeft"
@@ -13703,6 +13825,7 @@
     },
     "5:13" : {
       "families" : [
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/spec/Long_6.0_methods.json"
       ],
@@ -13750,6 +13873,7 @@
     "6:12" : {
       "families" : [
         "v6/authored/BigInt.shift_and_inverse_range_edges.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/spec/BigInt_6.0_features.json"
       ],
       "name" : "BigInt.shiftLeft"
@@ -13869,7 +13993,8 @@
     "99:19" : {
       "families" : [
         "v6/authored/Box.getReg_dynamic_index.json",
-        "v6/authored/Evaluation.stypeToRType_sites_v6.json"
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json"
       ],
       "name" : "Box.getReg"
     },
@@ -14780,11 +14905,13 @@
     "BoolToSigmaProp" : {
       "families" : [
         "v5/authored/Context.extension_key_domain.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/and_sigma_equivalence.json",
         "v5/spec/or_sigma_equivalence.json",
         "v5/spec/sigmaProp_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -15070,6 +15197,7 @@
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
@@ -15111,6 +15239,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -15194,6 +15323,7 @@
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
         "v5/authored/String.jdk_utf8_decode.json",
@@ -15235,6 +15365,7 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
@@ -15435,12 +15566,14 @@
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -15536,6 +15669,7 @@
         "v5/authored/EQ_of_SigmaProp_unequal.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/GroupElement.canonical_bytes.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/spec/BinXor_logical_XOR_test.json",
@@ -15555,6 +15689,7 @@
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -16598,6 +16733,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Global.some_none.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
@@ -16627,6 +16763,7 @@
     },
     "GroupGenerator$" : {
       "families" : [
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_node_array_class.json",
@@ -16637,6 +16774,7 @@
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Numeric.methodcall_ids.json"
@@ -16688,6 +16826,7 @@
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/GroupElement.canonical_bytes.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v5/spec/Coll_filter_with_nested_If.json",
@@ -16719,6 +16858,7 @@
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -17031,6 +17171,7 @@
         "v5/authored/Context.properties.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/GroupElement.canonical_bytes.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -17108,6 +17249,7 @@
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
@@ -17815,6 +17957,7 @@
     "Self$" : {
       "families" : [
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/MethodCall.argument_widening.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
@@ -17827,6 +17970,7 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Context.property_call_forms_v6.json",
+        "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -18631,12 +18775,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 3041,
+    "accepts" : 3122,
     "distinct_methods" : 162,
     "distinct_ops" : 89,
-    "entries" : 3834,
-    "files" : 353,
-    "rejects" : 793,
-    "unwalked" : 158
+    "entries" : 3955,
+    "files" : 355,
+    "rejects" : 833,
+    "unwalked" : 160
   }
 }
