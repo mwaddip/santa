@@ -677,6 +677,56 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/BigInt.out_of_range_below_v3.json" : {
+      "accepts" : 30,
+      "entries" : 37,
+      "methods" : [
+      ],
+      "op" : "BigInt.out_of_range_below_v3",
+      "ops" : [
+        "%",
+        "*",
+        "+",
+        "-",
+        "/",
+        "Apply",
+        "BlockValue",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "Downcast",
+        "EQ",
+        "Exponentiate",
+        "FuncValue",
+        "GT",
+        "GroupGenerator$",
+        "MapCollection",
+        "MultiplyGroup",
+        "Negation",
+        "SelectField",
+        "SubstConstants",
+        "Tuple",
+        "Upcast",
+        "ValDef",
+        "ValUse",
+        "max",
+        "min"
+      ],
+      "provenance" : "authored",
+      "rejects" : 7,
+      "tree_shapes" : [
+        {
+          "accepts" : 30,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 7,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Box.accessor_method_form.json" : {
       "accepts" : 6,
       "entries" : 6,
@@ -14202,6 +14252,7 @@
   "op_index" : {
     "%" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Int_methods_equivalence.json",
@@ -14230,6 +14281,7 @@
     },
     "*" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_map_with_nested_if.json",
@@ -14273,6 +14325,7 @@
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/FuncValue.non_unary_arity.json",
@@ -14353,6 +14406,7 @@
     },
     "-" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Int_methods_equivalence.json",
@@ -14404,6 +14458,7 @@
     },
     "/" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Int_methods_equivalence.json",
@@ -14526,6 +14581,7 @@
     "Apply" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -14811,6 +14867,7 @@
     "BlockValue" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/BigInt_methods_equivalence.json",
@@ -14989,6 +15046,7 @@
     },
     "ByIndex" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Option.method_type_variable_names.json",
@@ -15192,6 +15250,7 @@
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.eq_compared_count_generic.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.method_type_variable_names.json",
@@ -15321,6 +15380,7 @@
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -15643,6 +15703,7 @@
     },
     "Downcast" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long.toByte_method.json",
         "v5/spec/Long.toInt_method.json",
@@ -15659,6 +15720,7 @@
     "EQ" : {
       "families" : [
         "v5/authored/AvlTree.digest_any_collection.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Coll.eq_compared_count_coa.json",
         "v5/authored/Coll.eq_compared_count_generic.json",
@@ -15803,6 +15865,7 @@
     },
     "Exponentiate" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/GroupElement.exp_equivalence.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
@@ -16167,6 +16230,7 @@
     "FuncValue" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
@@ -16439,6 +16503,7 @@
     },
     "GT" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
         "v5/spec/Byte_LT_GT_NEQ.json",
@@ -16763,6 +16828,7 @@
     },
     "GroupGenerator$" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
@@ -17109,6 +17175,7 @@
     },
     "MapCollection" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/spec/Coll_map_method_equivalence.json",
         "v5/spec/Coll_map_with_nested_if.json",
@@ -17387,6 +17454,7 @@
     },
     "MultiplyGroup" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/GroupElement.multiply_equivalence.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/captured/h250628-01251d809fae.json"
@@ -17440,6 +17508,7 @@
     },
     "Negation" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/Numeric_Negation_equivalence.json",
         "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/Negation.mixed_width.json",
@@ -17819,6 +17888,7 @@
     },
     "SelectField" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.method_type_variable_names.json",
@@ -18243,6 +18313,7 @@
     "SubstConstants" : {
       "families" : [
         "v5/authored/AvlTree.digest_any_collection.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
@@ -18285,6 +18356,7 @@
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/Tuple.checkType_unsupported.json",
@@ -18357,6 +18429,7 @@
     "Upcast" : {
       "families" : [
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_method_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -18424,6 +18497,7 @@
     "ValDef" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/BigInt_methods_equivalence.json",
@@ -18519,6 +18593,7 @@
     "ValUse" : {
       "families" : [
         "v5/authored/Apply.non_unary_arity.json",
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
@@ -18759,8 +18834,17 @@
         "0xff"
       ]
     },
+    "max" : {
+      "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json"
+      ],
+      "op_codes" : [
+        "0xa2"
+      ]
+    },
     "min" : {
       "families" : [
+        "v5/authored/BigInt.out_of_range_below_v3.json",
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/captured/h318040-089df53dc16b.json",
@@ -18775,12 +18859,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 3122,
+    "accepts" : 3152,
     "distinct_methods" : 162,
-    "distinct_ops" : 89,
-    "entries" : 3955,
-    "files" : 355,
-    "rejects" : 833,
+    "distinct_ops" : 90,
+    "entries" : 3992,
+    "files" : 356,
+    "rejects" : 840,
     "unwalked" : 160
   }
 }

@@ -1,0 +1,816 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "BigInt.out_of_range_below_v3",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-bigint-out-of-range",
+  "entries" : [
+    {
+      "name" : "b1-accept#0",
+      "script" : "[B1] `X / 1`, X = `BigInt.MIN / -1` = 2^255 — 2^255: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009d9d062080000000000000000000000000000000000000000000000000000000000000000601ff060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b2-accept#1",
+      "script" : "[B2] `X / -1`, X = `BigInt.MIN / -1` = 2^255 — BigInt.MIN: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009d9d062080000000000000000000000000000000000000000000000000000000000000000601ff0601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b3-errored#2",
+      "script" : "[B3] `X * 1`, X = `BigInt.MIN / -1` = 2^255 — THROWS `BigInteger out of 256 bit range`: a checked operation refuses its RESULT (toSignedBigIntValueExact). SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009c9d062080000000000000000000000000000000000000000000000000000000000000000601ff060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "b4-accept#3",
+      "script" : "[B4] `X * -1`, X = `BigInt.MIN / -1` = 2^255 — BigInt.MIN: the checked multiply's result is in range. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009c9d062080000000000000000000000000000000000000000000000000000000000000000601ff0601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b5-accept#4",
+      "script" : "[B5] `X * 0`, X = `BigInt.MIN / -1` = 2^255 — 0: the result is in range. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009c9d062080000000000000000000000000000000000000000000000000000000000000000601ff060100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b6-errored#5",
+      "script" : "[B6] `X + 0`, X = `BigInt.MIN / -1` = 2^255 — THROWS `BigInteger out of 256 bit range`: a checked operation refuses its RESULT (toSignedBigIntValueExact). SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009a9d062080000000000000000000000000000000000000000000000000000000000000000601ff060100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "b7-accept#6",
+      "script" : "[B7] `X + (-1)`, X = `BigInt.MIN / -1` = 2^255 — 2^255 − 1: the result is in range. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009a9d062080000000000000000000000000000000000000000000000000000000000000000601ff0601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b8-accept#7",
+      "script" : "[B8] `-X`, X = `BigInt.MIN / -1` = 2^255 — BigInt.MIN: negation checks its result, which is in range. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00f09d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b9-accept#8",
+      "script" : "[B9] `min(X, 0)`, X = `BigInt.MIN / -1` = 2^255 — 0: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00a19d062080000000000000000000000000000000000000000000000000000000000000000601ff060100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b10-accept#9",
+      "script" : "[B10] `max(X, 0)`, X = `BigInt.MIN / -1` = 2^255 — 2^255: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00a29d062080000000000000000000000000000000000000000000000000000000000000000601ff060100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819968"
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b11-accept#10",
+      "script" : "[B11] `X > 0`, X = `BigInt.MIN / -1` = 2^255 — true: ordering reads the value as it is. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00919d062080000000000000000000000000000000000000000000000000000000000000000601ff060100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b12-accept#11",
+      "script" : "[B12] `X > BigInt.MAX`, X = `BigInt.MIN / -1` = 2^255 — TRUE: X is above MAX. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00919d062080000000000000000000000000000000000000000000000000000000000000000601ff06207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b13-accept#12",
+      "script" : "[B13] `X == X`, X = `BigInt.MIN / -1` = 2^255 — true. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00939d062080000000000000000000000000000000000000000000000000000000000000000601ff9d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 75,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b14-accept#13",
+      "script" : "[B14] `X == BigInt.MAX`, X = `BigInt.MIN / -1` = 2^255 — false: X is not MAX. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00939d062080000000000000000000000000000000000000000000000000000000000000000601ff06207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b15-accept#14",
+      "script" : "[B15] `X % 7`, X = `BigInt.MIN / -1` = 2^255 — 1: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009e9d062080000000000000000000000000000000000000000000000000000000000000000601ff060107",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "1"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b16-accept#15",
+      "script" : "[B16] `7 % X`, X = `BigInt.MIN / -1` = 2^255 — 7: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009e0601079d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "7"
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "b17-accept#16",
+      "script" : "[B17] `X % X`, X = `BigInt.MIN / -1` = 2^255 — 0: an unchecked operation (no range check below v3) keeps or shrinks the value. SEPARATING: an implementation that range-checks every BigInt below v3 (or holds no 2^255) refuses X itself. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009e9d062080000000000000000000000000000000000000000000000000000000000000000601ff9d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "0"
+        },
+        "cost" : 95,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s1-accept#17",
+      "script" : "[S1] `Coll(X)(0) - 1` → 2^255 − 1: nothing that only moves a value looks at its magnitude; the cost is the twin's (S1t). SEPARATING: an implementation that checks a BigInt when it is stored or bound refuses it. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "0099b28301069d062080000000000000000000000000000000000000000000000000000000000000000601ff040000060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 115,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s1t-accept#18",
+      "script" : "[S1t] `Coll(Y)(0) - 1`, Y = `6 / -1` → -7. THE IN-RANGE TWIN of S1: the same nodes. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "0099b28301069d0601060601ff040000060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 115,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s2-accept#19",
+      "script" : "[S2] `(X, 1).X1 - 1` → 2^255 − 1: nothing that only moves a value looks at its magnitude; the cost is the twin's (S2t). SEPARATING: an implementation that checks a BigInt when it is stored or bound refuses it. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00998c86029d062080000000000000000000000000000000000000000000000000000000000000000601ff040201060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s2t-accept#20",
+      "script" : "[S2t] `(Y, 1).Y1 - 1`, Y = `6 / -1` → -7. THE IN-RANGE TWIN of S2: the same nodes. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00998c86029d0601060601ff040201060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s3-accept#21",
+      "script" : "[S3] `{ val x = X; x - 1 }` → 2^255 − 1: nothing that only moves a value looks at its magnitude; the cost is the twin's (S3t). SEPARATING: an implementation that checks a BigInt when it is stored or bound refuses it. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00d801d6019d062080000000000000000000000000000000000000000000000000000000000000000601ff997201060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s3t-accept#22",
+      "script" : "[S3t] `{ val x = Y; x - 1 }`, Y = `6 / -1` → -7. THE IN-RANGE TWIN of S3: the same nodes. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00d801d6019d0601060601ff997201060101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 72,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s4-accept#23",
+      "script" : "[S4] `{ (a: BigInt) => a - 1 }(X)` → 2^255 − 1: nothing that only moves a value looks at its magnitude; the cost is the twin's (S4t). SEPARATING: an implementation that checks a BigInt when it is stored or bound refuses it. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00dad9010106997201060101019d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 105,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s4t-accept#24",
+      "script" : "[S4t] `{ (a: BigInt) => a - 1 }(Y)`, Y = `6 / -1` → -7. THE IN-RANGE TWIN of S4: the same nodes. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00dad9010106997201060101019d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 105,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s5-accept#25",
+      "script" : "[S5] `Coll(X).map(a => a - 1)(0)` → 2^255 − 1: nothing that only moves a value looks at its magnitude; the cost is the twin's (S5t). SEPARATING: an implementation that checks a BigInt when it is stored or bound refuses it. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00b2ad8301069d062080000000000000000000000000000000000000000000000000000000000000000601ffd9010106997201060101040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+        },
+        "cost" : 151,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s5t-accept#26",
+      "script" : "[S5t] `Coll(Y).map(a => a - 1)(0)`, Y = `6 / -1` → -7. THE IN-RANGE TWIN of S5: the same nodes. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00b2ad8301069d0601060601ffd9010106997201060101040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "-7"
+        },
+        "cost" : 151,
+        "error" : null
+      }
+    },
+    {
+      "name" : "e1-accept#27",
+      "script" : "[E1] `groupGenerator.exp(X)` → g^(2^255): `Exponentiate` takes the out-of-range exponent. SEPARATING: an implementation that refuses or reduces it answers otherwise. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009f829d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02b23790a42be63e1b251ad6c94fdef07271ec0aada31db6c3e8bd32043f8be384"
+        },
+        "cost" : 945,
+        "error" : null
+      }
+    },
+    {
+      "name" : "e2-accept#28",
+      "script" : "[E2] `g.exp(X) == g.exp(BigInt.MAX).multiply(g)` → true: the exponent is used at its full value. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00939f829d062080000000000000000000000000000000000000000000000000000000000000000601ffa09f8206207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 2082,
+        "error" : null
+      }
+    },
+    {
+      "name" : "e3-accept#29",
+      "script" : "[E3] `g.exp(BigInt.MAX)`. CONTROL for E1: the in-range maximum. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "009f8206207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "GroupElement",
+          "bytes_hex" : "02370ebfed473178159fd08c3f7bc07e12301792fbd251554a80298efc666c651d"
+        },
+        "cost" : 915,
+        "error" : null
+      }
+    },
+    {
+      "name" : "c1-errored#30",
+      "script" : "[C1] `substConstants(t, Coll(0), Coll(X))` — THROWS `IllegalArgumentException: BigInt value … doesn't fit into 256 bits`: the data writer's own range requirement, the one consumer below v3 that range-checks a value it is handed. SEPARATING: a writer without the check writes the tree. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f827300821001008301069d062080000000000000000000000000000000000000000000000000000000000000000601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "c1t-accept#31",
+      "script" : "[C1t] `substConstants(t, Coll(0), Coll(Y))` → the tree with the constant -6. CONTROL for C1. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "00740e0c1001060101d1939f827300821001008301069d0601060601ff",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : -6
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : -109
+            },
+            {
+              "kind" : "Byte",
+              "value" : -97
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -126
+            }
+          ]
+        },
+        "cost" : 265,
+        "error" : null
+      }
+    },
+    {
+      "name" : "k1-errored#32",
+      "script" : "[K1] `Downcast(X, Long)` — THROWS `Cannot downcast value CBigInt(2^255)`: below v3 a cast takes no BigInt input at all (K1t refuses an in-range one the same way). Tree v0 under activated 2.",
+      "tree_bytes_hex" : "007d9d062080000000000000000000000000000000000000000000000000000000000000000601ff05",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k1t-errored#33",
+      "script" : "[K1t] `Downcast(Y, Long)` — THROWS the same: not a range matter. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "007d9d0601060601ff05",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k2-errored#34",
+      "script" : "[K2] `Upcast(X, BigInt)` — THROWS `Cannot upcast value CBigInt(2^255)`. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "007e9d062080000000000000000000000000000000000000000000000000000000000000000601ff06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k2t-errored#35",
+      "script" : "[K2t] `Upcast(Y, BigInt)` — THROWS the same. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "007e9d0601060601ff06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "k3-accept#36",
+      "script" : "[K3] `Upcast(7L, BigInt)` → 7. CONTROL: a cast from a Long. Tree v0 under activated 2.",
+      "tree_bytes_hex" : "007e050e06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "BigInt",
+          "value" : "7"
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    }
+  ]
+}
