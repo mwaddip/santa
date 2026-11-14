@@ -304,6 +304,34 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/AvlTree.method_call_charge_order.json" : {
+      "accepts" : 10,
+      "entries" : 14,
+      "methods" : [
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove"
+      ],
+      "op" : "AvlTree.method_call_charge_order",
+      "ops" : [
+        "Const",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 4,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.negative_keylength_tree.json" : {
       "accepts" : 3,
       "entries" : 5,
@@ -4451,6 +4479,35 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.method_call_charge_order_v6.json" : {
+      "accepts" : 22,
+      "entries" : 27,
+      "methods" : [
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove",
+        "100:16 AvlTree.insertOrUpdate"
+      ],
+      "op" : "AvlTree.method_call_charge_order_v6",
+      "ops" : [
+        "Const",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 5,
+      "tree_shapes" : [
+        {
+          "accepts" : 22,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 5,
           "tree_version" : 3
         }
       ],
@@ -12489,12 +12546,14 @@
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v6/authored/AvlTree.bad_proof_bytes_v6.json",
         "v6/authored/AvlTree.degenerate_edges_v6.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -12530,9 +12589,11 @@
       "families" : [
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
+        "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.update.json",
-        "v5/authored/AvlTree.wrong_tree_proof.json"
+        "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v6/authored/AvlTree.method_call_charge_order_v6.json"
       ],
       "name" : "AvlTree.update"
     },
@@ -12540,10 +12601,12 @@
       "families" : [
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
+        "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h2666-8437796cc182.json",
         "v6/captured/h28474-527dd0cad822.json",
@@ -12570,6 +12633,7 @@
       "families" : [
         "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
+        "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json"
       ],
       "name" : "AvlTree.insertOrUpdate"
@@ -14881,6 +14945,7 @@
     "Const" : {
       "families" : [
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
+        "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
@@ -14889,6 +14954,7 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
+        "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/BigInt.shift_and_inverse_range_edges.json",
         "v6/authored/ByIndex.default_specialisation.json",
@@ -16679,6 +16745,7 @@
         "v5/authored/AvlTree.get_proof_ladder.json",
         "v5/authored/AvlTree.insert.json",
         "v5/authored/AvlTree.keyLength_wrapped_negative.json",
+        "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.proof_adversarial.json",
@@ -16719,6 +16786,7 @@
         "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/BigInt.shift_and_inverse_range_edges.json",
@@ -18277,12 +18345,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2686,
+    "accepts" : 2718,
     "distinct_methods" : 162,
     "distinct_ops" : 89,
-    "entries" : 3196,
-    "files" : 345,
-    "rejects" : 510,
+    "entries" : 3237,
+    "files" : 347,
+    "rejects" : 519,
     "unwalked" : 16
   }
 }

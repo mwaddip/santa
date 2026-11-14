@@ -1,0 +1,290 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "AvlTree.method_call_charge_order",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-avl-charge-order",
+  "entries" : [
+    {
+      "name" : "flag-off-insert-boolean-arg-errored#0",
+      "script" : "[F1] `tree.insert(true, Coll(2.toByte))` on a tree whose flags are all OFF — THROWS `IllegalArgumentException: argument type mismatch`: `insert` is reached by reflection (`evalMethod.invoke`, values.scala:1391), and a `Boolean` where a collection is declared is refused by the reflective call BEFORE the body's flag check (CErgoTreeEvaluator.scala:134) runs. SEPARATING: an evaluator that checks the flag first answers None (F1c). Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640c6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd020001000201010e0102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flag-off-insert-well-typed-control-accept#1",
+      "script" : "[F1c] The same call with the `Boolean` replaced by a well-typed empty collection → None: the flag check answers first. CONTROL for F1. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640c6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd02000100020c3c0e0e000e0102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 34,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flag-off-update-boolean-arg-errored#2",
+      "script" : "[F2] `tree.update(Coll(), true)` on a tree whose flags are all OFF — THROWS `IllegalArgumentException: argument type mismatch`: `update` is reached by reflection (`evalMethod.invoke`, values.scala:1391), and a `Boolean` where a collection is declared is refused by the reflective call BEFORE the body's flag check (CErgoTreeEvaluator.scala:170) runs. SEPARATING: an evaluator that checks the flag first answers None (F2c). Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd02000100020c3c0e0e000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flag-off-update-well-typed-control-accept#3",
+      "script" : "[F2c] The same call with the `Boolean` replaced by a well-typed empty collection → None: the flag check answers first. CONTROL for F2. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd02000100020c3c0e0e000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 34,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flag-off-remove-boolean-arg-errored#4",
+      "script" : "[F3] `tree.remove(true, Coll(2.toByte))` on a tree whose flags are all OFF — THROWS `IllegalArgumentException: argument type mismatch`: `remove` is reached by reflection (`evalMethod.invoke`, values.scala:1391), and a `Boolean` where a collection is declared is refused by the reflective call BEFORE the body's flag check (CErgoTreeEvaluator.scala:234) runs. SEPARATING: an evaluator that checks the flag first answers None (F3c). Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640e6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd020001000201010e0102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flag-off-remove-well-typed-control-accept#5",
+      "script" : "[F3c] The same call with the `Boolean` replaced by a well-typed empty collection → None: the flag check answers first. CONTROL for F3. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640e6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd02000100021a000e0102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 34,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flag-off-zero-digest-insert-boolean-arg-errored#6",
+      "script" : "[F5] `zeroTree.insert(true, Coll(2.toByte))` on an all-zero digest, key length 32, flags are all OFF — THROWS `IllegalArgumentException: argument type mismatch`: `insert` is reached by reflection (`evalMethod.invoke`, values.scala:1391), and a `Boolean` where a collection is declared is refused by the reflective call BEFORE the body's flag check (CErgoTreeEvaluator.scala:134) runs. SEPARATING: an evaluator that checks the flag first answers None (F5c). Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640c640000000000000000000000000000000000000000000000000000000000000000000020000201010e0102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flag-off-zero-digest-insert-well-typed-control-accept#7",
+      "script" : "[F5c] The same call with the `Boolean` replaced by a well-typed empty collection → None: the flag check answers first. CONTROL for F5. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640c64000000000000000000000000000000000000000000000000000000000000000000002000020c3c0e0e000e0102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 34,
+        "error" : null
+      }
+    },
+    {
+      "name" : "other-tree-update-second-key-coll-int-accept#8",
+      "script" : "[O3] `tree.update((first, (Coll[Int](2) → Coll(5.toByte)), 0), proof)` (other-tree) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; the proof is valid for the fixture tree T, applied here to ANOTHER tree, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second entry, a pair whose KEY is a `Coll[Int]`, is never read. SEPARATING: an evaluator that reads or type-checks every entry first errors. CONTROL: O3c. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d647ca99024833a7c538e35710c94acf164ca93693117acee3a5bfdd3035810ee110107010002483c0e0e3c100e04010108000000000000000b01040105000e550385ab460a6564d1e5ded17716cd5866650d7fbb9cada7fecabd5fe21e2f80e43a02010200000008000000000000000a03fc29fc93353c639f7cf275ea69851dfa41d720ed53bcc9c10bda17166966d5ed00010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 324,
+        "error" : null
+      }
+    },
+    {
+      "name" : "other-tree-update-first-entry-only-control-accept#9",
+      "script" : "[O3c] `tree.update(Coll(first), proof)` (other-tree) — the same call with only the first entry, in a well-typed `Coll[(Coll[Byte], Coll[Byte])]` → None at the SAME cost as O3 and O4: the later entry is not charged either. CONTROL for O3/O4. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d647ca99024833a7c538e35710c94acf164ca93693117acee3a5bfdd3035810ee1101070100020c3c0e0e01010108000000000000000b0e550385ab460a6564d1e5ded17716cd5866650d7fbb9cada7fecabd5fe21e2f80e43a02010200000008000000000000000a03fc29fc93353c639f7cf275ea69851dfa41d720ed53bcc9c10bda17166966d5ed00010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 324,
+        "error" : null
+      }
+    },
+    {
+      "name" : "other-tree-update-second-no-pair-accept#10",
+      "script" : "[O4] `tree.update((first, 5, 0), proof)` (other-tree) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; the proof is valid for the fixture tree T, applied here to ANOTHER tree, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second item, a bare `Int` where a pair is declared, is never read. SEPARATING, as O3. CONTROL: O3c. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d647ca99024833a7c538e35710c94acf164ca93693117acee3a5bfdd3035810ee110107010002483c0e0e0404010108000000000000000b0a000e550385ab460a6564d1e5ded17716cd5866650d7fbb9cada7fecabd5fe21e2f80e43a02010200000008000000000000000a03fc29fc93353c639f7cf275ea69851dfa41d720ed53bcc9c10bda17166966d5ed00010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 324,
+        "error" : null
+      }
+    },
+    {
+      "name" : "built-update-second-key-coll-int-accept#11",
+      "script" : "[B3] `tree.update((first, (Coll[Int](2) → Coll(5.toByte)), 0), proof)` (built) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; on the fixture tree, the first entry updates key 3, which is absent, against the proof for key 1, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second entry, a pair whose KEY is a `Coll[Int]`, is never read. SEPARATING: an evaluator that reads or type-checks every entry first errors. CONTROL: B3c. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd0207010002483c0e0e3c100e04010308000000000000001e01040105000e550385ab460a6564d1e5ded17716cd5866650d7fbb9cada7fecabd5fe21e2f80e43a02010200000008000000000000000a03fc29fc93353c639f7cf275ea69851dfa41d720ed53bcc9c10bda17166966d5ed00010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 344,
+        "error" : null
+      }
+    },
+    {
+      "name" : "built-update-first-entry-only-control-accept#12",
+      "script" : "[B3c] `tree.update(Coll(first), proof)` (built) — the same call with only the first entry, in a well-typed `Coll[(Coll[Byte], Coll[Byte])]` → None at the SAME cost as B3 and B4: the later entry is not charged either. CONTROL for B3/B4. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd02070100020c3c0e0e01010308000000000000001e0e550385ab460a6564d1e5ded17716cd5866650d7fbb9cada7fecabd5fe21e2f80e43a02010200000008000000000000000a03fc29fc93353c639f7cf275ea69851dfa41d720ed53bcc9c10bda17166966d5ed00010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 344,
+        "error" : null
+      }
+    },
+    {
+      "name" : "built-update-second-no-pair-accept#13",
+      "script" : "[B4] `tree.update((first, 5, 0), proof)` (built) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; on the fixture tree, the first entry updates key 3, which is absent, against the proof for key 1, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second item, a bare `Int` where a pair is declared, is never read. SEPARATING, as B3. CONTROL: B3c. Tree v0 under activated 2: the same outcome and cost as at tree v3.",
+      "tree_bytes_hex" : "00dc640d6415cc1ba1054bf74431a2ccfc57e6051b9d0e7561f70586e5512c0ae3f3bac4fd0207010002483c0e0e0404010308000000000000001e0a000e550385ab460a6564d1e5ded17716cd5866650d7fbb9cada7fecabd5fe21e2f80e43a02010200000008000000000000000a03fc29fc93353c639f7cf275ea69851dfa41d720ed53bcc9c10bda17166966d5ed00010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 344,
+        "error" : null
+      }
+    }
+  ]
+}
