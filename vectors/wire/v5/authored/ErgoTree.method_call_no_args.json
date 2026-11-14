@@ -1,0 +1,55 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.method_call_no_args",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "method-call-no-args-i-v0#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[I] `sigmaProp(CONTEXT.INPUTS.size == CONTEXT.INPUTS.size)`, both sides the zero-argument METHOD call, unsized tree v0 — read, and written back as the PROPERTY call (`db`): the expected bytes differ from the input. SEPARATING: an implementation that echoes the input, or refuses it, is red.",
+      "bytes_hex" : "00d193b1dc6504fe00b1dc6504fe00",
+      "expected_bytes_hex" : "00d193b1db6504feb1db6504fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-call-no-args-o-v0#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[O] `sigmaProp(CONTEXT.OUTPUTS.size == CONTEXT.OUTPUTS.size)`, both sides the zero-argument METHOD call, unsized tree v0 — read, and written back as the PROPERTY call (`db`): the expected bytes differ from the input. SEPARATING: an implementation that echoes the input, or refuses it, is red.",
+      "bytes_hex" : "00d193b1dc6505fe00b1dc6505fe00",
+      "expected_bytes_hex" : "00d193b1db6505feb1db6505fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-call-no-args-h-v0#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[H] `sigmaProp(CONTEXT.HEIGHT == CONTEXT.HEIGHT)`, both sides the zero-argument METHOD call, unsized tree v0 — read, and written back as the PROPERTY call (`db`): the expected bytes differ from the input. SEPARATING: an implementation that echoes the input, or refuses it, is red.",
+      "bytes_hex" : "00d193dc6506fe00dc6506fe00",
+      "expected_bytes_hex" : "00d193db6506fedb6506fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "method-call-no-args-s-v0#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[S] `sigmaProp(CONTEXT.SELF.value == CONTEXT.SELF.value)`, both sides the zero-argument METHOD call, unsized tree v0 — read, and written back as the PROPERTY call (`db`): the expected bytes differ from the input. SEPARATING: an implementation that echoes the input, or refuses it, is red.",
+      "bytes_hex" : "00d193c1dc6507fe00c1dc6507fe00",
+      "expected_bytes_hex" : "00d193c1db6507fec1db6507fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.method_call_no_args",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "method-call-no-args-i-v3#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[I] `sigmaProp(CONTEXT.INPUTS.size == CONTEXT.INPUTS.size)`, both sides the zero-argument METHOD call, sized tree v3 — REJECTED (`AssertionError`, not a ValidationException: the size bit does not degrade it).",
+      "bytes_hex" : "0b0ed193b1dc6504fe00b1dc6504fe00",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-call-no-args-o-v3#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[O] `sigmaProp(CONTEXT.OUTPUTS.size == CONTEXT.OUTPUTS.size)`, both sides the zero-argument METHOD call, sized tree v3 — REJECTED (`AssertionError`, not a ValidationException: the size bit does not degrade it).",
+      "bytes_hex" : "0b0ed193b1dc6505fe00b1dc6505fe00",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-call-no-args-h-v3#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[H] `sigmaProp(CONTEXT.HEIGHT == CONTEXT.HEIGHT)`, both sides the zero-argument METHOD call, sized tree v3 — REJECTED (`AssertionError`, not a ValidationException: the size bit does not degrade it).",
+      "bytes_hex" : "0b0cd193dc6506fe00dc6506fe00",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "method-call-no-args-s-v3#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-method-call-no-args",
+      "description" : "[S] `sigmaProp(CONTEXT.SELF.value == CONTEXT.SELF.value)`, both sides the zero-argument METHOD call, sized tree v3 — REJECTED (`AssertionError`, not a ValidationException: the size bit does not degrade it).",
+      "bytes_hex" : "0b0ed193c1dc6507fe00c1dc6507fe00",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

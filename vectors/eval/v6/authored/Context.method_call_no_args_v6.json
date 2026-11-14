@@ -1,0 +1,164 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Context.method_call_no_args_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-method-call-no-args",
+  "entries" : [
+    {
+      "name" : "i-method-call#0",
+      "script" : "[I] `CONTEXT.INPUTS.size` as a METHOD call with NO arguments (`dc … 00`) at tree v3 — REFUSED AT PARSE (`AssertionError`): from v3 the reader asserts the argument list is non-empty (MethodCallSerializer.scala:52-55). SEPARATING: an implementation that reads it at v3 returns a value.",
+      "tree_bytes_hex" : "0b06b1dc6504fe00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "ip-property-call#1",
+      "script" : "[Ip] `CONTEXT.INPUTS.size` as a PROPERTY call (`db`). CONTROL: the form both versions read.",
+      "tree_bytes_hex" : "0b05b1db6504fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 29,
+        "error" : null
+      }
+    },
+    {
+      "name" : "o-method-call#2",
+      "script" : "[O] `CONTEXT.OUTPUTS.size` as a METHOD call with NO arguments (`dc … 00`) at tree v3 — REFUSED AT PARSE (`AssertionError`): from v3 the reader asserts the argument list is non-empty (MethodCallSerializer.scala:52-55). SEPARATING: an implementation that reads it at v3 returns a value.",
+      "tree_bytes_hex" : "0b06b1dc6505fe00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "op-property-call#3",
+      "script" : "[Op] `CONTEXT.OUTPUTS.size` as a PROPERTY call (`db`). CONTROL: the form both versions read.",
+      "tree_bytes_hex" : "0b05b1db6505fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 29,
+        "error" : null
+      }
+    },
+    {
+      "name" : "h-method-call#4",
+      "script" : "[H] `CONTEXT.HEIGHT` as a METHOD call with NO arguments (`dc … 00`) at tree v3 — REFUSED AT PARSE (`AssertionError`): from v3 the reader asserts the argument list is non-empty (MethodCallSerializer.scala:52-55). SEPARATING: an implementation that reads it at v3 returns a value.",
+      "tree_bytes_hex" : "0b05dc6506fe00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "hp-property-call#5",
+      "script" : "[Hp] `CONTEXT.HEIGHT` as a PROPERTY call (`db`). CONTROL: the form both versions read.",
+      "tree_bytes_hex" : "0b04db6506fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "s-method-call#6",
+      "script" : "[S] `CONTEXT.SELF.value` as a METHOD call with NO arguments (`dc … 00`) at tree v3 — REFUSED AT PARSE (`AssertionError`): from v3 the reader asserts the argument list is non-empty (MethodCallSerializer.scala:52-55). SEPARATING: an implementation that reads it at v3 returns a value.",
+      "tree_bytes_hex" : "0b06c1dc6507fe00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "sp-property-call#7",
+      "script" : "[Sp] `CONTEXT.SELF.value` as a PROPERTY call (`db`). CONTROL: the form both versions read.",
+      "tree_bytes_hex" : "0b05c1db6507fe",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "1000000"
+        },
+        "cost" : 23,
+        "error" : null
+      }
+    }
+  ]
+}

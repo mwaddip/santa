@@ -1043,6 +1043,41 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Context.method_call_no_args.json" : {
+      "accepts" : 8,
+      "entries" : 8,
+      "methods" : [
+        "101:4 Context.INPUTS",
+        "101:5 Context.OUTPUTS",
+        "101:6 Context.HEIGHT",
+        "101:7 Context.SELF"
+      ],
+      "op" : "Context.method_call_no_args",
+      "ops" : [
+        "Context$",
+        "ExtractAmount",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "Outputs$",
+        "Self$",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Context.op_forms.json" : {
       "accepts" : 2,
       "entries" : 2,
@@ -5807,6 +5842,41 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Context.method_call_no_args_v6.json" : {
+      "accepts" : 4,
+      "entries" : 8,
+      "methods" : [
+        "101:4 Context.INPUTS",
+        "101:5 Context.OUTPUTS",
+        "101:6 Context.HEIGHT",
+        "101:7 Context.SELF"
+      ],
+      "op" : "Context.method_call_no_args_v6",
+      "ops" : [
+        "Context$",
+        "ExtractAmount",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "Outputs$",
+        "Self$",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 4,
       "version" : "v6"
     },
     "v6/authored/Context.property_call_forms_v6.json" : {
@@ -13131,28 +13201,36 @@
     },
     "101:4" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json"
       ],
       "name" : "Context.INPUTS"
     },
     "101:5" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json"
       ],
       "name" : "Context.OUTPUTS"
     },
     "101:6" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json"
       ],
       "name" : "Context.HEIGHT"
     },
     "101:7" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json"
       ],
       "name" : "Context.SELF"
@@ -15623,6 +15701,7 @@
     },
     "Context$" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
         "v5/authored/Context.property_call_forms.json",
@@ -15630,6 +15709,7 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
@@ -15879,12 +15959,14 @@
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.sub_min_value.json",
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll.filter_equivalence.json",
         "v5/spec/Coll.forall_equivalence.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -16851,7 +16933,9 @@
     },
     "Height$" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -16986,8 +17070,10 @@
     },
     "Inputs$" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v6/authored/Coll.reference_store_ops.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -17234,6 +17320,7 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
         "v5/authored/Context.property_call_forms.json",
@@ -17288,6 +17375,7 @@
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
@@ -17823,7 +17911,9 @@
     },
     "Outputs$" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -18026,6 +18116,7 @@
     },
     "Self$" : {
       "families" : [
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v6/authored/Append.reference_array_store.json",
@@ -18039,6 +18130,7 @@
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
@@ -18186,6 +18278,7 @@
       "families" : [
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/Box.token_window_const.json",
+        "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Coll.size_equivalence.json",
@@ -18195,6 +18288,7 @@
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
@@ -18859,12 +18953,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 3152,
+    "accepts" : 3164,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 3992,
-    "files" : 356,
-    "rejects" : 840,
-    "unwalked" : 160
+    "entries" : 4008,
+    "files" : 358,
+    "rejects" : 844,
+    "unwalked" : 164
   }
 }
