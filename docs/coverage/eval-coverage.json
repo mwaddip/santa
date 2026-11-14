@@ -1378,6 +1378,33 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/String.jdk_utf8_decode.json" : {
+      "accepts" : 17,
+      "entries" : 17,
+      "methods" : [
+      ],
+      "op" : "String.jdk_utf8_decode",
+      "ops" : [
+        "Const",
+        "EQ",
+        "NEQ",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 17,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Tuple.checkType_unsupported.json" : {
       "accepts" : 0,
       "entries" : 2,
@@ -7007,6 +7034,37 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 2,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/String.jdk_utf8_decode_v6.json" : {
+      "accepts" : 34,
+      "entries" : 34,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "106:4 SigmaDslBuilder.deserializeTo"
+      ],
+      "op" : "String.jdk_utf8_decode_v6",
+      "ops" : [
+        "Const",
+        "EQ",
+        "Global$",
+        "MethodCall",
+        "NEQ",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 34,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
           "tree_version" : 3
         }
       ],
@@ -12971,6 +13029,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_Byte.json",
@@ -12988,6 +13047,7 @@
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/captured/h33615-7f2709218327.json",
@@ -14949,6 +15009,7 @@
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
+        "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v6/authored/Append.reference_array_store.json",
@@ -14993,6 +15054,7 @@
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -15284,6 +15346,7 @@
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/String.jdk_utf8_decode.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
@@ -15301,6 +15364,7 @@
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -16337,6 +16401,7 @@
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Xor.per_item_cost_base.json",
@@ -16845,6 +16910,7 @@
         "v6/authored/Numeric.methodcall_ids.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -16985,6 +17051,7 @@
     },
     "NEQ" : {
       "families" : [
+        "v5/authored/String.jdk_utf8_decode.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
         "v5/spec/Byte_LT_GT_NEQ.json",
         "v5/spec/Int_LT_GT_NEQ.json",
@@ -16999,6 +17066,7 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h210076-842bb218d145.json",
@@ -17818,8 +17886,10 @@
     },
     "SubstConstants" : {
       "families" : [
+        "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/substConstants_declared_size_u32.json",
@@ -18345,11 +18415,11 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2718,
+    "accepts" : 2769,
     "distinct_methods" : 162,
     "distinct_ops" : 89,
-    "entries" : 3237,
-    "files" : 347,
+    "entries" : 3288,
+    "files" : 349,
     "rejects" : 519,
     "unwalked" : 16
   }

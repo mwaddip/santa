@@ -1,0 +1,111 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.jdk_utf8_decode",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "jdk-utf8-decode-tx-ctl-r4-repl-v0#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-ctl-r4-repl] an output whose R4 is the String ⟨EF BF BD⟩. CONTROL: well-formed text, written back as read. The JVM's id: 5e2cec6f0eb46b55ca37a1b3f2cbd48c5e480648e0a353dbbfa5a4cdcc3525a1.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc030008d30100016603efbfbd",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-r4-sur-v0#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-r4-sur] an output whose R4 is the String ⟨ED A0 80⟩. The JVM reads it as ONE U+FFFD and writes `EF BF BD`, so the transaction it writes, and the id it computes over those bytes, are tx-ctl-r4-repl's. SEPARATING: a port that keeps the bytes, or decodes three replacements, writes other bytes and computes another id: a wrong transaction id is a wrong block. The JVM's id: 5e2cec6f0eb46b55ca37a1b3f2cbd48c5e480648e0a353dbbfa5a4cdcc3525a1.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc030008d30100016603eda080",
+      "expected_bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc030008d30100016603efbfbd",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-ctl-ext-repl-v0#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-ctl-ext-repl] an input whose context extension holds var 0 = the String ⟨EF BF BD⟩. CONTROL. The JVM's id: b1ca98ac374749fe25b46007abb66d4c7b35d05ce88fa46347b57396285f9237.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a0001006603efbfbd0000018094ebdc030008d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-ext-sur-v0#3",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-ext-sur] an input whose context extension holds var 0 = the String ⟨ED A0 80⟩, written back as `EF BF BD`: the bytes and id of tx-ctl-ext-repl. SEPARATING, as tx-r4-sur. The JVM's id: b1ca98ac374749fe25b46007abb66d4c7b35d05ce88fa46347b57396285f9237.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a0001006603eda0800000018094ebdc030008d3010000",
+      "expected_bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a0001006603efbfbd0000018094ebdc030008d3010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-ctl-tree-repl-v0#4",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-ctl-tree-repl] an output whose (unsized v0) tree is `sigmaProp(Coll(⟨EF BF BD⟩) == Coll(⟨EF BF BD⟩))`. CONTROL. The JVM's id: ee6ae9ea55f417ff2071c433813f1cb9551d55c3fee42fb6ec890f95a739d86c.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc0300d1930c660103efbfbd0c660103efbfbd010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-tree-sur-v0#5",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-tree-sur] an output whose (unsized v0) tree holds the String ⟨ED A0 80⟩ in a constant: the tree is written with `EF BF BD`, so the bytes and id are tx-ctl-tree-repl's. SEPARATING, as tx-r4-sur. The JVM's id: ee6ae9ea55f417ff2071c433813f1cb9551d55c3fee42fb6ec890f95a739d86c.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc0300d1930c660103eda0800c660103efbfbd010000",
+      "expected_bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc0300d1930c660103efbfbd0c660103efbfbd010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-ctl-tree-tv-v0#6",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-ctl-tree-tv] an output whose tree is `sigmaProp(Coll[T]().size == 0)`. CONTROL: a well-formed type-variable name. The JVM's id: 1c749fae3584e0d5ad4a94892235e2efcd9b1af9ef7ce9282de289492100b966.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc0300d193b183006701540400010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-tree-tv-overlong-v0#7",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-tree-tv-overlong] an output whose (unsized v0) tree names a type variable ⟨E0 80 80⟩: an overlong form, one U+FFFD per byte, so the name is written as `EF BF BD × 3` (9 bytes). SEPARATING: a port that keeps the name, or replaces the overlong once, writes other bytes. The JVM's id: aa0ab95837b4c976dccd3fe5686fd5c7eb3e3829be08b7c4096157d660a72b65.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc0300d193b183006703e080800400010000",
+      "expected_bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc0300d193b183006709efbfbdefbfbdefbfbd0400010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-tx-sizedtree-tv-overlong-v0#8",
+      "kind" : "Transaction",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[tx-sizedtree-tv-overlong] the same tree SIZED (header 08): the JVM re-writes it and its size grows from 12 to 18. SEPARATING, as tx-tree-tv-overlong, and for a port that echoes a sized tree's bytes. The JVM's id: a03835575e1b248c623bb2fd2a6e151feb3f3bdb16d7e22244d05951bd6811cb.",
+      "bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc03080cd193b183006703e080800400010000",
+      "expected_bytes_hex" : "01a05d90c50251aea28100ccaa1da38004fb5a04154bfa300a600f3c10d130816a00000000018094ebdc030812d193b183006709efbfbdefbfbdefbfbd0400010000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    }
+  ]
+}

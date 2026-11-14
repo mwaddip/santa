@@ -1,0 +1,365 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "String.jdk_utf8_decode",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-jdk-utf8-decode",
+  "entries" : [
+    {
+      "name" : "ctl-true#0",
+      "script" : "[ctl-true] `Coll(⟨EF BF BD⟩) == Coll(⟨EF BF BD⟩)`, both written `EF BF BD` → true at cost 41. CONTROL: well-formed text on both sides.",
+      "tree_bytes_hex" : "00930c660103efbfbd0c660103efbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "ctl-false#1",
+      "script" : "[ctl-false] `Coll(\"A\") == Coll(\"B\")` → false at cost 41. CONTROL: equal lengths, unequal text: the comparison is charged and answers false.",
+      "tree_bytes_hex" : "00930c660101410c66010142",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "sur-vs-1repl#2",
+      "script" : "[sur-vs-1repl] `Coll(⟨ED A0 80⟩) == Coll(⟨EF BF BD⟩)` → true at cost 41. SEPARATING: the JDK takes ANY continuation byte after `ED`, so an encoded surrogate is ONE U+FFFD; a decoder that replaces it per maximal subpart (three U+FFFD), or that keeps the bytes, answers the other way.",
+      "tree_bytes_hex" : "00930c660103eda0800c660103efbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "sur-vs-3repl#3",
+      "script" : "[sur-vs-3repl] `Coll(⟨ED A0 80⟩) == Coll(⟨EF BF BD × 3⟩)` → false at cost 24. The lengths differ (1 against 3 UTF-16 units), so no character comparison is charged. SEPARATING: the JDK takes ANY continuation byte after `ED`, so an encoded surrogate is ONE U+FFFD; a decoder that replaces it per maximal subpart (three U+FFFD), or that keeps the bytes, answers the other way.",
+      "tree_bytes_hex" : "00930c660103eda0800c660109efbfbdefbfbdefbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 24,
+        "error" : null
+      }
+    },
+    {
+      "name" : "sur-same#4",
+      "script" : "[sur-same] `Coll(⟨ED A0 80⟩) == Coll(⟨ED A0 80⟩)` → true at cost 41. CONTROL: the same bytes on both sides are equal under any decoder.",
+      "tree_bytes_hex" : "00930c660103eda0800c660103eda080",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "sur40-same#5",
+      "script" : "[sur40-same] `Coll(40 × ⟨ED A0 80⟩) == Coll(40 × ⟨ED A0 80⟩)`, 120 bytes a side → true at cost 41. Decoded, each side is 40 UTF-16 units: one 96-unit chunk of the String comparison, the cost of a one-character string. SEPARATING on cost: a port that counts the 120 bytes, or 120 replacement characters, charges two chunks (43, as ctl-repl120-same).",
+      "tree_bytes_hex" : "00930c660178eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda0800c660178eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080eda080",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "ctl-repl40-same#6",
+      "script" : "[ctl-repl40-same] `Coll(40 × ⟨EF BF BD⟩) == Coll(40 × ⟨EF BF BD⟩)`, 120 bytes of `EF BF BD` a side → true at cost 41. CONTROL for sur40-same: well-formed, 40 UTF-16 units, the same cost.",
+      "tree_bytes_hex" : "00930c660178efbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbd0c660178efbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "ctl-repl120-same#7",
+      "script" : "[ctl-repl120-same] `Coll(120 × ⟨EF BF BD⟩) == Coll(120 × ⟨EF BF BD⟩)` → true at cost 43. CONTROL: what 120 UTF-16 units cost, two chunks.",
+      "tree_bytes_hex" : "00930c6601e802efbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbd0c6601e802efbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbdefbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 43,
+        "error" : null
+      }
+    },
+    {
+      "name" : "overlong3-vs-3repl#8",
+      "script" : "[overlong3-vs-3repl] `Coll(⟨E0 80 80⟩) == Coll(⟨EF BF BD × 3⟩)` → true at cost 41. An overlong form (`E0 80..9F`) becomes one U+FFFD PER BYTE. SEPARATING: a decoder that replaces the overlong sequence once answers false.",
+      "tree_bytes_hex" : "00930c660103e080800c660109efbfbdefbfbdefbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "overlong3-vs-1repl#9",
+      "script" : "[overlong3-vs-1repl] `Coll(⟨E0 80 80⟩) == Coll(⟨EF BF BD⟩)` → false at cost 24. The lengths differ (3 against 1). SEPARATING: a decoder that replaces the overlong sequence once answers true.",
+      "tree_bytes_hex" : "00930c660103e080800c660103efbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 24,
+        "error" : null
+      }
+    },
+    {
+      "name" : "neq-sur-vs-1repl#10",
+      "script" : "[neq-sur-vs-1repl] `Coll(⟨ED A0 80⟩) != Coll(⟨EF BF BD⟩)` → false at cost 41. `NEQ` calls the same comparer. SEPARATING, as sur-vs-1repl.",
+      "tree_bytes_hex" : "00940c660103eda0800c660103efbfbd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-sur-vs-1repl#11",
+      "script" : "[pair-sur-vs-1repl] `(⟨ED A0 80⟩, 1) == (⟨EF BF BD⟩, 1)`, two `(String, Int)` constants → true at cost 35. The same decoding inside a pair. SEPARATING, as sur-vs-1repl.",
+      "tree_bytes_hex" : "00933c660403eda080023c660403efbfbd02",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-sur-vs-3repl#12",
+      "script" : "[pair-sur-vs-3repl] `(⟨ED A0 80⟩, 1) == (⟨EF BF BD × 3⟩, 1)` → false at cost 15. The lengths differ; the String case bails before charging the comparison. SEPARATING, as sur-vs-3repl.",
+      "tree_bytes_hex" : "00933c660403eda080023c660409efbfbdefbfbdefbfbd02",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "pair-ctl#13",
+      "script" : "[pair-ctl] `(⟨EF BF BD⟩, 1) == (⟨EF BF BD⟩, 1)` → true at cost 35. CONTROL for the pair rows.",
+      "tree_bytes_hex" : "00933c660403efbfbd023c660403efbfbd02",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "subst-sur-vs-1repl#14",
+      "script" : "[subst-sur-vs-1repl] `substConstants(tree with String constant ⟨ED A0 80⟩, Coll[Int](), Coll[Int]()) == the same tree with `EF BF BD`` → true at cost 238. `substConstants` re-writes the tree, and the constant goes out as decoded text. SEPARATING: a port that keeps the bytes returns the input.",
+      "tree_bytes_hex" : "0093740e0910016603eda0807300100010000e0910016603efbfbd7300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 238,
+        "error" : null
+      }
+    },
+    {
+      "name" : "subst-sur-vs-3repl#15",
+      "script" : "[subst-sur-vs-3repl] `substConstants(tree with String constant ⟨ED A0 80⟩, …) == the tree with `EF BF BD × 3`` → false at cost 221. SEPARATING, as sur-vs-3repl.",
+      "tree_bytes_hex" : "0093740e0910016603eda0807300100010000e0f10016609efbfbdefbfbdefbfbd7300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 221,
+        "error" : null
+      }
+    },
+    {
+      "name" : "subst-ctl-repl#16",
+      "script" : "[subst-ctl-repl] `substConstants(tree with String constant ⟨EF BF BD⟩, …) == the same tree` → true at cost 238. CONTROL for the substConstants rows.",
+      "tree_bytes_hex" : "0093740e0910016603efbfbd7300100010000e0910016603efbfbd7300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 238,
+        "error" : null
+      }
+    }
+  ]
+}

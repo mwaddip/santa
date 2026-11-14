@@ -1,0 +1,66 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Constant.jdk_utf8_decode",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "jdk-utf8-decode-str-sur-v0#0",
+      "kind" : "Constant",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[str-sur] The String ⟨ED A0 80⟩, an encoded surrogate: ONE U+FFFD, written `66 03 EF BF BD`. SEPARATING: a port that keeps the bytes echoes; a decoder that replaces per maximal subpart writes three U+FFFD (`66 09 …`).",
+      "bytes_hex" : "6603eda080",
+      "expected_bytes_hex" : "6603efbfbd",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-str-sur-ascii-v0#1",
+      "kind" : "Constant",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[str-sur-ascii] The String ⟨ED A0 41⟩: `ED A0` is one U+FFFD (the JDK takes the continuation byte after `ED`), then `A`: written `66 04 EF BF BD 41`. SEPARATING, as str-sur.",
+      "bytes_hex" : "6603eda041",
+      "expected_bytes_hex" : "6604efbfbd41",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-str-overlong3-v0#2",
+      "kind" : "Constant",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[str-overlong3] The String ⟨E0 80 80⟩, an overlong form: one U+FFFD PER BYTE, written `66 09 EF BF BD × 3`. SEPARATING: a decoder that replaces the overlong sequence once writes `66 03 EF BF BD`.",
+      "bytes_hex" : "6603e08080",
+      "expected_bytes_hex" : "6609efbfbdefbfbdefbfbd",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-str-above-v0#3",
+      "kind" : "Constant",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[str-above] The String ⟨F4 90 80 80⟩, a code point above U+10FFFF: one U+FFFD per byte, written `66 0C EF BF BD × 4`. SEPARATING, as str-overlong3.",
+      "bytes_hex" : "6604f4908080",
+      "expected_bytes_hex" : "660cefbfbdefbfbdefbfbdefbfbd",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-str-valid-v0#4",
+      "kind" : "Constant",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[str-valid] The String ⟨E2 82 AC⟩ (€), well-formed: written back as read. CONTROL.",
+      "bytes_hex" : "6603e282ac",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    }
+  ]
+}

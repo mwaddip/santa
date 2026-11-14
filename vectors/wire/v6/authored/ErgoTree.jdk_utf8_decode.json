@@ -1,0 +1,173 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.jdk_utf8_decode",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "jdk-utf8-decode-size0-sur-v3#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[size0-sur] `sigmaProp(Coll[⟨ED A0 80⟩]().size == 0)`, a type variable named ⟨ED A0 80⟩. One U+FFFD: the name is written `EF BF BD`. SEPARATING, as str-sur.",
+      "bytes_hex" : "0b0cd193b183006703eda0800400",
+      "expected_bytes_hex" : "0b0cd193b183006703efbfbd0400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-size0-overlong3-v3#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[size0-overlong3] `sigmaProp(Coll[⟨E0 80 80⟩]().size == 0)`, a type variable named ⟨E0 80 80⟩. One U+FFFD per byte: the name is written as 9 bytes (`67 09 …`). SEPARATING, as str-overlong3.",
+      "bytes_hex" : "0b0cd193b183006703e080800400",
+      "expected_bytes_hex" : "0b12d193b183006709efbfbdefbfbdefbfbd0400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-size0-overlong4-v3#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[size0-overlong4] `sigmaProp(Coll[⟨F0 80 80 80⟩]().size == 0)`, a type variable named ⟨F0 80 80 80⟩. One U+FFFD per byte: 12 bytes. SEPARATING, as str-overlong3.",
+      "bytes_hex" : "0b0dd193b183006704f08080800400",
+      "expected_bytes_hex" : "0b15d193b18300670cefbfbdefbfbdefbfbdefbfbd0400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-size0-above-v3#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[size0-above] `sigmaProp(Coll[⟨F4 90 80 80⟩]().size == 0)`, a type variable named ⟨F4 90 80 80⟩. One U+FFFD per byte: 12 bytes. SEPARATING, as str-above.",
+      "bytes_hex" : "0b0dd193b183006704f49080800400",
+      "expected_bytes_hex" : "0b15d193b18300670cefbfbdefbfbdefbfbdefbfbd0400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-size0-ff-v3#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[size0-ff] `sigmaProp(Coll[⟨FF⟩]().size == 0)`, a type variable named ⟨FF⟩. `FF` is never valid UTF-8: one U+FFFD, written `EF BF BD`.",
+      "bytes_hex" : "0b0ad193b183006701ff0400",
+      "expected_bytes_hex" : "0b0cd193b183006703efbfbd0400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-size0-valid-v3#5",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[size0-valid] `sigmaProp(Coll[⟨E2 82 AC⟩]().size == 0)`, a type variable named ⟨E2 82 AC⟩. Well-formed: written back as read. CONTROL.",
+      "bytes_hex" : "0b0cd193b183006703e282ac0400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-ctl-v3#6",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-ctl] `sigmaProp(Coll[T]() == Coll[T]())`. Both names `T`: built, written back as read. CONTROL.",
+      "bytes_hex" : "0b0cd19383006701548300670154",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-ctl-differ-v3#7",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-ctl-differ] `sigmaProp(Coll[T]() == Coll[U]())`. `T` and `U` differ: REJECTED (`ConstraintFailed`, `SameType2`). CONTROL: what a name mismatch does.",
+      "bytes_hex" : "0b0cd19383006701548300670155",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-overlong-vs-3ff-v3#8",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-overlong-vs-3ff] `sigmaProp(Coll[⟨E0 80 80⟩]() == Coll[⟨FF FF FF⟩]())`. Both decode to three U+FFFD: the types are EQUAL, the node is built, and both names are written `EF BF BD × 3`. SEPARATING: a port that compares the bytes, or replaces the overlong once, refuses the tree.",
+      "bytes_hex" : "0b10d19383006703e0808083006703ffffff",
+      "expected_bytes_hex" : "0b1cd19383006709efbfbdefbfbdefbfbd83006709efbfbdefbfbdefbfbd",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-overlong-vs-1ff-v3#9",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-overlong-vs-1ff] `sigmaProp(Coll[⟨E0 80 80⟩]() == Coll[⟨FF⟩]())`. Three U+FFFD against one: REJECTED (`ConstraintFailed`). SEPARATING: a decoder that replaces the overlong once builds it.",
+      "bytes_hex" : "0b0ed19383006703e0808083006701ff",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-above-vs-4ff-v3#10",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-above-vs-4ff] `sigmaProp(Coll[⟨F4 90 80 80⟩]() == Coll[⟨FF FF FF FF⟩]())`. Four U+FFFD a side: built, both written `EF BF BD × 4`. SEPARATING, as overlong-vs-3ff.",
+      "bytes_hex" : "0b12d19383006704f490808083006704ffffffff",
+      "expected_bytes_hex" : "0b22d1938300670cefbfbdefbfbdefbfbdefbfbd8300670cefbfbdefbfbdefbfbdefbfbd",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-above-vs-1ff-v3#11",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-above-vs-1ff] `sigmaProp(Coll[⟨F4 90 80 80⟩]() == Coll[⟨FF⟩]())`. Four against one: REJECTED. SEPARATING, as overlong-vs-1ff.",
+      "bytes_hex" : "0b0fd19383006704f490808083006701ff",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-sur-vs-1ff-v3#12",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-sur-vs-1ff] `sigmaProp(Coll[⟨ED A0 80⟩]() == Coll[⟨FF⟩]())`. One U+FFFD a side: built, both written `EF BF BD`. SEPARATING: a decoder that replaces the surrogate per maximal subpart refuses it.",
+      "bytes_hex" : "0b0ed19383006703eda08083006701ff",
+      "expected_bytes_hex" : "0b10d19383006703efbfbd83006703efbfbd",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "jdk-utf8-decode-eq-sur-vs-3ff-v3#13",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-jdk-utf8-decode",
+      "description" : "[eq-sur-vs-3ff] `sigmaProp(Coll[⟨ED A0 80⟩]() == Coll[⟨FF FF FF⟩]())`. One against three: REJECTED. SEPARATING: a three-replacement decoder builds it.",
+      "bytes_hex" : "0b10d19383006703eda08083006703ffffff",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
