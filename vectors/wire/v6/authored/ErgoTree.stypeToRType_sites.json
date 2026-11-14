@@ -1,0 +1,169 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "ErgoTree.stypeToRType_sites",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "stypetortype-collint-empty-v3#0",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollInt-empty] `sigmaProp(Coll[Int]().size == 0)`. ACCEPTED, round-trips to its own bytes. CONTROL.",
+      "bytes_hex" : "0b07d193b110000400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-collt-empty-v3#1",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollT-empty] `sigmaProp(Coll[T]().size == 0)`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "0b0ad193b10c670154000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-collcollt-1-empty-v3#2",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollCollT-1-empty] `sigmaProp(Coll[Coll[T]](Coll()).size == 0)`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "0b0cd193b10c0c67015401000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-colloptt-empty-v3#3",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollOptT-empty] `sigmaProp(Coll[Option[T]]().size == 0)`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "0b0bd193b10c24670154000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-colloptt-1-v3#4",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollOptT-1] `sigmaProp(Coll[Option[T]](None).size == 0)`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "0b0cd193b10c2467015401000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-colltriplet-empty-v3#5",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollTripleT-empty] `sigmaProp(Coll[(Int, Int, T)]().size == 0)`. ACCEPTED, round-trips to its own bytes. SEPARATING, as the v0 rows.",
+      "bytes_hex" : "0b0dd193b10c480404670154000400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-collf2-empty-v3#6",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollF2-empty] `sigmaProp(Coll[(Int, Int) => Int]().size == 0)`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "0b0dd193b10c700204040400000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-collf2-1-v3#7",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollF2-1] `sigmaProp(Coll[(Int, Int) => Int](…).size == 0)`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "0b0ed193b10c70020404040001000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-collf1-empty-v3#8",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[CollF1-empty] `sigmaProp(Coll[(Int) => Int]().size == 0)`. ACCEPTED, round-trips to its own bytes. CONTROL for CollF2: a one-argument function type has a runtime type.",
+      "bytes_hex" : "0b0cd193b10c7001040400000400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-seg-collt-empty-v3#9",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[seg-CollT-empty] `sigmaProp(Coll[T]().size == 0)`, the constant segregated. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "1b0d010c67015400d193b173000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-seg-collint-empty-v3#10",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[seg-CollInt-empty] `sigmaProp(Coll[Int]().size == 0)`, the constant segregated. ACCEPTED, round-trips to its own bytes. CONTROL.",
+      "bytes_hex" : "1b0a011000d193b173000400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-seg-colltriplet-empty-v3#11",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[seg-CollTripleT-empty] `sigmaProp(Coll[(Int, Int, T)]().size == 0)`, the constant segregated. ACCEPTED, round-trips to its own bytes. SEPARATING, as CollTripleT-empty.",
+      "bytes_hex" : "1b10010c48040467015400d193b173000400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-seg-collf2-1-v3#12",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[seg-CollF2-1] `sigmaProp(Coll[(Int, Int) => Int](…).size == 0)`, the constant segregated. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "1b11010c7002040404000100d193b173000400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "stypetortype-optt-none-v3#13",
+      "kind" : "ErgoTree",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[OptT-none] `sigmaProp(None: Option[T]).isDefined)`, a `None` constant of `Option[T]` — ACCEPTED, round-trips: there is no data to read, so nothing resolves `T`. SEPARATING: an implementation that refuses any constant whose type mentions a variable rejects it.",
+      "bytes_hex" : "0b07d1e62467015400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.stypeToRType_sites",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "stypetortype-r4-collint-v0#0",
+      "kind" : "Box",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[r4-CollInt] A box whose R4 is `Coll[Int]()`. ACCEPTED. CONTROL.",
+      "bytes_hex" : "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000011000000000000000000000000000000000000000000000000000000000000000000000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "stypetortype-r4-collt-v0#1",
+      "kind" : "Box",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[r4-CollT] A box whose R4 is `Coll[T]()`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "stypetortype-r4-collcollt-v0#2",
+      "kind" : "Box",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[r4-CollCollT] A box whose R4 is `Coll[Coll[T]]()`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "stypetortype-r4-colloptt-v0#3",
+      "kind" : "Box",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[r4-CollOptT] A box whose R4 is `Coll[Option[T]]()`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c2467015400000000000000000000000000000000000000000000000000000000000000000000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "stypetortype-r4-collpairtint-v0#4",
+      "kind" : "Box",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[r4-CollPairTInt] A box whose R4 is `Coll[(T, Int)]()`. REJECTED: the reader resolves the item type before reading and finds no runtime type; a RuntimeException, not a ValidationException, so nothing degrades. SEPARATING: an implementation that reads such data accepts it.",
+      "bytes_hex" : "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c3c6701540400000000000000000000000000000000000000000000000000000000000000000000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "stypetortype-r4-colltriplet-v0#5",
+      "kind" : "Box",
+      "source" : "santa:authored-runtime-type-sites",
+      "description" : "[r4-CollTripleT] A box whose R4 is `Coll[(Int, Int, T)]()`. ACCEPTED: a tuple of three is read as `Coll[Any]`. SEPARATING, as the tree rows.",
+      "bytes_hex" : "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c48040467015400000000000000000000000000000000000000000000000000000000000000000000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      }
+    }
+  ]
+}

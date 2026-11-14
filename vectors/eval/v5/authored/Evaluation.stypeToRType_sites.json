@@ -1,0 +1,1334 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Evaluation.stypeToRType_sites",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-runtime-type-sites",
+  "entries" : [
+    {
+      "name" : "coll-empty-int-control-accept#0",
+      "script" : "[coll-empty|Int] `Coll[Int]().size`, τ = `Int` → 0 at cost 34. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00b1830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 34,
+        "error" : null
+      }
+    },
+    {
+      "name" : "getvar-node-int-control-accept#1",
+      "script" : "[getvar-node|Int] `getVar[Int](1).isDefined`, τ = `Int` → true at cost 20. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00e6e30104",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "reg-node-absent-int-control-accept#2",
+      "script" : "[reg-node-absent|Int] `box.R4[Int].isDefined`, a box constant with no registers, τ = `Int` → false at cost 65. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000000000000000000000000000000000000000000000000000000000000000000000000404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "const-coll-empty-int-control-accept#3",
+      "script" : "[const-coll-empty|Int] a constant `Coll[Int]()`, `.size`, τ = `Int` → 0 at cost 19. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00b10c0400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-int-control-accept#4",
+      "script" : "[const-collcoll-1-empty|Int] a constant `Coll[Coll[Int]](Coll())`, `.size`, τ = `Int` → 1 at cost 19. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00b10c0c040100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "const-coll-1-item-int-control-accept#5",
+      "script" : "[const-coll-1-item|Int] a constant `Coll[Int]` of one item (the byte 00), `.size`, τ = `Int` → 1 at cost 19. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00b10c040100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 1
+        },
+        "cost" : 19,
+        "error" : null
+      }
+    },
+    {
+      "name" : "const-box-with-reg-int-control-accept#6",
+      "script" : "[const-box-with-reg|Int] `.value` of a box constant whose R4 is `Coll[Int]()`, τ = `Int` → \"1000000\" at cost 13. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "1000000"
+        },
+        "cost" : 13,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-int-control-accept#7",
+      "script" : "[box-reg-other-absent|Int] `R5[Int].isDefined` of a box constant whose R4 is `Coll[Int]()`, τ = `Int` → false at cost 65. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c04000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-reg-own-type-int-control-accept#8",
+      "script" : "[box-reg-own-type|Int] `R4[Coll[Int]].isDefined` of a box constant whose R4 is `Coll[Int]()`, τ = `Int` → true at cost 65. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0400000000000000000000000000000000000000000000000000000000000000000000040c04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 65,
+        "error" : null
+      }
+    },
+    {
+      "name" : "box-reg-value-int-control-accept#9",
+      "script" : "[box-reg-value|Int] `.value` of a box constant whose R4 is `Coll[Int]()`, read by the ExtractAmount node, τ = `Int` → \"1000000\" at cost 13. CONTROL: `Int` has a runtime type, so the site resolves it and goes on.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Long",
+          "value" : "1000000"
+        },
+        "cost" : 13,
+        "error" : null
+      }
+    },
+    {
+      "name" : "coll-empty-t-errored#10",
+      "script" : "[coll-empty|T] `Coll[T]().size`, τ = `T` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b18300670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "getvar-node-t-errored#11",
+      "script" : "[getvar-node|T] `getVar[T](1).isDefined`, τ = `T` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `GetVar` resolves τ before it looks the variable up. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6e301670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-t-errored#12",
+      "script" : "[reg-node-absent|T] `box.R4[T].isDefined`, a box constant with no registers, τ = `T` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179800000000000000000000000000000000000000000000000000000000000000000000000004670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-t-errored#13",
+      "script" : "[const-coll-empty|T] a constant `Coll[T]()`, `.size`, τ = `T` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c67015400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-t-errored#14",
+      "script" : "[const-collcoll-1-empty|T] a constant `Coll[Coll[T]](Coll())`, `.size`, τ = `T` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c6701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-box-with-reg-t-errored#15",
+      "script" : "[const-box-with-reg|T] `.value` of a box constant whose R4 is `Coll[T]()`, τ = `T` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box's registers are read when the box is, and the register's collection data resolves its item type. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-t-errored#16",
+      "script" : "[box-reg-other-absent|T] `R5[Int].isDefined` of a box constant whose R4 is `Coll[T]()`, τ = `T` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c670154000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-t-errored#17",
+      "script" : "[box-reg-own-type|T] `R4[Coll[T]].isDefined` of a box constant whose R4 is `Coll[T]()`, τ = `T` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c67015400000000000000000000000000000000000000000000000000000000000000000000040c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-value-t-errored#18",
+      "script" : "[box-reg-value|T] `.value` of a box constant whose R4 is `Coll[T]()`, read by the ExtractAmount node, τ = `T` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read, so even the value, which reads no register, is refused. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-collt-errored#19",
+      "script" : "[coll-empty|CollT] `Coll[Coll[T]]().size`, τ = `Coll[T]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b183000c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-collt-errored#20",
+      "script" : "[reg-node-absent|CollT] `box.R4[Coll[T]].isDefined`, a box constant with no registers, τ = `Coll[T]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000000000000000000000000000000000000000000000000000000000000000000000040c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-collt-errored#21",
+      "script" : "[const-coll-empty|CollT] a constant `Coll[Coll[T]]()`, `.size`, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c67015400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-collt-errored#22",
+      "script" : "[const-collcoll-1-empty|CollT] a constant `Coll[Coll[Coll[T]]](Coll())`, `.size`, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c0c6701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-1-item-collt-errored#23",
+      "script" : "[const-coll-1-item|CollT] a constant `Coll[Coll[T]]` of one item (the byte 00), `.size`, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c6701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-box-with-reg-collt-errored#24",
+      "script" : "[const-box-with-reg|CollT] `.value` of a box constant whose R4 is `Coll[Coll[T]]()`, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box's registers are read when the box is, and the register's collection data resolves its item type. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-collt-errored#25",
+      "script" : "[box-reg-other-absent|CollT] `R5[Int].isDefined` of a box constant whose R4 is `Coll[Coll[T]]()`, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c670154000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-collt-errored#26",
+      "script" : "[box-reg-own-type|CollT] `R4[Coll[Coll[T]]].isDefined` of a box constant whose R4 is `Coll[Coll[T]]()`, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c67015400000000000000000000000000000000000000000000000000000000000000000000040c0c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-value-collt-errored#27",
+      "script" : "[box-reg-value|CollT] `.value` of a box constant whose R4 is `Coll[Coll[T]]()`, read by the ExtractAmount node, τ = `Coll[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read, so even the value, which reads no register, is refused. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-collcollt-errored#28",
+      "script" : "[coll-empty|CollCollT] `Coll[Coll[Coll[T]]]().size`, τ = `Coll[Coll[T]]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b183000c0c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-collcollt-errored#29",
+      "script" : "[reg-node-absent|CollCollT] `box.R4[Coll[Coll[T]]].isDefined`, a box constant with no registers, τ = `Coll[Coll[T]]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000000000000000000000000000000000000000000000000000000000000000000000040c0c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-collcollt-errored#30",
+      "script" : "[const-coll-empty|CollCollT] a constant `Coll[Coll[Coll[T]]]()`, `.size`, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c0c67015400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-collcollt-errored#31",
+      "script" : "[const-collcoll-1-empty|CollCollT] a constant `Coll[Coll[Coll[Coll[T]]]](Coll())`, `.size`, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c0c0c6701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-1-item-collcollt-errored#32",
+      "script" : "[const-coll-1-item|CollCollT] a constant `Coll[Coll[Coll[T]]]` of one item (the byte 00), `.size`, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c0c6701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-box-with-reg-collcollt-errored#33",
+      "script" : "[const-box-with-reg|CollCollT] `.value` of a box constant whose R4 is `Coll[Coll[Coll[T]]]()`, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box's registers are read when the box is, and the register's collection data resolves its item type. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c0c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-collcollt-errored#34",
+      "script" : "[box-reg-other-absent|CollCollT] `R5[Int].isDefined` of a box constant whose R4 is `Coll[Coll[Coll[T]]]()`, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c0c670154000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-collcollt-errored#35",
+      "script" : "[box-reg-own-type|CollCollT] `R4[Coll[Coll[Coll[T]]]].isDefined` of a box constant whose R4 is `Coll[Coll[Coll[T]]]()`, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c0c67015400000000000000000000000000000000000000000000000000000000000000000000040c0c0c670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-value-collcollt-errored#36",
+      "script" : "[box-reg-value|CollCollT] `.value` of a box constant whose R4 is `Coll[Coll[Coll[T]]]()`, read by the ExtractAmount node, τ = `Coll[Coll[T]]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read, so even the value, which reads no register, is refused. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c0c67015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-optt-errored#37",
+      "script" : "[coll-empty|OptT] `Coll[Option[T]]().size`, τ = `Option[T]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b1830024670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "getvar-node-optt-errored#38",
+      "script" : "[getvar-node|OptT] `getVar[Option[T]](1).isDefined`, τ = `Option[T]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `GetVar` resolves τ before it looks the variable up. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6e30124670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-optt-errored#39",
+      "script" : "[reg-node-absent|OptT] `box.R4[Option[T]].isDefined`, a box constant with no registers, τ = `Option[T]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000000000000000000000000000000000000000000000000000000000000000000000000424670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-optt-errored#40",
+      "script" : "[const-coll-empty|OptT] a constant `Coll[Option[T]]()`, `.size`, τ = `Option[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c2467015400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-optt-errored#41",
+      "script" : "[const-collcoll-1-empty|OptT] a constant `Coll[Coll[Option[T]]](Coll())`, `.size`, τ = `Option[T]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c246701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-pairtint-errored#42",
+      "script" : "[coll-empty|PairTInt] `Coll[(T, Int)]().size`, τ = `(T, Int)` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b183003c67015404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-pairtint-errored#43",
+      "script" : "[reg-node-absent|PairTInt] `box.R4[(T, Int)].isDefined`, a box constant with no registers, τ = `(T, Int)` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000000000000000000000000000000000000000000000000000000000000000000000043c67015404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-pairtint-errored#44",
+      "script" : "[const-coll-empty|PairTInt] a constant `Coll[(T, Int)]()`, `.size`, τ = `(T, Int)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c3c6701540400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-pairtint-errored#45",
+      "script" : "[const-collcoll-1-empty|PairTInt] a constant `Coll[Coll[(T, Int)]](Coll())`, `.size`, τ = `(T, Int)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c3c670154040100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-box-with-reg-pairtint-errored#46",
+      "script" : "[const-box-with-reg|PairTInt] `.value` of a box constant whose R4 is `Coll[(T, Int)]()`, τ = `(T, Int)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box's registers are read when the box is, and the register's collection data resolves its item type. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c3c6701540400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-pairtint-errored#47",
+      "script" : "[box-reg-other-absent|PairTInt] `R5[Int].isDefined` of a box constant whose R4 is `Coll[(T, Int)]()`, τ = `(T, Int)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c3c67015404000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-pairtint-errored#48",
+      "script" : "[box-reg-own-type|PairTInt] `R4[Coll[(T, Int)]].isDefined` of a box constant whose R4 is `Coll[(T, Int)]()`, τ = `(T, Int)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c3c6701540400000000000000000000000000000000000000000000000000000000000000000000040c3c67015404",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-value-pairtint-errored#49",
+      "script" : "[box-reg-value|PairTInt] `.value` of a box constant whose R4 is `Coll[(T, Int)]()`, read by the ExtractAmount node, τ = `(T, Int)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read, so even the value, which reads no register, is refused. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c3c6701540400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-pairintt-errored#50",
+      "script" : "[coll-empty|PairIntT] `Coll[(Int, T)]().size`, τ = `(Int, T)` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b1830040670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-pairintt-errored#51",
+      "script" : "[reg-node-absent|PairIntT] `box.R4[(Int, T)].isDefined`, a box constant with no registers, τ = `(Int, T)` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000000000000000000000000000000000000000000000000000000000000000000000000440670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-pairintt-errored#52",
+      "script" : "[const-coll-empty|PairIntT] a constant `Coll[(Int, T)]()`, `.size`, τ = `(Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c4067015400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-pairintt-errored#53",
+      "script" : "[const-collcoll-1-empty|PairIntT] a constant `Coll[Coll[(Int, T)]](Coll())`, `.size`, τ = `(Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c406701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-box-with-reg-pairintt-errored#54",
+      "script" : "[const-box-with-reg|PairIntT] `.value` of a box constant whose R4 is `Coll[(Int, T)]()`, τ = `(Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box's registers are read when the box is, and the register's collection data resolves its item type. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c4067015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-pairintt-errored#55",
+      "script" : "[box-reg-other-absent|PairIntT] `R5[Int].isDefined` of a box constant whose R4 is `Coll[(Int, T)]()`, τ = `(Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c40670154000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-pairintt-errored#56",
+      "script" : "[box-reg-own-type|PairIntT] `R4[Coll[(Int, T)]].isDefined` of a box constant whose R4 is `Coll[(Int, T)]()`, τ = `(Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c4067015400000000000000000000000000000000000000000000000000000000000000000000040c40670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-value-pairintt-errored#57",
+      "script" : "[box-reg-value|PairIntT] `.value` of a box constant whose R4 is `Coll[(Int, T)]()`, read by the ExtractAmount node, τ = `(Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read, so even the value, which reads no register, is refused. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c4067015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-triplet-errored#58",
+      "script" : "[coll-empty|TripleT] `Coll[(Int, Int, T)]().size`, τ = `(Int, Int, T)` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b18300480404670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-triplet-errored#59",
+      "script" : "[reg-node-absent|TripleT] `box.R4[(Int, Int, T)].isDefined`, a box constant with no registers, τ = `(Int, Int, T)` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179800000000000000000000000000000000000000000000000000000000000000000000000004480404670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-triplet-errored#60",
+      "script" : "[const-collcoll-1-empty|TripleT] a constant `Coll[Coll[(Int, Int, T)]](Coll())`, `.size`, τ = `(Int, Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c4804046701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-triplet-errored#61",
+      "script" : "[box-reg-other-absent|TripleT] `R5[Int].isDefined` of a box constant whose R4 is `Coll[(Int, Int, T)]()`, τ = `(Int, Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c480404670154000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-triplet-errored#62",
+      "script" : "[box-reg-own-type|TripleT] `R4[Coll[(Int, Int, T)]].isDefined` of a box constant whose R4 is `Coll[(Int, Int, T)]()`, τ = `(Int, Int, T)` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c48040467015400000000000000000000000000000000000000000000000000000000000000000000040c480404670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "coll-empty-colltriplet-errored#63",
+      "script" : "[coll-empty|CollTripleT] `Coll[Coll[(Int, Int, T)]]().size`, τ = `Coll[(Int, Int, T)]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): the `ConcreteCollection` node resolves its item type's runtime type at evaluation, before there is anything to build. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00b183000c480404670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "reg-node-absent-colltriplet-errored#64",
+      "script" : "[reg-node-absent|CollTripleT] `box.R4[Coll[(Int, Int, T)]].isDefined`, a box constant with no registers, τ = `Coll[(Int, Int, T)]` — THROWS (`RuntimeException: Don't know how to convert SType T to RType`): `ExtractRegisterAs` resolves τ's runtime type before it reads the register: an ABSENT register does not save it. SEPARATING: an implementation that answers without resolving the type returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000000000000000000000000000000000000000000000000000000000000000000000040c480404670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-empty-colltriplet-errored#65",
+      "script" : "[const-coll-empty|CollTripleT] a constant `Coll[Coll[(Int, Int, T)]]()`, `.size`, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves a collection's item type BEFORE it reads the items, so an EMPTY collection is refused too. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c48040467015400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-collcoll-1-empty-colltriplet-errored#66",
+      "script" : "[const-collcoll-1-empty|CollTripleT] a constant `Coll[Coll[Coll[(Int, Int, T)]]](Coll())`, `.size`, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c0c4804046701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-coll-1-item-colltriplet-errored#67",
+      "script" : "[const-coll-1-item|CollTripleT] a constant `Coll[Coll[(Int, Int, T)]]` of one item (the byte 00), `.size`, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the data reader resolves the item type before reading. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00b10c0c4804046701540100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "const-box-with-reg-colltriplet-errored#68",
+      "script" : "[const-box-with-reg|CollTripleT] `.value` of a box constant whose R4 is `Coll[Coll[(Int, Int, T)]]()`, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box's registers are read when the box is, and the register's collection data resolves its item type. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c48040467015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-other-absent-colltriplet-errored#69",
+      "script" : "[box-reg-other-absent|CollTripleT] `R5[Int].isDefined` of a box constant whose R4 is `Coll[Coll[(Int, Int, T)]]()`, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read at all, so a register the row never asks for still refuses it. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c480404670154000000000000000000000000000000000000000000000000000000000000000000000504",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-own-type-colltriplet-errored#70",
+      "script" : "[box-reg-own-type|CollTripleT] `R4[Coll[Coll[(Int, Int, T)]]].isDefined` of a box constant whose R4 is `Coll[Coll[(Int, Int, T)]]()`, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00e6c663c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c48040467015400000000000000000000000000000000000000000000000000000000000000000000040c0c480404670154",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "box-reg-value-colltriplet-errored#71",
+      "script" : "[box-reg-value|CollTripleT] `.value` of a box constant whose R4 is `Coll[Coll[(Int, Int, T)]]()`, read by the ExtractAmount node, τ = `Coll[(Int, Int, T)]` — REFUSED AT PARSE (`RuntimeException: Don't know how to convert SType T to RType`): the box cannot be read, so even the value, which reads no register, is refused. SEPARATING: an implementation that parses such data returns a value.",
+      "tree_bytes_hex" : "00c163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980000010c0c48040467015400000000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

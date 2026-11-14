@@ -1214,6 +1214,36 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Evaluation.stypeToRType_sites.json" : {
+      "accepts" : 10,
+      "entries" : 72,
+      "methods" : [
+      ],
+      "op" : "Evaluation.stypeToRType_sites",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "ExtractAmount",
+        "ExtractRegisterAs",
+        "GetVar",
+        "OptionIsDefined",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 62,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 20,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 42,
+      "version" : "v5"
+    },
     "v5/authored/FuncValue.non_unary_arity.json" : {
       "accepts" : 1,
       "entries" : 4,
@@ -5736,6 +5766,44 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Evaluation.stypeToRType_sites_v6.json" : {
+      "accepts" : 30,
+      "entries" : 228,
+      "methods" : [
+        "101:12 Context.getVarFromInput",
+        "106:10 SigmaDslBuilder.none",
+        "106:4 SigmaDslBuilder.deserializeTo",
+        "106:9 SigmaDslBuilder.some",
+        "99:19 Box.getReg"
+      ],
+      "op" : "Evaluation.stypeToRType_sites_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "ExtractAmount",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Global$",
+        "MethodCall",
+        "OptionIsDefined",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 198,
+      "tree_shapes" : [
+        {
+          "accepts" : 30,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 99,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 99,
       "version" : "v6"
     },
     "v6/authored/FunDef.nTpeArgs_count_bound.json" : {
@@ -12782,6 +12850,7 @@
       "families" : [
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -12998,6 +13067,7 @@
     "106:10" : {
       "families" : [
         "v6/authored/Coll.prefix_cross_type_equality.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
@@ -13045,6 +13115,7 @@
     "106:4" : {
       "families" : [
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
@@ -13092,6 +13163,7 @@
     "106:9" : {
       "families" : [
         "v6/authored/Coll.prefix_cross_type_equality.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/Option.method_type_variable_names_v6.json"
@@ -13689,7 +13761,8 @@
     },
     "99:19" : {
       "families" : [
-        "v6/authored/Box.getReg_dynamic_index.json"
+        "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json"
       ],
       "name" : "Box.getReg"
     },
@@ -14887,6 +14960,7 @@
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
@@ -14924,6 +14998,7 @@
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
@@ -15007,6 +15082,7 @@
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
         "v5/authored/String.jdk_utf8_decode.json",
@@ -15044,6 +15120,7 @@
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
@@ -15251,6 +15328,7 @@
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -15490,11 +15568,13 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.sub_min_value.json",
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll.filter_equivalence.json",
         "v5/spec/Coll.forall_equivalence.json",
         "v6/authored/Context.property_call_forms_v6.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -15631,8 +15711,10 @@
       "families" : [
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -16173,6 +16255,7 @@
         "v5/authored/Box.sub_min_value.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ_of_SigmaProp.json",
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/spec/Advanced_Box_test.json",
@@ -16266,6 +16349,7 @@
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/EQ.comparer_dispatch.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -16377,6 +16461,7 @@
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/EQ.comparer_dispatch.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
@@ -16879,6 +16964,7 @@
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
@@ -17382,8 +17468,10 @@
     },
     "OptionIsDefined" : {
       "families" : [
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
@@ -17764,6 +17852,7 @@
       "families" : [
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Coll.size_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_node_array_class.json",
@@ -17771,6 +17860,7 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Context.property_call_forms_v6.json",
+        "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
@@ -18415,12 +18505,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 2769,
+    "accepts" : 2809,
     "distinct_methods" : 162,
     "distinct_ops" : 89,
-    "entries" : 3288,
-    "files" : 349,
-    "rejects" : 519,
-    "unwalked" : 16
+    "entries" : 3588,
+    "files" : 351,
+    "rejects" : 779,
+    "unwalked" : 157
   }
 }
