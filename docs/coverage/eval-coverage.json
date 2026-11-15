@@ -5497,20 +5497,24 @@
       "version" : "v6"
     },
     "v6/authored/Coll.reference_store_ops.json" : {
-      "accepts" : 22,
-      "entries" : 40,
+      "accepts" : 48,
+      "entries" : 91,
       "methods" : [
         "12:15 SCollection.flatMap",
         "12:19 SCollection.patch",
         "12:20 SCollection.updated",
         "12:21 SCollection.updateMany",
         "12:29 SCollection.zip",
-        "12:30 SCollection.reverse"
+        "12:30 SCollection.reverse",
+        "12:9 SCollection.append"
       ],
       "op" : "Coll.reference_store_ops",
       "ops" : [
+        "Append",
+        "BlockValue",
         "ConcreteCollection",
         "Const",
+        "EQ",
         "FuncValue",
         "GetVar",
         "GroupGenerator$",
@@ -5521,21 +5525,22 @@
         "Self$",
         "SizeOf",
         "Tuple",
+        "ValDef",
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 18,
+      "rejects" : 43,
       "tree_shapes" : [
         {
-          "accepts" : 22,
+          "accepts" : 48,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 18,
+          "rejects" : 35,
           "tree_version" : 3
         }
       ],
-      "unwalked" : 0,
+      "unwalked" : 8,
       "version" : "v6"
     },
     "v6/authored/Coll.runtime_shapes_methodcall.json" : {
@@ -13851,6 +13856,7 @@
     "12:9" : {
       "families" : [
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json"
       ],
       "name" : "SCollection.append"
@@ -14762,6 +14768,7 @@
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
@@ -15091,6 +15098,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
@@ -15962,6 +15970,7 @@
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
+        "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/Context.property_call_forms_v6.json",
@@ -18761,6 +18770,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
@@ -19109,12 +19119,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 3825,
+    "accepts" : 3851,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 5317,
+    "entries" : 5368,
     "files" : 360,
-    "rejects" : 1492,
-    "unwalked" : 653
+    "rejects" : 1517,
+    "unwalked" : 661
   }
 }
