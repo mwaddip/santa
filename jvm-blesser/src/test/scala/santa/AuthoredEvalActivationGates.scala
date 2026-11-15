@@ -21,6 +21,13 @@ package santa
 // inputs on which the two readings agree, `sigmaProp(true)`, and the operands both readings refuse (an Int; an
 // out-of-bounds `ByIndex` on an empty `Coll[SigmaProp]`) are the CONTROLS beside the separating rows. Closed
 // trees in the contract §2 context; var 1 = Int 0 is never read.
+//
+// BELOW THE ACTIVATION, the `v4` slot (activated 0 or 1): `XorOf.activated_version_gate_v4` and
+// `BoolToSigmaProp.activated_version_gate_v4`, the same rows at (activated 0, tree 0), (1, 0) and (1, 1). They take
+// the 4.x readings: xorOf is `distinct.length == 2`, and a SigmaProp operand passes through (cost 20 / 30 / 35).
+// They separate an implementation that applies the 5.x readings at every activated version. (Tree v1 at activated 0
+// is left out: the node refuses a tree above its activated version in its verifier, which the transaction tier
+// grades; no eval entry carries that pair, runner-contract §2.)
 
 import io.circe.Json
 import scorex.util.encode.Base16
@@ -43,6 +50,11 @@ object AuthoredEvalActivationGates {
   /** The activated version per file. Every file holds tree v0 then tree v1. */
   val Activated: Map[String, Byte] = Map(XorV5 -> V5, B2spV5 -> V5, XorV6 -> V6, B2spV6 -> V6)
   val TreeVersions: Seq[Int] = Seq(0, 1)
+  val XorV4 = "XorOf.activated_version_gate_v4"
+  val B2spV4 = "BoolToSigmaProp.activated_version_gate_v4"
+  /** The v4 files' (activated, tree version) pairs, in entry order: tree v0 at activated 0 and 1, then the v1 tree at
+    * activated 1 (never above its activated version). */
+  val V4Combos: Seq[(Byte, Int)] = Seq((0.toByte, 0), (1.toByte, 0), (1.toByte, 1))
 
   val IntInput: Json = Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0))
 
@@ -83,6 +95,14 @@ object AuthoredEvalActivationGates {
         s"ACTIVATED version, whatever the tree's. $why"
     }
     def slug: String = s"xorof-$id-${if (separating) "separating" else "control"}"
+    /** Below the JIT activation: the 4.x reading. */
+    def scriptBelow: String = {
+      val x = xorReading(items); val v4 = v4Reading(items)
+      s"`xorOf($lit)`, the Coll[Boolean] a constant — $v4 at cost 30, the 4.x reading: below the JIT activation " +
+        "`xorOf` is `distinct.length == 2` (the collection holds both a true and a false). " +
+        (if (separating) s"SEPARATING: the exclusive or gives $x; an implementation that applies it at every " +
+          "activated version answers that." else s"CONTROL: the exclusive or gives $v4 too.")
+    }
   }
 
   val XorRows: Seq[XorRow] = Seq(
@@ -93,50 +113,81 @@ object AuthoredEvalActivationGates {
   private val G = CryptoConstants.dlogGroup.generator
   private val SpConst: Value[SType] = any(SigmaPropConstant(CSigmaProp(ProveDlog(G))))
 
-  /** One BoolToSigmaProp row: an id, its operand, whether the JVM accepts, and whether it separates. */
-  case class B2spRow(id: String, script: String, operand: Value[SType], accepts: Boolean, separating: Boolean) {
+  /** One BoolToSigmaProp row: an id, its operand, whether the JVM accepts from the activation on, whether that
+    * separates, its script below the activation, and whether the JVM accepts there. */
+  case class B2spRow(id: String, script: String, operand: Value[SType], accepts: Boolean, separating: Boolean,
+                     below: String, acceptsBelow: Boolean) {
     def root: Value[SType] = any(BoolToSigmaProp(bool(operand)))
     def slug: String = s"booltosigmaprop-$id-${if (accepts) "accept" else "reject"}"
+    def slugBelow: String = s"booltosigmaprop-$id-${if (acceptsBelow) "accept" else "reject"}"
   }
 
   private val sepB2sp = "SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws " +
     "(ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version " +
     "ACCEPTS here."
+  private val passB2sp = "the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x " +
+    "branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at " +
+    "every activated version refuses here."
   val B2spRows: Seq[B2spRow] = Seq(
     B2spRow("true", "`sigmaProp(true)` — `TrivialProp.TrueProp` (d3) at cost 20 (Constant 5 + BoolToSigmaProp 15). " +
-      "CONTROL: both readings accept.", any(TrueLeaf), accepts = true, separating = false),
+      "CONTROL: both readings accept.", any(TrueLeaf), accepts = true, separating = false,
+      "`sigmaProp(true)` below the JIT activation — TrueProp (d3) at cost 20. CONTROL: both " +
+        "readings accept.", acceptsBelow = true),
     B2spRow("sp-const", "`sigmaProp(<SigmaProp constant proveDlog(G)>)`, BoolToSigmaProp over a SigmaProp " +
-      s"constant (`d1 08cd…`) — REFUSED. $sepB2sp", SpConst, accepts = false, separating = true),
+      s"constant (`d1 08cd…`) — REFUSED. $sepB2sp", SpConst, accepts = false, separating = true,
+      "`sigmaProp(<SigmaProp constant proveDlog(G)>)` below the JIT activation — " +
+        s"`proveDlog(G)` at cost 20 (Constant 5 + BoolToSigmaProp 15): $passB2sp", acceptsBelow = true),
     B2spRow("provedlog", "`sigmaProp(proveDlog(G))`, BoolToSigmaProp over a CreateProveDlog node (`d1 cd07…`) — " +
-      s"REFUSED. $sepB2sp", any(CreateProveDlog(GroupElementConstant(G))), accepts = false, separating = true),
+      s"REFUSED. $sepB2sp", any(CreateProveDlog(GroupElementConstant(G))), accepts = false, separating = true,
+      "`sigmaProp(proveDlog(G))` below the JIT activation — `proveDlog(G)` at cost 30 " +
+        s"(GroupElement constant 5 + CreateProveDlog 10 + BoolToSigmaProp 15): $passB2sp", acceptsBelow = true),
     B2spRow("nested", "`sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` (`d1 d1 08cd…`) — REFUSED: the " +
-      s"inner node already throws. $sepB2sp", any(BoolToSigmaProp(bool(SpConst))), accepts = false, separating = true),
+      s"inner node already throws. $sepB2sp", any(BoolToSigmaProp(bool(SpConst))), accepts = false, separating = true,
+      "`sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` below " +
+        "the JIT activation — `proveDlog(G)` at cost 35, through both nodes (Constant 5 + 15 + 15): " + passB2sp,
+      acceptsBelow = true),
     B2spRow("int", "`sigmaProp(<Int 1>)` (`d1 0402`) — REFUSED (ClassCastException Integer → Boolean). CONTROL: " +
-      "both readings refuse.", any(IntConstant(1)), accepts = false, separating = false),
+      "both readings refuse.", any(IntConstant(1)), accepts = false, separating = false,
+      "`sigmaProp(<Int 1>)` below the JIT activation — REFUSED (ClassCastException Integer → " +
+        "Boolean: an operand that is no SigmaProp is cast on both branches). CONTROL: both readings refuse.",
+      acceptsBelow = false),
     B2spRow("sp-throws", "`sigmaProp(Coll[SigmaProp]()(0))` (`d1 b2 830008 0400 00`) — REFUSED " +
       "(ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.",
       any(ByIndex(ConcreteCollection(IndexedSeq[Value[SSigmaProp.type]](), SSigmaProp), IntConstant(0), None)),
-      accepts = false, separating = false))
+      accepts = false, separating = false,
+      "`sigmaProp(Coll[SigmaProp]()(0))` below the JIT activation — REFUSED " +
+        "(ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.",
+      acceptsBelow = false))
 
-  private def file(op: String, rows: Seq[(String, Value[SType], String, Boolean)]): Json = {
-    val a = Activated(op)
-    val entries = TreeVersions.flatMap(t => rows.map(r => (t, r))).zipWithIndex.map {
-      case ((t, (id, root, script, accepts)), i) =>
+  /** One entry to author: id, root, script, whether the JVM accepts, the name's slug. */
+  private type Row = (String, Value[SType], String, Boolean, String)
+
+  private def fileOf(op: String, combos: Seq[(Byte, Int)], rowsAt: (Byte, Int) => Seq[Row],
+                     name: (String, Byte, Int, Int) => String): Json = {
+    val entries = combos.flatMap { case (a, t) => rowsAt(a, t).map(r => (a, t, r)) }.zipWithIndex.map {
+      case ((a, t, (id, root, script, accepts, slug)), i) =>
         val sc = s"[$id] $script  // tree v$t, activated $a"
         val hex = tree(root, a, t)
-        val name = s"${slugOf(op, id)}-t$t#$i"
-        if (accepts) SpecExtract.authoredEntryV(op, sc, hex, name, IntInput, a, ergoTree = t)
-        else SpecExtract.authoredRejectEntryV(op, sc, hex, name, IntInput, a, ergoTree = t)
+        if (accepts) SpecExtract.authoredEntryV(op, sc, hex, name(slug, a, t, i), IntInput, a, ergoTree = t)
+        else SpecExtract.authoredRejectEntryV(op, sc, hex, name(slug, a, t, i), IntInput, a, ergoTree = t)
     }
     SpecExtract.authoredEnvelope(op, entries, Source).mapObject(_.add("blessed_by", Json.fromString(Stamp)))
   }
-  private def slugOf(op: String, id: String): String =
-    if (op.startsWith("XorOf")) XorRows.find(_.id == id).get.slug else B2spRows.find(_.id == id).get.slug
+  /** v5/v6: the file's activated version at tree v0 then v1; a row reads the same at both. */
+  private def fileAtActivation(op: String, rows: Seq[Row]): Json =
+    fileOf(op, TreeVersions.map(t => (Activated(op), t)), (_, _) => rows, (slug, _, t, i) => s"$slug-t$t#$i")
+  /** v4: every pair of V4Combos; a row reads the same at each. */
+  private def fileBelowActivation(op: String, rows: Seq[Row]): Json =
+    fileOf(op, V4Combos, (_, _) => rows, (slug, a, t, i) => s"$slug-a$a-t$t#$i")
 
   def extract(): Map[String, Json] = {
-    val xor = XorRows.map(r => (r.id, r.root, r.script, true))
-    val b2sp = B2spRows.map(r => (r.id, r.root, r.script, r.accepts))
-    Map(XorV5 -> file(XorV5, xor), XorV6 -> file(XorV6, xor), B2spV5 -> file(B2spV5, b2sp), B2spV6 -> file(B2spV6, b2sp))
+    val xor = XorRows.map(r => (r.id, r.root, r.script, true, r.slug))
+    val b2sp = B2spRows.map(r => (r.id, r.root, r.script, r.accepts, r.slug))
+    val xorBelow = XorRows.map(r => (r.id, r.root, r.scriptBelow, true, r.slug))
+    val b2spBelow = B2spRows.map(r => (r.id, r.root, r.below, r.acceptsBelow, r.slugBelow))
+    Map(XorV5 -> fileAtActivation(XorV5, xor), XorV6 -> fileAtActivation(XorV6, xor),
+      B2spV5 -> fileAtActivation(B2spV5, b2sp), B2spV6 -> fileAtActivation(B2spV6, b2sp),
+      XorV4 -> fileBelowActivation(XorV4, xorBelow), B2spV4 -> fileBelowActivation(B2spV4, b2spBelow))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

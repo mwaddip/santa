@@ -1,0 +1,368 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "BoolToSigmaProp.activated_version_gate_v4",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-activation-gates",
+  "entries" : [
+    {
+      "name" : "booltosigmaprop-true-accept-a0-t0#0",
+      "script" : "[true] `sigmaProp(true)` below the JIT activation — TrueProp (d3) at cost 20. CONTROL: both readings accept.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-const-accept-a0-t0#1",
+      "script" : "[sp-const] `sigmaProp(<SigmaProp constant proveDlog(G)>)` below the JIT activation — `proveDlog(G)` at cost 20 (Constant 5 + BoolToSigmaProp 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-provedlog-accept-a0-t0#2",
+      "script" : "[provedlog] `sigmaProp(proveDlog(G))` below the JIT activation — `proveDlog(G)` at cost 30 (GroupElement constant 5 + CreateProveDlog 10 + BoolToSigmaProp 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00d1cd070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-nested-accept-a0-t0#3",
+      "script" : "[nested] `sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` below the JIT activation — `proveDlog(G)` at cost 35, through both nodes (Constant 5 + 15 + 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00d1d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-int-reject-a0-t0#4",
+      "script" : "[int] `sigmaProp(<Int 1>)` below the JIT activation — REFUSED (ClassCastException Integer → Boolean: an operand that is no SigmaProp is cast on both branches). CONTROL: both readings refuse.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00d10402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-throws-reject-a0-t0#5",
+      "script" : "[sp-throws] `sigmaProp(Coll[SigmaProp]()(0))` below the JIT activation — REFUSED (ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00d1b2830008040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-true-accept-a1-t0#6",
+      "script" : "[true] `sigmaProp(true)` below the JIT activation — TrueProp (d3) at cost 20. CONTROL: both readings accept.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-const-accept-a1-t0#7",
+      "script" : "[sp-const] `sigmaProp(<SigmaProp constant proveDlog(G)>)` below the JIT activation — `proveDlog(G)` at cost 20 (Constant 5 + BoolToSigmaProp 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-provedlog-accept-a1-t0#8",
+      "script" : "[provedlog] `sigmaProp(proveDlog(G))` below the JIT activation — `proveDlog(G)` at cost 30 (GroupElement constant 5 + CreateProveDlog 10 + BoolToSigmaProp 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00d1cd070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-nested-accept-a1-t0#9",
+      "script" : "[nested] `sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` below the JIT activation — `proveDlog(G)` at cost 35, through both nodes (Constant 5 + 15 + 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00d1d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-int-reject-a1-t0#10",
+      "script" : "[int] `sigmaProp(<Int 1>)` below the JIT activation — REFUSED (ClassCastException Integer → Boolean: an operand that is no SigmaProp is cast on both branches). CONTROL: both readings refuse.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00d10402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-throws-reject-a1-t0#11",
+      "script" : "[sp-throws] `sigmaProp(Coll[SigmaProp]()(0))` below the JIT activation — REFUSED (ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00d1b2830008040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-true-accept-a1-t1#12",
+      "script" : "[true] `sigmaProp(true)` below the JIT activation — TrueProp (d3) at cost 20. CONTROL: both readings accept.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0903d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-const-accept-a1-t1#13",
+      "script" : "[sp-const] `sigmaProp(<SigmaProp constant proveDlog(G)>)` below the JIT activation — `proveDlog(G)` at cost 20 (Constant 5 + BoolToSigmaProp 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0924d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-provedlog-accept-a1-t1#14",
+      "script" : "[provedlog] `sigmaProp(proveDlog(G))` below the JIT activation — `proveDlog(G)` at cost 30 (GroupElement constant 5 + CreateProveDlog 10 + BoolToSigmaProp 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0924d1cd070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-nested-accept-a1-t1#15",
+      "script" : "[nested] `sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` below the JIT activation — `proveDlog(G)` at cost 35, through both nodes (Constant 5 + 15 + 15): the SigmaProp PASSES THROUGH: below the JIT activation `BoolToSigmaProp.eval` keeps the 4.x branch for historical scripts. SEPARATING: from activated 2 on it throws, so an implementation that casts at every activated version refuses here.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0925d1d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-int-reject-a1-t1#16",
+      "script" : "[int] `sigmaProp(<Int 1>)` below the JIT activation — REFUSED (ClassCastException Integer → Boolean: an operand that is no SigmaProp is cast on both branches). CONTROL: both readings refuse.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0903d10402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-throws-reject-a1-t1#17",
+      "script" : "[sp-throws] `sigmaProp(Coll[SigmaProp]()(0))` below the JIT activation — REFUSED (ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0908d1b2830008040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

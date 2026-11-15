@@ -1,5 +1,74 @@
 {
   "families" : {
+    "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json" : {
+      "accepts" : 12,
+      "entries" : 18,
+      "methods" : [
+      ],
+      "op" : "BoolToSigmaProp.activated_version_gate_v4",
+      "ops" : [
+        "BoolToSigmaProp",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "CreateProveDlog"
+      ],
+      "provenance" : "authored",
+      "rejects" : 6,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 4,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 2,
+          "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v4"
+    },
+    "v4/authored/XorOf.activated_version_gate_v4.json" : {
+      "accepts" : 27,
+      "entries" : 27,
+      "methods" : [
+      ],
+      "op" : "XorOf.activated_version_gate_v4",
+      "ops" : [
+        "Const",
+        "XorOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 18,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v4"
+    },
     "v5/authored/Apply.non_unary_arity.json" : {
       "accepts" : 1,
       "entries" : 3,
@@ -15316,6 +15385,7 @@
     },
     "BoolToSigmaProp" : {
       "families" : [
+        "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -15403,6 +15473,7 @@
     },
     "ByIndex" : {
       "families" : [
+        "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -15600,6 +15671,7 @@
     },
     "ConcreteCollection" : {
       "families" : [
+        "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.digest_any_collection.json",
@@ -15742,6 +15814,8 @@
     },
     "Const" : {
       "families" : [
+        "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
+        "v4/authored/XorOf.activated_version_gate_v4.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
@@ -16045,6 +16119,7 @@
     },
     "CreateProveDlog" : {
       "families" : [
+        "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/spec/proveDlog_equivalence.json",
         "v6/authored/BoolToSigmaProp.activated_version_gate_v6.json",
@@ -19237,6 +19312,7 @@
     },
     "XorOf" : {
       "families" : [
+        "v4/authored/XorOf.activated_version_gate_v4.json",
         "v5/authored/XorOf.activated_version_gate.json",
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -19271,12 +19347,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 3891,
+    "accepts" : 3930,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 5428,
-    "files" : 364,
-    "rejects" : 1537,
+    "entries" : 5473,
+    "files" : 366,
+    "rejects" : 1543,
     "unwalked" : 661
   }
 }

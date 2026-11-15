@@ -45,10 +45,11 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 5,428 entries across 364 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 3,340
+- ✅ **A blessed eval corpus — 5,473 entries across 366 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 3,385
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends (full context); version-split into **v5** (2,310 entries — the cumulative
+  spends (full context); version-split into **v4** (45 entries — below the JIT activation,
+  activated 0 or 1, where sigma-state keeps its 4.x behaviours), **v5** (2,310 — the cumulative
   v5/mainnet method surface) and **v6** (3,118 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under.
@@ -334,7 +335,7 @@ Still greenfield, and where help is most wanted (see below):
 docs/contract/     the frozen runner I/O contracts (eval · wire · transaction · block · chain · authds)
 docs/coverage/     standing corpus coverage manifest (what the vectors exercise)
 schema/            JSON Schemas for vectors + actuals, and the validator
-vectors/eval/      the canonical eval corpus — the "nice list" (v5/ and v6/)
+vectors/eval/      the canonical eval corpus — the "nice list" (v4/, v5/ and v6/)
 vectors/wire/      wire-tier round-trip vectors
 vectors/transaction/  transaction-tier captured vectors (v6/captured/)
 vectors/block/     block-tier digest-state vectors (captured + authored mutations)
