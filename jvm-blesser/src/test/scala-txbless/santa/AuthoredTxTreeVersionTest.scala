@@ -86,17 +86,15 @@ class AuthoredTxTreeVersionTest extends munit.FunSuite {
     }
   }
 
-  test("block-version edges: the spend check at block versions 2, 5, 0 and above 128") {
+  test("block-version edges: the spend check at block versions 2 and 5") {
     val es = entries(EdgesPath)
-    assertEquals(es.map(valid), List(false, true, true, true, true, true, false, false, true, true, false))
+    assertEquals(es.map(valid), List(false, true, true, true, true, true, false))
     // the unverified accepts (a v>3 tree, activated above the max supported 3) cost the initial cost alone, 12100
-    List(2, 3, 5, 9).foreach(i => assertEquals(cost(es(i)), Some(12100L), s"#$i unverified at 12100"))
+    List(2, 3, 5).foreach(i => assertEquals(cost(es(i)), Some(12100L), s"#$i unverified at 12100"))
     // the verified accepts (a tree at most the activated version) cost 12105
-    List(1, 4, 8).foreach(i => assertEquals(cost(es(i)), Some(ScriptCost), s"#$i verified at 12105"))
-    // the version rejects name the signed-byte activated version
+    List(1, 4).foreach(i => assertEquals(cost(es(i)), Some(ScriptCost), s"#$i verified at 12105"))
+    // the version reject names the activated version
     assert(reason(es(0)).contains(above(2, 1)), reason(es(0)))
-    assert(reason(es(7)).contains(above(0, -1)), reason(es(7)))
-    assert(reason(es(10)).contains(above(0, -57)), reason(es(10)))
   }
 
   test("write vectors") {

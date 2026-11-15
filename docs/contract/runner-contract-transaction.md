@@ -342,14 +342,14 @@ are §5's.
   - a v3 tree does not spend ("ErgoTree version 3 is higher than activated 2"), and v2 does
   - an output with a v3 or a v4 tree is valid: a block below version 4 parses its transactions outside any
     version context, so such a box could be created, though not spent
-- **`transaction/any/authored/tree-version-block-version-edges`** (11, block versions 0/2/5/128/200): the spend
-  check at the block-version edges — version-agnostic, so it lives at `any/` (its entries span activated −57 to
-  127). The check has no floor at activated 2 (a v2 tree at block version 2 is invalid); above the max supported
-  version 3 a tree is accepted *unverified* at the initial cost alone, 12100, its proposition not reduced (the v4
-  `SigmaProp(false)` spends, the v3 one reduces to false); and the activated version `(blockVersion − 1).toByte` is
-  a signed byte, so block version 0 (−1) and 129–255 (−128 to −2) reject every script spend, while 128 (127) is the
-  §2 branch. Block version 1 is not representable from the v2+ header donor (its re-linked headers fail the chain
-  check), so §1's v1/v0-at-block-version-1 rows stay unvectored.
+- **`transaction/any/authored/tree-version-block-version-edges`** (7, block versions 2 and 5): the spend check at
+  the block-version edges — version-agnostic, so it lives at `any/` (its entries span activated 1 to 4). The check
+  has no floor at activated 2 (a v2 tree at block version 2 is invalid); above the max supported version 3 a tree is
+  accepted *unverified* at the initial cost alone, 12100, its proposition not reduced (the v4 `SigmaProp(false)`
+  spends, the v3 one reduces to false). Block versions start at 1 and rise by one per soft fork, so the
+  signed-byte ends (block version 0, and 128 and above) are unreachable and not vectored (deleted 2026-11-16).
+  Block version 1 is not representable from the v2+ header donor (its re-linked headers fail the chain check), so
+  §1's v1/v0-at-block-version-1 rows stay unvectored.
 - **`transaction/any/authored/block-version-source`** (8): which block version activates scripts — the voted
   **parameters'** block version, not the header's. The JVM judges both the activated script version
   (`ErgoContext`: activated = `(stateContext.blockVersion − 1).toByte`, `stateContext.blockVersion` =
@@ -361,9 +361,9 @@ are §5's.
 
 Rudolph is valid 12/12 · cost 6/6. blitzen-mwaddip (fork `d4cda68d`, costs equal on the six accepts),
 blitzen-develop (`1633e018`) and dasher (ergots `7e3bfb1a`) find all 12 valid: each over-accepts the six rejects.
-For the block-version edges (11): rudolph is valid 11/11 · cost 7/7; the fork `14aad9c0` has seven reds (the three
-sections — §1/§3 over-accepts, §2 costs 12105 not 12100, and it reduces the v4 `SigmaProp(false)`), develop six
-(three of those, plus errors on the bv128/bv200 headers), ergots four (the valid-dimension divergences).
+For the block-version edges (11 when graded, 7 since 2026-11-16): rudolph was valid 11/11 · cost 7/7; the fork
+`14aad9c0` had seven reds (§1 over-accepts, §2 costs 12105 not 12100, and it reduced the v4 `SigmaProp(false)`),
+develop six (three of those, plus errors on the bv128/bv200 headers), ergots four (the valid-dimension divergences).
 For block-version-source (8): rudolph green on all 8; the fork, develop and ergots each have 3 reds (R5 — params 5
 unverified; the two creation-height rows) — each derives the block version from the pre-header, not the parameters.
 The blitzen adapter now sets `Parameter::BlockVersion` from `parameters.blockVersion` (both branches), so a fork fixed

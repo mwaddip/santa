@@ -38,8 +38,9 @@ import RentFixtures._
 object AuthoredTxTreeVersion {
   val V6Path = "transaction/v6/authored/tree-version-above-activated.json"
   val V5Path = "transaction/v5/authored/tree-version-above-activated.json"
-  // Version-agnostic: its entries span activated -57..127 across block versions 0/2/5/128/200, so it is not a v6
-  // vector. It lives under any/ (the taxonomy label for vectors that are not tied to one ErgoTree version).
+  // Version-agnostic: its entries span activated 1..4 across block versions 2 and 5, so it is not a v6
+  // vector. (Block versions 0, 128 and 200 were deleted 2026-11-16: block versions start at 1 and rise by one per soft
+  // fork, so no chain produces them.) It lives under any/ (the taxonomy label for vectors that are not tied to one ErgoTree version).
   val EdgesPath = "transaction/any/authored/tree-version-block-version-edges.json"
   private val V = 1000000000L // the value of every box and output but the rent box's
   private val H = AuthoredTxStorageRent.H
@@ -59,7 +60,7 @@ object AuthoredTxTreeVersion {
   private val Block4 = Ctx(4, AuthoredTxStorageRent.headersHex, AuthoredTxStorageRent.preHeader)
   private val Block3: Ctx = blockCtx(3)
 
-  /** The rent context at `version` (block 3 above; block-version edges: 2, 5, 0, 128, 200), the preHeader set to it.
+  /** The rent context at `version` (block 3 above; block-version edges: 2, 5), the preHeader set to it.
     * A header's id covers its version, so the whole ten-header window is re-linked oldest first before the newest
     * nine are taken. Block version 1 is not representable — UpcomingStateContext's build throws before any
     * verdict — so it is not here. */
@@ -262,22 +263,7 @@ object AuthoredTxTreeVersion {
       edge(blockCtx(5), 6, "bv5-tree-v3-false-reject",
         s"A v3 SigmaProp(false) tree (0b 02 08 d2) at block version 5: verified, reduces to false, invalid. The " +
         s"contrast with #5 pins that a v>3 tree is accepted without reduction. $note", "0b0208d2",
-        Left("Scripts of all transaction inputs")),
-      // 3. Block version 0 and above 128: the activated version is a signed byte.
-      edge(blockCtx(0), 7, "bv0-tree-v0-reject",
-        s"Block version 0, so activated = (0 - 1).toByte = -1. Even a v0 tree is above -1: 'ErgoTree version 0 is " +
-        s"higher than activated -1', invalid. Every script spend is invalid at block version 0. $note", "0008d3",
-        Left(above(0, -1))),
-      edge(blockCtx(128), 8, "bv128-tree-v0-verified-accept",
-        s"Block version 128, so activated = (128 - 1).toByte = 127. A v0 tree is at most 127, so it is verified as " +
-        s"usual, at 12105. $note", "0008d3", Right(ScriptCost)),
-      edge(blockCtx(128), 9, "bv128-tree-v4-unverified-accept",
-        s"Block version 128 (activated 127, above the max supported 3): a v4 tree (0c 02 08 d3) is accepted unverified " +
-        s"at 12100. $note", "0c0208d3", Right(UnverifiedCost)),
-      edge(blockCtx(200), 10, "bv200-tree-v0-reject",
-        s"Block version 200, so activated = (200 - 1).toByte = 199 = -57. Even a v0 tree is above -57: 'ErgoTree " +
-        s"version 0 is higher than activated -57', invalid. Block versions 129-255 reject every script spend. $note",
-        "0008d3", Left(above(0, -57))))
+        Left("Scripts of all transaction inputs")))
   }
 
   private def envelope(op: String, es: Seq[Json]): Json = Json.obj(
