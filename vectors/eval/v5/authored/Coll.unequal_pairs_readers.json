@@ -1,0 +1,184 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.unequal_pairs_readers",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-pre-activation",
+  "entries" : [
+    {
+      "name" : "wide-L12R1-filter-true-v0-a2#0",
+      "script" : "[wide|L12R1|filter-true|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — Coll((1,1)) at cost 62. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b5dc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "STuple",
+            "items" : [
+              {
+                "tag" : "SInt"
+              },
+              {
+                "tag" : "SLong"
+              }
+            ]
+          },
+          "items" : [
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Int",
+                  "value" : 1
+                },
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 62,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R1-filter-true-v1-a2#1",
+      "script" : "[wide|L12R1|filter-true|v1] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — Coll((1,1)) at cost 62. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v1, activated 2",
+      "tree_bytes_hex" : "091db5dc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "STuple",
+            "items" : [
+              {
+                "tag" : "SInt"
+              },
+              {
+                "tag" : "SLong"
+              }
+            ]
+          },
+          "items" : [
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Int",
+                  "value" : 1
+                },
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 62,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R1-exists-false-v0-a2#2",
+      "script" : "[wide|L12R1|exists-false|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — false at cost 45. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00aedc0c1d100c020406080a0c0e101214161801110102d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R1-exists-false-v1-a2#3",
+      "script" : "[wide|L12R1|exists-false|v1] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — false at cost 45. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v1, activated 2",
+      "tree_bytes_hex" : "091daedc0c1d100c020406080a0c0e101214161801110102d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R1-forall-true-v0-a2#4",
+      "script" : "[wide|L12R1|forall-true|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — true at cost 45. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00afdc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R1-forall-true-v1-a2#5",
+      "script" : "[wide|L12R1|forall-true|v1] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — true at cost 45. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v1, activated 2",
+      "tree_bytes_hex" : "091dafdc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    }
+  ]
+}

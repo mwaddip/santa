@@ -27,6 +27,17 @@ package santa
 // (activated 3 for a row below it, 1 for a row above it) answers differently, CONTROL when it answers the same. Rows
 // at activated 0/1 go to the `v4` slot, 2 to `v5`, 3 to `v6`. A v1 tree at activated 0 is left out (a tree above its
 // activated version is the transaction tier's, runner-contract §2).
+//
+// THE FOLLOW-UP (santa-probe-pre-activation-2, rows-2.tsv, 373 rows at activated 1, 2 and 3): what an implementation
+// can still miss after passing the above, found by sigma-rust's review of its first tip. `Coll.unequal_pairs_readers`:
+// the readers of an unequal zip, the AvlTree methods among them (`getMany` is `keys.map`, `insert`/`update` are
+// `entries.forall`, CErgoTreeEvaluator.scala:118/140/178; valid proofs over an empty tree of 1-byte keys).
+// `Coll.object_arrays_by_class`: `++` goes by the LEFT operand's array CLASS, not its item type (a `map`-built
+// generic Coll[Byte] takes an empty right operand of any class where the constant refuses it; an `indices` result
+// refuses one an Int constant takes), and the readers of the result see that array: `atLeast` casts it to
+// `SigmaProp[]` (CSigmaDslBuilder.scala:105, so `atLeast(k, a ++ b)` throws), `updateMany`/`filter` over pairs store
+// into it (CollsOverArrays.scala:350-366, 436-448), `substConstants` writes it (the writer casts each item), and `==`
+// compares it boxed (an Int 1 equals a Long 1, DataValueComparer.scala:159-176).
 
 import io.circe.Json
 import scorex.util.encode.Base16
@@ -37,10 +48,11 @@ object AuthoredEvalPreActivation {
   val Source = "santa:authored-pre-activation"
   val Stamp = "jvm:sigma-state-6.0.7"
   val IntInput: Json = Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0))
-  val RowsFile: java.nio.file.Path =
-    java.nio.file.Paths.get("src", "test", "resources", "sigma-rust-pre-activation", "rows.tsv")
+  private val RowsDir = java.nio.file.Paths.get("src", "test", "resources", "sigma-rust-pre-activation")
+  /** The first request's rows (append / zip / xor), then the follow-up's (zip-readers / append-by-class). */
+  val RowsFiles: Seq[java.nio.file.Path] = Seq(RowsDir.resolve("rows.tsv"), RowsDir.resolve("rows-2.tsv"))
 
-  /** One vendored row: the part (append / zip / xor), sigma-rust's row set and name, the tree version, the activated
+  /** One vendored row: the part (append / zip / xor, then zip-readers / append-by-class), sigma-rust's row set and name, the tree version, the activated
     * version, the expression's bytes, and the jars' measurement (outcome, value text, cost of a value). */
   case class Row(part: String, set: String, name: String, treeVersion: Int, activated: Int, body: String,
                  jarsOutcome: String, jarsValue: String, jarsCost: String) {
@@ -54,14 +66,16 @@ object AuthoredEvalPreActivation {
         case "append" => "Coll.append_concat"
         case "zip"    => "Coll.zip_unequal_sides"
         case "xor"    => "Xor.unequal_sides"
+        case "zip-readers"     => "Coll.unequal_pairs_readers"
+        case "append-by-class" => "Coll.object_arrays_by_class"
       }
       activated match { case 0 | 1 => base + "_v4"; case 2 => base; case 3 => base + "_v6" }
     }
     def slug: String = name.replace('|', '-').replaceAll("[^A-Za-z0-9.+_-]", "_")
   }
 
-  def rows(): Vector[Row] = {
-    val lines = new String(java.nio.file.Files.readAllBytes(RowsFile), "UTF-8").split("\n").toVector
+  def rows(): Vector[Row] = RowsFiles.toVector.flatMap { f =>
+    val lines = new String(java.nio.file.Files.readAllBytes(f), "UTF-8").split("\n").toVector
     lines.drop(1).filter(_.trim.nonEmpty).map(_.split("\t", -1)).map(c =>
       Row(c(0), c(1), c(2), c(3).toInt, c(4).toInt, c(5), c(6), c(7), c(8)))
   }
@@ -86,6 +100,7 @@ object AuthoredEvalPreActivation {
       case "GroupElement" => "<point>"
       case "Box" => "<box>"
       case "AvlTree" => "<tree>"
+      case "Option" => c.downField("value").focus.filterNot(_.isNull).map(v => s"Some(${text(v)})").getOrElse("None")
       case other => s"<$other>"
     }
   }
@@ -105,6 +120,13 @@ object AuthoredEvalPreActivation {
     case ("xor", true) => "`Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept " +
       "unequal, so a longer LEFT operand throws"
     case ("xor", false) => "`Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand"
+    case ("zip-readers", true) => "a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is " +
+      "`keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides)"
+    case ("zip-readers", false) => "a reader over a `zip` from the JIT activation on, the zip cut to the shorter side"
+    case ("append-by-class", true) => "below the JIT activation `++` goes by the LEFT operand's array CLASS, not its " +
+      "item type (`concatArrays_v4`), and the readers of its result see that array (`atLeast` casts it to " +
+      "`SigmaProp[]`, `updateMany`/`filter` over pairs store into it, `substConstants` writes it, `==` compares it boxed)"
+    case ("append-by-class", false) => "`++` and the readers of its result from the JIT activation on (the 5.0 concat)"
   }
 
   /** Whether the row separates: the same tree on the other side of the activation answers differently. */

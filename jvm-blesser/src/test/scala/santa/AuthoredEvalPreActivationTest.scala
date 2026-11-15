@@ -32,10 +32,13 @@ class AuthoredEvalPreActivationTest extends munit.FunSuite {
   private def entry(op: String, name: String, a: Int): Json =
     entries(op).find(e => rowName(e) == name && ver(e, "activated") == a).getOrElse(fail(s"no $name at $a in $op"))
 
-  test("seven files: v4 append 343, zip 292, xor 11; v5 xor 6; v6 append 343, zip 230, xor 6; versions in their slot") {
+  test("thirteen files (the first request's seven, the follow-up's six); versions in their slot") {
     val want = Map("Coll.append_concat_v4" -> 343, "Coll.zip_unequal_sides_v4" -> 292, "Xor.unequal_sides_v4" -> 11,
       "Xor.unequal_sides" -> 6, "Coll.append_concat_v6" -> 343, "Coll.zip_unequal_sides_v6" -> 230,
-      "Xor.unequal_sides_v6" -> 6)
+      "Xor.unequal_sides_v6" -> 6,
+      "Coll.unequal_pairs_readers_v4" -> 51, "Coll.unequal_pairs_readers" -> 6, "Coll.unequal_pairs_readers_v6" -> 15,
+      "Coll.object_arrays_by_class_v4" -> 158, "Coll.object_arrays_by_class" -> 6,
+      "Coll.object_arrays_by_class_v6" -> 137)
     assertEquals(v.keySet, want.keySet)
     want.foreach { case (op, n) => assertEquals(entries(op).size, n, op) }
     assertEquals(rows.size, want.values.sum)
@@ -86,6 +89,13 @@ class AuthoredEvalPreActivationTest extends munit.FunSuite {
     // sigma-rust's table, from its fork's side: 336 append and 185 + 36 zip rows differ below the activation
     assertEquals(sep("Coll.append_concat_v4"), 336)
     assertEquals(sep("Coll.zip_unequal_sides_v4"), 221)
+    // the follow-up, measured the same way (an activated-2 row is measured against activated 1)
+    assertEquals(sep("Coll.object_arrays_by_class_v4"), 105)
+    assertEquals(sep("Coll.object_arrays_by_class"), 6)
+    assertEquals(sep("Coll.object_arrays_by_class_v6"), 102)
+    assertEquals(sep("Coll.unequal_pairs_readers_v4"), 45)
+    assertEquals(sep("Coll.unequal_pairs_readers"), 6)
+    assertEquals(sep("Coll.unequal_pairs_readers_v6"), 15)
   }
 
   test("Global.xor below the activation: a longer FIRST operand throws, a longer second one does not") {
@@ -96,6 +106,19 @@ class AuthoredEvalPreActivationTest extends munit.FunSuite {
     }
     assertEquals(B.text(value(entry("Xor.unequal_sides", "global-xor-left-longer|v0", 2))), "Coll(0,0)")
     assertEquals(B.text(value(entry("Xor.unequal_sides_v6", "global-xor-left-longer|v0", 3))), "Coll(0,0)")
+  }
+
+  test("the follow-up's readers below the activation: AvlTree over an unequal zip, atLeast over a 4.x ++, boxed ==") {
+    val readers = "Coll.unequal_pairs_readers"; val byClass = "Coll.object_arrays_by_class"
+    // insert walks the entries (forall): the zip's longer LEFT side throws below, a valid proof gives Some above
+    assertEquals(err(entry(readers + "_v4", "avlp|insert|k12-v1|v0", 1)), Some("errored"))
+    assertEquals(B.text(value(entry(readers + "_v6", "avlp|insert|k12-v1|v0", 3))), "Some(<tree>)")
+    // atLeast casts the ARRAY to SigmaProp[]: the 4.x ++ of two Coll[SigmaProp] is an array of objects
+    assertEquals(err(entry(byClass + "_v4", "atleast-cc|cc++cc|v0", 1)), Some("errored"))
+    assertEquals(B.text(value(entry(byClass + "_v6", "atleast-cc|cc++cc|v0", 3))), "<sigmaprop>")
+    // == of two arrays of objects is Scala's == on the boxed items: Int 1 equals Long 1 below; refused above
+    assertEquals(B.text(value(entry(byClass + "_v4", "objeq|BigInt|Int1|Long1|eq|v0", 1))), "true")
+    assertEquals(err(entry(byClass + "_v6", "objeq|BigInt|Int1|Long1|eq|v0", 3)), Some("errored"))
   }
 
   test("a value whose items are of another class than its item type, and a Coll[AvlTree] value, encode as such") {

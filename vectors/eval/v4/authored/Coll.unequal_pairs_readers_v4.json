@@ -1,0 +1,1038 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.unequal_pairs_readers_v4",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-pre-activation",
+  "entries" : [
+    {
+      "name" : "avlp-insert-k12-v1-v0-a1#0",
+      "script" : "[avlp|insert|k12-v1|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Some(<tree>) at cost 274.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a0101090e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avlp-insert-k12-v1-isDefined-v0-a1#1",
+      "script" : "[avlp|insert|k12-v1|isDefined|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives true at cost 284.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00e6dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a0101090e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avlp-insert-k12-v0-v0-a1#2",
+      "script" : "[avlp|insert|k12-v0|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Some(<tree>) at cost 224.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avlp-insert-k12-v0-isDefined-v0-a1#3",
+      "script" : "[avlp|insert|k12-v0|isDefined|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives true at cost 234.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00e6dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avlp-update-k12-v0-v0-a1#4",
+      "script" : "[avlp|update|k12-v0|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Some(<tree>) at cost 224.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640d64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avlp-getMany-lie-zip-k1-empty-v0-a1#5",
+      "script" : "[avlp|getMany|lie-zip-k1-empty|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 184.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640b64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc45900070100029501001a010101dc0c1d1a010101011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avlp-getMany-lie-zip-k1-empty-size-v0-a1#6",
+      "script" : "[avlp|getMany|lie-zip-k1-empty|size|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives 0 at cost 198.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00b1dc640b64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc45900070100029501001a010101dc0c1d1a010101011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-empty-proof-v0-a1#7",
+      "script" : "[avl|insert|rs-empty|empty-proof|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives None at cost 184.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-empty-proof-v0-a1#8",
+      "script" : "[avl|update|rs-empty|empty-proof|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives None at cost 184.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-empty-proof-isDefined-v0-a1#9",
+      "script" : "[avl|insert|rs-empty|empty-proof|isDefined|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives false at cost 194.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00e6dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-empty-proof-isDefined-v0-a1#10",
+      "script" : "[avl|update|rs-empty|empty-proof|isDefined|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives false at cost 194.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00e6dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-junk-proof-v0-a1#11",
+      "script" : "[avl|insert|rs-empty|junk-proof|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives None at cost 184.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-junk-proof-v0-a1#12",
+      "script" : "[avl|update|rs-empty|junk-proof|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives None at cost 184.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-junk-proof-isDefined-v0-a1#13",
+      "script" : "[avl|insert|rs-empty|junk-proof|isDefined|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives false at cost 194.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00e6dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-junk-proof-isDefined-v0-a1#14",
+      "script" : "[avl|update|rs-empty|junk-proof|isDefined|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives false at cost 194.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00e6dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-exists-false-v0-a1#15",
+      "script" : "[wide|L12R1|exists-false|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 45.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00aedc0c1d100c020406080a0c0e101214161801110102d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-exists-false-v1-a1#16",
+      "script" : "[wide|L12R1|exists-false|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 45.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091daedc0c1d100c020406080a0c0e101214161801110102d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-exists-false-v0-a1#17",
+      "script" : "[wide|L12R0|exists-false|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 35.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00aedc0c1d100c020406080a0c0e1012141618011100d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-exists-false-v1-a1#18",
+      "script" : "[wide|L12R0|exists-false|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 35.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091caedc0c1d100c020406080a0c0e1012141618011100d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L24R12-exists-false-v0-a1#19",
+      "script" : "[wide|L24R12|exists-false|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 157.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00aedc0c1d1018020406080a0c0e10121416181a1c1e20222426282a2c2e3001110c020406080a0c0e1012141618d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L24R12-exists-false-v1-a1#20",
+      "script" : "[wide|L24R12|exists-false|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 157.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0934aedc0c1d1018020406080a0c0e10121416181a1c1e20222426282a2c2e3001110c020406080a0c0e1012141618d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-filter-true-v0-a1#21",
+      "script" : "[wide|L12R1|filter-true|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll((1,1)) at cost 62.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00b5dc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-filter-true-v1-a1#22",
+      "script" : "[wide|L12R1|filter-true|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll((1,1)) at cost 62.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091db5dc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-filter-false-v0-a1#23",
+      "script" : "[wide|L12R1|filter-false|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 62.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00b5dc0c1d100c020406080a0c0e101214161801110102d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-filter-false-v1-a1#24",
+      "script" : "[wide|L12R1|filter-false|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 62.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091db5dc0c1d100c020406080a0c0e101214161801110102d9010140050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-filter-true-v0-a1#25",
+      "script" : "[wide|L12R0|filter-true|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 52.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00b5dc0c1d100c020406080a0c0e1012141618011100d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-filter-true-v1-a1#26",
+      "script" : "[wide|L12R0|filter-true|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 52.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091cb5dc0c1d100c020406080a0c0e1012141618011100d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-forall-true-v0-a1#27",
+      "script" : "[wide|L12R1|forall-true|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives true at cost 45.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00afdc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-forall-true-v1-a1#28",
+      "script" : "[wide|L12R1|forall-true|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives true at cost 45.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091dafdc0c1d100c020406080a0c0e101214161801110102d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-forall-true-v0-a1#29",
+      "script" : "[wide|L12R0|forall-true|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives true at cost 35.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00afdc0c1d100c020406080a0c0e1012141618011100d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-forall-true-v1-a1#30",
+      "script" : "[wide|L12R0|forall-true|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives true at cost 35.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091cafdc0c1d100c020406080a0c0e1012141618011100d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L24R12-forall-true-v0-a1#31",
+      "script" : "[wide|L24R12|forall-true|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives true at cost 157.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00afdc0c1d1018020406080a0c0e10121416181a1c1e20222426282a2c2e3001110c020406080a0c0e1012141618d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L24R12-forall-true-v1-a1#32",
+      "script" : "[wide|L24R12|forall-true|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives true at cost 157.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0934afdc0c1d1018020406080a0c0e10121416181a1c1e20222426282a2c2e3001110c020406080a0c0e1012141618d9010140050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-map._1-v0-a1#33",
+      "script" : "[wide|L12R1|map._1|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll(1) at cost 72.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00addc0c1d100c020406080a0c0e101214161801110102d9010140058c720101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-map._1-v1-a1#34",
+      "script" : "[wide|L12R1|map._1|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll(1) at cost 72.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091faddc0c1d100c020406080a0c0e101214161801110102d9010140058c720101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-map._1-v0-a1#35",
+      "script" : "[wide|L12R0|map._1|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 52.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00addc0c1d100c020406080a0c0e1012141618011100d9010140058c720101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-map._1-v1-a1#36",
+      "script" : "[wide|L12R0|map._1|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll() at cost 52.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091eaddc0c1d100c020406080a0c0e1012141618011100d9010140058c720101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L24R12-map._1-v0-a1#37",
+      "script" : "[wide|L24R12|map._1|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll(1,2,3,4,5,6,7,8,9,10,11,12) at cost 294.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00addc0c1d1018020406080a0c0e10121416181a1c1e20222426282a2c2e3001110c020406080a0c0e1012141618d9010140058c720101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L24R12-map._1-v1-a1#38",
+      "script" : "[wide|L24R12|map._1|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll(1,2,3,4,5,6,7,8,9,10,11,12) at cost 294.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0936addc0c1d1018020406080a0c0e10121416181a1c1e20222426282a2c2e3001110c020406080a0c0e1012141618d9010140058c720101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R1-updated-0-v0-a1#39",
+      "script" : "[wide|L12R1|updated-0|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — Coll((1,1)) at cost 61. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc0c14dc0c1d100c020406080a0c0e10121416180111010202040040050202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "STuple",
+            "items" : [
+              {
+                "tag" : "SInt"
+              },
+              {
+                "tag" : "SLong"
+              }
+            ]
+          },
+          "items" : [
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Int",
+                  "value" : 1
+                },
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 61,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R1-updated-0-v1-a1#40",
+      "script" : "[wide|L12R1|updated-0|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — Coll((1,1)) at cost 61. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091fdc0c14dc0c1d100c020406080a0c0e10121416180111010202040040050202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "STuple",
+            "items" : [
+              {
+                "tag" : "SInt"
+              },
+              {
+                "tag" : "SLong"
+              }
+            ]
+          },
+          "items" : [
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Int",
+                  "value" : 1
+                },
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 61,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L1R12-updated-0-v0-a1#41",
+      "script" : "[wide|L1R12|updated-0|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — Coll((1,1)) at cost 60. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc0c14dc0c1d10010201110c020406080a0c0e101214161802040040050202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "STuple",
+            "items" : [
+              {
+                "tag" : "SInt"
+              },
+              {
+                "tag" : "SLong"
+              }
+            ]
+          },
+          "items" : [
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Int",
+                  "value" : 1
+                },
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L1R12-updated-0-v1-a1#42",
+      "script" : "[wide|L1R12|updated-0|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — Coll((1,1)) at cost 60. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091fdc0c14dc0c1d10010201110c020406080a0c0e101214161802040040050202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "STuple",
+            "items" : [
+              {
+                "tag" : "SInt"
+              },
+              {
+                "tag" : "SLong"
+              }
+            ]
+          },
+          "items" : [
+            {
+              "kind" : "Tuple",
+              "items" : [
+                {
+                  "kind" : "Int",
+                  "value" : 1
+                },
+                {
+                  "kind" : "Long",
+                  "value" : "1"
+                }
+              ]
+            }
+          ]
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "wide-L12R0-updated-0-v0-a1#43",
+      "script" : "[wide|L12R0|updated-0|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc0c14dc0c1d100c020406080a0c0e101214161801110002040040050202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "wide-L12R0-updated-0-v1-a1#44",
+      "script" : "[wide|L12R0|updated-0|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (InvocationTargetException). CONTROL: the 5.x reading (activated 3) gives the same.  // tree v1, activated 1",
+      "tree_bytes_hex" : "091edc0c14dc0c1d100c020406080a0c0e101214161801110002040040050202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "unitarg-rs-empty-exists-false-v0-a1#45",
+      "script" : "[unitarg|rs-empty|exists-false|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 34.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00aedc0c1d1003020406011100d90101620100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "unitarg-rs-empty-filter-false.size-v0-a1#46",
+      "script" : "[unitarg|rs-empty|filter-false.size|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives 0 at cost 65.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00b1b5dc0c1d1003020406011100d90101620100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "unitarg-rs-empty-map-const.size-v0-a1#47",
+      "script" : "[unitarg|rs-empty|map-const.size|v0] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives 0 at cost 65.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00b1addc0c1d1003020406011100d90101620402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "unitarg-rs-empty-exists-false-v1-a1#48",
+      "script" : "[unitarg|rs-empty|exists-false|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives false at cost 34.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0912aedc0c1d1003020406011100d90101620100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "unitarg-rs-empty-filter-false.size-v1-a1#49",
+      "script" : "[unitarg|rs-empty|filter-false.size|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives 0 at cost 65.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0913b1b5dc0c1d1003020406011100d90101620100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "unitarg-rs-empty-map-const.size-v1-a1#50",
+      "script" : "[unitarg|rs-empty|map-const.size|v1] a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is `keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides) — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives 0 at cost 65.  // tree v1, activated 1",
+      "tree_bytes_hex" : "0913b1addc0c1d1003020406011100d90101620402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

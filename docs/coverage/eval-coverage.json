@@ -78,6 +78,112 @@
       "unwalked" : 0,
       "version" : "v4"
     },
+    "v4/authored/Coll.object_arrays_by_class_v4.json" : {
+      "accepts" : 92,
+      "entries" : 158,
+      "methods" : [
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "12:14 SCollection.indices",
+        "12:19 SCollection.patch",
+        "12:20 SCollection.updated",
+        "12:21 SCollection.updateMany",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.object_arrays_by_class_v4",
+      "ops" : [
+        "Append",
+        "AtLeast",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "Downcast",
+        "EQ",
+        "Filter",
+        "FuncValue",
+        "If",
+        "MapCollection",
+        "MethodCall",
+        "NEQ",
+        "OptionIsDefined",
+        "SelectField",
+        "SizeOf",
+        "Slice",
+        "SubstConstants",
+        "Upcast",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 66,
+      "tree_shapes" : [
+        {
+          "accepts" : 89,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 57,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 9,
+          "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v4"
+    },
+    "v4/authored/Coll.unequal_pairs_readers_v4.json" : {
+      "accepts" : 4,
+      "entries" : 51,
+      "methods" : [
+        "100:11 AvlTree.getMany",
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "12:20 SCollection.updated",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.unequal_pairs_readers_v4",
+      "ops" : [
+        "Const",
+        "Exists",
+        "Filter",
+        "ForAll",
+        "FuncValue",
+        "If",
+        "MapCollection",
+        "MethodCall",
+        "OptionIsDefined",
+        "SelectField",
+        "SizeOf",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 47,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 31,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 16,
+          "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v4"
+    },
     "v4/authored/Coll.zip_unequal_sides_v4.json" : {
       "accepts" : 89,
       "entries" : 292,
@@ -1257,6 +1363,82 @@
           "has_size" : false,
           "rejects" : 7,
           "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.object_arrays_by_class.json" : {
+      "accepts" : 0,
+      "entries" : 6,
+      "methods" : [
+        "12:21 SCollection.updateMany",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.object_arrays_by_class",
+      "ops" : [
+        "Append",
+        "Const",
+        "If",
+        "MethodCall",
+        "Slice"
+      ],
+      "provenance" : "authored",
+      "rejects" : 6,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 3,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
+          "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.unequal_pairs_readers.json" : {
+      "accepts" : 6,
+      "entries" : 6,
+      "methods" : [
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.unequal_pairs_readers",
+      "ops" : [
+        "Const",
+        "Exists",
+        "Filter",
+        "ForAll",
+        "FuncValue",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 3,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 1
         }
       ],
       "unwalked" : 0,
@@ -5714,6 +5896,51 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Coll.object_arrays_by_class_v6.json" : {
+      "accepts" : 16,
+      "entries" : 137,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:21 SCollection.updateMany",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.object_arrays_by_class_v6",
+      "ops" : [
+        "Append",
+        "AtLeast",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "Downcast",
+        "EQ",
+        "Filter",
+        "FuncValue",
+        "If",
+        "MapCollection",
+        "MethodCall",
+        "NEQ",
+        "SelectField",
+        "SizeOf",
+        "Slice",
+        "SubstConstants",
+        "Upcast",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 121,
+      "tree_shapes" : [
+        {
+          "accepts" : 16,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 121,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Coll.pair_shape_map.json" : {
       "accepts" : 14,
       "entries" : 17,
@@ -6115,6 +6342,38 @@
           "has_size" : true,
           "rejects" : 2,
           "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.unequal_pairs_readers_v6.json" : {
+      "accepts" : 15,
+      "entries" : 15,
+      "methods" : [
+        "100:11 AvlTree.getMany",
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.unequal_pairs_readers_v6",
+      "ops" : [
+        "Const",
+        "If",
+        "MethodCall",
+        "OptionIsDefined",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 15,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
         }
       ],
       "unwalked" : 0,
@@ -13575,10 +13834,12 @@
     },
     "100:11" : {
       "families" : [
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.getMany.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/captured/h2666-8437796cc182.json",
         "v6/captured/h323127-6e4a9fe411cb.json",
         "v6/captured/h323718-96fa91ae47de.json"
@@ -13587,6 +13848,8 @@
     },
     "100:12" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
@@ -13602,6 +13865,7 @@
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-84ecb7431b61.json",
@@ -13633,6 +13897,8 @@
     },
     "100:13" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
@@ -13640,7 +13906,8 @@
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
-        "v6/authored/AvlTree.method_call_charge_order_v6.json"
+        "v6/authored/AvlTree.method_call_charge_order_v6.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json"
       ],
       "name" : "AvlTree.update"
     },
@@ -14158,10 +14425,12 @@
     },
     "12:14" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/spec/Coll.indices_equivalence.json",
         "v5/spec/Coll_flatMap_method_equivalence.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
         "v6/authored/Coll.specialisation_getorelse.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
@@ -14192,6 +14461,7 @@
     },
     "12:19" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -14223,6 +14493,8 @@
     "12:20" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -14241,12 +14513,15 @@
     "12:21" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_updateMany_method_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
@@ -14274,16 +14549,22 @@
     "12:29" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll.zip_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
@@ -15309,12 +15590,15 @@
     "Append" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
         "v5/spec/Coll.append_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
@@ -15500,9 +15784,11 @@
     "AtLeast" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json"
       ],
       "op_codes" : [
@@ -15818,6 +16104,7 @@
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
@@ -15832,6 +16119,7 @@
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
@@ -16019,6 +16307,7 @@
     "ConcreteCollection" : {
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.degenerate_edges.json",
@@ -16064,6 +16353,7 @@
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
@@ -16165,6 +16455,8 @@
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v4/authored/Xor.unequal_sides_v4.json",
         "v4/authored/XorOf.activated_version_gate_v4.json",
@@ -16174,6 +16466,8 @@
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.method_type_variable_names.json",
@@ -16202,6 +16496,7 @@
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
@@ -16214,6 +16509,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Comparison.mixed_width.json",
@@ -16510,12 +16806,14 @@
     },
     "Downcast" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long.toByte_method.json",
         "v5/spec/Long.toInt_method.json",
         "v5/spec/Long.toShort_method.json",
         "v5/spec/Short_methods_equivalence.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/captured/h2666-8437796cc182.json",
         "v6/captured/h323127-6e4a9fe411cb.json",
         "v6/captured/h323718-96fa91ae47de.json"
@@ -16527,6 +16825,7 @@
     "EQ" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
@@ -16552,6 +16851,7 @@
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.reference_store_ops.json",
@@ -16645,8 +16945,10 @@
     "Exists" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v6/authored/Coll.append_concat_v6.json",
@@ -16969,14 +17271,18 @@
     "Filter" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/spec/Coll.filter_equivalence.json",
         "v5/spec/Coll_filter.json",
         "v5/spec/Coll_filter_with_nested_If.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
@@ -17030,8 +17336,10 @@
     },
     "ForAll" : {
       "families" : [
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/spec/Coll.forall_equivalence.json",
         "v5/spec/Coll_forall_with_nested_If.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
@@ -17058,10 +17366,13 @@
     "FuncValue" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
@@ -17157,6 +17468,7 @@
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
@@ -17731,8 +18043,11 @@
     "If" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -17754,6 +18069,7 @@
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
@@ -17762,6 +18078,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Comparison.mixed_width.json",
@@ -18025,6 +18342,8 @@
     "MapCollection" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
@@ -18033,6 +18352,7 @@
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
@@ -18063,6 +18383,8 @@
     "MethodCall" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v4/authored/Xor.unequal_sides_v4.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
@@ -18090,6 +18412,8 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Coll.method_type_variable_names.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
+        "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/Context.properties.json",
@@ -18132,6 +18456,7 @@
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
@@ -18144,6 +18469,7 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Coll.updateMany_runtime_item_type.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Context.getVarFromInput.json",
@@ -18329,6 +18655,7 @@
     },
     "NEQ" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
@@ -18344,6 +18671,7 @@
         "v5/spec/Short_LT_GT_NEQ.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/Coll.eq_item_type.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
@@ -18665,10 +18993,13 @@
     },
     "OptionIsDefined" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
@@ -18758,6 +19089,8 @@
     },
     "SelectField" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -18811,6 +19144,7 @@
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
@@ -19063,6 +19397,8 @@
     "SizeOf" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/Box.token_window_const.json",
@@ -19075,8 +19411,10 @@
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
+        "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
@@ -19151,9 +19489,12 @@
     "Slice" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v5/authored/Coll.object_arrays_by_class.json",
         "v5/spec/Coll_slice_method_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
@@ -19201,6 +19542,7 @@
     },
     "SubstConstants" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
@@ -19208,6 +19550,7 @@
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
@@ -19321,6 +19664,7 @@
     },
     "Upcast" : {
       "families" : [
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -19331,6 +19675,7 @@
         "v5/spec/Long.toBigInt_method.json",
         "v5/spec/Short_methods_equivalence.json",
         "v6/authored/ArithOp.mixed_width.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -19489,6 +19834,8 @@
     "ValUse" : {
       "families" : [
         "v4/authored/Coll.append_concat_v4.json",
+        "v4/authored/Coll.object_arrays_by_class_v4.json",
+        "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
@@ -19585,6 +19932,7 @@
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
+        "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
@@ -19768,12 +20116,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 4594,
+    "accepts" : 4727,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 6704,
-    "files" : 373,
-    "rejects" : 2110,
+    "entries" : 7077,
+    "files" : 379,
+    "rejects" : 2350,
     "unwalked" : 661
   }
 }

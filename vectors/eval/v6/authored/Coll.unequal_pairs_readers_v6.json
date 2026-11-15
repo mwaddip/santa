@@ -1,0 +1,342 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.unequal_pairs_readers_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-pre-activation",
+  "entries" : [
+    {
+      "name" : "avlp-insert-k12-v1-v0-a3#0",
+      "script" : "[avlp|insert|k12-v1|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — Some(<tree>) at cost 274. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a0101090e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "AvlTree",
+            "bytes_hex" : "a3e760bf71ece75bd9f2addb73a823bf83e08e82dc4cc1f4a871d740c7f6cd6d01070100"
+          }
+        },
+        "cost" : 274,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avlp-insert-k12-v1-isDefined-v0-a3#1",
+      "script" : "[avlp|insert|k12-v1|isDefined|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — true at cost 284. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00e6dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a0101090e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 284,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avlp-insert-k12-v0-v0-a3#2",
+      "script" : "[avlp|insert|k12-v0|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — Some(<tree>) at cost 224. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "AvlTree",
+            "bytes_hex" : "931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc45900070100"
+          }
+        },
+        "cost" : 224,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avlp-insert-k12-v0-isDefined-v0-a3#3",
+      "script" : "[avlp|insert|k12-v0|isDefined|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — true at cost 234. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00e6dc640c64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 234,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avlp-update-k12-v0-v0-a3#4",
+      "script" : "[avlp|update|k12-v0|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — Some(<tree>) at cost 224. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640d64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc4590007010002dc0c1d1a0201010102011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : {
+            "kind" : "AvlTree",
+            "bytes_hex" : "931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc45900070100"
+          }
+        },
+        "cost" : 224,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avlp-getMany-lie-zip-k1-empty-v0-a3#5",
+      "script" : "[avlp|getMany|lie-zip-k1-empty|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — Coll() at cost 184. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640b64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc45900070100029501001a010101dc0c1d1a010101011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SOption",
+            "elem" : {
+              "tag" : "SColl",
+              "elem" : {
+                "tag" : "SByte"
+              }
+            }
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 184,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avlp-getMany-lie-zip-k1-empty-size-v0-a3#6",
+      "script" : "[avlp|getMany|lie-zip-k1-empty|size|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — 0 at cost 198. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1dc640b64931febe9170def63e50b66e4f923a9af40ac80ee43342ebf4fde9f0d5d1fc45900070100029501001a010101dc0c1d1a010101011a000e090200ff000000000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 198,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-empty-proof-v0-a3#7",
+      "script" : "[avl|insert|rs-empty|empty-proof|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — None at cost 184. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 184,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-empty-proof-v0-a3#8",
+      "script" : "[avl|update|rs-empty|empty-proof|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — None at cost 184. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 184,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-empty-proof-isDefined-v0-a3#9",
+      "script" : "[avl|insert|rs-empty|empty-proof|isDefined|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — false at cost 194. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00e6dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 194,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-empty-proof-isDefined-v0-a3#10",
+      "script" : "[avl|update|rs-empty|empty-proof|isDefined|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — false at cost 194. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00e6dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 194,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-junk-proof-v0-a3#11",
+      "script" : "[avl|insert|rs-empty|junk-proof|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — None at cost 184. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 184,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-junk-proof-v0-a3#12",
+      "script" : "[avl|update|rs-empty|junk-proof|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — None at cost 184. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Option",
+          "value" : null
+        },
+        "cost" : 184,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-insert-rs-empty-junk-proof-isDefined-v0-a3#13",
+      "script" : "[avl|insert|rs-empty|junk-proof|isDefined|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — false at cost 194. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00e6dc640c6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 194,
+        "error" : null
+      }
+    },
+    {
+      "name" : "avl-update-rs-empty-junk-proof-isDefined-v0-a3#14",
+      "script" : "[avl|update|rs-empty|junk-proof|isDefined|v0] a reader over a `zip` from the JIT activation on, the zip cut to the shorter side — false at cost 194. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00e6dc640d6400000000000000000000000000000000000000000000000000000000000000000007200002dc0c1d1a010101011a000e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 194,
+        "error" : null
+      }
+    }
+  ]
+}
