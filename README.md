@@ -45,11 +45,11 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 5,368 entries across 360 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 3,280
+- ✅ **A blessed eval corpus — 5,428 entries across 364 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 3,340
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends (full context); version-split into **v5** (2,280 entries — the cumulative
-  v5/mainnet method surface) and **v6** (3,088 — the v6 new-feature surface). Each entry is
+  spends (full context); version-split into **v5** (2,310 entries — the cumulative
+  v5/mainnet method surface) and **v6** (3,118 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under.
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,

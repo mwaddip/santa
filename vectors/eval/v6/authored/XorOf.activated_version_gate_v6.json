@@ -1,0 +1,386 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "XorOf.activated_version_gate_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-activation-gates",
+  "entries" : [
+    {
+      "name" : "xorof-tft-separating-t0#0",
+      "script" : "[tft] `xorOf(Coll(true, false, true))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives true; an implementation that gates on the TREE version keeps it here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-tt-control-t0#1",
+      "script" : "[tt] `xorOf(Coll(true, true))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-tf-control-t0#2",
+      "script" : "[tf] `xorOf(Coll(true, false))`, the Coll[Boolean] a constant — true at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives true too.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-ttf-separating-t0#3",
+      "script" : "[ttf] `xorOf(Coll(true, true, false))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives true; an implementation that gates on the TREE version keeps it here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0303",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-ttt-separating-t0#4",
+      "script" : "[ttt] `xorOf(Coll(true, true, true))`, the Coll[Boolean] a constant — true at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives false; an implementation that gates on the TREE version keeps it here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-ff-control-t0#5",
+      "script" : "[ff] `xorOf(Coll(false, false))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-t-separating-t0#6",
+      "script" : "[t] `xorOf(Coll(true))`, the Coll[Boolean] a constant — true at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives false; an implementation that gates on the TREE version keeps it here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-f-control-t0#7",
+      "script" : "[f] `xorOf(Coll(false))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-empty-control-t0#8",
+      "script" : "[empty] `xorOf(Coll())`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00ff0d00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-tft-separating-t1#9",
+      "script" : "[tft] `xorOf(Coll(true, false, true))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives true; an implementation that gates on the TREE version keeps it here.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-tt-control-t1#10",
+      "script" : "[tt] `xorOf(Coll(true, true))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-tf-control-t1#11",
+      "script" : "[tf] `xorOf(Coll(true, false))`, the Coll[Boolean] a constant — true at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives true too.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-ttf-separating-t1#12",
+      "script" : "[ttf] `xorOf(Coll(true, true, false))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives true; an implementation that gates on the TREE version keeps it here.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0303",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-ttt-separating-t1#13",
+      "script" : "[ttt] `xorOf(Coll(true, true, true))`, the Coll[Boolean] a constant — true at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives false; an implementation that gates on the TREE version keeps it here.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-ff-control-t1#14",
+      "script" : "[ff] `xorOf(Coll(false, false))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-t-separating-t1#15",
+      "script" : "[t] `xorOf(Coll(true))`, the Coll[Boolean] a constant — true at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. SEPARATING: the 4.x reading (`distinct.length == 2`, below activated 2) gives false; an implementation that gates on the TREE version keeps it here.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-f-control-t1#16",
+      "script" : "[f] `xorOf(Coll(false))`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0904ff0d0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "xorof-empty-control-t1#17",
+      "script" : "[empty] `xorOf(Coll())`, the Coll[Boolean] a constant — false at cost 30, the exclusive or: the gate reads the ACTIVATED version, whatever the tree's. CONTROL: the 4.x reading gives false too.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0903ff0d00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    }
+  ]
+}

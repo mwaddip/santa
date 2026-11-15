@@ -1,0 +1,230 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "BoolToSigmaProp.activated_version_gate",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-activation-gates",
+  "entries" : [
+    {
+      "name" : "booltosigmaprop-true-accept-t0#0",
+      "script" : "[true] `sigmaProp(true)` — `TrivialProp.TrueProp` (d3) at cost 20 (Constant 5 + BoolToSigmaProp 15). CONTROL: both readings accept.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-const-reject-t0#1",
+      "script" : "[sp-const] `sigmaProp(<SigmaProp constant proveDlog(G)>)`, BoolToSigmaProp over a SigmaProp constant (`d1 08cd…`) — REFUSED. SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws (ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version ACCEPTS here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-provedlog-reject-t0#2",
+      "script" : "[provedlog] `sigmaProp(proveDlog(G))`, BoolToSigmaProp over a CreateProveDlog node (`d1 cd07…`) — REFUSED. SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws (ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version ACCEPTS here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d1cd070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-nested-reject-t0#3",
+      "script" : "[nested] `sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` (`d1 d1 08cd…`) — REFUSED: the inner node already throws. SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws (ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version ACCEPTS here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d1d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-int-reject-t0#4",
+      "script" : "[int] `sigmaProp(<Int 1>)` (`d1 0402`) — REFUSED (ClassCastException Integer → Boolean). CONTROL: both readings refuse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d10402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-throws-reject-t0#5",
+      "script" : "[sp-throws] `sigmaProp(Coll[SigmaProp]()(0))` (`d1 b2 830008 0400 00`) — REFUSED (ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d1b2830008040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-true-accept-t1#6",
+      "script" : "[true] `sigmaProp(true)` — `TrivialProp.TrueProp` (d3) at cost 20 (Constant 5 + BoolToSigmaProp 15). CONTROL: both readings accept.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0903d10101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-const-reject-t1#7",
+      "script" : "[sp-const] `sigmaProp(<SigmaProp constant proveDlog(G)>)`, BoolToSigmaProp over a SigmaProp constant (`d1 08cd…`) — REFUSED. SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws (ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version ACCEPTS here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0924d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-provedlog-reject-t1#8",
+      "script" : "[provedlog] `sigmaProp(proveDlog(G))`, BoolToSigmaProp over a CreateProveDlog node (`d1 cd07…`) — REFUSED. SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws (ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version ACCEPTS here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0924d1cd070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-nested-reject-t1#9",
+      "script" : "[nested] `sigmaProp(sigmaProp(<SigmaProp constant proveDlog(G)>))` (`d1 d1 08cd…`) — REFUSED: the inner node already throws. SEPARATING: from activated 2 on the operand is cast to Boolean and a SigmaProp throws (ClassCastException); below it a SigmaProp passes through, so an implementation that gates on the TREE version ACCEPTS here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0925d1d108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-int-reject-t1#10",
+      "script" : "[int] `sigmaProp(<Int 1>)` (`d1 0402`) — REFUSED (ClassCastException Integer → Boolean). CONTROL: both readings refuse.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0903d10402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "booltosigmaprop-sp-throws-reject-t1#11",
+      "script" : "[sp-throws] `sigmaProp(Coll[SigmaProp]()(0))` (`d1 b2 830008 0400 00`) — REFUSED (ArrayIndexOutOfBounds before BoolToSigmaProp is reached). CONTROL: both readings refuse.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0908d1b2830008040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
