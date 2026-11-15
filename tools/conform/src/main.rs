@@ -89,6 +89,8 @@ struct Runner {
     tiers: Vec<String>,
     cost: bool,
     impl_: Option<String>,
+    /// The manifest's `control`: the oracle's own runner, whose not running leaves the grid unanchored.
+    control: bool,
     run: PathBuf,
 }
 
@@ -121,6 +123,7 @@ fn discover(runners_dir: &Path) -> Vec<Runner> {
             tiers: j["tiers"].as_array().unwrap().iter().map(|t| t.as_str().unwrap().to_string()).collect(),
             cost: j.get("cost").and_then(Value::as_bool).unwrap_or(true),
             impl_: j.get("impl").and_then(Value::as_str).map(String::from),
+            control: j.get("control").and_then(Value::as_bool).unwrap_or(false),
             run,
         });
     }
@@ -731,6 +734,20 @@ fn write_results(root: &Path, results: &[Value]) {
     fs::write(out.join("results.json"), serde_json::to_string_pretty(&doc).unwrap()).unwrap();
 }
 
+/// The control runners (`"control": true`) that did not run: no result, or one marked `errored` (santa-run could not
+/// build or run). A grid without its control says nothing about the oracle, so this fails the run; any other runner
+/// that could not run stays a warning in the grid.
+fn unrun_controls<'a>(runners: &'a [Runner], results: &[Value]) -> Vec<&'a str> {
+    runners
+        .iter()
+        .filter(|m| m.control)
+        .filter(|m| {
+            !results.iter().any(|r| r["name"].as_str() == Some(m.name.as_str()) && r["mark"].as_str() != Some("errored"))
+        })
+        .map(|m| m.name.as_str())
+        .collect()
+}
+
 fn main() -> ExitCode {
     let root = repo_root();
     if env::args().any(|a| a == "--clean") {
@@ -784,15 +801,41 @@ fn main() -> ExitCode {
     }
     write_results(&root, &results);
     eprintln!("\nresults → .santa/results.json");
+    let unrun = unrun_controls(&runners, &results);
+    if !unrun.is_empty() {
+        eprintln!("\nFAILED: the control runner(s) {unrun:?} did not run, so this grid is not anchored to the oracle");
+        return ExitCode::FAILURE;
+    }
     ExitCode::SUCCESS
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_relpath, resolve_impl, select, Vec5};
+    use super::{parse_relpath, resolve_impl, select, unrun_controls, Runner, Vec5};
+    use serde_json::json;
     use std::fs;
     use std::path::PathBuf;
     use std::process::Command;
+
+    fn runner(name: &str, control: bool) -> Runner {
+        Runner {
+            name: name.into(), label: name.into(), version: "v6".into(), tiers: vec!["eval".into()],
+            cost: true, impl_: None, control, run: PathBuf::from("/dev/null"),
+        }
+    }
+
+    /// A control that could not build or run fails the run; any other runner that could not stays a warning, and a
+    /// control that ran is fine whatever its red count (grading is the grid's job, not the exit code's).
+    #[test]
+    fn a_control_that_did_not_run_is_named() {
+        let rs = vec![runner("rudolph", true), runner("dasher", false)];
+        let ran = |n: &str, mark: &str| json!({"name": n, "mark": mark});
+        assert!(unrun_controls(&rs, &[ran("rudolph", "nice"), ran("dasher", "errored")]).is_empty());
+        assert!(unrun_controls(&rs, &[ran("rudolph", "coal"), ran("dasher", "coal")]).is_empty());
+        assert_eq!(unrun_controls(&rs, &[ran("rudolph", "errored"), ran("dasher", "nice")]), vec!["rudolph"]);
+        // a control with no result at all did not run either
+        assert_eq!(unrun_controls(&rs, &[ran("dasher", "nice")]), vec!["rudolph"]);
+    }
 
     fn sample() -> Vec<Vec5> {
         ["eval/v5/spec/a.json", "eval/v6/spec/b.json", "eval/v5/authored/c.json", "wire/v5/spec/d.json",

@@ -25,6 +25,20 @@ jobs:
         with:
           version: 2026.5.18
           install: false                 # no root config by design; each wrapper/santa-run does `mise install`
+      # ── sbt's own downloads (the launcher's sbt, the build's dependencies) ──────
+      # Without this every run fetches sbt and the blesser's whole dependency tree from Maven
+      # Central, and its rate limit (HTTP 429) once left rudolph, the control, unbuilt
+      # (run 43739816807). Keyed on what pins them: the blesser's build files and rudolph's
+      # toolchain; a partial hit (restore-keys) still saves most of the fetch.
+      - name: cache sbt and coursier downloads
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.cache/coursier
+            ~/.sbt
+            ~/.ivy2/cache
+          key: sbt-${{ hashFiles('jvm-blesser/build.sbt', 'jvm-blesser/project/build.properties', 'runners/rudolph/mise.toml') }}
+          restore-keys: sbt-
       # ── ergo-core (tx-tier oracle dep) ──────────────────────────────────────────
       # Not on Maven: publishLocal'd from the upstream node at the pinned tag — the same
       # artifacts the local blesser uses (published from a clone of the same tag, verified = upstream).

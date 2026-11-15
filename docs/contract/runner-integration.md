@@ -34,6 +34,9 @@ and `runners/blitzen-eni/` — to compare an implementation's branches side by s
 - **`tiers`** — the set of result-shape tiers the runner implements (`eval` today; `wire`/`block` later). Tiers are *not* cumulative; declaring `eval` never pulls in `wire`. Uneven maturity across tiers is surfaced as naughty (the grid is the readiness map), not hidden by under-declaring.
 - **`cost`** — whether the runner claims the **cost dimension**. `false` = value-only (a wallet/eval-only SDK); the orchestrator grades value and ignores cost for it. Declared scope, not abstention.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
+- **`control`** (optional, default `false`) — the oracle's own runner (rudolph). A grid in which a control could not
+  build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `results.json`), and the CI
+  run fails before it publishes a scoreboard. Any other runner that cannot build or run stays a ⚠️ row in the grid.
 
 ## 3. The entrypoint — `santa-run`
 
