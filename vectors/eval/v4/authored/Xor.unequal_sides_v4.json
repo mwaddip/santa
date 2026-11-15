@@ -1,0 +1,296 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Xor.unequal_sides_v4",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-pre-activation",
+  "entries" : [
+    {
+      "name" : "node-xor-left-longer-v0-a0#0",
+      "script" : "[node-xor-left-longer|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll(0,0) at cost 22.  // tree v0, activated 0",
+      "tree_bytes_hex" : "009b0e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "node-xor-left-shorter-v0-a0#1",
+      "script" : "[node-xor-left-shorter|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — Coll(0,0) at cost 22. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 0",
+      "tree_bytes_hex" : "009b0e0201020e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 22,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-left-longer-v0-a0#2",
+      "script" : "[global-xor-left-longer|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Coll(0,0) at cost 31.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00dc6a02dd020e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "global-xor-left-shorter-v0-a0#3",
+      "script" : "[global-xor-left-shorter|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — Coll(0,0) at cost 31. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00dc6a02dd020e0201020e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-equal-v0-a0#4",
+      "script" : "[global-xor-equal|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — Coll(0,0) at cost 31. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 0",
+      "tree_bytes_hex" : "00dc6a02dd020e0201020e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 0,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "node-xor-left-longer-v0-a1#5",
+      "script" : "[node-xor-left-longer|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — REFUSED (ArrayIndexOutOfBoundsException). SEPARATING: the 5.x reading (activated 3) gives Coll(0,0) at cost 22.  // tree v0, activated 1",
+      "tree_bytes_hex" : "009b0e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "node-xor-left-shorter-v0-a1#6",
+      "script" : "[node-xor-left-shorter|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — Coll(0,0) at cost 22. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 1",
+      "tree_bytes_hex" : "009b0e0201020e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 22,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-left-longer-v0-a1#7",
+      "script" : "[global-xor-left-longer|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Coll(0,0) at cost 31.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc6a02dd020e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "global-xor-left-shorter-v0-a1#8",
+      "script" : "[global-xor-left-shorter|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — Coll(0,0) at cost 31. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc6a02dd020e0201020e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-equal-v0-a1#9",
+      "script" : "[global-xor-equal|v0] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — Coll(0,0) at cost 31. CONTROL: the 5.x reading (activated 3) gives the same.  // tree v0, activated 1",
+      "tree_bytes_hex" : "00dc6a02dd020e0201020e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-left-longer-v1-v1-a1#10",
+      "script" : "[global-xor-left-longer-v1|v1] `Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept unequal, so a longer LEFT operand throws — REFUSED (InvocationTargetException). SEPARATING: the 5.x reading (activated 3) gives Coll(0,0) at cost 31.  // tree v1, activated 1",
+      "tree_bytes_hex" : "090edc6a02dd020e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 1,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

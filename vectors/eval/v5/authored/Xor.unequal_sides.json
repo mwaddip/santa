@@ -1,0 +1,206 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Xor.unequal_sides",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-pre-activation",
+  "entries" : [
+    {
+      "name" : "node-xor-left-longer-v0-a2#0",
+      "script" : "[node-xor-left-longer|v0] `Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand — Coll(0,0) at cost 22. SEPARATING: the 4.x reading (activated 1) gives REFUSED (ArrayIndexOutOfBoundsException).  // tree v0, activated 2",
+      "tree_bytes_hex" : "009b0e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 22,
+        "error" : null
+      }
+    },
+    {
+      "name" : "node-xor-left-shorter-v0-a2#1",
+      "script" : "[node-xor-left-shorter|v0] `Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand — Coll(0,0) at cost 22. CONTROL: the 4.x reading (activated 1) gives the same.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009b0e0201020e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 22,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-left-longer-v0-a2#2",
+      "script" : "[global-xor-left-longer|v0] `Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand — Coll(0,0) at cost 31. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00dc6a02dd020e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-left-shorter-v0-a2#3",
+      "script" : "[global-xor-left-shorter|v0] `Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand — Coll(0,0) at cost 31. CONTROL: the 4.x reading (activated 1) gives the same.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00dc6a02dd020e0201020e03010203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-equal-v0-a2#4",
+      "script" : "[global-xor-equal|v0] `Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand — Coll(0,0) at cost 31. CONTROL: the 4.x reading (activated 1) gives the same.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00dc6a02dd020e0201020e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "global-xor-left-longer-v1-v1-a2#5",
+      "script" : "[global-xor-left-longer-v1|v1] `Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand — Coll(0,0) at cost 31. SEPARATING: the 4.x reading (activated 1) gives REFUSED (InvocationTargetException).  // tree v1, activated 2",
+      "tree_bytes_hex" : "090edc6a02dd020e030102030e020102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    }
+  ]
+}
