@@ -68,8 +68,8 @@ Per entry the comparator emits **one** verdict (no value/cost split, no amber):
   §5: it never matches, so it is surfaced, not hidden).
 - **`panicked` → coal unconditionally** — a crash is not a clean rejection.
 - **Reject entries** (the vector entry carries `"error": "errored"`: the JVM rejects `bytes_hex` at
-  parse, so there is no canonical output): **`reject` nice** iff the actual is `errored`. Producing
-  bytes is the **over-accept** — coal, whatever the bytes.
+  parse, or parses it and refuses to write it back, so there is no canonical output): **`reject` nice**
+  iff the actual is `errored`. Producing bytes is the **over-accept** — coal, whatever the bytes.
 
 Precedence mirrors the eval grade: **panicked → not-implemented → roundtrip / reject**. The
 `not-implemented` and `panicked` verdicts are the *same shapes* the eval grade emits, so a
@@ -182,9 +182,13 @@ arms are named non-goals, to be specified when built (do not implement against t
   constants are read and after the size-bit rule, also when the tree is nested in a Box constant, a register
   or an extension, while a nested header without the size bit degrades the outer tree; under (2, 2) a v3
   tree rejects, in `wire/v5/authored/`; a block section of version 4 rejects such an output and one of
-  version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); and the
+  version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); the
   creation-height parse bound
-  (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`). Each bound ships with its accept twin on the other side. Beside them,
+  (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`); and the
+  writer's range, where the JVM parses the bytes and refuses to write them back (a type variable name of at most
+  255 bytes read as a TEXT longer than 255, since a malformed byte becomes the three bytes of U+FFFD: `putUByte`
+  refuses its length; in a tree's types, in an output's tree, in a Box held in a register or an extension —
+  `{ErgoTree,Transaction}.type_var_name_write_range`). Each bound ships with its accept twin on the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
   parsed transaction, not echo its input. `{Box,Transaction}.sized_tree_declared_size` are

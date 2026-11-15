@@ -642,7 +642,15 @@ object EvalCore {
     * Same (treeVersion, Either) shape as evalEntry; treeVersion defaults to 0 on
     * deserialize failure, is preserved on eval failure. */
   def evalApplied(treeBytesHex: String, inputJson: Json,
-                  activated: Byte): (Byte, Either[String, (Json, Long)]) =
+                  activated: Byte): (Byte, Either[String, (Json, Long)]) = {
+    val (treeVer, outcome) = evalAppliedOutcome(treeBytesHex, inputJson, activated)
+    (treeVer, outcome.left.map(errClass))
+  }
+
+  /** evalApplied with the failure kept as the Throwable itself, for a blesser that states WHY an entry is refused
+    * (its cause chain); evalApplied is this with the failure reduced to `errClass`. */
+  def evalAppliedOutcome(treeBytesHex: String, inputJson: Json,
+                         activated: Byte): (Byte, Either[Throwable, (Json, Long)]) =
     try {
       val bytes   = Base16.decode(treeBytesHex).get
       val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
@@ -660,8 +668,8 @@ object EvalCore {
           (v, acc.totalCost.value)
         }
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
-      } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
-    } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
+      } catch { case t: Throwable => (treeVer, Left(t)) }
+    } catch { case t: Throwable => (0.toByte, Left(t)) }
 
   // ── Context with custom SELF box + var 1 (santa-eval/v4, Box.getReg dynamic-index) ────
 

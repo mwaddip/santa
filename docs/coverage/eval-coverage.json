@@ -246,6 +246,62 @@
       "unwalked" : 0,
       "version" : "v4"
     },
+    "v4/authored/SubstConstants.coll_count_range_v4.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.coll_count_range_v4",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v4"
+    },
+    "v4/authored/SubstConstants.type_var_name_range_v4.json" : {
+      "accepts" : 10,
+      "entries" : 15,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.type_var_name_range_v4",
+      "ops" : [
+        "Const",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 5,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v4"
+    },
     "v4/authored/Xor.unequal_sides_v4.json" : {
       "accepts" : 6,
       "entries" : 11,
@@ -2017,6 +2073,62 @@
           "has_deserialize" : false,
           "has_size" : false,
           "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SubstConstants.coll_count_range.json" : {
+      "accepts" : 1,
+      "entries" : 2,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.coll_count_range",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SubstConstants.type_var_name_range.json" : {
+      "accepts" : 10,
+      "entries" : 15,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.type_var_name_range",
+      "ops" : [
+        "Const",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 5,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
           "tree_version" : 0
         }
       ],
@@ -6817,6 +6929,45 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.deserializeTo_Box_type_var_name_range.json" : {
+      "accepts" : 58,
+      "entries" : 66,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "106:4 SigmaDslBuilder.deserializeTo",
+        "99:8 Box.tokens"
+      ],
+      "op" : "Global.deserializeTo_Box_type_var_name_range",
+      "ops" : [
+        "Const",
+        "EQ",
+        "ExtractAmount",
+        "ExtractBytes",
+        "ExtractBytesWithNoRef",
+        "ExtractCreationInfo",
+        "ExtractId",
+        "ExtractRegisterAs",
+        "ExtractScriptBytes",
+        "Global$",
+        "MethodCall",
+        "OptionIsDefined",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 8,
+      "tree_shapes" : [
+        {
+          "accepts" : 58,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 8,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Global.deserializeTo_Header_id_basis.json" : {
       "accepts" : 4,
       "entries" : 5,
@@ -7365,6 +7516,39 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_coll_count_range.json" : {
+      "accepts" : 9,
+      "entries" : 12,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize_coll_count_range",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "CalcBlake2b256",
+        "Const",
+        "Global$",
+        "MethodCall",
+        "SizeOf",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
           "tree_version" : 3
         }
       ],
@@ -8240,6 +8424,78 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SubstConstants.coll_count_range_v6.json" : {
+      "accepts" : 2,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.coll_count_range_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SubstConstants.type_var_name_range_v6.json" : {
+      "accepts" : 21,
+      "entries" : 30,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.type_var_name_range_v6",
+      "ops" : [
+        "Const",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 9,
+      "tree_shapes" : [
+        {
+          "accepts" : 10,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 11,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
           "tree_version" : 3
         }
       ],
@@ -14308,6 +14564,7 @@
       "families" : [
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.serialize_AvlTree.json",
         "v6/authored/Global.serialize_Box.json",
         "v6/authored/Global.serialize_Box_Int.json",
@@ -14321,6 +14578,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
@@ -14342,6 +14600,7 @@
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
@@ -15125,6 +15384,7 @@
         "v5/spec/Box_properties_equivalence.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112291-52c30165e5d5.json",
@@ -15592,7 +15852,9 @@
         "v4/authored/Coll.append_concat_v4.json",
         "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
         "v5/authored/Coll.object_arrays_by_class.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
         "v5/spec/Coll.append_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_concat_v6.json",
@@ -15602,6 +15864,8 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
@@ -15916,9 +16180,11 @@
     },
     "BlockValue" : {
       "families" : [
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/FuncValue.non_unary_arity.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -15936,6 +16202,7 @@
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -15944,6 +16211,7 @@
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -16239,8 +16507,12 @@
     },
     "CalcBlake2b256" : {
       "families" : [
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
         "v5/spec/blake2b256_sha256_equivalence.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -16309,6 +16581,7 @@
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.digest_any_collection.json",
@@ -16329,6 +16602,7 @@
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
@@ -16376,6 +16650,7 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -16458,6 +16733,8 @@
         "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
+        "v4/authored/SubstConstants.type_var_name_range_v4.json",
         "v4/authored/Xor.unequal_sides_v4.json",
         "v4/authored/XorOf.activated_version_gate_v4.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
@@ -16473,6 +16750,8 @@
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
         "v5/authored/String.jdk_utf8_decode.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.type_var_name_range.json",
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v5/authored/Xor.unequal_sides.json",
@@ -16516,6 +16795,8 @@
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
@@ -16530,6 +16811,8 @@
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.type_var_name_range_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -16861,6 +17144,7 @@
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
@@ -17009,6 +17293,7 @@
         "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -17072,7 +17357,8 @@
       "families" : [
         "v5/authored/Box.bytes_byte_basis.json",
         "v5/spec/Box_properties_equivalence.json",
-        "v6/authored/Coll.producer_specialisation_witness.json"
+        "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json"
       ],
       "op_codes" : [
         "0xc3"
@@ -17081,7 +17367,8 @@
     "ExtractBytesWithNoRef" : {
       "families" : [
         "v5/authored/Box.bytes_byte_basis.json",
-        "v5/spec/Box_properties_equivalence.json"
+        "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json"
       ],
       "op_codes" : [
         "0xc4"
@@ -17090,7 +17377,8 @@
     "ExtractCreationInfo" : {
       "families" : [
         "v5/spec/Box_properties_equivalence.json",
-        "v6/authored/Coll.producer_specialisation_witness.json"
+        "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json"
       ],
       "op_codes" : [
         "0xc7"
@@ -17100,6 +17388,7 @@
       "families" : [
         "v5/authored/Box.bytes_byte_basis.json",
         "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -17149,6 +17438,7 @@
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
@@ -17217,6 +17507,7 @@
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.flatMap_equivalence.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -17926,6 +18217,7 @@
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
@@ -17944,6 +18236,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
@@ -18479,6 +18772,7 @@
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.deserializeTo_Header_id_basis.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
@@ -18497,6 +18791,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
@@ -19001,6 +19296,7 @@
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
@@ -19420,7 +19716,9 @@
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
+        "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
@@ -19544,14 +19842,20 @@
       "families" : [
         "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
+        "v4/authored/SubstConstants.type_var_name_range_v4.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/String.jdk_utf8_decode.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.type_var_name_range.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.type_var_name_range_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/substConstants_declared_size_u32.json",
@@ -19734,9 +20038,11 @@
     },
     "ValDef" : {
       "families" : [
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/FuncValue.non_unary_arity.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -19754,6 +20060,7 @@
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -19762,6 +20069,7 @@
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -19837,11 +20145,13 @@
         "v4/authored/Coll.object_arrays_by_class_v4.json",
         "v4/authored/Coll.unequal_pairs_readers_v4.json",
         "v4/authored/Coll.zip_unequal_sides_v4.json",
+        "v4/authored/SubstConstants.coll_count_range_v4.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/Option.map.json",
+        "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -19953,6 +20263,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -19960,6 +20271,7 @@
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -20116,12 +20428,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 4727,
+    "accepts" : 4839,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 7077,
-    "files" : 379,
-    "rejects" : 2350,
+    "entries" : 7223,
+    "files" : 387,
+    "rejects" : 2384,
     "unwalked" : 661
   }
 }
