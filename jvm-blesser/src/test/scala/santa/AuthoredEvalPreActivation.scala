@@ -1,43 +1,29 @@
 package santa
 
-// Authored eval vectors for sigma-rust's santa-probe-pre-activation (2026-11-15): Coll.append's 4.x concat and zip of
-// unequal sides below the JIT activation. Measured first in santa.spike.PreActivationProbe; the reply is
-// prompts/drafts/sigma-rust-pre-activation-reply.md.
+// Authored eval vectors for sigma-rust's santa-probe-pre-activation and its follow-up (2026-11-15). Measured first in
+// santa.spike.PreActivationProbe; the replies are prompts/drafts/sigma-rust-pre-activation{,-2}-reply.md.
 //
 // THE RULE, read in 6.0.7 and measured: two collection behaviours sit behind `VersionContext.isJitActivated`
-// (activated >= 2), whatever the tree version:
-//  - `Coll.append` (CollsOverArrays.scala:48-57): below the activation the concat is `concatArrays_v4`
-//    (CollectionUtil.scala:11-26), which allocates by the LEFT array's class and copies with `Array.copy`. A
-//    collection over references (BigInt, GroupElement, SigmaProp, Box, AvlTree, a collection, a tuple of other than two
-//    items) takes ANY collection, the result an array of objects under the left's item type (a value whose items are of
-//    another class than its item type, encoded item by item); a Short/Int/Long one takes an EMPTY right operand of any
-//    class. From the activation on, the 5.0 concat refuses both.
-//  - `pairColl` (CollsOverArrays.scala:183-203): below the activation a `zip` keeps sides of unequal length; `map`,
-//    `exists`, `forall`, `filter` walk the LEFT length and read both sides (throwing where the right ends unless
-//    exists/forall answered first); `length`, `indices`, `apply`, `getOrElse`, `fold` take the shorter. From the
-//    activation on, the zip cuts the longer side. The `Xor` node and `Global.xor` are `left.zip(right).map(...)`:
-//    below the activation a longer LEFT operand throws (the argument order matters; from the activation on the xor
-//    is over the shorter operand either way).
+// (activated >= 2), whatever the tree version. From the activation on, which is every block made today:
+//  - `Coll.append` (CollsOverArrays.scala:48-57) is the 5.0 concat. It refuses what the 4.x `concatArrays_v4`
+//    (CollectionUtil.scala:11-26) took below the activation: a collection over references taking ANY collection, a
+//    Short/Int/Long one taking an EMPTY right operand of any class.
+//  - `pairColl` (CollsOverArrays.scala:183-203) cuts the longer side of a `zip`, so `map`, `exists`, `forall`,
+//    `filter`, the AvlTree methods (`getMany` is `keys.map`, `insert`/`update` are `entries.forall`,
+//    CErgoTreeEvaluator.scala:118/140/178) and `Xor` / `Global.xor` (`left.zip(right).map(...)`) read equal sides.
+// An implementation that applies the 4.x behaviours at every activated version answers otherwise on the SEPARATING
+// rows.
 //
-// THE ROWS: sigma-rust's 1,208 (its two table tests' rows, every tree of version 0, at activated 1 or 3) and its six
-// `Xor`/`Global.xor` rows at activated 0 to 3, VENDORED AS INPUTS (src/test/resources/sigma-rust-pre-activation/
-// rows.tsv: name, tree version, activated, the expression's bytes) with the jars' outcome as an independent
+// THE ROWS: sigma-rust's, VENDORED AS INPUTS (src/test/resources/sigma-rust-pre-activation/rows.tsv, rows-2.tsv:
+// part, set, name, tree version, activated, the expression's bytes) with the jars' outcome as an independent
 // cross-check. Every expectation is our oracle's; the JVM writer re-serializes every expression byte-identically (our
-// trees). A row's label is measured, not copied: SEPARATING when the same tree on the other side of the activation
-// (activated 3 for a row below it, 1 for a row above it) answers differently, CONTROL when it answers the same. Rows
-// at activated 0/1 go to the `v4` slot, 2 to `v5`, 3 to `v6`. A v1 tree at activated 0 is left out (a tree above its
-// activated version is the transaction tier's, runner-contract §2).
+// trees). A row's label is measured, not copied: SEPARATING when the same tree at activated 1 (the 4.x reading)
+// answers differently, CONTROL when it answers the same. Rows at activated 2 go to `v5`, 3 to `v6`.
 //
-// THE FOLLOW-UP (santa-probe-pre-activation-2, rows-2.tsv, 373 rows at activated 1, 2 and 3): what an implementation
-// can still miss after passing the above, found by sigma-rust's review of its first tip. `Coll.unequal_pairs_readers`:
-// the readers of an unequal zip, the AvlTree methods among them (`getMany` is `keys.map`, `insert`/`update` are
-// `entries.forall`, CErgoTreeEvaluator.scala:118/140/178; valid proofs over an empty tree of 1-byte keys).
-// `Coll.object_arrays_by_class`: `++` goes by the LEFT operand's array CLASS, not its item type (a `map`-built
-// generic Coll[Byte] takes an empty right operand of any class where the constant refuses it; an `indices` result
-// refuses one an Int constant takes), and the readers of the result see that array: `atLeast` casts it to
-// `SigmaProp[]` (CSigmaDslBuilder.scala:105, so `atLeast(k, a ++ b)` throws), `updateMany`/`filter` over pairs store
-// into it (CollsOverArrays.scala:350-366, 436-448), `substConstants` writes it (the writer casts each item), and `==`
-// compares it boxed (an Int 1 equals a Long 1, DataValueComparer.scala:159-176).
+// THE ROWS BELOW THE ACTIVATION WERE DELETED (2026-11-15, the user's rule: what nothing can reach is irrelevant).
+// Activated 0/1 exists only in mainnet blocks up to 889,855, and a full-validation replay of that history with an
+// implementation that has none of these 4.x behaviours was clean (ergo-node-rust, 2026-11-08): no historical spend
+// needs them. 855 vendored rows went with them.
 
 import io.circe.Json
 import scorex.util.encode.Base16
@@ -58,9 +44,8 @@ object AuthoredEvalPreActivation {
                  jarsOutcome: String, jarsValue: String, jarsCost: String) {
     def treeHex: String =
       if (treeVersion == 0) "00" + body else f"${8 + treeVersion}%02x" + vlq(body.length / 2) + body
-    def below: Boolean = activated < 2
-    /** The activated version on the other side of the activation. */
-    def other: Int = if (below) 3 else 1
+    /** The activated version a SEPARATING row is measured against: the 4.x reading below the activation. */
+    def other: Int = 1
     def op: String = {
       val base = part match {
         case "append" => "Coll.append_concat"
@@ -69,7 +54,7 @@ object AuthoredEvalPreActivation {
         case "zip-readers"     => "Coll.unequal_pairs_readers"
         case "append-by-class" => "Coll.object_arrays_by_class"
       }
-      activated match { case 0 | 1 => base + "_v4"; case 2 => base; case 3 => base + "_v6" }
+      activated match { case 2 => base; case 3 => base + "_v6" }
     }
     def slug: String = name.replace('|', '-').replaceAll("[^A-Za-z0-9.+_-]", "_")
   }
@@ -109,24 +94,12 @@ object AuthoredEvalPreActivation {
   /** The graded outcome, coarse as the eval tier grades it: a refusal, or the value and its cost. */
   def graded(o: Either[String, (Json, Long)]): Option[(Json, Long)] = o.toOption
 
-  private def rule(r: Row): String = (r.part, r.below) match {
-    case ("append", true) => "`Coll.append` below the JIT activation: the 4.x concat (`concatArrays_v4` allocates by the " +
-      "LEFT array's class: an array of references takes any collection, a Short/Int/Long one an empty right operand " +
-      "of any class)"
-    case ("append", false) => "`Coll.append` from the JIT activation on: the 5.0 concat"
-    case ("zip", true) => "`zip` below the JIT activation keeps sides of unequal length (map/exists/forall/filter walk " +
-      "the LEFT length and read both sides; length/indices/apply/getOrElse/fold take the shorter)"
-    case ("zip", false) => "`zip` from the JIT activation on cuts the longer side"
-    case ("xor", true) => "`Xor` / `Global.xor` below the JIT activation: `left.zip(right).map(...)` over sides kept " +
-      "unequal, so a longer LEFT operand throws"
-    case ("xor", false) => "`Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand"
-    case ("zip-readers", true) => "a reader over a `zip` of unequal sides below the JIT activation (AvlTree `getMany` is " +
-      "`keys.map`, `insert`/`update` are `entries.forall`, so they walk the LEFT length and read both sides)"
-    case ("zip-readers", false) => "a reader over a `zip` from the JIT activation on, the zip cut to the shorter side"
-    case ("append-by-class", true) => "below the JIT activation `++` goes by the LEFT operand's array CLASS, not its " +
-      "item type (`concatArrays_v4`), and the readers of its result see that array (`atLeast` casts it to " +
-      "`SigmaProp[]`, `updateMany`/`filter` over pairs store into it, `substConstants` writes it, `==` compares it boxed)"
-    case ("append-by-class", false) => "`++` and the readers of its result from the JIT activation on (the 5.0 concat)"
+  private def rule(r: Row): String = r.part match {
+    case "append" => "`Coll.append` from the JIT activation on: the 5.0 concat"
+    case "zip" => "`zip` from the JIT activation on cuts the longer side"
+    case "xor" => "`Xor` / `Global.xor` from the JIT activation on: over the zip cut to the shorter operand"
+    case "zip-readers" => "a reader over a `zip` from the JIT activation on, the zip cut to the shorter side"
+    case "append-by-class" => "`++` and the readers of its result from the JIT activation on (the 5.0 concat)"
   }
 
   /** Whether the row separates: the same tree on the other side of the activation answers differently. */
@@ -135,7 +108,7 @@ object AuthoredEvalPreActivation {
   def script(r: Row): String = {
     val here = outcome(r.treeHex, r.activated)
     val there = outcome(r.treeHex, r.other)
-    val reading = if (r.below) "the 5.x reading (activated 3)" else "the 4.x reading (activated 1)"
+    val reading = "the 4.x reading (activated 1)"
     val why = if (graded(here) != graded(there)) s"SEPARATING: $reading gives ${said(there)}."
               else s"CONTROL: $reading gives the same."
     s"[${r.name}] ${rule(r)} — ${said(here)}. $why  // tree v${r.treeVersion}, activated ${r.activated}"

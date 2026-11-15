@@ -22,12 +22,14 @@ package santa
 // out-of-bounds `ByIndex` on an empty `Coll[SigmaProp]`) are the CONTROLS beside the separating rows. Closed
 // trees in the contract §2 context; var 1 = Int 0 is never read.
 //
-// BELOW THE ACTIVATION, the `v4` slot (activated 0 or 1): `XorOf.activated_version_gate_v4` and
-// `BoolToSigmaProp.activated_version_gate_v4`, the same rows at (activated 0, tree 0), (1, 0) and (1, 1). They take
-// the 4.x readings: xorOf is `distinct.length == 2`, and a SigmaProp operand passes through (cost 20 / 30 / 35).
-// They separate an implementation that applies the 5.x readings at every activated version. (Tree v1 at activated 0
-// is left out: the node refuses a tree above its activated version in its verifier, which the transaction tier
-// grades; no eval entry carries that pair, runner-contract §2.)
+// BELOW THE ACTIVATION, the `v4` slot (activated 0 or 1): `BoolToSigmaProp.activated_version_gate_v4`, the same rows
+// at (activated 0, tree 0), (1, 0) and (1, 1), where a SigmaProp operand passes through (cost 20 / 30 / 35). Mainnet
+// history needs that reading: 12 trees created below the activation hold BoolToSigmaProp over a SigmaProp (one of
+// them spent in 5fe235558... at height 680,692). xorOf's 4.x reading has no `v4` file: no code that ran at activated
+// 0/1 on mainnet holds an XorOf node (no tree created at or below 889,855, and no code injected into a spend there;
+// scanned 2026-11-15), so nothing can reach it. (Tree v1 at activated 0 is left out: the node refuses a tree above
+// its activated version in its verifier, which the transaction tier grades; no eval entry carries that pair,
+// runner-contract §2.)
 
 import io.circe.Json
 import scorex.util.encode.Base16
@@ -50,9 +52,8 @@ object AuthoredEvalActivationGates {
   /** The activated version per file. Every file holds tree v0 then tree v1. */
   val Activated: Map[String, Byte] = Map(XorV5 -> V5, B2spV5 -> V5, XorV6 -> V6, B2spV6 -> V6)
   val TreeVersions: Seq[Int] = Seq(0, 1)
-  val XorV4 = "XorOf.activated_version_gate_v4"
   val B2spV4 = "BoolToSigmaProp.activated_version_gate_v4"
-  /** The v4 files' (activated, tree version) pairs, in entry order: tree v0 at activated 0 and 1, then the v1 tree at
+  /** The v4 file's (activated, tree version) pairs, in entry order: tree v0 at activated 0 and 1, then the v1 tree at
     * activated 1 (never above its activated version). */
   val V4Combos: Seq[(Byte, Int)] = Seq((0.toByte, 0), (1.toByte, 0), (1.toByte, 1))
 
@@ -95,14 +96,6 @@ object AuthoredEvalActivationGates {
         s"ACTIVATED version, whatever the tree's. $why"
     }
     def slug: String = s"xorof-$id-${if (separating) "separating" else "control"}"
-    /** Below the JIT activation: the 4.x reading. */
-    def scriptBelow: String = {
-      val x = xorReading(items); val v4 = v4Reading(items)
-      s"`xorOf($lit)`, the Coll[Boolean] a constant — $v4 at cost 30, the 4.x reading: below the JIT activation " +
-        "`xorOf` is `distinct.length == 2` (the collection holds both a true and a false). " +
-        (if (separating) s"SEPARATING: the exclusive or gives $x; an implementation that applies it at every " +
-          "activated version answers that." else s"CONTROL: the exclusive or gives $v4 too.")
-    }
   }
 
   val XorRows: Seq[XorRow] = Seq(
@@ -183,11 +176,10 @@ object AuthoredEvalActivationGates {
   def extract(): Map[String, Json] = {
     val xor = XorRows.map(r => (r.id, r.root, r.script, true, r.slug))
     val b2sp = B2spRows.map(r => (r.id, r.root, r.script, r.accepts, r.slug))
-    val xorBelow = XorRows.map(r => (r.id, r.root, r.scriptBelow, true, r.slug))
     val b2spBelow = B2spRows.map(r => (r.id, r.root, r.below, r.acceptsBelow, r.slugBelow))
     Map(XorV5 -> fileAtActivation(XorV5, xor), XorV6 -> fileAtActivation(XorV6, xor),
       B2spV5 -> fileAtActivation(B2spV5, b2sp), B2spV6 -> fileAtActivation(B2spV6, b2sp),
-      XorV4 -> fileBelowActivation(XorV4, xorBelow), B2spV4 -> fileBelowActivation(B2spV4, b2spBelow))
+      B2spV4 -> fileBelowActivation(B2spV4, b2spBelow))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

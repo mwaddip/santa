@@ -6,7 +6,7 @@ import scorex.util.encode.Base16
 /** Anchors the writer-count-range eval families. `SpecExtract` fails loud if an entry's outcome changes between the
   * label and the bless; pinned here is what would rot silently while still grading green:
   *
-  *  - the eight files, their entry counts, and each entry's version pair (its slot);
+  *  - the six files, their entry counts, and each entry's version pair (its slot);
   *  - OUR trees: the JVM writer re-serializes every vendored expression byte-identically, but for the two Boolean rows
   *    whose packed constant sets a padding bit (and there only in that bit);
   *  - every outcome, value and cost agrees with the jars' own measurement (sigma-rust's context-free probe on the same
@@ -30,20 +30,19 @@ class AuthoredEvalWriterCountRangeTest extends munit.FunSuite {
   private def bytesOf(j: Json): Array[Byte] =
     j.hcursor.downField("items").as[List[Json]].toOption.get.map(_.hcursor.get[Int]("value").toOption.get.toByte).toArray
 
-  test("eight files; versions in their slot") {
+  test("six files; versions in their slot") {
     val want = Map(
       "Global.deserializeTo_Box_type_var_name_range" -> 66,
-      "SubstConstants.type_var_name_range_v4" -> 15, "SubstConstants.type_var_name_range" -> 15,
+      "SubstConstants.type_var_name_range" -> 15,
       "SubstConstants.type_var_name_range_v6" -> 30,
       "Global.serialize_coll_count_range" -> 12,
-      "SubstConstants.coll_count_range_v4" -> 2, "SubstConstants.coll_count_range" -> 2,
+      "SubstConstants.coll_count_range" -> 2,
       "SubstConstants.coll_count_range_v6" -> 4)
     assertEquals(v.keySet, want.keySet)
     want.foreach { case (op, n) => assertEquals(entries(op).size, n, op) }
     assertEquals(rows.size, want.values.sum)
     v.keys.foreach { op =>
-      val allowed = if (op.endsWith("_v4")) Set(0, 1) else if (op.endsWith("_v6") || op.startsWith("Global.")) Set(3)
-                    else Set(2)
+      val allowed = if (op.endsWith("_v6") || op.startsWith("Global.")) Set(3) else Set(2)
       entries(op).foreach { e =>
         assert(allowed(ver(e, "activated")), s"$op ${str(e, "name")}")
         assert(ver(e, "ergoTree") <= ver(e, "activated"), s"$op ${str(e, "name")}: tree above activated")
@@ -110,16 +109,15 @@ class AuthoredEvalWriterCountRangeTest extends munit.FunSuite {
       // a count past the range on a path that writes it is refused (by the writer, or before it)
       if (r.overRange && r.writes) assert(o.isLeft, s"${r.name} a${r.activated}: written past the range")
     }
-    // sigma-rust's table: 25 rows differ on its fork at 94ed4325, every one a writer refusal here
-    assertEquals(refused.values.sum, 25)
+    // sigma-rust's table: 25 rows differ on its fork at 94ed4325, every one a writer refusal here; 3 of them were at
+    // activated 1 and went with the v4 slot
+    assertEquals(refused.values.sum, 22)
     assertEquals(refused("Global.serialize_coll_count_range"), 3)
-    assertEquals(refused("SubstConstants.coll_count_range_v6") + refused("SubstConstants.coll_count_range") +
-      refused("SubstConstants.coll_count_range_v4"), 4)
+    assertEquals(refused("SubstConstants.coll_count_range_v6") + refused("SubstConstants.coll_count_range"), 3)
     assertEquals(refused("Global.deserializeTo_Box_type_var_name_range"), 8)
     // a long name refuses in a constant at tree v3 (None of Option[T], a Box) and in a Box constant at tree v0
     assertEquals(refused("SubstConstants.type_var_name_range_v6"), 6)
     assertEquals(refused("SubstConstants.type_var_name_range"), 2)
-    assertEquals(refused("SubstConstants.type_var_name_range_v4"), 2)
   }
 
   test("the pairs: one item / one byte of text either side of the range") {

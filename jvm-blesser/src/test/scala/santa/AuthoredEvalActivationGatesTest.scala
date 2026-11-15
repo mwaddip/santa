@@ -113,7 +113,7 @@ class AuthoredEvalActivationGatesTest extends munit.FunSuite {
   }
 
   // ── v4: below the JIT activation ───────────────────────────────────────────────────────────────────────────────
-  private val v4ops = Seq(B.XorV4, B.B2spV4)
+  private val v4ops = Seq(B.B2spV4)
   private val readable: Seq[(Int, Int)] = B.V4Combos.map { case (a, t) => (a.toInt, t) }
   private def atAT(op: String, a: Int, t: Int): List[Json] =
     entries(op).filter(e => ver(e, "activated") == a && ver(e, "ergoTree") == t)
@@ -127,7 +127,7 @@ class AuthoredEvalActivationGatesTest extends munit.FunSuite {
     assertEquals(readable, Seq((0, 0), (1, 0), (1, 1)))
     v4ops.foreach { op =>
       val es = entries(op)
-      assertEquals(es.size, if (isXor(op)) 27 else 18, op)
+      assertEquals(es.size, 18, op)
       es.foreach(e => assert(ver(e, "ergoTree") <= ver(e, "activated"), s"${str(e, "name")}: tree above activated"))
       assertEquals(es.map(e => (ver(e, "activated"), ver(e, "ergoTree"))).distinct, B.V4Combos.map { case (a, t) => (a.toInt, t) }.toList)
       es.foreach(e => assertEquals(e.hcursor.downField("input").focus, Some(B.IntInput), str(e, "name")))
@@ -141,8 +141,7 @@ class AuthoredEvalActivationGatesTest extends munit.FunSuite {
     }
   }
 
-  test("v4 below the activation: xorOf the 4.x reading at 30; a SigmaProp operand passes through at 20 / 30 / 35") {
-    val perItem = XorOf.costKind match { case p: PerItemCost => p; case o => fail(s"not per-item: $o") }
+  test("v4 below the activation: a SigmaProp operand passes through at 20 / 30 / 35") {
     val pass = sigmaProp(s"cd$G")
     val b2sp: Map[String, Option[(Json, Long)]] = Map(
       "true" -> Some((sigmaProp("d3"), 20L)), "sp-const" -> Some((pass, 20L)), "provedlog" -> Some((pass, 30L)),
@@ -150,13 +149,6 @@ class AuthoredEvalActivationGatesTest extends munit.FunSuite {
     assertEquals(b2sp.keySet, B.B2spRows.map(_.id).toSet)
     assertEquals(B.B2spRows.filter(_.acceptsBelow).map(_.id).toSet, b2sp.collect { case (i, Some(_)) => i }.toSet)
     readable.foreach { case (a, t) =>
-      B.XorRows.foreach { r =>
-        val e = rowAT(B.XorV4, a, t, r.id)
-        assertEquals(err(e), None, s"${r.id} ($a, $t)")
-        assertEquals(value(e), boolJ(B.v4Reading(r.items)), s"${r.id} ($a, $t)")
-        assertEquals(cost(e), fixed(Constant.costKind) + perItem.cost(r.items.size).value.toLong, s"${r.id} ($a, $t)")
-        assert(str(e, "script").contains(if (r.separating) "SEPARATING" else "CONTROL"), r.id)
-      }
       b2sp.foreach { case (i, want) =>
         val e = rowAT(B.B2spV4, a, t, i)
         want match {

@@ -18,7 +18,7 @@ package santa
 //    and `substConstants`, which writes every constant of the tree it is given again (a None constant of Option[T], a
 //    Box constant whose box's tree holds the name; ErgoTreeSerializer.scala:320-378) and copies the body as read.
 //
-// THE ROWS: sigma-rust's 146 (src/test/resources/sigma-rust-writer-count-range/eval.tsv: a bare root expression at a
+// THE ROWS: sigma-rust's 129 at activated 2 and 3 (src/test/resources/sigma-rust-writer-count-range/eval.tsv: a bare root expression at a
 // tree version and an activated version, with the jars' outcome, value and cost as an independent cross-check), all
 // agreeing with the jars. Every expectation is our oracle's. Two changes, both ours:
 //  - every `Global.serialize` / `substConstants` row of the long collection is wrapped in `blake2b256` (the 65,535
@@ -28,8 +28,9 @@ package santa
 //    reads it and writes `7F`, and the vectors carry the JVM's bytes (OUR trees). Every other expression is written
 //    back byte-identically.
 // A row is WRITER REFUSES when our oracle refuses it in a writer's range check, CONTROL otherwise (the bytes are read,
-// or the count fits, or it is refused for another reason whatever the count). Rows at activated 1 go to the `v4` slot,
-// 2 to `v5`, 3 to `v6`.
+// or the count fits, or it is refused for another reason whatever the count). Rows at activated 2 go to `v5`, 3 to
+// `v6`. The request's 17 rows at activated 1 were deleted with the `v4` slot's unreachable families (2026-11-15):
+// activated 1 exists only in mainnet blocks up to 889,855, which a replay without these behaviours validated clean.
 
 import io.circe.Json
 import scorex.util.encode.Base16
@@ -66,7 +67,7 @@ object AuthoredEvalWriterCountRange {
     def bareTreeHex: String = tree(body)
     private def tree(e: String): String =
       if (treeVersion == 0) "00" + e else f"${8 + treeVersion}%02x" + vlq(e.length / 2) + e
-    private def slot: String = activated match { case 0 | 1 => "_v4"; case 2 => ""; case 3 => "_v6" }
+    private def slot: String = activated match { case 2 => ""; case 3 => "_v6" }
     def op: String = kind match {
       case "dto"             => "Global.deserializeTo_Box_type_var_name_range"
       case "subst"           => "SubstConstants.type_var_name_range" + slot
