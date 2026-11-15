@@ -132,6 +132,14 @@ context-surface vectors exposed that each adapter had improvised this context (t
 divergences were harness artifacts, not library findings); blessed values for
 `Context.*`/`preHeader.*` families assume this table. Drift gates: the pin is mirrored in EvalCore, each runner adapter, and the test anchors — a mirror that drifts goes red on the `Context.*`/`preHeader.*` families (EvalConformanceTest re-bless on the blesser side, `./conform` on the runner side).
 
+*No tree above its activated version (2026-11-15).* Every eval entry carries `ergoTree ≤ activated`, and
+`./validate` enforces it. The node refuses a tree above its activated version before any reduction
+(`Interpreter.checkSoftForkCondition`), but implementations apply that refusal in their verifier, outside the
+evaluator an eval runner calls (sigma-rust's `check_soft_fork_condition`, arkadianet's `reduce.rs`). So the
+transaction tier grades it (`tree-version-block-version-edges`, `tree-version-above-activated`), the one
+tier where it is the implementation's answer and not a runner's. Below activated 2 it matters most: there
+sigma-state's `VersionContext` accepts the pair, so a bare evaluator would run a v1 tree at activated 0.
+
 **`santa-eval/v6-fullctx` — real reconstructed context (not the pinned dummy).** Entries
 in this schema carry a full `context` envelope; the JVM control reconstructs a REAL
 `ErgoLikeContext` via `EvalCore.evalFullContext` rather than `EvalCore.dummyContext`. The
@@ -199,7 +207,10 @@ reconstruction rules, which every conforming implementation of this schema must 
   which evaluate under the pinned dummy context, the control reconstructs a REAL
   `ErgoLikeContext` from this envelope via `EvalCore.evalFullContext` (see §2).
 - **Version is an input.** The runner evaluates each entry under the entry's declared
-  `(activated, ergoTree)` versions — it does not choose or assume a version.
+  `(activated, ergoTree)` versions — it does not choose or assume a version. The corpus
+  directory names the slot: `v4` holds entries at `activated` 0 or 1 (below the JIT activation,
+  where sigma-state's only gate, `activated >= 2`, is closed), `v5` at 2, `v6` at 3. No entry
+  carries a tree above its activated version (§2).
 
 ### Postconditions (a runner must guarantee)
 - The actuals file validates against `santa-eval.actuals.schema.json`.

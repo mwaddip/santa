@@ -30,7 +30,7 @@ and `runners/blitzen-eni/` — to compare an implementation's branches side by s
 }
 ```
 
-- **`version`** — one per runner, the max protocol version it supports; **cumulative** (v6 ⊃ v5, soft-fork). The orchestrator selects every vector whose `version ≤` this.
+- **`version`** — one per runner, the max protocol version it supports; **cumulative** (v6 ⊃ v5 ⊃ v4, soft-fork). The orchestrator selects every vector whose `version ≤` this. The slots: `v4` = every activated version below the JIT activation (0 or 1), `v5` = activated 2, `v6` = activated 3 (`conform`'s `VERSIONS`; `validate` holds each file's entries to its slot).
 - **`tiers`** — the set of result-shape tiers the runner implements (`eval` today; `wire`/`block` later). Tiers are *not* cumulative; declaring `eval` never pulls in `wire`. Uneven maturity across tiers is surfaced as naughty (the grid is the readiness map), not hidden by under-declaring.
 - **`cost`** — whether the runner claims the **cost dimension**. `false` = value-only (a wallet/eval-only SDK); the orchestrator grades value and ignores cost for it. Declared scope, not abstention.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).

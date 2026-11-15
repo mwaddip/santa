@@ -289,14 +289,34 @@ fn main() -> ExitCode {
     }
 }
 
+/// Protocol slot -> the `version.activated` values its entries may carry (conform's `VERSIONS`). `v4` is every
+/// version below the JIT activation (0 or 1: sigma-state gates only on `activated >= 2` there), `v5` is 2,
+/// `v6` is 3. Any other label (including `any`) is not a pinned slot.
+fn slot_activated(v: &str) -> Option<&'static [i64]> {
+    match v {
+        "v4" => Some(&[0, 1]),
+        "v5" => Some(&[2]),
+        "v6" => Some(&[3]),
+        _ => None,
+    }
+}
+
+/// The names of the entries whose `version.activated` is not one `want` allows (all of them when `want` is None).
+fn off_slot<'a>(doc: &'a Value, want: Option<&[i64]>) -> Vec<&'a str> {
+    doc["entries"]
+        .as_array()
+        .map(|es| {
+            es.iter()
+                .filter(|e| !e["version"]["activated"].as_i64().is_some_and(|a| want.is_some_and(|w| w.contains(&a))))
+                .filter_map(|e| e["name"].as_str())
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
 /// 2b. The self-describing taxonomy path must agree with the in-data envelope, so the fast
 /// path-selector and the self-contained envelope can never silently drift.
 fn path_envelope_guard(root: &Path, files: &[PathBuf]) -> u32 {
-    let version_activated = |v: &str| match v {
-        "v5" => Some(2i64),
-        "v6" => Some(3i64),
-        _ => None,
-    };
     let tier_prefix = |t: &str| match t {
         "eval" => Some("santa-eval/"),
         _ => None,
@@ -331,20 +351,32 @@ fn path_envelope_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: provenance {prov:?} vs source {source:?}", rel.display());
         }
-        let want = version_activated(version);
-        let off: Vec<&str> = doc["entries"]
-            .as_array()
-            .map(|es| {
-                es.iter()
-                    .filter(|e| e["version"]["activated"].as_i64() != want)
-                    .filter_map(|e| e["name"].as_str())
-                    .collect()
-            })
-            .unwrap_or_default();
+        let want = slot_activated(version);
+        let off = off_slot(&doc, want);
         if want.is_none() || !off.is_empty() {
             let head = &off[..off.len().min(3)];
             g += 1;
             println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+        }
+        // Every eval entry carries ergoTree <= activated. The node refuses a tree above its activated version
+        // before any reduction (Interpreter.checkSoftForkCondition), and implementations apply that in their
+        // verifier, outside the evaluator an eval runner calls: the transaction tier grades it, not this one.
+        let above: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| {
+                es.iter()
+                    .filter(|e| match (e["version"]["ergoTree"].as_i64(), e["version"]["activated"].as_i64()) {
+                        (Some(t), Some(a)) => t > a,
+                        _ => false,
+                    })
+                    .filter_map(|e| e["name"].as_str())
+                    .collect()
+            })
+            .unwrap_or_default();
+        if !above.is_empty() {
+            let head = &above[..above.len().min(3)];
+            g += 1;
+            println!("  [WRONG] {}: ergoTree above activated (graded at the transaction tier): {head:?}", rel.display());
         }
     }
     if g == 0 {
@@ -385,14 +417,9 @@ fn actuals_guards(v: &Validator) -> u32 {
 }
 
 /// Wire taxonomy path <-> in-data envelope guard (parallel to path_envelope_guard, wire
-/// rules). tier "wire" => schema "santa-wire/"; version v5->activated 2, v6->3; provenance
+/// rules). tier "wire" => schema "santa-wire/"; version per `slot_activated` (v4->0|1, v5->2, v6->3); provenance
 /// follows each entry's `source`: framework => vendored, testnet:/santa: => authored, spec => spec.
 fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
-    let version_activated = |v: &str| match v {
-        "v5" => Some(2i64),
-        "v6" => Some(3i64),
-        _ => None,
-    };
     println!("\n[wire catalogue] path <-> envelope guard:");
     let vroot = root.join("vectors");
     let mut g: u32 = 0;
@@ -443,16 +470,8 @@ fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: provenance {prov:?} but entry source(s) disagree: {head:?}", rel.display());
         }
-        let want = version_activated(version);
-        let off: Vec<&str> = doc["entries"]
-            .as_array()
-            .map(|es| {
-                es.iter()
-                    .filter(|e| e["version"]["activated"].as_i64() != want)
-                    .filter_map(|e| e["name"].as_str())
-                    .collect()
-            })
-            .unwrap_or_default();
+        let want = slot_activated(version);
+        let off = off_slot(&doc, want);
         if want.is_none() || !off.is_empty() {
             let head = &off[..off.len().min(3)];
             g += 1;
@@ -1100,16 +1119,11 @@ fn chain_actuals_guards(v: &Validator) -> u32 {
 }
 
 /// Transaction taxonomy path <-> in-data envelope guard. tier "transaction" => schema
-/// "santa-transaction/v1"; version v5 => activated 2, v6 => activated 3, "any" => version-agnostic
+/// "santa-transaction/v1"; version per `slot_activated` (v4 => 0|1, v5 => 2, v6 => 3), "any" => version-agnostic
 /// (per-entry activated unconstrained, e.g. the block-version edges); provenance captured =>
 /// every entry source starts with "testnet:" or "mainnet:" (chain history) AND expected.valid ==
 /// true; provenance authored => every entry source starts with "santa:".
 fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
-    let version_activated = |v: &str| match v {
-        "v5" => Some(2i64),
-        "v6" => Some(3i64),
-        _ => None,
-    };
     println!("\n[transaction catalogue] path <-> envelope guard:");
     let vroot = root.join("vectors");
     let mut g: u32 = 0;
@@ -1131,21 +1145,13 @@ fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: schema {schema:?} != tier {tier:?}", rel.display());
         }
-        // version -> activated: v5/v6 pin every entry to one activated version. "any" is
+        // version -> activated: v4/v5/v6 pin every entry to their slot's activated versions. "any" is
         // version-agnostic (per-entry activated varies, e.g. the block-version edges span -57..127),
         // so it skips the pin (mirrors chain_path_guard). Any other version fires [WRONG]
         // unconditionally (mirrors wire).
         if version != "any" {
-            let want = version_activated(version);
-            let off: Vec<&str> = doc["entries"]
-                .as_array()
-                .map(|es| {
-                    es.iter()
-                        .filter(|e| e["version"]["activated"].as_i64() != want)
-                        .filter_map(|e| e["name"].as_str())
-                        .collect()
-                })
-                .unwrap_or_default();
+            let want = slot_activated(version);
+            let off = off_slot(&doc, want);
             if want.is_none() || !off.is_empty() {
                 let head = &off[..off.len().min(3)];
                 g += 1;
@@ -1274,6 +1280,52 @@ fn nipopow_actuals_guards(v: &Validator) -> u32 {
 mod tests {
     use super::*;
     use std::path::Path;
+
+    /// One eval file under vectors/eval/<version>/authored/, entries at the given (activated, ergoTree) pairs.
+    fn eval_guard_on(version: &str, versions: &[(i64, i64)], tag: &str) -> u32 {
+        let tmp = std::env::temp_dir().join(format!("santa-test-eval-{tag}-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("eval").join(version).join("authored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let entries: Vec<Value> = versions.iter().enumerate().map(|(i, (a, t))| json!({
+            "name": format!("e#{i}"), "tree_bytes_hex": "00d10101",
+            "version": { "activated": a, "ergoTree": t },
+            "expected": { "value": null, "cost": null, "error": "errored" }
+        })).collect();
+        let doc = json!({ "schema": "santa-eval/v2", "op": "t", "source": "santa:authored-test", "entries": entries });
+        let fpath = vdir.join("t.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        let bad = path_envelope_guard(&tmp, &[fpath]);
+        let _ = fs::remove_dir_all(&tmp);
+        bad
+    }
+
+    /// v4 is everything below the JIT activation: its entries carry activated 0 or 1, nothing else; v5 stays 2.
+    #[test]
+    fn eval_path_guard_v4_is_activated_0_or_1() {
+        assert_eq!(eval_guard_on("v4", &[(0, 0), (1, 0), (0, 0)], "v4ok"), 0);
+        assert!(eval_guard_on("v4", &[(0, 0), (2, 0)], "v4two") > 0, "activated 2 under v4 must fire");
+        assert!(eval_guard_on("v5", &[(1, 0)], "v5one") > 0, "activated 1 under v5 must fire");
+        assert_eq!(eval_guard_on("v5", &[(2, 0)], "v5ok"), 0);
+        assert!(eval_guard_on("v3", &[(0, 0)], "v3") > 0, "an unknown slot must fire");
+    }
+
+    /// No eval entry carries a tree above its activated version, at any slot: that refusal is the node's verifier
+    /// (checkSoftForkCondition), graded at the transaction tier.
+    #[test]
+    fn eval_path_guard_refuses_a_tree_above_its_activated_version() {
+        assert_eq!(eval_guard_on("v4", &[(1, 1), (1, 0), (0, 0)], "eqok"), 0);
+        assert!(eval_guard_on("v4", &[(0, 1)], "v4above") > 0, "tree v1 at activated 0 must fire");
+        assert!(eval_guard_on("v5", &[(2, 3)], "v5above") > 0, "tree v3 at activated 2 must fire");
+        assert_eq!(eval_guard_on("v6", &[(3, 3), (3, 0)], "v6ok"), 0);
+    }
+
+    #[test]
+    fn slot_activated_matches_conform_versions() {
+        assert_eq!(slot_activated("v4"), Some(&[0i64, 1][..]));
+        assert_eq!(slot_activated("v5"), Some(&[2i64][..]));
+        assert_eq!(slot_activated("v6"), Some(&[3i64][..]));
+        assert_eq!(slot_activated("any"), None);
+    }
 
     fn schema_dir() -> std::path::PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../..").join("schema")

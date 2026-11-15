@@ -15,7 +15,9 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
 use std::{env, fs};
 
-const VERSIONS: [&str; 2] = ["v5", "v6"]; // ordered; cumulative (a runner's version implies all lower)
+/// Protocol slots, ordered; cumulative (a runner's version implies all lower). `v4` is everything below the JIT
+/// activation (an entry's `version.activated` 0 or 1), `v5` is activated 2, `v6` activated 3.
+const VERSIONS: [&str; 3] = ["v4", "v5", "v6"];
 
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..") // tools/conform -> repo root
@@ -793,7 +795,8 @@ mod tests {
     use std::process::Command;
 
     fn sample() -> Vec<Vec5> {
-        ["eval/v5/spec/a.json", "eval/v6/spec/b.json", "eval/v5/authored/c.json", "wire/v5/spec/d.json"]
+        ["eval/v5/spec/a.json", "eval/v6/spec/b.json", "eval/v5/authored/c.json", "wire/v5/spec/d.json",
+         "eval/v4/authored/e.json"]
             .iter()
             .map(|r| {
                 let (t, v, p, o) = parse_relpath(r);
@@ -822,7 +825,7 @@ mod tests {
     fn select_v6_eval_is_cumulative() {
         assert_eq!(
             selected_rels("v6", &["eval"]),
-            ["eval/v5/authored/c.json", "eval/v5/spec/a.json", "eval/v6/spec/b.json"]
+            ["eval/v4/authored/e.json", "eval/v5/authored/c.json", "eval/v5/spec/a.json", "eval/v6/spec/b.json"]
         );
     }
 
@@ -830,8 +833,13 @@ mod tests {
     fn select_v5_eval_excludes_v6_and_other_tiers() {
         assert_eq!(
             selected_rels("v5", &["eval"]),
-            ["eval/v5/authored/c.json", "eval/v5/spec/a.json"]
+            ["eval/v4/authored/e.json", "eval/v5/authored/c.json", "eval/v5/spec/a.json"]
         );
+    }
+
+    #[test]
+    fn select_v4_eval_is_below_the_jit_activation_only() {
+        assert_eq!(selected_rels("v4", &["eval"]), ["eval/v4/authored/e.json"]);
     }
 
     #[test]
