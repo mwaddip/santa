@@ -1,5 +1,6 @@
 import {
-  SValueParseError, SValueSerializeError, STypeParseError, ErgoTreeParseError, ErgoTreeSerializeError,
+  SValueParseError, SValueSerializeError, STypeParseError, STypeSerializeError, ErgoTreeParseError,
+  ErgoTreeSerializeError,
   SigmaBooleanParseError, SigmaBooleanSerializeError, ExprParseError,
 } from '@ergots/ergoscript'
 import { ReaderError } from '@ergots/scorex'
@@ -11,7 +12,7 @@ import { ReaderError } from '@ergots/scorex'
  *  not ErgoTreeParseError. Mirrors ergots' own test/conformance/_santa.ts isWireParseError set. */
 export function isWireCodecError(err: unknown): boolean {
   return err instanceof SValueParseError || err instanceof SValueSerializeError
-    || err instanceof STypeParseError
+    || err instanceof STypeParseError || err instanceof STypeSerializeError
     || err instanceof ErgoTreeParseError || err instanceof ErgoTreeSerializeError
     || err instanceof SigmaBooleanParseError || err instanceof SigmaBooleanSerializeError
     || err instanceof ExprParseError

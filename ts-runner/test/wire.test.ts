@@ -116,3 +116,21 @@ describe('runWireVector — wire round-trip (santa-wire/v1)', () => {
     }
   })
 })
+
+describe('runWireVector — a type-variable name past 255 bytes of text (writer count range)', () => {
+  // ergots refuses to write such a name with its typed STypeSerializeError (root-exported, like the SValue and
+  // ErgoTree serialize errors already in isWireCodecError): a faithful reject, `errored`, never the panic net.
+  for (const rel of ['v5/authored/ErgoTree.type_var_name_write_range.json',
+    'v6/authored/ErgoTree.type_var_name_write_range.json',
+    'v6/authored/Transaction.type_var_name_write_range.json']) {
+    it(`${rel}: refusals errored, controls written back, none panics`, async () => {
+      const vec = loadVector(rel)
+      const actuals = await runWireVector(vec)
+      expect(Object.keys(actuals)).toEqual(vec.entries.map((e) => e.name))
+      for (const e of vec.entries) {
+        if (e.error === 'errored') expect(actuals[e.name], e.name).toEqual({ bytes_hex: null, error: 'errored' })
+        else expect(actuals[e.name], e.name).toEqual({ bytes_hex: e.expected_bytes_hex ?? e.bytes_hex, error: null })
+      }
+    })
+  }
+})

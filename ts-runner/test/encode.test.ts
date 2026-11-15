@@ -4,6 +4,9 @@ import { parseSValue } from '@ergots/ergoscript'
 import { ByteReader } from '@ergots/scorex'
 import { encodeSValue } from '../src/encode'
 import { hexToBytes } from '../src/hex'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
 
 describe('encode — primitives', () => {
   it('Boolean → bare bool', () => {
@@ -77,5 +80,25 @@ describe('encode — bytes-kinds (AvlTree round-trip)', () => {
     const tree = parseSValue({ tag: 'SAvlTree' }, 3, new ByteReader(hexToBytes(AVL_HEX)))
     expect(tree.kind).toBe('AvlTree')
     expect(encodeSValue(tree, 3)).toEqual({ kind: 'AvlTree', bytes_hex: AVL_HEX })
+  })
+})
+
+describe('encode — a Box is the bytes it was read from', () => {
+  // The JVM encodes a Box value as `ebox.bytes`, the slice the box was parsed from, which ergots surfaces as
+  // `boxBytesOf` (the basis of its `Box.bytes`). These boxes name a type variable whose text the reader builds from
+  // FF bytes (each one U+FFFD): written back, the 255-byte text becomes EF BF BD x 85, and the 256- and 258-byte
+  // texts cannot be written at all. So an encoder that WRITES the box gives other bytes, or throws.
+  const here = path.dirname(fileURLToPath(import.meta.url))
+  const vec = JSON.parse(readFileSync(path.resolve(here,
+    '../../vectors/eval/v6/authored/Global.deserializeTo_Box_type_var_name_range.json'), 'utf8')) as
+    { entries: { name: string; expected: { value?: { kind: string; bytes_hex: string } } }[] }
+  const boxes = vec.entries.filter((e) => /-just-/.test(e.name))
+  it('the six `just` rows: parsed, then encoded, give back their bytes', () => {
+    expect(boxes.length).toBe(6)
+    for (const e of boxes) {
+      const hex = e.expected.value!.bytes_hex
+      const box = parseSValue({ tag: 'SBox' }, 3, new ByteReader(hexToBytes(hex)))
+      expect(encodeSValue(box, 3), e.name).toEqual({ kind: 'Box', bytes_hex: hex })
+    }
   })
 })

@@ -1,5 +1,5 @@
 import type { SValue, SType } from '@ergots/ergoscript'
-import { serializeSValue } from '@ergots/ergoscript'
+import { serializeSValue, boxBytesOf } from '@ergots/ergoscript'
 import { ByteWriter } from '@ergots/scorex'
 import { bytesToHex } from './hex'
 import { stypeToSanta } from './stype'
@@ -33,7 +33,10 @@ export function encodeSValue(v: SValue, treeVersion: number): Json {
       // SANTA Option has NO elem (contract §4); drop ergots' elem.
       return { kind: 'Option', value: v.value === null ? null : encodeSValue(v.value, treeVersion) }
     case 'Box':
-      return { kind: 'Box', bytes_hex: serializeBytesKind({ tag: 'SBox' }, v, treeVersion) }
+      // The JVM's value is `ebox.bytes`: the slice the box was parsed from, or the box written when it was built.
+      // ergots' `boxBytesOf` is that basis (its `Box.bytes`); writing the box instead gives other bytes for a box
+      // read from non-canonical bytes, and throws for one whose contents cannot be written.
+      return { kind: 'Box', bytes_hex: bytesToHex(boxBytesOf(v.value)) }
     case 'Header':
       return { kind: 'Header', bytes_hex: serializeBytesKind({ tag: 'SHeader' }, v, treeVersion) }
     case 'AvlTree':
