@@ -116,6 +116,7 @@ object EvalCore {
       case SBox        => tag("SBox")
       case SHeader     => tag("SHeader")
       case SPreHeader  => tag("SPreHeader")
+      case SAvlTree    => tag("SAvlTree")
       // STuple MUST precede SCollection: STuple <: SCollection, so a `SCollection`
       // case placed first would shadow it (STuple unreachable → tuples mis-encode as
       // {tag:"SColl"}). The cross-check can't catch this (both sides share the

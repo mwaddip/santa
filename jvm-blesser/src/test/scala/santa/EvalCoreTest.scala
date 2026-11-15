@@ -25,6 +25,24 @@ class EvalCoreTest extends munit.FunSuite {
     assertEquals(json.noSpaces, """{"tag":"STuple","items":[{"tag":"SInt"},{"tag":"SLong"}]}""")
   }
 
+  // Every scalar tag the vector schema's SType enum lists must encode as itself, never as the {tag:"SUnknown"}
+  // fallback (which the schema refuses). SAvlTree fell through until a Coll[AvlTree] VALUE was first blessed
+  // (sigma-rust's pre-activation rows, 2026-11-15: `Coll(<tree>)` from the 4.x concat).
+  test("stypeToJson covers every scalar tag of the schema's SType enum, SAvlTree included") {
+    import sigma.ast._
+    val scalars: Seq[(SType, String)] = Seq(SBoolean -> "SBoolean", SByte -> "SByte", SShort -> "SShort",
+      SInt -> "SInt", SLong -> "SLong", SBigInt -> "SBigInt", SUnsignedBigInt -> "SUnsignedBigInt",
+      SGroupElement -> "SGroupElement", SSigmaProp -> "SSigmaProp", SBox -> "SBox", SHeader -> "SHeader",
+      SPreHeader -> "SPreHeader", SUnit -> "SUnit", SAny -> "SAny", SAvlTree -> "SAvlTree")
+    scalars.foreach { case (t, name) => assertEquals(EvalCore.stypeToJson(t).noSpaces, s"""{"tag":"$name"}""") }
+    assertEquals(EvalCore.stypeToJson(SCollection(SAvlTree)).noSpaces, """{"tag":"SColl","elem":{"tag":"SAvlTree"}}""")
+    // and the schema's own enum is exactly these names
+    val schema = io.circe.parser.parse(new String(java.nio.file.Files.readAllBytes(
+      java.nio.file.Paths.get("..", "schema", "santa-eval.vector.schema.json")), "UTF-8")).toOption.get
+    assert(schema.noSpaces.contains(scalars.map(n => s""""${n._2}"""").mkString(",")),
+      "the schema's SType enum lists the scalars in this order")
+  }
+
   // ── decodeInputConstant: a tuple INPUT, by arity ───────────────────────────
   // The JVM holds a pair as a Scala Tuple2 and every other tuple as a generic Coll[Any]
   // (CoreDataSerializer -> Evaluation.toDslTuple, which pairs up only at arity 2). A decoder
