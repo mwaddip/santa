@@ -309,9 +309,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   non-modifying lookup — turned out **not to be a consensus divergence at all**:
   `UnknownModification`, `UpdateLongBy` and `RemoveIfExists` have **zero** fully-qualified
   references in sigma-state 6.0.3 or ergo-core, so no ErgoScript or node path can construct
-  them. The 13 fixtures exercising them are retired to
-  [`unreachable/`](unreachable/README.md) (preserved, not deleted — dead code can be
-  revived), and with them gone the JVM and `ergo_avltree_rust` agree on **37/37** of the
+  them. The 13 fixtures exercising them were deleted (behaviour no consensus path reaches is
+  irrelevant to SANTA), and with them gone the JVM and `ergo_avltree_rust` agree on **37/37** of the
   reachable corpus. The finding is kept and reframed — plus one prediction
   that did *not* land: the four adverse (malformed/mismatched/truncated/swapped-digest
   proof) fixtures were flagged as a possible reject-detection miss and came back fully

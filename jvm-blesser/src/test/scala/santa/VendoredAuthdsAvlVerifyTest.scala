@@ -181,13 +181,11 @@ class VendoredAuthdsAvlVerifyTest extends munit.FunSuite {
     }
     assert(withValue > 0, "corpus must exercise value-carrying operations")
     // `delta` is carried only by UpdateLongBy, which is unreachable from any
-    // consensus path and retired to unreachable/authds/ (2026-08-04). Pinned at 0 so
-    // reactivating it trips here: restore this count AND the Long-exactness guard
-    // that used to live in the test below (the schema constrains `delta` to
-    // ^-?[0-9]+$, but not that it round-trips through Long).
+    // consensus path: its fixtures were retired on 2026-08-04 and deleted on
+    // 2026-11-16 (unreachable behaviour is irrelevant to SANTA). Pinned at 0 so a
+    // re-vendor that brings it back trips here.
     assertEquals(withDelta, 0,
-      "UpdateLongBy is retired to unreachable/authds/ — if it is reactivated, restore " +
-        "this count and the deleted 'deltas are decimal STRINGS, Long-exact' test")
+      "UpdateLongBy is unreachable from any consensus path: its fixtures do not belong in the corpus")
   }
 
   test("every entry's source names the fixture file it was built from") {
@@ -266,14 +264,13 @@ class VendoredAuthdsAvlVerifyTest extends munit.FunSuite {
     * That divergence was never observable by consensus: `UnknownModification`,
     * `UpdateLongBy` and `RemoveIfExists` have ZERO fully-qualified references in
     * sigma-state 6.0.3 or ergo-core, so no ErgoScript or node path can construct
-    * them. The 13 fixtures exercising them are retired to `unreachable/authds/`
-    * (see that directory's README for the evidence and how to bring them back);
-    * the finding is retained and reframed at
-    * docs/findings/authds-unknownmodification-jvm-vs-rust.md.
+    * them. The 13 fixtures exercising them were retired on 2026-08-04 and deleted
+    * on 2026-11-16 (unreachable behaviour is irrelevant to SANTA); the finding is
+    * retained and reframed at docs/findings/authds-unknownmodification-jvm-vs-rust.md.
     *
     * An empty set is the strongest form of this pin: ANY divergence now fails the
     * test as a new finding. Do not add to it without demonstrating the behaviour is
-    * consensus-reachable — an unreachable one belongs in `unreachable/`, and a
+    * consensus-reachable — an unreachable one is deleted from the corpus, and a
     * reachable one belongs in `docs/findings/`. */
   private val KnownDivergences: Set[String] = Set.empty
 

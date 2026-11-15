@@ -412,7 +412,7 @@ Two further limits, surfaced building the runner arms:
 | vixen (arkadianet @ `a36bbb47`) | n/a | 26/26 | 30/30 | 26/26 | **17** |
 
 **The corpus shrank from 60 to 47 on 2026-08-04**, when 13 `avl_verify` fixtures were
-retired to [`unreachable/`](../../unreachable/README.md): they exercise
+retired (and on 2026-11-16 deleted, as unreachable behaviour is irrelevant to SANTA): they exercise
 `UnknownModification`, `UpdateLongBy` and `RemoveIfExists`, which have **zero**
 fully-qualified references in sigma-state 6.0.3 or ergo-core and so cannot be
 constructed by any consensus path. With them gone dasher reaches red 0 — ergots matches
