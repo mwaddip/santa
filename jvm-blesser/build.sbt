@@ -94,12 +94,14 @@ lazy val jvmBlesser = (project in file("."))
     javaOptions ++= runnerJavaOptions,
     // Rudolph runs as plain `java` (runners/rudolph/santa-run), outside sbt, so a resource bound (santa-bound) covers
     // the Runner and not sbt or the build: this writes the arguments it runs with, one per line. MaxRAMPercentage=75
-    // sizes the heap to 3/4 of the unit's memory limit (the JVM's default is 1/4); it is the run line's alone, so the
-    // test forks keep the default.
+    // sizes the heap to 3/4 of the unit's memory limit (the JVM's default is 1/4). ExitOnOutOfMemoryError: the Runner
+    // catches Throwable per entry (EvalCore), so a heap OutOfMemoryError would grade `errored`, a false green the
+    // control guard cannot see; exiting (status 3) makes it a crash santa-bound records. Both are the run line's
+    // alone, so the test forks keep the defaults.
     rudolphJavaArgs := {
       val f = target.value / "rudolph-java-args"
       val cp = (Runtime / fullClasspath).value.files.map(_.getAbsolutePath).mkString(java.io.File.pathSeparator)
-      IO.writeLines(f, runnerJavaOptions ++ Seq("-XX:MaxRAMPercentage=75", "-cp", cp))
+      IO.writeLines(f, runnerJavaOptions ++ Seq("-XX:MaxRAMPercentage=75", "-XX:+ExitOnOutOfMemoryError", "-cp", cp))
       f
     }
   )
