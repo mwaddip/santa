@@ -70,6 +70,16 @@
     {"name": "reject-expected-not-implemented-is-coverage",
      "actual":   {"bytes_hex": null, "error": "not-implemented"},
      "expected": {"bytes_hex": "1a0168", "error": "errored"},
-     "verdict":  {"kind": "coverage", "tag": "not-implemented"}}
+     "verdict":  {"kind": "coverage", "tag": "not-implemented"}},
+
+    {"name": "exceeded-on-accept-is-coal",
+     "actual":   {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "expected": {"bytes_hex": "c0843d09"},
+     "verdict":  {"kind": "exceeded", "limit": "memory"}},
+
+    {"name": "exceeded-on-reject-is-coal-not-nice",
+     "actual":   {"error": "exceeded", "limit": "time", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "expected": {"bytes_hex": "1a0168", "error": "errored"},
+     "verdict":  {"kind": "exceeded", "limit": "time"}}
   ]
 }

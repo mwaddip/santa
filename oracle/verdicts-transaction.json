@@ -41,6 +41,16 @@
      "description": "BY DESIGN: errored on a reject vector is coal, not a clean rejection. The tx tier explicitly separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null). Differs from the eval reject arm where errored IS the clean reject.",
      "expected": {"valid": false, "cost": null,  "reason": "script evaluation failed"},
      "actual":   {"valid": null,  "cost": null,  "error": "errored", "reason": "decode boom"},
-     "verdict":  {"kind": "transaction", "valid": "value", "cost": "n/a"}}
+     "verdict":  {"kind": "transaction", "valid": "value", "cost": "n/a"}},
+
+    {"name": "exceeded-on-accept-is-coal",
+     "expected": {"valid": true, "cost": null, "reason": null},
+     "actual":   {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "verdict":  {"kind": "exceeded", "limit": "memory"}},
+
+    {"name": "exceeded-on-reject-is-coal-not-nice",
+     "expected": {"valid": false, "cost": null, "reason": "script evaluation failed"},
+     "actual":   {"error": "exceeded", "limit": "time", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "verdict":  {"kind": "exceeded", "limit": "time"}}
   ]
 }

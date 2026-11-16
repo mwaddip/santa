@@ -42,14 +42,25 @@ fn err_is(v: &Value, tag: &str) -> bool {
     v.get("error").and_then(Value::as_str) == Some(tag)
 }
 
+/// A bounded file whose process hit its budget (runner-integration.md §3a). conform writes this actual from
+/// santa-bound's status record; a runner never emits it. Coal unconditionally, before any expected check, in every
+/// tier: no answer within the budget is not a clean rejection either.
+fn exceeded_verdict(actual: &Value) -> Option<Value> {
+    err_is(actual, "exceeded").then(|| json!({"kind": "exceeded", "limit": actual["limit"]}))
+}
+
 /// §6 per-entry verdict, as a JSON object. Coverage (not-implemented) takes
 /// precedence — the runner didn't engage the op, accept or reject. Otherwise reject vectors
 /// (expected errored) get one verdict; accept vectors get independent value + cost verdicts
 /// (cost graded only when claimed and value is nice). A null `actual` is a totality breach -> coal.
-/// A `panicked` actual (a runner crash) is coal unconditionally, before any expected check.
+/// A `panicked` actual (a runner crash) is coal unconditionally, before any expected check; so is
+/// `exceeded` (a budget hit, written by conform, never by a runner).
 pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
     if actual.is_null() {
         return json!({"kind": "accept", "value": "value", "cost": "n/a"});
+    }
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
     }
     if err_is(actual, "panicked") {
         // A runner that crashed on this entry. Unconditional coal — even against a
@@ -102,13 +113,17 @@ pub fn grade(actual: &Value, expected: &Value, claims_cost: bool) -> Value {
 /// value/cost split (the wire tier has no cost dimension). For a round-trip vector a non-null
 /// `errored` / a byte mismatch / a null actual (totality breach) is differ (coal).
 /// `not-implemented` (no serializer for this kind) and `panicked` (a runner crash) reuse the eval
-/// `coverage`/`panicked` verdict shapes, so conform tallies them uniformly across tiers.
+/// `coverage`/`panicked` verdict shapes, so conform tallies them uniformly across tiers. `exceeded` (a budget hit,
+/// written by conform, never by a runner) is coal unconditionally, before either arm.
 pub fn grade_wire(actual: &Value, expected: &Value) -> Value {
     if actual.is_null() {
         // A reject-expected vector reads a null actual as a totality breach (coal), same as round-trip:
         // a runner that emits nothing did not cleanly reject.
         return json!({"kind": if err_is(expected, "errored") { "reject" } else { "roundtrip" },
             "verdict": "differ"});
+    }
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
     }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
@@ -162,10 +177,14 @@ fn hex_eq(a: Option<&Value>, b: Option<&Value>) -> bool {
 ///
 /// Returns a verdict object in the same vocabulary as `grade` and `grade_wire` so `conform` can
 /// tally all tiers uniformly:
+/// - `{"kind": "exceeded", "limit": "memory"|"time"}` (a budget hit, written by conform; coal unconditionally)
 /// - `{"kind": "panicked"}`
 /// - `{"kind": "coverage", "tag": "not-implemented"}`
 /// - `{"kind": "transaction", "valid": "nice"|"value", "cost": "nice"|"cost"|"n/a"}`
 pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
+    }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
     }
