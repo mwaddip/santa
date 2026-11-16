@@ -115,7 +115,8 @@ The orchestrator stays **toolchain-agnostic** — `./conform` never learns a run
 invokes `santa-run`. The pin lives **with the runner** (presence-as-state): drop a dir in, it carries
 its toolchain; remove it, nothing dangles. Deliberately **per-runner, not a shared union** — two
 same-language runners (`blitzen-develop`/`blitzen-eni`) can pin different versions, which one flattened
-`[tools]` could not. **Bootstrap deps** (assumed, not provisioned): `mise` and `git`. Everything else
+`[tools]` could not. **Bootstrap deps** (assumed, not provisioned): `mise`, `git`, and a systemd user manager on
+cgroup v2 with the memory controller delegated and swap accounted (§3a; `santa-bound` checks it). Everything else
 self-provisions — each runner its own toolchain (above), and SANTA's own tooling (the `conform` +
 `validate` + `santa-check` rust workspace under `tools/`) via the wrappers' `mise exec` against
 `tools/mise.toml`. CI installs mise via `jdx/mise-action`; `mise install` may delegate to a native
@@ -139,7 +140,9 @@ budget at its top level:
   service, so systemd enforces the bound from outside the process (`MemoryMax`, `MemorySwapMax=0`, `RuntimeMaxSec`,
   `TimeoutStopSec=5`). The files without `limits` are ONE unit under the **safety ceiling (4096 MiB, 600 s)**; each
   bounded file is its own unit under its budget. A unit gets the caller's whole environment and working directory.
-  It never runs anything unbounded: if it cannot create a unit, the runner is reported ⚠️.
+  It never runs anything unbounded: before any unit it runs a probe unit that reads its own `memory.max` and
+  `memory.swap.max` back (`systemd-run` accepts `MemoryMax=` even where the user manager cannot enforce it), and if
+  the bound is not applied, or a unit cannot be created, the runner is reported ⚠️.
 - **A bounded file whose process hits its budget grades `exceeded`** (`{"kind": "exceeded", "limit": "memory" |
   "time"}`), coal unconditionally, on that entry alone; the column survives. conform writes that actual from
   santa-bound's status record (`{"error": "exceeded", "limit": …, "budget": {…}}`), whatever file the process left:

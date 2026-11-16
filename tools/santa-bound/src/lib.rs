@@ -155,6 +155,41 @@ pub fn run_unit(
     Ok(outcome)
 }
 
+/// The probe's reading of its own cgroup: `memory.max` (bytes) then `memory.swap.max`. Ok iff systemd applied a
+/// `MemoryMax=<memory_mb>M` and `MemorySwapMax=0` to it.
+pub fn check_probe(out: &str, memory_mb: u64) -> Result<(), String> {
+    let mut l = out.lines().map(str::trim);
+    let (mem, swap) = (l.next().unwrap_or(""), l.next().unwrap_or(""));
+    let want = (memory_mb << 20).to_string();
+    if mem == want && swap == "0" {
+        return Ok(());
+    }
+    Err(format!(
+        "systemd did not apply the memory bound to a user unit (memory.max {mem:?}, memory.swap.max {swap:?}; want \
+         {want:?}, \"0\"): the user manager needs cgroup v2 with the memory controller delegated and swap accounted. \
+         santa-bound never runs a file unbounded"
+    ))
+}
+
+/// `systemd-run --user` accepts `MemoryMax=` even where the user manager has no memory controller, and the unit then
+/// runs unbounded. So before any unit runs, a probe unit reads its own cgroup's limits back.
+pub fn check_enforced() -> Result<(), String> {
+    let out = Command::new("systemd-run")
+        .args(["--user", "--wait", "--pipe", "--quiet", "--collect"])
+        .args(["-p", "MemoryMax=64M", "-p", "MemorySwapMax=0", "-p", "RuntimeMaxSec=30", "--"])
+        .args(["/bin/sh", "-c", "cg=$(cut -d: -f3 /proc/self/cgroup); cat /sys/fs/cgroup$cg/memory.max /sys/fs/cgroup$cg/memory.swap.max"])
+        .output()
+        .map_err(|e| format!("cannot start systemd-run: {e}"))?;
+    if !out.status.success() {
+        return Err(format!(
+            "cannot run a systemd user unit ({}): {}",
+            out.status,
+            String::from_utf8_lossy(&out.stderr).trim()
+        ));
+    }
+    check_probe(&String::from_utf8_lossy(&out.stdout), 64)
+}
+
 /// One unit's status record.
 pub fn record(file: Option<&str>, limits: &Limits, o: &Outcome) -> Value {
     let mut r = Map::new();
@@ -183,6 +218,7 @@ fn write_json(p: &Path, v: &Value) -> Result<(), String> {
 /// The whole run (`args` = `<cmd> [args…] <vectors-dir> <out-dir>`, at least three). Ok(0): the ordinary unit
 /// succeeded (or there was none) and every bounded unit has a record; Ok(3): the ordinary unit did not succeed.
 pub fn run(args: &[String], status: &Path, env: &[(String, String)]) -> Result<i32, String> {
+    check_enforced()?;
     let (cmd, dirs) = args.split_at(args.len() - 2);
     let (vectors, out) = (Path::new(&dirs[0]), Path::new(&dirs[1]));
     let vectors = fs::canonicalize(vectors).map_err(|e| format!("{}: {e}", vectors.display()))?;
@@ -327,7 +363,21 @@ mod tests {
         assert_eq!(record(Some("c.json"), &L, &Outcome::Success), json!({"file": "c.json", "limits": l, "result": "success"}));
     }
 
+    #[test]
+    fn probe_reading() {
+        assert_eq!(check_probe("67108864\n0\n", 64), Ok(()));
+        let e = check_probe("max\nmax\n", 64);
+        assert!(e.as_ref().is_err_and(|e| e.contains("memory controller")), "{e:?}");
+        assert!(check_probe("67108864\n", 64).is_err(), "swap not accounted");
+        assert!(check_probe("", 64).is_err());
+    }
+
     // ---- live: systemd-run --user (present locally and on ubuntu-latest, tmp/resource-bounds/README.md) ----
+
+    #[test]
+    fn bounds_are_enforced_here() {
+        assert_eq!(check_enforced(), Ok(()));
+    }
 
     #[test]
     fn unit_success() {
