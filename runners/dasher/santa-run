@@ -32,6 +32,6 @@ if [ -d "$impl/ergots/packages/transaction" ]; then
 fi
 ln -sfn "$impl/ergots" "$TS/ergots-impl"
 (cd "$TS" && npm install --no-audit --no-fund >/dev/null 2>&1 && npm run build >/dev/null 2>&1)
-for f in "$VECTORS"/*.json; do
-  node "$TS/dist/runner.js" "$f" "$OUT/$(basename "$f")"
-done
+# One node per file, stopping at the first that fails (as under set -e); under santa-bound when SANTA_BOUND is set.
+${SANTA_BOUND:+"$SANTA_BOUND"} bash -c 'for f in "$1"/*.json; do node "$0" "$f" "$2/$(basename "$f")" || exit $?; done' \
+  "$TS/dist/runner.js" "$VECTORS" "$OUT"
