@@ -1909,6 +1909,103 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/SubstConstants.lift_by_class.json" : {
+      "accepts" : 489,
+      "entries" : 939,
+      "methods" : [
+        "101:2 Context.headers",
+        "101:3 Context.preHeader"
+      ],
+      "op" : "SubstConstants.lift_by_class",
+      "ops" : [
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "If",
+        "MapCollection",
+        "MethodCall",
+        "Self$",
+        "SubstConstants",
+        "Tuple",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 450,
+      "tree_shapes" : [
+        {
+          "accepts" : 163,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 128,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 163,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 128,
+          "tree_version" : 1
+        },
+        {
+          "accepts" : 163,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 128,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 66,
+      "version" : "v5"
+    },
+    "v5/authored/SubstConstants.template_tree_version.json" : {
+      "accepts" : 24,
+      "entries" : 42,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.template_tree_version",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 18,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 6,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 1
+        },
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/SubstConstants.type_var_name_range.json" : {
       "accepts" : 10,
       "entries" : 15,
@@ -9134,6 +9231,120 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/SubstConstants.lift_by_class_v6.json" : {
+      "accepts" : 674,
+      "entries" : 1252,
+      "methods" : [
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "106:9 SigmaDslBuilder.some"
+      ],
+      "op" : "SubstConstants.lift_by_class_v6",
+      "ops" : [
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "Context$",
+        "FuncValue",
+        "GetVar",
+        "Global$",
+        "If",
+        "MapCollection",
+        "MethodCall",
+        "Self$",
+        "SubstConstants",
+        "Tuple",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 578,
+      "tree_shapes" : [
+        {
+          "accepts" : 163,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 128,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 163,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 128,
+          "tree_version" : 1
+        },
+        {
+          "accepts" : 163,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 128,
+          "tree_version" : 2
+        },
+        {
+          "accepts" : 185,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 128,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 66,
+      "version" : "v6"
+    },
+    "v6/authored/SubstConstants.template_tree_version_v6.json" : {
+      "accepts" : 38,
+      "entries" : 56,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.template_tree_version_v6",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "SubstConstants"
+      ],
+      "provenance" : "authored",
+      "rejects" : 18,
+      "tree_shapes" : [
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 6,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 1
+        },
+        {
+          "accepts" : 8,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 2
+        },
+        {
+          "accepts" : 14,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/SubstConstants.type_var_name_range_v6.json" : {
       "accepts" : 21,
       "entries" : 30,
@@ -14985,7 +15196,9 @@
     },
     "101:2" : {
       "families" : [
-        "v5/authored/Context.properties.json"
+        "v5/authored/Context.properties.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json"
       ],
       "name" : "Context.headers"
     },
@@ -14993,8 +15206,10 @@
       "families" : [
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/captured/h1542-1b5c260a496a.json"
       ],
       "name" : "Context.preHeader"
@@ -15334,7 +15549,8 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
-        "v6/authored/Option.method_type_variable_names_v6.json"
+        "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json"
       ],
       "name" : "SigmaDslBuilder.some"
     },
@@ -17092,6 +17308,7 @@
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Coll_apply_method_equivalence.json",
         "v5/spec/Coll_getOrElse_method_equivalence.json",
         "v6/authored/ArithOp.mixed_width.json",
@@ -17111,6 +17328,7 @@
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -17318,6 +17536,8 @@
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/SubstConstants.template_tree_version.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
@@ -17388,6 +17608,8 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/SubstConstants.template_tree_version_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -17483,6 +17705,8 @@
         "v5/authored/SelectField.non_pair.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/SubstConstants.template_tree_version.json",
         "v5/authored/SubstConstants.type_var_name_range.json",
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
@@ -17569,6 +17793,8 @@
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/SubstConstants.template_tree_version_v6.json",
         "v6/authored/SubstConstants.type_var_name_range_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
@@ -17765,6 +17991,7 @@
         "v5/authored/Context.properties.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
@@ -17775,6 +18002,7 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -18424,6 +18652,7 @@
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -18549,6 +18778,7 @@
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -18770,6 +19000,7 @@
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -18881,6 +19112,7 @@
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
@@ -18969,6 +19201,7 @@
     },
     "Global$" : {
       "families" : [
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/Xor.unequal_sides.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
@@ -19024,6 +19257,7 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Xor.per_item_cost_base.json",
@@ -19121,6 +19355,7 @@
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v5/spec/Coll_filter_with_nested_If.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -19169,6 +19404,7 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -19423,6 +19659,7 @@
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Coll_map_method_equivalence.json",
         "v5/spec/Coll_map_with_nested_if.json",
         "v5/spec/nested_loops_map_inside_fold.json",
@@ -19435,6 +19672,7 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
@@ -19498,6 +19736,7 @@
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/Xor.unequal_sides.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/Box_properties_equivalence.json",
@@ -19608,6 +19847,7 @@
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -20340,6 +20580,7 @@
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
@@ -20356,6 +20597,7 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -20671,6 +20913,8 @@
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/SubstConstants.template_tree_version.json",
         "v5/authored/SubstConstants.type_var_name_range.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
@@ -20680,6 +20924,8 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/SubstConstants.template_tree_version_v6.json",
         "v6/authored/SubstConstants.type_var_name_range_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
@@ -20724,6 +20970,7 @@
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/Tuple.checkType_unsupported.json",
         "v5/authored/Tuple.non_pair_arity3.json",
         "v5/spec/BigInt_methods_equivalence.json",
@@ -20754,6 +21001,7 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.small_tuples.json",
@@ -21003,6 +21251,7 @@
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/Option.map.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
@@ -21145,6 +21394,7 @@
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -21306,12 +21556,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 5532,
+    "accepts" : 6757,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 9873,
-    "files" : 407,
-    "rejects" : 4341,
-    "unwalked" : 2293
+    "entries" : 12162,
+    "files" : 411,
+    "rejects" : 5405,
+    "unwalked" : 2425
   }
 }

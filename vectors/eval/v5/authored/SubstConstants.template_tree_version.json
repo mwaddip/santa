@@ -1,0 +1,2450 @@
+{
+  "schema" : "santa-eval/v6-fullctx",
+  "op" : "SubstConstants.template_tree_version",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-substconstants-lift",
+  "entries" : [
+    {
+      "name" : "template-ubi-consts-int-written-v0-a2#0",
+      "script" : "[template|ubi-consts|int-written|v0] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v0-a2#1",
+      "script" : "[template|ubi-consts|nothing|v0] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v0-a2#2",
+      "script" : "[template|hdr-const|int-written|v0] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v0-a2#3",
+      "script" : "[template|hdr-const|nothing|v0] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v0-a2#4",
+      "script" : "[template|option-const|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v0-a2#5",
+      "script" : "[template|option-const|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v0-a2#6",
+      "script" : "[template|sized-v3-longs|int-written|v0] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v0-a2#7",
+      "script" : "[template|sized-v3-longs|nothing|v0] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v0-a2#8",
+      "script" : "[template|sized-v1-int|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 1901040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v0-a2#9",
+      "script" : "[template|sized-v1-int|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 190104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e07190501040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v0-a2#10",
+      "script" : "[template|sized-v2-int|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a01040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v0-a2#11",
+      "script" : "[template|sized-v2-int|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a0104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v0-a2#12",
+      "script" : "[template|unsized-v0-int|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v0-a2#13",
+      "script" : "[template|unsized-v0-int|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00740e061001040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-ubi-consts-int-written-v1-a2#14",
+      "script" : "[template|ubi-consts|int-written|v1] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 2",
+      "tree_bytes_hex" : "091a740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v1-a2#15",
+      "script" : "[template|ubi-consts|nothing|v1] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0917740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v1-a2#16",
+      "script" : "[template|hdr-const|int-written|v1] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 2",
+      "tree_bytes_hex" : "09eb01740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v1-a2#17",
+      "script" : "[template|hdr-const|nothing|v1] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 2",
+      "tree_bytes_hex" : "09e801740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v1-a2#18",
+      "script" : "[template|option-const|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0915740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v1-a2#19",
+      "script" : "[template|option-const|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 2",
+      "tree_bytes_hex" : "0912740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v1-a2#20",
+      "script" : "[template|sized-v3-longs|int-written|v1] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "0918740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v1-a2#21",
+      "script" : "[template|sized-v3-longs|nothing|v1] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "0915740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v1-a2#22",
+      "script" : "[template|sized-v1-int|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 1901040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "0912740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v1-a2#23",
+      "script" : "[template|sized-v1-int|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 190104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "090f740e07190501040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v1-a2#24",
+      "script" : "[template|sized-v2-int|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a01040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "0912740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v1-a2#25",
+      "script" : "[template|sized-v2-int|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a0104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "090f740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v1-a2#26",
+      "script" : "[template|unsized-v0-int|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "0911740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v1-a2#27",
+      "script" : "[template|unsized-v0-int|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 2",
+      "tree_bytes_hex" : "090e740e061001040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-ubi-consts-int-written-v2-a2#28",
+      "script" : "[template|ubi-consts|int-written|v2] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a1a740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v2-a2#29",
+      "script" : "[template|ubi-consts|nothing|v2] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a17740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v2-a2#30",
+      "script" : "[template|hdr-const|int-written|v2] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 2",
+      "tree_bytes_hex" : "0aeb01740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v2-a2#31",
+      "script" : "[template|hdr-const|nothing|v2] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 2",
+      "tree_bytes_hex" : "0ae801740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v2-a2#32",
+      "script" : "[template|option-const|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a15740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v2-a2#33",
+      "script" : "[template|option-const|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a12740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v2-a2#34",
+      "script" : "[template|sized-v3-longs|int-written|v2] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a18740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v2-a2#35",
+      "script" : "[template|sized-v3-longs|nothing|v2] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a15740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v2-a2#36",
+      "script" : "[template|sized-v1-int|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 1901040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a12740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v2-a2#37",
+      "script" : "[template|sized-v1-int|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 190104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a0f740e07190501040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v2-a2#38",
+      "script" : "[template|sized-v2-int|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a01040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a12740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v2-a2#39",
+      "script" : "[template|sized-v2-int|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a0104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a0f740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v2-a2#40",
+      "script" : "[template|unsized-v0-int|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a11740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v2-a2#41",
+      "script" : "[template|unsized-v0-int|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 2",
+      "tree_bytes_hex" : "0a0e740e061001040273001000830004",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    }
+  ]
+}

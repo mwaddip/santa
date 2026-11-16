@@ -1,0 +1,5314 @@
+{
+  "schema" : "santa-eval/v6-fullctx",
+  "op" : "SubstConstants.template_tree_version_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-substconstants-lift",
+  "entries" : [
+    {
+      "name" : "template-ubi-consts-int-written-v0-a3#0",
+      "script" : "[template|ubi-consts|int-written|v0] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v0-a3#1",
+      "script" : "[template|ubi-consts|nothing|v0] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v0-a3#2",
+      "script" : "[template|hdr-const|int-written|v0] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v0-a3#3",
+      "script" : "[template|hdr-const|nothing|v0] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v0-a3#4",
+      "script" : "[template|option-const|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v0-a3#5",
+      "script" : "[template|option-const|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v0-a3#6",
+      "script" : "[template|sized-v3-longs|int-written|v0] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v0-a3#7",
+      "script" : "[template|sized-v3-longs|nothing|v0] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v0-a3#8",
+      "script" : "[template|sized-v1-int|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 1901040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v0-a3#9",
+      "script" : "[template|sized-v1-int|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 190104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e07190501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v0-a3#10",
+      "script" : "[template|sized-v2-int|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a01040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v0-a3#11",
+      "script" : "[template|sized-v2-int|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a0104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v0-a3#12",
+      "script" : "[template|unsized-v0-int|int-written|v0] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v0-a3#13",
+      "script" : "[template|unsized-v0-int|nothing|v0] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e061001040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-ubi-consts-int-written-v1-a3#14",
+      "script" : "[template|ubi-consts|int-written|v1] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 3",
+      "tree_bytes_hex" : "091a740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v1-a3#15",
+      "script" : "[template|ubi-consts|nothing|v1] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0917740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v1-a3#16",
+      "script" : "[template|hdr-const|int-written|v1] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 3",
+      "tree_bytes_hex" : "09eb01740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v1-a3#17",
+      "script" : "[template|hdr-const|nothing|v1] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 3",
+      "tree_bytes_hex" : "09e801740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v1-a3#18",
+      "script" : "[template|option-const|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0915740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v1-a3#19",
+      "script" : "[template|option-const|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v1, activated 3",
+      "tree_bytes_hex" : "0912740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v1-a3#20",
+      "script" : "[template|sized-v3-longs|int-written|v1] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "0918740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v1-a3#21",
+      "script" : "[template|sized-v3-longs|nothing|v1] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "0915740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v1-a3#22",
+      "script" : "[template|sized-v1-int|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 1901040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "0912740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v1-a3#23",
+      "script" : "[template|sized-v1-int|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 190104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "090f740e07190501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v1-a3#24",
+      "script" : "[template|sized-v2-int|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a01040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "0912740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v1-a3#25",
+      "script" : "[template|sized-v2-int|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a0104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "090f740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v1-a3#26",
+      "script" : "[template|unsized-v0-int|int-written|v1] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "0911740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v1-a3#27",
+      "script" : "[template|unsized-v0-int|nothing|v1] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v1, activated 3",
+      "tree_bytes_hex" : "090e740e061001040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 1
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-ubi-consts-int-written-v2-a3#28",
+      "script" : "[template|ubi-consts|int-written|v2] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a1a740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v2-a3#29",
+      "script" : "[template|ubi-consts|nothing|v2] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — THROWS AT EVALUATION (SerializerException: Cannot deserialize primitive type with code 9). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a17740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v2-a3#30",
+      "script" : "[template|hdr-const|int-written|v2] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 3",
+      "tree_bytes_hex" : "0aeb01740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v2-a3#31",
+      "script" : "[template|hdr-const|nothing|v2] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Not defined DataSerializer for type SHeader). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 3",
+      "tree_bytes_hex" : "0ae801740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v2-a3#32",
+      "script" : "[template|option-const|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a15740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v2-a3#33",
+      "script" : "[template|option-const|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — THROWS AT EVALUATION (SerializerException: Data value of the type with the code 36 cannot be deserialized.). TEMPLATE: its constants are read at the evaluated tree's version, where this one has no reading.  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a12740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v2-a3#34",
+      "script" : "[template|sized-v3-longs|int-written|v2] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a18740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v2-a3#35",
+      "script" : "[template|sized-v3-longs|nothing|v2] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a15740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v2-a3#36",
+      "script" : "[template|sized-v1-int|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 1901040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a12740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v2-a3#37",
+      "script" : "[template|sized-v1-int|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 190104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a0f740e07190501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v2-a3#38",
+      "script" : "[template|sized-v2-int|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a01040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a12740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v2-a3#39",
+      "script" : "[template|sized-v2-int|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a0104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a0f740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v2-a3#40",
+      "script" : "[template|unsized-v0-int|int-written|v2] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a11740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v2-a3#41",
+      "script" : "[template|unsized-v0-int|nothing|v2] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v2, activated 3",
+      "tree_bytes_hex" : "0a0e740e061001040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-ubi-consts-int-written-v3-a3#42",
+      "script" : "[template|ubi-consts|int-written|v3] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, an Int written over its Int constant — the bytes 1b0d04090107090108040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1a740e0f1b0d04090107090108040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 13
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 9
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 9
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-ubi-consts-nothing-v3-a3#43",
+      "script" : "[template|ubi-consts|nothing|v3] `substConstants(template, positions, newValues)` with a template holding UnsignedBigInt constants, nothing substituted — the bytes 1b0d04090107090108040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b17740e0f1b0d040901070901080402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 13
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 9
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 9
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-hdr-const-int-written-v3-a3#44",
+      "script" : "[template|hdr-const|int-written|v3] `substConstants(template, positions, newValues)` with a template holding a Header constant, an Int written over its Int constant — the bytes 1bdc010268050101010101010101010101010101010101010101010101010101… (223 bytes) at cost 335. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0beb01740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010203040506070804027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : -36
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 104
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : -24
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 121
+            },
+            {
+              "kind" : "Byte",
+              "value" : -66
+            },
+            {
+              "kind" : "Byte",
+              "value" : 102
+            },
+            {
+              "kind" : "Byte",
+              "value" : 126
+            },
+            {
+              "kind" : "Byte",
+              "value" : -7
+            },
+            {
+              "kind" : "Byte",
+              "value" : -36
+            },
+            {
+              "kind" : "Byte",
+              "value" : -69
+            },
+            {
+              "kind" : "Byte",
+              "value" : -84
+            },
+            {
+              "kind" : "Byte",
+              "value" : 85
+            },
+            {
+              "kind" : "Byte",
+              "value" : -96
+            },
+            {
+              "kind" : "Byte",
+              "value" : 98
+            },
+            {
+              "kind" : "Byte",
+              "value" : -107
+            },
+            {
+              "kind" : "Byte",
+              "value" : -50
+            },
+            {
+              "kind" : "Byte",
+              "value" : -121
+            },
+            {
+              "kind" : "Byte",
+              "value" : 11
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : -101
+            },
+            {
+              "kind" : "Byte",
+              "value" : -4
+            },
+            {
+              "kind" : "Byte",
+              "value" : -37
+            },
+            {
+              "kind" : "Byte",
+              "value" : 45
+            },
+            {
+              "kind" : "Byte",
+              "value" : -50
+            },
+            {
+              "kind" : "Byte",
+              "value" : 40
+            },
+            {
+              "kind" : "Byte",
+              "value" : -39
+            },
+            {
+              "kind" : "Byte",
+              "value" : 89
+            },
+            {
+              "kind" : "Byte",
+              "value" : -14
+            },
+            {
+              "kind" : "Byte",
+              "value" : -127
+            },
+            {
+              "kind" : "Byte",
+              "value" : 91
+            },
+            {
+              "kind" : "Byte",
+              "value" : 22
+            },
+            {
+              "kind" : "Byte",
+              "value" : -8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 23
+            },
+            {
+              "kind" : "Byte",
+              "value" : -104
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 335,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-hdr-const-nothing-v3-a3#45",
+      "script" : "[template|hdr-const|nothing|v3] `substConstants(template, positions, newValues)` with a template holding a Header constant, nothing substituted — the bytes 1bdc010268050101010101010101010101010101010101010101010101010101… (223 bytes) at cost 330. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0be801740edf011bdc01026805010101010101010101010101010101010101010101010101010101010101010102020202020202020202020202020202020202020202020202020202020202020303030303030303030303030303030303030303030303030303030303030303040404040404040404040404040404040404040404040404040404040404040404e80705050505050505050505050505050505050505050505050505050505050505050700000005000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102030405060708040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : -36
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 104
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : -24
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 121
+            },
+            {
+              "kind" : "Byte",
+              "value" : -66
+            },
+            {
+              "kind" : "Byte",
+              "value" : 102
+            },
+            {
+              "kind" : "Byte",
+              "value" : 126
+            },
+            {
+              "kind" : "Byte",
+              "value" : -7
+            },
+            {
+              "kind" : "Byte",
+              "value" : -36
+            },
+            {
+              "kind" : "Byte",
+              "value" : -69
+            },
+            {
+              "kind" : "Byte",
+              "value" : -84
+            },
+            {
+              "kind" : "Byte",
+              "value" : 85
+            },
+            {
+              "kind" : "Byte",
+              "value" : -96
+            },
+            {
+              "kind" : "Byte",
+              "value" : 98
+            },
+            {
+              "kind" : "Byte",
+              "value" : -107
+            },
+            {
+              "kind" : "Byte",
+              "value" : -50
+            },
+            {
+              "kind" : "Byte",
+              "value" : -121
+            },
+            {
+              "kind" : "Byte",
+              "value" : 11
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : -101
+            },
+            {
+              "kind" : "Byte",
+              "value" : -4
+            },
+            {
+              "kind" : "Byte",
+              "value" : -37
+            },
+            {
+              "kind" : "Byte",
+              "value" : 45
+            },
+            {
+              "kind" : "Byte",
+              "value" : -50
+            },
+            {
+              "kind" : "Byte",
+              "value" : 40
+            },
+            {
+              "kind" : "Byte",
+              "value" : -39
+            },
+            {
+              "kind" : "Byte",
+              "value" : 89
+            },
+            {
+              "kind" : "Byte",
+              "value" : -14
+            },
+            {
+              "kind" : "Byte",
+              "value" : -127
+            },
+            {
+              "kind" : "Byte",
+              "value" : 91
+            },
+            {
+              "kind" : "Byte",
+              "value" : 22
+            },
+            {
+              "kind" : "Byte",
+              "value" : -8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 23
+            },
+            {
+              "kind" : "Byte",
+              "value" : -104
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 6
+            },
+            {
+              "kind" : "Byte",
+              "value" : 7
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 330,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-option-const-int-written-v3-a3#46",
+      "script" : "[template|option-const|int-written|v3] `substConstants(template, positions, newValues)` with a template holding an option constant, an Int written over its Int constant — the bytes 1b0802280102040a7300 at cost 335. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b15740e0a1b080228010204027300100102830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 40
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 335,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-option-const-nothing-v3-a3#47",
+      "script" : "[template|option-const|nothing|v3] `substConstants(template, positions, newValues)` with a template holding an option constant, nothing substituted — the bytes 1b080228010204027300 at cost 330. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b12740e0a1b0802280102040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 8
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 40
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 330,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-int-written-v3-a3#48",
+      "script" : "[template|sized-v3-longs|int-written|v3] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, an Int written over its Int constant — the bytes 1b0b04050e0510040a04047300 at cost 535. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b18740e0d1b0b04050e0510040204047300100104830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 11
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 535,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v3-longs-nothing-v3-a3#49",
+      "script" : "[template|sized-v3-longs|nothing|v3] `substConstants(template, positions, newValues)` with a template holding Long constants under a sized v3 header, nothing substituted — the bytes 1b0b04050e0510040204047300 at cost 530. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b15740e0d1b0b04050e05100402040473001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 27
+            },
+            {
+              "kind" : "Byte",
+              "value" : 11
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 14
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 530,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-int-written-v3-a3#50",
+      "script" : "[template|sized-v1-int|int-written|v3] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, an Int written over its Int constant — the bytes 190501040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b12740e0719050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v1-int-nothing-v3-a3#51",
+      "script" : "[template|sized-v1-int|nothing|v3] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v1 header, nothing substituted — the bytes 19050104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0f740e07190501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 25
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-int-written-v3-a3#52",
+      "script" : "[template|sized-v2-int|int-written|v3] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, an Int written over its Int constant — the bytes 1a0501040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b12740e071a050104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-sized-v2-int-nothing-v3-a3#53",
+      "script" : "[template|sized-v2-int|nothing|v3] `substConstants(template, positions, newValues)` with a template holding an Int under a sized v2 header, nothing substituted — the bytes 1a050104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0f740e071a0501040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 26
+            },
+            {
+              "kind" : "Byte",
+              "value" : 5
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-int-written-v3-a3#54",
+      "script" : "[template|unsized-v0-int|int-written|v3] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, an Int written over its Int constant — the bytes 1001040a7300 at cost 235. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b11740e06100104027300100100830104040a",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 10
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 235,
+        "error" : null
+      }
+    },
+    {
+      "name" : "template-unsized-v0-int-nothing-v3-a3#55",
+      "script" : "[template|unsized-v0-int|nothing|v3] `substConstants(template, positions, newValues)` with a template holding an Int under an unsized v0 header, nothing substituted — the bytes 100104027300 at cost 230. TEMPLATE: read and written back under the evaluated tree's version (a size field only from version 3).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0e740e061001040273001000830004",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "8094ebdc030008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010000d13c239cafa64fd4a8b41c55e3e124c8ea1b88cace671794d69bdf4bb7b4e79a00"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+        ],
+        "headers" : [
+          "04c1caac521fe75f5af2aeda4f5acd787293f23209b465bed62d1851d2d4994a784d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "0411d13a2450fd4a5eed3efd0d319afa093bd943a1f4e43c56bcdcb083dc3b0e0e80a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 115
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    }
+  ]
+}

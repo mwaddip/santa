@@ -56,15 +56,15 @@ object AuthoredTxTreeVersion {
   private def b(h: String): Array[Byte] = Base16.decode(h).get
 
   /** A block context: its version, the nine headers a script at H sees (NEWEST-first) and the preHeader. */
-  private final case class Ctx(blockVersion: Int, headersHex: Seq[String], preHeader: Json)
-  private val Block4 = Ctx(4, AuthoredTxStorageRent.headersHex, AuthoredTxStorageRent.preHeader)
-  private val Block3: Ctx = blockCtx(3)
+  private[santa] final case class Ctx(blockVersion: Int, headersHex: Seq[String], preHeader: Json)
+  private[santa] val Block4 = Ctx(4, AuthoredTxStorageRent.headersHex, AuthoredTxStorageRent.preHeader)
+  private[santa] val Block3: Ctx = blockCtx(3)
 
   /** The rent context at `version` (block 3 above; block-version edges: 2, 5), the preHeader set to it.
     * A header's id covers its version, so the whole ten-header window is re-linked oldest first before the newest
     * nine are taken. Block version 1 is not representable — UpcomingStateContext's build throws before any
     * verdict — so it is not here. */
-  private def blockCtx(version: Int): Ctx = {
+  private[santa] def blockCtx(version: Int): Ctx = {
     val oldestFirst = AuthoredTxStorageRent.windowHex.map(h => HeaderSerializer.parseBytes(b(h))).reverse
     val relinked = oldestFirst.tail.foldLeft(Vector(oldestFirst.head.copy(version = version.toByte))) { (acc, h) =>
       acc :+ h.copy(version = version.toByte, parentId = acc.last.id)

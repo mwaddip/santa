@@ -956,7 +956,20 @@ object EvalCore {
       inputsHex: Seq[String], dataInputsHex: Seq[String], outputsHex: Seq[String],
       headersHex: Seq[String], preHeaderHex: String,
       inputExtensionsJson: Seq[Map[Int, Json]], lastBlockUtxoRootHex: Option[String],
-      activated: Byte): (Byte, Either[String, (Json, Long)]) =
+      activated: Byte): (Byte, Either[String, (Json, Long)]) = {
+    val (treeVer, outcome) = evalFullContextOutcome(treeBytesHex, selfIndex, inputsHex, dataInputsHex, outputsHex,
+      headersHex, preHeaderHex, inputExtensionsJson, lastBlockUtxoRootHex, activated)
+    (treeVer, outcome.left.map(errClass))
+  }
+
+  /** evalFullContext with the failure kept as the Throwable itself, for a blesser that states WHY an entry is refused
+    * (its cause chain); evalFullContext is this with the failure reduced to `errClass`. */
+  def evalFullContextOutcome(
+      treeBytesHex: String, selfIndex: Int,
+      inputsHex: Seq[String], dataInputsHex: Seq[String], outputsHex: Seq[String],
+      headersHex: Seq[String], preHeaderHex: String,
+      inputExtensionsJson: Seq[Map[Int, Json]], lastBlockUtxoRootHex: Option[String],
+      activated: Byte): (Byte, Either[Throwable, (Json, Long)]) =
     try {
       val bytes   = Base16.decode(treeBytesHex).get
       val tree    = sigma.santa.LenientErgoTree.deserialize(bytes)
@@ -992,6 +1005,6 @@ object EvalCore {
           (v, acc.totalCost.value)
         }
         (treeVer, Right((valueToJson(rawValue), jitCost.toLong)))
-      } catch { case t: Throwable => (treeVer, Left(errClass(t))) }
-    } catch { case t: Throwable => (0.toByte, Left(errClass(t))) }
+      } catch { case t: Throwable => (treeVer, Left(t)) }
+    } catch { case t: Throwable => (0.toByte, Left(t)) }
 }

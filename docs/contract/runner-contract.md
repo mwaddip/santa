@@ -191,6 +191,12 @@ reconstruction rules, which every conforming implementation of this schema must 
 - **Consistency constraint:** `preHeader.parentId == headers[0].id`. Real harvested
   envelopes satisfy this inherently (the spending block's preHeader references its
   parent, which is `headers[0]`); the control surface-verifies it.
+- **Authored entries** (2026-11-16: the `SubstConstants.lift_by_class` and `template_tree_version` families) carry
+  a synthetic but internally consistent envelope: ONE header (the newest of the transaction tier's storage-rent
+  window at block version `activated + 1`), a pre-header whose parent is that header and whose version is
+  `activated + 1`, a P2PK `SELF` without registers, no context variable and no outputs. They sit at activated 2 (the
+  `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
+  activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 
 ## 3. Preconditions, postconditions, invariants
 
