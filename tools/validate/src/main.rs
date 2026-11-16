@@ -274,6 +274,11 @@ fn main() -> ExitCode {
     errs += nipopow_path_guard(&root, &nipopow_files);
     errs += nipopow_actuals_guards(&nipopow_act_validator);
 
+    // Bounded files, every tier: `limits` within the ceilings and exactly one entry (santa_check::limits).
+    let all: Vec<(PathBuf, Value)> =
+        json_files(&root.join("vectors")).into_iter().map(|f| { let d = load(&f); (f, d) }).collect();
+    errs += limits_guard(&all);
+
     println!(
         "\n=== {} ===",
         if errs == 0 {
@@ -1251,6 +1256,26 @@ fn nipopow_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
 /// NiPoPoW actuals asymmetry guards: interlinks-ok carries interlinks + null error; prove-ok
 /// carries proofHex + null error; error non-null forces both verdict fields null; panicked
 /// carries note (forbidden elsewhere, mirroring block/wire/authds).
+/// A bounded file (top-level `limits`, runner-integration.md §3a) declares a budget within the ceilings (4096 MiB,
+/// 60 s) and holds exactly one entry. One `[WRONG]` line per file that does not.
+fn limits_guard(docs: &[(PathBuf, Value)]) -> u32 {
+    println!("\n[limits] bounded-file guard:");
+    let mut bad = 0;
+    let mut bounded = 0;
+    for (f, doc) in docs {
+        match santa_check::limits::check_bounded(doc) {
+            Ok(None) => {}
+            Ok(Some(_)) => bounded += 1,
+            Err(e) => {
+                bad += 1;
+                println!("  [WRONG] {}: {e}", f.display());
+            }
+        }
+    }
+    println!("[limits] {bounded} bounded file(s) ok, {bad} wrong");
+    bad
+}
+
 fn nipopow_actuals_guards(v: &Validator) -> u32 {
     let checks: &[(&str, Value, bool)] = &[
         ("interlinks-ok", json!({"i#0": {"interlinks": [["abababababababababababababababababababababababababababababababab"]], "error": null}}), true),
@@ -1280,6 +1305,38 @@ fn nipopow_actuals_guards(v: &Validator) -> u32 {
 mod tests {
     use super::*;
     use std::path::Path;
+
+    /// The seven vector schemas carry one `limits` definition, so a bounded file means the same in every tier.
+    #[test]
+    fn every_vector_schema_carries_the_same_limits_definition() {
+        let schema = |t: &str| {
+            load(&Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("../../schema/santa-{t}.vector.schema.json")))
+        };
+        let eval = schema("eval")["properties"]["limits"].clone();
+        assert_eq!(eval["required"], json!(["memory_mb", "wall_s"]));
+        for t in ["wire", "transaction", "block", "chain", "authds", "nipopow"] {
+            assert_eq!(schema(t)["properties"]["limits"], eval, "{t}");
+        }
+    }
+
+    #[test]
+    fn limits_guard_counts_each_bad_bounded_file() {
+        let doc = |limits: Option<Value>, n: usize| {
+            let mut d = json!({ "entries": vec![json!({}); n] });
+            if let Some(l) = limits {
+                d["limits"] = l;
+            }
+            d
+        };
+        let ok = json!({ "memory_mb": 1024, "wall_s": 10 });
+        let docs = vec![
+            (PathBuf::from("ok.json"), doc(Some(ok.clone()), 1)),
+            (PathBuf::from("two.json"), doc(Some(ok), 2)),
+            (PathBuf::from("over.json"), doc(Some(json!({ "memory_mb": 4097, "wall_s": 10 })), 1)),
+            (PathBuf::from("ordinary.json"), doc(None, 3)),
+        ];
+        assert_eq!(limits_guard(&docs), 2);
+    }
 
     /// One eval file under vectors/eval/<version>/authored/, entries at the given (activated, ergoTree) pairs.
     fn eval_guard_on(version: &str, versions: &[(i64, i64)], tag: &str) -> u32 {
