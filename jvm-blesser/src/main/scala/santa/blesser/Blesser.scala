@@ -14,7 +14,7 @@ object Blesser {
 
   /** Bless one fixture file under `activated`, returning the vector Json. */
   def blessFixture(inPath: String, activated: Byte): Json = {
-    val doc = io.circe.parser.parse(scala.io.Source.fromFile(inPath).mkString)
+    val doc = io.circe.parser.parse(scala.io.Source.fromFile(inPath)(scala.io.Codec.UTF8).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
     val op     = opFromPath(inPath)
     val inputs = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)

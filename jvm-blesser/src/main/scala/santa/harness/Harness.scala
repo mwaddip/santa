@@ -17,9 +17,9 @@ object Harness {
       System.err.println("usage: harness <vector.json> <actuals.json> [<runner-label>]")
       sys.exit(2)
     }
-    val vec   = io.circe.parser.parse(scala.io.Source.fromFile(args(0)).mkString)
+    val vec   = io.circe.parser.parse(scala.io.Source.fromFile(args(0))(scala.io.Codec.UTF8).mkString)
       .fold(e => sys.error(s"bad vector json: $e"), identity)
-    val act   = io.circe.parser.parse(scala.io.Source.fromFile(args(1)).mkString)
+    val act   = io.circe.parser.parse(scala.io.Source.fromFile(args(1))(scala.io.Codec.UTF8).mkString)
       .fold(e => sys.error(s"bad actuals json: $e"), identity)
     val label = args.lift(2).getOrElse("Rudolph (jvm)")
 

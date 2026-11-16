@@ -20,6 +20,19 @@ ThisBuild / organization := "io.santa"
 // by reflection). The gate is a build-capability switch, not a maintainer-only fence.
 val txBlesserEnabled = sys.env.get("SANTA_TX_BLESSER").exists(v => v == "1" || v.equalsIgnoreCase("true"))
 
+// The JVM options of every forked run: the Runner (rudolph) and the test forks share them.
+val runnerJavaOptions = Seq(
+  "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+  "--add-opens", "java.base/java.util=ALL-UNNAMED",
+  // HotSpot drops the message of an implicit exception (ArrayStoreException, ClassCastException, ...) once the
+  // throwing code is hot, so a blessed `reason` would depend on what ran before it. Always keep the message.
+  "-XX:-OmitStackTraceInFastThrow",
+  // JDK 17 takes its default charset from the locale; the vectors are UTF-8 JSON (JDK 18+ defaults to UTF-8).
+  "-Dfile.encoding=UTF-8"
+)
+
+lazy val rudolphJavaArgs = taskKey[File]("Writes target/rudolph-java-args: the JVM options and classpath rudolph runs with.")
+
 lazy val jvmBlesser = (project in file("."))
   .settings(
     name := "santa-jvm-blesser",
@@ -78,11 +91,15 @@ lazy val jvmBlesser = (project in file("."))
     // JDK 17 + Scala 2.12: pre-open java.base in case sigma's crypto path
     // reflects into it. Harmless if unused.
     fork := true,
-    javaOptions ++= Seq(
-      "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-      "--add-opens", "java.base/java.util=ALL-UNNAMED",
-      // HotSpot drops the message of an implicit exception (ArrayStoreException, ClassCastException, ...) once the
-      // throwing code is hot, so a blessed `reason` would depend on what ran before it. Always keep the message.
-      "-XX:-OmitStackTraceInFastThrow"
-    )
+    javaOptions ++= runnerJavaOptions,
+    // Rudolph runs as plain `java` (runners/rudolph/santa-run), outside sbt, so a resource bound (santa-bound) covers
+    // the Runner and not sbt or the build: this writes the arguments it runs with, one per line. MaxRAMPercentage=75
+    // sizes the heap to 3/4 of the unit's memory limit (the JVM's default is 1/4); it is the run line's alone, so the
+    // test forks keep the default.
+    rudolphJavaArgs := {
+      val f = target.value / "rudolph-java-args"
+      val cp = (Runtime / fullClasspath).value.files.map(_.getAbsolutePath).mkString(java.io.File.pathSeparator)
+      IO.writeLines(f, runnerJavaOptions ++ Seq("-XX:MaxRAMPercentage=75", "-cp", cp))
+      f
+    }
   )

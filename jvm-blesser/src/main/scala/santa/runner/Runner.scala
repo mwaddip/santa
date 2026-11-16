@@ -301,7 +301,7 @@ object Runner {
 
   /** Run one vector file, writing actuals to outPath (or stdout if None). */
   def runFile(vecPath: String, outPath: Option[String]): Unit = {
-    val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath).mkString)
+    val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath)(scala.io.Codec.UTF8).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
     val schema   = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
     val entries  = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)

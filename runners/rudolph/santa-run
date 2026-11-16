@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # santa-run <impl-path> <vectors-dir> <out-dir>  — Rudolph (JVM reference runner).
-# impl-path ($1) is ignored: Rudolph self-contains sigma-state 6.0.6 via sbt. One JVM
-# invocation processes the whole dir (Runner dir-mode).
+# impl-path ($1) is ignored: Rudolph self-contains the reference sigma-state/ergo-core via sbt.
+# sbt builds and writes the JVM arguments (task rudolphJavaArgs); the Runner then runs as plain
+# `java` (dir-mode), so santa-bound bounds the Runner and not sbt or the build.
 #
 # Self-provision the toolchain (presence-as-state: runners/rudolph/mise.toml) — re-exec
 # once under `mise exec` so java + sbt are on PATH for the sbt build under jvm-blesser/.
@@ -18,4 +19,7 @@ fi
 VECTORS="$(realpath "$2")"
 OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # runners/rudolph -> repo root
-(cd "$ROOT/jvm-blesser" && sbt --batch "runMain santa.runner.Runner $VECTORS $OUT")
+(cd "$ROOT/jvm-blesser" && sbt --batch rudolphJavaArgs)
+mapfile -t jargs < "$ROOT/jvm-blesser/target/rudolph-java-args"
+cd "$ROOT/jvm-blesser"
+${SANTA_BOUND:+"$SANTA_BOUND"} java "${jargs[@]}" santa.runner.Runner "$VECTORS" "$OUT"
