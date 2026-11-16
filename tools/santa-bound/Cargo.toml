@@ -1,0 +1,9 @@
+[package]
+name = "santa-bound"
+version = "0.1.0"
+edition = "2021"
+description = "SANTA's resource bound: runs a runner's last line under cgroup limits (systemd-run --user), the ordinary files in one unit under the safety ceiling and each bounded file in its own unit under its `limits`; writes a plan and per-unit status records for conform."
+
+[dependencies]
+serde_json = "1"
+santa-check = { path = "../santa-check" }
