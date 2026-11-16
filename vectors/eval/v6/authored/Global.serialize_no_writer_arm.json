@@ -1,0 +1,713 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Global.serialize_no_writer_arm",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-serialize-costed-writer",
+  "entries" : [
+    {
+      "name" : "B-top-Global-a3#0",
+      "script" : "[B|top|Global] `Global.serialize` of the Global object — REFUSED (SerializerException: Don't know how to serialize (sigma.data.CSigmaDslBuilder$@<hash>, SGlobal)). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b06dc6a03dd01dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-second-Global-a3#1",
+      "script" : "[B|pair-second|Global] `Global.serialize` of the Tuple node (1, the Global object) — REFUSED (SerializerException: Don't know how to serialize (sigma.data.CSigmaDslBuilder$@<hash>, SGlobal)). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0adc6a03dd0186020402dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-first-Global-a3#2",
+      "script" : "[B|pair-first|Global] `Global.serialize` of the Tuple node (the Global object, 1) — REFUSED (SerializerException: Don't know how to serialize (sigma.data.CSigmaDslBuilder$@<hash>, SGlobal)). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0adc6a03dd018602dd0402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-after-bytes50-Global-a3#3",
+      "script" : "[B|after-bytes50|Global] `Global.serialize` of the Tuple node (Coll[Byte] of 50, the Global object) — REFUSED (SerializerException: Don't know how to serialize (sigma.data.CSigmaDslBuilder$@<hash>, SGlobal)). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b3cdc6a03dd0186020e320101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-in-pair-Global-a3#4",
+      "script" : "[B|pair-in-pair|Global] `Global.serialize` of the Tuple node (1, (1L, the Global object)) — REFUSED (SerializerException: Don't know how to serialize (sigma.data.CSigmaDslBuilder$@<hash>, SGlobal)). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0edc6a03dd018602040286020502dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-top-lambda-a3#5",
+      "script" : "[B|top|lambda] `Global.serialize` of the function `(x: Int) => x` — REFUSED (SerializerException: Data value of the type with the code 112 cannot be deserialized.). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0bdc6a03dd01d90110047210",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-second-lambda-a3#6",
+      "script" : "[B|pair-second|lambda] `Global.serialize` of the Tuple node (1, the function `(x: Int) => x`) — REFUSED (SerializerException: Data value of the type with the code 112 cannot be deserialized.). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0fdc6a03dd0186020402d90110047210",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-first-lambda-a3#7",
+      "script" : "[B|pair-first|lambda] `Global.serialize` of the Tuple node (the function `(x: Int) => x`, 1) — REFUSED (SerializerException: Data value of the type with the code 112 cannot be deserialized.). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0fdc6a03dd018602d901100472100402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-after-bytes50-lambda-a3#8",
+      "script" : "[B|after-bytes50|lambda] `Global.serialize` of the Tuple node (Coll[Byte] of 50, the function `(x: Int) => x`) — REFUSED (SerializerException: Data value of the type with the code 112 cannot be deserialized.). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b41dc6a03dd0186020e320101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101d90110047210",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-in-pair-lambda-a3#9",
+      "script" : "[B|pair-in-pair|lambda] `Global.serialize` of the Tuple node (1, (1L, the function `(x: Int) => x`)) — REFUSED (SerializerException: Data value of the type with the code 112 cannot be deserialized.). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b13dc6a03dd018602040286020502d90110047210",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-top-Any-a3#10",
+      "script" : "[B|top|Any] `Global.serialize` of `(1, 2, 3)(0)`, typed Any — REFUSED (SerializerException: Don't know how to serialize (1, SAny)). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b10dc6a03dd01b248040404020406040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-second-Any-a3#11",
+      "script" : "[B|pair-second|Any] `Global.serialize` of the Tuple node (1, `(1, 2, 3)(0)`, typed Any) — REFUSED (RuntimeException: Unknown type SAny). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b14dc6a03dd0186020402b248040404020406040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-first-Any-a3#12",
+      "script" : "[B|pair-first|Any] `Global.serialize` of the Tuple node (`(1, 2, 3)(0)`, typed Any, 1) — REFUSED (RuntimeException: Unknown type SAny). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b14dc6a03dd018602b2480404040204060400000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-after-bytes50-Any-a3#13",
+      "script" : "[B|after-bytes50|Any] `Global.serialize` of the Tuple node (Coll[Byte] of 50, `(1, 2, 3)(0)`, typed Any) — REFUSED (RuntimeException: Unknown type SAny). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b46dc6a03dd0186020e320101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101b248040404020406040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-in-pair-Any-a3#14",
+      "script" : "[B|pair-in-pair|Any] `Global.serialize` of the Tuple node (1, (1L, `(1, 2, 3)(0)`, typed Any)) — REFUSED (RuntimeException: Unknown type SAny). NO WRITER ARM: the type has no data writer; refused where the writer reaches it.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b18dc6a03dd018602040286020502b248040404020406040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-top-Unit-coll-a3#15",
+      "script" : "[B|top|Unit-coll] `Global.serialize` of `Coll[Byte](1, 1).map(x => ())`, a Coll[Unit] — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0fdc6a03dd01ad0e020101d901100262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-second-Unit-coll-a3#16",
+      "script" : "[B|pair-second|Unit-coll] `Global.serialize` of the Tuple node (1, `Coll[Byte](1, 1).map(x => ())`, a Coll[Unit]) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b13dc6a03dd0186020402ad0e020101d901100262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-first-Unit-coll-a3#17",
+      "script" : "[B|pair-first|Unit-coll] `Global.serialize` of the Tuple node (`Coll[Byte](1, 1).map(x => ())`, a Coll[Unit], 1) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b13dc6a03dd018602ad0e020101d9011002620402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-after-bytes50-Unit-coll-a3#18",
+      "script" : "[B|after-bytes50|Unit-coll] `Global.serialize` of the Tuple node (Coll[Byte] of 50, `Coll[Byte](1, 1).map(x => ())`, a Coll[Unit]) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b45dc6a03dd0186020e320101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101ad0e020101d901100262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-pair-in-pair-Unit-coll-a3#19",
+      "script" : "[B|pair-in-pair|Unit-coll] `Global.serialize` of the Tuple node (1, (1L, `Coll[Byte](1, 1).map(x => ())`, a Coll[Unit])) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b17dc6a03dd018602040286020502ad0e020101d901100262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "B-top-Unit-a3#20",
+      "script" : "[B|top|Unit] `Global.serialize` of Unit — Coll() at cost 24. CONTROL: Unit writes nothing.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b06dc6a03dd0162",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 24,
+        "error" : null
+      }
+    },
+    {
+      "name" : "B-pair-second-Unit-a3#21",
+      "script" : "[B|pair-second|Unit] `Global.serialize` of the Tuple node (1, Unit) — Coll(2) at cost 47. CONTROL: Unit writes nothing.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0adc6a03dd018602040262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 47,
+        "error" : null
+      }
+    },
+    {
+      "name" : "B-pair-first-Unit-a3#22",
+      "script" : "[B|pair-first|Unit] `Global.serialize` of the Tuple node (Unit, 1) — Coll(2) at cost 47. CONTROL: Unit writes nothing.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0adc6a03dd018602620402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 47,
+        "error" : null
+      }
+    },
+    {
+      "name" : "B-after-bytes50-Unit-a3#23",
+      "script" : "[B|after-bytes50|Unit] `Global.serialize` of the Tuple node (Coll[Byte] of 50, Unit) — Coll(50,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,… at cost 100. CONTROL: Unit writes nothing.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b3cdc6a03dd0186020e32010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010162",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 50
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            }
+          ]
+        },
+        "cost" : 100,
+        "error" : null
+      }
+    },
+    {
+      "name" : "B-pair-in-pair-Unit-a3#24",
+      "script" : "[B|pair-in-pair|Unit] `Global.serialize` of the Tuple node (1, (1L, Unit)) — Coll(2,2) at cost 70. CONTROL: Unit writes nothing.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0edc6a03dd01860204028602050262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 70,
+        "error" : null
+      }
+    }
+  ]
+}

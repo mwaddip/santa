@@ -1,0 +1,372 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Global.serialize_tuple_arm",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-serialize-costed-writer",
+  "entries" : [
+    {
+      "name" : "X-tuple-pairs-ok-a3#0",
+      "script" : "[X|tuple|pairs|ok] `Global.serialize` of a constant collection of two (Int, Long) — Coll(2,2,2,2,2) at cost 39. CONTROL: a valid write of the tuple arm.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0ddc6a03dd010c40050202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 39,
+        "error" : null
+      }
+    },
+    {
+      "name" : "X-tuple-triples-ok-a3#1",
+      "script" : "[X|tuple|triples|ok] `Global.serialize` of a constant collection of two (Int, Long, Int) — Coll(2,2,2,2,2,2,2) at cost 45. CONTROL: a valid write of the tuple arm.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b11dc6a03dd010c4804050402020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "X-tuple-quads-ok-a3#2",
+      "script" : "[X|tuple|quads|ok] `Global.serialize` of a constant collection of two (Int, Long, Int, Long) — Coll(2,2,2,2,2,2,2,2,2) at cost 51. CONTROL: a valid write of the tuple arm.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b14dc6a03dd010c5404050405020202020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 51,
+        "error" : null
+      }
+    },
+    {
+      "name" : "X-tuple-pairs-under-triples-a3#3",
+      "script" : "[X|tuple|pairs-under-triples] `Global.serialize` of `if (false) <two (Int, Long, Int)> else <two (Int, Long)>`: a pair under a triple's type — REFUSED (AssertionError: assertion failed: Type (SInt$,SLong$,SInt$) doesn't correspond to value Coll(1,1)). TUPLE LENGTH: a tuple of another length than its type; the writer's assertion refuses it (an AssertionError, which fails the script).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1cdc6a03dd019501000c48040504020202020202020c40050202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-tuple-triples-under-pairs-a3#4",
+      "script" : "[X|tuple|triples-under-pairs] `Global.serialize` of `if (false) <two (Int, Long)> else <two (Int, Long, Int)>`: a triple under a pair's type — REFUSED (AssertionError: assertion failed: Type (SInt$,SLong$) doesn't correspond to value Coll(1,1,1)). TUPLE LENGTH: a tuple of another length than its type; the writer's assertion refuses it (an AssertionError, which fails the script).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1cdc6a03dd019501000c400502020202020c4804050402020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-tuple-quads-under-triples-a3#5",
+      "script" : "[X|tuple|quads-under-triples] `Global.serialize` of `if (false) <two (Int, Long, Int)> else <two (Int, Long, Int, Long)>` — REFUSED (AssertionError: assertion failed: Type (SInt$,SLong$,SInt$) doesn't correspond to value Coll(1,1,1,1)). TUPLE LENGTH: a tuple of another length than its type; the writer's assertion refuses it (an AssertionError, which fails the script).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b23dc6a03dd019501000c48040504020202020202020c5404050405020202020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-tuple-triples-under-quads-a3#6",
+      "script" : "[X|tuple|triples-under-quads] `Global.serialize` of `if (false) <two (Int, Long, Int, Long)> else <two (Int, Long, Int)>` — REFUSED (AssertionError: assertion failed: Type (SInt$,SLong$,SInt$,SLong$) doesn't correspond to value Coll(1,1,1)). TUPLE LENGTH: a tuple of another length than its type; the writer's assertion refuses it (an AssertionError, which fails the script).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b23dc6a03dd019501000c54040504050202020202020202020c4804050402020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-tuple-colls-under-triples-a3#7",
+      "script" : "[X|tuple|colls-under-triples] `Global.serialize` of `if (false) <two (Int, Long, Int)> else <a Coll[Coll[Int]] of two>`: an item that is a collection of Int — REFUSED (RuntimeException: Cannot execute fromDslTuple(Coll(1,1,1), (SInt$,SLong$,SInt$))). NOT A TUPLE: an item that is neither a pair nor a collection of Any; refused (`fromDslTuple`).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1edc6a03dd019501000c48040504020202020202021c020302020203020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-tuple-colls-under-pairs-a3#8",
+      "script" : "[X|tuple|colls-under-pairs] `Global.serialize` of `if (false) <two (Int, Long)> else <a Coll[Coll[Int]] of two>`: an item that is a collection of Int — REFUSED (RuntimeException: Cannot execute fromDslTuple(Coll(1,1,1), (SInt$,SLong$))). NOT A TUPLE: an item that is neither a pair nor a collection of Any; refused (`fromDslTuple`).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1adc6a03dd019501000c400502020202021c020302020203020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-tuple-ints-under-triples-a3#9",
+      "script" : "[X|tuple|ints-under-triples] `Global.serialize` of `if (false) <two (Int, Long, Int)> else Coll[Int](1, 2)`: an item that is an Int — REFUSED (RuntimeException: Cannot execute fromDslTuple(1, (SInt$,SLong$,SInt$))). NOT A TUPLE: an item that is neither a pair nor a collection of Any; refused (`fromDslTuple`).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b18dc6a03dd019501000c480405040202020202020210020204",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "X-coll-triples-item-under-coll-of-coll-int-a3#10",
+      "script" : "[X|coll|triples-item-under-coll-of-coll-int] `Global.serialize` of `if (false) <a Coll[Coll[Int]] of two> else <two (Int, Int, Int)>`: a triple, a collection of Any, under Coll[Int] — Coll(2,3,2,2,2,3,2,2,2) at cost 66. COLLECTION ARM: a tuple (a collection of Any) under a collection type is written item by item by the collection arm, its Int items as the Ints they are: a value.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1edc6a03dd019501001c0203020202030202020c4804040402020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            }
+          ]
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    },
+    {
+      "name" : "X-coll-triples-item-under-coll-of-coll-long-a3#11",
+      "script" : "[X|coll|triples-item-under-coll-of-coll-long] `Global.serialize` of `if (false) <a Coll[Coll[Long]] of two> else <two (Int, Int, Int)>`: a triple's Int items under Coll[Long] — REFUSED (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Long (java.lang.Integer and java.lang.Long are in module java.base of loader…). COLLECTION ARM, ANOTHER CLASS: the collection arm writes the tuple's items by the static type Long; refused.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1edc6a03dd019501001d0203020202030202020c4804040402020202020202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

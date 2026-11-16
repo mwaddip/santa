@@ -93,6 +93,7 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 | `preHeader.votes` | 3 zero bytes (chain-faithful width — `Votes` is fixed-size in byte-oriented models) |
 | `LastBlockUtxoRootHash` | `AvlTreeData.dummy` (33-byte all-zero digest = 32-byte root hash + height byte; flags 0x07 = all operations allowed; keyLength 32; no value-length — serialized `00`×33 `07 20 00`) |
 | extension | empty except the entry's input binding (var 1; `santa-eval/v3` per-input extensions; `santa-eval/v5` a full top-level self extension keyed 0..255 — a key ≥ 0x80 is a signed-negative `Byte` that crashes `toSigmaContext` before eval) |
+| cost limit | the evaluator's default, `scriptCostLimitInEvaluator` = 1,000,000 block units = **10,000,000 JIT units**, from an initial cost of 0, on every schema arm (`santa-eval/v6-fullctx` too); an evaluation whose cost crosses it is `errored` (see the cost-limit note) |
 
 *SELF-registers note (added 2026-11-07, after a runner broke it).* The table always meant R4–R9
 to be absent — "registers beyond the mandatory ones only via `santa-eval/v4`" — but it did not say
@@ -113,6 +114,14 @@ because a runner satisfied neither and the corpus could not see it:
   `selfBoxIndex` is a full-value search of `INPUTS` for SELF, and so is sigma-rust's. Whatever a
   runner does to SELF it must do to `INPUTS[0]`. This is the half a `Context.properties` red caught
   during the fix, not reasoning.
+
+*Cost-limit note (added 2026-11-16, after two runners lacked it).* The oracle has always evaluated
+every entry under `DefaultEvalSettings.scriptCostLimitInEvaluator` (EvalCore), but the table did not
+say so, and no vector came near the limit until `eval/v6/authored/Global.serialize_shared_nested.json`,
+whose writes cross it at about 10,030,000. Two runners evaluated with NO limit and answered those
+entries as values at 16 to 67 million: blitzen took its context from a generated template, and dasher
+left ergots' `jitCostLimit` unset, which ergots reads as "unlimited". A limit is a context premise like
+the rest of this table: a runner sets it, it does not inherit it.
 
 `OUTPUTS` is empty here, so it has no registers to pin — but a future vector reading
 `OUTPUTS(i).R4` would need the same treatment stated for outputs, and the premise that no vector

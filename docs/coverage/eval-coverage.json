@@ -7220,6 +7220,139 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Global.serialize_count_range_at_depth.json" : {
+      "accepts" : 7,
+      "entries" : 18,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "106:9 SigmaDslBuilder.some"
+      ],
+      "op" : "Global.serialize_count_range_at_depth",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "Global$",
+        "If",
+        "MethodCall",
+        "SizeOf",
+        "Tuple",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 11,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 11,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_no_writer_arm.json" : {
+      "accepts" : 5,
+      "entries" : 25,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize_no_writer_arm",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "FuncValue",
+        "Global$",
+        "MapCollection",
+        "MethodCall",
+        "Tuple",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 20,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 20,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_runtime_class.json" : {
+      "accepts" : 368,
+      "entries" : 686,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "106:9 SigmaDslBuilder.some"
+      ],
+      "op" : "Global.serialize_runtime_class",
+      "ops" : [
+        "ConcreteCollection",
+        "Const",
+        "Global$",
+        "If",
+        "MethodCall",
+        "Tuple"
+      ],
+      "provenance" : "authored",
+      "rejects" : 318,
+      "tree_shapes" : [
+        {
+          "accepts" : 368,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 318,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_shared_nested.json" : {
+      "accepts" : 11,
+      "entries" : 22,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize_shared_nested",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "Global$",
+        "If",
+        "MethodCall",
+        "SizeOf",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 11,
+      "tree_shapes" : [
+        {
+          "accepts" : 11,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 11,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Global.serialize_small_tuple.json" : {
       "accepts" : 2,
       "entries" : 2,
@@ -7243,6 +7376,34 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_tuple_arm.json" : {
+      "accepts" : 4,
+      "entries" : 12,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize_tuple_arm",
+      "ops" : [
+        "Const",
+        "Global$",
+        "If",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 8,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 8,
           "tree_version" : 3
         }
       ],
@@ -14238,7 +14399,12 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
+        "v6/authored/Global.serialize_runtime_class.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/Global.serialize_tuple_arm.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
@@ -14311,6 +14477,8 @@
       "families" : [
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
@@ -15492,6 +15660,8 @@
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
@@ -15827,6 +15997,8 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -16011,6 +16183,7 @@
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
@@ -16262,6 +16435,9 @@
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_runtime_class.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
@@ -16406,7 +16582,12 @@
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
+        "v6/authored/Global.serialize_runtime_class.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/Global.serialize_tuple_arm.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.numeric_receiver_width.json",
@@ -17371,6 +17552,7 @@
         "v6/authored/Global.serialize_SigmaProp.json",
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -17827,7 +18009,12 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
+        "v6/authored/Global.serialize_runtime_class.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/Global.serialize_tuple_arm.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
@@ -17965,6 +18152,10 @@
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Global.none_pre_v3_dead_branch.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_runtime_class.json",
+        "v6/authored/Global.serialize_shared_nested.json",
+        "v6/authored/Global.serialize_tuple_arm.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
@@ -18231,6 +18422,7 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
@@ -18369,7 +18561,12 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
+        "v6/authored/Global.serialize_runtime_class.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_small_tuple.json",
+        "v6/authored/Global.serialize_tuple_arm.json",
         "v6/authored/Global.some_none.json",
         "v6/authored/GroupElement.expUnsigned.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
@@ -19283,6 +19480,8 @@
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
@@ -19475,6 +19674,9 @@
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
+        "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -19615,6 +19817,8 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -19813,6 +20017,9 @@
         "v6/authored/Global.serialize_SigmaProp_conjectures.json",
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_no_writer_arm.json",
+        "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/HOF_FunDef_polymorphic_identity.json",
         "v6/authored/HOF_FunDef_type_var_body.json",
         "v6/authored/HOF_currying_Apply_of_Apply.json",
@@ -19974,12 +20181,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 4274,
+    "accepts" : 4669,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 6324,
-    "files" : 379,
-    "rejects" : 2050,
+    "entries" : 7087,
+    "files" : 384,
+    "rejects" : 2418,
     "unwalked" : 661
   }
 }

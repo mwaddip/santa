@@ -76,6 +76,11 @@ const NOT_IMPL: Result = Object.freeze({ value: null, cost: null, error: 'not-im
  *  otherwise-uncaught throw — a malformed entry, an unexpected codec or internal error — is
  *  caught here and surfaced as the `panicked` outcome (coal, message in `note`) so the run
  *  continues; a crash on one entry never aborts the file. The inner `throw err` sites land here. */
+/** Contract §2's cost limit: the evaluator's default, `scriptCostLimitInEvaluator` = 1,000,000 block units =
+ *  10,000,000 JIT units, on every arm (the oracle's EvalCore, DefaultEvalSettings). ergots reads an unset
+ *  `jitCostLimit` as unlimited, so every context the runner builds passes this one. */
+export const EVAL_JIT_COST_LIMIT = 10_000_000
+
 export function runEntry(schema: string, e: Entry, readExt: ExtensionReader = null): Result {
   try {
     return runEntryInner(schema, e, readExt)
@@ -147,6 +152,7 @@ function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Resu
   const ctxBase = {
     treeVersion,
     constants: tree.constants,
+    jitCostLimit: EVAL_JIT_COST_LIMIT,
     preHeader,
     height: preHeader.height,             // GlobalVars.Height; the JVM's HEIGHT is preHeader.height (0)
     selfBox: selfBoxBase,
@@ -487,6 +493,7 @@ function buildFullCtxOpts(
   return {
     treeVersion,
     constants: tree.constants,
+    jitCostLimit: EVAL_JIT_COST_LIMIT,
     height: preHeader.height,   // GlobalVars.Height; the JVM's HEIGHT is preHeader.height
     selfBox,
     inputs,
