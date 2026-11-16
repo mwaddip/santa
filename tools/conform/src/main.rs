@@ -182,9 +182,93 @@ fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<(String, Opt
 /// Filter by (version<=, tiers), stage selected vectors flat as symlinks, run, collect actuals keyed
 /// by source relpath. Everything per-runner lives under .santa/<name>/. Err(code) = the runner (or
 /// its impl checkout) failed to run — surfaced as ⚠️, not graded.
-fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<(BTreeMap<String, Value>, Option<String>), i32> {
+/// Why a runner has no grades this run (a ⚠️ row, not a 🪨).
+enum RunFail {
+    /// santa-run exited non-zero: build, impl checkout, or a crash over the ordinary files.
+    Exit(i32),
+    /// The ordinary run hit santa-bound's safety ceiling ("memory 4096 MiB" | "time 600 s"): it protects the machine.
+    Ceiling(String),
+    /// santa-bound's records are missing: the runner's last line skipped it, or a bounded file has no record.
+    Bound(String),
+}
+
+fn fail_message(f: &RunFail) -> String {
+    match f {
+        RunFail::Exit(c) => format!("santa-run exited {c}: could not build/run"),
+        RunFail::Ceiling(l) => format!("santa-run exceeded the safety ceiling ({l})"),
+        RunFail::Bound(m) => m.clone(),
+    }
+}
+
+/// santa-bound is built beside conform (the ./conform wrapper builds both, same profile).
+fn santa_bound_path() -> PathBuf {
+    match env::current_exe().ok().and_then(|e| e.parent().map(|d| d.join("santa-bound"))) {
+        Some(p) if p.is_file() => p,
+        _ => die("santa-bound is not built next to conform: run ./conform, whose wrapper builds it".into()),
+    }
+}
+
+/// santa-bound's status records: one per bounded file (by staged name), and the ordinary run's.
+struct Bound {
+    bounded: BTreeMap<String, Value>,
+    ordinary: Option<Value>,
+}
+
+fn read_json(p: &Path) -> Option<Value> {
+    serde_json::from_str(&fs::read_to_string(p).ok()?).ok()
+}
+
+/// The status dir santa-bound wrote. Err when there is no plan (the runner's last line skipped santa-bound, so its
+/// bounded files ran unbounded) or a planned bounded file has no record.
+fn read_bound(status: &Path) -> Result<Bound, String> {
+    let plan = read_json(&status.join("plan.json")).ok_or_else(|| {
+        "santa-run did not run its last line through santa-bound (no plan.json), so its bounded files ran unbounded"
+            .to_string()
+    })?;
+    let mut bounded = BTreeMap::new();
+    for name in plan["bounded"].as_object().into_iter().flat_map(|m| m.keys()) {
+        let r = read_json(&status.join("bounded").join(name))
+            .ok_or_else(|| format!("santa-bound left no record for the bounded file {name}"))?;
+        bounded.insert(name.clone(), r);
+    }
+    Ok(Bound { bounded, ordinary: read_json(&status.join("ordinary.json")) })
+}
+
+/// One staged file's actuals. A bounded file that exceeded its budget or crashed gets the actual conform writes for
+/// each entry (`exceeded` / `panicked`), whatever file its process left; otherwise the runner's file, or {} if absent.
+fn actuals_for(ofile: &Path, record: Option<&Value>, vector: &Value) -> Value {
+    let each = |a: Value| -> Value {
+        let names = vector["entries"].as_array().into_iter().flatten().filter_map(|e| e["name"].as_str());
+        Value::Object(names.map(|n| (n.to_string(), a.clone())).collect())
+    };
+    match record {
+        Some(r) if r["result"] == "exceeded" => {
+            each(json!({"error": "exceeded", "limit": r["limit"], "budget": r["limits"]}))
+        }
+        Some(r) if r["result"] == "crashed" => {
+            each(json!({"error": "panicked", "note": format!("process {}", r["detail"].as_str().unwrap_or("?"))}))
+        }
+        // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the
+        // breach rather than silently dropping the vector.
+        _ if ofile.is_file() => serde_json::from_str(&fs::read_to_string(ofile).unwrap()).unwrap(),
+        _ => json!({}),
+    }
+}
+
+/// The ordinary run's ceiling hit, as "memory 4096 MiB" / "time 600 s".
+fn ceiling_hit(ordinary: &Value) -> Option<String> {
+    let l = &ordinary["limits"];
+    match (ordinary["result"].as_str(), ordinary["limit"].as_str()) {
+        (Some("exceeded"), Some("memory")) => Some(format!("memory {} MiB", l["memory_mb"])),
+        (Some("exceeded"), Some("time")) => Some(format!("time {} s", l["wall_s"])),
+        _ => None,
+    }
+}
+
+/// Runs one runner over its selection. Ok: (actuals by relpath, impl sha, the bounded files that exceeded or crashed).
+fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<(BTreeMap<String, Value>, Option<String>, Vec<String>), RunFail> {
     let ws = root.join(".santa").join(&m.name);
-    let (impl_path, sha) = resolve_impl(&m.impl_, &ws)?;
+    let (impl_path, sha) = resolve_impl(&m.impl_, &ws).map_err(RunFail::Exit)?;
     let selected = select(vectors, &m.version, &m.tiers);
     let indir = ws.join("in");
     let _ = fs::remove_dir_all(&indir);
@@ -192,6 +276,9 @@ fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<(BTreeMap<String
     let odir = ws.join("out");
     let _ = fs::remove_dir_all(&odir);
     fs::create_dir_all(&odir).unwrap();
+    // santa-bound's status dir sits on the same filesystem as the staging, so its unit dirs list in the same order.
+    let status = ws.join("bound");
+    let _ = fs::remove_dir_all(&status);
     let mut staged: Vec<(String, String)> = Vec::new(); // (staged filename, source relpath)
     for v in &selected {
         let rel = &v.0;
@@ -203,25 +290,34 @@ fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<(BTreeMap<String
         .arg(&impl_path)
         .arg(&indir)
         .arg(&odir)
+        .env("SANTA_BOUND", santa_bound_path())
+        .env("SANTA_BOUND_STATUS", &status)
         .status()
     {
         Ok(s) if s.success() => {}
-        Ok(s) => return Err(s.code().unwrap_or(1)),
-        Err(_) => return Err(1),
+        Ok(s) => {
+            let ceiling = read_bound(&status).ok().and_then(|b| b.ordinary).as_ref().and_then(ceiling_hit);
+            return Err(ceiling.map_or(RunFail::Exit(s.code().unwrap_or(1)), RunFail::Ceiling));
+        }
+        Err(_) => return Err(RunFail::Exit(1)),
     }
+    let bound = read_bound(&status).map_err(RunFail::Bound)?;
     let mut res = BTreeMap::new();
+    let mut failures = Vec::new();
     for (name, rel) in staged {
         let ofile = odir.join(&name);
-        // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the
-        // breach rather than silently dropping the vector.
-        let act = if ofile.is_file() {
-            serde_json::from_str(&fs::read_to_string(&ofile).unwrap()).unwrap()
-        } else {
-            json!({})
+        let act = match bound.bounded.get(&name) {
+            Some(r) if r["result"] != "success" => {
+                failures.push(rel.clone());
+                let vector: Value =
+                    serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&rel)).unwrap()).unwrap();
+                actuals_for(&ofile, Some(r), &vector)
+            }
+            r => actuals_for(&ofile, r, &Value::Null),
         };
         res.insert(rel, act);
     }
-    Ok((res, sha))
+    Ok((res, sha, failures))
 }
 
 #[derive(Default)]
@@ -237,6 +333,8 @@ struct Counts {
     reject_nice: u64,
     reject_coal: u64,
     panicked: u64,
+    // a bounded file whose process hit its budget (santa-bound); conform writes the actual, never a runner
+    exceeded: u64,
     roundtrip_total: u64,
     roundtrip_nice: u64,
     roundtrip_coal: u64,
@@ -285,7 +383,7 @@ struct Counts {
 
 impl Counts {
     fn red_total(&self) -> u64 {
-        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal + self.chain_value_coal
+        self.value_coal + self.not_impl + self.cost_coal + self.reject_coal + self.panicked + self.exceeded + self.roundtrip_coal + self.tx_valid_coal + self.block_valid_coal + self.post_digest_coal + self.chain_value_coal
         + self.authds_proof_coal + self.authds_digest_coal
         + self.authds_accepted_coal + self.authds_results_coal
         + self.nipopow_interlinks_coal + self.nipopow_proof_coal
@@ -296,7 +394,7 @@ impl Counts {
             "not_impl": self.not_impl,
             "cost_graded": self.cost_graded, "cost_nice": self.cost_nice, "cost_coal": self.cost_coal,
             "reject_total": self.reject_total, "reject_nice": self.reject_nice, "reject_coal": self.reject_coal,
-            "panicked": self.panicked,
+            "panicked": self.panicked, "exceeded": self.exceeded,
             "roundtrip_total": self.roundtrip_total, "roundtrip_nice": self.roundtrip_nice, "roundtrip_coal": self.roundtrip_coal,
             "tx_valid_total": self.tx_valid_total, "tx_valid_nice": self.tx_valid_nice, "tx_valid_coal": self.tx_valid_coal,
             "block_valid_total": self.block_valid_total, "block_valid_nice": self.block_valid_nice, "block_valid_coal": self.block_valid_coal,
@@ -331,6 +429,9 @@ impl Counts {
         }
         if self.panicked > 0 {
             bits.push(format!("{} panicked", self.panicked));
+        }
+        if self.exceeded > 0 {
+            bits.push(format!("{} exceeded", self.exceeded));
         }
         // transaction slices: valid dim first, then cost (cost reuses the shared cost counters).
         if self.tx_valid_total > 0 {
@@ -499,6 +600,14 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
                 grade(&actual, &e["expected"], claims_cost)
             };
             match g["kind"].as_str() {
+                Some("exceeded") => {
+                    c.exceeded += 1;
+                    let b = &actual["budget"];
+                    c.red.push(red_detail(&op, name, "exceeded",
+                        expected_brief(e, is_wire, is_tx, is_chain),
+                        format!("exceeded {} ({} MiB, {} s)", g["limit"].as_str().unwrap_or("?"), b["memory_mb"], b["wall_s"]),
+                        None, script));
+                }
                 Some("panicked") => {
                     c.panicked += 1;
                     c.red.push(red_detail(&op, name, "panicked",
@@ -748,6 +857,22 @@ fn unrun_controls<'a>(runners: &'a [Runner], results: &[Value]) -> Vec<&'a str> 
         .collect()
 }
 
+/// The control runners that exceeded or crashed on a bounded file. The reference proves every budget on every run:
+/// if it cannot keep within one, the budget (or the row) is wrong, not the ports.
+fn over_budget_controls<'a>(runners: &'a [Runner], results: &[Value]) -> Vec<&'a str> {
+    runners
+        .iter()
+        .filter(|m| m.control)
+        .filter(|m| {
+            results.iter().any(|r| {
+                r["name"].as_str() == Some(m.name.as_str())
+                    && r["bounded_failures"].as_array().is_some_and(|a| !a.is_empty())
+            })
+        })
+        .map(|m| m.name.as_str())
+        .collect()
+}
+
 fn main() -> ExitCode {
     let root = repo_root();
     if env::args().any(|a| a == "--clean") {
@@ -764,16 +889,17 @@ fn main() -> ExitCode {
     for m in &runners {
         eprintln!("running {} …", m.name);
         match run_one(m, &root, &vectors) {
-            Err(code) => {
-                println!("  ⚠️  {}  — santa-run exited {code}: could not build/run (see error above)", m.label);
+            Err(f) => {
+                let msg = fail_message(&f);
+                println!("  ⚠️  {}  — {msg} (see error above)", m.label);
                 results.push(json!({
                     "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
                     "impl": &m.impl_, "sha": Value::Null,
-                    "mark": "errored", "red_total": Value::Null, "slices": {},
-                    "error": format!("santa-run exited {code}: could not build/run"),
+                    "mark": "errored", "red_total": Value::Null, "slices": {}, "bounded_failures": [],
+                    "error": msg,
                 }));
             }
-            Ok((actuals, sha)) => {
+            Ok((actuals, sha, failures)) => {
                 let slices = tally(&actuals, m.cost, &root);
                 let agg_red: u64 = slices.values().map(Counts::red_total).sum();
                 let mark = if agg_red == 0 { "🎁" } else { "🪨" };
@@ -795,6 +921,7 @@ fn main() -> ExitCode {
                     "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
                     "impl": &m.impl_, "sha": sha,
                     "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
+                    "bounded_failures": failures,
                 }));
             }
         }
@@ -804,6 +931,11 @@ fn main() -> ExitCode {
     let unrun = unrun_controls(&runners, &results);
     if !unrun.is_empty() {
         eprintln!("\nFAILED: the control runner(s) {unrun:?} did not run, so this grid is not anchored to the oracle");
+        return ExitCode::FAILURE;
+    }
+    let over = over_budget_controls(&runners, &results);
+    if !over.is_empty() {
+        eprintln!("\nFAILED: the control runner(s) {over:?} exceeded or crashed on a bounded file: the budget is wrong, not the ports");
         return ExitCode::FAILURE;
     }
     ExitCode::SUCCESS
@@ -1510,5 +1642,121 @@ mod tests {
         assert_eq!(c.authds_digest_coal, 1, "wrong final digest must be coal");
         assert_eq!(c.red_total(), 1);
         fs::remove_dir_all(&root).ok();
+    }
+
+    // ── resource bounds (santa-bound) ─────────────────────────────────────────
+
+    static BOUND_TEST_DIR_SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+    fn bound_root(tag: &str) -> std::path::PathBuf {
+        let n = BOUND_TEST_DIR_SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let d = std::env::temp_dir().join(format!("santa-bound-conform-test-{}-{n}-{tag}", std::process::id()));
+        let _ = fs::remove_dir_all(&d);
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn one_entry_vector() -> serde_json::Value {
+        json!({"schema": "santa-eval/v2", "op": "x", "limits": {"memory_mb": 1024, "wall_s": 10},
+               "entries": [{"name": "e#0", "expected": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}}]})
+    }
+
+    fn record(result: &str, extra: serde_json::Value) -> serde_json::Value {
+        let mut r = json!({"file": "x.json", "limits": {"memory_mb": 1024, "wall_s": 10}, "result": result});
+        for (k, v) in extra.as_object().unwrap() {
+            r[k] = v.clone();
+        }
+        r
+    }
+
+    #[test]
+    fn read_bound_requires_a_plan() {
+        let d = bound_root("noplan");
+        let e = super::read_bound(&d).map(|_| ()).unwrap_err();
+        assert!(e.contains("santa-bound"), "{e}");
+    }
+
+    #[test]
+    fn read_bound_requires_a_record_per_bounded_file() {
+        let d = bound_root("norecord");
+        fs::create_dir_all(d.join("bounded")).unwrap();
+        fs::write(d.join("plan.json"), json!({"ordinary": [], "bounded": {"x.json": {"memory_mb": 1024, "wall_s": 10}}}).to_string()).unwrap();
+        let e = super::read_bound(&d).map(|_| ()).unwrap_err();
+        assert!(e.contains("x.json"), "{e}");
+        fs::write(d.join("bounded").join("x.json"), record("success", json!({})).to_string()).unwrap();
+        let b = super::read_bound(&d).unwrap();
+        assert_eq!(b.bounded["x.json"]["result"], "success");
+        assert!(b.ordinary.is_none());
+    }
+
+    #[test]
+    fn actuals_for_exceeded_ignores_a_partial_file() {
+        let d = bound_root("partial");
+        let ofile = d.join("x.json");
+        fs::write(&ofile, json!({"e#0": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}}).to_string()).unwrap();
+        let r = record("exceeded", json!({"limit": "memory"}));
+        assert_eq!(
+            super::actuals_for(&ofile, Some(&r), &one_entry_vector()),
+            json!({"e#0": {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}}})
+        );
+    }
+
+    #[test]
+    fn actuals_for_crashed_is_panicked() {
+        let d = bound_root("crashed");
+        let r = record("crashed", json!({"detail": "exit status 134"}));
+        assert_eq!(
+            super::actuals_for(&d.join("x.json"), Some(&r), &one_entry_vector()),
+            json!({"e#0": {"error": "panicked", "note": "process exit status 134"}})
+        );
+    }
+
+    #[test]
+    fn actuals_for_success_reads_the_file() {
+        let d = bound_root("success");
+        let ofile = d.join("x.json");
+        let a = json!({"e#0": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}});
+        fs::write(&ofile, a.to_string()).unwrap();
+        let r = record("success", json!({}));
+        assert_eq!(super::actuals_for(&ofile, Some(&r), &one_entry_vector()), a);
+        assert_eq!(super::actuals_for(&ofile, None, &one_entry_vector()), a);
+        assert_eq!(super::actuals_for(&d.join("absent.json"), None, &one_entry_vector()), json!({}));
+    }
+
+    #[test]
+    fn tally_counts_exceeded() {
+        use std::collections::BTreeMap;
+        let root = bound_root("tally");
+        let dir = root.join("vectors").join("eval").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("x.json"), one_entry_vector().to_string()).unwrap();
+        let mut actuals = BTreeMap::new();
+        actuals.insert("eval/v6/authored/x.json".to_string(),
+            json!({"e#0": {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}}}));
+        let slices = super::tally(&actuals, true, &root);
+        let c = slices.values().next().unwrap();
+        assert_eq!(c.exceeded, 1);
+        assert_eq!(c.red_total(), 1);
+        assert_eq!(c.red[0]["dim"], "exceeded");
+        assert_eq!(c.red[0]["got"], "exceeded memory (1024 MiB, 10 s)");
+        assert_eq!(c.summary(), "1 exceeded");
+        fs::remove_dir_all(&root).ok();
+    }
+
+    #[test]
+    fn over_budget_controls_names_only_controls() {
+        let rs = vec![runner("rudolph", true), runner("dasher", false)];
+        let r = |n: &str, f: serde_json::Value| json!({"name": n, "mark": "coal", "bounded_failures": f});
+        assert_eq!(super::over_budget_controls(&rs, &[r("rudolph", json!(["eval/v6/authored/x.json"])), r("dasher", json!([]))]),
+                   vec!["rudolph"]);
+        assert!(super::over_budget_controls(&rs, &[r("rudolph", json!([])), r("dasher", json!(["eval/v6/authored/x.json"]))]).is_empty());
+    }
+
+    #[test]
+    fn fail_message_names_the_ceiling() {
+        assert_eq!(super::fail_message(&super::RunFail::Ceiling("memory 4096 MiB".into())),
+                   "santa-run exceeded the safety ceiling (memory 4096 MiB)");
+        assert_eq!(super::fail_message(&super::RunFail::Exit(101)), "santa-run exited 101: could not build/run");
+        assert_eq!(super::fail_message(&super::RunFail::Bound("boom".into())), "boom");
     }
 }

@@ -36,7 +36,8 @@ and `runners/blitzen-eni/` — to compare an implementation's branches side by s
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
 - **`control`** (optional, default `false`) — the oracle's own runner (rudolph). A grid in which a control could not
   build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `results.json`), and the CI
-  run fails before it publishes a scoreboard. Any other runner that cannot build or run stays a ⚠️ row in the grid.
+  run fails before it publishes a scoreboard. The same holds for a control that exceeds or crashes on a bounded
+  file (§3a). Any other runner that cannot build or run stays a ⚠️ row in the grid.
 
 ## 3. The entrypoint — `santa-run`
 
@@ -69,6 +70,22 @@ reported **⚠️ "could not build/run"** — distinct from a 🪨 divergence, s
 and the remaining runners still grade, so one broken conformer can't abort the run.
 
 Resolve `<vectors-dir>`/`<out-dir>` to absolute paths if the entrypoint `cd`s before running.
+
+### The last line and `santa-bound`
+
+Everything a `santa-run` does before it runs the conformer (provisioning, the build, patching the impl checkout
+and the `trap` that restores it) stays as it is. The conformer itself runs on the **last line**, and only there,
+through `santa-bound` (§3a):
+
+```bash
+${SANTA_BOUND:+"$SANTA_BOUND"} <cmd…> "$VECTORS" "$OUT"
+```
+
+`./conform` sets `SANTA_BOUND` (and `SANTA_BOUND_STATUS`); the last two arguments are always the vectors dir and
+the out dir. Unset (a runner's own self-test, a manual run), the prefix expands to nothing and the line runs as
+before. Nothing that builds or patches may run inside it: a bound covers the conformer's work, and a process the
+bound kills must never be the one holding a restore `trap`. A runner whose last line skips the prefix is reported
+**⚠️** (its bounded files would have run unbounded).
 
 **`<impl-path>`** is the directory Santa checked the runner's `impl` out into; the runner finds its
 dependency there **by repo name** — `<impl-path>/sigma-rust`, `<impl-path>/ergots`, etc. (Santa
@@ -104,6 +121,38 @@ self-provisions — each runner its own toolchain (above), and SANTA's own tooli
 `tools/mise.toml`. CI installs mise via `jdx/mise-action`; `mise install` may delegate to a native
 manager (rust → rustup, which mise bootstraps) — still root-less and version-pinned.
 
+## 3a. Bounded files
+
+Some inputs make an implementation do unbounded work where the reference does almost none (a write the JVM charges
+as it goes and stops at the cost limit; a tree whose parse grows). The reference is the measure: **what it handles
+within reasonable bounds, every implementation is expected to handle.** A vector file may therefore declare a
+budget at its top level:
+
+```json
+"limits": { "memory_mb": 1024, "wall_s": 10 }
+```
+
+- **A bounded file holds exactly one entry**, so a budget is a per-row bound. `memory_mb` is MiB, `wall_s` seconds;
+  `./validate` holds them to at most **4096 MiB** and **60 s** (`santa_check::limits`). The blessers' default is
+  1024 MiB / 10 s.
+- **`santa-bound`** (`tools/santa-bound`) runs the last line once per unit, each a temporary `systemd-run --user`
+  service, so systemd enforces the bound from outside the process (`MemoryMax`, `MemorySwapMax=0`, `RuntimeMaxSec`,
+  `TimeoutStopSec=5`). The files without `limits` are ONE unit under the **safety ceiling (4096 MiB, 600 s)**; each
+  bounded file is its own unit under its budget. A unit gets the caller's whole environment and working directory.
+  It never runs anything unbounded: if it cannot create a unit, the runner is reported ⚠️.
+- **A bounded file whose process hits its budget grades `exceeded`** (`{"kind": "exceeded", "limit": "memory" |
+  "time"}`), coal unconditionally, on that entry alone; the column survives. conform writes that actual from
+  santa-bound's status record (`{"error": "exceeded", "limit": …, "budget": {…}}`), whatever file the process left:
+  a runner never emits it, and the actuals schemas do not carry it. A bounded file whose process crashes (non-zero
+  exit, a signal) grades `panicked` with `note` `process <exit status>`.
+- **The control proves every budget, on every run.** If rudolph exceeds or crashes on a bounded file, `./conform`
+  fails: the budget or the row is wrong, not the ports.
+- **The safety ceiling protects the machine; it does not grade.** An ordinary run that hits it loses that runner's
+  column, reported ⚠️ `santa-run exceeded the safety ceiling (memory 4096 MiB)` (or `time 600 s`).
+- **A budget is a threshold, not a benchmark.** An implementation that lands near it can grade differently run to
+  run, so a bounded row is one whose blow-up clears the budget by orders of magnitude, where an honest
+  implementation stays far below it.
+
 ## 4. The runner does not compare — the orchestrator does
 
 Per eval contract §6, conformance comparison needs no oracle and must be **pinned identically
@@ -114,13 +163,11 @@ in-process — over *every* runner's actuals. **A runner MUST NOT self-judge for
 (value / cost / not-implemented / reject / panicked). A standalone self-compare mode is fine
 as a *dev convenience*, but the `santa-run` path emits actuals and leaves the verdict to `conform`.
 
-(`santa-check` is the canonical engine alongside the per-ecosystem references — the TypeScript one
-(Dasher) and the Scala `Harness`; §5/§6 require all to return the same verdict on the same bytes, and
-each is proven against the [verdict-oracle](../../oracle) (`oracle/*.json`) so they can't drift. The
-orchestrator runs the full grid over `runners/*` — the N-way is whatever is checked in, never a
-hardcoded count (currently Rudolph · Dasher · Blitzen develop & eni · Comet); Dasher scores
-**1705/1705**, matching its TS-comparator e2e exactly, and Blitzen's results carry the same shared
-verdict.)
+(`santa-check` is the canonical engine, and the one proven against the [verdict-oracle](../../oracle)
+(`oracle/*.json`, by `tools/santa-check/tests/oracle.rs`; the nipopow verdicts by unit tests). The per-ecosystem
+references (the TypeScript `structuralEqual` + grading in Dasher's `ts-runner/test/`, and the Scala `Harness`)
+implement the same §5/§6 but do not read the oracle today, so their agreement is not machine-checked. The
+orchestrator runs the full grid over `runners/*` — the N-way is whatever is checked in, never a hardcoded count.)
 
 **Prose travels with the vector and is never graded.** An entry may carry free prose saying why it exists and
 what it pins: `script` in the eval tier, an optional `description` in every other tier. A runner ignores it and
@@ -140,7 +187,8 @@ and passes `<impl-path>` — see §2/§3.)*
 
 ## 6. Worked example — adding a runner
 
-1. Implement `santa-run` (any language) emitting actuals per §3, self-provisioning its toolchain.
+1. Implement `santa-run` (any language) emitting actuals per §3, self-provisioning its toolchain, its last line
+   under the `santa-bound` prefix (§3, "The last line and `santa-bound`").
 2. Add `runner.json` (§2) and a `mise.toml` (§3 Toolchain) pinning the toolchain.
 3. Make `santa-run` executable and place the dir under `runners/` (in-tree or `git submodule add`).
 4. `./conform` discovers and runs it; the per-slice table shows its results.

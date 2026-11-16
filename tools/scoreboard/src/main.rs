@@ -162,6 +162,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         let mut t = format!("roundtrip {}/{}", g("roundtrip_nice"), g("roundtrip_total"));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
                         t
                     } else if is_tx {
                         // Transaction tier: valid + cost (when graded) + optional not-impl/panicked gaps.
@@ -171,6 +172,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         }
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
                         // Append dim-labelled details for genuine divergences (valid/cost) — skip
                         // not-implemented entries since they are already counted in the not-impl N summary.
                         for entry in &red_arr {
@@ -190,12 +192,14 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         let mut t = format!("valid {}/{}", g("block_valid_nice"), g("block_valid_total"));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
                         t
                     } else if is_chain {
                         // Chain tier: single value dimension (cost is n/a) + optional not-impl/panicked gaps.
                         let mut t = format!("value {}/{}", g("chain_value_nice"), g("chain_value_total"));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
                         t
                     } else if is_authds {
                         // AuthDS tier (AVL prover + verifier). authds_prove tallies proof + digest
@@ -217,13 +221,16 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                             g("authds_digest_nice"), g("authds_digest_total")));
                         if g("not_impl") > 0 { t.push_str(&format!(" \u{b7} not-impl {}", g("not_impl"))); }
                         if g("panicked") > 0 { t.push_str(&format!(" \u{b7} panicked {}", g("panicked"))); }
+                        if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
                         t
                     } else {
-                        format!(
+                        let mut t = format!(
                             "value {}/{} \u{b7} cost {}/{} \u{b7} reject {}/{} \u{b7} panicked {}",
                             g("value_nice"), g("value_total"), g("cost_nice"), g("cost_graded"),
                             g("reject_nice"), g("reject_total"), g("panicked")
-                        )
+                        );
+                        if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
+                        t
                     };
                     // For tx/block/chain/authds slices: if every red entry is dim="not-implemented" it
                     // is a coverage/roadmap cell (the impl doesn't support this tier yet), not a genuine
@@ -1159,5 +1166,24 @@ mod tests {
              blank cell into an alarm");
         assert!(!eval_cells.contains("class=\"norun\""),
             "an undeclared tier must NOT be reported as ungraded");
+    }
+
+    /// A budget hit (`exceeded`, written by conform for a bounded file) shows in the cell's tooltip in every tier.
+    #[test]
+    fn exceeded_shows_in_the_tooltip() {
+        let red = json!([{"dim": "exceeded", "entry": "e#0", "op": "x"}]);
+        let r = json!({
+          "schema": "santa-results/v1",
+          "runners": [
+            { "name": "vixen", "mark": "coal", "red_total": 2, "cost": true, "slices": {
+                "eval/v6/authored": {"value_nice": 0, "value_total": 0, "cost_nice": 0, "cost_graded": 0,
+                                     "reject_nice": 0, "reject_total": 0, "panicked": 0, "exceeded": 1, "red": red},
+                "transaction/v6/authored": {"tx_valid_total": 0, "tx_valid_nice": 0, "tx_valid_coal": 0,
+                                            "cost_graded": 0, "not_impl": 0, "panicked": 0, "exceeded": 1, "red": red}
+            } }
+          ]
+        });
+        let html = dashboard(&r, "abc123");
+        assert_eq!(html.matches("exceeded 1").count(), 2, "{html}");
     }
 }

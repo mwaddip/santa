@@ -235,6 +235,11 @@ reconstruction rules, which every conforming implementation of this schema must 
   it into a softer outcome on the implementation's behalf. Graded coal **unconditionally** (§5/§6),
   even against a reject-expected vector: a crash is not a clean rejection (hence a distinct tag, not a
   reuse of `errored`). `note` (present iff `error == "panicked"`) carries the message for diagnosis.
+- **Exceeded** (an orchestrator outcome, never in a runner's actuals): a bounded file (one entry with a
+  `limits` budget) whose process hit its memory or time budget. `./conform` writes
+  `{ "error": "exceeded", "limit": "memory"|"time", "budget": {…} }` for its entry from santa-bound's record, and
+  a bounded file whose process crashed gets `panicked` with `note` `process <exit status>`. See
+  [runner-integration.md §3a](runner-integration.md#3a-bounded-files).
 - **Value-success with cost not claimed:** `{ "value": <SValue>, "cost": null, "error": null }` — the
   runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
   This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
@@ -447,7 +452,8 @@ wire-encodability gate drops un-ingestable inputs, a committed `expected` is alw
 That is intentional: it is always a real finding (a coverage gap), surfaced rather than hidden.
 `panicked` is coal **unconditionally** — unlike `errored`
 it never matches a reject-expected `expected` (a crash is not a clean rejection), which is
-why it is a distinct tag rather than a refinement of `errored`.
+why it is a distinct tag rather than a refinement of `errored`. So is `exceeded` (§3), on every tier: no answer
+within the budget is not a clean rejection either.
 
 A vector is **nice** for a runner iff every entry is nice; one lump of coal makes the runner
 **naughty** on that vector.

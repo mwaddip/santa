@@ -14,4 +14,6 @@ if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
   # tools/conform and fail ("couldn't exec process: Permission denied").
   exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$d/$(basename "$0")" "$@"
 fi
+# santa-bound runs each runner's last line under cgroup bounds; conform finds it beside itself (same profile).
+cargo build --manifest-path "$d/tools/Cargo.toml" -p santa-bound -q
 exec cargo run --manifest-path "$d/tools/Cargo.toml" -p conform -q -- "$@"
