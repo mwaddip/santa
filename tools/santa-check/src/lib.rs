@@ -255,6 +255,9 @@ pub fn grade_transaction(actual: &Value, expected: &Value) -> Value {
 /// - `{"kind": "coverage", "tag": "not-implemented"}`
 /// - `{"kind": "block", "valid": "nice"|"valid", "post_digest": "nice"|"post_digest"|"n/a", "cost": "nice"|"cost"|"n/a"}`
 pub fn grade_block(actual: &Value, expected: &Value) -> Value {
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
+    }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
     }
@@ -323,6 +326,9 @@ pub fn grade_block(actual: &Value, expected: &Value) -> Value {
 /// vectors (`expected.error == "errored"`) errored is the graded nice outcome.
 /// Unknown kind is coal — never a silent pass.
 pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
+    }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
     }
@@ -380,6 +386,9 @@ pub fn grade_chain(actual: &Value, entry: &Value) -> Value {
 ///
 /// Unknown kind is coal on every dimension — never a silent pass.
 pub fn grade_authds(actual: &Value, entry: &Value) -> Value {
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
+    }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
     }
@@ -433,6 +442,9 @@ pub fn grade_authds(actual: &Value, entry: &Value) -> Value {
 }
 
 pub fn grade_nipopow(actual: &Value, entry: &Value, chain: &Value) -> Value {
+    if let Some(v) = exceeded_verdict(actual) {
+        return v;
+    }
     if err_is(actual, "panicked") {
         return json!({"kind": "panicked"});
     }
@@ -1023,5 +1035,15 @@ mod nipopow_tests {
         let actual = json!({"error": "panicked", "note": "boom"});
         let g = grade_nipopow(&actual, &entry, &chain);
         assert_eq!(g["kind"], "panicked");
+    }
+
+    #[test]
+    fn grade_nipopow_exceeded() {
+        let chain = json!([]);
+        let entry = json!({"kind": "nipopow_interlinks", "expected": {}});
+        let actual = json!({"error": "exceeded", "limit": "time"});
+        let g = grade_nipopow(&actual, &entry, &chain);
+        assert_eq!(g["kind"], "exceeded");
+        assert_eq!(g["limit"], "time");
     }
 }

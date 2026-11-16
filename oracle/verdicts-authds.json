@@ -285,6 +285,59 @@
         "proof": "proof",
         "digest": "digest"
       }
+    },
+    {
+      "name": "exceeded-on-accept-is-coal",
+      "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+      "entry": {
+        "kind": "avl_prove",
+        "expected": {
+          "proofs": [
+            "aa",
+            "bb"
+          ],
+          "digests": [
+            "11",
+            "22"
+          ]
+        }
+      },
+      "actual": {
+        "error": "exceeded",
+        "limit": "memory",
+        "budget": {
+          "memory_mb": 1024,
+          "wall_s": 10
+        }
+      },
+      "verdict": {
+        "kind": "exceeded",
+        "limit": "memory"
+      }
+    },
+    {
+      "name": "exceeded-on-reject-is-coal-not-nice",
+      "description": "A budget hit where the proof is rejected is not a clean rejection.",
+      "entry": {
+        "kind": "avl_verify",
+        "expected": {
+          "proof_accepted": false,
+          "results": [],
+          "new_digest_hex": null
+        }
+      },
+      "actual": {
+        "error": "exceeded",
+        "limit": "time",
+        "budget": {
+          "memory_mb": 1024,
+          "wall_s": 10
+        }
+      },
+      "verdict": {
+        "kind": "exceeded",
+        "limit": "time"
+      }
     }
   ]
 }

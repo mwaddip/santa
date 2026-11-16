@@ -71,6 +71,18 @@
      "description": "Panicked on a reject vector: coal unconditionally (a crash is not a clean rejection).",
      "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
      "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "panicked", "note": "panic in reject path"},
-     "verdict":  {"kind": "panicked"}}
+     "verdict":  {"kind": "panicked"}},
+
+    {"name": "exceeded-on-accept-is-coal",
+     "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+     "expected": {"valid": true, "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50", "cost": 12500, "reason": null},
+     "actual":   {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "verdict":  {"kind": "exceeded", "limit": "memory"}},
+
+    {"name": "exceeded-on-reject-is-coal-not-nice",
+     "description": "A budget hit on a reject vector is not a clean rejection.",
+     "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
+     "actual":   {"error": "exceeded", "limit": "time", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "verdict":  {"kind": "exceeded", "limit": "time"}}
   ]
 }
