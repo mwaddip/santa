@@ -184,11 +184,15 @@ arms are named non-goals, to be specified when built (do not implement against t
   tree rejects, in `wire/v5/authored/`; a block section of version 4 rejects such an output and one of
   version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); the
   creation-height parse bound
-  (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`); and the
+  (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`); the
   writer's range, where the JVM parses the bytes and refuses to write them back (a type variable name of at most
   255 bytes read as a TEXT longer than 255, since a malformed byte becomes the three bytes of U+FFFD: `putUByte`
   refuses its length; in a tree's types, in an output's tree, in a Box held in a register or an extension —
-  `{ErgoTree,Transaction}.type_var_name_write_range`). Each bound ships with its accept twin on the other side. Beside them,
+  `{ErgoTree,Transaction}.type_var_name_write_range`); and the static type of `Exponentiate` and `MultiplyGroup`,
+  GroupElement whatever their operands (`==` between such a node over an Int or Any-typed left operand and a group
+  element is read, and `+ 1` over it is refused by the builder's arithmetic check, a `ConstraintFailed` the size
+  flag does not degrade — `{Box,Transaction}.tree_group_node_static_type`). Each bound ships with its accept twin on
+  the other side. Beside them,
   `Transaction.context_extension_duplicate_ids` is a non-identity round-trip (§1): the JVM collapses a
   repeated extension id to its last value at its first position, so a runner must re-serialize the
   parsed transaction, not echo its input. `{Box,Transaction}.sized_tree_declared_size` are

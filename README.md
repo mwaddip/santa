@@ -45,13 +45,13 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 7,104 entries across 401 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 5,016
+- ✅ **A blessed eval corpus — 9,744 entries across 405 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 7,656
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
   spends (full context); version-split into **v4** (18 entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (2,345 — the cumulative
-  v5/mainnet method surface) and **v6** (4,741 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (3,341 — the cumulative
+  v5/mainnet method surface) and **v6** (6,385 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -219,6 +219,14 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - A decoded `NoType` against a declared `SAny` rejects. `R1` is the box's own proposition bytes. A Boolean root is
     wrapped in `sigmaProp`.
   - A decode is charged twice its length once it completes.
+
+  **The group nodes' static type** (`group-node-static-type`, 48 entries): `Exponentiate` and `MultiplyGroup` are
+  typed `GroupElement` whatever their operands.
+  - A box whose tree compares such a node with a group element spends, where the node's left operand is an Any-typed
+    group element, or an Int behind `true ||`.
+  - The substitution checks each `DeserializeContext` / `DeserializeRegister` script's type against the declared one
+    before the script runs, taken or not: the node over the Int 1 against `Int` behind `true ||` does not spend, and
+    the node over an Any-typed group element against `GroupElement` does.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

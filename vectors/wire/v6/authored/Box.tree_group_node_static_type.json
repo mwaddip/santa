@@ -1,0 +1,1015 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Box.tree_group_node_static_type",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "entries" : [
+    {
+      "name" : "group-node-static-type-true-prop-v0#0",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[true-prop|v0] A box whose tree (unsized, v0) is `sigmaProp(true)`. The JVM reads it and writes it back as read. CONTROL: the carrier.",
+      "bytes_hex" : "c0843d00d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-true-prop-v0-sized#1",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[true-prop|v0-sized] A box whose tree (sized, v0) is `sigmaProp(true)`. The JVM reads it and writes it back as read. CONTROL: the carrier.",
+      "bytes_hex" : "c0843d0803d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-true-prop-v1-sized#2",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[true-prop|v1-sized] A box whose tree (sized, v1) is `sigmaProp(true)`. The JVM reads it and writes it back as read. CONTROL: the carrier.",
+      "bytes_hex" : "c0843d0903d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-true-prop-v3-sized#3",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[true-prop|v3-sized] A box whose tree (sized, v3) is `sigmaProp(true)`. The JVM reads it and writes it back as read. CONTROL: the carrier.",
+      "bytes_hex" : "c0843d0b03d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.ctl-v0#4",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.ctl|v0] A box whose tree (unsized, v0) is `Coll(1, 2, 3).filter({ (i: Int) => true })`, a Coll[Int] root. The JVM REJECTS it: rule 1001 (its root is no SigmaProp), which an unsized tree cannot degrade. CONTROL: no proposition (rule 1001), read in full: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d00b51003020406d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.ctl-v0-sized#5",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.ctl|v0-sized] A box whose tree (sized, v0) is `Coll(1, 2, 3).filter({ (i: Int) => true })`, a Coll[Int] root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001), read in full: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d080cb51003020406d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.ctl-v1-sized#6",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.ctl|v1-sized] A box whose tree (sized, v1) is `Coll(1, 2, 3).filter({ (i: Int) => true })`, a Coll[Int] root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001), read in full: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d090cb51003020406d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.ctl-v3-sized#7",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.ctl|v3-sized] A box whose tree (sized, v3) is `Coll(1, 2, 3).filter({ (i: Int) => true })`, a Coll[Int] root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001), read in full: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d0b0cb51003020406d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.int-v0#8",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.int|v0] A box whose tree (unsized, v0) is `Filter` over the Int 1, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: Filter's type is a strict cast of its input's, which the root check reads: a ClassCastException, no ValidationException, so the size flag does not degrade it.",
+      "bytes_hex" : "c0843d00b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.int-v0-sized#9",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.int|v0-sized] A box whose tree (sized, v0) is `Filter` over the Int 1, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: Filter's type is a strict cast of its input's, which the root check reads: a ClassCastException, no ValidationException, so the size flag does not degrade it.",
+      "bytes_hex" : "c0843d0809b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.int-v1-sized#10",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.int|v1-sized] A box whose tree (sized, v1) is `Filter` over the Int 1, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: Filter's type is a strict cast of its input's, which the root check reads: a ClassCastException, no ValidationException, so the size flag does not degrade it.",
+      "bytes_hex" : "c0843d0909b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-filter.int-v3-sized#11",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[filter.int|v3-sized] A box whose tree (sized, v3) is `Filter` over the Int 1, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: Filter's type is a strict cast of its input's, which the root check reads: a ClassCastException, no ValidationException, so the size flag does not degrade it.",
+      "bytes_hex" : "c0843d0b09b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-lambda.filter.int-v0#12",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[lambda.filter.int|v0] A box whose tree (unsized, v0) is a lambda `{ (x: Int) => x.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the lambda's type reads its body's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d00d9010904b57209d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-lambda.filter.int-v0-sized#13",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[lambda.filter.int|v0-sized] A box whose tree (sized, v0) is a lambda `{ (x: Int) => x.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the lambda's type reads its body's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d080dd9010904b57209d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-lambda.filter.int-v1-sized#14",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[lambda.filter.int|v1-sized] A box whose tree (sized, v1) is a lambda `{ (x: Int) => x.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the lambda's type reads its body's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d090dd9010904b57209d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-lambda.filter.int-v3-sized#15",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[lambda.filter.int|v3-sized] A box whose tree (sized, v3) is a lambda `{ (x: Int) => x.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the lambda's type reads its body's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0b0dd9010904b57209d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.filter.int-v0#16",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.filter.int|v0] A box whose tree (unsized, v0) is a block `{ val v = 1; 1.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the block's type reads its result's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d00d801d6010402b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.filter.int-v0-sized#17",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.filter.int|v0-sized] A box whose tree (sized, v0) is a block `{ val v = 1; 1.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the block's type reads its result's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d080fd801d6010402b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.filter.int-v1-sized#18",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.filter.int|v1-sized] A box whose tree (sized, v1) is a block `{ val v = 1; 1.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the block's type reads its result's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d090fd801d6010402b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.filter.int-v3-sized#19",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.filter.int|v3-sized] A box whose tree (sized, v3) is a block `{ val v = 1; 1.filter(...) }`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: the block's type reads its result's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0b0fd801d6010402b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.val-filter.int-v0#20",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.val-filter.int|v0] A box whose tree (unsized, v0) is a block `{ val v = 1.filter(...); sigmaProp(true) }`. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a ValDef's type reads its right side's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d00d801d601b50402d90101040101d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.val-filter.int-v0-sized#21",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.val-filter.int|v0-sized] A box whose tree (sized, v0) is a block `{ val v = 1.filter(...); sigmaProp(true) }`. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a ValDef's type reads its right side's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0810d801d601b50402d90101040101d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.val-filter.int-v1-sized#22",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.val-filter.int|v1-sized] A box whose tree (sized, v1) is a block `{ val v = 1.filter(...); sigmaProp(true) }`. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a ValDef's type reads its right side's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0910d801d601b50402d90101040101d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-block.val-filter.int-v3-sized#23",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[block.val-filter.int|v3-sized] A box whose tree (sized, v3) is a block `{ val v = 1.filter(...); sigmaProp(true) }`. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a ValDef's type reads its right side's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0b10d801d601b50402d90101040101d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-if.filter.int-v0#24",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[if.filter.int|v0] A box whose tree (unsized, v0) is `if (true) 1.filter(...) else 1.filter(...)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: If's type reads its branch's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d00950101b50402d90101040101b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-if.filter.int-v0-sized#25",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[if.filter.int|v0-sized] A box whose tree (sized, v0) is `if (true) 1.filter(...) else 1.filter(...)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: If's type reads its branch's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0815950101b50402d90101040101b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-if.filter.int-v1-sized#26",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[if.filter.int|v1-sized] A box whose tree (sized, v1) is `if (true) 1.filter(...) else 1.filter(...)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: If's type reads its branch's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0915950101b50402d90101040101b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-if.filter.int-v3-sized#27",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[if.filter.int|v3-sized] A box whose tree (sized, v3) is `if (true) 1.filter(...) else 1.filter(...)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: If's type reads its branch's (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0b15950101b50402d90101040101b50402d901010401010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-tuple.filter.int-v0#28",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[tuple.filter.int|v0] A box whose tree (unsized, v0) is the tuple `(1.filter(...), 1)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a Tuple's type reads its items' (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d008602b50402d9010104010104020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-tuple.filter.int-v0-sized#29",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[tuple.filter.int|v0-sized] A box whose tree (sized, v0) is the tuple `(1.filter(...), 1)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a Tuple's type reads its items' (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d080d8602b50402d9010104010104020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-tuple.filter.int-v1-sized#30",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[tuple.filter.int|v1-sized] A box whose tree (sized, v1) is the tuple `(1.filter(...), 1)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a Tuple's type reads its items' (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d090d8602b50402d9010104010104020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-tuple.filter.int-v3-sized#31",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[tuple.filter.int|v3-sized] A box whose tree (sized, v3) is the tuple `(1.filter(...), 1)`, the root. The JVM REJECTS it: Filter's type casts an Int to a collection (ClassCastException). CONTROL: a Tuple's type reads its items' (a Filter over an Int): a ClassCastException at any form.",
+      "bytes_hex" : "c0843d0b0d8602b50402d9010104010104020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.size-filter.int-v0#32",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.size-filter.int|v0] A box whose tree (unsized, v0) is `sigmaProp(1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: SizeOf does not read its input's type, so the tree is read (it fails only when evaluated).",
+      "bytes_hex" : "c0843d00d193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.size-filter.int-v0-sized#33",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.size-filter.int|v0-sized] A box whose tree (sized, v0) is `sigmaProp(1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: SizeOf does not read its input's type, so the tree is read (it fails only when evaluated).",
+      "bytes_hex" : "c0843d080ed193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.size-filter.int-v1-sized#34",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.size-filter.int|v1-sized] A box whose tree (sized, v1) is `sigmaProp(1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: SizeOf does not read its input's type, so the tree is read (it fails only when evaluated).",
+      "bytes_hex" : "c0843d090ed193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.size-filter.int-v3-sized#35",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.size-filter.int|v3-sized] A box whose tree (sized, v3) is `sigmaProp(1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: SizeOf does not read its input's type, so the tree is read (it fails only when evaluated).",
+      "bytes_hex" : "c0843d0b0ed193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.size-filter.int-v0#36",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.size-filter.int|v0] A box whose tree (unsized, v0) is `sigmaProp(true && 1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: as above, behind `&&`.",
+      "bytes_hex" : "c0843d00d1ed010193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.size-filter.int-v0-sized#37",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.size-filter.int|v0-sized] A box whose tree (sized, v0) is `sigmaProp(true && 1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: as above, behind `&&`.",
+      "bytes_hex" : "c0843d0811d1ed010193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.size-filter.int-v1-sized#38",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.size-filter.int|v1-sized] A box whose tree (sized, v1) is `sigmaProp(true && 1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: as above, behind `&&`.",
+      "bytes_hex" : "c0843d0911d1ed010193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.size-filter.int-v3-sized#39",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.size-filter.int|v3-sized] A box whose tree (sized, v3) is `sigmaProp(true && 1.filter(...).size == 0)`. The JVM reads it and writes it back as read. CONTROL: as above, behind `&&`.",
+      "bytes_hex" : "c0843d0b11d1ed010193b1b50402d9010104010104000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.ctl-v0#40",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.ctl|v0] A box whose tree (unsized, v0) is `Exponentiate(g, 2)`, the root. The JVM REJECTS it: rule 1001 (its root is no SigmaProp), which an unsized tree cannot degrade. CONTROL: no proposition (rule 1001), whatever the node's type: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d009f070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.ctl-v0-sized#41",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.ctl|v0-sized] A box whose tree (sized, v0) is `Exponentiate(g, 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001), whatever the node's type: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d08269f070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.ctl-v1-sized#42",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.ctl|v1-sized] A box whose tree (sized, v1) is `Exponentiate(g, 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001), whatever the node's type: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d09269f070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.ctl-v3-sized#43",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.ctl|v3-sized] A box whose tree (sized, v3) is `Exponentiate(g, 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001), whatever the node's type: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d0b269f070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.int-v0#44",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.int|v0] A box whose tree (unsized, v0) is `Exponentiate(1, 2)`, the root. The JVM REJECTS it: rule 1001 (its root is no SigmaProp), which an unsized tree cannot degrade. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Int: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d009f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.int-v0-sized#45",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.int|v0-sized] A box whose tree (sized, v0) is `Exponentiate(1, 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Int: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d08069f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.int-v1-sized#46",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.int|v1-sized] A box whose tree (sized, v1) is `Exponentiate(1, 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Int: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d09069f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.int-v3-sized#47",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.int|v3-sized] A box whose tree (sized, v3) is `Exponentiate(1, 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Int: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d0b069f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.anyge-v0#48",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.anyge|v0] A box whose tree (unsized, v0) is `Exponentiate((g, true, 1L)(0), 2)`, the root. The JVM REJECTS it: rule 1001 (its root is no SigmaProp), which an unsized tree cannot degrade. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Any: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d009fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.anyge-v0-sized#49",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.anyge|v0-sized] A box whose tree (sized, v0) is `Exponentiate((g, true, 1L)(0), 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Any: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d082f9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.anyge-v1-sized#50",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.anyge|v1-sized] A box whose tree (sized, v1) is `Exponentiate((g, true, 1L)(0), 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Any: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d092f9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-exp.anyge-v3-sized#51",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[exp.anyge|v3-sized] A box whose tree (sized, v3) is `Exponentiate((g, true, 1L)(0), 2)`, the root. The JVM degrades the tree (rule 1001: its root is no SigmaProp) and keeps its bytes. CONTROL: no proposition (rule 1001) whether the node is typed GroupElement or Any: rejected without the size flag, degraded with it.",
+      "bytes_hex" : "c0843d0b2f9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.anyge-v0#52",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.anyge|v0] A box whose tree (unsized, v0) is `proveDlog(Exponentiate((g, true, 1L)(0), 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d00cd9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.anyge-v0-sized#53",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.anyge|v0-sized] A box whose tree (sized, v0) is `proveDlog(Exponentiate((g, true, 1L)(0), 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d0830cd9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.anyge-v1-sized#54",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.anyge|v1-sized] A box whose tree (sized, v1) is `proveDlog(Exponentiate((g, true, 1L)(0), 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d0930cd9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.anyge-v3-sized#55",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.anyge|v3-sized] A box whose tree (sized, v3) is `proveDlog(Exponentiate((g, true, 1L)(0), 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d0b30cd9fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801020400000601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.int-v0#56",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.int|v0] A box whose tree (unsized, v0) is `proveDlog(Exponentiate(1, 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d00cd9f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.int-v0-sized#57",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.int|v0-sized] A box whose tree (sized, v0) is `proveDlog(Exponentiate(1, 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d0807cd9f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.int-v1-sized#58",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.int|v1-sized] A box whose tree (sized, v1) is `proveDlog(Exponentiate(1, 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d0907cd9f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.dlog-exp.int-v3-sized#59",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.dlog-exp.int|v3-sized] A box whose tree (sized, v3) is `proveDlog(Exponentiate(1, 2))`. The JVM reads it and writes it back as read. CONTROL: proveDlog checks nothing of its operand while the tree is read.",
+      "bytes_hex" : "c0843d0b07cd9f04020601020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.anyge==g-v0#60",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.anyge==g|v0] A box whose tree (unsized, v0) is `sigmaProp(Exponentiate((g, true, 1L)(0), 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d00d1939fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.anyge==g-v0-sized#61",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.anyge==g|v0-sized] A box whose tree (sized, v0) is `sigmaProp(Exponentiate((g, true, 1L)(0), 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0853d1939fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.anyge==g-v1-sized#62",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.anyge==g|v1-sized] A box whose tree (sized, v1) is `sigmaProp(Exponentiate((g, true, 1L)(0), 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0953d1939fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.anyge==g-v3-sized#63",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.anyge==g|v3-sized] A box whose tree (sized, v3) is `sigmaProp(Exponentiate((g, true, 1L)(0), 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0b53d1939fb2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int==g-v0#64",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int==g|v0] A box whose tree (unsized, v0) is `sigmaProp(Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d00d1939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int==g-v0-sized#65",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int==g|v0-sized] A box whose tree (sized, v0) is `sigmaProp(Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d082ad1939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int==g-v1-sized#66",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int==g|v1-sized] A box whose tree (sized, v1) is `sigmaProp(Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d092ad1939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int==g-v3-sized#67",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int==g|v3-sized] A box whose tree (sized, v3) is `sigmaProp(Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0b2ad1939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int+1==1-v0#68",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int+1==1|v0] A box whose tree (unsized, v0) is `sigmaProp(Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept.",
+      "bytes_hex" : "c0843d00d1939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int+1==1-v0-sized#69",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int+1==1|v0-sized] A box whose tree (sized, v0) is `sigmaProp(Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept.",
+      "bytes_hex" : "c0843d080dd1939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int+1==1-v1-sized#70",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int+1==1|v1-sized] A box whose tree (sized, v1) is `sigmaProp(Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept.",
+      "bytes_hex" : "c0843d090dd1939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.exp.int+1==1-v3-sized#71",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.exp.int+1==1|v3-sized] A box whose tree (sized, v3) is `sigmaProp(Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept.",
+      "bytes_hex" : "c0843d0b0dd1939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int==g-v0#72",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int==g|v0] A box whose tree (unsized, v0) is `sigmaProp(true || Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses. Untaken: a parse refusal, whatever the evaluation would do.",
+      "bytes_hex" : "c0843d00d1ec0101939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int==g-v0-sized#73",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int==g|v0-sized] A box whose tree (sized, v0) is `sigmaProp(true || Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses. Untaken: a parse refusal, whatever the evaluation would do.",
+      "bytes_hex" : "c0843d082dd1ec0101939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int==g-v1-sized#74",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int==g|v1-sized] A box whose tree (sized, v1) is `sigmaProp(true || Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses. Untaken: a parse refusal, whatever the evaluation would do.",
+      "bytes_hex" : "c0843d092dd1ec0101939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int==g-v3-sized#75",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int==g|v3-sized] A box whose tree (sized, v3) is `sigmaProp(true || Exponentiate(1, 2) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Int == GroupElement`, which the builder refuses. Untaken: a parse refusal, whatever the evaluation would do.",
+      "bytes_hex" : "c0843d0b2dd1ec0101939f0402060102070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int+1==1-v0#76",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int+1==1|v0] A box whose tree (unsized, v0) is `sigmaProp(true || Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d00d1ec0101939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int+1==1-v0-sized#77",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int+1==1|v0-sized] A box whose tree (sized, v0) is `sigmaProp(true || Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d0810d1ec0101939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int+1==1-v1-sized#78",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int+1==1|v1-sized] A box whose tree (sized, v1) is `sigmaProp(true || Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d0910d1ec0101939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.exp.int+1==1-v3-sized#79",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.exp.int+1==1|v3-sized] A box whose tree (sized, v3) is `sigmaProp(true || Exponentiate(1, 2) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d0b10d1ec0101939a9f0402060102040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.mul.anyge==g-v0#80",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.mul.anyge==g|v0] A box whose tree (unsized, v0) is `sigmaProp(MultiplyGroup((g, true, 1L)(0), g) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d00d193a0b2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.mul.anyge==g-v0-sized#81",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.mul.anyge==g|v0-sized] A box whose tree (sized, v0) is `sigmaProp(MultiplyGroup((g, true, 1L)(0), g) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0872d193a0b2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.mul.anyge==g-v1-sized#82",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.mul.anyge==g|v1-sized] A box whose tree (sized, v1) is `sigmaProp(MultiplyGroup((g, true, 1L)(0), g) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0972d193a0b2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.mul.anyge==g-v3-sized#83",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.mul.anyge==g|v3-sized] A box whose tree (sized, v3) is `sigmaProp(MultiplyGroup((g, true, 1L)(0), g) == g)`. The JVM reads it and writes it back as read. STATIC TYPE: the node is GroupElement, so `==` compares two group elements and the tree is read; a port that types the node by its left operand sees `Any == GroupElement`, which the builder refuses.",
+      "bytes_hex" : "c0843d0b72d193a0b2480701050279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980102040000070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.mul.int+1==1-v0#84",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.mul.int+1==1|v0] A box whose tree (unsized, v0) is `sigmaProp(true || MultiplyGroup(1, g) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d00d1ec0101939aa00402070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.mul.int+1==1-v0-sized#85",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.mul.int+1==1|v0-sized] A box whose tree (sized, v0) is `sigmaProp(true || MultiplyGroup(1, g) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d082fd1ec0101939aa00402070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.mul.int+1==1-v1-sized#86",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.mul.int+1==1|v1-sized] A box whose tree (sized, v1) is `sigmaProp(true || MultiplyGroup(1, g) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d092fd1ec0101939aa00402070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "group-node-static-type-prop.untaken.mul.int+1==1-v3-sized#87",
+      "kind" : "Box",
+      "source" : "santa:authored-node-static-type",
+      "description" : "[prop.untaken.mul.int+1==1|v3-sized] A box whose tree (sized, v3) is `sigmaProp(true || MultiplyGroup(1, g) + 1 == 1)`. The JVM REJECTS it: the builder's arithmetic check fails (ConstraintFailed). STATIC TYPE: the node is GroupElement, so `+ 1` is arithmetic over a group element, which the builder refuses; a port that types the node by its left operand sees `Int + Int` and reads the tree: the over-accept. Untaken: refused while the tree is read.",
+      "bytes_hex" : "c0843d0b2fd1ec0101939aa00402070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040204020100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
