@@ -327,6 +327,13 @@ object SpecExtract {
   def authoredEnvelope(op: String, entries: Seq[Json], source: String): Json =
     envelope(op, entries, source)
 
+  /** The default budget of a bounded file (runner-integration.md §3a): 1 GiB and 10 s. On the serialize rows that
+    * needed it, about 7x the reference's memory and 13x its time, measured one row a process. */
+  val DefaultLimits: Json = Json.obj("memory_mb" -> Json.fromInt(1024), "wall_s" -> Json.fromInt(10))
+
+  /** A bounded file: the envelope with a top-level `limits` (exactly one entry; ./validate holds the ceilings). */
+  def bounded(envelope: Json, limits: Json = DefaultLimits): Json = envelope.mapObject(_.add("limits", limits))
+
   /** Author one santa-eval/v3 entry: extensions given as {varId -> binding JSON} per input (an
     * SValue, or a `Value`'s bytes), decoded by the oracle exactly as the runner will and written
     * verbatim into the vector. JVM blesses value+cost via evalWithInputExtensionsJson (the oracle;

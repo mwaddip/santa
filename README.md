@@ -45,15 +45,19 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 7,087 entries across 384 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 4,999
+- ✅ **A blessed eval corpus — 7,104 entries across 401 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 5,016
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
   spends (full context); version-split into **v4** (18 entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
   `SigmaProp` through), **v5** (2,345 — the cumulative
-  v5/mainnet method surface) and **v6** (4,724 — the v6 new-feature surface). Each entry is
+  v5/mainnet method surface) and **v6** (4,741 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
-  `(activated, ergoTree)` version it was blessed under.
+  `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
+  `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
+  (`Global.serialize` of a value shared 2^12 and more times); each runner runs each in its own process under
+  that budget, and a hit grades `exceeded` on that entry alone
+  ([runner-integration §3a](docs/contract/runner-integration.md#3a-bounded-files)).
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
   one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Seven runners wired today:
   - **Rudolph**: the JVM reference, the all-🎁 control that blessed the corpus.

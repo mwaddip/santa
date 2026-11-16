@@ -21,16 +21,17 @@ package santa
 // THE ROWS: sigma-rust's 920 (src/test/resources/sigma-rust-serialize-costed-writer/rows.tsv, as sent: a bare root
 // expression at tree version 3 and activated 3, with the jars' outcome, value and cost and fork cc29855f's answer).
 // Every expectation is our oracle's; all 780 rows at the default limit agree with the jars in outcome, value and cost.
-// Authored: 763, into five `v6` files. Not authored:
+// Authored: 780, 763 into five `v6` files and the 17 HELD rows each a bounded file (below). Not authored:
 //  - the 140 `limit` rows: each runs under its own cost limit (10 to 200), and the eval schema carries no cost limit
 //    (every entry evaluates at the default). With one, they separate nothing on a tier that grades value, cost and
 //    `errored`: a write-first port reaches the same total and fails the same check.
-//  - the 17 HELD rows, whose nested value is more than 64 MiB written or printed in full (2^12 and more inner copies,
-//    every three-level row, the 32,768 x 32,768 error rows): fork cc29855f writes before it charges and takes 1 GB to
-//    24 GB on them, aborting on three; upstream sigma-rust has no cost limit at all. An abort takes a runner's whole
-//    column (`santa-run exited`), so authoring them needs a per-row memory and time bound in the grading, which the
-//    corpus does not have. Every authored row, measured one a process under a 3 GB cap on blitzen (fork and
-//    upstream), vixen and dasher, ends within 0.6 s and 500 MB.
+// THE 17 HELD rows, whose nested value is more than 64 MiB written or printed in full (2^12 and more inner copies, every
+// three-level row, the 32,768 x 32,768 error rows), are BOUNDED FILES: one entry each and a resource budget
+// (`SpecExtract.DefaultLimits`, runner-integration.md §3a), so every runner runs each in its own process under that
+// budget and a hit grades `exceeded` on that entry alone. Fork cc29855f writes before it charges and takes 1 GB to
+// 24 GB on them, aborting on three; upstream sigma-rust has no cost limit at all; the JVM stops at the cost limit
+// within its baseline. Every row in the five files, measured one a process under a 3 GB cap on blitzen (fork and
+// upstream), vixen and dasher, ends within 0.6 s and 500 MB.
 // The trees are OUR writing of each expression (the JVM writes 729 of the 763 back byte-identically; the eight
 // `coll-of-options` rows' `Option[Coll[Int]]` type `24 10` is written in its short form `34`), but for the 26
 // `String-surrogate` rows, which keep the vendored `ED A0 80`: the reader decodes those three bytes to one U+FFFD and the
@@ -51,7 +52,7 @@ object AuthoredEvalSerializeCostedWriter {
   val IntInput: Json = Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0))
   val RowsFile: java.nio.file.Path =
     java.nio.file.Paths.get("src", "test", "resources", "sigma-rust-serialize-costed-writer", "rows.tsv")
-  /** A nested value larger than this, written or printed in full, is held (see the header). */
+  /** A nested value larger than this, written or printed in full, is held: a bounded file of its own (the header). */
   val HeldBytes: Long = 64L << 20
   val DefaultJitLimit: Long = 10000000L
 
@@ -66,7 +67,7 @@ object AuthoredEvalSerializeCostedWriter {
     /** The bytes of the nested value written in full: 32,768 bytes times every level's count. */
     def nestedBytes: Option[Long] = if (nestedFamily) Some(f(2).split('x').map(_.toLong).product) else None
     def held: Boolean = nestedBytes.exists(_ > HeldBytes)
-    def authored: Boolean = set != "limit" && !held
+    def authored: Boolean = set != "limit"
     def keepsVendored: Boolean = name.contains("|String-surrogate|")
     /** A row the JVM refuses inside `Global.serialize` whose bytes a port that writes them anyway would hand back in
       * full: the nested value of another class (32 MiB at 32,768 x 1,024) and every 65,536-byte write. The vector takes
@@ -251,9 +252,12 @@ object AuthoredEvalSerializeCostedWriter {
           s"constant of 1,023: 65,535 bytes ($block)"
         else s"`Global.serialize(${CountCarrier(f(1))})`, c = b6 ++ b6: 65,536 bytes ($block)"
       case "X" => s"`Global.serialize` of ${TupleArm(f.drop(2).mkString("|"))}"
-      case "G" | "E" =>
-        val m = f(2).split('x')(1)
-        val v = s"v = Coll(b) doubled by `++` to $m items, every one the same b (b: 32,768 bytes)"
+      case "G" | "E" | "G3" | "E3" =>
+        val d = f(2).split('x')
+        val v =
+          if (d.length == 2) s"v = Coll(b) doubled by `++` to ${d(1)} items, every one the same b (b: 32,768 bytes)"
+          else s"v = Coll(w) doubled by `++` to ${d(2)} items, every one the same w, itself Coll(b) doubled to ${d(1)} " +
+            "items, every one the same b (b: 32,768 bytes)"
         f(1) match {
           case "size-serialize"            => s"`Global.serialize(v).size`, $v"
           case "size-only"                 => s"`v.size`, $v"
@@ -303,7 +307,7 @@ object AuthoredEvalSerializeCostedWriter {
         case _ => ensure(o.isLeft)
           "NOT A TUPLE: an item that is neither a pair nor a collection of Any; refused (`fromDslTuple`)."
       }
-      case "G" | "E" => r.f(1) match {
+      case "G" | "E" | "G3" | "E3" => r.f(1) match {
         case "size-only" => ensure(o.isRight); "CONTROL: the collection exists, and nothing writes it."
         case "size-serialize" if o.isRight =>
           "CONTROL: written within the cost limit, and the result fits 100,000 bytes."
@@ -326,17 +330,27 @@ object AuthoredEvalSerializeCostedWriter {
     s"[${r.name}] ${what(r)}$wrap — ${said(r)}. ${label(r)}  // tree v${r.treeVersion}, activated ${r.activated}"
   }
 
-  def extract(): Map[String, Json] =
-    rows().filter(_.authored).groupBy(_.op).map { case (op, rs) =>
-      val entries = rs.zipWithIndex.map { case (r, i) =>
-        val name = s"${r.slug}-a${r.activated}#$i"
-        val a = r.activated.toByte
-        if (r.outcome.isRight)
-          SpecExtract.authoredEntryV(op, script(r), r.treeHex, name, IntInput, a, ergoTree = r.treeVersion)
-        else SpecExtract.authoredRejectEntryV(op, script(r), r.treeHex, name, IntInput, a, ergoTree = r.treeVersion)
-      }
-      op -> SpecExtract.authoredEnvelope(op, entries, Source).mapObject(_.add("blessed_by", Json.fromString(Stamp)))
+  /** A held row's own file (a bounded file: one entry, `limits`). */
+  def boundedKey(r: Row): String = SpecExtract.slug(s"${r.op}_bounded_${r.slug}")
+
+  private def entry(r: Row, i: Int): Json = {
+    val name = s"${r.slug}-a${r.activated}#$i"
+    val a = r.activated.toByte
+    if (r.outcome.isRight)
+      SpecExtract.authoredEntryV(r.op, script(r), r.treeHex, name, IntInput, a, ergoTree = r.treeVersion)
+    else SpecExtract.authoredRejectEntryV(r.op, script(r), r.treeHex, name, IntInput, a, ergoTree = r.treeVersion)
+  }
+  private def envelope(op: String, entries: Seq[Json]): Json =
+    SpecExtract.authoredEnvelope(op, entries, Source).mapObject(_.add("blessed_by", Json.fromString(Stamp)))
+
+  /** The five op files (every authored row but the held ones), and one bounded file per held row. */
+  def extract(): Map[String, Json] = {
+    val rs = rows().filter(_.authored)
+    val files = rs.filterNot(_.held).groupBy(_.op).map { case (op, g) =>
+      op -> envelope(op, g.zipWithIndex.map { case (r, i) => entry(r, i) })
     }
+    files ++ rs.filter(_.held).map(r => boundedKey(r) -> SpecExtract.bounded(envelope(r.op, Seq(entry(r, 0)))))
+  }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =
     SpecExtract.writeStaging("AuthoredEvalSerializeCostedWriter", extract(), outDir)
