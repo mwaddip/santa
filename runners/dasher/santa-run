@@ -33,5 +33,7 @@ fi
 ln -sfn "$impl/ergots" "$TS/ergots-impl"
 (cd "$TS" && npm install --no-audit --no-fund >/dev/null 2>&1 && npm run build >/dev/null 2>&1)
 # One node per file, stopping at the first that fails (as under set -e); under santa-bound when SANTA_BOUND is set.
-${SANTA_BOUND:+"$SANTA_BOUND"} bash -c 'for f in "$1"/*.json; do node "$0" "$f" "$2/$(basename "$f")" || exit $?; done' \
+# --max-old-space-size: node sizes V8's heap to about half its cgroup's memory, so inside a bounded unit a row within
+# the budget would abort at the heap limit (graded panicked); a large ceiling leaves the bound to the cgroup.
+${SANTA_BOUND:+"$SANTA_BOUND"} bash -c 'for f in "$1"/*.json; do node --max-old-space-size=65536 "$0" "$f" "$2/$(basename "$f")" || exit $?; done' \
   "$TS/dist/runner.js" "$VECTORS" "$OUT"
