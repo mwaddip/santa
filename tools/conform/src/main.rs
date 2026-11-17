@@ -23,6 +23,9 @@ const VERSIONS: [&str; 3] = ["v4", "v5", "v6"];
 /// manifest may declare the ones it implements (`kinds`); a wire file holds one kind (./validate).
 const WIRE_KINDS: [&str; 7] = ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree", "BlockTransactions"];
 
+/// The keys a runner.json may hold (runner-integration §2); any other is refused.
+const MANIFEST_KEYS: [&str; 9] = ["name", "label", "version", "tiers", "cost", "kinds", "activation", "impl", "control"];
+
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..") // tools/conform -> repo root
 }
@@ -101,16 +104,7 @@ fn wire_facts(vectors_dir: &Path, vectors: &[Vec5]) -> Result<BTreeMap<String, W
         let path = vectors_dir.join(&v.0);
         let doc: Value = serde_json::from_str(&fs::read_to_string(&path).map_err(|e| format!("{}: {e}", v.0))?)
             .map_err(|e| format!("{}: {e}", v.0))?;
-        let mut kinds: Vec<&str> = doc["entries"]
-            .as_array()
-            .map(|es| es.iter().map(|e| e["kind"].as_str().unwrap_or("")).collect())
-            .unwrap_or_default();
-        kinds.sort_unstable();
-        kinds.dedup();
-        let kind = match kinds.as_slice() {
-            [k] if !k.is_empty() => k.to_string(),
-            ks => return Err(format!("{}: a wire file holds one kind, this one {ks:?}", v.0)),
-        };
+        let kind = santa_check::wire::one_kind(&doc).map_err(|e| format!("{}: {e}", v.0))?;
         let activation_rule = doc.get("activation_rule").and_then(Value::as_bool).unwrap_or(false);
         out.insert(v.0.clone(), WireFacts { kind, activation_rule });
     }
@@ -158,6 +152,16 @@ struct Runner {
 /// A runner.json, read. A declared scope is coarse and must name what it means: an unknown kind, an empty `kinds`
 /// (a wire tier that selects nothing would grade nothing, silently) and `kinds` without the wire tier are errors.
 fn parse_manifest(j: &Value, run: PathBuf) -> Result<Runner, String> {
+    // A misspelt key ("kind", "activations") would silently fall back to a default and widen or narrow the scope.
+    let obj = j.as_object().ok_or("runner.json: not an object")?;
+    if let Some(k) = obj.keys().find(|k| !MANIFEST_KEYS.contains(&k.as_str())) {
+        return Err(format!("runner.json: unknown key {k:?}; known: {MANIFEST_KEYS:?}"));
+    }
+    let flag = |k: &str, default: bool| match j.get(k) {
+        None => Ok(default),
+        Some(Value::Bool(b)) => Ok(*b),
+        Some(v) => Err(format!("runner.json: {k:?} is {v}, not a boolean")),
+    };
     let s = |k: &str| j[k].as_str().map(String::from).ok_or_else(|| format!("runner.json: no {k:?}"));
     let tiers: Vec<String> = j["tiers"]
         .as_array()
@@ -191,11 +195,11 @@ fn parse_manifest(j: &Value, run: PathBuf) -> Result<Runner, String> {
         label: s("label")?,
         version: s("version")?,
         tiers,
-        cost: j.get("cost").and_then(Value::as_bool).unwrap_or(true),
+        cost: flag("cost", true)?,
         kinds,
-        activation: j.get("activation").and_then(Value::as_bool).unwrap_or(true),
+        activation: flag("activation", true)?,
         impl_: j.get("impl").and_then(Value::as_str).map(String::from),
-        control: j.get("control").and_then(Value::as_bool).unwrap_or(false),
+        control: flag("control", false)?,
         run,
     })
 }
@@ -1052,7 +1056,8 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
-    use super::{in_scope, parse_manifest, parse_relpath, resolve_impl, select, unrun_controls, wire_facts, Runner, Vec5, WireFacts, WIRE_KINDS};
+    use super::{discover_vectors, in_scope, parse_manifest, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Runner, Vec5, WireFacts, WIRE_KINDS};
+    use std::collections::BTreeMap;
     use serde_json::json;
     use std::fs;
     use std::path::PathBuf;
@@ -1224,30 +1229,121 @@ mod tests {
         assert!(in_scope("eval/v5/authored/c.json", &facts(), &fleet(), false));
     }
 
-    #[test]
-    fn wire_facts_err_on_mixed_kinds() {
-        let root = std::env::temp_dir().join(format!("santa-wire-facts-test-{}", std::process::id()));
-        let dir = root.join("wire/v5/authored");
-        fs::create_dir_all(&dir).unwrap();
-        let file = |name: &str, kinds: &[&str]| {
-            let entries: Vec<_> = kinds.iter().map(|k| json!({"kind": k})).collect();
-            fs::write(dir.join(name), json!({"schema": "santa-wire/v1", "entries": entries}).to_string()).unwrap();
-        };
-        file("Box.one.json", &["Box", "Box"]);
-        file("Box.two.json", &["Box", "Transaction"]);
-        let vs: Vec<Vec5> = ["wire/v5/authored/Box.one.json", "wire/v5/authored/Box.two.json"]
-            .iter()
+    /// A temp dir removed on drop, so a failing assertion leaves nothing behind.
+    struct TempDir(PathBuf);
+    impl TempDir {
+        fn new(tag: &str) -> Self {
+            let d = std::env::temp_dir().join(format!("santa-conform-{tag}-{}", std::process::id()));
+            let _ = fs::remove_dir_all(&d);
+            fs::create_dir_all(&d).unwrap();
+            TempDir(d)
+        }
+    }
+    impl Drop for TempDir {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn vec5s(rels: &[&str]) -> Vec<Vec5> {
+        rels.iter()
             .map(|r| {
                 let (t, v, p, o) = parse_relpath(r);
                 (r.to_string(), t, v, p, o)
             })
-            .collect();
-        let e = wire_facts(&root, &vs).err().unwrap();
-        assert!(e.contains("Box.two.json"), "{e}");
-        let ok = wire_facts(&root, &vs[..1]).unwrap();
+            .collect()
+    }
+
+    #[test]
+    fn wire_facts_read_kind_and_marker_and_refuse_ambiguous_files() {
+        let root = TempDir::new("wire-facts");
+        let dir = root.0.join("wire/v5/authored");
+        fs::create_dir_all(&dir).unwrap();
+        let file = |name: &str, kinds: &[&str], marker: Option<bool>| {
+            let entries: Vec<_> = kinds.iter().map(|k| json!({"kind": k})).collect();
+            let mut doc = json!({"schema": "santa-wire/v1", "entries": entries});
+            if let Some(m) = marker {
+                doc["activation_rule"] = json!(m);
+            }
+            fs::write(dir.join(name), doc.to_string()).unwrap();
+        };
+        file("Box.one.json", &["Box", "Box"], None);
+        file("Box.marked.json", &["Box"], Some(true));
+        file("Box.two.json", &["Box", "Transaction"], None);
+        file("Box.empty.json", &[], None);
+        let ok = wire_facts(&root.0, &vec5s(&["wire/v5/authored/Box.one.json", "wire/v5/authored/Box.marked.json"])).unwrap();
         assert_eq!(ok["wire/v5/authored/Box.one.json"].kind, "Box");
         assert!(!ok["wire/v5/authored/Box.one.json"].activation_rule);
-        let _ = fs::remove_dir_all(&root);
+        assert!(ok["wire/v5/authored/Box.marked.json"].activation_rule);
+        for bad in ["wire/v5/authored/Box.two.json", "wire/v5/authored/Box.empty.json"] {
+            let e = wire_facts(&root.0, &vec5s(&[bad])).err().unwrap();
+            assert!(e.contains(bad.rsplit('/').next().unwrap()), "{e}");
+        }
+    }
+
+    #[test]
+    fn scope_suffix_names_what_is_declared() {
+        let mut r = runner("comet", false);
+        assert_eq!(scope_suffix(&r), "");
+        r.kinds = Some(vec!["Constant".into(), "Box".into()]);
+        r.activation = false;
+        assert_eq!(scope_suffix(&r), ", kinds=Constant,Box, activation=False");
+    }
+
+    #[test]
+    fn manifest_rejects_unknown_keys_and_non_bool_flags() {
+        for extra in [json!({"kind": ["Box"]}), json!({"activations": false}), json!({"activation": "false"}),
+                      json!({"cost": "false"}), json!({"control": 1})] {
+            let e = parse_manifest(&manifest(extra.clone()), PathBuf::from("/dev/null"));
+            assert!(e.is_err(), "{extra}");
+        }
+    }
+
+    /// Every runner.json in the tree parses (tools CI has no submodules: it reads the in-tree ones; a local run all).
+    #[test]
+    fn every_present_runner_manifest_parses() {
+        let runners = repo_root().join("runners");
+        let mut n = 0;
+        for d in fs::read_dir(&runners).unwrap().flatten() {
+            let m = d.path().join("runner.json");
+            if m.is_file() {
+                let j: serde_json::Value = serde_json::from_str(&fs::read_to_string(&m).unwrap()).unwrap();
+                parse_manifest(&j, PathBuf::from("/dev/null")).unwrap_or_else(|e| panic!("{}: {e}", m.display()));
+                n += 1;
+            }
+        }
+        assert!(n >= 2, "rudolph and dasher are in-tree");
+    }
+
+    /// Comet's declared scope (Constant, Box, Transaction; no activation rules) over the REAL corpus at v5: what it
+    /// keeps and what it does not (2026-11-17: 9 wire files in; out 5 ErgoTree, 1 SigmaBoolean, 1 BlockTransactions,
+    /// 2 marked). A corpus change that moves these counts should be looked at, not just re-pinned.
+    #[test]
+    fn comet_scope_over_the_real_corpus() {
+        let vdir = repo_root().join("vectors");
+        let vectors = discover_vectors(&vdir);
+        let facts = wire_facts(&vdir, &vectors).unwrap();
+        let kinds = Some(vec!["Constant".to_string(), "Box".to_string(), "Transaction".to_string()]);
+        let wire: Vec<&Vec5> = select(&vectors, "v5", &["wire".to_string()]);
+        let (kept, out): (Vec<&Vec5>, Vec<&Vec5>) = wire.iter().partition(|v| in_scope(&v.0, &facts, &kinds, false));
+        for v in &kept {
+            let f = &facts[&v.0];
+            assert!(["Constant", "Box", "Transaction"].contains(&f.kind.as_str()) && !f.activation_rule, "{}", v.0);
+        }
+        let mut why: BTreeMap<String, usize> = BTreeMap::new();
+        for v in &out {
+            let f = &facts[&v.0];
+            // by kind first: the v5 BlockTransactions file is both an undeclared kind and marked
+            let in_kinds = ["Constant", "Box", "Transaction"].contains(&f.kind.as_str());
+            *why.entry(if in_kinds { "marked".into() } else { f.kind.clone() }).or_default() += 1;
+        }
+        assert_eq!(kept.len(), 9);
+        let want: BTreeMap<String, usize> =
+            [("BlockTransactions", 1), ("ErgoTree", 5), ("SigmaBoolean", 1), ("marked", 2)]
+                .iter()
+                .map(|(k, n)| (k.to_string(), *n))
+                .collect();
+        assert_eq!(why, want);
     }
 
     // Port of the former tools/test_checkout.py: a throwaway local "remote" with v1 then v2 on

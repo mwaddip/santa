@@ -492,27 +492,13 @@ fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
     g
 }
 
-/// The one kind a wire file's entries share, or why there is none. A wire file holds one kind
-/// (runner-contract-wire), the unit `conform` selects by a runner's declared `kinds`.
-fn wire_one_kind(doc: &Value) -> Result<String, String> {
-    let entries = doc["entries"].as_array().map(Vec::as_slice).unwrap_or(&[]);
-    let mut kinds: Vec<&str> = entries.iter().map(|e| e["kind"].as_str().unwrap_or("")).collect();
-    kinds.sort_unstable();
-    kinds.dedup();
-    match kinds.as_slice() {
-        [k] if !k.is_empty() => Ok(k.to_string()),
-        [] => Err("no entries".to_string()),
-        ks => Err(format!("entries hold more than one kind (or none): {ks:?}")),
-    }
-}
-
 /// Every wire file holds exactly one kind.
 fn wire_one_kind_guard(root: &Path, files: &[PathBuf]) -> u32 {
     println!("\n[wire catalogue] one kind per file:");
     let vroot = root.join("vectors");
     let mut g: u32 = 0;
     for f in files {
-        if let Err(why) = wire_one_kind(&load(f)) {
+        if let Err(why) = santa_check::wire::one_kind(&load(f)) {
             g += 1;
             println!("  [WRONG] {}: {why}", f.strip_prefix(&vroot).unwrap().display());
         }
@@ -1349,16 +1335,6 @@ mod tests {
         for t in ["wire", "transaction", "block", "chain", "authds", "nipopow"] {
             assert_eq!(schema(t)["properties"]["limits"], eval, "{t}");
         }
-    }
-
-    /// A wire file holds one kind (runner-contract-wire): `conform` selects by it, a file at a time.
-    #[test]
-    fn one_kind_guard_flags_mixed_and_empty() {
-        let doc = |kinds: &[&str]| json!({ "entries": kinds.iter().map(|k| json!({ "kind": k })).collect::<Vec<_>>() });
-        assert_eq!(wire_one_kind(&doc(&["Box", "Box"])), Ok("Box".to_string()));
-        assert!(wire_one_kind(&doc(&["Box", "Transaction"])).is_err());
-        assert!(wire_one_kind(&doc(&[])).is_err());
-        assert!(wire_one_kind(&json!({ "entries": [{ "name": "no kind" }] })).is_err());
     }
 
     #[test]

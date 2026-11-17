@@ -57,6 +57,8 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   staged and not tallied, as a higher version or an undeclared tier; `conform`'s header line, `results.json` and
   the scoreboard show the declared scope.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
+- `conform` refuses a key outside these (a misspelt `kind` / `activations` would silently fall back to a default
+  and change the scope) and a `cost` / `activation` / `control` that is not a JSON boolean.
 - **`control`** (optional, default `false`) — the oracle's own runner (rudolph). A grid in which a control could not
   build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `results.json`), and the CI
   run fails before it publishes a scoreboard. The same holds for a control that exceeds or crashes on a bounded

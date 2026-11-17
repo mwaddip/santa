@@ -4,6 +4,7 @@
 use serde_json::{json, Number, Value};
 
 pub mod limits;
+pub mod wire;
 
 /// §5 structural equality: objects key-order-insensitive, arrays order-sensitive, numbers numeric,
 /// strings exact, null == only null, bool is NOT int.
