@@ -118,14 +118,16 @@ class AuthoredWireTreeVersionTest extends munit.FunSuite {
     }
   }
 
-  test("the marked files differ from the committed ones only by the marker, after blessed_by") {
+  // The marker was added to the six committed files as one line each, entries untouched (12867f0's diff: +1 line per
+  // file). From then on the blesser must reproduce each committed file byte for byte, the marker right after blessed_by.
+  test("the blesser reproduces the committed files, the marker right after blessed_by") {
     for ((vectors, dir) <- Seq(v6 -> "v6", v5 -> "v5"); (op, env) <- vectors) {
       val path = java.nio.file.Paths.get("..", "vectors", "wire", dir, "authored", s"$op.json")
-      val committed = new String(java.nio.file.Files.readAllBytes(path), "UTF-8").split("\n", -1).toVector
-      val at = committed.indexWhere(_.trim.startsWith("\"blessed_by\""))
-      assert(at > 0, s"$dir/$op: no blessed_by line")
-      val marked = (committed.take(at + 1) :+ "  \"activation_rule\" : true," ) ++ committed.drop(at + 1)
-      assertEquals(env.spaces2.trim, marked.mkString("\n").trim, s"$dir/$op")
+      val committed = new String(java.nio.file.Files.readAllBytes(path), "UTF-8")
+      assertEquals(env.spaces2.trim, committed.trim, s"$dir/$op")
+      val lines = committed.split("\n").toVector
+      val at = lines.indexWhere(_.trim.startsWith("\"blessed_by\""))
+      assertEquals(lines.lift(at + 1).map(_.trim), Some("\"activation_rule\" : true,"), s"$dir/$op")
     }
   }
 
