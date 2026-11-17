@@ -17,18 +17,19 @@ class AuthoredTxGenericProducersTest extends munit.FunSuite {
   private def valid(e: Json): Boolean =
     e.hcursor.downField("expected").get[Boolean]("valid").toOption.getOrElse(fail("valid"))
 
-  test("the wrap is neutral on every authored row but the item calls; the item calls are not spent") {
+  test("the wrap is neutral on every spendable row; on every other row that answers it throws") {
     E.authored().foreach { case (r, o) =>
       val w = EvalCore.evalFullContextOutcome(AuthoredTxGenericProducers.treeAt(r.treeVersion, "d801d60b" + r.body + "0101"),
         0, Seq(r.selfHex), Nil, Nil, Seq(AuthoredEvalSubstConstantsLift.HeaderHex(r.activated)),
         AuthoredEvalSubstConstantsLift.preHeaderHex(r.activated), Seq(r.ext), None, r.activated.toByte)._2
-      if (!r.item) o match {
+      if (B.spendable(r)) o match {
         case E.Answer(_, cost) =>
           assertEquals(w.map(x => (AuthoredEvalPatchArrayClass.text(x._1), x._2)), Right(("true", cost + 12)), r.name)
         case _ => assert(w.isLeft, r.name)
-      }
+      } else if (o.isInstanceOf[E.Answer]) assert(w.isLeft, s"${r.name}: an excluded row the wrap carries")
     }
-    assert(spends.filter(_.family == "ROW").forall(s => !E.rows().exists(r => r.name == s.name && r.item)))
+    assert(spends.filter(_.family == "ROW").forall(s => E.rows().exists(r => r.name == s.name && B.spendable(r))))
+    assert(spends.exists(_.name.contains("|byIndex.in|")), "the ByIndex rows in range are spent")
   }
 
   test("the selection: per receiver, method, tree version and gradeable class; the requested trees") {
@@ -37,7 +38,7 @@ class AuthoredTxGenericProducersTest extends munit.FunSuite {
     val byName = E.rows().groupBy(_.name).map { case (n, rs) => n -> rs.head }
     val keys = names.map(n => byName(n)).map(r => (r.receiver, r.method, r.treeVersion, r.grade))
     assertEquals(keys.distinct.size, keys.size)
-    assertEquals(spends.count(_.family == "REQ"), 6)
+    assertEquals(spends.count(_.family == "REQ"), 10)
     Seq(2, 3).foreach { a =>
       spends.filter(_.activated == a).zip(entries(a)).foreach { case (s, e) =>
         assertEquals(valid(e), s.valid, s"${s.name} a$a")
@@ -59,6 +60,13 @@ class AuthoredTxGenericProducersTest extends munit.FunSuite {
     Seq(2, 3).foreach { a =>
       assertEquals(blessed(a).hcursor.get[String]("op").toOption, Some(B.Op))
       assertEquals(blessed(a).hcursor.get[String]("blessed_by").toOption, Some("jvm:ergo-core-6.0.7-validateStateful"))
+    }
+    // the first selection's entries (c3e291e) stay where they were: the new spends are appended
+    Seq(2, 3).foreach { a =>
+      val path = java.nio.file.Paths.get("..", "vectors").resolve(B.Paths(a))
+      val before = io.circe.parser.parse(new String(java.nio.file.Files.readAllBytes(path), "UTF-8")).toOption.get
+        .hcursor.downField("entries").as[List[Json]].toOption.get
+      assertEquals(entries(a).take(before.size), before, s"activated $a: the committed entries are a prefix")
     }
     B.writeVectors(java.nio.file.Paths.get("..", "vectors"))
   }

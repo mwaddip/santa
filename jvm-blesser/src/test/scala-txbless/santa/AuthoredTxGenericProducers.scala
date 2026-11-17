@@ -6,10 +6,14 @@ package santa
 //  - ROW: per receiver, method, tree version and sigma-rust's gradeable class, the first authored row in the table's
 //    order, as `sigmaProp({ val v = <row>; true })` at the row's tree version. The JVM evaluates the ValDef, so the box
 //    spends exactly where the row answers (measured on every row: the wrap answers `true` exactly there, cost + 12).
-//    Not the `getOrElse` / `ByIndex` rows: their direct default of another type gives the call a type variable, and a
-//    ValDef of it throws (`Unknown type IV`) where the bare row answers, so no such wrap carries them.
+//    Not the `getOrElse` METHOD rows and not `ByIndex` with the index out of range: with a default of another type the
+//    method is typed by its type variable, and a ValDef of it throws (`Unknown type IV`) where the bare row answers;
+//    out of range the default comes back and the ValDef throws on it. `ByIndex` IN range is the collection's item type
+//    and is carried (sigma-rust's note santa-probe-specialised-patch-array-3.md, measured here too).
 //  - REQ: sigma-rust's three whole trees (tree v0): `sigmaProp(SELF.R4[Coll[Byte]].get.patch(0, Coll[Int](), 0).size
-//    == 2)`, the same over variable 1, and `sigmaProp(SELF.R1[Coll[Byte]].get.patch(0, Coll[Int](), 0).size > 0)`.
+//    == 2)`, the same over variable 1, and `sigmaProp(SELF.R1[Coll[Byte]].get.patch(0, Coll[Int](), 0).size > 0)`;
+//    and from its note, `ByIndex(CONTEXT.preHeader.parentId, 0, default)` read by another consumer,
+//    `sigmaProp(Coll[Byte](<it>).size == 1)`, with the default `true` and `1L` (tree v0).
 //
 // Each spends the context's own SELF with the tree under test spliced into its RAW bytes (its registers and token as
 // sigma-rust wrote them), the input carrying the context's RAW extension spliced over the writer's re-encoding (the
@@ -65,25 +69,43 @@ object AuthoredTxGenericProducers {
         "`83020202010202`"),
     ("R1|empty-ints|size>0", "00d191b1dc0c13e4c6a7010e030400100004000400",
       "`sigmaProp(SELF.R1[Coll[Byte]].get.patch(0, Coll[Int](), 0).size > 0)`, R1 read as a register"))
+  /** From sigma-rust's note: the ByIndex node with a default, in range, over the pre-header's parentId. */
+  val RequestedByIndex: Seq[(String, String, String)] = Seq(
+    ("preHeader.parentId|byIndex.in|true|coll-size==1", "00d193b1830102b2db6902db6503fe04000101010402",
+      "`sigmaProp(Coll[Byte](ByIndex(CONTEXT.preHeader.parentId, 0, default = true)).size == 1)`"),
+    ("preHeader.parentId|byIndex.in|1L|coll-size==1", "00d193b1830102b2db6902db6503fe04000105020402",
+      "`sigmaProp(Coll[Byte](ByIndex(CONTEXT.preHeader.parentId, 0, default = 1L)).size == 1)`"))
+  /** A row the wrap carries: not the `getOrElse` method, not `ByIndex` out of range (see the header). */
+  def spendable(r: AuthoredEvalGenericProducers.Row): Boolean =
+    !r.method.startsWith("getOrElse") && r.method != "byIndex.out"
 
   def spends(): Vector[Spend] = {
     val rows = E.authored()
-    val picked = rows.map(_._1).filterNot(_.item)
-      .groupBy(r => (r.receiver, r.method, r.treeVersion, r.grade)).values.map(_.head.name).toSet
-    val fromRows = rows.filter { case (r, _) => picked(r.name) }.map { case (r, o) =>
-      val answers = o.isInstanceOf[E.Answer]
-      Spend("ROW", r.name, r.treeVersion, r.activated, treeAt(r.treeVersion, wrap(r.body)), r.rv, answers,
-        s"`sigmaProp({ val v = <row>; true })` over ${E.call(r)}",
-        if (answers) s"SEPARATING ROW: the receiver is ${E.Holder(r.receiver)._2}, GENERIC on a node: the call answers " +
-          "and the box SPENDS. A port that holds it specialised refuses the call, and the box with it."
-        else s"CONTROL OF THE CLASS: the receiver is ${E.Holder(r.receiver)._2}, SPECIALISED on a node: the call " +
-          "throws and the box does NOT spend.")
+    /** Per receiver, method, tree version and gradeable class, the first row in the table's order. */
+    def firstOf(pick: AuthoredEvalGenericProducers.Row => Boolean): Vector[Spend] = {
+      val picked = rows.map(_._1).filter(pick)
+        .groupBy(r => (r.receiver, r.method, r.treeVersion, r.grade)).values.map(_.head.name).toSet
+      rows.filter { case (r, _) => picked(r.name) }.map { case (r, o) =>
+        val answers = o.isInstanceOf[E.Answer]
+        Spend("ROW", r.name, r.treeVersion, r.activated, treeAt(r.treeVersion, wrap(r.body)), r.rv, answers,
+          s"`sigmaProp({ val v = <row>; true })` over ${E.call(r)}",
+          if (answers) s"SEPARATING ROW: the receiver is ${E.Holder(r.receiver)._2}, GENERIC on a node: the call answers " +
+            "and the box SPENDS. A port that holds it specialised refuses the call, and the box with it."
+          else s"CONTROL OF THE CLASS: the receiver is ${E.Holder(r.receiver)._2}, SPECIALISED on a node: the call " +
+            "throws and the box does NOT spend.")
+      }
     }
     val req = for { (n, t, w) <- Requested; a <- Seq(2, 3) }
       yield Spend("REQ", n, 0, a, t, rv = true, valid = true, w,
         "The receiver is GENERIC on a node, so the empty Coll[Int] patch answers the receiver unchanged: the box SPENDS. " +
           "A port that holds it specialised refuses.")
-    fromRows ++ req
+    val reqByIndex = for { (n, t, w) <- RequestedByIndex; a <- Seq(2, 3) }
+      yield Spend("REQ", n, 0, a, t, rv = false, valid = true, w,
+        "The ByIndex node is typed by the collection's item type, and in range a GENERIC receiver (the pre-header's " +
+          "parentId, built with `toColl`) hands back its item without touching the default: the box SPENDS. A port that " +
+          "holds it specialised and unboxes the default refuses.")
+    // appended after the first selection (c3e291e), so its entries keep their indices
+    firstOf(r => spendable(r) && r.method != "byIndex.in") ++ req ++ firstOf(_.method == "byIndex.in") ++ reqByIndex
   }
 
   private def ctxOf(activated: Int): AuthoredTxTreeVersion.Ctx =

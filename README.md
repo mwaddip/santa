@@ -250,11 +250,13 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - A node builds the pre-header's `parentId` and `votes` as generic collections, which take an empty patch of any
     class: those boxes spend.
 
-  **The collections a node holds generic** (`generic-producers`, 123 entries at block version 4 and 52 at block
+  **The collections a node holds generic** (`generic-producers`, 129 entries at block version 4 and 58 at block
   version 3): besides the pre-header's two fields, R1 and R3 read as registers, and a `Coll[Byte]` or `Coll[Boolean]`
   collection expression in a register or a context variable (also nested, sliced or read by `getReg`).
   - On them `patch`, `startsWith` and `endsWith` with a collection of another array answer, so the box spends; on a
     header's field, a constant register or variable, `SELF.propositionBytes` or a token id they throw.
+  - A `ByIndex` node with a default of another class, the index in range, hands back the generic receiver's item at
+    tree version 0, so its box spends too.
   - The spent box's registers and the input's extension travel as the bytes their writer chose (an `83…` of booleans
     is not re-encoded as `85…`).
 
