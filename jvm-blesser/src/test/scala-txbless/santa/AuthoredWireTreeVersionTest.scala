@@ -108,12 +108,24 @@ class AuthoredWireTreeVersionTest extends munit.FunSuite {
       assertEquals(c.get[String]("schema").toOption, Some("santa-wire/v1"))
       assertEquals(c.get[String]("blessed_by").toOption, Some(
         if (kind == "BlockTransactions") "jvm:ergo-core-6.0.6-BlockTransactionsSerializer" else "jvm:sigma-state-6.0.6"))
+      assertEquals(c.get[Boolean]("activation_rule").toOption, Some(true), s"$op: decided by the activated version")
       c.downField("entries").as[List[Json]].getOrElse(Nil).foreach { e =>
         assertEquals(e.hcursor.get[String]("kind").toOption, Some(kind))
         assertEquals(e.hcursor.downField("version").get[Int]("activated").toOption, Some(pair))
         assertEquals(e.hcursor.downField("version").get[Int]("ergoTree").toOption, Some(pair))
         assert(e.hcursor.get[String]("source").toOption.exists(_.startsWith("santa:")))
       }
+    }
+  }
+
+  test("the marked files differ from the committed ones only by the marker, after blessed_by") {
+    for ((vectors, dir) <- Seq(v6 -> "v6", v5 -> "v5"); (op, env) <- vectors) {
+      val path = java.nio.file.Paths.get("..", "vectors", "wire", dir, "authored", s"$op.json")
+      val committed = new String(java.nio.file.Files.readAllBytes(path), "UTF-8").split("\n", -1).toVector
+      val at = committed.indexWhere(_.trim.startsWith("\"blessed_by\""))
+      assert(at > 0, s"$dir/$op: no blessed_by line")
+      val marked = (committed.take(at + 1) :+ "  \"activation_rule\" : true," ) ++ committed.drop(at + 1)
+      assertEquals(env.spaces2.trim, marked.mkString("\n").trim, s"$dir/$op")
     }
   }
 

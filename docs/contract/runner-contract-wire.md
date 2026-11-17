@@ -26,6 +26,13 @@ Same `run(vector) → actuals` shape as eval (`runner-contract.md` §1), with th
   envelope), so one slice — e.g. `Box` — can hold vectors vendored from several frameworks
   (ergots + Fleet), each tagged with its origin; the provenance dir follows (framework source
   ⇒ `vendored`, `testnet:`/`santa:` ⇒ `authored`).
+- **A wire file holds one kind**: every entry's `kind` is the same (`./validate` enforces it). The
+  file is the unit `conform` selects by a runner's declared `kinds` (runner-integration.md §2).
+- **`activation_rule: true`** (optional envelope field, after `blessed_by`; absent = false) marks a
+  file whose verdicts are decided by a consensus rule tied to the activated script version: the
+  `{Box,Transaction,BlockTransactions}.tree_version_above_activated` files, where a tree above it
+  is refused. A runner that declares `activation: false` is not graded on such a file. A rule tied
+  only to the TREE's version (e.g. `ErgoTree.numeric_methodcall_version_gate`) is not marked.
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
   runner's **`{ bytes_hex, error }`** — its reserialization of the input bytes.
 

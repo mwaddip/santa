@@ -233,10 +233,18 @@ object AuthoredWireTreeVersion extends BoxTreeWireFixtures {
       "parses. Round-trip identity.", 4, "0b0208d3", None, V3, rejectsUnder = None)
   }
 
+  /** These files' verdicts turn on the activated script version, and the envelope says so (`activation_rule`,
+    * runner-contract-wire): a runner that declares no activated-version rules is not graded on them. The field sits
+    * after `blessed_by`; the shared `envelope` (BoxTreeWireFixtures) is left as it is. */
+  private def activationRule(env: Json): Json = env.mapObject(o => io.circe.JsonObject.fromIterable(o.toList.flatMap {
+    case kv @ ("blessed_by", _) => Seq(kv, "activation_rule" -> Json.True)
+    case kv                     => Seq(kv)
+  }))
+
   def extract(): Map[String, Json] = Map(
     OpBox   -> envelope(OpBox, v6Entries("Box", boxWith)),
     OpTx    -> envelope(OpTx, v6Entries("Transaction", cand => txWith(cand)) ++ v6ExtensionEntries),
-    OpBlock -> blockEnvelope(v6BlockEntries))
+    OpBlock -> blockEnvelope(v6BlockEntries)).map { case (op, env) => op -> activationRule(env) }
 
   // ── the v5 files: (2, 2), and block sections of version 3 ─────────────────────────────────────────
   private def v5Entries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
@@ -307,7 +315,7 @@ object AuthoredWireTreeVersion extends BoxTreeWireFixtures {
   def extractV5(): Map[String, Json] = Map(
     OpBox   -> envelope(OpBox, v5Entries("Box", boxWith)),
     OpTx    -> envelope(OpTx, v5Entries("Transaction", cand => txWith(cand))),
-    OpBlock -> blockEnvelope(v5BlockEntries))
+    OpBlock -> blockEnvelope(v5BlockEntries)).map { case (op, env) => op -> activationRule(env) }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =
     SpecExtract.writeStaging("AuthoredWireTreeVersion", extract(), outDir)
