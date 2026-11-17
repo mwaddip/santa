@@ -51,7 +51,9 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   not abstention, and they stay coarse: a whole tier, kind or class of rule, never a family, an entry or a failure.
   Each needs a reason the implementation's own API gives (it has no entry point for that kind; it has no notion of
   the activated version), stated in the runner's README. A failure inside an API the implementation does offer
-  stays coal: a gap there is a feature to build, not something to declare away. Out-of-scope files are not
+  stays coal: a gap there is a feature to build, not something to declare away. Likewise a kind or rule the
+  implementation means to support but has not built yet is no reason: it stays declared, and its
+  `not-implemented` is the readiness map (e.g. ergots' missing transaction serializer). Out-of-scope files are not
   staged and not tallied, as a higher version or an undeclared tier; `conform`'s header line, `results.json` and
   the scoreboard show the declared scope.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
@@ -238,7 +240,8 @@ from, so a 🪨 traces to an exact corpus).
 
 The kit ships **no comparator binary**: the comparison *is* the §5/§6 spec, which a runner implements
 natively and proves against the oracle (§6 made executable). A runner's self-test: fetch a pinned kit →
-run `santa-run` over the subset its `runner.json` selects (`version ≤`, `tiers ∈`) → grade with its own
+run `santa-run` over the subset its `runner.json` selects (`version ≤`, `tiers ∈`, and its declared `kinds` /
+`activation`) → grade with its own
 oracle-checked comparator → gate. By construction the verdict equals `./conform`'s.
 
 **Badges are SANTA-minted, never self-reported.** SANTA's CI runs the canonical grid and publishes

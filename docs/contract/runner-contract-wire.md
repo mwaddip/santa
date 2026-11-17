@@ -29,10 +29,13 @@ Same `run(vector) → actuals` shape as eval (`runner-contract.md` §1), with th
 - **A wire file holds one kind**: every entry's `kind` is the same (`./validate` enforces it). The
   file is the unit `conform` selects by a runner's declared `kinds` (runner-integration.md §2).
 - **`activation_rule: true`** (optional envelope field, after `blessed_by`; absent = false) marks a
-  file whose verdicts are decided by a consensus rule tied to the activated script version: the
+  file built to grade a consensus rule tied to the activated script version: the
   `{Box,Transaction,BlockTransactions}.tree_version_above_activated` files, where a tree above it
-  is refused. A runner that declares `activation: false` is not graded on such a file. A rule tied
-  only to the TREE's version (e.g. `ErgoTree.numeric_methodcall_version_gate`) is not marked.
+  is refused, with that rule's controls. A runner that declares `activation: false` is not graded on
+  such a file. The marker is per file: three of their rows (v6 `Box` / `Transaction` #7 and #11, v5
+  `BlockTransactions` #4) are decided by the size-bit rule 1012 alone, which `tree_nested_degrade`
+  also grades, unmarked. A rule tied only to the TREE's version (e.g.
+  `ErgoTree.numeric_methodcall_version_gate`) is not marked.
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
   runner's **`{ bytes_hex, error }`** — its reserialization of the input bytes.
 
@@ -103,7 +106,8 @@ Unchanged from `runner-contract.md` §3:
 
 - **`kind`** selects the serializer the runner dispatches on — the initial set is
   `{ Constant, Box, Transaction, Header, SigmaBoolean, ErgoTree }`, extensible; `BlockTransactions` is
-  added. A `kind` the runner does not serialize is `not-implemented` (§2), never a silent skip.
+  added. A `kind` the runner neither serializes nor has declared out of its scope (`kinds`,
+  runner-integration §2) is `not-implemented` (§2), never a silent skip.
 - **`BlockTransactions`** is a block's transactions section as the JVM frames it: the 32-byte header
   id, `VLQ(10,000,000 + blockVersion)` (block version > 1), the VLQ tx count, then the transactions.
   The runner parses the transactions one after another from the section's bytes, as a node parses a

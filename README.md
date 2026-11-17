@@ -112,8 +112,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
 - ✅ **Wire tier live** — `santa-wire/v1` byte-round-trip vectors, **213 entries**
   (`Constant` 178 · `Box` 11 · `SigmaBoolean` 7 · `Transaction` 17), JVM-canonicalized
   from ergots' `fixture-gen` + Fleet's `_test-vectors` seeds. Rudolph + Blitzen 213/213;
-  Dasher 196 (no tx serializer — growth ledger); Comet 185 (Fleet's honest gaps, recorded
-  as findings). An authored **reject arm** (`wire/v6/authored/`) pins bytes the JVM refuses at
+  Dasher 196 (no tx serializer — growth ledger); Comet 185 of the 206 in its declared scope
+  (Fleet's honest gaps, recorded as findings; its 7 `SigmaBoolean` are declared out). An authored **reject arm** (`wire/v6/authored/`) pins bytes the JVM refuses at
   parse, each with an accept twin on the other side of the bound:
   - soft-fork SHeader constants
   - **ContextExtension bounds:** count ≥ 128, and variable id ≥ 0x80 (since sigma-state 6.0.5)
