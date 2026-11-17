@@ -231,8 +231,11 @@ reconstruction rules, which every conforming implementation of this schema must 
   sigma-rust's whole transaction: `SELF` and a second input (`inputs`), one data input, and two `outputs` whose boxes
   carry the transaction's id. On the rows that read a variable, both inputs' extensions travel as RAW `Value` bindings
   (`input_extensions`, `extension` = SELF's); the other rows' transaction has no extension, and so another id, which
-  their outputs carry. They sit at activated 2 (the
-  `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
+  their outputs carry. The `AvlTree.item_bind_context` families (2026-11-18) carry the same header and pre-header,
+  sigma-rust's review `SELF` (1,000,000 nanoErg, the generator's P2PK, created at 100, R4 = `(Coll[Byte](1), 5, 0)`,
+  R5 = `Coll((Coll[Byte](3), 5))`, R6 = `Coll[Int](10)`), ONE output (1,000,000 nanoErg to the same P2PK, created at
+  100), and its context variables 1 to 7 as RAW `Value` bindings on the rows that read a variable only. They sit at
+  activated 2 (the `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 
 ## 3. Preconditions, postconditions, invariants

@@ -45,17 +45,18 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 25,949 entries across 427 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 23,861
+- ✅ **A blessed eval corpus — 27,478 entries across 431 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 25,390
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 7,299 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
+  spends; 8,206 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
-  the collections a context brings, 1,956 over the ones a node holds generic, and 1,875 over R2 read as a register
-  and every box of a transaction); version-split into **v4** (18
+  the collections a context brings, 1,956 over the ones a node holds generic, 1,875 over R2 read as a register
+  and every box of a transaction, and 907 AvlTree calls given a box, a header, the context or a register's value as
+  an item); version-split into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (8,511 — the cumulative
-  v5/mainnet method surface) and **v6** (17,420 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (8,966 — the cumulative
+  v5/mainnet method surface) and **v6** (18,494 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -283,6 +284,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - Where the item is never read, the call answers and the box spends: the tree's flag is off, or the proof does not
     belong to the tree and the item comes after the first entry (`update`, `insertOrUpdate`; `insert` from tree
     version 3).
+  - `avltree-item-bind-review` (227 / 119) adds sigma-rust's whole trees at every tree version and, per class, the
+    item from a register or a context variable (the spend carries sigma-rust's box and extension), a box, header or
+    function as the item, an empty key (a collection, so the call answers), and entries whose key and value are both
+    of another kind.
 
   **`AND` and `OR` read item by item** (`and-or-item-by-item`, 330 entries at block version 4 and 165 at block
   version 3): over its collection, each stops at the deciding item and charges for the items it read (AND 5 per 32,
