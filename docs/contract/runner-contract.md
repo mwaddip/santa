@@ -175,6 +175,14 @@ reconstruction rules, which every conforming implementation of this schema must 
   | `height` | unsigned LEB128, u32 |
   | `minerPk` | 33 raw bytes (SEC1) |
   | `votes` | 3 raw bytes |
+
+  **The pre-header's `parentId` and `votes` are the collections a node builds** (2026-11-17), and their runtime
+  class is visible to a script. ergo-core's `PreHeader.toSigma` writes them with `toColl`, which makes them GENERIC
+  collections on the JVM, where every other byte collection the context brings (a header's fields, a box's, a
+  register, a context variable, a token id, `LastBlockUtxoRootHash.digest`) is specialised. A specialised
+  collection's `patch` casts the patch's array to its own, so `CONTEXT.preHeader.parentId.patch(0, <an empty
+  Coll[Boolean]>, 0)` answers the parent id, and the same call on `CONTEXT.headers(0).parentId` throws
+  (`Coll.patch_array_class_context`). The same holds for the dummy context's pre-header.
 - **`lastBlockUtxoRoot`** is derived from `headers[0].stateRoot` as
   `AvlTreeData{ digest = headers[0].stateRoot (33 bytes), flags = 0x07 (all ops),
   keyLength = 32, valueLengthOpt = None }` — serialized `<stateRoot 33B> 07 20 00`.
@@ -196,7 +204,12 @@ reconstruction rules, which every conforming implementation of this schema must 
   window at block version `activated + 1`), a pre-header whose parent is that header and whose version is
   `activated + 1`, a P2PK `SELF` without registers, no context variable and no outputs (the `source|…` rows, from
   2026-11-17: the same `SELF` with R4 = `Coll[String]("D")`, and context variable 1 = `Coll[String]("C")` as a
-  `Value` binding, `0c66010143`). They sit at activated 2 (the
+  `Value` binding, `0c66010143`). The `Coll.patch_array_class_context` families (2026-11-17) carry the same header
+  and pre-header, and sigma-rust's own `SELF` (1,000,000 nanoErg, the generator's P2PK, created at 100, one token
+  `22`×32, R4 = `Coll[Byte](1, 2)`, R5 = `Coll(true, false)`, R6 = `Coll(Coll[Byte](1), Coll[Byte](2))`) and context
+  variables 1 = `Coll[Byte](1, 2)` and 2 = `Coll(true, false)` as `Value` bindings (`0e020102`, `0d0201`), the
+  bytes a node's reader takes, on the rows that read them (`getVar`): the reader decides the collection's class.
+  The other rows' context carries no extension. They sit at activated 2 (the
   `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 

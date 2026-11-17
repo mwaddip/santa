@@ -49,13 +49,21 @@ object EvalCore {
   // it as data (activation rides the separate activatedScriptVersion field either way).
   private[santa] def dummyPreHeader(height: Int, activated: Byte): PreHeader = CPreHeader(
     version = (activated + 1).toByte,
-    parentId = Colls.fromArray(Array.fill(32)(0: Byte)), // chain wire width (BlockId)
+    parentId = preHeaderBytes(Array.fill(32)(0: Byte)), // chain wire width (BlockId)
     timestamp = 3L,
     nBits = 0L,
     height = height,
     minerPk = GroupElementSerializer.parse(SigmaSerializer.startReader(dummyPubkey)).toGroupElement,
-    votes = Colls.fromArray(Array.fill(3)(0: Byte)) // chain wire width (Votes)
+    votes = preHeaderBytes(Array.fill(3)(0: Byte)) // chain wire width (Votes)
   )
+
+  /** A pre-header's byte fields as a node builds them. ergo-core's `PreHeader.toSigma` (6.0.7) writes
+    * `parentId.toBytes.toColl` and `votes.toColl`, through the generic `sigma.Extensions.ArrayOps`, so on a node they are
+    * GENERIC collections (`CollOverArray`); `Colls.fromArray` is `@specialized`, and at a `Byte` call site it builds the
+    * specialised `CollOverArray$mcB$sp`. A script sees the difference: `patch` with an empty collection of another array
+    * class throws on the specialised one and answers on the generic one (measured: the transaction tier, which builds
+    * its pre-header through ergo-core, spends `CONTEXT.preHeader.parentId.patch(0, <an empty Coll[Boolean]>, 0)`). */
+  private[santa] def preHeaderBytes(bs: Array[Byte]): Coll[Byte] = new sigma.Extensions.ArrayOps(bs).toColl
 
   /** Mirror of the production constant-substitution conditionality
     * (`Interpreter.fullReduction`, sigma-state Interpreter.scala:218): trees WITHOUT
@@ -900,16 +908,16 @@ object EvalCore {
   def avlTreeFromStateRoot(stateRoot: ADDigest): AvlTreeData =
     AvlTreeData(Colls.fromArray(stateRoot), AvlTreeFlags.AllOperationsAllowed, keyLength = 32, valueLengthOpt = None)
 
-  private def preHeaderFromHex(hex: String): PreHeader = {
+  private[santa] def preHeaderFromHex(hex: String): PreHeader = {
     val f = PreHeaderCodec.decode(Base16.decode(hex).get)
     CPreHeader(
       version   = f.version,
-      parentId  = Colls.fromArray(f.parentId),
+      parentId  = preHeaderBytes(f.parentId),
       timestamp = f.timestamp,
       nBits     = f.nBits,
       height    = f.height,
       minerPk   = GroupElementSerializer.parse(SigmaSerializer.startReader(f.minerPk)).toGroupElement,
-      votes     = Colls.fromArray(f.votes))
+      votes     = preHeaderBytes(f.votes))
   }
 
   private[santa] def fullContext(

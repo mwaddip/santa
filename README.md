@@ -45,15 +45,16 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 12,232 entries across 411 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 10,144
+- ✅ **A blessed eval corpus — 16,458 entries across 415 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 14,370
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 2,421 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, and 2,359 authored
-  `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`); version-split into **v4** (18
+  spends; 3,468 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
+  `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, and 1,047 authored `patch` rows over
+  the collections a context brings); version-split into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (4,395 — the cumulative
-  v5/mainnet method surface) and **v6** (7,819 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (5,778 — the cumulative
+  v5/mainnet method surface) and **v6** (10,662 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -240,6 +241,14 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     version when nothing is written.
   - A String item has no lift at tree version 3, wherever it comes from: a `Coll[String]` read from a context
     variable or from a register spends below tree version 3 and does not spend at 3.
+
+  **A specialised collection's `patch`** (`patch-array-class`, 248 entries at block version 4 and 120 at block
+  version 3): on the JVM, a `Coll[Byte]`, `Coll[Boolean]` or `Coll[Int]` held over a primitive array is a specialised
+  collection, and its `patch` casts the patch's array to its own before anything is stored. Per receiver (37 a script
+  builds, 27 the context brings) and tree version, one such spend and one control.
+  - A patch held over another array throws although it is empty and nothing is replaced, so the box does not spend.
+  - A node builds the pre-header's `parentId` and `votes` as generic collections, which take an empty patch of any
+    class: those boxes spend.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated
