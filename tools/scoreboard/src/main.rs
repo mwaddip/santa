@@ -71,6 +71,20 @@ fn source_label(runner: &Value) -> String {
     }
 }
 
+/// A runner's declared scope beyond version / tiers / cost (runner-integration §2), for its column header:
+/// "kinds Constant, Box, Transaction · no activation rules"; None when it declares neither.
+fn scope_label(runner: &Value) -> Option<String> {
+    let mut parts = Vec::new();
+    if let Some(ks) = runner.get("kinds").and_then(Value::as_array) {
+        let ks: Vec<&str> = ks.iter().filter_map(Value::as_str).collect();
+        parts.push(format!("kinds {}", ks.join(", ")));
+    }
+    if runner.get("activation").and_then(Value::as_bool) == Some(false) {
+        parts.push("no activation rules".to_string());
+    }
+    (!parts.is_empty()).then(|| parts.join(" \u{b7} "))
+}
+
 /// Self-contained HTML dashboard: a slice × runner MATRIX. Rows are slices, columns are runners;
 /// each cell is green (🎁 nice) / red (🪨 N, coal with N divergences) / grey (— the runner doesn't
 /// cover that slice), so a passing cell stays green even when others in its slice row diverge. The
@@ -101,8 +115,11 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
             _ => "\u{26a0}", // ⚠ errored (could not build/run)
         };
         let control = if CONTROL_RUNNERS.contains(&name) { " <em>(control)</em>" } else { "" };
+        let scope = scope_label(r)
+            .map(|s| format!("<br><span class=\"src\" title=\"declared scope (runner-integration §2)\">{}</span>", html_escape(&s)))
+            .unwrap_or_default();
         header.push_str(&format!(
-            "<th>{icon} {}{control}<br><span class=\"src\">{}</span></th>",
+            "<th>{icon} {}{control}<br><span class=\"src\">{}</span>{scope}</th>",
             html_escape(name),
             html_escape(&source_label(r))
         ));
@@ -1185,5 +1202,31 @@ mod tests {
         });
         let html = dashboard(&r, "abc123");
         assert_eq!(html.matches("exceeded 1").count(), 2, "{html}");
+    }
+
+    /// The header line of a one-runner dashboard (the column's `<th>`), for the declared-scope tests.
+    fn header_th(runner: Value) -> String {
+        let html = dashboard(&json!({"schema": "santa-results/v1", "runners": [runner]}), "ref");
+        let start = html.find("<tr><th>slice</th>").expect("header row");
+        let row = &html[start..];
+        row[..row.find("</tr>").unwrap()].to_string()
+    }
+
+    #[test]
+    fn header_shows_declared_scope() {
+        let th = header_th(json!({"name": "comet", "mark": "coal", "red_total": 1, "slices": {},
+            "kinds": ["Constant", "Box", "Transaction"], "activation": false}));
+        assert!(th.contains("kinds Constant, Box, Transaction"), "{th}");
+        assert!(th.contains("no activation rules"), "{th}");
+    }
+
+    #[test]
+    fn header_without_scope_fields_is_unchanged() {
+        let plain = header_th(json!({"name": "dasher", "mark": "nice", "red_total": 0, "slices": {}}));
+        let defaults = header_th(json!({"name": "dasher", "mark": "nice", "red_total": 0, "slices": {},
+            "kinds": null, "activation": true}));
+        assert_eq!(plain, defaults);
+        assert!(!plain.contains("kinds") && !plain.contains("activation"), "{plain}");
+        assert_eq!(plain.matches("class=\"src\"").count(), 1, "{plain}");
     }
 }
