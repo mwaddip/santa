@@ -348,6 +348,37 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/AvlTree.item_bind.json" : {
+      "accepts" : 219,
+      "entries" : 1350,
+      "methods" : [
+        "100:10 AvlTree.get",
+        "100:11 AvlTree.getMany",
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove",
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.item_bind",
+      "ops" : [
+        "Const",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1131,
+      "tree_shapes" : [
+        {
+          "accepts" : 219,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1131,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/AvlTree.keyLength_wrapped_negative.json" : {
       "accepts" : 1,
       "entries" : 1,
@@ -5509,6 +5540,46 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/AvlTree.item_bind_v6.json" : {
+      "accepts" : 658,
+      "entries" : 3371,
+      "methods" : [
+        "100:10 AvlTree.get",
+        "100:11 AvlTree.getMany",
+        "100:12 AvlTree.insert",
+        "100:13 AvlTree.update",
+        "100:14 AvlTree.remove",
+        "100:16 AvlTree.insertOrUpdate",
+        "100:9 AvlTree.contains"
+      ],
+      "op" : "AvlTree.item_bind_v6",
+      "ops" : [
+        "Const",
+        "MethodCall"
+      ],
+      "provenance" : "authored",
+      "rejects" : 2713,
+      "tree_shapes" : [
+        {
+          "accepts" : 221,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 1131,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 437,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1582,
           "tree_version" : 3
         }
       ],
@@ -15518,10 +15589,12 @@
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.get.json",
         "v5/authored/AvlTree.get_proof_ladder.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.proof_adversarial.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/captured/h30866-174f842b6284.json",
         "v6/captured/h318040-089df53dc16b.json",
@@ -15535,8 +15608,10 @@
       "families" : [
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.getMany.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/Coll.unequal_pairs_readers_v6.json",
         "v6/captured/h2666-8437796cc182.json",
         "v6/captured/h323127-6e4a9fe411cb.json",
@@ -15550,6 +15625,7 @@
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
@@ -15558,6 +15634,7 @@
         "v6/authored/AvlTree.degenerate_edges_v6.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
@@ -15595,11 +15672,13 @@
       "families" : [
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.update.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/Coll.unequal_pairs_readers_v6.json"
       ],
@@ -15609,12 +15688,14 @@
       "families" : [
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.empty_ops_valid_proof.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.remove.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h2666-8437796cc182.json",
@@ -15647,6 +15728,7 @@
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json"
       ],
@@ -15713,11 +15795,13 @@
       "families" : [
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
         "v5/authored/AvlTree.per_op_failure.json",
         "v5/authored/AvlTree.updateDigest_then_contains.json",
         "v5/authored/AvlTree.wrong_tree_proof.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/captured/h261770-5dad90a5021b.json",
         "v6/captured/h264948-bf31b3635b88.json",
         "v6/captured/h265399-83f7c92a5d39.json",
@@ -18385,6 +18469,7 @@
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.digest_any_collection.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
@@ -18416,6 +18501,7 @@
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/BigInt.shift_and_inverse_range_edges.json",
@@ -20500,6 +20586,7 @@
         "v5/authored/AvlTree.getMany.json",
         "v5/authored/AvlTree.get_proof_ladder.json",
         "v5/authored/AvlTree.insert.json",
+        "v5/authored/AvlTree.item_bind.json",
         "v5/authored/AvlTree.keyLength_wrapped_negative.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/AvlTree.negative_keylength_tree.json",
@@ -20556,6 +20643,7 @@
         "v6/authored/AvlTree.empty_ops_valid_proof_v6.json",
         "v6/authored/AvlTree.insertOrUpdate.json",
         "v6/authored/AvlTree.insert_wrong_tree.json",
+        "v6/authored/AvlTree.item_bind_v6.json",
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/AvlTree.negative_keylength_tree_v6.json",
         "v6/authored/AvlTree.per_op_failure_v6.json",
@@ -22416,12 +22504,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 11229,
+    "accepts" : 12106,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 20289,
-    "files" : 421,
-    "rejects" : 9060,
+    "entries" : 25010,
+    "files" : 423,
+    "rejects" : 12904,
     "unwalked" : 2425
   }
 }

@@ -45,8 +45,8 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 20,289 entries across 421 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 18,201
+- ✅ **A blessed eval corpus — 25,010 entries across 423 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 22,922
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
   spends; 7,299 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
@@ -54,8 +54,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   and every box of a transaction); version-split into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (6,848 — the cumulative
-  v5/mainnet method surface) and **v6** (13,423 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (8,198 — the cumulative
+  v5/mainnet method surface) and **v6** (16,794 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -271,6 +271,18 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - The rule holds for a data input's, an output's and a second input's registers and for `getVarFromInput`: expression
     registers and R1 / R3 read as registers spend, constants, token ids, `propositionBytes` and an output's `id` do not.
   - A Tuple expression in a register or variable, read at its tuple type, throws whatever the call.
+
+  **An AvlTree data method given an item of another kind** (`avltree-item-bind`, 221 entries at block version 4 and
+  98 at block version 3): the parser does not check a method call's argument against the signature, so a keys or
+  entries argument can be a 3-tuple constant or a collection of another item type. Per method, tree, carrier and
+  outcome, one spend.
+  - The JVM meets the item where it first uses it: `getMany` and the entry methods bind it before the operation's
+    cost (no collection, no pair), every method casts a key or value to `byte[]` after it, `remove` reads each key
+    inside its cost block, and `contains` / `get` refuse a key of another class at the reflective call. The box does
+    not spend.
+  - Where the item is never read, the call answers and the box spends: the tree's flag is off, or the proof does not
+    belong to the tree and the item comes after the first entry (`update`, `insertOrUpdate`; `insert` from tree
+    version 3).
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated
