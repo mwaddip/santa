@@ -45,16 +45,17 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 18,414 entries across 417 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 16,326
+- ✅ **A blessed eval corpus — 20,289 entries across 421 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 18,201
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 5,424 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
+  spends; 7,299 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
-  the collections a context brings, and 1,956 over the ones a node holds generic); version-split into **v4** (18
+  the collections a context brings, 1,956 over the ones a node holds generic, and 1,875 over R2 read as a register
+  and every box of a transaction); version-split into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (6,328 — the cumulative
-  v5/mainnet method surface) and **v6** (12,068 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (6,848 — the cumulative
+  v5/mainnet method surface) and **v6** (13,423 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -261,6 +262,15 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     tree version 0, so its box spends too.
   - The spent box's registers and the input's extension travel as the bytes their writer chose (an `83…` of booleans
     is not re-encoded as `85…`).
+
+  **R2 and every box of a transaction** (`generic-producers-pairs`, 25 entries at block version 4 and 9 at block
+  version 3; `generic-producers-census`, 231 and 87), spent in a transaction with a second input, a data input and two
+  outputs:
+  - R2 read as a register is built as `Box.tokens` is, a generic collection of pairs, so `++`, `ByIndex` with a default
+    of another class, and `patch` / `startsWith` with an `indices` argument answer over it and the box spends.
+  - The rule holds for a data input's, an output's and a second input's registers and for `getVarFromInput`: expression
+    registers and R1 / R3 read as registers spend, constants, token ids, `propositionBytes` and an output's `id` do not.
+  - A Tuple expression in a register or variable, read at its tuple type, throws whatever the call.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

@@ -188,7 +188,15 @@ reconstruction rules, which every conforming implementation of this schema must 
   `getOrElse` / `ByIndex` hand back a default of another class as it is, and `startsWith` / `endsWith` compare item
   by item; on a specialised one they throw (`Coll.generic_producers`). Registers and variables come from the bytes
   a node's readers take (box bytes, `Value` bindings), so an implementation's readers decide this; a hand-built
-  pre-header does not.
+  pre-header does not. **R2 read as a register** is built as `Box.tokens` is (`Constant(additionalTokens.map(identity))`):
+  a GENERIC collection of pairs (`CollOverArray` of `Tuple2`), where the same data as a constant, or a `zip`, is a pair
+  of arrays (`PairOfCols`). `++` with pairs of another class, `updated`, `getOrElse` / `ByIndex` with a default of
+  another class and `patch` / `startsWith` / `endsWith` with an `indices` argument show the difference
+  (`Coll.generic_producers_pairs`). The rule holds for every box of the transaction, not only SELF: a data input's, an
+  output's and a second input's R1, R3 bytes and expression registers, `getVarFromInput`, `creationInfo`'s bytes, and
+  expressions two deep, empty, or beside a constant are GENERIC; their constants, token ids, `propositionBytes` and an
+  output's `id` are SPECIALISED. A Tuple EXPRESSION in a register or variable read at its tuple type throws, whatever
+  the call (`Coll.generic_producers_census`).
 - **`lastBlockUtxoRoot`** is derived from `headers[0].stateRoot` as
   `AvlTreeData{ digest = headers[0].stateRoot (33 bytes), flags = 0x07 (all ops),
   keyLength = 32, valueLengthOpt = None }` — serialized `<stateRoot 33B> 07 20 00`.
@@ -219,7 +227,11 @@ reconstruction rules, which every conforming implementation of this schema must 
   header and pre-header with either that `SELF` or sigma-rust's rv-rc `SELF` (R4..R9 holding collection expressions,
   a nested one, a `Coll[Int]` expression and a `Coll[Byte]` constant, one token) and its five context variables as
   `Value` bindings in their RAW bytes, on the rows that read a variable (re-writing would turn an `83…` of booleans
-  into `85…`). They sit at activated 2 (the
+  into `85…`). The `Coll.generic_producers_pairs` and `_census` families carry the same header and pre-header and
+  sigma-rust's whole transaction: `SELF` and a second input (`inputs`), one data input, and two `outputs` whose boxes
+  carry the transaction's id. On the rows that read a variable, both inputs' extensions travel as RAW `Value` bindings
+  (`input_extensions`, `extension` = SELF's); the other rows' transaction has no extension, and so another id, which
+  their outputs carry. They sit at activated 2 (the
   `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 

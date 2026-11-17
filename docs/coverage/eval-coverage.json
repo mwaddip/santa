@@ -1103,6 +1103,93 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Coll.generic_producers_census.json" : {
+      "accepts" : 231,
+      "entries" : 324,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:3 Context.preHeader",
+        "105:2 PreHeader.parentId",
+        "105:7 PreHeader.votes",
+        "12:19 SCollection.patch",
+        "12:2 SCollection.getOrElse",
+        "99:8 Box.tokens"
+      ],
+      "op" : "Coll.generic_producers_census",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractCreationInfo",
+        "ExtractId",
+        "ExtractRegisterAs",
+        "ExtractScriptBytes",
+        "GetVar",
+        "If",
+        "Inputs$",
+        "MethodCall",
+        "OptionGet",
+        "OptionGetOrElse",
+        "Outputs$",
+        "SelectField",
+        "Self$",
+        "Slice"
+      ],
+      "provenance" : "authored",
+      "rejects" : 93,
+      "tree_shapes" : [
+        {
+          "accepts" : 231,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 93,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.generic_producers_pairs.json" : {
+      "accepts" : 153,
+      "entries" : 196,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:19 SCollection.patch",
+        "12:2 SCollection.getOrElse",
+        "12:20 SCollection.updated",
+        "12:29 SCollection.zip",
+        "99:8 Box.tokens"
+      ],
+      "op" : "Coll.generic_producers_pairs",
+      "ops" : [
+        "Append",
+        "ByIndex",
+        "Const",
+        "EQ",
+        "ExtractRegisterAs",
+        "If",
+        "MethodCall",
+        "OptionGet",
+        "Outputs$",
+        "Self$",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 43,
+      "tree_shapes" : [
+        {
+          "accepts" : 153,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 43,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Coll.hof_per_element_env.json" : {
       "accepts" : 10,
       "entries" : 10,
@@ -5931,6 +6018,117 @@
         }
       ],
       "unwalked" : 1,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.generic_producers_census_v6.json" : {
+      "accepts" : 647,
+      "entries" : 907,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:12 Context.getVarFromInput",
+        "101:3 Context.preHeader",
+        "105:2 PreHeader.parentId",
+        "105:7 PreHeader.votes",
+        "106:9 SigmaDslBuilder.some",
+        "12:19 SCollection.patch",
+        "12:2 SCollection.getOrElse",
+        "12:31 SCollection.startsWith",
+        "12:32 SCollection.endsWith",
+        "99:19 Box.getReg",
+        "99:8 Box.tokens"
+      ],
+      "op" : "Coll.generic_producers_census_v6",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractCreationInfo",
+        "ExtractId",
+        "ExtractRegisterAs",
+        "ExtractScriptBytes",
+        "GetVar",
+        "Global$",
+        "If",
+        "Inputs$",
+        "MethodCall",
+        "OptionGet",
+        "OptionGetOrElse",
+        "Outputs$",
+        "SelectField",
+        "Self$",
+        "Slice"
+      ],
+      "provenance" : "authored",
+      "rejects" : 260,
+      "tree_shapes" : [
+        {
+          "accepts" : 231,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 93,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 416,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 167,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.generic_producers_pairs_v6.json" : {
+      "accepts" : 362,
+      "entries" : 448,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:19 SCollection.patch",
+        "12:2 SCollection.getOrElse",
+        "12:20 SCollection.updated",
+        "12:29 SCollection.zip",
+        "12:31 SCollection.startsWith",
+        "12:32 SCollection.endsWith",
+        "99:8 Box.tokens"
+      ],
+      "op" : "Coll.generic_producers_pairs_v6",
+      "ops" : [
+        "Append",
+        "ByIndex",
+        "Const",
+        "EQ",
+        "ExtractRegisterAs",
+        "If",
+        "MethodCall",
+        "OptionGet",
+        "Outputs$",
+        "Self$",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 86,
+      "tree_shapes" : [
+        {
+          "accepts" : 153,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 43,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 209,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 43,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
       "version" : "v6"
     },
     "v6/authored/Coll.generic_producers_v6.json" : {
@@ -15531,7 +15729,9 @@
     },
     "101:1" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Context.properties.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112379-8c12d3f6ce28.json",
         "v6/captured/h113569-a967385bcebd.json",
@@ -15551,6 +15751,7 @@
     },
     "101:12" : {
       "families" : [
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
@@ -15578,10 +15779,12 @@
     "101:3" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
@@ -15771,8 +15974,10 @@
     "105:2" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.preHeader_accessors.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json"
       ],
@@ -15810,8 +16015,10 @@
     "105:7" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.preHeader_accessors.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json"
       ],
@@ -15955,6 +16162,7 @@
     },
     "106:9" : {
       "families" : [
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
@@ -15991,11 +16199,13 @@
     "12:14" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/spec/Coll.indices_equivalence.json",
         "v5/spec/Coll_flatMap_method_equivalence.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
@@ -16030,11 +16240,15 @@
     "12:19" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_patch_method_equivalence.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
@@ -16050,7 +16264,11 @@
     "12:2" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.pair_shape_map.json",
@@ -16065,11 +16283,13 @@
     },
     "12:20" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_updated_method_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.item_store_type_check.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
@@ -16118,6 +16338,7 @@
     "12:29" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
@@ -16126,6 +16347,7 @@
         "v5/spec/Coll.zip_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
@@ -16177,6 +16399,8 @@
     "12:31" : {
       "families" : [
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
@@ -16190,6 +16414,8 @@
     },
     "12:32" : {
       "families" : [
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
@@ -16651,6 +16877,7 @@
     "99:19" : {
       "families" : [
         "v6/authored/Box.getReg_dynamic_index.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
@@ -16698,8 +16925,12 @@
       "families" : [
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
@@ -17187,6 +17418,7 @@
     },
     "Append" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/SubstConstants.coll_count_range.json",
@@ -17195,6 +17427,7 @@
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
@@ -17755,6 +17988,8 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
@@ -17770,6 +18005,8 @@
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
@@ -18153,6 +18390,8 @@
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
@@ -18188,6 +18427,8 @@
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
@@ -18451,6 +18692,7 @@
     "Context$" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.preHeader_accessors.json",
@@ -18459,6 +18701,7 @@
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v6/authored/Append.reference_array_store.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Context.getVarFromInput.json",
@@ -18572,6 +18815,7 @@
         "v5/authored/Coll.eq_compared_count_coa.json",
         "v5/authored/Coll.eq_compared_count_generic.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.property_call_forms.json",
@@ -18594,6 +18838,7 @@
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
@@ -18846,7 +19091,9 @@
     },
     "ExtractCreationInfo" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json"
       ],
@@ -18857,8 +19104,10 @@
     "ExtractId" : {
       "families" : [
         "v5/authored/Box.bytes_byte_basis.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -18907,6 +19156,8 @@
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Exponentiate.static_type.json",
@@ -18914,6 +19165,8 @@
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
@@ -18987,9 +19240,11 @@
     "ExtractScriptBytes" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.flatMap_equivalence.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
@@ -19500,6 +19755,7 @@
         "v5/authored/Box.sub_min_value.json",
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ_of_SigmaProp.json",
@@ -19596,6 +19852,7 @@
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
@@ -19715,6 +19972,7 @@
         "v5/spec/groupGenerator_equivalence.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
@@ -19858,6 +20116,8 @@
     "If" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
@@ -19883,6 +20143,8 @@
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
@@ -19980,9 +20242,11 @@
     },
     "Inputs$" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Context.method_call_no_args_v6.json",
@@ -20252,6 +20516,8 @@
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
@@ -20298,6 +20564,8 @@
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
@@ -20614,6 +20882,8 @@
         "v5/authored/Box.sub_min_value.json",
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/Option.method_type_variable_names.json",
@@ -20707,6 +20977,8 @@
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
@@ -20832,8 +21104,10 @@
     },
     "OptionGetOrElse" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
@@ -20908,8 +21182,12 @@
     },
     "Outputs$" : {
       "families" : [
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -20978,6 +21256,7 @@
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.patch_array_class_context.json",
@@ -21029,6 +21308,7 @@
         "v5/spec/or_sigma_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
@@ -21124,6 +21404,8 @@
     "Self$" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
@@ -21134,6 +21416,8 @@
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
@@ -21296,6 +21580,7 @@
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/ByIndex.tuple_item.json",
+        "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
@@ -21307,6 +21592,7 @@
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
+        "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
@@ -21409,10 +21695,12 @@
     "Slice" : {
       "families" : [
         "v5/authored/Coll.generic_producers.json",
+        "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/spec/Coll_slice_method_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
@@ -22128,12 +22416,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 9836,
+    "accepts" : 11229,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 18414,
-    "files" : 417,
-    "rejects" : 8578,
+    "entries" : 20289,
+    "files" : 421,
+    "rejects" : 9060,
     "unwalked" : 2425
   }
 }
