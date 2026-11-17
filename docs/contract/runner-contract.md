@@ -178,11 +178,17 @@ reconstruction rules, which every conforming implementation of this schema must 
 
   **The pre-header's `parentId` and `votes` are the collections a node builds** (2026-11-17), and their runtime
   class is visible to a script. ergo-core's `PreHeader.toSigma` writes them with `toColl`, which makes them GENERIC
-  collections on the JVM, where every other byte collection the context brings (a header's fields, a box's, a
-  register, a context variable, a token id, `LastBlockUtxoRootHash.digest`) is specialised. A specialised
-  collection's `patch` casts the patch's array to its own, so `CONTEXT.preHeader.parentId.patch(0, <an empty
-  Coll[Boolean]>, 0)` answers the parent id, and the same call on `CONTEXT.headers(0).parentId` throws
-  (`Coll.patch_array_class_context`). The same holds for the dummy context's pre-header.
+  collections on the JVM. A specialised collection's `patch` casts the patch's array to its own, so
+  `CONTEXT.preHeader.parentId.patch(0, <an empty Coll[Boolean]>, 0)` answers the parent id, and the same call on
+  `CONTEXT.headers(0).parentId` throws (`Coll.patch_array_class_context`). The same holds for the dummy context's
+  pre-header. A node also holds GENERIC: R1 read as a register (`ByteArrayConstant(propositionBytes)`), the bytes of
+  R3 read as a register, and a `Coll[Byte]` or `Coll[Boolean]` collection EXPRESSION (`83…`, `85…`) in a register or a
+  context variable, nested or not. It holds SPECIALISED a header's fields, a collection CONSTANT in a register or
+  variable, `SELF.propositionBytes`, a token id and `LastBlockUtxoRootHash.digest`. On a generic collection
+  `getOrElse` / `ByIndex` hand back a default of another class as it is, and `startsWith` / `endsWith` compare item
+  by item; on a specialised one they throw (`Coll.generic_producers`). Registers and variables come from the bytes
+  a node's readers take (box bytes, `Value` bindings), so an implementation's readers decide this; a hand-built
+  pre-header does not.
 - **`lastBlockUtxoRoot`** is derived from `headers[0].stateRoot` as
   `AvlTreeData{ digest = headers[0].stateRoot (33 bytes), flags = 0x07 (all ops),
   keyLength = 32, valueLengthOpt = None }` — serialized `<stateRoot 33B> 07 20 00`.
@@ -209,7 +215,11 @@ reconstruction rules, which every conforming implementation of this schema must 
   `22`×32, R4 = `Coll[Byte](1, 2)`, R5 = `Coll(true, false)`, R6 = `Coll(Coll[Byte](1), Coll[Byte](2))`) and context
   variables 1 = `Coll[Byte](1, 2)` and 2 = `Coll(true, false)` as `Value` bindings (`0e020102`, `0d0201`), the
   bytes a node's reader takes, on the rows that read them (`getVar`): the reader decides the collection's class.
-  The other rows' context carries no extension. They sit at activated 2 (the
+  The other rows' context carries no extension. The `Coll.generic_producers` families (2026-11-17) carry the same
+  header and pre-header with either that `SELF` or sigma-rust's rv-rc `SELF` (R4..R9 holding collection expressions,
+  a nested one, a `Coll[Int]` expression and a `Coll[Byte]` constant, one token) and its five context variables as
+  `Value` bindings in their RAW bytes, on the rows that read a variable (re-writing would turn an `83…` of booleans
+  into `85…`). They sit at activated 2 (the
   `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 

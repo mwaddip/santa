@@ -68,13 +68,15 @@ object AuthoredEvalPatchArrayClass {
     * the extension (the jars measured every row with it; the test holds every cost to theirs). */
   val Var1Bytes = "0e020102"
   val Var2Bytes = "0d0201"
-  private def valueBinding(h: String): Json =
+  def valueBinding(h: String): Json =
     Json.obj("kind" -> Json.fromString("Value"), "bytes_hex" -> Json.fromString(h))
   val Ext: Map[Int, Json] = Map(1 -> valueBinding(Var1Bytes), 2 -> valueBinding(Var2Bytes))
   private def extJson(e: Map[Int, Json]): Json = Json.obj(e.toSeq.sortBy(_._1).map { case (k, v) => k.toString -> v }: _*)
-  def context(activated: Int, ext: Map[Int, Json]): Json = Json.obj(
+  def context(activated: Int, ext: Map[Int, Json]): Json = contextWith(activated, SelfHex, ext)
+  /** The same context around another SELF (AuthoredEvalGenericProducers' rv rows). */
+  def contextWith(activated: Int, selfHex: String, ext: Map[Int, Json]): Json = Json.obj(
     "self_index"       -> Json.fromInt(0),
-    "inputs"           -> Json.arr(Json.fromString(SelfHex)),
+    "inputs"           -> Json.arr(Json.fromString(selfHex)),
     "data_inputs"      -> Json.arr(),
     "outputs"          -> Json.arr(),
     "headers"          -> Json.arr(Json.fromString(L.HeaderHex(activated))),

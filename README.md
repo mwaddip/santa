@@ -45,16 +45,16 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 16,458 entries across 415 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 14,370
+- ✅ **A blessed eval corpus — 18,414 entries across 417 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 16,326
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 3,468 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
-  `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, and 1,047 authored `patch` rows over
-  the collections a context brings); version-split into **v4** (18
+  spends; 5,424 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
+  `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
+  the collections a context brings, and 1,956 over the ones a node holds generic); version-split into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (5,778 — the cumulative
-  v5/mainnet method surface) and **v6** (10,662 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (6,328 — the cumulative
+  v5/mainnet method surface) and **v6** (12,068 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -249,6 +249,14 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - A patch held over another array throws although it is empty and nothing is replaced, so the box does not spend.
   - A node builds the pre-header's `parentId` and `votes` as generic collections, which take an empty patch of any
     class: those boxes spend.
+
+  **The collections a node holds generic** (`generic-producers`, 123 entries at block version 4 and 52 at block
+  version 3): besides the pre-header's two fields, R1 and R3 read as registers, and a `Coll[Byte]` or `Coll[Boolean]`
+  collection expression in a register or a context variable (also nested, sliced or read by `getReg`).
+  - On them `patch`, `startsWith` and `endsWith` with a collection of another array answer, so the box spends; on a
+    header's field, a constant register or variable, `SELF.propositionBytes` or a token id they throw.
+  - The spent box's registers and the input's extension travel as the bytes their writer chose (an `83…` of booleans
+    is not re-encoded as `85…`).
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated
