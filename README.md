@@ -69,7 +69,9 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     - `blitzen-develop`: upstream `develop` (value-only);
     - `blitzen-mwaddip`: the `master` branch of the mwaddip fork (`--features jit-cost`). It took over from the fork's `eni` branch,
       whose runner was retired on 2026-09-29 after master reproduced it exactly.
-  - **Comet**: the pure-TS **Fleet SDK**, wire tier only.
+  - **Comet**: the pure-TS **Fleet SDK**, wire tier only, graded on Fleet's public API: the `Constant`, `Box` and
+    `Transaction` kinds, without the rules tied to the activated script version (its declared scope,
+    [runner-integration §2](docs/contract/runner-integration.md#2-the-manifest--runnerjson)).
   - **Donner**: ergo-node-rust.
   - **Vixen**: arkadianet/ergo.
 
