@@ -30,9 +30,30 @@ and `runners/blitzen-eni/` — to compare an implementation's branches side by s
 }
 ```
 
+A wire runner may also declare (both optional; comet, the Fleet SDK runner, does):
+
+```jsonc
+  "kinds":      ["Constant", "Box", "Transaction"],  // the wire kinds it implements; omitted = every kind
+  "activation": false                                // applies rules tied to the activated script version? default true
+```
+
 - **`version`** — one per runner, the max protocol version it supports; **cumulative** (v6 ⊃ v5 ⊃ v4, soft-fork). The orchestrator selects every vector whose `version ≤` this. The slots: `v4` = every activated version below the JIT activation (0 or 1), `v5` = activated 2, `v6` = activated 3 (`conform`'s `VERSIONS`; `validate` holds each file's entries to its slot).
 - **`tiers`** — the set of result-shape tiers the runner implements (`eval` today; `wire`/`block` later). Tiers are *not* cumulative; declaring `eval` never pulls in `wire`. Uneven maturity across tiers is surfaced as naughty (the grid is the readiness map), not hidden by under-declaring.
 - **`cost`** — whether the runner claims the **cost dimension**. `false` = value-only (a wallet/eval-only SDK); the orchestrator grades value and ignores cost for it. Declared scope, not abstention.
+- **`kinds`** (optional) — the wire kinds the runner implements, from the wire schema's `kind` enum (`Constant`,
+  `Box`, `Transaction`, `Header`, `SigmaBoolean`, `ErgoTree`, `BlockTransactions`). A wire file holds one kind
+  (`validate` enforces it), and a file of an undeclared kind is not staged for the runner. Omitted = every kind;
+  `conform` refuses an unknown kind, an empty list, and `kinds` without the `wire` tier.
+- **`activation`** (optional, default `true`) — whether the runner applies consensus rules tied to the activated
+  script version. A wire file whose envelope says `activation_rule: true` (runner-contract-wire §1) is not staged
+  for a runner that declares `false`.
+- **What a scope declaration may say.** `version`, `tiers`, `cost`, `kinds` and `activation` are DECLARED SCOPE,
+  not abstention, and they stay coarse: a whole tier, kind or class of rule, never a family, an entry or a failure.
+  Each needs a reason the implementation's own API gives (it has no entry point for that kind; it has no notion of
+  the activated version), stated in the runner's README. A failure inside an API the implementation does offer
+  stays coal: a gap there is a feature to build, not something to declare away. Out-of-scope files are not
+  staged and not tallied, as a higher version or an undeclared tier; `conform`'s header line, `results.json` and
+  the scoreboard show the declared scope.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
 - **`control`** (optional, default `false`) — the oracle's own runner (rudolph). A grid in which a control could not
   build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `results.json`), and the CI

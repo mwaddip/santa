@@ -19,6 +19,10 @@ use std::{env, fs};
 /// activation (an entry's `version.activated` 0 or 1), `v5` is activated 2, `v6` activated 3.
 const VERSIONS: [&str; 3] = ["v4", "v5", "v6"];
 
+/// The wire kinds, as the wire vector schema's `kind` enum lists them (a test holds the two equal). A runner's
+/// manifest may declare the ones it implements (`kinds`); a wire file holds one kind (./validate).
+const WIRE_KINDS: [&str; 7] = ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree", "BlockTransactions"];
+
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..") // tools/conform -> repo root
 }
@@ -82,16 +86,118 @@ fn select<'a>(vectors: &'a [Vec5], version: &str, tiers: &[String]) -> Vec<&'a V
         .collect()
 }
 
+/// What a wire file says about itself, read once: its one kind and whether its verdicts turn on the activated
+/// script version (the envelope's `activation_rule`, runner-contract-wire).
+struct WireFacts {
+    kind: String,
+    activation_rule: bool,
+}
+
+/// The facts of every wire file in `vectors`, keyed by relpath. A file without exactly one kind is an error naming it
+/// (./validate refuses it too; conform must not guess a kind).
+fn wire_facts(vectors_dir: &Path, vectors: &[Vec5]) -> Result<BTreeMap<String, WireFacts>, String> {
+    let mut out = BTreeMap::new();
+    for v in vectors.iter().filter(|v| v.1 == "wire") {
+        let path = vectors_dir.join(&v.0);
+        let doc: Value = serde_json::from_str(&fs::read_to_string(&path).map_err(|e| format!("{}: {e}", v.0))?)
+            .map_err(|e| format!("{}: {e}", v.0))?;
+        let mut kinds: Vec<&str> = doc["entries"]
+            .as_array()
+            .map(|es| es.iter().map(|e| e["kind"].as_str().unwrap_or("")).collect())
+            .unwrap_or_default();
+        kinds.sort_unstable();
+        kinds.dedup();
+        let kind = match kinds.as_slice() {
+            [k] if !k.is_empty() => k.to_string(),
+            ks => return Err(format!("{}: a wire file holds one kind, this one {ks:?}", v.0)),
+        };
+        let activation_rule = doc.get("activation_rule").and_then(Value::as_bool).unwrap_or(false);
+        out.insert(v.0.clone(), WireFacts { kind, activation_rule });
+    }
+    Ok(out)
+}
+
+/// A runner's declared scope (runner-integration §2): a wire file of a kind it does not declare, or one decided by
+/// an activated-version rule when it declares none, is not staged for it. A file without facts (every file of
+/// another tier) is in scope.
+fn in_scope(rel: &str, facts: &BTreeMap<String, WireFacts>, kinds: &Option<Vec<String>>, activation: bool) -> bool {
+    match facts.get(rel) {
+        None => true,
+        Some(f) => kinds.as_ref().map_or(true, |ks| ks.iter().any(|k| k == &f.kind)) && (activation || !f.activation_rule),
+    }
+}
+
+/// The declared scope on a runner's header line: `, kinds=…` when declared, `, activation=False` when not claimed.
+fn scope_suffix(m: &Runner) -> String {
+    let mut s = String::new();
+    if let Some(ks) = &m.kinds {
+        s.push_str(&format!(", kinds={}", ks.join(",")));
+    }
+    if !m.activation {
+        s.push_str(", activation=False");
+    }
+    s
+}
+
 struct Runner {
     name: String,
     label: String,
     version: String,
     tiers: Vec<String>,
     cost: bool,
+    /// The wire kinds the runner implements (`kinds`); None = every kind.
+    kinds: Option<Vec<String>>,
+    /// Whether it applies consensus rules tied to the activated script version (`activation`, default true).
+    activation: bool,
     impl_: Option<String>,
     /// The manifest's `control`: the oracle's own runner, whose not running leaves the grid unanchored.
     control: bool,
     run: PathBuf,
+}
+
+/// A runner.json, read. A declared scope is coarse and must name what it means: an unknown kind, an empty `kinds`
+/// (a wire tier that selects nothing would grade nothing, silently) and `kinds` without the wire tier are errors.
+fn parse_manifest(j: &Value, run: PathBuf) -> Result<Runner, String> {
+    let s = |k: &str| j[k].as_str().map(String::from).ok_or_else(|| format!("runner.json: no {k:?}"));
+    let tiers: Vec<String> = j["tiers"]
+        .as_array()
+        .ok_or("runner.json: no \"tiers\"")?
+        .iter()
+        .map(|t| t.as_str().map(String::from).ok_or("runner.json: a tier is not a string"))
+        .collect::<Result<_, _>>()?;
+    let kinds = match j.get("kinds") {
+        None | Some(Value::Null) => None,
+        Some(v) => {
+            let ks: Vec<String> = v
+                .as_array()
+                .ok_or("runner.json: \"kinds\" is not an array")?
+                .iter()
+                .map(|k| k.as_str().map(String::from).ok_or("runner.json: a kind is not a string"))
+                .collect::<Result<_, _>>()?;
+            if ks.is_empty() {
+                return Err("runner.json: \"kinds\" is empty (omit it to mean every kind)".into());
+            }
+            if let Some(bad) = ks.iter().find(|k| !WIRE_KINDS.contains(&k.as_str())) {
+                return Err(format!("runner.json: unknown wire kind {bad:?}; known: {WIRE_KINDS:?}"));
+            }
+            if !tiers.iter().any(|t| t == "wire") {
+                return Err("runner.json: \"kinds\" declared without the wire tier".into());
+            }
+            Some(ks)
+        }
+    };
+    Ok(Runner {
+        name: s("name")?,
+        label: s("label")?,
+        version: s("version")?,
+        tiers,
+        cost: j.get("cost").and_then(Value::as_bool).unwrap_or(true),
+        kinds,
+        activation: j.get("activation").and_then(Value::as_bool).unwrap_or(true),
+        impl_: j.get("impl").and_then(Value::as_str).map(String::from),
+        control: j.get("control").and_then(Value::as_bool).unwrap_or(false),
+        run,
+    })
 }
 
 /// presence-as-state: a runner dir is valid iff it has runner.json + an executable santa-run.
@@ -116,16 +222,7 @@ fn discover(runners_dir: &Path) -> Vec<Runner> {
         }
         let j: Value = serde_json::from_str(&fs::read_to_string(d.join("runner.json")).unwrap())
             .unwrap_or_else(|e| die(format!("bad runner.json in {}: {e}", d.display())));
-        out.push(Runner {
-            name: j["name"].as_str().unwrap().to_string(),
-            label: j["label"].as_str().unwrap().to_string(),
-            version: j["version"].as_str().unwrap().to_string(),
-            tiers: j["tiers"].as_array().unwrap().iter().map(|t| t.as_str().unwrap().to_string()).collect(),
-            cost: j.get("cost").and_then(Value::as_bool).unwrap_or(true),
-            impl_: j.get("impl").and_then(Value::as_str).map(String::from),
-            control: j.get("control").and_then(Value::as_bool).unwrap_or(false),
-            run,
-        });
+        out.push(parse_manifest(&j, run).unwrap_or_else(|e| die(format!("{}: {e}", d.display()))));
     }
     out
 }
@@ -266,10 +363,18 @@ fn ceiling_hit(ordinary: &Value) -> Option<String> {
 }
 
 /// Runs one runner over its selection. Ok: (actuals by relpath, impl sha, the bounded files that exceeded or crashed).
-fn run_one(m: &Runner, root: &Path, vectors: &[Vec5]) -> Result<(BTreeMap<String, Value>, Option<String>, Vec<String>), RunFail> {
+fn run_one(
+    m: &Runner,
+    root: &Path,
+    vectors: &[Vec5],
+    facts: &BTreeMap<String, WireFacts>,
+) -> Result<(BTreeMap<String, Value>, Option<String>, Vec<String>), RunFail> {
     let ws = root.join(".santa").join(&m.name);
     let (impl_path, sha) = resolve_impl(&m.impl_, &ws).map_err(RunFail::Exit)?;
-    let selected = select(vectors, &m.version, &m.tiers);
+    let selected: Vec<&Vec5> = select(vectors, &m.version, &m.tiers)
+        .into_iter()
+        .filter(|v| in_scope(&v.0, facts, &m.kinds, m.activation))
+        .collect();
     let indir = ws.join("in");
     let _ = fs::remove_dir_all(&indir);
     fs::create_dir_all(&indir).unwrap();
@@ -885,15 +990,17 @@ fn main() -> ExitCode {
     }
     println!("\n=== SANTA conformance · {} runner(s) ===", runners.len());
     let vectors = discover_vectors(&root.join("vectors"));
+    let facts = wire_facts(&root.join("vectors"), &vectors).unwrap_or_else(|e| die(e));
     let mut results: Vec<Value> = Vec::new();
     for m in &runners {
         eprintln!("running {} …", m.name);
-        match run_one(m, &root, &vectors) {
+        match run_one(m, &root, &vectors, &facts) {
             Err(f) => {
                 let msg = fail_message(&f);
                 println!("  ⚠️  {}  — {msg} (see error above)", m.label);
                 results.push(json!({
                     "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
+                    "kinds": &m.kinds, "activation": m.activation,
                     "impl": &m.impl_, "sha": Value::Null,
                     "mark": "errored", "red_total": Value::Null, "slices": {}, "bounded_failures": [],
                     "error": msg,
@@ -904,11 +1011,12 @@ fn main() -> ExitCode {
                 let agg_red: u64 = slices.values().map(Counts::red_total).sum();
                 let mark = if agg_red == 0 { "🎁" } else { "🪨" };
                 println!(
-                    "  {mark} {}  (version≤{}, tiers={}, cost={})",
+                    "  {mark} {}  (version≤{}, tiers={}, cost={}{})",
                     m.label,
                     m.version,
                     m.tiers.join(","),
-                    if m.cost { "True" } else { "False" }
+                    if m.cost { "True" } else { "False" },
+                    scope_suffix(m)
                 );
                 for ((tier, version, prov), c) in &slices {
                     println!("      {tier}/{version}/{prov}: {}", c.summary());
@@ -919,6 +1027,7 @@ fn main() -> ExitCode {
                     .collect();
                 results.push(json!({
                     "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
+                    "kinds": &m.kinds, "activation": m.activation,
                     "impl": &m.impl_, "sha": sha,
                     "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
                     "bounded_failures": failures,
@@ -943,7 +1052,7 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
-    use super::{parse_relpath, resolve_impl, select, unrun_controls, Runner, Vec5};
+    use super::{in_scope, parse_manifest, parse_relpath, resolve_impl, select, unrun_controls, wire_facts, Runner, Vec5, WireFacts, WIRE_KINDS};
     use serde_json::json;
     use std::fs;
     use std::path::PathBuf;
@@ -952,7 +1061,7 @@ mod tests {
     fn runner(name: &str, control: bool) -> Runner {
         Runner {
             name: name.into(), label: name.into(), version: "v6".into(), tiers: vec!["eval".into()],
-            cost: true, impl_: None, control, run: PathBuf::from("/dev/null"),
+            cost: true, kinds: None, activation: true, impl_: None, control, run: PathBuf::from("/dev/null"),
         }
     }
 
@@ -1020,6 +1129,125 @@ mod tests {
     #[test]
     fn select_auto_includes_authored_provenance() {
         assert!(selected_rels("v5", &["eval"]).iter().any(|r| r.contains("/authored/")));
+    }
+
+    // ── declared scope: a runner's wire kinds and whether it applies activated-version rules ──────────
+
+    fn manifest(extra: serde_json::Value) -> serde_json::Value {
+        let mut m = json!({"name": "r", "label": "r", "version": "v5", "tiers": ["wire"]});
+        for (k, v) in extra.as_object().unwrap() {
+            m[k] = v.clone();
+        }
+        m
+    }
+
+    #[test]
+    fn manifest_rejects_unknown_kind() {
+        let e = parse_manifest(&manifest(json!({"kinds": ["box"]})), PathBuf::from("/dev/null")).err().unwrap();
+        assert!(e.contains("box"), "{e}");
+    }
+
+    #[test]
+    fn manifest_rejects_empty_kinds() {
+        assert!(parse_manifest(&manifest(json!({"kinds": []})), PathBuf::from("/dev/null")).is_err());
+    }
+
+    #[test]
+    fn manifest_rejects_kinds_without_wire() {
+        let m = manifest(json!({"kinds": ["Box"], "tiers": ["eval"]}));
+        assert!(parse_manifest(&m, PathBuf::from("/dev/null")).is_err());
+    }
+
+    #[test]
+    fn manifest_activation_without_wire_is_fine() {
+        let m = manifest(json!({"activation": false, "tiers": ["eval"]}));
+        assert!(!parse_manifest(&m, PathBuf::from("/dev/null")).unwrap().activation);
+    }
+
+    #[test]
+    fn manifest_defaults() {
+        let r = parse_manifest(&manifest(json!({})), PathBuf::from("/dev/null")).unwrap();
+        assert_eq!(r.kinds, None);
+        assert!(r.activation);
+        assert!(r.cost);
+        assert!(!r.control);
+    }
+
+    #[test]
+    fn wire_kinds_match_the_schema() {
+        let schema: serde_json::Value = serde_json::from_str(
+            &fs::read_to_string(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../schema/santa-wire.vector.schema.json"))
+                .unwrap(),
+        )
+        .unwrap();
+        let kinds: Vec<&str> = schema["$defs"]["entry"]["properties"]["kind"]["enum"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|k| k.as_str().unwrap())
+            .collect();
+        assert_eq!(kinds, WIRE_KINDS);
+    }
+
+    fn facts() -> std::collections::BTreeMap<String, WireFacts> {
+        [("wire/v5/authored/Box.a.json", "Box", false), ("wire/v5/authored/ErgoTree.b.json", "ErgoTree", false),
+         ("wire/v5/authored/Box.tree_version_above_activated.json", "Box", true)]
+            .iter()
+            .map(|(r, k, a)| (r.to_string(), WireFacts { kind: k.to_string(), activation_rule: *a }))
+            .collect()
+    }
+    fn fleet() -> Option<Vec<String>> {
+        Some(vec!["Constant".into(), "Box".into(), "Transaction".into()])
+    }
+
+    #[test]
+    fn in_scope_defaults_keep_everything() {
+        for rel in facts().keys() {
+            assert!(in_scope(rel, &facts(), &None, true), "{rel}");
+        }
+    }
+
+    #[test]
+    fn in_scope_kinds_cut_other_kinds() {
+        assert!(in_scope("wire/v5/authored/Box.a.json", &facts(), &fleet(), true));
+        assert!(!in_scope("wire/v5/authored/ErgoTree.b.json", &facts(), &fleet(), true));
+    }
+
+    #[test]
+    fn in_scope_activation_false_cuts_marked_files_only() {
+        assert!(in_scope("wire/v5/authored/Box.a.json", &facts(), &None, false));
+        assert!(!in_scope("wire/v5/authored/Box.tree_version_above_activated.json", &facts(), &None, false));
+    }
+
+    #[test]
+    fn in_scope_non_wire_always_in() {
+        assert!(in_scope("eval/v5/authored/c.json", &facts(), &fleet(), false));
+    }
+
+    #[test]
+    fn wire_facts_err_on_mixed_kinds() {
+        let root = std::env::temp_dir().join(format!("santa-wire-facts-test-{}", std::process::id()));
+        let dir = root.join("wire/v5/authored");
+        fs::create_dir_all(&dir).unwrap();
+        let file = |name: &str, kinds: &[&str]| {
+            let entries: Vec<_> = kinds.iter().map(|k| json!({"kind": k})).collect();
+            fs::write(dir.join(name), json!({"schema": "santa-wire/v1", "entries": entries}).to_string()).unwrap();
+        };
+        file("Box.one.json", &["Box", "Box"]);
+        file("Box.two.json", &["Box", "Transaction"]);
+        let vs: Vec<Vec5> = ["wire/v5/authored/Box.one.json", "wire/v5/authored/Box.two.json"]
+            .iter()
+            .map(|r| {
+                let (t, v, p, o) = parse_relpath(r);
+                (r.to_string(), t, v, p, o)
+            })
+            .collect();
+        let e = wire_facts(&root, &vs).err().unwrap();
+        assert!(e.contains("Box.two.json"), "{e}");
+        let ok = wire_facts(&root, &vs[..1]).unwrap();
+        assert_eq!(ok["wire/v5/authored/Box.one.json"].kind, "Box");
+        assert!(!ok["wire/v5/authored/Box.one.json"].activation_rule);
+        let _ = fs::remove_dir_all(&root);
     }
 
     // Port of the former tools/test_checkout.py: a throwaway local "remote" with v1 then v2 on
