@@ -1,0 +1,3140 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "OR.item_by_item",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "OR-ladder-L0-none-tv0-a2#0",
+      "script" : "[OR|ladder|L0|none] `OR(<a Coll[Boolean] constant of 0 items>)`, no deciding item (every one false) — false at cost 15. CONTROL: the JVM reads 0 of the 0 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L1-none-tv0-a2#1",
+      "script" : "[OR|ladder|L1|none] `OR(<a Coll[Boolean] constant of 1 items>)`, no deciding item (every one false) — false at cost 15. CONTROL: the JVM reads 1 of the 1 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L1-k0-tv0-a2#2",
+      "script" : "[OR|ladder|L1|k0] `OR(<a Coll[Boolean] constant of 1 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CONTROL: the JVM reads 1 of the 1 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L2-none-tv0-a2#3",
+      "script" : "[OR|ladder|L2|none] `OR(<a Coll[Boolean] constant of 2 items>)`, no deciding item (every one false) — false at cost 15. CONTROL: the JVM reads 2 of the 2 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d0200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L2-k0-tv0-a2#4",
+      "script" : "[OR|ladder|L2|k0] `OR(<a Coll[Boolean] constant of 2 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CONTROL: the JVM reads 1 of the 2 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d0201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L2-k1-tv0-a2#5",
+      "script" : "[OR|ladder|L2|k1] `OR(<a Coll[Boolean] constant of 2 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CONTROL: the JVM reads 2 of the 2 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d0202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L32-none-tv0-a2#6",
+      "script" : "[OR|ladder|L32|none] `OR(<a Coll[Boolean] constant of 32 items>)`, no deciding item (every one false) — false at cost 15. CONTROL: the JVM reads 32 of the 32 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d2000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L32-k0-tv0-a2#7",
+      "script" : "[OR|ladder|L32|k0] `OR(<a Coll[Boolean] constant of 32 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CONTROL: the JVM reads 1 of the 32 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d2001000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L32-k1-tv0-a2#8",
+      "script" : "[OR|ladder|L32|k1] `OR(<a Coll[Boolean] constant of 32 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CONTROL: the JVM reads 2 of the 32 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d2002000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L32-k31-tv0-a2#9",
+      "script" : "[OR|ladder|L32|k31] `OR(<a Coll[Boolean] constant of 32 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CONTROL: the JVM reads 32 of the 32 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d2000000080",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L33-none-tv0-a2#10",
+      "script" : "[OR|ladder|L33|none] `OR(<a Coll[Boolean] constant of 33 items>)`, no deciding item (every one false) — false at cost 15. CONTROL: the JVM reads 33 of the 33 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d210000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L33-k0-tv0-a2#11",
+      "script" : "[OR|ladder|L33|k0] `OR(<a Coll[Boolean] constant of 33 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CONTROL: the JVM reads 1 of the 33 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d210100000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L33-k1-tv0-a2#12",
+      "script" : "[OR|ladder|L33|k1] `OR(<a Coll[Boolean] constant of 33 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CONTROL: the JVM reads 2 of the 33 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d210200000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L33-k31-tv0-a2#13",
+      "script" : "[OR|ladder|L33|k31] `OR(<a Coll[Boolean] constant of 33 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CONTROL: the JVM reads 32 of the 33 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d210000008000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L33-k32-tv0-a2#14",
+      "script" : "[OR|ladder|L33|k32] `OR(<a Coll[Boolean] constant of 33 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CONTROL: the JVM reads 33 of the 33 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d210000000001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L64-none-tv0-a2#15",
+      "script" : "[OR|ladder|L64|none] `OR(<a Coll[Boolean] constant of 64 items>)`, no deciding item (every one false) — false at cost 15. CONTROL: the JVM reads 64 of the 64 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d400000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L64-k0-tv0-a2#16",
+      "script" : "[OR|ladder|L64|k0] `OR(<a Coll[Boolean] constant of 64 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CONTROL: the JVM reads 1 of the 64 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d400100000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L64-k1-tv0-a2#17",
+      "script" : "[OR|ladder|L64|k1] `OR(<a Coll[Boolean] constant of 64 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CONTROL: the JVM reads 2 of the 64 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d400200000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L64-k31-tv0-a2#18",
+      "script" : "[OR|ladder|L64|k31] `OR(<a Coll[Boolean] constant of 64 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CONTROL: the JVM reads 32 of the 64 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d400000008000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L64-k32-tv0-a2#19",
+      "script" : "[OR|ladder|L64|k32] `OR(<a Coll[Boolean] constant of 64 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CONTROL: the JVM reads 33 of the 64 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d400000000001000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L64-k63-tv0-a2#20",
+      "script" : "[OR|ladder|L64|k63] `OR(<a Coll[Boolean] constant of 64 items>)`, the only deciding item (true) at index 63, every other false — true at cost 15. CONTROL: the JVM reads 64 of the 64 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d400000000000000080",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-none-tv0-a2#21",
+      "script" : "[OR|ladder|L65|none] `OR(<a Coll[Boolean] constant of 65 items>)`, no deciding item (every one false) — false at cost 20. CONTROL: the JVM reads 65 of the 65 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-k0-tv0-a2#22",
+      "script" : "[OR|ladder|L65|k0] `OR(<a Coll[Boolean] constant of 65 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CHUNKS: the JVM reads 1 of the 65 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41010000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-k1-tv0-a2#23",
+      "script" : "[OR|ladder|L65|k1] `OR(<a Coll[Boolean] constant of 65 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CHUNKS: the JVM reads 2 of the 65 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41020000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-k31-tv0-a2#24",
+      "script" : "[OR|ladder|L65|k31] `OR(<a Coll[Boolean] constant of 65 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CHUNKS: the JVM reads 32 of the 65 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41000000800000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-k32-tv0-a2#25",
+      "script" : "[OR|ladder|L65|k32] `OR(<a Coll[Boolean] constant of 65 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CHUNKS: the JVM reads 33 of the 65 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41000000000100000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-k63-tv0-a2#26",
+      "script" : "[OR|ladder|L65|k63] `OR(<a Coll[Boolean] constant of 65 items>)`, the only deciding item (true) at index 63, every other false — true at cost 15. CHUNKS: the JVM reads 64 of the 65 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41000000000000008000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L65-k64-tv0-a2#27",
+      "script" : "[OR|ladder|L65|k64] `OR(<a Coll[Boolean] constant of 65 items>)`, the only deciding item (true) at index 64, every other false — true at cost 20. CONTROL: the JVM reads 65 of the 65 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d41000000000000000001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-none-tv0-a2#28",
+      "script" : "[OR|ladder|L100|none] `OR(<a Coll[Boolean] constant of 100 items>)`, no deciding item (every one false) — false at cost 20. CONTROL: the JVM reads 100 of the 100 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6400000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k0-tv0-a2#29",
+      "script" : "[OR|ladder|L100|k0] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CHUNKS: the JVM reads 1 of the 100 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6401000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k1-tv0-a2#30",
+      "script" : "[OR|ladder|L100|k1] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CHUNKS: the JVM reads 2 of the 100 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6402000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k31-tv0-a2#31",
+      "script" : "[OR|ladder|L100|k31] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CHUNKS: the JVM reads 32 of the 100 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6400000080000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k32-tv0-a2#32",
+      "script" : "[OR|ladder|L100|k32] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CHUNKS: the JVM reads 33 of the 100 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6400000000010000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k63-tv0-a2#33",
+      "script" : "[OR|ladder|L100|k63] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 63, every other false — true at cost 15. CHUNKS: the JVM reads 64 of the 100 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6400000000000000800000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k64-tv0-a2#34",
+      "script" : "[OR|ladder|L100|k64] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 64, every other false — true at cost 20. CONTROL: the JVM reads 65 of the 100 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6400000000000000000100000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L100-k99-tv0-a2#35",
+      "script" : "[OR|ladder|L100|k99] `OR(<a Coll[Boolean] constant of 100 items>)`, the only deciding item (true) at index 99, every other false — true at cost 20. CONTROL: the JVM reads 100 of the 100 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d6400000000000000000000000008",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-none-tv0-a2#36",
+      "script" : "[OR|ladder|L128|none] `OR(<a Coll[Boolean] constant of 128 items>)`, no deciding item (every one false) — false at cost 20. CONTROL: the JVM reads 128 of the 128 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800100000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k0-tv0-a2#37",
+      "script" : "[OR|ladder|L128|k0] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CHUNKS: the JVM reads 1 of the 128 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800101000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k1-tv0-a2#38",
+      "script" : "[OR|ladder|L128|k1] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CHUNKS: the JVM reads 2 of the 128 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800102000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k31-tv0-a2#39",
+      "script" : "[OR|ladder|L128|k31] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CHUNKS: the JVM reads 32 of the 128 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800100000080000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k32-tv0-a2#40",
+      "script" : "[OR|ladder|L128|k32] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CHUNKS: the JVM reads 33 of the 128 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800100000000010000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k63-tv0-a2#41",
+      "script" : "[OR|ladder|L128|k63] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 63, every other false — true at cost 15. CHUNKS: the JVM reads 64 of the 128 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 2.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800100000000000000800000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k64-tv0-a2#42",
+      "script" : "[OR|ladder|L128|k64] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 64, every other false — true at cost 20. CONTROL: the JVM reads 65 of the 128 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800100000000000000000100000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L128-k127-tv0-a2#43",
+      "script" : "[OR|ladder|L128|k127] `OR(<a Coll[Boolean] constant of 128 items>)`, the only deciding item (true) at index 127, every other false — true at cost 20. CONTROL: the JVM reads 128 of the 128 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d800100000000000000000000000000000080",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-none-tv0-a2#44",
+      "script" : "[OR|ladder|L129|none] `OR(<a Coll[Boolean] constant of 129 items>)`, no deciding item (every one false) — false at cost 25. CONTROL: the JVM reads 129 of the 129 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k0-tv0-a2#45",
+      "script" : "[OR|ladder|L129|k0] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CHUNKS: the JVM reads 1 of the 129 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 3.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010100000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k1-tv0-a2#46",
+      "script" : "[OR|ladder|L129|k1] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CHUNKS: the JVM reads 2 of the 129 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 3.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010200000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k31-tv0-a2#47",
+      "script" : "[OR|ladder|L129|k31] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CHUNKS: the JVM reads 32 of the 129 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 3.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010000008000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k32-tv0-a2#48",
+      "script" : "[OR|ladder|L129|k32] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CHUNKS: the JVM reads 33 of the 129 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 3.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010000000001000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k63-tv0-a2#49",
+      "script" : "[OR|ladder|L129|k63] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 63, every other false — true at cost 15. CHUNKS: the JVM reads 64 of the 129 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 3.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010000000000000080000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k64-tv0-a2#50",
+      "script" : "[OR|ladder|L129|k64] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 64, every other false — true at cost 20. CHUNKS: the JVM reads 65 of the 129 items (up to the deciding one) and charges 2 chunk(s) of 64; charging for the whole collection is 3.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010000000000000000010000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L129-k128-tv0-a2#51",
+      "script" : "[OR|ladder|L129|k128] `OR(<a Coll[Boolean] constant of 129 items>)`, the only deciding item (true) at index 128, every other false — true at cost 25. CONTROL: the JVM reads 129 of the 129 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d81010000000000000000000000000000000001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-none-tv0-a2#52",
+      "script" : "[OR|ladder|L256|none] `OR(<a Coll[Boolean] constant of 256 items>)`, no deciding item (every one false) — false at cost 30. CONTROL: the JVM reads 256 of the 256 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020000000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k0-tv0-a2#53",
+      "script" : "[OR|ladder|L256|k0] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 0, every other false — true at cost 15. CHUNKS: the JVM reads 1 of the 256 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 4.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020100000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k1-tv0-a2#54",
+      "script" : "[OR|ladder|L256|k1] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 1, every other false — true at cost 15. CHUNKS: the JVM reads 2 of the 256 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 4.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020200000000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k31-tv0-a2#55",
+      "script" : "[OR|ladder|L256|k31] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 31, every other false — true at cost 15. CHUNKS: the JVM reads 32 of the 256 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 4.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020000008000000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k32-tv0-a2#56",
+      "script" : "[OR|ladder|L256|k32] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 32, every other false — true at cost 15. CHUNKS: the JVM reads 33 of the 256 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 4.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020000000001000000000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k63-tv0-a2#57",
+      "script" : "[OR|ladder|L256|k63] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 63, every other false — true at cost 15. CHUNKS: the JVM reads 64 of the 256 items (up to the deciding one) and charges 1 chunk(s) of 64; charging for the whole collection is 4.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020000000000000080000000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k64-tv0-a2#58",
+      "script" : "[OR|ladder|L256|k64] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 64, every other false — true at cost 20. CHUNKS: the JVM reads 65 of the 256 items (up to the deciding one) and charges 2 chunk(s) of 64; charging for the whole collection is 4.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020000000000000000010000000000000000000000000000000000000000000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ladder-L256-k255-tv0-a2#59",
+      "script" : "[OR|ladder|L256|k255] `OR(<a Coll[Boolean] constant of 256 items>)`, the only deciding item (true) at index 255, every other false — true at cost 30. CONTROL: the JVM reads 256 of the 256 items; the whole collection is the same number of chunks of 64.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970d80020000000000000000000000000000000000000000000000000000000000000080",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Byte0-tv0-a2#60",
+      "script" : "[OR|tuple|dKn|Byte0] `OR((true, 0.toByte, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010201010000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Byte0-tv0-a2#61",
+      "script" : "[OR|tuple|ndK|Byte0] `OR((false, true, 0.toByte))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010102000100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Byte0-tv0-a2#62",
+      "script" : "[OR|tuple|nKd|Byte0] `OR((false, 0.toByte, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010201000001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Byte0-tv0-a2#63",
+      "script" : "[OR|tuple|Kdn|Byte0] `OR((0.toByte, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748020101000100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Byte0-tv0-a2#64",
+      "script" : "[OR|tuple|nnK|Byte0] `OR((false, false, 0.toByte))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010102000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Byte1-tv0-a2#65",
+      "script" : "[OR|tuple|dKn|Byte1] `OR((true, 1.toByte, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010201010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Byte1-tv0-a2#66",
+      "script" : "[OR|tuple|ndK|Byte1] `OR((false, true, 1.toByte))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010102000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Byte1-tv0-a2#67",
+      "script" : "[OR|tuple|nKd|Byte1] `OR((false, 1.toByte, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010201000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Byte1-tv0-a2#68",
+      "script" : "[OR|tuple|Kdn|Byte1] `OR((1.toByte, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748020101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Byte1-tv0-a2#69",
+      "script" : "[OR|tuple|nnK|Byte1] `OR((false, false, 1.toByte))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010102000001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Short-tv0-a2#70",
+      "script" : "[OR|tuple|dKn|Short] `OR((true, 5.toShort, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010301010a00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Short-tv0-a2#71",
+      "script" : "[OR|tuple|ndK|Short] `OR((false, true, 5.toShort))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010300010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Short-tv0-a2#72",
+      "script" : "[OR|tuple|nKd|Short] `OR((false, 5.toShort, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010301000a01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Short-tv0-a2#73",
+      "script" : "[OR|tuple|Kdn|Short] `OR((5.toShort, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480301010a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Short-tv0-a2#74",
+      "script" : "[OR|tuple|nnK|Short] `OR((false, false, 5.toShort))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010300000a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Int1-tv0-a2#75",
+      "script" : "[OR|tuple|dKn|Int1] `OR((true, 1, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010401010200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Int1-tv0-a2#76",
+      "script" : "[OR|tuple|ndK|Int1] `OR((false, true, 1))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010104000102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Int1-tv0-a2#77",
+      "script" : "[OR|tuple|nKd|Int1] `OR((false, 1, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010401000201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Int1-tv0-a2#78",
+      "script" : "[OR|tuple|Kdn|Int1] `OR((1, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748040101020100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Int1-tv0-a2#79",
+      "script" : "[OR|tuple|nnK|Int1] `OR((false, false, 1))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010104000002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Int5-tv0-a2#80",
+      "script" : "[OR|tuple|dKn|Int5] `OR((true, 5, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010401010a00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Int5-tv0-a2#81",
+      "script" : "[OR|tuple|ndK|Int5] `OR((false, true, 5))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010400010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Int5-tv0-a2#82",
+      "script" : "[OR|tuple|nKd|Int5] `OR((false, 5, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010401000a01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Int5-tv0-a2#83",
+      "script" : "[OR|tuple|Kdn|Int5] `OR((5, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480401010a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Int5-tv0-a2#84",
+      "script" : "[OR|tuple|nnK|Int5] `OR((false, false, 5))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010400000a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Long-tv0-a2#85",
+      "script" : "[OR|tuple|dKn|Long] `OR((true, 5L, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010501010a00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Long-tv0-a2#86",
+      "script" : "[OR|tuple|ndK|Long] `OR((false, true, 5L))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010500010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Long-tv0-a2#87",
+      "script" : "[OR|tuple|nKd|Long] `OR((false, 5L, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010501000a01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Long-tv0-a2#88",
+      "script" : "[OR|tuple|Kdn|Long] `OR((5L, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480501010a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Long-tv0-a2#89",
+      "script" : "[OR|tuple|nnK|Long] `OR((false, false, 5L))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010500000a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-BigInt-tv0-a2#90",
+      "script" : "[OR|tuple|dKn|BigInt] `OR((true, 5.toBigInt, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801060101010500",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-BigInt-tv0-a2#91",
+      "script" : "[OR|tuple|ndK|BigInt] `OR((false, true, 5.toBigInt))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010600010105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-BigInt-tv0-a2#92",
+      "script" : "[OR|tuple|nKd|BigInt] `OR((false, 5.toBigInt, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801060100010501",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-BigInt-tv0-a2#93",
+      "script" : "[OR|tuple|Kdn|BigInt] `OR((5.toBigInt, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974806010101050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-BigInt-tv0-a2#94",
+      "script" : "[OR|tuple|nnK|BigInt] `OR((false, false, 5.toBigInt))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010600000105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-GroupElement-tv0-a2#95",
+      "script" : "[OR|tuple|dKn|GroupElement] `OR((true, g, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010701010279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179800",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-GroupElement-tv0-a2#96",
+      "script" : "[OR|tuple|ndK|GroupElement] `OR((false, true, g))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010700010279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-GroupElement-tv0-a2#97",
+      "script" : "[OR|tuple|nKd|GroupElement] `OR((false, g, true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010701000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-GroupElement-tv0-a2#98",
+      "script" : "[OR|tuple|Kdn|GroupElement] `OR((g, true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480701010279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-GroupElement-tv0-a2#99",
+      "script" : "[OR|tuple|nnK|GroupElement] `OR((false, false, g))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010700000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-SigmaProp-tv0-a2#100",
+      "script" : "[OR|tuple|dKn|SigmaProp] `OR((true, proveDlog(g), false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801080101cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179800",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-SigmaProp-tv0-a2#101",
+      "script" : "[OR|tuple|ndK|SigmaProp] `OR((false, true, proveDlog(g)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480101080001cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-SigmaProp-tv0-a2#102",
+      "script" : "[OR|tuple|nKd|SigmaProp] `OR((false, proveDlog(g), true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801080100cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179801",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-SigmaProp-tv0-a2#103",
+      "script" : "[OR|tuple|Kdn|SigmaProp] `OR((proveDlog(g), true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748080101cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-SigmaProp-tv0-a2#104",
+      "script" : "[OR|tuple|nnK|SigmaProp] `OR((false, false, proveDlog(g)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480101080000cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Unit-tv0-a2#105",
+      "script" : "[OR|tuple|dKn|Unit] `OR((true, (), false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480162010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Unit-tv0-a2#106",
+      "script" : "[OR|tuple|ndK|Unit] `OR((false, true, ()))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480101620001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Unit-tv0-a2#107",
+      "script" : "[OR|tuple|nKd|Unit] `OR((false, (), true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480162010001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Unit-tv0-a2#108",
+      "script" : "[OR|tuple|Kdn|Unit] `OR(((), true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097486201010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Unit-tv0-a2#109",
+      "script" : "[OR|tuple|nnK|Unit] `OR((false, false, ()))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480101620000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Coll_Byte_-tv0-a2#110",
+      "script" : "[OR|tuple|dKn|Coll[Byte]] `OR((true, Coll[Byte](1), false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010e0101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Coll_Byte_-tv0-a2#111",
+      "script" : "[OR|tuple|ndK|Coll[Byte]] `OR((false, true, Coll[Byte](1)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010e00010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Coll_Byte_-tv0-a2#112",
+      "script" : "[OR|tuple|nKd|Coll[Byte]] `OR((false, Coll[Byte](1), true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010e0100010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Coll_Byte_-tv0-a2#113",
+      "script" : "[OR|tuple|Kdn|Coll[Byte]] `OR((Coll[Byte](1), true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480e010101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Coll_Byte_-tv0-a2#114",
+      "script" : "[OR|tuple|nnK|Coll[Byte]] `OR((false, false, Coll[Byte](1)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010e00000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-Coll_Boolean_-tv0-a2#115",
+      "script" : "[OR|tuple|dKn|Coll[Boolean]] `OR((true, Coll(true), false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010d0101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-Coll_Boolean_-tv0-a2#116",
+      "script" : "[OR|tuple|ndK|Coll[Boolean]] `OR((false, true, Coll(true)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010d00010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-Coll_Boolean_-tv0-a2#117",
+      "script" : "[OR|tuple|nKd|Coll[Boolean]] `OR((false, Coll(true), true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010d0100010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-Coll_Boolean_-tv0-a2#118",
+      "script" : "[OR|tuple|Kdn|Coll[Boolean]] `OR((Coll(true), true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097480d010101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-Coll_Boolean_-tv0-a2#119",
+      "script" : "[OR|tuple|nnK|Coll[Boolean]] `OR((false, false, Coll(true)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801010d00000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dKn-_Int_Int_-tv0-a2#120",
+      "script" : "[OR|tuple|dKn|(Int,Int)] `OR((true, (5, 5), false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748015801010a0a00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndK-_Int_Int_-tv0-a2#121",
+      "script" : "[OR|tuple|ndK|(Int,Int)] `OR((false, true, (5, 5)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801015800010a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nKd-_Int_Int_-tv0-a2#122",
+      "script" : "[OR|tuple|nKd|(Int,Int)] `OR((false, (5, 5), true))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748015801000a0a01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-Kdn-_Int_Int_-tv0-a2#123",
+      "script" : "[OR|tuple|Kdn|(Int,Int)] `OR(((5, 5), true, false))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097485801010a0a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-nnK-_Int_Int_-tv0-a2#124",
+      "script" : "[OR|tuple|nnK|(Int,Int)] `OR((false, false, (5, 5)))`, the argument a 3-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00974801015800000a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-tuple-dnn-Boolean-tv0-a2#125",
+      "script" : "[OR|tuple|dnn|Boolean] `OR((true, false, false))`, the argument a 3-tuple constant of Booleans (a Coll[Any] at runtime) — true at cost 15. CONTROL: every item a Boolean; the call reads up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010101010000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nnn-Boolean-tv0-a2#126",
+      "script" : "[OR|tuple|nnn|Boolean] `OR((false, false, false))`, the argument a 3-tuple constant of Booleans (a Coll[Any] at runtime) — false at cost 15. CONTROL: every item a Boolean; the call reads up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010101000000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nnd-Boolean-tv0-a2#127",
+      "script" : "[OR|tuple|nnd|Boolean] `OR((false, false, true))`, the argument a 3-tuple constant of Booleans (a Coll[Any] at runtime) — true at cost 15. CONTROL: every item a Boolean; the call reads up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010101000001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-ndn-Boolean-tv0-a2#128",
+      "script" : "[OR|tuple|ndn|Boolean] `OR((false, true, false))`, the argument a 3-tuple constant of Booleans (a Coll[Any] at runtime) — true at cost 15. CONTROL: every item a Boolean; the call reads up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009748010101000100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nnndK-Int5-tv0-a2#129",
+      "script" : "[OR|tuple|nnndK|Int5] `OR((false, false, false, true, 5))`, the argument a 5-tuple constant (a Coll[Any] at runtime) — true at cost 15. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009760050101010104000000010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-tuple-nnnnK-Int5-tv0-a2#130",
+      "script" : "[OR|tuple|nnnnK|Int5] `OR((false, false, false, false, 5))`, the argument a 5-tuple constant (a Coll[Any] at runtime) — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009760050101010104000000000a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-pair-dd-tv0-a2#131",
+      "script" : "[OR|pair|dd] `OR((true, true))`, the argument a PAIR constant (a Tuple2 at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.Coll). MOVE: a pair is a Tuple2 on the JVM, no collection: `inputV.length` throws ClassCastException whatever its items.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097550101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-pair-nn-tv0-a2#132",
+      "script" : "[OR|pair|nn] `OR((false, false))`, the argument a PAIR constant (a Tuple2 at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.Coll). MOVE: a pair is a Tuple2 on the JVM, no collection: `inputV.length` throws ClassCastException whatever its items.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097550000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-pair-dn-tv0-a2#133",
+      "script" : "[OR|pair|dn] `OR((true, false))`, the argument a PAIR constant (a Tuple2 at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.Coll). MOVE: a pair is a Tuple2 on the JVM, no collection: `inputV.length` throws ClassCastException whatever its items.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097550100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-pair-dInt5-tv0-a2#134",
+      "script" : "[OR|pair|dInt5] `OR((true, 5))`, the argument a PAIR constant (a Tuple2 at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.Coll). MOVE: a pair is a Tuple2 on the JVM, no collection: `inputV.length` throws ClassCastException whatever its items.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00973d04010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-pair-Int5d-tv0-a2#135",
+      "script" : "[OR|pair|Int5d] `OR((5, true))`, the argument a PAIR constant (a Tuple2 at runtime) — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.Coll). MOVE: a pair is a Tuple2 on the JVM, no collection: `inputV.length` throws ClassCastException whatever its items.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009740010a01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Byte_-empty-tv0-a2#136",
+      "script" : "[OR|coll|Coll[Byte]|empty] `OR(Coll[Byte]())`, an EMPTY collection constant of another item type — false at cost 15. NEVER READ: the collection is empty, so no item is read and the call answers false, whatever the item type. A port that checks the item type first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Byte_-one-tv0-a2#137",
+      "script" : "[OR|coll|Coll[Byte]|one] `OR(Coll[Byte](1.toByte))`, a one-item collection constant of another item type — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Short_-empty-tv0-a2#138",
+      "script" : "[OR|coll|Coll[Short]|empty] `OR(Coll[Short]())`, an EMPTY collection constant of another item type — false at cost 15. NEVER READ: the collection is empty, so no item is read and the call answers false, whatever the item type. A port that checks the item type first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970f00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Short_-one-tv0-a2#139",
+      "script" : "[OR|coll|Coll[Short]|one] `OR(Coll[Short](5.toShort))`, a one-item collection constant of another item type — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970f010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Int_-empty-tv0-a2#140",
+      "script" : "[OR|coll|Coll[Int]|empty] `OR(Coll[Int]())`, an EMPTY collection constant of another item type — false at cost 15. NEVER READ: the collection is empty, so no item is read and the call answers false, whatever the item type. A port that checks the item type first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00971000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Int_-one-tv0-a2#141",
+      "script" : "[OR|coll|Coll[Int]|one] `OR(Coll[Int](5))`, a one-item collection constant of another item type — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009710010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Long_-empty-tv0-a2#142",
+      "script" : "[OR|coll|Coll[Long]|empty] `OR(Coll[Long]())`, an EMPTY collection constant of another item type — false at cost 15. NEVER READ: the collection is empty, so no item is read and the call answers false, whatever the item type. A port that checks the item type first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00971100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Long_-one-tv0-a2#143",
+      "script" : "[OR|coll|Coll[Long]|one] `OR(Coll[Long](5L))`, a one-item collection constant of another item type — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009711010a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Coll_Byte_-empty-tv0-a2#144",
+      "script" : "[OR|coll|Coll[Coll[Byte]]|empty] `OR(Coll[Coll[Byte]]())`, an EMPTY collection constant of another item type — false at cost 15. NEVER READ: the collection is empty, so no item is read and the call answers false, whatever the item type. A port that checks the item type first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00971a00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Coll_Byte_-one-tv0-a2#145",
+      "script" : "[OR|coll|Coll[Coll[Byte]]|one] `OR(Coll[Coll[Byte]](Coll[Byte](1)))`, a one-item collection constant of another item type — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00971a010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Int_Int_-empty-tv0-a2#146",
+      "script" : "[OR|coll|Coll[(Int,Int)]|empty] `OR(Coll[(Int,Int)]())`, an EMPTY collection constant of another item type — false at cost 15. NEVER READ: the collection is empty, so no item is read and the call answers false, whatever the item type. A port that checks the item type first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970c5800",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 15,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-coll-Coll_Int_Int_-one-tv0-a2#147",
+      "script" : "[OR|coll|Coll[(Int,Int)]|one] `OR(Coll[(Int,Int)]((5, 5)))`, a one-item collection constant of another item type — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). MOVE: the loop reaches the item of another kind before any deciding item, and unboxing it to a Boolean throws ClassCastException.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00970c58010a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-expr-d-divzero-tv0-a2#148",
+      "script" : "[OR|expr|d-divzero] `OR(Coll(true, 1 / 0 == 1))`, the argument a collection EXPRESSION (ConcreteCollection) — THROWS AT EVALUATION (ArithmeticException: / by zero). EAGER: a ConcreteCollection evaluates (and charges) EVERY item before AND / OR reads it, so the item after the deciding one is evaluated even though the loop never reads it. A port that evaluates the items lazily answers (or charges less) here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00978302010101939d040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-expr-d-divone-tv0-a2#149",
+      "script" : "[OR|expr|d-divone] `OR(Coll(true, 1 / 1 == 1))`, the argument a collection EXPRESSION (ConcreteCollection) — true at cost 68. EAGER: a ConcreteCollection evaluates (and charges) EVERY item before AND / OR reads it, so the item after the deciding one is evaluated even though the loop never reads it. A port that evaluates the items lazily answers (or charges less) here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00978302010101939d040204020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 68,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-expr-d-blake-tv0-a2#150",
+      "script" : "[OR|expr|d-blake] `OR(Coll(true, blake2b256(<1,024 bytes>).size == 32))`, the argument a collection EXPRESSION (ConcreteCollection) — true at cost 138. EAGER: a ConcreteCollection evaluates (and charges) EVERY item before AND / OR reads it, so the item after the deciding one is evaluated even though the loop never reads it. A port that evaluates the items lazily answers (or charges less) here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097830201010193b1cb0e8008070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070440",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 138,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-expr-n-divzero-tv0-a2#151",
+      "script" : "[OR|expr|n-divzero] `OR(Coll(false, 1 / 0 == 1))`, the argument a collection EXPRESSION (ConcreteCollection) — THROWS AT EVALUATION (ArithmeticException: / by zero). CONTROL: the throwing item comes before the decision, so every reading of the collection throws.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00978302010100939d040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-expr-divzero-d-tv0-a2#152",
+      "script" : "[OR|expr|divzero-d] `OR(Coll(1 / 0 == 1, true))`, the argument a collection EXPRESSION (ConcreteCollection) — THROWS AT EVALUATION (ArithmeticException: / by zero). CONTROL: the throwing item comes before the decision, so every reading of the collection throws.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0097830201939d0402040004020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-expr-d-n-divzero-tv0-a2#153",
+      "script" : "[OR|expr|d-n-divzero] `OR(Coll(true, false, 1 / 0 == 1))`, the argument a collection EXPRESSION (ConcreteCollection) — THROWS AT EVALUATION (ArithmeticException: / by zero). EAGER: a ConcreteCollection evaluates (and charges) EVERY item before AND / OR reads it, so the item after the deciding one is evaluated even though the loop never reads it. A port that evaluates the items lazily answers (or charges less) here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009783030101010100939d040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinOr-expr-d-divzero-tv0-a2#154",
+      "script" : "[BinOr|expr|d-divzero] `true || (1 / 0 == 1)`, the lazy binary form — true at cost 25. CONTRAST: the binary form is lazy, so its right side is never evaluated (BinOr / BinAnd), unlike the same items in a collection.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ec0101939d040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinOr-expr-d-blake-tv0-a2#155",
+      "script" : "[BinOr|expr|d-blake] `true || (blake2b256(<1,024 bytes>).size == 32)`, the lazy binary form — true at cost 25. CONTRAST: the binary form is lazy, so its right side is never evaluated (BinOr / BinAnd), unlike the same items in a collection.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ec010193b1cb0e8008070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070707070440",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-sigma-rust-sigmaProp_true_5_true_-tv0-a2#156",
+      "script" : "[OR|sigma-rust|sigmaProp(true,5,true)] `sigmaProp(OR((true, 5, true)))`, sigma-rust's row (`00d19748010401010a01`), the argument a 3-tuple constant — <sigmaprop> at cost 30. NEVER READ: the item of another kind comes after the deciding item, so the loop stops before it and the call answers. A port that casts or checks the whole collection first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d19748010401010a01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    }
+  ]
+}

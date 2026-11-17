@@ -36,6 +36,37 @@
       "unwalked" : 0,
       "version" : "v4"
     },
+    "v5/authored/AND.item_by_item.json" : {
+      "accepts" : 101,
+      "entries" : 156,
+      "methods" : [
+      ],
+      "op" : "AND.item_by_item",
+      "ops" : [
+        "/",
+        "AND",
+        "BinAnd",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "EQ",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 55,
+      "tree_shapes" : [
+        {
+          "accepts" : 101,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 55,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Apply.non_unary_arity.json" : {
       "accepts" : 1,
       "entries" : 3,
@@ -2029,6 +2060,38 @@
         }
       ],
       "unwalked" : 324,
+      "version" : "v5"
+    },
+    "v5/authored/OR.item_by_item.json" : {
+      "accepts" : 102,
+      "entries" : 157,
+      "methods" : [
+      ],
+      "op" : "OR.item_by_item",
+      "ops" : [
+        "/",
+        "BinOr",
+        "BoolToSigmaProp",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "EQ",
+        "OR",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 55,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 55,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
       "version" : "v5"
     },
     "v5/authored/Option.map.json" : {
@@ -5252,6 +5315,45 @@
       ],
       "unwalked" : 0,
       "version" : "v5"
+    },
+    "v6/authored/AND.item_by_item_v6.json" : {
+      "accepts" : 202,
+      "entries" : 312,
+      "methods" : [
+      ],
+      "op" : "AND.item_by_item_v6",
+      "ops" : [
+        "/",
+        "AND",
+        "BinAnd",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "EQ",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 110,
+      "tree_shapes" : [
+        {
+          "accepts" : 101,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 55,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 101,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 55,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
     },
     "v6/authored/Append.reference_array_store.json" : {
       "accepts" : 10,
@@ -9610,6 +9712,46 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/OR.item_by_item_v6.json" : {
+      "accepts" : 204,
+      "entries" : 314,
+      "methods" : [
+      ],
+      "op" : "OR.item_by_item_v6",
+      "ops" : [
+        "/",
+        "BinOr",
+        "BoolToSigmaProp",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "EQ",
+        "OR",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 110,
+      "tree_shapes" : [
+        {
+          "accepts" : 102,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 55,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 102,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 55,
           "tree_version" : 3
         }
       ],
@@ -17404,20 +17546,24 @@
     },
     "/" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Int_methods_equivalence.json",
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/UnsignedBigInt_arith_domain_rejects.json",
         "v6/authored/UnsignedBigInt_arith_table.json",
@@ -17453,7 +17599,9 @@
     },
     "AND" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/spec/allOf_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
@@ -17735,8 +17883,10 @@
     },
     "BinAnd" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/spec/and_boolean_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -17798,8 +17948,10 @@
     },
     "BinOr" : {
       "families" : [
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v5/spec/or_boolean_equivalence.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-52c30165e5d5.json",
         "v6/captured/h112291-84ecb7431b61.json",
@@ -17982,6 +18134,7 @@
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/and_sigma_equivalence.json",
         "v5/spec/or_sigma_equivalence.json",
         "v5/spec/sigmaProp_equivalence.json",
@@ -17989,6 +18142,7 @@
         "v6/authored/BoolToSigmaProp.activated_version_gate_v6.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -18219,12 +18373,16 @@
     },
     "CalcBlake2b256" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/spec/blake2b256_sha256_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/Global.serialize_coll_count_range.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -18292,6 +18450,7 @@
     "ConcreteCollection" : {
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.degenerate_edges.json",
         "v5/authored/AvlTree.digest_any_collection.json",
@@ -18313,6 +18472,7 @@
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/SubstConstants.lift_by_class.json",
@@ -18321,6 +18481,7 @@
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
         "v5/spec/substConstants_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.bad_proof_bytes_v6.json",
         "v6/authored/AvlTree.degenerate_edges_v6.json",
@@ -18385,6 +18546,7 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
@@ -18467,6 +18629,7 @@
     "Const" : {
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.item_bind.json",
@@ -18486,6 +18649,7 @@
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
         "v5/authored/String.jdk_utf8_decode.json",
@@ -18497,6 +18661,7 @@
         "v5/authored/Tuple.non_pair_arity3.json",
         "v5/authored/Xor.unequal_sides.json",
         "v5/authored/XorOf.activated_version_gate.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
@@ -18580,6 +18745,7 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Numeric.methodcall_ids.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
@@ -18894,6 +19060,7 @@
     },
     "EQ" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.eq_id_basis.json",
@@ -18914,12 +19081,14 @@
         "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/spec/BinXor_logical_XOR_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
@@ -18948,6 +19117,7 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -20956,7 +21126,9 @@
     },
     "OR" : {
       "families" : [
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/anyOf_equivalence.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json"
       ],
       "op_codes" : [
@@ -21665,6 +21837,7 @@
     },
     "SizeOf" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/ByIndex.tuple_item.json",
@@ -21674,7 +21847,9 @@
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/Coll.size_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
@@ -21716,6 +21891,7 @@
         "v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x8192.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -22504,12 +22680,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 12106,
+    "accepts" : 12715,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 25010,
-    "files" : 423,
-    "rejects" : 12904,
+    "entries" : 25949,
+    "files" : 427,
+    "rejects" : 13234,
     "unwalked" : 2425
   }
 }
