@@ -194,7 +194,9 @@ reconstruction rules, which every conforming implementation of this schema must 
 - **Authored entries** (2026-11-16: the `SubstConstants.lift_by_class` and `template_tree_version` families) carry
   a synthetic but internally consistent envelope: ONE header (the newest of the transaction tier's storage-rent
   window at block version `activated + 1`), a pre-header whose parent is that header and whose version is
-  `activated + 1`, a P2PK `SELF` without registers, no context variable and no outputs. They sit at activated 2 (the
+  `activated + 1`, a P2PK `SELF` without registers, no context variable and no outputs (the `source|…` rows, from
+  2026-11-17: the same `SELF` with R4 = `Coll[String]("D")`, and context variable 1 = `Coll[String]("C")` as a
+  `Value` binding, `0c66010143`). They sit at activated 2 (the
   `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 

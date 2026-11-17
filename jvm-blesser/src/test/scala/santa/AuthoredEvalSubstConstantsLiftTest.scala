@@ -27,20 +27,30 @@ class AuthoredEvalSubstConstantsLiftTest extends munit.FunSuite {
 
   test("four files; versions in their slot; the context of the slot") {
     val want = Map(
-      "SubstConstants.lift_by_class" -> 939, "SubstConstants.lift_by_class_v6" -> 1252,
+      "SubstConstants.lift_by_class" -> 969, "SubstConstants.lift_by_class_v6" -> 1292,
       "SubstConstants.template_tree_version" -> 42, "SubstConstants.template_tree_version_v6" -> 56)
     assertEquals(v.keySet, want.keySet)
     want.foreach { case (op, n) => assertEquals(entries(op).size, n, op) }
-    assertEquals(rows.size, 2289)
-    assertEquals(rows.map(_.name).distinct.size, 1308)
+    assertEquals(rows.size, 2359)
+    assertEquals(rows.map(_.name).distinct.size, 1348)
     v.foreach { case (op, j) =>
       assertEquals(j.hcursor.get[String]("schema").toOption, Some("santa-eval/v6-fullctx"), op)
       val a = if (op.endsWith("_v6")) 3 else 2
       entries(op).foreach { e =>
         assertEquals(ver(e, "activated"), a, s"$op ${str(e, "name")}")
         assert(ver(e, "ergoTree") <= a, s"$op ${str(e, "name")}: a tree above its activated version")
-        assertEquals(e.hcursor.downField("context").focus, Some(B.context(a)), s"$op ${str(e, "name")}")
+        val want = if (rowName(e).startsWith("source|")) B.sourceContext(a) else B.context(a)
+        assertEquals(e.hcursor.downField("context").focus, Some(want), s"$op ${str(e, "name")}")
       }
+    }
+  }
+
+  test("the addendum's rows come after the first file's, so its entries keep their indices") {
+    Seq("SubstConstants.lift_by_class", "SubstConstants.lift_by_class_v6").foreach { op =>
+      val names = entries(op).map(rowName)
+      val firstAddendum = names.indexWhere(n => n.startsWith("string|") || n.startsWith("source|"))
+      assert(firstAddendum > 0, op)
+      assert(names.drop(firstAddendum).forall(n => n.startsWith("string|") || n.startsWith("source|")), op)
     }
   }
 
@@ -53,6 +63,14 @@ class AuthoredEvalSubstConstantsLiftTest extends munit.FunSuite {
     }
     val self = org.ergoplatform.ErgoBox.sigmaSerializer.fromBytes(scorex.util.encode.Base16.decode(B.SelfHex).get)
     assert(self.additionalRegisters.isEmpty)
+  }
+
+  test("the source rows' context: SELF's R4 and variable 1 travel as the bytes a node's readers take") {
+    val selfR4 = org.ergoplatform.ErgoBox.sigmaSerializer.fromBytes(scorex.util.encode.Base16.decode(B.SelfR4Hex).get)
+    assertEquals(selfR4.additionalRegisters.keySet, Set(org.ergoplatform.ErgoBox.R4: org.ergoplatform.ErgoBox.NonMandatoryRegisterId))
+    assert(B.SelfR4Hex.contains("01" + B.R4Bytes), "R4 = Coll[String](\"D\") as the box writes it")
+    assertEquals(B.SelfR4Hex.replace("01" + B.R4Bytes, "00").take(80), B.SelfHex.take(80), "the same box but R4")
+    assertEquals(EvalCore.decodeBinding(B.Var1Binding).tpe: sigma.ast.SType, sigma.ast.SCollection(sigma.ast.SString): sigma.ast.SType)
   }
 
   test("every outcome, value and cost agrees with the jars' own measurement; a value differs only by our context") {
@@ -108,6 +126,7 @@ class AuthoredEvalSubstConstantsLiftTest extends munit.FunSuite {
     v.keys.foreach(op => entries(op).foreach { e =>
       val s = str(e, "script")
       assert(!s.matches(".*@[0-9a-f]{6,}.*"), s"${rowName(e)}: an identity hash in the script")
+      assert(!s.matches(".*Lambda\\$[0-9].*"), s"${rowName(e)}: a JVM-generated lambda class in the script")
       assertEquals(s.contains("— THROWS AT EVALUATION") || s.contains("— REFUSED AT PARSE"), err(e).isDefined, rowName(e))
     })
   }

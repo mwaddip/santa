@@ -18,6 +18,10 @@ package santa
 // each, at tree versions 0 to 3 (`00` + body, or the sized header + body). A row is `<where>|<kind>|<position>|v<tree
 // version>`. Tree v0..v2 rows go to the v5 files at activated 2 and to the `_v6` files at activated 3, tree-v3 rows to
 // the `_v6` files; the `template|…` rows (the template read at the evaluated version) are their own family.
+// The addendum (santa-probe-substconstants-lift-2.md, rows-strings.tsv, 40 rows, appended after the first file's): a
+// String new value at tree version 3 is refused also where it is WRITTEN over a template's String constant, and when it
+// comes from context variable 1 or SELF.R4 (`source|…`, a context of its own: those two bound as a node's readers take
+// them).
 //
 // THE CONTEXT (santa-eval/v6-fullctx, the rows read CONTEXT.headers, CONTEXT.preHeader and SELF): one header, the newest
 // of the storage-rent window the transaction tier spends under (block version 4 for activated 3; the window re-linked
@@ -42,6 +46,10 @@ object AuthoredEvalSubstConstantsLift {
   val Stamp = "jvm:sigma-state-6.0.7"
   val RowsFile: java.nio.file.Path =
     java.nio.file.Paths.get("src", "test", "resources", "sigma-rust-substconstants-lift", "rows.tsv")
+  /** The addendum (santa-probe-substconstants-lift-2.md, 2026-11-17): a String new value at tree version 3, written or
+    * not, and read from a context variable or a register. Its rows are appended after the first file's. */
+  val StringsFile: java.nio.file.Path =
+    java.nio.file.Paths.get("src", "test", "resources", "sigma-rust-substconstants-lift", "rows-strings.tsv")
 
   // ── the context ──────────────────────────────────────────────────────────────────────────────────
   /** CONTEXT.headers(0) per activated version: the newest header of the transaction tier's window at block version
@@ -80,6 +88,29 @@ object AuthoredEvalSubstConstantsLift {
     "extension"        -> Json.obj(),
     "input_extensions" -> Json.arr(Json.obj()))
 
+  // The `source|…` rows' context: the same, but SELF carries R4 = Coll[String]("D") and context variable 1 is
+  // Coll[String]("C"), each as the bytes a node's reader takes (rule 1019 does not refuse a String).
+  val R4Bytes = "0c66010144"
+  val Var1Bytes = "0c66010143"
+  val Var1Binding: Json = Json.obj("kind" -> Json.fromString("Value"), "bytes_hex" -> Json.fromString(Var1Bytes))
+  /** A Value's bytes, read as the extension and register readers read them. */
+  def constantOf(hex: String): sigma.ast.EvaluatedValue[_ <: sigma.ast.SType] = VersionContext.withVersions(3, 3) {
+    sigma.serialization.ValueSerializer.deserialize(SigmaSerializer.startReader(b(hex)))
+      .asInstanceOf[sigma.ast.EvaluatedValue[_ <: sigma.ast.SType]]
+  }
+  /** SELF for the `source|…` rows: SelfHex's box with R4 = Coll[String]("D"). */
+  val SelfR4Hex: String = VersionContext.withVersions(3, 3) {
+    hx(RentFixtures.box("santa:substconstants-lift:self-r4", 1000000000L, 1,
+      ErgoTree.fromSigmaBoolean(ProveDlog(CryptoConstants.dlogGroup.generator)), Nil,
+      Map[org.ergoplatform.ErgoBox.NonMandatoryRegisterId, sigma.ast.EvaluatedValue[_ <: sigma.ast.SType]](
+        org.ergoplatform.ErgoBox.R4 -> constantOf(R4Bytes)).asInstanceOf[RentFixtures.Regs]).bytes)
+  }
+  def sourceContext(activated: Int): Json = context(activated).mapObject(_
+    .add("inputs", Json.arr(Json.fromString(SelfR4Hex)))
+    .add("extension", Json.obj("1" -> Var1Binding))
+    .add("input_extensions", Json.arr(Json.obj("1" -> Var1Binding))))
+  def contextOf(r: Row): Json = if (r.fromContext) sourceContext(r.activated) else context(r.activated)
+
   // ── the rows ─────────────────────────────────────────────────────────────────────────────────────
   /** One vendored row at one activated version. `jars*` is sigma-rust's measurement on the 6.0.7 jars, under their own
     * context (one header and a pre-header of their own: a value that writes a header or SELF differs from ours). */
@@ -90,6 +121,8 @@ object AuthoredEvalSubstConstantsLift {
     def kind: String = f(1)
     def position: String = if (f.length == 4) f(2) else ""
     def template: Boolean = where == "template"
+    /** A `source|…` row reads its new values from context variable 1 or SELF.R4 (the addendum's own context). */
+    def fromContext: Boolean = where == "source"
     def treeHex: String =
       if (treeVersion == 0) "00" + body else f"${8 + treeVersion}%02x" + vlq(body.length / 2) + body
     def op: String = "SubstConstants." + (if (template) "template_tree_version" else "lift_by_class") +
@@ -100,9 +133,11 @@ object AuthoredEvalSubstConstantsLift {
     def embedsContext: Boolean = (holdsHeader && !template) || (kind == "self" && Set("own", "one-item")(position))
   }
 
-  def rows(): Vector[Row] = {
-    val lines = new String(java.nio.file.Files.readAllBytes(RowsFile), "UTF-8").split("\n").toVector
-    lines.drop(1).filter(_.trim.nonEmpty).map(_.split("\t", -1)).filter(_(0) == "eval").flatMap { c =>
+  /** The first file's rows, then the addendum's (appended, so the first file's entries keep their indices). The
+    * addendum's `source|…` rows say their context in the first column (`eval, in the context: …`). */
+  def rows(): Vector[Row] = Seq(RowsFile, StringsFile).toVector.flatMap { file =>
+    val lines = new String(java.nio.file.Files.readAllBytes(file), "UTF-8").split("\n").toVector
+    lines.drop(1).filter(_.trim.nonEmpty).map(_.split("\t", -1)).filter(_(0).startsWith("eval")).flatMap { c =>
       val as = c(3) match { case "2 and 3" => Seq(2, 3); case a => Seq(a.toInt) }
       as.map(a => Row(c(1), c(2).toInt, a, c(4), c(5), c(6), c(7), c(9) == "yes"))
     }
@@ -134,8 +169,9 @@ object AuthoredEvalSubstConstantsLift {
     case Left(t)        => RefusedAtParse(t)
     case Right(Left(t)) => RefusedAtParse(t)
     case Right(Right(())) =>
-      EvalCore.evalFullContextOutcome(r.treeHex, 0, Seq(SelfHex), Nil, Nil, Seq(HeaderHex(r.activated)),
-        preHeaderHex(r.activated), Seq(Map.empty), None, r.activated.toByte)._2 match {
+      val (self, ext) = if (r.fromContext) (SelfR4Hex, Map(1 -> Var1Binding)) else (SelfHex, Map.empty[Int, Json])
+      EvalCore.evalFullContextOutcome(r.treeHex, 0, Seq(self), Nil, Nil, Seq(HeaderHex(r.activated)),
+        preHeaderHex(r.activated), Seq(ext), None, r.activated.toByte)._2 match {
         case Right((v, cost)) => Answer(v, cost)
         case Left(t)          => ThrowsAtEval(t)
       }
@@ -150,10 +186,12 @@ object AuthoredEvalSubstConstantsLift {
   }
 
   def chain(t: Throwable): Seq[Throwable] = Iterator.iterate(t)(_.getCause).takeWhile(_ != null).toSeq
-  /** A failure as the script states it: the innermost cause's class and message, identity hashes masked. */
+  /** A failure as the script states it: the innermost cause's class and message, with what changes from one JVM to the
+    * next masked: identity hashes, and the generated class of a lambda (`FuncValue$$Lambda$958/0x00007f8b944cecd0`). */
   private def why(t: Throwable): String = {
     val c = chain(t).last
-    val m = Option(c.getMessage).getOrElse("").replaceAll("@[0-9a-f]{4,}", "@<hash>").replaceAll("\\s+", " ").trim
+    val m = Option(c.getMessage).getOrElse("").replaceAll("\\$\\$Lambda\\$[0-9]+/0x[0-9a-f]+", "\\$\\$Lambda")
+      .replaceAll("@[0-9a-f]{4,}", "@<hash>").replaceAll("\\s+", " ").trim
     s"${c.getClass.getSimpleName}${if (m.isEmpty) "" else ": " + clip(m, 120)}"
   }
   private def clip(m: String, n: Int): String =
@@ -210,6 +248,23 @@ object AuthoredEvalSubstConstantsLift {
     "nothing"        -> "nothing substituted")
   private def text(m: Map[String, String], k: String): String = m.getOrElse(k, s"`$k`")
 
+  // The addendum's rows (`string|…` and `source|…`): every template holds a String constant.
+  private val StringKind: Map[String, String] = Map(
+    "tuple-const"      -> "the tuple constant `(5, \"C\", 6)` as the new values over the template constants `1, \"A\", 2`",
+    "coll-const"       -> "`Coll[String](\"C\")` as the new values over the template constant `\"B\"`",
+    "template-alone"   -> "no new values over the template constant `\"B\"`",
+    "var1-coll-string" -> ("`getVar[Coll[String]](1).get` (variable 1 = `Coll[String](\"C\")`, read from the extension's " +
+      "bytes) as the new values over the template constant `\"B\"`"),
+    "R4-coll-string"   -> ("`SELF.R4[Coll[String]].get` (R4 = `Coll[String](\"D\")`, read from the box's bytes) as the " +
+      "new values over the template constant `\"B\"`"))
+  private val StringPosition: Map[String, String] = Map(
+    "written-012"    -> "positions 0, 1, 2 (all three written)",
+    "written-1-only" -> "positions 7, 1, 7 (only the String's written)",
+    "none-written"   -> "positions 7, 7, 7 (none written)",
+    "written-0"      -> "position 0 (written over the String)",
+    "pos7"           -> "position 7 (not written)",
+    "nothing"        -> "no position")
+
   def label(r: Row, o: Outcome): String = {
     val msgs = o match { case ThrowsAtEval(t) => chain(t).map(x => Option(x.getMessage).getOrElse("")); case _ => Nil }
     o match {
@@ -232,6 +287,8 @@ object AuthoredEvalSubstConstantsLift {
 
   def script(r: Row, o: Outcome): String = {
     val what = if (r.template) s"a template holding ${text(Kind, r.kind)}, ${text(Position, r.position)}"
+               else if (Set("string", "source")(r.where))
+                 s"${text(StringKind, r.kind)}, ${text(StringPosition, r.position)}"
                else s"${text(Kind, r.kind)} as ${text(Where, r.where)}" +
                  (if (r.position.isEmpty) "" else s", ${text(Position, r.position)}")
     s"[${r.name}] `substConstants(template, positions, newValues)` with $what — ${said(o)}. ${label(r, o)}" +
@@ -250,7 +307,7 @@ object AuthoredEvalSubstConstantsLift {
       "script"         -> Json.fromString(script(r, o)),
       "tree_bytes_hex" -> Json.fromString(r.treeHex),
       "version"        -> Json.obj("activated" -> Json.fromInt(r.activated), "ergoTree" -> Json.fromInt(r.treeVersion)),
-      "context"        -> context(r.activated),
+      "context"        -> contextOf(r),
       "expected"       -> expected)
   }
 

@@ -16,9 +16,9 @@ class AuthoredTxSubstConstantsLiftTest extends munit.FunSuite {
   private def valid(e: Json): Boolean =
     e.hcursor.downField("expected").get[Boolean]("valid").toOption.getOrElse(fail("valid"))
 
-  test("64 spends at activated 3, 48 at activated 2; each tree in its box; costs only on a spend") {
-    assertEquals(entries(3).size, 64)
-    assertEquals(entries(2).size, 48)
+  test("80 spends at activated 3, 60 at activated 2; each tree in its box; costs only on a spend") {
+    assertEquals(entries(3).size, 80)
+    assertEquals(entries(2).size, 60)
     Seq(2, 3).foreach { a =>
       val ss = spends.filter(_.activated == a)
       ss.zip(entries(a)).foreach { case (s, e) =>
@@ -48,6 +48,21 @@ class AuthoredTxSubstConstantsLiftTest extends munit.FunSuite {
       }
     }
     assertEquals(spends.count(_.nine), 7)
+  }
+
+  test("the addendum's source spends: appended; R4 on the box, variable 1 in the extension; refused only at tree v3") {
+    val E = AuthoredEvalSubstConstantsLift
+    assertEquals(spends.count(_.fromContext), 28)
+    Seq(2, 3).foreach { a =>
+      val ss = spends.filter(_.activated == a)
+      assert(ss.dropWhile(!_.fromContext).forall(_.fromContext), s"activated $a: the source spends come last")
+      ss.zip(entries(a)).filter(_._1.fromContext).foreach { case (s, e) =>
+        val inBox = e.hcursor.downField("input_boxes_hex").as[List[String]].toOption.get.head
+        assert(inBox.contains("01" + E.R4Bytes), s"${s.name}: R4 = Coll[String]('D') on the spent box")
+        assert(str(e, "tx_bytes_hex").contains("01" + "01" + E.Var1Bytes), s"${s.name}: variable 1 in the extension")
+        assertEquals(valid(e), s.treeVersion < 3, s"${s.name} a$a")
+      }
+    }
   }
 
   test("the eval families' context is this tier's: the newest header, and the pre-header's fields") {

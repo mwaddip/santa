@@ -12,12 +12,18 @@ package santa
 // 3) with nine positions, all past the template's constants, so the template comes back unchanged wherever the lift
 // passes: refused below tree version 3 (the lift), spent at 3.
 //
+// The addendum (santa-probe-substconstants-lift-2.md, 2026-11-17) adds its `source|…` eval rows as spends, appended:
+// `Coll[String]` new values from context variable 1 (the input's extension) or R4 (the spent box), each as the node's
+// readers take them from the transaction and the box; refused at tree version 3, spent below.
+//
 // extract() FAILS LOUD unless each verdict is the jars' (a value spends, a throw does not), or for the two rows above
 // the length requirement.
 
 import io.circe.Json
+import org.ergoplatform.ErgoBox
 import scorex.util.encode.Base16
 import sigma.VersionContext
+import sigma.ast.{EvaluatedValue, SType}
 import sigma.serialization.{ErgoTreeSerializer, SigmaSerializer}
 import santa.runner.TxEngine
 
@@ -46,6 +52,8 @@ object AuthoredTxSubstConstantsLift {
   final case class Spend(name: String, treeVersion: Int, activated: Int, treeHex: String, jarsOutcome: Option[String]) {
     def slug: String = name.replace('|', '-').replaceAll("[^A-Za-z0-9.+_=-]", "_")
     def nine: Boolean = name.startsWith("headers9|")
+    /** The addendum's `source|…` rows as spends: context variable 1 travels in the input's extension, R4 on the box. */
+    def fromContext: Boolean = name.startsWith("source|")
   }
 
   /** Coll[Int](0) as the rows write the positions, and Coll[Int](0, 1, …, 8). */
@@ -67,7 +75,14 @@ object AuthoredTxSubstConstantsLift {
     val nineBody = one.replace(OnePosition, NinePositions)
     val twins = for { tv <- (0 to 3).toVector; a <- if (tv < 3) Seq(2, 3) else Seq(3) }
       yield Spend(s"headers9|nocon|v$tv", tv, a, treeAt(tv, nineBody), None)
-    fromTable ++ twins
+    // the addendum's `source|…` eval rows, each as `sigmaProp(<row>.size > 0)` (the first file's tree form), appended
+    val sources = new String(java.nio.file.Files.readAllBytes(AuthoredEvalSubstConstantsLift.StringsFile), "UTF-8")
+      .split("\n").toVector.drop(1).filter(_.trim.nonEmpty).map(_.split("\t", -1))
+      .filter(c => c(0).startsWith("eval") && c(1).startsWith("source|")).flatMap { c =>
+        val as = c(3) match { case "2 and 3" => Seq(2, 3); case a => Seq(a.toInt) }
+        as.map(a => Spend(c(1), c(2).toInt, a, treeAt(c(2).toInt, "d191b1" + c(4) + "0400"), Some(c(5))))
+      }
+    fromTable ++ twins ++ sources
   }
 
   private val LengthReq = "expected positions and newVals to have the same length"
@@ -88,8 +103,14 @@ object AuthoredTxSubstConstantsLift {
     val what = if (s.nine)
       "`sigmaProp(substConstants(<a template without constants>, Coll(0, 1, …, 8), CONTEXT.headers).size > 0)`: " +
         "change 1 of the request with a position for each of the nine headers, all past the template's constants"
+    else if (s.fromContext) "`sigmaProp(substConstants(…).size > 0)` over sigma-rust's eval row of that name, with " +
+      "context variable 1 = `Coll[String](\"C\")` in the input's extension and R4 = `Coll[String](\"D\")` on the box"
     else "`sigmaProp(substConstants(…).size > 0)` over sigma-rust's eval row of that name"
     val why = (s.nine, s.jarsOutcome) match {
+      case (_, _) if s.fromContext && valid => "A String lifts below tree version 3, and the box SPENDS."
+      case (_, _) if s.fromContext => "A String has no lift at tree version 3, wherever it comes from, so the call " +
+        "throws and the box does NOT spend. SEPARATING ROW: an implementation that lifts a String at every version " +
+        "spends it."
       case (true, _) if valid => "Every header lifts at tree version 3, nothing is written, and the box SPENDS."
       case (true, _) => "A Header has no case in the lift below tree version 3, so the call throws before the " +
         "template is read and the box does NOT spend. SEPARATING ROW: an implementation that turns every new value into " +
@@ -108,8 +129,12 @@ object AuthoredTxSubstConstantsLift {
     val entries = ss.zipWithIndex.map { case (s, i) =>
       val tree = VersionContext.withVersions(3, 3)(ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(b(s.treeHex)))
       require(hx(VersionContext.withVersions(3, 3)(tree.bytes)) == s.treeHex, s"${s.name}: the tree must travel as written")
-      val bx = VersionContext.withVersions(3, 3)(box(s"santa:scl:${s.name}:a$a", V, 1, tree))
-      val txHex = VersionContext.withVersions(3, 3)(hex(txBytes(tx(Seq(input(bx, ext())), Seq(candidate(V, 1))))))
+      val E = AuthoredEvalSubstConstantsLift
+      val regs: Regs = if (s.fromContext) Map[ErgoBox.NonMandatoryRegisterId, EvaluatedValue[_ <: SType]](
+        ErgoBox.R4 -> E.constantOf(E.R4Bytes)).asInstanceOf[Regs] else Map()
+      val extension = if (s.fromContext) ext(1.toByte -> E.constantOf(E.Var1Bytes)) else ext()
+      val bx = VersionContext.withVersions(3, 3)(box(s"santa:scl:${s.name}:a$a", V, 1, tree, Nil, regs))
+      val txHex = VersionContext.withVersions(3, 3)(hex(txBytes(tx(Seq(input(bx, extension)), Seq(candidate(V, 1))))))
       val v = TxEngine.validateBytes(txHex, Seq(hex(bx.bytes)), Nil, c.headersHex, c.preHeader,
         AuthoredTxStorageRent.params)
       val (wantValid, because) = want(s)

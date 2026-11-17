@@ -45,15 +45,15 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 12,162 entries across 411 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 10,074
+- ✅ **A blessed eval corpus — 12,232 entries across 411 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 10,144
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 2,351 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, and 2,289 authored
+  spends; 2,421 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, and 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`); version-split into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (4,365 — the cumulative
-  v5/mainnet method surface) and **v6** (7,779 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (4,395 — the cumulative
+  v5/mainnet method surface) and **v6** (7,819 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -230,7 +230,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     before the script runs, taken or not: the node over the Int 1 against `Int` behind `true ||` does not spend, and
     the node over an Any-typed group element against `GroupElement` does.
 
-  **The `substConstants` lift** (`substconstants-lift`, 64 entries at block version 4 and 48 at block version 3):
+  **The `substConstants` lift** (`substconstants-lift`, 80 entries at block version 4 and 60 at block version 3):
   `substConstants` turns each item of its new values into a constant by the item's class and the version of the tree
   being evaluated, before it reads the template.
   - A Header item has no lift below tree version 3, so the call throws whatever its position. Under a node's nine
@@ -238,6 +238,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     nine positions past the template's constants, the box spends at tree version 3 and does not spend below it.
   - A collection holding a pre-header, `CONTEXT`, `Global` or a function lifts whole, so the box spends at every tree
     version when nothing is written.
+  - A String item has no lift at tree version 3, wherever it comes from: a `Coll[String]` read from a context
+    variable or from a register spends below tree version 3 and does not spend at 3.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

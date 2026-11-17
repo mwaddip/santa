@@ -1910,8 +1910,8 @@
       "version" : "v5"
     },
     "v5/authored/SubstConstants.lift_by_class.json" : {
-      "accepts" : 489,
-      "entries" : 939,
+      "accepts" : 519,
+      "entries" : 969,
       "methods" : [
         "101:2 Context.headers",
         "101:3 Context.preHeader"
@@ -1922,12 +1922,14 @@
         "ConcreteCollection",
         "Const",
         "Context$",
+        "ExtractRegisterAs",
         "FuncValue",
         "GetVar",
         "Global$",
         "If",
         "MapCollection",
         "MethodCall",
+        "OptionGet",
         "Self$",
         "SubstConstants",
         "Tuple",
@@ -1937,7 +1939,7 @@
       "rejects" : 450,
       "tree_shapes" : [
         {
-          "accepts" : 163,
+          "accepts" : 173,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
@@ -1945,7 +1947,7 @@
           "tree_version" : 0
         },
         {
-          "accepts" : 163,
+          "accepts" : 173,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -1953,7 +1955,7 @@
           "tree_version" : 1
         },
         {
-          "accepts" : 163,
+          "accepts" : 173,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -9232,8 +9234,8 @@
       "version" : "v6"
     },
     "v6/authored/SubstConstants.lift_by_class_v6.json" : {
-      "accepts" : 674,
-      "entries" : 1252,
+      "accepts" : 705,
+      "entries" : 1292,
       "methods" : [
         "101:2 Context.headers",
         "101:3 Context.preHeader",
@@ -9245,22 +9247,24 @@
         "ConcreteCollection",
         "Const",
         "Context$",
+        "ExtractRegisterAs",
         "FuncValue",
         "GetVar",
         "Global$",
         "If",
         "MapCollection",
         "MethodCall",
+        "OptionGet",
         "Self$",
         "SubstConstants",
         "Tuple",
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 578,
+      "rejects" : 587,
       "tree_shapes" : [
         {
-          "accepts" : 163,
+          "accepts" : 173,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
@@ -9268,7 +9272,7 @@
           "tree_version" : 0
         },
         {
-          "accepts" : 163,
+          "accepts" : 173,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -9276,7 +9280,7 @@
           "tree_version" : 1
         },
         {
-          "accepts" : 163,
+          "accepts" : 173,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -9284,11 +9288,11 @@
           "tree_version" : 2
         },
         {
-          "accepts" : 185,
+          "accepts" : 186,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 128,
+          "rejects" : 137,
           "tree_version" : 3
         }
       ],
@@ -18423,6 +18427,7 @@
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
@@ -18430,6 +18435,7 @@
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -20079,6 +20085,7 @@
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SubstConstants.lift_by_class.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -20190,6 +20197,7 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.binding_provenance_var.json",
@@ -21556,12 +21564,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 6757,
+    "accepts" : 6818,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 12162,
+    "entries" : 12232,
     "files" : 411,
-    "rejects" : 5405,
+    "rejects" : 5414,
     "unwalked" : 2425
   }
 }
