@@ -13691,6 +13691,238 @@
         "cost" : null,
         "error" : "errored"
       }
+    },
+    {
+      "name" : "Filter-div-dec-then-zero-v0-a3#756",
+      "script" : "[Filter|div|dec-then-zero|v0] `Filter(ConstantNode(Coll(5,0),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(Divide(IntConstant(10), ValUse(1,SInt$)),IntConstant(0))))` — THROWS AT EVALUATION (ArithmeticException: / by zero). a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b510020a00d9010104919d041472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "Filter-div-zero-first-v0-a3#757",
+      "script" : "[Filter|div|zero-first|v0] `Filter(ConstantNode(Coll(0,5),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(Divide(IntConstant(10), ValUse(1,SInt$)),IntConstant(0))))` — THROWS AT EVALUATION (ArithmeticException: / by zero). a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b51002000ad9010104919d041472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "Filter-div-dec-then-zero-x40-v0-a3#758",
+      "script" : "[Filter|div|dec-then-zero-x40|v0] `Filter(ConstantNode(Coll(5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(Divide(IntConstant(10), ValUse(1,SInt$)),IntConstant(0))))` — THROWS AT EVALUATION (ArithmeticException: / by zero). a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b510290a00000000000000000000000000000000000000000000000000000000000000000000000000000000d9010104919d041472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "Filter-blake-dec-first-v0-a3#759",
+      "script" : "[Filter|blake|dec-first|v0] `Filter(ConstantNode(Coll(5,5,5),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(SizeOf(CalcBlake2b256(ConstantNode(Coll(7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7),Coll[SByte$]))),ValUse(1,SInt$)))…` — Coll(5,5,5) at cost 259. a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b510030a0a0ad901010491b1cb0e2007070707070707070707070707070707070707070707070707070707070707077201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            }
+          ]
+        },
+        "cost" : 259,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Filter-blake-none-v0-a3#760",
+      "script" : "[Filter|blake|none|v0] `Filter(ConstantNode(Coll(40,40,40),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(SizeOf(CalcBlake2b256(ConstantNode(Coll(7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7),Coll[SByte$]))),ValUse(1,SInt$…` — Coll() at cost 259. a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b51003505050d901010491b1cb0e2007070707070707070707070707070707070707070707070707070707070707077201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 259,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Filter-div-dec-then-zero-v3-a3#761",
+      "script" : "[Filter|div|dec-then-zero|v3] `Filter(ConstantNode(Coll(5,0),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(Divide(IntConstant(10), ValUse(1,SInt$)),IntConstant(0))))` — THROWS AT EVALUATION (ArithmeticException: / by zero). a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b11b510020a00d9010104919d041472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "Filter-div-zero-first-v3-a3#762",
+      "script" : "[Filter|div|zero-first|v3] `Filter(ConstantNode(Coll(0,5),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(Divide(IntConstant(10), ValUse(1,SInt$)),IntConstant(0))))` — THROWS AT EVALUATION (ArithmeticException: / by zero). a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b11b51002000ad9010104919d041472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "Filter-div-dec-then-zero-x40-v3-a3#763",
+      "script" : "[Filter|div|dec-then-zero-x40|v3] `Filter(ConstantNode(Coll(5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(Divide(IntConstant(10), ValUse(1,SInt$)),IntConstant(0))))` — THROWS AT EVALUATION (ArithmeticException: / by zero). a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b38b510290a00000000000000000000000000000000000000000000000000000000000000000000000000000000d9010104919d041472010400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "Filter-blake-dec-first-v3-a3#764",
+      "script" : "[Filter|blake|dec-first|v3] `Filter(ConstantNode(Coll(5,5,5),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(SizeOf(CalcBlake2b256(ConstantNode(Coll(7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7),Coll[SByte$]))),ValUse(1,SInt$)))…` — Coll(5,5,5) at cost 259. a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b31b510030a0a0ad901010491b1cb0e2007070707070707070707070707070707070707070707070707070707070707077201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            }
+          ]
+        },
+        "cost" : 259,
+        "error" : null
+      }
+    },
+    {
+      "name" : "Filter-blake-none-v3-a3#765",
+      "script" : "[Filter|blake|none|v3] `Filter(ConstantNode(Coll(40,40,40),Coll[SInt$]),FuncValue(WrappedArray((1,SInt$)),GT(SizeOf(CalcBlake2b256(ConstantNode(Coll(7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7),Coll[SByte$]))),ValUse(1,SInt$…` — Coll() at cost 259. a throwing (`1 / 0`) or a costly (`blake2b256`) lambda after the deciding item: Exists / ForAll stop at the deciding item and never call it there; Filter calls it on every item.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b31b51003505050d901010491b1cb0e2007070707070707070707070707070707070707070707070707070707070707077201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 259,
+        "error" : null
+      }
     }
   ]
 }

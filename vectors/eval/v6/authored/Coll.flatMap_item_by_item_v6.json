@@ -1,0 +1,2850 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.flatMap_item_by_item_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "flatMap-indices-n0-v0-a3#0",
+      "script" : "[flatMap|indices|n0|v0] `MethodCall(ConstantNode(Coll(Coll(),Coll()),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8),List(),Method…` — Coll() at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a02000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n0-v3-a3#1",
+      "script" : "[flatMap|indices|n0|v3] `MethodCall(ConstantNode(Coll(Coll(),Coll()),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8),List(),Method…` — Coll() at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b11dc0c0f1a02000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n1-v0-a3#2",
+      "script" : "[flatMap|indices|n1|v0] `MethodCall(ConstantNode(Coll(Coll(),Coll(0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8),List(),Metho…` — Coll(0) at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a0200010001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n1-v3-a3#3",
+      "script" : "[flatMap|indices|n1|v3] `MethodCall(ConstantNode(Coll(Coll(),Coll(0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8),List(),Metho…` — Coll(0) at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b12dc0c0f1a0200010001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            }
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n7-v0-a3#4",
+      "script" : "[flatMap|indices|n7|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0),Coll(0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8),L…` — Coll(0,1,2,0,1,2,3) at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a0203000000040000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            }
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n7-v3-a3#5",
+      "script" : "[flatMap|indices|n7|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0),Coll(0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8),L…` — Coll(0,1,2,0,1,2,3) at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b18dc0c0f1a0203000000040000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            }
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n8-v0-a3#6",
+      "script" : "[flatMap|indices|n8|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0),Coll(0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8)…` — Coll(0,1,2,3,0,1,2,3) at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a020400000000040000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            }
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n8-v3-a3#7",
+      "script" : "[flatMap|indices|n8|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0),Coll(0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),8)…` — Coll(0,1,2,3,0,1,2,3) at cost 156. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b19dc0c0f1a020400000000040000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            }
+          ]
+        },
+        "cost" : 156,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n9-v0-a3#8",
+      "script" : "[flatMap|indices|n9|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0),Coll(0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),…` — Coll(0,1,2,3,0,1,2,3,4) at cost 166. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a02040000000005000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            }
+          ]
+        },
+        "cost" : 166,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n9-v3-a3#9",
+      "script" : "[flatMap|indices|n9|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0),Coll(0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),JitCost(10),…` — Coll(0,1,2,3,0,1,2,3,4) at cost 166. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b1adc0c0f1a02040000000005000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            }
+          ]
+        },
+        "cost" : 166,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n15-v0-a3#10",
+      "script" : "[flatMap|indices|n15|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),…` — Coll(0,1,2,3,4,5,6,0,1,2,3,4,5,6,7) at cost 166. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a02070000000000000008000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            }
+          ]
+        },
+        "cost" : 166,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n15-v3-a3#11",
+      "script" : "[flatMap|indices|n15|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60),…` — Coll(0,1,2,3,4,5,6,0,1,2,3,4,5,6,7) at cost 166. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b20dc0c0f1a02070000000000000008000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            }
+          ]
+        },
+        "cost" : 166,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n16-v0-a3#12",
+      "script" : "[flatMap|indices|n16|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60…` — Coll(0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7) at cost 166. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a0208000000000000000008000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            }
+          ]
+        },
+        "cost" : 166,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n16-v3-a3#13",
+      "script" : "[flatMap|indices|n16|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(60…` — Coll(0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7) at cost 166. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b21dc0c0f1a0208000000000000000008000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            }
+          ]
+        },
+        "cost" : 166,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n17-v0-a3#14",
+      "script" : "[flatMap|indices|n17|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(…` — Coll(0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7,8) at cost 176. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a020800000000000000000900000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            }
+          ]
+        },
+        "cost" : 176,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n17-v3-a3#15",
+      "script" : "[flatMap|indices|n17|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemCost(JitCost(…` — Coll(0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7,8) at cost 176. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b22dc0c0f1a020800000000000000000900000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            }
+          ]
+        },
+        "cost" : 176,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n23-v0-a3#16",
+      "script" : "[flatMap|indices|n23|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemC…` — Coll(0,1,2,3,4,5,6,7,8,9,10,0,1,2,3,4,5,6,7,8,9,10,11) at cost 176. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a020b00000000000000000000000c00000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            }
+          ]
+        },
+        "cost" : 176,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n23-v3-a3#17",
+      "script" : "[flatMap|indices|n23|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerItemC…` — Coll(0,1,2,3,4,5,6,7,8,9,10,0,1,2,3,4,5,6,7,8,9,10,11) at cost 176. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b28dc0c0f1a020b00000000000000000000000c00000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            }
+          ]
+        },
+        "cost" : 176,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n24-v0-a3#18",
+      "script" : "[flatMap|indices|n24|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerIte…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,0,1,2,3,4,5,6,7,8,9,10,11) at cost 176. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a020c0000000000000000000000000c00000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            }
+          ]
+        },
+        "cost" : 176,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n24-v3-a3#19",
+      "script" : "[flatMap|indices|n24|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerIte…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,0,1,2,3,4,5,6,7,8,9,10,11) at cost 176. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b29dc0c0f1a020c0000000000000000000000000c00000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            }
+          ]
+        },
+        "cost" : 176,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n25-v0-a3#20",
+      "script" : "[flatMap|indices|n25|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerI…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,0,1,2,3,4,5,6,7,8,9,10,11,12) at cost 186. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a020c0000000000000000000000000d0000000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            }
+          ]
+        },
+        "cost" : 186,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n25-v3-a3#21",
+      "script" : "[flatMap|indices|n25|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,flatMap,(Coll[Coll[SByte$]],(Coll[SByte$]) => Coll[SInt$]) => Coll[SInt$],15,PerI…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,0,1,2,3,4,5,6,7,8,9,10,11,12) at cost 186. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b2adc0c0f1a020c0000000000000000000000000d0000000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            }
+          ]
+        },
+        "cost" : 186,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n64-v0-a3#22",
+      "script" : "[flatMap|indices|n64|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,fla…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31) at cost 230. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a0220000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n64-v3-a3#23",
+      "script" : "[flatMap|indices|n64|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,fla…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31) at cost 230. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b51dc0c0f1a0220000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            }
+          ]
+        },
+        "cost" : 230,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n65-v0-a3#24",
+      "script" : "[flatMap|indices|n65|v0] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,f…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32) at cost 242. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00dc0c0f1a022000000000000000000000000000000000000000000000000000000000000000002100000000000000000000000000000000000000000000000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            },
+            {
+              "kind" : "Int",
+              "value" : 32
+            }
+          ]
+        },
+        "cost" : 242,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flatMap-indices-n65-v3-a3#25",
+      "script" : "[flatMap|indices|n65|v3] `MethodCall(ConstantNode(Coll(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)),Coll[Coll[SByte$]]),SMethod(SCollectionMethods,f…` — Coll(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32) at cost 242. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b52dc0c0f1a022000000000000000000000000000000000000000000000000000000000000000002100000000000000000000000000000000000000000000000000000000000000000001d901010edb0c0e7201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SInt"
+          },
+          "items" : [
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            },
+            {
+              "kind" : "Int",
+              "value" : 0
+            },
+            {
+              "kind" : "Int",
+              "value" : 1
+            },
+            {
+              "kind" : "Int",
+              "value" : 2
+            },
+            {
+              "kind" : "Int",
+              "value" : 3
+            },
+            {
+              "kind" : "Int",
+              "value" : 4
+            },
+            {
+              "kind" : "Int",
+              "value" : 5
+            },
+            {
+              "kind" : "Int",
+              "value" : 6
+            },
+            {
+              "kind" : "Int",
+              "value" : 7
+            },
+            {
+              "kind" : "Int",
+              "value" : 8
+            },
+            {
+              "kind" : "Int",
+              "value" : 9
+            },
+            {
+              "kind" : "Int",
+              "value" : 10
+            },
+            {
+              "kind" : "Int",
+              "value" : 11
+            },
+            {
+              "kind" : "Int",
+              "value" : 12
+            },
+            {
+              "kind" : "Int",
+              "value" : 13
+            },
+            {
+              "kind" : "Int",
+              "value" : 14
+            },
+            {
+              "kind" : "Int",
+              "value" : 15
+            },
+            {
+              "kind" : "Int",
+              "value" : 16
+            },
+            {
+              "kind" : "Int",
+              "value" : 17
+            },
+            {
+              "kind" : "Int",
+              "value" : 18
+            },
+            {
+              "kind" : "Int",
+              "value" : 19
+            },
+            {
+              "kind" : "Int",
+              "value" : 20
+            },
+            {
+              "kind" : "Int",
+              "value" : 21
+            },
+            {
+              "kind" : "Int",
+              "value" : 22
+            },
+            {
+              "kind" : "Int",
+              "value" : 23
+            },
+            {
+              "kind" : "Int",
+              "value" : 24
+            },
+            {
+              "kind" : "Int",
+              "value" : 25
+            },
+            {
+              "kind" : "Int",
+              "value" : 26
+            },
+            {
+              "kind" : "Int",
+              "value" : 27
+            },
+            {
+              "kind" : "Int",
+              "value" : 28
+            },
+            {
+              "kind" : "Int",
+              "value" : 29
+            },
+            {
+              "kind" : "Int",
+              "value" : 30
+            },
+            {
+              "kind" : "Int",
+              "value" : 31
+            },
+            {
+              "kind" : "Int",
+              "value" : 32
+            }
+          ]
+        },
+        "cost" : 242,
+        "error" : null
+      }
+    }
+  ]
+}

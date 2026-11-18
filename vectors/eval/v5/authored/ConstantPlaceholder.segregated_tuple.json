@@ -1,0 +1,1766 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "ConstantPlaceholder.segregated_tuple",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "AND-ph-dKn-v0-a2#0",
+      "script" : "[AND|ph|dKn|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010401000a01d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-dKn-v1-a2#1",
+      "script" : "[AND|ph|dKn|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010401000a01d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-dKn-v2-a2#2",
+      "script" : "[AND|ph|dKn|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010401000a01d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-nKd-v0-a2#3",
+      "script" : "[AND|ph|nKd|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010401010a00d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-nKd-v1-a2#4",
+      "script" : "[AND|ph|nKd|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010401010a00d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-nKd-v2-a2#5",
+      "script" : "[AND|ph|nKd|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010401010a00d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-ndn-v0-a2#6",
+      "script" : "[AND|ph|ndn|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010101010001d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-ndn-v1-a2#7",
+      "script" : "[AND|ph|ndn|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010101010001d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-ndn-v2-a2#8",
+      "script" : "[AND|ph|ndn|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010101010001d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-nnn-v0-a2#9",
+      "script" : "[AND|ph|nnn|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010101010101d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-nnn-v1-a2#10",
+      "script" : "[AND|ph|nnn|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010101010101d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ph-nnn-v2-a2#11",
+      "script" : "[AND|ph|nnn|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010101010101d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-phColl-dKn-v0-a2#12",
+      "script" : "[AND|phColl|dKn|v0] `BoolToSigmaProp(AND(ByIndex(ConstantPlaceholder(0,Coll[(SBoolean,SInt$,SBoolean)]),IntConstant(0),None)))` — FalseProp at cost 66. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010c4801040101000a01d196b27300040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phColl-dKn-v1-a2#13",
+      "script" : "[AND|phColl|dKn|v1] `BoolToSigmaProp(AND(ByIndex(ConstantPlaceholder(0,Coll[(SBoolean,SInt$,SBoolean)]),IntConstant(0),None)))` — FalseProp at cost 66. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v1, activated 2",
+      "tree_bytes_hex" : "1912010c4801040101000a01d196b27300040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phColl-dKn-v2-a2#14",
+      "script" : "[AND|phColl|dKn|v2] `BoolToSigmaProp(AND(ByIndex(ConstantPlaceholder(0,Coll[(SBoolean,SInt$,SBoolean)]),IntConstant(0),None)))` — FalseProp at cost 66. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a12010c4801040101000a01d196b27300040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 66,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phPair-dKn-v0-a2#15",
+      "script" : "[AND|phPair|dKn|v0] `BoolToSigmaProp(AND(SelectField(ConstantPlaceholder(0,(SInt$,(SBoolean,SInt$,SBoolean))),2)))` — FalseProp at cost 41. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100140480104010a000a01d1968c730002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phPair-dKn-v1-a2#16",
+      "script" : "[AND|phPair|dKn|v1] `BoolToSigmaProp(AND(SelectField(ConstantPlaceholder(0,(SInt$,(SBoolean,SInt$,SBoolean))),2)))` — FalseProp at cost 41. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v1, activated 2",
+      "tree_bytes_hex" : "19100140480104010a000a01d1968c730002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phPair-dKn-v2-a2#17",
+      "script" : "[AND|phPair|dKn|v2] `BoolToSigmaProp(AND(SelectField(ConstantPlaceholder(0,(SInt$,(SBoolean,SInt$,SBoolean))),2)))` — FalseProp at cost 41. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a100140480104010a000a01d1968c730002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-none-v0-a2#18",
+      "script" : "[AND|phLadder|none|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 76. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 76,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-none-v1-a2#19",
+      "script" : "[AND|phLadder|none|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 76. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 76,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-none-v2-a2#20",
+      "script" : "[AND|phLadder|none|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 76. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 76,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k0-v0-a2#21",
+      "script" : "[AND|phLadder|k0|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02feffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k0-v1-a2#22",
+      "script" : "[AND|phLadder|k0|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02feffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k0-v2-a2#23",
+      "script" : "[AND|phLadder|k0|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02feffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k31-v0-a2#24",
+      "script" : "[AND|phLadder|k31|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02ffffff7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k31-v1-a2#25",
+      "script" : "[AND|phLadder|k31|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02ffffff7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k31-v2-a2#26",
+      "script" : "[AND|phLadder|k31|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02ffffff7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k32-v0-a2#27",
+      "script" : "[AND|phLadder|k32|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 36. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02fffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k32-v1-a2#28",
+      "script" : "[AND|phLadder|k32|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 36. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02fffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k32-v2-a2#29",
+      "script" : "[AND|phLadder|k32|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 36. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02fffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k64-v0-a2#30",
+      "script" : "[AND|phLadder|k64|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 41. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02fffffffffffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k64-v1-a2#31",
+      "script" : "[AND|phLadder|k64|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 41. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02fffffffffffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k64-v2-a2#32",
+      "script" : "[AND|phLadder|k64|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 41. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02fffffffffffffffffeffffffffffffffffffffffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 41,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k150-v0-a2#33",
+      "script" : "[AND|phLadder|k150|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 51. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02ffffffffffffffffffffffffffffffffffffbfffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 51,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k150-v1-a2#34",
+      "script" : "[AND|phLadder|k150|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 51. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02ffffffffffffffffffffffffffffffffffffbfffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 51,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k150-v2-a2#35",
+      "script" : "[AND|phLadder|k150|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 51. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02ffffffffffffffffffffffffffffffffffffbfffffffffffffffffffffffffffffffffffff0fd1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 51,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k299-v0-a2#36",
+      "script" : "[AND|phLadder|k299|v0] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 76. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff07d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 76,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k299-v1-a2#37",
+      "script" : "[AND|phLadder|k299|v1] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 76. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff07d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 76,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-phLadder-k299-v2-a2#38",
+      "script" : "[AND|phLadder|k299|v2] `BoolToSigmaProp(AND(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 76. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac02ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff07d1967300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 76,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-ph-dKn-v0-a2#39",
+      "script" : "[OR|ph|dKn|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010401010a00d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-dKn-v1-a2#40",
+      "script" : "[OR|ph|dKn|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010401010a00d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-dKn-v2-a2#41",
+      "script" : "[OR|ph|dKn|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010401010a00d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-nKd-v0-a2#42",
+      "script" : "[OR|ph|nKd|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010401000a01d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-nKd-v1-a2#43",
+      "script" : "[OR|ph|nKd|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010401000a01d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-nKd-v2-a2#44",
+      "script" : "[OR|ph|nKd|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010401000a01d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-ndn-v0-a2#45",
+      "script" : "[OR|ph|ndn|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010101000100d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-ndn-v1-a2#46",
+      "script" : "[OR|ph|ndn|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010101000100d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-ndn-v2-a2#47",
+      "script" : "[OR|ph|ndn|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010101000100d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-nnn-v0-a2#48",
+      "script" : "[OR|ph|nnn|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010101000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-nnn-v1-a2#49",
+      "script" : "[OR|ph|nnn|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010101000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-ph-nnn-v2-a2#50",
+      "script" : "[OR|ph|nnn|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010101000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "OR-phColl-dKn-v0-a2#51",
+      "script" : "[OR|phColl|dKn|v0] `BoolToSigmaProp(OR(ByIndex(ConstantPlaceholder(0,Coll[(SBoolean,SInt$,SBoolean)]),IntConstant(0),None)))` — TrueProp at cost 61. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010c4801040101010a00d197b27300040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 61,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phColl-dKn-v1-a2#52",
+      "script" : "[OR|phColl|dKn|v1] `BoolToSigmaProp(OR(ByIndex(ConstantPlaceholder(0,Coll[(SBoolean,SInt$,SBoolean)]),IntConstant(0),None)))` — TrueProp at cost 61. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v1, activated 2",
+      "tree_bytes_hex" : "1912010c4801040101010a00d197b27300040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 61,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phColl-dKn-v2-a2#53",
+      "script" : "[OR|phColl|dKn|v2] `BoolToSigmaProp(OR(ByIndex(ConstantPlaceholder(0,Coll[(SBoolean,SInt$,SBoolean)]),IntConstant(0),None)))` — TrueProp at cost 61. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a12010c4801040101010a00d197b27300040000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 61,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phPair-dKn-v0-a2#54",
+      "script" : "[OR|phPair|dKn|v0] `BoolToSigmaProp(OR(SelectField(ConstantPlaceholder(0,(SInt$,(SBoolean,SInt$,SBoolean))),2)))` — TrueProp at cost 36. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100140480104010a010a00d1978c730002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phPair-dKn-v1-a2#55",
+      "script" : "[OR|phPair|dKn|v1] `BoolToSigmaProp(OR(SelectField(ConstantPlaceholder(0,(SInt$,(SBoolean,SInt$,SBoolean))),2)))` — TrueProp at cost 36. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v1, activated 2",
+      "tree_bytes_hex" : "19100140480104010a010a00d1978c730002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phPair-dKn-v2-a2#56",
+      "script" : "[OR|phPair|dKn|v2] `BoolToSigmaProp(OR(SelectField(ConstantPlaceholder(0,(SInt$,(SBoolean,SInt$,SBoolean))),2)))` — TrueProp at cost 36. the tuple of three INSIDE a segregated collection or pair constant: the placeholder's check passes (the constant is of its type), and the tree reduces.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a100140480104010a010a00d1978c730002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-none-v0-a2#57",
+      "script" : "[OR|phLadder|none|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 46. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020000000000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-none-v1-a2#58",
+      "script" : "[OR|phLadder|none|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 46. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020000000000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-none-v2-a2#59",
+      "script" : "[OR|phLadder|none|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — FalseProp at cost 46. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020000000000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d2"
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k0-v0-a2#60",
+      "script" : "[OR|phLadder|k0|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020100000000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k0-v1-a2#61",
+      "script" : "[OR|phLadder|k0|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020100000000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k0-v2-a2#62",
+      "script" : "[OR|phLadder|k0|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020100000000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k31-v0-a2#63",
+      "script" : "[OR|phLadder|k31|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020000008000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k31-v1-a2#64",
+      "script" : "[OR|phLadder|k31|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020000008000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k31-v2-a2#65",
+      "script" : "[OR|phLadder|k31|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020000008000000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k32-v0-a2#66",
+      "script" : "[OR|phLadder|k32|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020000000001000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k32-v1-a2#67",
+      "script" : "[OR|phLadder|k32|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020000000001000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k32-v2-a2#68",
+      "script" : "[OR|phLadder|k32|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 26. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020000000001000000000000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k64-v0-a2#69",
+      "script" : "[OR|phLadder|k64|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020000000000000000010000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k64-v1-a2#70",
+      "script" : "[OR|phLadder|k64|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020000000000000000010000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k64-v2-a2#71",
+      "script" : "[OR|phLadder|k64|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 31. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020000000000000000010000000000000000000000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 31,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k150-v0-a2#72",
+      "script" : "[OR|phLadder|k150|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 36. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020000000000000000000000000000000000004000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k150-v1-a2#73",
+      "script" : "[OR|phLadder|k150|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 36. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020000000000000000000000000000000000004000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k150-v2-a2#74",
+      "script" : "[OR|phLadder|k150|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 36. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020000000000000000000000000000000000004000000000000000000000000000000000000000d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 36,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k299-v0-a2#75",
+      "script" : "[OR|phLadder|k299|v0] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 46. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v0, activated 2",
+      "tree_bytes_hex" : "10010dac020000000000000000000000000000000000000000000000000000000000000000000000000008d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k299-v1-a2#76",
+      "script" : "[OR|phLadder|k299|v1] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 46. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v1, activated 2",
+      "tree_bytes_hex" : "192e010dac020000000000000000000000000000000000000000000000000000000000000000000000000008d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-phLadder-k299-v2-a2#77",
+      "script" : "[OR|phLadder|k299|v2] `BoolToSigmaProp(OR(ConstantPlaceholder(0,Coll[SBoolean])))` — TrueProp at cost 46. a segregated `Coll[Boolean]` constant: the placeholder passes, and the node reads its items up to the deciding one.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a2e010dac020000000000000000000000000000000000000000000000000000000000000000000000000008d1977300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "SizeOf-ph-_true_5_true_-v0-a2#78",
+      "script" : "[SizeOf|ph|(true,5,true)|v0] `BoolToSigmaProp(EQ(SizeOf(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))),IntConstant(3)))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010401010a01d193b173000406",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SizeOf-ph-_true_5_true_-v1-a2#79",
+      "script" : "[SizeOf|ph|(true,5,true)|v1] `BoolToSigmaProp(EQ(SizeOf(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))),IntConstant(3)))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190f0148010401010a01d193b173000406",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SizeOf-ph-_true_5_true_-v2-a2#80",
+      "script" : "[SizeOf|ph|(true,5,true)|v2] `BoolToSigmaProp(EQ(SizeOf(ConstantPlaceholder(0,(SBoolean,SInt$,SBoolean))),IntConstant(3)))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SInt$,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0f0148010401010a01d193b173000406",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "XorOf-ph-_true_false_false_-v0-a2#81",
+      "script" : "[XorOf|ph|(true,false,false)|v0] `BoolToSigmaProp(XorOf(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "100148010101010000d1ff7300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "XorOf-ph-_true_false_false_-v1-a2#82",
+      "script" : "[XorOf|ph|(true,false,false)|v1] `BoolToSigmaProp(XorOf(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190c0148010101010000d1ff7300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "XorOf-ph-_true_false_false_-v2-a2#83",
+      "script" : "[XorOf|ph|(true,false,false)|v2] `BoolToSigmaProp(XorOf(ConstantPlaceholder(0,(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (RuntimeException: Unsupported tuple type (SBoolean,SBoolean,SBoolean)). SEGREGATED: the tuple of three is the tree's constant; `ConstantPlaceholder.eval` checks the constant against its type, and a tuple of other than two items is no value of its type there, so the reduction throws (`Unsupported tuple type`). A port that reads the placeholder without the check, or reduces the tree again with its constants substituted, answers here.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0c0148010101010000d1ff7300",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SizeOf-inline-_true_5_true_-v0-a2#84",
+      "script" : "[SizeOf|inline|(true,5,true)|v0] `BoolToSigmaProp(EQ(SizeOf(ConstantNode(Coll(true,5,true),(SBoolean,SInt$,SBoolean))),IntConstant(3)))` — TrueProp at cost 42. the UNSEGREGATED twin: the tuple inline is a `Constant`, which no check meets, and the tree reduces.  // tree v0, activated 2",
+      "tree_bytes_hex" : "1000d193b148010401010a010406",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 42,
+        "error" : null
+      }
+    },
+    {
+      "name" : "SizeOf-inline-_true_5_true_-v1-a2#85",
+      "script" : "[SizeOf|inline|(true,5,true)|v1] `BoolToSigmaProp(EQ(SizeOf(ConstantNode(Coll(true,5,true),(SBoolean,SInt$,SBoolean))),IntConstant(3)))` — TrueProp at cost 42. the UNSEGREGATED twin: the tuple inline is a `Constant`, which no check meets, and the tree reduces.  // tree v1, activated 2",
+      "tree_bytes_hex" : "190d00d193b148010401010a010406",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 1
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 42,
+        "error" : null
+      }
+    },
+    {
+      "name" : "SizeOf-inline-_true_5_true_-v2-a2#86",
+      "script" : "[SizeOf|inline|(true,5,true)|v2] `BoolToSigmaProp(EQ(SizeOf(ConstantNode(Coll(true,5,true),(SBoolean,SInt$,SBoolean))),IntConstant(3)))` — TrueProp at cost 42. the UNSEGREGATED twin: the tuple inline is a `Constant`, which no check meets, and the tree reduces.  // tree v2, activated 2",
+      "tree_bytes_hex" : "1a0d00d193b148010401010a010406",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 42,
+        "error" : null
+      }
+    },
+    {
+      "name" : "OR-inline-dKn-v0-a2#87",
+      "script" : "[OR|inline|dKn|v0] `BoolToSigmaProp(OR(ConstantNode(Coll(true,5,false),(SBoolean,SInt$,SBoolean))))` — TrueProp at cost 30. the UNSEGREGATED twin: the tuple inline is a `Constant`, which no check meets, and the tree reduces.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d19748010401010a00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    }
+  ]
+}

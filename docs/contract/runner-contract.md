@@ -238,7 +238,11 @@ reconstruction rules, which every conforming implementation of this schema must 
   `{AND,OR,XorOf}.item_by_item_context` families (2026-11-18) carry the same header, pre-header and one output, and
   sigma-rust's round `SELF` (R4..R9: `(true, 5, true)`, `(false, 5, true)`, `Coll(true, false, true)`, `Coll[Int](5)`,
   `(5, true, false)`, an empty `Coll[Int]`), its context variables 1 to 8 as RAW `Value` bindings on the rows that read a
-  variable only. They sit at activated 2 (the `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
+  variable only. The `AND.item_by_item_context` and `OR.item_by_item_context` entries appended later the same day (the
+  round's addendum) carry that context, or the addendum's: its `SELF` (one token, `22`×32 × 1,000; R4 / R5 =
+  `(true, 5, true)` / `(false, 5, true)`, R6 / R7 their bytes as a `Coll[Byte]`, R8 a `Coll` of both) and its context
+  variables 1, 2 and 10 to 13 (the two tuples, their bytes, a `Coll[Boolean]`'s bytes, a `Coll` of both), again on the
+  rows whose tree reads a variable only. Each entry states its own context. They sit at activated 2 (the `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 
 ## 3. Preconditions, postconditions, invariants

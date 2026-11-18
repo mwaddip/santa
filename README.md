@@ -45,19 +45,20 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 43,016 entries across 453 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 40,928
+- ✅ **A blessed eval corpus — 47,725 entries across 459 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 45,637
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 8,566 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
+  spends; 9,440 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
   the collections a context brings, 1,956 over the ones a node holds generic, 1,875 over R2 read as a register
   and every box of a transaction, 907 AvlTree calls given a box, a header, the context or a register's value as
-  an item, and 360 AND / OR / XorOf calls over a register's, a variable's or the context's collection); version-split
+  an item, and 1,234 AND / OR / XorOf calls over a register's, a variable's, the context's or a producer's collection);
+  version-split
   into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (13,909 — the cumulative
-  v5/mainnet method surface) and **v6** (29,089 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (14,607 — the cumulative
+  v5/mainnet method surface) and **v6** (33,100 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -302,6 +303,16 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     collection, spent in its box with its extension. The eval tier adds every producer of the collection, every
     carrier of a tuple, and the neighbour nodes (`XorOf`, `Exists`, `ForAll`, `Filter`, `||` / `&&`, `SigmaAnd` /
     `SigmaOr`), each with its own reading.
+  - `segregated-tuple` (120 / 90): a SEGREGATED tuple of three never reaches the node. The constant placeholder
+    checks the constant against its type, a tuple of other than two items is no value of its type there, and the
+    reduction throws, so the box does not spend; the same tuple inline, or inside a segregated collection or pair
+    constant, reduces. A plain box: nothing in the context but the tree.
+  - `and-or-item-by-item-producers` (240 / 171): sigma-rust's whole trees over more producers of the collection
+    (`slice`, `append`, `updated`, `zip`, `reverse`, `ByIndex` with a default, an `Option`'s `get` / `getOrElse`,
+    `Global.deserializeTo`, `executeFromVar`, `DeserializeRegister`), spent in its box with its extension. The eval
+    tier adds the chunk boundaries over ten producers, 65,536 and 65,537 items, nested AND / OR, the kinds with no
+    data form as an item, and the other callers of the counting `addSeqCost` (`indexOf`, `flatMap`, collection
+    equality, `substConstants`).
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

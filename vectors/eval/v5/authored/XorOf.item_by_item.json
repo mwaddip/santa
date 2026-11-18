@@ -18675,6 +18675,801 @@
         "cost" : 45,
         "error" : null
       }
+    },
+    {
+      "name" : "XorOf-const-L100-k95-v0-a2#1018",
+      "script" : "[XorOf|const|L100|k95|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 45. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0d64ffffffffffffffffffffff7f0f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L100-k95-v0-a2#1019",
+      "script" : "[XorOf|tuple|L100|k95|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 45. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60640101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L100-k96-v0-a2#1020",
+      "script" : "[XorOf|const|L100|k96|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 45. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0d64ffffffffffffffffffffffff0e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L100-k96-v0-a2#1021",
+      "script" : "[XorOf|tuple|L100|k96|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 45. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60640101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L129-k95-v0-a2#1022",
+      "script" : "[XorOf|const|L129|k95|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 50. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0d8101ffffffffffffffffffffff7fffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L129-k95-v0-a2#1023",
+      "script" : "[XorOf|tuple|L129|k95|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 50. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff6081010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L129-k96-v0-a2#1024",
+      "script" : "[XorOf|const|L129|k96|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 50. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0d8101fffffffffffffffffffffffffeffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L129-k96-v0-a2#1025",
+      "script" : "[XorOf|tuple|L129|k96|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 50. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff6081010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L129-k127-v0-a2#1026",
+      "script" : "[XorOf|const|L129|k127|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 50. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0d8101ffffffffffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L129-k127-v0-a2#1027",
+      "script" : "[XorOf|tuple|L129|k127|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 50. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff6081010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-none-v0-a2#1028",
+      "script" : "[XorOf|const|L193|none|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-none-v0-a2#1029",
+      "script" : "[XorOf|tuple|L193|none|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k0-v0-a2#1030",
+      "script" : "[XorOf|const|L193|k0|v0] `XorOf(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101feffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k0-v0-a2#1031",
+      "script" : "[XorOf|tuple|L193|k0|v0] `XorOf(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k1-v0-a2#1032",
+      "script" : "[XorOf|const|L193|k1|v0] `XorOf(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101fdffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k1-v0-a2#1033",
+      "script" : "[XorOf|tuple|L193|k1|v0] `XorOf(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k31-v0-a2#1034",
+      "script" : "[XorOf|const|L193|k31|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffff7fffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k31-v0-a2#1035",
+      "script" : "[XorOf|tuple|L193|k31|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k32-v0-a2#1036",
+      "script" : "[XorOf|const|L193|k32|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101fffffffffeffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k32-v0-a2#1037",
+      "script" : "[XorOf|tuple|L193|k32|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k63-v0-a2#1038",
+      "script" : "[XorOf|const|L193|k63|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffffffffffff7fffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k63-v0-a2#1039",
+      "script" : "[XorOf|tuple|L193|k63|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k64-v0-a2#1040",
+      "script" : "[XorOf|const|L193|k64|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101fffffffffffffffffeffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k64-v0-a2#1041",
+      "script" : "[XorOf|tuple|L193|k64|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k95-v0-a2#1042",
+      "script" : "[XorOf|const|L193|k95|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffffffffffffffffffff7fffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k95-v0-a2#1043",
+      "script" : "[XorOf|tuple|L193|k95|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k96-v0-a2#1044",
+      "script" : "[XorOf|const|L193|k96|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101fffffffffffffffffffffffffeffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k96-v0-a2#1045",
+      "script" : "[XorOf|tuple|L193|k96|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k127-v0-a2#1046",
+      "script" : "[XorOf|const|L193|k127|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffffffffffffffffffffffffffff7fffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k127-v0-a2#1047",
+      "script" : "[XorOf|tuple|L193|k127|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k128-v0-a2#1048",
+      "script" : "[XorOf|const|L193|k128|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101fffffffffffffffffffffffffffffffffeffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k128-v0-a2#1049",
+      "script" : "[XorOf|tuple|L193|k128|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k191-v0-a2#1050",
+      "script" : "[XorOf|const|L193|k191|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffffffffffffffffffffffffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k191-v0-a2#1051",
+      "script" : "[XorOf|tuple|L193|k191|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-const-L193-k192-v0-a2#1052",
+      "script" : "[XorOf|const|L193|k192|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff0dc101ffffffffffffffffffffffffffffffffffffffffffffffff00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-tuple-L193-k192-v0-a2#1053",
+      "script" : "[XorOf|tuple|L193|k192|v0] `XorOf(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 60. XorOf casts the whole array: it reads every item, whatever their values.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ff60c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 60,
+        "error" : null
+      }
+    },
+    {
+      "name" : "XorOf-indices-two-v0-a2#1054",
+      "script" : "[XorOf|indices|two|v0] `XorOf(MethodCall(ConstantNode(Coll(true,false),Coll[SBoolean]),SMethod(SCollectionMethods,indices,(Coll[SBoolean]) => Coll[SInt$],14,PerItemCost(JitCost(20),JitCost(2),16),List(),MethodIRInfo(Some(<function1>),None,None)…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). over a `Coll.indices` result (the specialised `Int` class): read, an `Int` item is no Boolean (`ClassCastException`); empty, the node answers.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ffdb0c0e0d0201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "XorOf-indices-empty-v0-a2#1055",
+      "script" : "[XorOf|indices|empty|v0] `XorOf(MethodCall(ConstantNode(Coll(),Coll[SBoolean]),SMethod(SCollectionMethods,indices,(Coll[SBoolean]) => Coll[SInt$],14,PerItemCost(JitCost(20),JitCost(2),16),List(),MethodIRInfo(Some(<function1>),None,None),Some(Oper…` — false at cost 56. over a `Coll.indices` result (the specialised `Int` class): read, an `Int` item is no Boolean (`ClassCastException`); empty, the node answers.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ffdb0c0e0d00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 56,
+        "error" : null
+      }
     }
   ]
 }

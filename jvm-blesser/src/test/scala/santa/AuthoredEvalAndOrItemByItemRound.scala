@@ -12,7 +12,9 @@ package santa
 //  * a tuple of three reaches the node as the input, as an item of a collection constant (`ByIndex`), as a pair's side
 //    (`SelectField`), from a context variable and from a register at the tuple's own type, but NOT through a `ValDef`
 //    or as a lambda's parameter (`Unsupported tuple type`); a collection node with an item of another type is refused
-//    at parse (`Invalid type of collection value`);
+//    at parse (`Invalid type of collection value`). That was the request's generator's list, not the rule: the
+//    addendum (AuthoredEvalAndOrItemByItemRound2) measures more producers, a collection that is no tuple, and a
+//    SEGREGATED tuple of three, which never reaches the node (the placeholder's type check refuses it);
 //  * the NEIGHBOURS: `XorOf` casts the whole array; `Exists` / `ForAll` with the identity lambda stop at the deciding
 //    item and add their cost over the LENGTH before the walk; `Filter` reads every item; `||` / `&&` cast the left
 //    first and evaluate the right only if it decides nothing; `SigmaAnd` / `SigmaOr` evaluate and cast every item.

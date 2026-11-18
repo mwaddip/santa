@@ -25797,6 +25797,3132 @@
         "cost" : 143,
         "error" : null
       }
+    },
+    {
+      "name" : "AND-const-L100-k95-v0-a2#1329",
+      "script" : "[AND|const|L100|k95|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960d64ffffffffffffffffffffff7f0f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L100-k95-v0-a2#1330",
+      "script" : "[AND|boolnode|L100|k95|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 545. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00968564ffffffffffffffffffffff7f0f",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 545,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L100-k95-v0-a2#1331",
+      "script" : "[AND|collnode|L100|k95|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 545. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00968364010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 545,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L100-k95-v0-a2#1332",
+      "script" : "[AND|map|L100|k95|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 1065. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0d64ffffffffffffffffffffff7f0fd90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1065,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L100-k95-v0-a2#1333",
+      "script" : "[AND|slice|L100|k95|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 52. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40d64ffffffffffffffffffffff7f0f040004c801",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 52,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L100-k95-v0-a2#1334",
+      "script" : "[AND|append|L100|k95|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 57. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d32ffffffffffff030d32ffffffffffdf03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 57,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L100-k95-v0-a2#1335",
+      "script" : "[AND|filter|L100|k95|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 1065. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50d64ffffffffffffffffffffff7f0fd90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1065,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L100-k95-v0-a2#1336",
+      "script" : "[AND|tuple|L100|k95|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660640101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L100-k96-v0-a2#1337",
+      "script" : "[AND|const|L100|k96|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960d64ffffffffffffffffffffffff0e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L100-k96-v0-a2#1338",
+      "script" : "[AND|boolnode|L100|k96|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 550. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00968564ffffffffffffffffffffffff0e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 550,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L100-k96-v0-a2#1339",
+      "script" : "[AND|collnode|L100|k96|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 550. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00968364010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 550,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L100-k96-v0-a2#1340",
+      "script" : "[AND|map|L100|k96|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 1070. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0d64ffffffffffffffffffffffff0ed90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1070,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L100-k96-v0-a2#1341",
+      "script" : "[AND|slice|L100|k96|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 57. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40d64ffffffffffffffffffffffff0e040004c801",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 57,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L100-k96-v0-a2#1342",
+      "script" : "[AND|append|L100|k96|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 62. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d32ffffffffffff030d32ffffffffffbf03",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 62,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L100-k96-v0-a2#1343",
+      "script" : "[AND|filter|L100|k96|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 1070. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50d64ffffffffffffffffffffffff0ed90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1070,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L100-k96-v0-a2#1344",
+      "script" : "[AND|tuple|L100|k96|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660640101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L129-k95-v0-a2#1345",
+      "script" : "[AND|const|L129|k95|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960d8101ffffffffffffffffffffff7fffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L129-k95-v0-a2#1346",
+      "script" : "[AND|boolnode|L129|k95|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 690. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096858101ffffffffffffffffffffff7fffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 690,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L129-k95-v0-a2#1347",
+      "script" : "[AND|collnode|L129|k95|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 690. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683810101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 690,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L129-k95-v0-a2#1348",
+      "script" : "[AND|map|L129|k95|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 1358. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0d8101ffffffffffffffffffffff7fffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1358,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L129-k95-v0-a2#1349",
+      "script" : "[AND|slice|L129|k95|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 54. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40d8101ffffffffffffffffffffff7fffffffff010400048202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 54,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L129-k95-v0-a2#1350",
+      "script" : "[AND|append|L129|k95|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 59. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d40ffffffffffffffff0d41ffffff7fffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L129-k95-v0-a2#1351",
+      "script" : "[AND|filter|L129|k95|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 1358. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50d8101ffffffffffffffffffffff7fffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1358,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L129-k95-v0-a2#1352",
+      "script" : "[AND|tuple|L129|k95|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00966081010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L129-k96-v0-a2#1353",
+      "script" : "[AND|const|L129|k96|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960d8101fffffffffffffffffffffffffeffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L129-k96-v0-a2#1354",
+      "script" : "[AND|boolnode|L129|k96|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 695. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096858101fffffffffffffffffffffffffeffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 695,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L129-k96-v0-a2#1355",
+      "script" : "[AND|collnode|L129|k96|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 695. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683810101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 695,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L129-k96-v0-a2#1356",
+      "script" : "[AND|map|L129|k96|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 1363. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0d8101fffffffffffffffffffffffffeffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1363,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L129-k96-v0-a2#1357",
+      "script" : "[AND|slice|L129|k96|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 59. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40d8101fffffffffffffffffffffffffeffffff010400048202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L129-k96-v0-a2#1358",
+      "script" : "[AND|append|L129|k96|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 64. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d40ffffffffffffffff0d41fffffffffeffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L129-k96-v0-a2#1359",
+      "script" : "[AND|filter|L129|k96|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 1363. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50d8101fffffffffffffffffffffffffeffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1363,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L129-k96-v0-a2#1360",
+      "script" : "[AND|tuple|L129|k96|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00966081010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L129-k127-v0-a2#1361",
+      "script" : "[AND|const|L129|k127|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960d8101ffffffffffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L129-k127-v0-a2#1362",
+      "script" : "[AND|boolnode|L129|k127|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 695. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096858101ffffffffffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 695,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L129-k127-v0-a2#1363",
+      "script" : "[AND|collnode|L129|k127|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 695. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683810101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 695,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L129-k127-v0-a2#1364",
+      "script" : "[AND|map|L129|k127|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 1363. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0d8101ffffffffffffffffffffffffffffff7f01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1363,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L129-k127-v0-a2#1365",
+      "script" : "[AND|slice|L129|k127|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 59. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40d8101ffffffffffffffffffffffffffffff7f010400048202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L129-k127-v0-a2#1366",
+      "script" : "[AND|append|L129|k127|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 64. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d40ffffffffffffffff0d41ffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L129-k127-v0-a2#1367",
+      "script" : "[AND|filter|L129|k127|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 1363. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50d8101ffffffffffffffffffffffffffffff7f01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1363,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L129-k127-v0-a2#1368",
+      "script" : "[AND|tuple|L129|k127|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00966081010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-none-v0-a2#1369",
+      "script" : "[AND|const|L193|none|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — true at cost 50. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-none-v0-a2#1370",
+      "script" : "[AND|boolnode|L193|none|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — true at cost 1030. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 1030,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-none-v0-a2#1371",
+      "script" : "[AND|collnode|L193|none|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — true at cost 1030. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 1030,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-none-v0-a2#1372",
+      "script" : "[AND|map|L193|none|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — true at cost 2025. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffffffffffffffffffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 2025,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-none-v0-a2#1373",
+      "script" : "[AND|slice|L193|none|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — true at cost 74. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffffffffffffffffffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 74,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-none-v0-a2#1374",
+      "script" : "[AND|append|L193|none|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 79. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-none-v0-a2#1375",
+      "script" : "[AND|filter|L193|none|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — true at cost 2025. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffffffffffffffffffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 2025,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-none-v0-a2#1376",
+      "script" : "[AND|tuple|L193|none|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — true at cost 50. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k0-v0-a2#1377",
+      "script" : "[AND|const|L193|k0|v0] `AND(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 20. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101feffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k0-v0-a2#1378",
+      "script" : "[AND|boolnode|L193|k0|v0] `AND(ConcreteCollection(WrappedArray(FalseLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, Tru…` — false at cost 1000. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101feffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k0-v0-a2#1379",
+      "script" : "[AND|collnode|L193|k0|v0] `AND(ConcreteCollection(WrappedArray(FalseLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, Tru…` — false at cost 1000. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k0-v0-a2#1380",
+      "script" : "[AND|map|L193|k0|v0] `AND(MapCollection(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 1995. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101feffffffffffffffffffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1995,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k0-v0-a2#1381",
+      "script" : "[AND|slice|L193|k0|v0] `AND(Slice(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 44. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101feffffffffffffffffffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k0-v0-a2#1382",
+      "script" : "[AND|append|L193|k0|v0] `AND(Append(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 49. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60feffffffffffffffffffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k0-v0-a2#1383",
+      "script" : "[AND|filter|L193|k0|v0] `AND(Filter(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 1995. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101feffffffffffffffffffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1995,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k0-v0-a2#1384",
+      "script" : "[AND|tuple|L193|k0|v0] `AND(ConstantNode(Coll(false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 20. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k1-v0-a2#1385",
+      "script" : "[AND|const|L193|k1|v0] `AND(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 20. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101fdffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k1-v0-a2#1386",
+      "script" : "[AND|boolnode|L193|k1|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, FalseLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, Tru…` — false at cost 1000. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101fdffffffffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k1-v0-a2#1387",
+      "script" : "[AND|collnode|L193|k1|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, FalseLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, Tru…` — false at cost 1000. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k1-v0-a2#1388",
+      "script" : "[AND|map|L193|k1|v0] `AND(MapCollection(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 1995. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101fdffffffffffffffffffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1995,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k1-v0-a2#1389",
+      "script" : "[AND|slice|L193|k1|v0] `AND(Slice(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 44. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101fdffffffffffffffffffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k1-v0-a2#1390",
+      "script" : "[AND|append|L193|k1|v0] `AND(Append(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 49. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60fdffffffffffffffffffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k1-v0-a2#1391",
+      "script" : "[AND|filter|L193|k1|v0] `AND(Filter(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,…` — false at cost 1995. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101fdffffffffffffffffffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1995,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k1-v0-a2#1392",
+      "script" : "[AND|tuple|L193|k1|v0] `AND(ConstantNode(Coll(true,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 20. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k31-v0-a2#1393",
+      "script" : "[AND|const|L193|k31|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,tr…` — false at cost 20. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffff7fffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k31-v0-a2#1394",
+      "script" : "[AND|boolnode|L193|k31|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1000. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffff7fffffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k31-v0-a2#1395",
+      "script" : "[AND|collnode|L193|k31|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1000. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k31-v0-a2#1396",
+      "script" : "[AND|map|L193|k31|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,tru…` — false at cost 1995. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffff7fffffffffffffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1995,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k31-v0-a2#1397",
+      "script" : "[AND|slice|L193|k31|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,t…` — false at cost 44. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffff7fffffffffffffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k31-v0-a2#1398",
+      "script" : "[AND|append|L193|k31|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,…` — false at cost 49. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffff7fffffffffffffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k31-v0-a2#1399",
+      "script" : "[AND|filter|L193|k31|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,…` — false at cost 1995. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffff7fffffffffffffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1995,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k31-v0-a2#1400",
+      "script" : "[AND|tuple|L193|k31|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,true,tr…` — false at cost 20. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 20,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k32-v0-a2#1401",
+      "script" : "[AND|const|L193|k32|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,tr…` — false at cost 25. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101fffffffffeffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k32-v0-a2#1402",
+      "script" : "[AND|boolnode|L193|k32|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1005. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101fffffffffeffffffffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k32-v0-a2#1403",
+      "script" : "[AND|collnode|L193|k32|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1005. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k32-v0-a2#1404",
+      "script" : "[AND|map|L193|k32|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,tru…` — false at cost 2000. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101fffffffffeffffffffffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k32-v0-a2#1405",
+      "script" : "[AND|slice|L193|k32|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,t…` — false at cost 49. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101fffffffffeffffffffffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k32-v0-a2#1406",
+      "script" : "[AND|append|L193|k32|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,…` — false at cost 54. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60fffffffffeffffffffffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 54,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k32-v0-a2#1407",
+      "script" : "[AND|filter|L193|k32|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,…` — false at cost 2000. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101fffffffffeffffffffffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k32-v0-a2#1408",
+      "script" : "[AND|tuple|L193|k32|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,false,true,true,true,true,true,true,tr…` — false at cost 25. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k63-v0-a2#1409",
+      "script" : "[AND|const|L193|k63|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 25. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffffffffffff7fffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k63-v0-a2#1410",
+      "script" : "[AND|boolnode|L193|k63|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1005. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffffffffffff7fffffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k63-v0-a2#1411",
+      "script" : "[AND|collnode|L193|k63|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1005. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k63-v0-a2#1412",
+      "script" : "[AND|map|L193|k63|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2000. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffffffffffff7fffffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k63-v0-a2#1413",
+      "script" : "[AND|slice|L193|k63|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 49. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffffffffffff7fffffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 49,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k63-v0-a2#1414",
+      "script" : "[AND|append|L193|k63|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 54. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffff7fffffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 54,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k63-v0-a2#1415",
+      "script" : "[AND|filter|L193|k63|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2000. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffffffffffff7fffffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k63-v0-a2#1416",
+      "script" : "[AND|tuple|L193|k63|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 25. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k64-v0-a2#1417",
+      "script" : "[AND|const|L193|k64|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101fffffffffffffffffeffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k64-v0-a2#1418",
+      "script" : "[AND|boolnode|L193|k64|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1010. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101fffffffffffffffffeffffffffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k64-v0-a2#1419",
+      "script" : "[AND|collnode|L193|k64|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1010. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k64-v0-a2#1420",
+      "script" : "[AND|map|L193|k64|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2005. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101fffffffffffffffffeffffffffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k64-v0-a2#1421",
+      "script" : "[AND|slice|L193|k64|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 54. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101fffffffffffffffffeffffffffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 54,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k64-v0-a2#1422",
+      "script" : "[AND|append|L193|k64|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 59. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60fffffffffffffffffeffffff0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k64-v0-a2#1423",
+      "script" : "[AND|filter|L193|k64|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2005. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101fffffffffffffffffeffffffffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k64-v0-a2#1424",
+      "script" : "[AND|tuple|L193|k64|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k95-v0-a2#1425",
+      "script" : "[AND|const|L193|k95|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffffffffffffffffffff7fffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k95-v0-a2#1426",
+      "script" : "[AND|boolnode|L193|k95|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1010. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffffffffffffffffffff7fffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k95-v0-a2#1427",
+      "script" : "[AND|collnode|L193|k95|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1010. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k95-v0-a2#1428",
+      "script" : "[AND|map|L193|k95|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2005. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffffffffffffffffffff7fffffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k95-v0-a2#1429",
+      "script" : "[AND|slice|L193|k95|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 54. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffffffffffffffffffff7fffffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 54,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k95-v0-a2#1430",
+      "script" : "[AND|append|L193|k95|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 59. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffff7f0d61ffffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k95-v0-a2#1431",
+      "script" : "[AND|filter|L193|k95|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2005. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffffffffffffffffffff7fffffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2005,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k95-v0-a2#1432",
+      "script" : "[AND|tuple|L193|k95|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 30. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k96-v0-a2#1433",
+      "script" : "[AND|const|L193|k96|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101fffffffffffffffffffffffffeffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k96-v0-a2#1434",
+      "script" : "[AND|boolnode|L193|k96|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1015. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101fffffffffffffffffffffffffeffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k96-v0-a2#1435",
+      "script" : "[AND|collnode|L193|k96|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1015. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k96-v0-a2#1436",
+      "script" : "[AND|map|L193|k96|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2010. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101fffffffffffffffffffffffffeffffffffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k96-v0-a2#1437",
+      "script" : "[AND|slice|L193|k96|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 59. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101fffffffffffffffffffffffffeffffffffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k96-v0-a2#1438",
+      "script" : "[AND|append|L193|k96|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 64. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffffff0d61feffffffffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k96-v0-a2#1439",
+      "script" : "[AND|filter|L193|k96|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2010. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101fffffffffffffffffffffffffeffffffffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k96-v0-a2#1440",
+      "script" : "[AND|tuple|L193|k96|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k127-v0-a2#1441",
+      "script" : "[AND|const|L193|k127|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffffffffffffffffffffffffffff7fffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k127-v0-a2#1442",
+      "script" : "[AND|boolnode|L193|k127|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1015. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffffffffffffffffffffffffffff7fffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k127-v0-a2#1443",
+      "script" : "[AND|collnode|L193|k127|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1015. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k127-v0-a2#1444",
+      "script" : "[AND|map|L193|k127|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2010. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffffffffffffffffffffffffffff7fffffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k127-v0-a2#1445",
+      "script" : "[AND|slice|L193|k127|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 59. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffffffffffffffffffffffffffff7fffffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k127-v0-a2#1446",
+      "script" : "[AND|append|L193|k127|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 64. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffffff0d61ffffff7fffffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k127-v0-a2#1447",
+      "script" : "[AND|filter|L193|k127|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2010. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffffffffffffffffffffffffffff7fffffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2010,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k127-v0-a2#1448",
+      "script" : "[AND|tuple|L193|k127|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 35. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k128-v0-a2#1449",
+      "script" : "[AND|const|L193|k128|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 40. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101fffffffffffffffffffffffffffffffffeffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k128-v0-a2#1450",
+      "script" : "[AND|boolnode|L193|k128|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1020. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101fffffffffffffffffffffffffffffffffeffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1020,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k128-v0-a2#1451",
+      "script" : "[AND|collnode|L193|k128|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1020. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1020,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k128-v0-a2#1452",
+      "script" : "[AND|map|L193|k128|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2015. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101fffffffffffffffffffffffffffffffffeffffffffffffff01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k128-v0-a2#1453",
+      "script" : "[AND|slice|L193|k128|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 64. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101fffffffffffffffffffffffffffffffffeffffffffffffff010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 64,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k128-v0-a2#1454",
+      "script" : "[AND|append|L193|k128|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 69. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffffff0d61fffffffffeffffffffffffff01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 69,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k128-v0-a2#1455",
+      "script" : "[AND|filter|L193|k128|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2015. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101fffffffffffffffffffffffffffffffffeffffffffffffff01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k128-v0-a2#1456",
+      "script" : "[AND|tuple|L193|k128|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 40. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k191-v0-a2#1457",
+      "script" : "[AND|const|L193|k191|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 45. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffffffffffffffffffffffffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k191-v0-a2#1458",
+      "script" : "[AND|boolnode|L193|k191|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1025. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffffffffffffffffffffffffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1025,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k191-v0-a2#1459",
+      "script" : "[AND|collnode|L193|k191|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1025. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1025,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k191-v0-a2#1460",
+      "script" : "[AND|map|L193|k191|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2020. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffffffffffffffffffffffffffffffffffffffffffff7f01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2020,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k191-v0-a2#1461",
+      "script" : "[AND|slice|L193|k191|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 69. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffffffffffffffffffffffffffffffffffffffffffff7f010400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 69,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k191-v0-a2#1462",
+      "script" : "[AND|append|L193|k191|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 74. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffffff0d61ffffffffffffffffffffff7f01",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 74,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k191-v0-a2#1463",
+      "script" : "[AND|filter|L193|k191|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2020. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffffffffffffffffffffffffffffffffffffffffffff7f01d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2020,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k191-v0-a2#1464",
+      "script" : "[AND|tuple|L193|k191|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 45. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 45,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-const-L193-k192-v0-a2#1465",
+      "script" : "[AND|const|L193|k192|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 50. items from the producer `const`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00960dc101ffffffffffffffffffffffffffffffffffffffffffffffff00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-boolnode-L193-k192-v0-a2#1466",
+      "script" : "[AND|boolnode|L193|k192|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1030. items from the producer `boolnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009685c101ffffffffffffffffffffffffffffffffffffffffffffffff00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1030,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-collnode-L193-k192-v0-a2#1467",
+      "script" : "[AND|collnode|L193|k192|v0] `AND(ConcreteCollection(WrappedArray(TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, TrueLeaf, True…` — false at cost 1030. items from the producer `collnode`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009683c101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 1030,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-map-L193-k192-v0-a2#1468",
+      "script" : "[AND|map|L193|k192|v0] `AND(MapCollection(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 2025. items from the producer `map`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ad0dc101ffffffffffffffffffffffffffffffffffffffffffffffff00d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2025,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-slice-L193-k192-v0-a2#1469",
+      "script" : "[AND|slice|L193|k192|v0] `AND(Slice(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tr…` — false at cost 74. items from the producer `slice`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b40dc101ffffffffffffffffffffffffffffffffffffffffffffffff000400048203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 74,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-append-L193-k192-v0-a2#1470",
+      "script" : "[AND|append|L193|k192|v0] `AND(Append(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 79. items from the producer `append`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b30d60ffffffffffffffffffffffff0d61ffffffffffffffffffffffff00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 79,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-filter-L193-k192-v0-a2#1471",
+      "script" : "[AND|filter|L193|k192|v0] `AND(Filter(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,t…` — false at cost 2025. items from the producer `filter`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b50dc101ffffffffffffffffffffffffffffffffffffffffffffffff00d90101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 2025,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-tuple-L193-k192-v0-a2#1472",
+      "script" : "[AND|tuple|L193|k192|v0] `AND(ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,tru…` — false at cost 50. items from the producer `tuple`, the deciding item placed at a chunk boundary: the node reads up to it and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64); a port that charges for the whole collection is above this cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "009660c10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 50,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-indices-two-v0-a2#1473",
+      "script" : "[AND|indices|two|v0] `AND(MethodCall(ConstantNode(Coll(true,false),Coll[SBoolean]),SMethod(SCollectionMethods,indices,(Coll[SBoolean]) => Coll[SInt$],14,PerItemCost(JitCost(20),JitCost(2),16),List(),MethodIRInfo(Some(<function1>),None,None),S…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). over a `Coll.indices` result (the specialised `Int` class): read, an `Int` item is no Boolean (`ClassCastException`); empty, the node answers.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096db0c0e0d0201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-indices-empty-v0-a2#1474",
+      "script" : "[AND|indices|empty|v0] `AND(MethodCall(ConstantNode(Coll(),Coll[SBoolean]),SMethod(SCollectionMethods,indices,(Coll[SBoolean]) => Coll[SInt$],14,PerItemCost(JitCost(20),JitCost(2),16),List(),MethodIRInfo(Some(<function1>),None,None),Some(Operat…` — true at cost 46. over a `Coll.indices` result (the specialised `Int` class): read, an `Int` item is no Boolean (`ClassCastException`); empty, the node answers.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096db0c0e0d00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 46,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-doubled-L65536-none-v0-a2#1475",
+      "script" : "[AND|doubled|L65536|none|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — true at cost 12658. 65,536 or 65,537 items, built by doubling: the node reads up to the deciding item and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d803d6010d8040ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd602b372017201d603b37202720296b372037203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 12658,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-doubled-L65537-k65536-v0-a2#1476",
+      "script" : "[AND|doubled|L65537|k65536|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 14000. 65,536 or 65,537 items, built by doubling: the node reads up to the deciding item and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d803d6010d8040ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd602b372017201d603b37202720296b3b3720372030d0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 14000,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-doubled-L65537-k0-v0-a2#1477",
+      "script" : "[AND|doubled|L65537|k0|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true…` — false at cost 3760. 65,536 or 65,537 items, built by doubling: the node reads up to the deciding item and charges for the items read (AND 10 + 5 per 32, OR 5 + 5 per 64).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d803d6010d8040ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd602b372017201d603b37202720296b30d0100b372037203",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 3760,
+        "error" : null
+      }
     }
   ]
 }

@@ -1,0 +1,432 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "SubstConstants.item_by_item_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "substConstants-n0-v0-a3#0",
+      "script" : "[substConstants|n0|v0] `SubstConstants(ConstantNode(Coll(16,0,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,0,-47,127) at cost 115. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e041000d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 115,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n0-v3-a3#1",
+      "script" : "[substConstants|n0|v3] `SubstConstants(ConstantNode(Coll(16,0,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,0,-47,127) at cost 115. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0b740e041000d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 115,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n1-v0-a3#2",
+      "script" : "[substConstants|n1|v0] `SubstConstants(ConstantNode(Coll(16,1,4,0,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,1,4,0,-47,127) at cost 215. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0610010400d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 215,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n1-v3-a3#3",
+      "script" : "[substConstants|n1|v3] `SubstConstants(ConstantNode(Coll(16,1,4,0,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,1,4,0,-47,127) at cost 215. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0d740e0610010400d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 1
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 215,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n2-v0-a3#4",
+      "script" : "[substConstants|n2|v0] `SubstConstants(ConstantNode(Coll(16,2,4,0,4,2,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,2,4,0,4,2,-47,127) at cost 315. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e08100204000402d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 315,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n2-v3-a3#5",
+      "script" : "[substConstants|n2|v3] `SubstConstants(ConstantNode(Coll(16,2,4,0,4,2,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,2,4,0,4,2,-47,127) at cost 315. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b0f740e08100204000402d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 315,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n3-v0-a3#6",
+      "script" : "[substConstants|n3|v0] `SubstConstants(ConstantNode(Coll(16,3,4,0,4,2,4,4,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,3,4,0,4,2,4,4,-47,127) at cost 415. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00740e0a1003040004020404d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 415,
+        "error" : null
+      }
+    },
+    {
+      "name" : "substConstants-n3-v3-a3#7",
+      "script" : "[substConstants|n3|v3] `SubstConstants(ConstantNode(Coll(16,3,4,0,4,2,4,4,-47,127),Coll[SByte$]),ConstantNode(Coll(),Coll[SInt$]),ConstantNode(Coll(),Coll[SInt$]))` — Coll(16,3,4,0,4,2,4,4,-47,127) at cost 415. a caller of the counting `addSeqCost` (sigma-state charges for the items the loop walked, a chunk at a time), its stop placed at a chunk boundary; a port that charges for the whole collection, or per item, is off this cost.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b11740e0a1003040004020404d17f10001000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Coll",
+          "elem" : {
+            "tag" : "SByte"
+          },
+          "items" : [
+            {
+              "kind" : "Byte",
+              "value" : 16
+            },
+            {
+              "kind" : "Byte",
+              "value" : 3
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 0
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 2
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : 4
+            },
+            {
+              "kind" : "Byte",
+              "value" : -47
+            },
+            {
+              "kind" : "Byte",
+              "value" : 127
+            }
+          ]
+        },
+        "cost" : 415,
+        "error" : null
+      }
+    }
+  ]
+}
