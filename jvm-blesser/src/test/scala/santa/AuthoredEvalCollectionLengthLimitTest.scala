@@ -10,7 +10,7 @@ import io.circe.Json
   *  - the authored tree: a collection-rooted row under `SizeOf` answers as the row (the same class, message and counter;
   *    its length at `SizeOfCost` more), every other row is its own bytes;
   *  - the files: new, their schema and slot, names unique; left out exactly the cost-limit rows and the repeats of a tree
-  *    and activated version in a file (the same outcome); a committed file is this generator's output;
+  *    and activated version in a file (the same outcome); a committed file begins with this generator's output;
   *  - the scripts are reproducible.
   */
 class AuthoredEvalCollectionLengthLimitTest extends munit.FunSuite {
@@ -81,10 +81,14 @@ class AuthoredEvalCollectionLengthLimitTest extends munit.FunSuite {
       repeats.map(r => s"${r.name} a${r.activated}").mkString(", "))
   }
 
-  test("a committed file is this generator's output") {
+  test("a committed file begins with this generator's output (a later addendum appends)") {
     val held = v.keys.toSeq.sorted.flatMap(op => B.committed(op).map(op -> _))
-    held.foreach { case (op, j) => assertEquals(j, v(op), op) }
-    println(s"committed: ${held.size} of ${v.size}")
+    held.foreach { case (op, j) =>
+      assertEquals(B.entriesOf(j).take(entries(op).size), entries(op), op)
+      assertEquals(j.hcursor.downField("entries").delete.focus, v(op).hcursor.downField("entries").delete.focus, op)
+    }
+    println(s"committed: ${held.size} of ${v.size}; appended to since: " +
+      held.filter { case (op, j) => B.entriesOf(j).size > entries(op).size }.map(_._1).mkString(", "))
   }
 
   test("reproducible scripts") {

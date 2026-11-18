@@ -1428,8 +1428,8 @@
       "version" : "v5"
     },
     "v5/authored/Coll.flatMap_length_limit.json" : {
-      "accepts" : 43,
-      "entries" : 67,
+      "accepts" : 56,
+      "entries" : 139,
       "methods" : [
         "12:14 SCollection.indices",
         "12:15 SCollection.flatMap",
@@ -1441,24 +1441,27 @@
         "BlockValue",
         "ConcreteCollection",
         "Const",
+        "EQ",
         "FuncValue",
+        "If",
         "MapCollection",
         "MethodCall",
         "SigmaPropBytes",
         "SizeOf",
         "Slice",
+        "Upcast",
         "ValDef",
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 24,
+      "rejects" : 83,
       "tree_shapes" : [
         {
-          "accepts" : 43,
+          "accepts" : 56,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 24,
+          "rejects" : 83,
           "tree_version" : 0
         }
       ],
@@ -7541,8 +7544,8 @@
       "version" : "v6"
     },
     "v6/authored/Coll.flatMap_length_limit_v6.json" : {
-      "accepts" : 90,
-      "entries" : 140,
+      "accepts" : 116,
+      "entries" : 284,
       "methods" : [
         "12:14 SCollection.indices",
         "12:15 SCollection.flatMap",
@@ -7554,32 +7557,35 @@
         "BlockValue",
         "ConcreteCollection",
         "Const",
+        "EQ",
         "FuncValue",
+        "If",
         "MapCollection",
         "MethodCall",
         "SigmaPropBytes",
         "SizeOf",
         "Slice",
+        "Upcast",
         "ValDef",
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 50,
+      "rejects" : 168,
       "tree_shapes" : [
         {
-          "accepts" : 43,
+          "accepts" : 56,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 24,
+          "rejects" : 83,
           "tree_version" : 0
         },
         {
-          "accepts" : 47,
+          "accepts" : 60,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 26,
+          "rejects" : 85,
           "tree_version" : 3
         }
       ],
@@ -21630,6 +21636,7 @@
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.eq_compared_count_coa.json",
         "v5/authored/Coll.eq_compared_count_generic.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class.json",
@@ -21659,6 +21666,7 @@
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
@@ -23072,6 +23080,7 @@
         "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.generic_producers_pairs.json",
@@ -23105,6 +23114,7 @@
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
@@ -25066,6 +25076,7 @@
       "families" : [
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/spec/Byte_methods_equivalence.json",
@@ -25076,6 +25087,7 @@
         "v5/spec/Long.toBigInt_method.json",
         "v5/spec/Short_methods_equivalence.json",
         "v6/authored/ArithOp.mixed_width.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
@@ -25665,12 +25677,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 22157,
+    "accepts" : 22196,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 49475,
+    "entries" : 49691,
     "files" : 480,
-    "rejects" : 27318,
+    "rejects" : 27495,
     "unwalked" : 2557
   }
 }

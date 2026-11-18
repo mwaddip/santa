@@ -76,8 +76,10 @@ object AuthoredEvalCollectionLengthLimit {
     def rowTreeHex: String = if (whole) bytes else header(bytes)
     def slug: String = name.replace(": ", "-").replace('|', '-').replaceAll("[^A-Za-z0-9.+_=-]", "_").replaceAll("_+", "_")
   }
-  def allRows(): Vector[Row] = {
-    val lines = new String(java.nio.file.Files.readAllBytes(RowsFile), "UTF-8").split("\n").toVector
+  def allRows(): Vector[Row] = rowsOf(RowsFile)
+  /** A rows file in the first request's 11 columns (the addendum's too), one Row per activated version. */
+  def rowsOf(file: java.nio.file.Path): Vector[Row] = {
+    val lines = new String(java.nio.file.Files.readAllBytes(file), "UTF-8").split("\n").toVector
     lines.drop(1).filter(_.trim.nonEmpty).map(_.split("\t", -1)).flatMap { c =>
       require(c.length == 11, s"11 columns: ${c.take(2).mkString(" ")}")
       val as = c(3) match { case "2 and 3" => Seq(2, 3); case a => Seq(a.toInt) }
@@ -105,6 +107,7 @@ object AuthoredEvalCollectionLengthLimit {
       case ("keep", _) => "Coll.length_kept_at_limit"
       case ("parse", _) => "Coll.declared_count_at_parse"
       case ("trees", _) => "Coll.length_limit_whole_trees"
+      case ("flat" | "fan", _) => "Coll.flatMap_length_limit" // the addendum (AuthoredEvalCollectionLengthLimit2)
     }
     base + (if (r.activated == 3) "_v6" else "")
   }
@@ -187,6 +190,7 @@ object AuthoredEvalCollectionLengthLimit {
     case ("keep", "xorMethod") => "`Global.xor`"
     case ("keep", "mapToInt") => "`Coll.map` (to an `Int`)"
     case ("keep", p) => s"`Coll.$p`"
+    case ("flat" | "fan", _) => "`Coll.flatMap`"
     case ("append", "method") => "`Coll.append`"
     case ("append", _) | (_, "append") => "`Append`"
     case (_, "flatMap") => "`Coll.flatMap`"
@@ -215,6 +219,28 @@ object AuthoredEvalCollectionLengthLimit {
       s"refused count: the reduction throws, in reach of any block. $Rule"
     case ("trees", _) => s"A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants ${r.fields(2)}) at the last accepted " +
       "count: it reduces to TrueProp."
+    // the addendum (santa-probe-collection-length-limit-2.md): when `flatMap` refuses, and the fan-out
+    case ("fan", _) => "THE FAN-OUT: every lambda call returns ONE shared collection (`v17.flatMap(x => v18)`, 65,536 " +
+      "calls), so the result's length grows with the calls at a price that does not; the jars refuse both lengths " +
+      s"(131,072 and 4,194,304 items) at the same counter, before `flatMap`'s own cost. $Rule A port without the limit " +
+      "holds the whole result before it answers."
+    case ("flat", "ERR/ERR") => r.fields(0) match {
+      case "long" | "pairNot" => "AN ITEM THE RESULT'S ARRAY CANNOT HOLD is refused at its part, before the next lambda " +
+        "runs, even after parts already past the limit (`ClassCastException`; a part holding no pairs under a pair " +
+        "result, `ArrayStoreException`): `Coll.flatMap` hands each part to an array builder of the result's item class " +
+        "as its lambda returns it (6.0.6 `CollsOverArrays.scala:70-73`). Which refusal, and the counter at it, are the row."
+      case "nestL" | "nestR" => "NESTED PAIRS: the left side is built before the right one, so a wrong component inside " +
+        "the LEFT side's pairs is refused before the length, one inside the RIGHT side's pairs only when the result is " +
+        "within the limit; over it, the length comes first. Which refusal, and the counter at it, are the row."
+      case _ => "A RESULT OF PAIRS: a component of another class is refused after the last lambda (`fromBoxedPairs` " +
+        "stores both components of every pair before a side is built), the left component before the right one, and " +
+        "before the length. Which refusal, and the counter at it, are the row."
+    }
+    case ("flat", "REFUSED") => "REFUSED FOR ITS LENGTH, LAST: `Coll.flatMap` builds the collection after its last part " +
+      s"(`fromArray`), so the length is checked after every part, at a counter without `flatMap`'s own cost. $Rule A port " +
+      "without the limit answers here."
+    case ("flat", _) => "A CONTROL: every part the lambda returns is of the result's class, within the limit (a part of " +
+      "another class sits behind `if (false)`)."
     case (_, "REFUSED") => s"REFUSED FOR ITS LENGTH: ${producer(r)} returns more than it was given, and its result is past " +
       s"100,000 items. $Rule A port without the limit answers here."
     case (_, "VALUE") => s"A CONTROL: ${producer(r)}'s result within 100,000 items (the last accepted count, or a result " +
