@@ -2,19 +2,23 @@ package santa
 
 import io.circe.Json
 
-/** Anchors the collection-length-limit addendum (when `flatMap` refuses, and the fan-out):
+/** Anchors a collection-length-limit addendum (AuthoredEvalCollectionLengthLimit2: when `flatMap` refuses, and the
+  * fan-out; AuthoredEvalCollectionLengthLimit3: a specialised or empty part of another class):
   *
   *  - every row agrees with the jars' own measurement: the outcome, the exception class and the item count its message
   *    names, the value, and the evaluator's counter, at the throw too;
   *  - every row is authored under `SizeOf` and answers as the row (the same class, message and counter; its length at
   *    `SizeOfCost` more);
-  *  - the files keep their 829693b entries and envelope first, unchanged (append-only); left out exactly the repeats
-  *    of a tree and activated version (the same outcome); no fan-out row above 64 items a call;
+  *  - the files keep the entries they held before the addendum and their envelope first, unchanged (append-only);
+  *    left out exactly the repeats of a tree and activated version (the same outcome);
+  *  - the first addendum: no fan-out row above 64 items a call;
   *  - the scripts are reproducible.
   */
-class AuthoredEvalCollectionLengthLimit2Test extends munit.FunSuite {
+abstract class AuthoredEvalCollectionLengthLimitAddendumTest(B: AuthoredEvalCollectionLengthLimitAddendum, stage: String)
+    extends munit.FunSuite {
   override val munitTimeout = scala.concurrent.duration.Duration(30, "min")
-  private val B = AuthoredEvalCollectionLengthLimit2
+  /** What the addendum's rows hold beyond the shared checks. */
+  protected def rowChecks(all: Vector[AuthoredEvalCollectionLengthLimit.Row]): Unit = ()
   private val E = AuthoredEvalCollectionLengthLimit
   private lazy val all = B.allRows()
   private lazy val plan = B.plan()
@@ -39,7 +43,7 @@ class AuthoredEvalCollectionLengthLimit2Test extends munit.FunSuite {
     println(s"${all.size} row-activations agree")
   }
 
-  test("every row under SizeOf answers as the row; no fan-out row above 64 items a call") {
+  test("every row under SizeOf answers as the row; the addendum's own row checks") {
     all.foreach { r =>
       val k = s"${r.name} a${r.activated}"
       assert(E.collectionRooted(r), k)
@@ -51,11 +55,10 @@ class AuthoredEvalCollectionLengthLimit2Test extends munit.FunSuite {
         assertEquals(w.counter, row.counter + E.SizeOfCost, k)
       } else assertEquals((w.what, w.msg, w.counter), (row.what, row.msg, row.counter), k)
     }
-    val fans = all.filter(_.section == "fan").map(_.fields(2)).distinct.sorted
-    assertEquals(fans, Vector("65536x2", "65536x64"))
+    rowChecks(all)
   }
 
-  test("the files keep their 829693b entries and envelope first, unchanged; left out the repeats (same outcome)") {
+  test("the files keep their entries before the addendum and envelope first, unchanged; left out the repeats") {
     assertEquals(v.keySet, B.Before.keySet)
     v.keys.foreach { op =>
       val before = B.base(op)
@@ -90,6 +93,23 @@ class AuthoredEvalCollectionLengthLimit2Test extends munit.FunSuite {
   }
 
   test("write staging files") {
-    B.writeVectors(java.nio.file.Paths.get("target", "eval-authored", "collection-length-limit-2"))
+    B.writeVectors(java.nio.file.Paths.get("target", "eval-authored", stage))
+  }
+}
+
+class AuthoredEvalCollectionLengthLimit2Test
+    extends AuthoredEvalCollectionLengthLimitAddendumTest(AuthoredEvalCollectionLengthLimit2, "collection-length-limit-2") {
+  override protected def rowChecks(all: Vector[AuthoredEvalCollectionLengthLimit.Row]): Unit = {
+    assertEquals(all.size, 216)
+    val fans = all.filter(_.section == "fan").map(_.fields(2)).distinct.sorted
+    assertEquals(fans, Vector("65536x2", "65536x64"), "no fan-out row above 64 items a call")
+  }
+}
+
+class AuthoredEvalCollectionLengthLimit3Test
+    extends AuthoredEvalCollectionLengthLimitAddendumTest(AuthoredEvalCollectionLengthLimit3, "collection-length-limit-3") {
+  override protected def rowChecks(all: Vector[AuthoredEvalCollectionLengthLimit.Row]): Unit = {
+    assertEquals(all.size, 132)
+    assertEquals(all.map(_.section).distinct, Vector("flat2"))
   }
 }

@@ -107,7 +107,7 @@ object AuthoredEvalCollectionLengthLimit {
       case ("keep", _) => "Coll.length_kept_at_limit"
       case ("parse", _) => "Coll.declared_count_at_parse"
       case ("trees", _) => "Coll.length_limit_whole_trees"
-      case ("flat" | "fan", _) => "Coll.flatMap_length_limit" // the addendum (AuthoredEvalCollectionLengthLimit2)
+      case ("flat" | "fan" | "flat2", _) => "Coll.flatMap_length_limit" // the addenda (AuthoredEvalCollectionLengthLimit2 / 3)
     }
     base + (if (r.activated == 3) "_v6" else "")
   }
@@ -190,7 +190,7 @@ object AuthoredEvalCollectionLengthLimit {
     case ("keep", "xorMethod") => "`Global.xor`"
     case ("keep", "mapToInt") => "`Coll.map` (to an `Int`)"
     case ("keep", p) => s"`Coll.$p`"
-    case ("flat" | "fan", _) => "`Coll.flatMap`"
+    case ("flat" | "fan" | "flat2", _) => "`Coll.flatMap`"
     case ("append", "method") => "`Coll.append`"
     case ("append", _) | (_, "append") => "`Append`"
     case (_, "flatMap") => "`Coll.flatMap`"
@@ -241,6 +241,15 @@ object AuthoredEvalCollectionLengthLimit {
       "without the limit answers here."
     case ("flat", _) => "A CONTROL: every part the lambda returns is of the result's class, within the limit (a part of " +
       "another class sits behind `if (false)`)."
+    // the second addendum (santa-probe-collection-length-limit-3.md): the part of another class is a specialised one
+    case ("flat2", "ERR/ERR") => "A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a " +
+      "primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under " +
+      "a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading " +
+      "its items differs here. Which refusal, and the counter at it, are the row."
+    case ("flat2", "REFUSED") => "AN EMPTY PART OF ANOTHER CLASS is taken (no item to store), so the right parts past the " +
+      s"limit are refused for the length, last. $Rule A port without the limit answers here."
+    case ("flat2", _) => "A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no " +
+      "item to store), within the limit."
     case (_, "REFUSED") => s"REFUSED FOR ITS LENGTH: ${producer(r)} returns more than it was given, and its result is past " +
       s"100,000 items. $Rule A port without the limit answers here."
     case (_, "VALUE") => s"A CONTROL: ${producer(r)}'s result within 100,000 items (the last accepted count, or a result " +

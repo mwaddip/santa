@@ -2673,6 +2673,828 @@
         "cost" : null,
         "error" : "errored"
       }
+    },
+    {
+      "name" : "flat2-longBytes-n3-2-v0-a2#139",
+      "script" : "[flat2: longBytes|n3|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n3-2-v0-a2#140",
+      "script" : "[flat2: longBools|n3|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n3-2-v0-a2#141",
+      "script" : "[flat2: longPairs|n3|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n3-2-v0-a2#142",
+      "script" : "[flat2: longEmptyBytes|n3|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 3758. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3758,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n3-12-v0-a2#143",
+      "script" : "[flat2: longBytes|n3|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n3-12-v0-a2#144",
+      "script" : "[flat2: longBools|n3|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n3-12-v0-a2#145",
+      "script" : "[flat2: longPairs|n3|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n3-12-v0-a2#146",
+      "script" : "[flat2: longEmptyBytes|n3|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 3 at cost 3791. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 3791,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n3-112-v0-a2#147",
+      "script" : "[flat2: longBytes|n3|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n3-112-v0-a2#148",
+      "script" : "[flat2: longBools|n3|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n3-112-v0-a2#149",
+      "script" : "[flat2: longPairs|n3|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n3-112-v0-a2#150",
+      "script" : "[flat2: longEmptyBytes|n3|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 6 at cost 3824. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 6
+        },
+        "cost" : 3824,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n3-211-v0-a2#151",
+      "script" : "[flat2: longBytes|n3|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n3-211-v0-a2#152",
+      "script" : "[flat2: longBools|n3|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n3-211-v0-a2#153",
+      "script" : "[flat2: longPairs|n3|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n3-211-v0-a2#154",
+      "script" : "[flat2: longEmptyBytes|n3|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 6 at cost 3824. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 6
+        },
+        "cost" : 3824,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-pairBytes-n3-2-v0-a2#155",
+      "script" : "[flat2: pairBytes|n3|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ArrayStoreException: java.lang.Byte). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501000c400500721c7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairEmptyBytes-n3-2-v0-a2#156",
+      "script" : "[flat2: pairEmptyBytes|n3|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 3758. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501000c400500721e7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3758,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-pairBytes-n3-112-v0-a2#157",
+      "script" : "[flat2: pairBytes|n3|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ArrayStoreException: java.lang.Byte). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501000c400500721c7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairEmptyBytes-n3-112-v0-a2#158",
+      "script" : "[flat2: pairEmptyBytes|n3|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 6 at cost 3824. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501000c400500721e7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 6
+        },
+        "cost" : 3824,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-pairBytes-n3-211-v0-a2#159",
+      "script" : "[flat2: pairBytes|n3|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ArrayStoreException: java.lang.Byte). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501000c400500721c7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairEmptyBytes-n3-211-v0-a2#160",
+      "script" : "[flat2: pairEmptyBytes|n3|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 6 at cost 3824. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b4721104000406d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501000c400500721e7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 6
+        },
+        "cost" : 3824,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n60000-2-v0-a2#161",
+      "script" : "[flat2: longBytes|n60000|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n60000-2-v0-a2#162",
+      "script" : "[flat2: longBools|n60000|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n60000-2-v0-a2#163",
+      "script" : "[flat2: longPairs|n60000|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n60000-2-v0-a2#164",
+      "script" : "[flat2: longEmptyBytes|n60000|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 1258887. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 1258887,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n60000-12-v0-a2#165",
+      "script" : "[flat2: longBytes|n60000|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n60000-12-v0-a2#166",
+      "script" : "[flat2: longBools|n60000|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n60000-12-v0-a2#167",
+      "script" : "[flat2: longPairs|n60000|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n60000-12-v0-a2#168",
+      "script" : "[flat2: longEmptyBytes|n60000|12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 60000 at cost 1333910. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f1002020401d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 60000
+        },
+        "cost" : 1333910,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n60000-112-v0-a2#169",
+      "script" : "[flat2: longBytes|n60000|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n60000-112-v0-a2#170",
+      "script" : "[flat2: longBools|n60000|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n60000-112-v0-a2#171",
+      "script" : "[flat2: longPairs|n60000|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n60000-112-v0-a2#172",
+      "script" : "[flat2: longEmptyBytes|n60000|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 120000 greater than 100000). AN EMPTY PART OF ANOTHER CLASS is taken (no item to store), so the right parts past the limit are refused for the length, last. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBytes-n60000-211-v0-a2#173",
+      "script" : "[flat2: longBytes|n60000|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501001100721c7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longBools-n60000-211-v0-a2#174",
+      "script" : "[flat2: longBools|n60000|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501001100721d7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longPairs-n60000-211-v0-a2#175",
+      "script" : "[flat2: longPairs|n60000|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Long). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d9012804959372280404950100110072147213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-longEmptyBytes-n60000-211-v0-a2#176",
+      "script" : "[flat2: longEmptyBytes|n60000|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 120000 greater than 100000). AN EMPTY PART OF ANOTHER CLASS is taken (no item to store), so the right parts past the limit are refused for the length, last. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501001100721e7213",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairBytes-n60000-2-v0-a2#177",
+      "script" : "[flat2: pairBytes|n60000|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ArrayStoreException: java.lang.Byte). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501000c400500721c7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairEmptyBytes-n60000-2-v0-a2#178",
+      "script" : "[flat2: pairEmptyBytes|n60000|2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 1258887. A CONTROL: every part is taken (of the result's class, or an EMPTY part of another class: no item to store), within the limit. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f10010401d90128049593722804049501000c400500721e7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 1258887,
+        "error" : null
+      }
+    },
+    {
+      "name" : "flat2-pairBytes-n60000-112-v0-a2#179",
+      "script" : "[flat2: pairBytes|n60000|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ArrayStoreException: java.lang.Byte). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501000c400500721c7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairEmptyBytes-n60000-112-v0-a2#180",
+      "script" : "[flat2: pairEmptyBytes|n60000|112|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 120000 greater than 100000). AN EMPTY PART OF ANOTHER CLASS is taken (no item to store), so the right parts past the limit are refused for the length, last. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100302020401d90128049593722804049501000c400500721e7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairBytes-n60000-211-v0-a2#181",
+      "script" : "[flat2: pairBytes|n60000|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (ArrayStoreException: java.lang.Byte). A SPECIALISED PART OF ANOTHER CLASS (a `Coll[Byte]` or `Coll[Boolean]` constant, a primitive array; or 3 pairs by `zip`): refused at its part when its items are stored (`ClassCastException`; under a pair result, `ArrayStoreException`), over the limit too. A port that judges a part by its class without reading its items differs here. Which refusal, and the counter at it, are the row. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501000c400500721c7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "flat2-pairEmptyBytes-n60000-211-v0-a2#182",
+      "script" : "[flat2: pairEmptyBytes|n60000|211|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 120000 greater than 100000). AN EMPTY PART OF ANOTHER CLASS is taken (no item to store), so the right parts past the limit are refused for the length, last. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d81ed601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b47211040004c0a907d613ad7212d90128047e722805d614dc0c1d7212017213d615dc0c1d7212017212d616dc0c1d7213017213d617dc0c1d7213017212d618dc0c1d7214017212d619dc0c1d7215017212d61adc0c1d7212017214d61bdc0c1d7212017215d61c0e03010101d61d0d0307d61e0e00dc0c0f100304020201d90128049593722804049501000c400500721e7214",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
     }
   ]
 }

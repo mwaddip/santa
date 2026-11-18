@@ -45,8 +45,8 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 49,691 entries across 480 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 47,603
+- ✅ **A blessed eval corpus — 49,823 entries across 480 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 47,735
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
   spends; 9,440 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
@@ -57,8 +57,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (15,241 — the cumulative
-  v5/mainnet method surface) and **v6** (34,432 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (15,285 — the cumulative
+  v5/mainnet method surface) and **v6** (34,520 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -328,7 +328,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - `flatMap` builds its result part by part: an item the result's array cannot hold is refused at its part, before
     the next lambda runs; a pair component of another class after the last lambda (the left before the right); the
     length last. One shared collection returned by every call makes a result of any length at a price that does not
-    grow with it (the fan-out, at 131,072 and 4,194,304 items).
+    grow with it (the fan-out, at 131,072 and 4,194,304 items). A specialised part of another class (a `Coll[Byte]`
+    or `Coll[Boolean]` constant, pairs by `zip`) is refused at its part too, its items read; an empty one is taken.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

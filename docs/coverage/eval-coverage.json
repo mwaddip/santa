@@ -1428,8 +1428,8 @@
       "version" : "v5"
     },
     "v5/authored/Coll.flatMap_length_limit.json" : {
-      "accepts" : 56,
-      "entries" : 139,
+      "accepts" : 66,
+      "entries" : 183,
       "methods" : [
         "12:14 SCollection.indices",
         "12:15 SCollection.flatMap",
@@ -1454,14 +1454,14 @@
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 83,
+      "rejects" : 117,
       "tree_shapes" : [
         {
-          "accepts" : 56,
+          "accepts" : 66,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 83,
+          "rejects" : 117,
           "tree_version" : 0
         }
       ],
@@ -7544,8 +7544,8 @@
       "version" : "v6"
     },
     "v6/authored/Coll.flatMap_length_limit_v6.json" : {
-      "accepts" : 116,
-      "entries" : 284,
+      "accepts" : 136,
+      "entries" : 372,
       "methods" : [
         "12:14 SCollection.indices",
         "12:15 SCollection.flatMap",
@@ -7570,22 +7570,22 @@
         "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 168,
+      "rejects" : 236,
       "tree_shapes" : [
         {
-          "accepts" : 56,
+          "accepts" : 66,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 83,
+          "rejects" : 117,
           "tree_version" : 0
         },
         {
-          "accepts" : 60,
+          "accepts" : 70,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 85,
+          "rejects" : 119,
           "tree_version" : 3
         }
       ],
@@ -25677,12 +25677,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 22196,
+    "accepts" : 22226,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 49691,
+    "entries" : 49823,
     "files" : 480,
-    "rejects" : 27495,
+    "rejects" : 27597,
     "unwalked" : 2557
   }
 }
