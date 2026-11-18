@@ -1,0 +1,866 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.length_limit_whole_trees_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "trees-append-at-inline-v0-a3#0",
+      "script" : "[trees: append|at|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 8054. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b47211040004000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 8054,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-append-at-inline-v3-a3#1",
+      "script" : "[trees: append|at|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 8054. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9001d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b47211040004000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 8054,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-append-over-inline-v0-a3#2",
+      "script" : "[trees: append|over|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-append-over-inline-v3-a3#3",
+      "script" : "[trees: append|over|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9001d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-flatMap-at-inline-v0-a3#4",
+      "script" : "[trees: flatMap|at|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 1879361. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d9012802830202722872280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 1879361,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-flatMap-at-inline-v3-a3#5",
+      "script" : "[trees: flatMap|at|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 1879361. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9401d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d9012802830202722872280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 1879361,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-flatMap-over-inline-v0-a3#6",
+      "script" : "[trees: flatMap|over|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d9012802830202722872280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-flatMap-over-inline-v3-a3#7",
+      "script" : "[trees: flatMap|over|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9401d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d9012802830202722872280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-patch-at-inline-v0-a3#8",
+      "script" : "[trees: patch|at|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 26080. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b472110400040204020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26080,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-patch-at-inline-v3-a3#9",
+      "script" : "[trees: patch|at|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 26080. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9701d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b472110400040204020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26080,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-patch-over-inline-v0-a3#10",
+      "script" : "[trees: patch|over|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b472110400040204000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-patch-over-inline-v3-a3#11",
+      "script" : "[trees: patch|over|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9701d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b472110400040204000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-serialize-at-inline-v3-a3#12",
+      "script" : "[trees: serialize|at|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 105364. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9601d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc6a03dd0183020eb47211040004a08d06b47211040004928d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 105364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-serialize-over-inline-v3-a3#13",
+      "script" : "[trees: serialize|over|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9601d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc6a03dd0183020eb47211040004a08d06b47211040004948d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-propBytes-at-inline-v0-a3#14",
+      "script" : "[trees: propBytes|at|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), Va…` — TrueProp at cost 24996. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd0720c0400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 24996,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-propBytes-at-inline-v3-a3#15",
+      "script" : "[trees: propBytes|at|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), Va…` — TrueProp at cost 24996. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8701d191b1d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd0720c0400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 24996,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-propBytes-over-inline-v0-a3#16",
+      "script" : "[trees: propBytes|over|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), Va…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd0720d0400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-propBytes-over-inline-v3-a3#17",
+      "script" : "[trees: propBytes|over|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), Va…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8f01d191b1d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd0720d0400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-subst-at-inline-v0-a3#18",
+      "script" : "[trees: subst|at|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 5647. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004808d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 5647,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-subst-at-inline-v3-a3#19",
+      "script" : "[trees: subst|at|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — TrueProp at cost 5647. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0ba401d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004808d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 5647,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-subst-over-inline-v0-a3#20",
+      "script" : "[trees: subst|over|inline|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004828d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-subst-over-inline-v3-a3#21",
+      "script" : "[trees: subst|over|inline|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appen…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants inline) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0ba401d191b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004828d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-append-at-seg-v0-a3#22",
+      "script" : "[trees: append|at|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(4,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 8030. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "1006040004c09a04040004000e01010400d191b1d811d6017304d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b4721173007301b47211730273037305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 8030,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-append-at-seg-v3-a3#23",
+      "script" : "[trees: append|at|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(4,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 8030. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "1b9d0106040004c09a04040004000e01010400d191b1d811d6017304d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b4721173007301b47211730273037305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 8030,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-append-over-seg-v0-a3#24",
+      "script" : "[trees: append|over|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(4,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "1006040004c09a04040004020e01010400d191b1d811d6017304d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b4721173007301b47211730273037305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-append-over-seg-v3-a3#25",
+      "script" : "[trees: append|over|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(4,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "1b9d0106040004c09a04040004020e01010400d191b1d811d6017304d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b4721173007301b47211730273037305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-flatMap-at-seg-v0-a3#26",
+      "script" : "[trees: flatMap|at|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(2,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 1879345. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "1004040004a08d060e01010400d191b1d811d6017302d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472117300730101d9012802830202722872287303",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 1879345,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-flatMap-at-seg-v3-a3#27",
+      "script" : "[trees: flatMap|at|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(2,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 1879345. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "1b9d0104040004a08d060e01010400d191b1d811d6017302d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472117300730101d9012802830202722872287303",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 1879345,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-flatMap-over-seg-v0-a3#28",
+      "script" : "[trees: flatMap|over|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(2,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "1004040004a28d060e01010400d191b1d811d6017302d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472117300730101d9012802830202722872287303",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-flatMap-over-seg-v3-a3#29",
+      "script" : "[trees: flatMap|over|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(2,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "1b9d0104040004a28d060e01010400d191b1d811d6017302d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472117300730101d9012802830202722872287303",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-patch-at-seg-v0-a3#30",
+      "script" : "[trees: patch|at|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 26048. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "1008040004c09a0404000400040204020e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b4721173007301037302b472117303730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26048,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-patch-at-seg-v3-a3#31",
+      "script" : "[trees: patch|at|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 26048. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "1ba80108040004c09a0404000400040204020e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b4721173007301037302b472117303730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 26048,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-patch-over-seg-v0-a3#32",
+      "script" : "[trees: patch|over|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "1008040004c09a0404000400040204000e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b4721173007301037302b472117303730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-patch-over-seg-v3-a3#33",
+      "script" : "[trees: patch|over|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "1ba80108040004c09a0404000400040204000e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b4721173007301037302b472117303730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-serialize-at-seg-v3-a3#34",
+      "script" : "[trees: serialize|at|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(4,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 105340. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "1ba30106040004a08d06040004928d060e01010400d191b1d811d6017304d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc6a03dd0183020eb4721173007301b47211730273037305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 105340,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-serialize-over-seg-v3-a3#35",
+      "script" : "[trees: serialize|over|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(4,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "1ba30106040004a08d06040004948d060e01010400d191b1d811d6017304d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc6a03dd0183020eb4721173007301b47211730273037305",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-propBytes-at-seg-v0-a3#36",
+      "script" : "[trees: propBytes|at|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(0,SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValDef(3,WrappedA…` — TrueProp at cost 24988. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "100208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980400d191b1d80cd6017300d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd0720c7301",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 24988,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-propBytes-at-seg-v3-a3#37",
+      "script" : "[trees: propBytes|at|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(0,SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValDef(3,WrappedA…` — TrueProp at cost 24988. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "1b8c010208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980400d191b1d80cd6017300d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd0720c7301",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 24988,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-propBytes-over-seg-v0-a3#38",
+      "script" : "[trees: propBytes|over|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(0,SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValDef(3,WrappedA…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "100208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980400d191b1d80dd6017300d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd0720d7301",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-propBytes-over-seg-v3-a3#39",
+      "script" : "[trees: propBytes|over|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(0,SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValDef(3,WrappedA…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "1b94010208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980400d191b1d80dd6017300d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd0720d7301",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-subst-at-seg-v0-a3#40",
+      "script" : "[trees: subst|at|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 5615. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v0, activated 3",
+      "tree_bytes_hex" : "10080e0c10020e000e00d1937300730110020002040004a08d06040004808d060e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210747300730183020eb4721173027303b47211730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 5615,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-subst-at-seg-v3-a3#41",
+      "script" : "[trees: subst|at|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — TrueProp at cost 5615. A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the last accepted count: it reduces to TrueProp.  // tree v3, activated 3",
+      "tree_bytes_hex" : "1bb501080e0c10020e000e00d1937300730110020002040004a08d06040004808d060e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210747300730183020eb4721173027303b47211730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "d3"
+        },
+        "cost" : 5615,
+        "error" : null
+      }
+    },
+    {
+      "name" : "trees-subst-over-seg-v0-a3#42",
+      "script" : "[trees: subst|over|seg|v0] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 3",
+      "tree_bytes_hex" : "10080e0c10020e000e00d1937300730110020002040004a08d06040004828d060e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210747300730183020eb4721173027303b47211730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "trees-subst-over-seg-v3-a3#43",
+      "script" : "[trees: subst|over|seg|v3] `BoolToSigmaProp(GT(SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantPlaceholder(6,Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Appe…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). A WHOLE TREE `sigmaProp(<producer>.size > 0)` (constants seg) at the first refused count: the reduction throws, in reach of any block. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v3, activated 3",
+      "tree_bytes_hex" : "1bb501080e0c10020e000e00d1937300730110020002040004a08d06040004828d060e01010400d191b1d811d6017306d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210747300730183020eb4721173027303b47211730473057307",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

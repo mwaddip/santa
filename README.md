@@ -45,8 +45,8 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 47,725 entries across 459 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 45,637
+- ✅ **A blessed eval corpus — 49,475 entries across 480 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 47,387
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
   spends; 9,440 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
@@ -57,8 +57,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (14,607 — the cumulative
-  v5/mainnet method surface) and **v6** (33,100 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (15,169 — the cumulative
+  v5/mainnet method surface) and **v6** (34,288 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -313,6 +313,18 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     tier adds the chunk boundaries over ten producers, 65,536 and 65,537 items, nested AND / OR, the kinds with no
     data form as an item, and the other callers of the counting `addSeqCost` (`indexOf`, `flatMap`, collection
     equality, `substConstants`).
+
+  **A collection holds at most 100,000 items** (`collection-length-limit`, 44 entries at block version 4 and 20 at
+  block version 3): sigma-rust's whole trees `sigmaProp(<producer>.size > 0)` for the six producers that can return
+  more than they were given (`Append`, `Coll.flatMap`, `Coll.patch`, `Global.serialize`, `SigmaPropBytes`,
+  `SubstConstants`), at the last accepted and the first refused count, constants inline and segregated, in a plain box.
+  - The collection class's constructor refuses more than 100,000 items (`MaxArrayLength`), and `append` checks the
+    sum before it copies, so the refused tree throws in the reduction and the box does not spend. The accepted
+    `append` tree costs 805: the refused one is in reach of any block.
+  - The eval tier adds every class of collection at the boundary (100,000 items accepted, 100,001 refused), the
+    length-keeping operations on exactly 100,000 items, the method forms (`NoSuchMethodException` at any length), two
+    refusals at once, and the declared counts at parse. A row whose root is a collection is authored under `SizeOf`:
+    the collection is built first, so a refusal is the row's own, and the value is its length.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

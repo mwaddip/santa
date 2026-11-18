@@ -1,0 +1,83 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "SubstConstants.length_limit",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "grow-subst-100000-v0-a2#0",
+      "script" : "[grow: subst|100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 5607. A CONTROL: `SubstConstants`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004808d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5607,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-subst-100001-v0-a2#1",
+      "script" : "[grow: subst|100001|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `SubstConstants` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004828d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-subst-131086-v0-a2#2",
+      "script" : "[grow: subst|131086|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 131086 greater than 100000). REFUSED FOR ITS LENGTH: `SubstConstants` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210740e0c10020e000e00d193730073011002000283020eb47211040004feff07b47211040004feff07",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-subst-size-100001-v0-a2#3",
+      "script" : "[grow: subst|size|100001|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `SubstConstants` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1740e0c10020e000e00d193730073011002000283020eb47211040004a08d06b47211040004828d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

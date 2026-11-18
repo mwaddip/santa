@@ -1,0 +1,1697 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.patch_length_limit",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "grow-patch-bytes-100000_0+1-0-v0-a2#0",
+      "script" : "[grow: patch|bytes|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-100000_0+1-1-v0-a2#1",
+      "script" : "[grow: patch|bytes|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-100000_end+1-0-v0-a2#2",
+      "script" : "[grow: patch|bytes|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-50001_0+50000-0-v0-a2#3",
+      "script" : "[grow: patch|bytes|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-50000_0+50000-0-v0-a2#4",
+      "script" : "[grow: patch|bytes|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-100000_0+100000-all-v0-a2#5",
+      "script" : "[grow: patch|bytes|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-100000_0+100000-0-v0-a2#6",
+      "script" : "[grow: patch|bytes|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bytes-99999_0+1-0-v0-a2#7",
+      "script" : "[grow: patch|bytes|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bools-100000_0+1-0-v0-a2#8",
+      "script" : "[grow: patch|bools|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bools-100000_0+1-1-v0-a2#9",
+      "script" : "[grow: patch|bools|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bools-100000_end+1-0-v0-a2#10",
+      "script" : "[grow: patch|bools|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bools-50001_0+50000-0-v0-a2#11",
+      "script" : "[grow: patch|bools|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bools-50000_0+50000-0-v0-a2#12",
+      "script" : "[grow: patch|bools|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bools-100000_0+100000-all-v0-a2#13",
+      "script" : "[grow: patch|bools|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-bools-100000_0+100000-0-v0-a2#14",
+      "script" : "[grow: patch|bools|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-bools-99999_0+1-0-v0-a2#15",
+      "script" : "[grow: patch|bools|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-ints-100000_0+1-0-v0-a2#16",
+      "script" : "[grow: patch|ints|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-ints-100000_0+1-1-v0-a2#17",
+      "script" : "[grow: patch|ints|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-ints-100000_end+1-0-v0-a2#18",
+      "script" : "[grow: patch|ints|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-ints-50001_0+50000-0-v0-a2#19",
+      "script" : "[grow: patch|ints|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-ints-50000_0+50000-0-v0-a2#20",
+      "script" : "[grow: patch|ints|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-ints-100000_0+100000-all-v0-a2#21",
+      "script" : "[grow: patch|ints|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-ints-100000_0+100000-0-v0-a2#22",
+      "script" : "[grow: patch|ints|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-ints-99999_0+1-0-v0-a2#23",
+      "script" : "[grow: patch|ints|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-longs-100000_0+1-0-v0-a2#24",
+      "script" : "[grow: patch|longs|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-longs-100000_0+1-1-v0-a2#25",
+      "script" : "[grow: patch|longs|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-longs-100000_end+1-0-v0-a2#26",
+      "script" : "[grow: patch|longs|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-longs-50001_0+50000-0-v0-a2#27",
+      "script" : "[grow: patch|longs|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-longs-50000_0+50000-0-v0-a2#28",
+      "script" : "[grow: patch|longs|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-longs-100000_0+100000-all-v0-a2#29",
+      "script" : "[grow: patch|longs|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-longs-100000_0+100000-0-v0-a2#30",
+      "script" : "[grow: patch|longs|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-longs-99999_0+1-0-v0-a2#31",
+      "script" : "[grow: patch|longs|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-100000_0+1-0-v0-a2#32",
+      "script" : "[grow: patch|pairs|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-100000_0+1-1-v0-a2#33",
+      "script" : "[grow: patch|pairs|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-100000_end+1-0-v0-a2#34",
+      "script" : "[grow: patch|pairs|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-50001_0+50000-0-v0-a2#35",
+      "script" : "[grow: patch|pairs|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-50000_0+50000-0-v0-a2#36",
+      "script" : "[grow: patch|pairs|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-100000_0+100000-all-v0-a2#37",
+      "script" : "[grow: patch|pairs|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-100000_0+100000-0-v0-a2#38",
+      "script" : "[grow: patch|pairs|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-pairs-99999_0+1-0-v0-a2#39",
+      "script" : "[grow: patch|pairs|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-100000_0+1-0-v0-a2#40",
+      "script" : "[grow: patch|collbytes|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-100000_0+1-1-v0-a2#41",
+      "script" : "[grow: patch|collbytes|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-100000_end+1-0-v0-a2#42",
+      "script" : "[grow: patch|collbytes|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-50001_0+50000-0-v0-a2#43",
+      "script" : "[grow: patch|collbytes|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-50000_0+50000-0-v0-a2#44",
+      "script" : "[grow: patch|collbytes|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-100000_0+100000-all-v0-a2#45",
+      "script" : "[grow: patch|collbytes|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-100000_0+100000-0-v0-a2#46",
+      "script" : "[grow: patch|collbytes|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-collbytes-99999_0+1-0-v0-a2#47",
+      "script" : "[grow: patch|collbytes|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-100000_0+1-0-v0-a2#48",
+      "script" : "[grow: patch|sigmaprops|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-100000_0+1-1-v0-a2#49",
+      "script" : "[grow: patch|sigmaprops|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 26040. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26040,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-100000_end+1-0-v0-a2#50",
+      "script" : "[grow: patch|sigmaprops|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304c09a0cb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-50001_0+50000-0-v0-a2#51",
+      "script" : "[grow: patch|sigmaprops|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a28d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-50000_0+50000-0-v0-a2#52",
+      "script" : "[grow: patch|sigmaprops|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 25321. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b47211040004a08d06030400b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 25321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-100000_0+100000-all-v0-a2#53",
+      "script" : "[grow: patch|sigmaprops|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 48751. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 48751,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-100000_0+100000-0-v0-a2#54",
+      "script" : "[grow: patch|sigmaprops|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a04030400b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-sigmaprops-99999_0+1-0-v0-a2#55",
+      "script" : "[grow: patch|sigmaprops|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 26038. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004be9a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26038,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-indices-100000_0+1-0-v0-a2#56",
+      "script" : "[grow: patch|indices|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004c09a04030400db0c0eb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-indices-100000_0+1-1-v0-a2#57",
+      "script" : "[grow: patch|indices|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 38590. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004c09a04030400db0c0eb47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 38590,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-indices-100000_end+1-0-v0-a2#58",
+      "script" : "[grow: patch|indices|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004c09a040304c09a0cdb0c0eb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-indices-50001_0+50000-0-v0-a2#59",
+      "script" : "[grow: patch|indices|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb47211040004a28d06030400db0c0eb47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-indices-50000_0+50000-0-v0-a2#60",
+      "script" : "[grow: patch|indices|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 37869. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb47211040004a08d06030400db0c0eb47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 37869,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-indices-100000_0+100000-all-v0-a2#61",
+      "script" : "[grow: patch|indices|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 73799. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004c09a04030400db0c0eb37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 73799,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-indices-100000_0+100000-0-v0-a2#62",
+      "script" : "[grow: patch|indices|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004c09a04030400db0c0eb37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-indices-99999_0+1-0-v0-a2#63",
+      "script" : "[grow: patch|indices|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 38588. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004be9a04030400db0c0eb47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 38588,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-zip-100000_0+1-0-v0-a2#64",
+      "script" : "[grow: patch|zip|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04030400dc0c1db472110400040201b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-zip-100000_0+1-1-v0-a2#65",
+      "script" : "[grow: patch|zip|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 38836. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04030400dc0c1db472110400040201b47211040004020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 38836,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-zip-100000_end+1-0-v0-a2#66",
+      "script" : "[grow: patch|zip|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004c09a0401b37211b47211040004c09a040304c09a0cdc0c1db472110400040201b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-zip-50001_0+50000-0-v0-a2#67",
+      "script" : "[grow: patch|zip|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db47211040004a28d0601b47211040004a28d06030400dc0c1db47211040004a08d0601b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-zip-50000_0+50000-0-v0-a2#68",
+      "script" : "[grow: patch|zip|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 37399. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db47211040004a08d0601b47211040004a08d06030400dc0c1db47211040004a08d0601b47211040004a08d060400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 37399,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-zip-100000_0+100000-all-v0-a2#69",
+      "script" : "[grow: patch|zip|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 74259. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04030400dc0c1db37211b47211040004c09a0401b37211b47211040004c09a0404c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 74259,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-zip-100000_0+100000-0-v0-a2#70",
+      "script" : "[grow: patch|zip|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04030400dc0c1db37211b47211040004c09a0401b37211b47211040004c09a040400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-zip-99999_0+1-0-v0-a2#71",
+      "script" : "[grow: patch|zip|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 38834. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004be9a0401b37211b47211040004be9a04030400dc0c1db472110400040201b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 38834,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-map-100000_0+1-0-v0-a2#72",
+      "script" : "[grow: patch|map|100000@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d90128027228030400adb4721104000402d901280272280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-map-100000_0+1-1-v0-a2#73",
+      "script" : "[grow: patch|map|100000@0+1-1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1036101. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d90128027228030400adb4721104000402d901280272280402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1036101,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-map-100000_end+1-0-v0-a2#74",
+      "script" : "[grow: patch|map|100000@end+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d901280272280304c09a0cadb4721104000402d901280272280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-map-50001_0+50000-0-v0-a2#75",
+      "script" : "[grow: patch|map|50001@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100001 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb47211040004a28d06d90128027228030400adb47211040004a08d06d901280272280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-map-50000_0+50000-0-v0-a2#76",
+      "script" : "[grow: patch|map|50000@0+50000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1035371. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb47211040004a08d06d90128027228030400adb47211040004a08d06d901280272280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1035371,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-map-100000_0+100000-all-v0-a2#77",
+      "script" : "[grow: patch|map|100000@0+100000-all|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 2068801. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d90128027228030400adb37211b47211040004c09a04d9012802722804c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 2068801,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-patch-map-100000_0+100000-0-v0-a2#78",
+      "script" : "[grow: patch|map|100000@0+100000-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.patch` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d90128027228030400adb37211b47211040004c09a04d901280272280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-patch-map-99999_0+1-0-v0-a2#79",
+      "script" : "[grow: patch|map|99999@0+1-0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1036089. A CONTROL: `Coll.patch`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004be9a04d90128027228030400adb4721104000402d901280272280400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1036089,
+        "error" : null
+      }
+    },
+    {
+      "name" : "both-patch-bytes+ints-over-v0-a2#80",
+      "script" : "[both: patch|bytes+ints|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class [I cannot be cast to class [B). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304001001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-patch-bytes+ints-at-v0-a2#81",
+      "script" : "[both: patch|bytes+ints|at|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class [I cannot be cast to class [B). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13b37211b47211040004c09a040304001001020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-patch-indices+bytes-over-v0-a2#82",
+      "script" : "[both: patch|indices+bytes|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class [B cannot be cast to class [I). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13db0c0eb37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-patch-zip+bytes-over-v0-a2#83",
+      "script" : "[both: patch|zip+bytes|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.PrimitiveType cannot be cast to class sigma.data.PairType). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04030400b47211040004020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-patch-map+ints-over-v0-a2#84",
+      "script" : "[both: patch|map+ints|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Byte). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d901280272280304001001020400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-patch-map+ints-at-v0-a2#85",
+      "script" : "[both: patch|map+ints|at|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Byte). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d901280272280304001001020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-patch-map+empty-ints-at-v0-a2#86",
+      "script" : "[both: patch|map+empty-ints|at|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1036041. TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c13adb37211b47211040004c09a04d9012802722803040010000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1036041,
+        "error" : null
+      }
+    }
+  ]
+}

@@ -1,0 +1,1343 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.flatMap_length_limit",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "grow-flatMap-bytes-50000x2-v0-a2#0",
+      "script" : "[grow: flatMap|bytes|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bytes-50001x2-v0-a2#1",
+      "script" : "[grow: flatMap|bytes|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-bytes-100000x2-v0-a2#2",
+      "script" : "[grow: flatMap|bytes|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-bytes-100000x1-v0-a2#3",
+      "script" : "[grow: flatMap|bytes|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d90128028301027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bytes-100000x0-v0-a2#4",
+      "script" : "[grow: flatMap|bytes|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d9012802830002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bytes-0x2-v0-a2#5",
+      "script" : "[grow: flatMap|bytes|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bools-50000x2-v0-a2#6",
+      "script" : "[grow: flatMap|bools|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280183020172287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bools-50001x2-v0-a2#7",
+      "script" : "[grow: flatMap|bools|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280183020172287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-bools-100000x2-v0-a2#8",
+      "script" : "[grow: flatMap|bools|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280183020172287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-bools-100000x1-v0-a2#9",
+      "script" : "[grow: flatMap|bools|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d90128018301017228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bools-100000x0-v0-a2#10",
+      "script" : "[grow: flatMap|bools|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d9012801830001",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-bools-0x2-v0-a2#11",
+      "script" : "[grow: flatMap|bools|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901280183020172287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-ints-50000x2-v0-a2#12",
+      "script" : "[grow: flatMap|ints|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-ints-50001x2-v0-a2#13",
+      "script" : "[grow: flatMap|ints|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-ints-100000x2-v0-a2#14",
+      "script" : "[grow: flatMap|ints|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-ints-100000x1-v0-a2#15",
+      "script" : "[grow: flatMap|ints|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d90128048301047228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-ints-100000x0-v0-a2#16",
+      "script" : "[grow: flatMap|ints|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d9012804830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-ints-0x2-v0-a2#17",
+      "script" : "[grow: flatMap|ints|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-longs-50000x2-v0-a2#18",
+      "script" : "[grow: flatMap|longs|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280583020572287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-longs-50001x2-v0-a2#19",
+      "script" : "[grow: flatMap|longs|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280583020572287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-longs-100000x2-v0-a2#20",
+      "script" : "[grow: flatMap|longs|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280583020572287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-longs-100000x1-v0-a2#21",
+      "script" : "[grow: flatMap|longs|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d90128058301057228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-longs-100000x0-v0-a2#22",
+      "script" : "[grow: flatMap|longs|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d9012805830005",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-longs-0x2-v0-a2#23",
+      "script" : "[grow: flatMap|longs|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901280583020572287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-pairs-50000x2-v0-a2#24",
+      "script" : "[grow: flatMap|pairs|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901285883025872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-pairs-50001x2-v0-a2#25",
+      "script" : "[grow: flatMap|pairs|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901285883025872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-pairs-100000x2-v0-a2#26",
+      "script" : "[grow: flatMap|pairs|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901285883025872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-pairs-100000x1-v0-a2#27",
+      "script" : "[grow: flatMap|pairs|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d90128588301587228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-pairs-100000x0-v0-a2#28",
+      "script" : "[grow: flatMap|pairs|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d9012858830058",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-pairs-0x2-v0-a2#29",
+      "script" : "[grow: flatMap|pairs|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901285883025872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-50000x2-v0-a2#30",
+      "script" : "[grow: flatMap|collbytes|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280e83020e72287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-50001x2-v0-a2#31",
+      "script" : "[grow: flatMap|collbytes|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280e83020e72287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-100000x2-v0-a2#32",
+      "script" : "[grow: flatMap|collbytes|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280e83020e72287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-100000x1-v0-a2#33",
+      "script" : "[grow: flatMap|collbytes|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280e83010e7228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-100000x0-v0-a2#34",
+      "script" : "[grow: flatMap|collbytes|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280e83000e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-0x2-v0-a2#35",
+      "script" : "[grow: flatMap|collbytes|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901280e83020e72287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-50000x2-v0-a2#36",
+      "script" : "[grow: flatMap|sigmaprops|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 1879321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280883020872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1879321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-50001x2-v0-a2#37",
+      "script" : "[grow: flatMap|sigmaprops|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280883020872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-100000x2-v0-a2#38",
+      "script" : "[grow: flatMap|sigmaprops|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d901280883020872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-100000x1-v0-a2#39",
+      "script" : "[grow: flatMap|sigmaprops|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 3131036. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d90128088301087228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3131036,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-100000x0-v0-a2#40",
+      "script" : "[grow: flatMap|sigmaprops|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 0 at cost 2506046. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb37211b47211040004c09a0401d9012808830008",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2506046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-0x2-v0-a2#41",
+      "script" : "[grow: flatMap|sigmaprops|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 0 at cost 3333. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb472110400040001d901280883020872287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3333,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-indices-50000x2-v0-a2#42",
+      "script" : "[grow: flatMap|indices|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1885595. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdb0c0eb47211040004a08d0601d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1885595,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-indices-50001x2-v0-a2#43",
+      "script" : "[grow: flatMap|indices|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdb0c0eb47211040004a28d0601d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-indices-100000x2-v0-a2#44",
+      "script" : "[grow: flatMap|indices|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdb0c0eb37211b47211040004c09a0401d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-indices-100000x1-v0-a2#45",
+      "script" : "[grow: flatMap|indices|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 3143560. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdb0c0eb37211b47211040004c09a0401d90128048301047228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3143560,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-indices-100000x0-v0-a2#46",
+      "script" : "[grow: flatMap|indices|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 2518570. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdb0c0eb37211b47211040004c09a0401d9012804830004",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2518570,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-indices-0x2-v0-a2#47",
+      "script" : "[grow: flatMap|indices|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3359. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdb0c0eb472110400040001d901280483020472287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3359,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-zip-50000x2-v0-a2#48",
+      "script" : "[grow: flatMap|zip|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1885360. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdc0c1db47211040004a08d0601b47211040004a08d0601d901285683025672287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1885360,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-zip-50001x2-v0-a2#49",
+      "script" : "[grow: flatMap|zip|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdc0c1db47211040004a28d0601b47211040004a28d0601d901285683025672287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-zip-100000x2-v0-a2#50",
+      "script" : "[grow: flatMap|zip|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdc0c1db37211b47211040004c09a0401b37211b47211040004c09a0401d901285683025672287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-zip-100000x1-v0-a2#51",
+      "script" : "[grow: flatMap|zip|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 3143790. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdc0c1db37211b47211040004c09a0401b37211b47211040004c09a0401d90128568301567228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 3143790,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-zip-100000x0-v0-a2#52",
+      "script" : "[grow: flatMap|zip|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 2518800. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdc0c1db37211b47211040004c09a0401b37211b47211040004c09a0401d9012856830056",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 2518800,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-zip-0x2-v0-a2#53",
+      "script" : "[grow: flatMap|zip|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3375. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fdc0c1db472110400040001b472110400040001d901285683025672287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3375,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-map-50000x2-v0-a2#54",
+      "script" : "[grow: flatMap|map|50000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 2384346. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fadb47211040004a08d06d9012802722801d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 2384346,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-map-50001x2-v0-a2#55",
+      "script" : "[grow: flatMap|map|50001x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fadb47211040004a28d06d9012802722801d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-map-100000x2-v0-a2#56",
+      "script" : "[grow: flatMap|map|100000x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 200000 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fadb37211b47211040004c09a04d9012802722801d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-map-100000x1-v0-a2#57",
+      "script" : "[grow: flatMap|map|100000x1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 4141061. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fadb37211b47211040004c09a04d9012802722801d90128028301027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 4141061,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-map-100000x0-v0-a2#58",
+      "script" : "[grow: flatMap|map|100000x0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3516071. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fadb37211b47211040004c09a04d9012802722801d9012802830002",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3516071,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-map-0x2-v0-a2#59",
+      "script" : "[grow: flatMap|map|0x2|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3359. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fadb4721104000400d9012802722801d901280283020272287228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3359,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-50000id-v0-a2#60",
+      "script" : "[grow: flatMap|collbytes|50000id|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 629321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280e7228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 629321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-50000indices-v0-a2#61",
+      "script" : "[grow: flatMap|collbytes|50000indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 1929321. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a08d0601d901280edb0c0e7228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1929321,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-50001id-v0-a2#62",
+      "script" : "[grow: flatMap|collbytes|50001id|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280e7228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-collbytes-50001indices-v0-a2#63",
+      "script" : "[grow: flatMap|collbytes|50001indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280edb0c0e7228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-2777propBytes-v0-a2#64",
+      "script" : "[grow: flatMap|sigmaprops|2777propBytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 99972 at cost 269974. A CONTROL: `Coll.flatMap`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004b22b01d9012808d07228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 99972
+        },
+        "cost" : 269974,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-flatMap-sigmaprops-2778propBytes-v0-a2#65",
+      "script" : "[grow: flatMap|sigmaprops|2778propBytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100008 greater than 100000). REFUSED FOR ITS LENGTH: `Coll.flatMap` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004b42b01d9012808d07228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-flatMap-bytes-over+wrongitem-v0-a2#66",
+      "script" : "[both: flatMap|bytes|over+wrongitem|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 100002 greater than 100000). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c0fb47211040004a28d0601d901280283020404020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

@@ -1,0 +1,968 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "SigmaPropBytes.length_limit_v6",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "grow-propBytes-node-and-k9-v0-a3#0",
+      "script" : "[grow: propBytes|node|and|k9|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k9-v3-a3#1",
+      "script" : "[grow: propBytes|node|and|k9|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b6bb1d809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k9-v0-a3#2",
+      "script" : "[grow: propBytes|size|and|k9|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208b1d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k9-v3-a3#3",
+      "script" : "[grow: propBytes|size|and|k9|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b6bd809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208b1d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k10-v0-a3#4",
+      "script" : "[grow: propBytes|node|and|k10|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k10-v3-a3#5",
+      "script" : "[grow: propBytes|node|and|k10|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b73b1d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k10-v0-a3#6",
+      "script" : "[grow: propBytes|size|and|k10|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209b1d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k10-v3-a3#7",
+      "script" : "[grow: propBytes|size|and|k10|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b73d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209b1d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k11-v0-a3#8",
+      "script" : "[grow: propBytes|node|and|k11|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k11-v3-a3#9",
+      "script" : "[grow: propBytes|node|and|k11|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b7bb1d80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k11-v0-a3#10",
+      "script" : "[grow: propBytes|size|and|k11|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ab1d0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k11-v3-a3#11",
+      "script" : "[grow: propBytes|size|and|k11|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b7bd80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ab1d0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k12-v0-a3#12",
+      "script" : "[grow: propBytes|node|and|k12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k12-v3-a3#13",
+      "script" : "[grow: propBytes|node|and|k12|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8301b1d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k12-v0-a3#14",
+      "script" : "[grow: propBytes|size|and|k12|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bb1d0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k12-v3-a3#15",
+      "script" : "[grow: propBytes|size|and|k12|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8301d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bb1d0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k13-v0-a3#16",
+      "script" : "[grow: propBytes|node|and|k13|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k13-v3-a3#17",
+      "script" : "[grow: propBytes|node|and|k13|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8b01b1d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k13-v0-a3#18",
+      "script" : "[grow: propBytes|size|and|k13|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cb1d0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k13-v3-a3#19",
+      "script" : "[grow: propBytes|size|and|k13|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8b01d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cb1d0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k14-v0-a3#20",
+      "script" : "[grow: propBytes|node|and|k14|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd60eea02720d720dd0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-and-k14-v3-a3#21",
+      "script" : "[grow: propBytes|node|and|k14|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9301b1d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd60eea02720d720dd0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k14-v0-a3#22",
+      "script" : "[grow: propBytes|size|and|k14|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd60eea02720d720db1d0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-and-k14-v3-a3#23",
+      "script" : "[grow: propBytes|size|and|k14|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaAnd(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), Val…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9301d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602ea0272017201d603ea0272027202d604ea0272037203d605ea0272047204d606ea0272057205d607ea0272067206d608ea0272077207d609ea0272087208d60aea0272097209d60bea02720a720ad60cea02720b720bd60dea02720c720cd60eea02720d720db1d0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k9-v0-a3#24",
+      "script" : "[grow: propBytes|node|or|k9|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k9-v3-a3#25",
+      "script" : "[grow: propBytes|node|or|k9|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b6bb1d809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k9-v0-a3#26",
+      "script" : "[grow: propBytes|size|or|k9|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208b1d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k9-v3-a3#27",
+      "script" : "[grow: propBytes|size|or|k9|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 9216 at cost 3364. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b6bd809d60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208b1d07209",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 9216
+        },
+        "cost" : 3364,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k10-v0-a3#28",
+      "script" : "[grow: propBytes|node|or|k10|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k10-v3-a3#29",
+      "script" : "[grow: propBytes|node|or|k10|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b73b1d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k10-v0-a3#30",
+      "script" : "[grow: propBytes|size|or|k10|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209b1d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k10-v3-a3#31",
+      "script" : "[grow: propBytes|size|or|k10|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 18432 at cost 6465. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b73d80ad60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209b1d0720a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 18432
+        },
+        "cost" : 6465,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k11-v0-a3#32",
+      "script" : "[grow: propBytes|node|or|k11|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k11-v3-a3#33",
+      "script" : "[grow: propBytes|node|or|k11|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b7bb1d80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k11-v0-a3#34",
+      "script" : "[grow: propBytes|size|or|k11|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ab1d0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k11-v3-a3#35",
+      "script" : "[grow: propBytes|size|or|k11|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 36864 at cost 12639. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b7bd80bd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ab1d0720b",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 36864
+        },
+        "cost" : 12639,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k12-v0-a3#36",
+      "script" : "[grow: propBytes|node|or|k12|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k12-v3-a3#37",
+      "script" : "[grow: propBytes|node|or|k12|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8301b1d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k12-v0-a3#38",
+      "script" : "[grow: propBytes|size|or|k12|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bb1d0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k12-v3-a3#39",
+      "script" : "[grow: propBytes|size|or|k12|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — 73728 at cost 24956. A CONTROL: `SigmaPropBytes`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8301d80cd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bb1d0720c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 73728
+        },
+        "cost" : 24956,
+        "error" : null
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k13-v0-a3#40",
+      "script" : "[grow: propBytes|node|or|k13|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cd0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k13-v3-a3#41",
+      "script" : "[grow: propBytes|node|or|k13|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8b01b1d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cd0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k13-v0-a3#42",
+      "script" : "[grow: propBytes|size|or|k13|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cb1d0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k13-v3-a3#43",
+      "script" : "[grow: propBytes|size|or|k13|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 147456 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b8b01d80dd60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cb1d0720d",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k14-v0-a3#44",
+      "script" : "[grow: propBytes|node|or|k14|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00b1d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cd60eeb02720d720dd0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-node-or-k14-v3-a3#45",
+      "script" : "[grow: propBytes|node|or|k14|v3] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9301b1d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cd60eeb02720d720dd0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k14-v0-a3#46",
+      "script" : "[grow: propBytes|size|or|k14|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v0, activated 3",
+      "tree_bytes_hex" : "00d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cd60eeb02720d720db1d0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "grow-propBytes-size-or-k14-v3-a3#47",
+      "script" : "[grow: propBytes|size|or|k14|v3] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)), ValDef(2,WrappedArray(),SigmaOr(WrappedArray(ValUse(1,SSigmaProp), ValUse(1,SSigmaProp)))), ValD…` — THROWS AT EVALUATION (IllegalArgumentException: requirement failed: Cannot create collection with size 294912 greater than 100000). REFUSED FOR ITS LENGTH: `SigmaPropBytes` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v3, activated 3",
+      "tree_bytes_hex" : "0b9301d80ed60108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602eb0272017201d603eb0272027202d604eb0272037203d605eb0272047204d606eb0272057205d607eb0272067206d608eb0272077207d609eb0272087208d60aeb0272097209d60beb02720a720ad60ceb02720b720bd60deb02720c720cd60eeb02720d720db1d0720e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

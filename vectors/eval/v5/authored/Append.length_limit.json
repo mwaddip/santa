@@ -1,0 +1,2153 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Append.length_limit",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "append-node-bytes-50000+50000-v0-a2#0",
+      "script" : "[append: node|bytes|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-100000+0-v0-a2#1",
+      "script" : "[append: node|bytes|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-0+100000-v0-a2#2",
+      "script" : "[append: node|bytes|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-99999+1-v0-a2#3",
+      "script" : "[append: node|bytes|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-100000+1-v0-a2#4",
+      "script" : "[append: node|bytes|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bytes-1+100000-v0-a2#5",
+      "script" : "[append: node|bytes|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bytes-50001+50000-v0-a2#6",
+      "script" : "[append: node|bytes|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bytes-65536+65536-v0-a2#7",
+      "script" : "[append: node|bytes|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bytes-100000+100000-v0-a2#8",
+      "script" : "[append: node|bytes|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bytes-0+0-v0-a2#9",
+      "script" : "[append: node|bytes|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bools-50000+50000-v0-a2#10",
+      "script" : "[append: node|bools|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bools-100000+0-v0-a2#11",
+      "script" : "[append: node|bools|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bools-0+100000-v0-a2#12",
+      "script" : "[append: node|bools|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bools-99999+1-v0-a2#13",
+      "script" : "[append: node|bools|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bools-100000+1-v0-a2#14",
+      "script" : "[append: node|bools|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Boolean with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bools-1+100000-v0-a2#15",
+      "script" : "[append: node|bools|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Boolean with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bools-50001+50000-v0-a2#16",
+      "script" : "[append: node|bools|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Boolean with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bools-65536+65536-v0-a2#17",
+      "script" : "[append: node|bools|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Boolean with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bools-100000+100000-v0-a2#18",
+      "script" : "[append: node|bools|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Boolean with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-bools-0+0-v0-a2#19",
+      "script" : "[append: node|bools|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-ints-50000+50000-v0-a2#20",
+      "script" : "[append: node|ints|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-ints-100000+0-v0-a2#21",
+      "script" : "[append: node|ints|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-ints-0+100000-v0-a2#22",
+      "script" : "[append: node|ints|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-ints-99999+1-v0-a2#23",
+      "script" : "[append: node|ints|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-ints-100000+1-v0-a2#24",
+      "script" : "[append: node|ints|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-ints-1+100000-v0-a2#25",
+      "script" : "[append: node|ints|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-ints-50001+50000-v0-a2#26",
+      "script" : "[append: node|ints|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-ints-65536+65536-v0-a2#27",
+      "script" : "[append: node|ints|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-ints-100000+100000-v0-a2#28",
+      "script" : "[append: node|ints|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-ints-0+0-v0-a2#29",
+      "script" : "[append: node|ints|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-longs-50000+50000-v0-a2#30",
+      "script" : "[append: node|longs|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-longs-100000+0-v0-a2#31",
+      "script" : "[append: node|longs|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-longs-0+100000-v0-a2#32",
+      "script" : "[append: node|longs|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-longs-99999+1-v0-a2#33",
+      "script" : "[append: node|longs|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-longs-100000+1-v0-a2#34",
+      "script" : "[append: node|longs|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Long with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-longs-1+100000-v0-a2#35",
+      "script" : "[append: node|longs|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Long with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-longs-50001+50000-v0-a2#36",
+      "script" : "[append: node|longs|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Long with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-longs-65536+65536-v0-a2#37",
+      "script" : "[append: node|longs|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Long with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-longs-100000+100000-v0-a2#38",
+      "script" : "[append: node|longs|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Long with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-longs-0+0-v0-a2#39",
+      "script" : "[append: node|longs|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-pairs-50000+50000-v0-a2#40",
+      "script" : "[append: node|pairs|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-pairs-100000+0-v0-a2#41",
+      "script" : "[append: node|pairs|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-pairs-0+100000-v0-a2#42",
+      "script" : "[append: node|pairs|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-pairs-99999+1-v0-a2#43",
+      "script" : "[append: node|pairs|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-pairs-100000+1-v0-a2#44",
+      "script" : "[append: node|pairs|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-pairs-1+100000-v0-a2#45",
+      "script" : "[append: node|pairs|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-pairs-50001+50000-v0-a2#46",
+      "script" : "[append: node|pairs|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-pairs-65536+65536-v0-a2#47",
+      "script" : "[append: node|pairs|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-pairs-100000+100000-v0-a2#48",
+      "script" : "[append: node|pairs|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-pairs-0+0-v0-a2#49",
+      "script" : "[append: node|pairs|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-collbytes-50000+50000-v0-a2#50",
+      "script" : "[append: node|collbytes|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-collbytes-100000+0-v0-a2#51",
+      "script" : "[append: node|collbytes|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-collbytes-0+100000-v0-a2#52",
+      "script" : "[append: node|collbytes|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-collbytes-99999+1-v0-a2#53",
+      "script" : "[append: node|collbytes|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-collbytes-100000+1-v0-a2#54",
+      "script" : "[append: node|collbytes|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.Coll with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-collbytes-1+100000-v0-a2#55",
+      "script" : "[append: node|collbytes|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.Coll with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-collbytes-50001+50000-v0-a2#56",
+      "script" : "[append: node|collbytes|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.Coll with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-collbytes-65536+65536-v0-a2#57",
+      "script" : "[append: node|collbytes|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.Coll with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-collbytes-100000+100000-v0-a2#58",
+      "script" : "[append: node|collbytes|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.Coll with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-collbytes-0+0-v0-a2#59",
+      "script" : "[append: node|collbytes|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-50000+50000-v0-a2#60",
+      "script" : "[append: node|sigmaprops|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-100000+0-v0-a2#61",
+      "script" : "[append: node|sigmaprops|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-0+100000-v0-a2#62",
+      "script" : "[append: node|sigmaprops|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-99999+1-v0-a2#63",
+      "script" : "[append: node|sigmaprops|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 8014. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 8014,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-100000+1-v0-a2#64",
+      "script" : "[append: node|sigmaprops|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.SigmaProp with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-1+100000-v0-a2#65",
+      "script" : "[append: node|sigmaprops|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.SigmaProp with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000402b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-50001+50000-v0-a2#66",
+      "script" : "[append: node|sigmaprops|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.SigmaProp with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b47211040004a28d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-65536+65536-v0-a2#67",
+      "script" : "[append: node|sigmaprops|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.SigmaProp with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b372117211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-100000+100000-v0-a2#68",
+      "script" : "[append: node|sigmaprops|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of sigma.SigmaProp with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-sigmaprops-0+0-v0-a2#69",
+      "script" : "[append: node|sigmaprops|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 0 at cost 3303. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b4721104000400b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3303,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-indices-50000+50000-v0-a2#70",
+      "script" : "[append: node|indices|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 19845. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb47211040004a08d06db0c0eb47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 19845,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-indices-100000+0-v0-a2#71",
+      "script" : "[append: node|indices|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20564. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb37211b47211040004c09a04db0c0eb4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20564,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-indices-0+100000-v0-a2#72",
+      "script" : "[append: node|indices|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20564. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb4721104000400db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20564,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-indices-99999+1-v0-a2#73",
+      "script" : "[append: node|indices|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20564. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb37211b47211040004be9a04db0c0eb4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20564,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-indices-100000+1-v0-a2#74",
+      "script" : "[append: node|indices|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb37211b47211040004c09a04db0c0eb4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-indices-1+100000-v0-a2#75",
+      "script" : "[append: node|indices|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb4721104000402db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-indices-50001+50000-v0-a2#76",
+      "script" : "[append: node|indices|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb47211040004a28d06db0c0eb47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-indices-65536+65536-v0-a2#77",
+      "script" : "[append: node|indices|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0e7211db0c0e7211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-indices-100000+100000-v0-a2#78",
+      "script" : "[append: node|indices|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Int with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb37211b47211040004c09a04db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-indices-0+0-v0-a2#79",
+      "script" : "[append: node|indices|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3355. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3db0c0eb4721104000400db0c0eb4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3355,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-zip-50000+50000-v0-a2#80",
+      "script" : "[append: node|zip|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 19375. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db47211040004a08d0601b47211040004a08d06dc0c1db47211040004a08d0601b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 19375,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-zip-100000+0-v0-a2#81",
+      "script" : "[append: node|zip|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20810. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04dc0c1db472110400040001b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20810,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-zip-0+100000-v0-a2#82",
+      "script" : "[append: node|zip|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20810. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db472110400040001b4721104000400dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20810,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-zip-99999+1-v0-a2#83",
+      "script" : "[append: node|zip|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20810. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db37211b47211040004be9a0401b37211b47211040004be9a04dc0c1db472110400040201b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20810,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-zip-100000+1-v0-a2#84",
+      "script" : "[append: node|zip|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04dc0c1db472110400040201b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-zip-1+100000-v0-a2#85",
+      "script" : "[append: node|zip|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db472110400040201b4721104000402dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-zip-50001+50000-v0-a2#86",
+      "script" : "[append: node|zip|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db47211040004a28d0601b47211040004a28d06dc0c1db47211040004a08d0601b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-zip-65536+65536-v0-a2#87",
+      "script" : "[append: node|zip|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1d7211017211dc0c1d7211017211",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-zip-100000+100000-v0-a2#88",
+      "script" : "[append: node|zip|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-zip-0+0-v0-a2#89",
+      "script" : "[append: node|zip|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3387. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3dc0c1db472110400040001b4721104000400dc0c1db472110400040001b4721104000400",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3387,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-map-50000+50000-v0-a2#90",
+      "script" : "[append: node|map|50000+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1017347. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb47211040004a08d06d90128027228adb47211040004a08d06d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1017347,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-map-100000+0-v0-a2#91",
+      "script" : "[append: node|map|100000+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1018065. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb37211b47211040004c09a04d90128027228adb4721104000400d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1018065,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-map-0+100000-v0-a2#92",
+      "script" : "[append: node|map|0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1018065. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb4721104000400d90128027228adb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1018065,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-map-99999+1-v0-a2#93",
+      "script" : "[append: node|map|99999+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1018065. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb37211b47211040004be9a04d90128027228adb4721104000402d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1018065,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-map-100000+1-v0-a2#94",
+      "script" : "[append: node|map|100000+1|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb37211b47211040004c09a04d90128027228adb4721104000402d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-map-1+100000-v0-a2#95",
+      "script" : "[append: node|map|1+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb4721104000402d90128027228adb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-map-50001+50000-v0-a2#96",
+      "script" : "[append: node|map|50001+50000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb47211040004a28d06d90128027228adb47211040004a08d06d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-map-65536+65536-v0-a2#97",
+      "script" : "[append: node|map|65536+65536|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 131072 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3ad7211d90128027228ad7211d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-map-100000+100000-v0-a2#98",
+      "script" : "[append: node|map|100000+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 200000 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb37211b47211040004c09a04d90128027228adb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-node-map-0+0-v0-a2#99",
+      "script" : "[append: node|map|0+0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 0 at cost 3355. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb4721104000400d90128027228adb4721104000400d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 0
+        },
+        "cost" : 3355,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-const0+100000-v0-a2#100",
+      "script" : "[append: node|bytes|const0+100000|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 7992. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b30e00b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-100000+const0-v0-a2#101",
+      "script" : "[append: node|bytes|100000+const0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 7992. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a040e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-const0+99999-v0-a2#102",
+      "script" : "[append: node|bytes|const0+99999|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 99999 at cost 7992. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b30e00b37211b47211040004be9a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 99999
+        },
+        "cost" : 7992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-node-bytes-99999+const0-v0-a2#103",
+      "script" : "[append: node|bytes|99999+const0|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 99999 at cost 7992. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets). AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004be9a040e00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 99999
+        },
+        "cost" : 7992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-size-bytes-100000+1-v0-a2#104",
+      "script" : "[append: size|bytes|100000+1|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). REFUSED FOR ITS LENGTH: `Append` returns more than it was given, and its result is past 100,000 items. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked). A port without the limit answers here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b3b37211b47211040004c09a04b4721104000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "append-size-bytes-50000+50000-v0-a2#105",
+      "script" : "[append: size|bytes|50000+50000|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — 100000 at cost 7297. A CONTROL: `Append`'s result within 100,000 items (the last accepted count, or a result the limit never meets).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b3b47211040004a08d06b47211040004a08d06",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7297,
+        "error" : null
+      }
+    },
+    {
+      "name" : "append-unused-bytes-100000+1-v0-a2#106",
+      "script" : "[append: unused|bytes|100000+1|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). AN UNUSED `val` IS EVALUATED: the `append` is bound, never read, and still refused. sigma-state holds a collection built at evaluation to at most 100,000 items (`MaxArrayLength`): the collection class's constructor refuses more (`IllegalArgumentException`), and `append` checks the SUM before its copy (`RuntimeException`; an empty left side returns the right one unchecked).  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d812d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210d612b3b37211b47211040004c09a04b47211040004020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-append-bytes+ints-over-v0-a2#107",
+      "script" : "[both: append|bytes+ints|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class [I cannot be cast to class [B). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04100102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-append-bytes+longs-over-v0-a2#108",
+      "script" : "[both: append|bytes+longs|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (ClassCastException: class [J cannot be cast to class [B). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3b37211b47211040004c09a04110102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "both-append-map+ints-over-v0-a2#109",
+      "script" : "[both: append|map+ints|over|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — THROWS AT EVALUATION (RuntimeException: Cannot allocate array of Byte with 100001 items: max limit is 100000). TWO REFUSALS AT ONCE: the result would be past the limit AND the other side's array is of another class; a specialised receiver casts the other array first (`ClassCastException`, whatever the lengths), a generic receiver's `append` refuses the SUM first, a generic receiver's `patch` stores the items first. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b3adb37211b47211040004c09a04d90128027228100102",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

@@ -139,6 +139,41 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Append.length_limit.json" : {
+      "accepts" : 55,
+      "entries" : 110,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Append.length_limit",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 55,
+      "tree_shapes" : [
+        {
+          "accepts" : 55,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 55,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Apply.non_unary_arity.json" : {
       "accepts" : 1,
       "entries" : 3,
@@ -1280,6 +1315,67 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/Coll.append_length_limit.json" : {
+      "accepts" : 0,
+      "entries" : 100,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:29 SCollection.zip",
+        "12:9 SCollection.append"
+      ],
+      "op" : "Coll.append_length_limit",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 100,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 100,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.declared_count_at_parse.json" : {
+      "accepts" : 1,
+      "entries" : 45,
+      "methods" : [
+      ],
+      "op" : "Coll.declared_count_at_parse",
+      "ops" : [
+        "Const",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 44,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 44,
+      "version" : "v5"
+    },
     "v5/authored/Coll.eq_compared_count_coa.json" : {
       "accepts" : 5,
       "entries" : 5,
@@ -1326,6 +1422,44 @@
           "has_size" : true,
           "rejects" : 0,
           "tree_version" : 2
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.flatMap_length_limit.json" : {
+      "accepts" : 43,
+      "entries" : 67,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:15 SCollection.flatMap",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.flatMap_length_limit",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SigmaPropBytes",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 24,
+      "tree_shapes" : [
+        {
+          "accepts" : 43,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 24,
+          "tree_version" : 0
         }
       ],
       "unwalked" : 0,
@@ -1500,6 +1634,98 @@
           "has_deserialize" : false,
           "has_size" : false,
           "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.length_kept_at_limit.json" : {
+      "accepts" : 93,
+      "entries" : 93,
+      "methods" : [
+        "106:2 SigmaDslBuilder.xor",
+        "12:14 SCollection.indices",
+        "12:20 SCollection.updated",
+        "12:21 SCollection.updateMany",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.length_kept_at_limit",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "Filter",
+        "FuncValue",
+        "Global$",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse",
+        "Xor"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 93,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.length_limit_whole_trees.json" : {
+      "accepts" : 10,
+      "entries" : 20,
+      "methods" : [
+        "12:15 SCollection.flatMap",
+        "12:19 SCollection.patch"
+      ],
+      "op" : "Coll.length_limit_whole_trees",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "BoolToSigmaProp",
+        "ConcreteCollection",
+        "Const",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GT",
+        "MethodCall",
+        "SigmaAnd",
+        "SigmaPropBytes",
+        "SizeOf",
+        "Slice",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 10,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
           "tree_version" : 0
         }
       ],
@@ -1686,6 +1912,42 @@
           "has_deserialize" : false,
           "has_size" : false,
           "rejects" : 200,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/Coll.patch_length_limit.json" : {
+      "accepts" : 41,
+      "entries" : 87,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:19 SCollection.patch",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.patch_length_limit",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 46,
+      "tree_shapes" : [
+        {
+          "accepts" : 41,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 46,
           "tree_version" : 0
         }
       ],
@@ -2686,6 +2948,69 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v5/authored/SigmaProp.propBytes_length_limit.json" : {
+      "accepts" : 0,
+      "entries" : 12,
+      "methods" : [
+        "8:1 SigmaProp.propBytes"
+      ],
+      "op" : "SigmaProp.propBytes_length_limit",
+      "ops" : [
+        "BlockValue",
+        "Const",
+        "MethodCall",
+        "SigmaAnd",
+        "SigmaOr",
+        "SizeOf",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 12,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 12,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SigmaPropBytes.length_limit.json" : {
+      "accepts" : 16,
+      "entries" : 24,
+      "methods" : [
+      ],
+      "op" : "SigmaPropBytes.length_limit",
+      "ops" : [
+        "BlockValue",
+        "Const",
+        "SigmaAnd",
+        "SigmaOr",
+        "SigmaPropBytes",
+        "SizeOf",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 8,
+      "tree_shapes" : [
+        {
+          "accepts" : 16,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 8,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/String.jdk_utf8_decode.json" : {
       "accepts" : 17,
       "entries" : 17,
@@ -2738,6 +3063,38 @@
           "has_deserialize" : false,
           "has_size" : false,
           "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SubstConstants.length_limit.json" : {
+      "accepts" : 1,
+      "entries" : 4,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.length_limit",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "SizeOf",
+        "Slice",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 3,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 3,
           "tree_version" : 0
         }
       ],
@@ -6007,6 +6364,49 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Append.length_limit_v6.json" : {
+      "accepts" : 115,
+      "entries" : 230,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Append.length_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 115,
+      "tree_shapes" : [
+        {
+          "accepts" : 55,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 55,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 60,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 60,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Append.reference_array_store.json" : {
       "accepts" : 10,
       "entries" : 12,
@@ -6906,6 +7306,50 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/Coll.append_length_limit_v6.json" : {
+      "accepts" : 0,
+      "entries" : 210,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:29 SCollection.zip",
+        "12:9 SCollection.append"
+      ],
+      "op" : "Coll.append_length_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 210,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 100,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 110,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Coll.append_node_array_class.json" : {
       "accepts" : 2,
       "entries" : 4,
@@ -6963,6 +7407,39 @@
         }
       ],
       "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.declared_count_at_parse_v6.json" : {
+      "accepts" : 2,
+      "entries" : 90,
+      "methods" : [
+      ],
+      "op" : "Coll.declared_count_at_parse_v6",
+      "ops" : [
+        "Const",
+        "SizeOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 88,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 88,
       "version" : "v6"
     },
     "v6/authored/Coll.eq_item_type.json" : {
@@ -7057,6 +7534,52 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.flatMap_length_limit_v6.json" : {
+      "accepts" : 90,
+      "entries" : 140,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:15 SCollection.flatMap",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.flatMap_length_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SigmaPropBytes",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 50,
+      "tree_shapes" : [
+        {
+          "accepts" : 43,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 24,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 47,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 26,
           "tree_version" : 3
         }
       ],
@@ -7362,6 +7885,125 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 11,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.length_kept_at_limit_v6.json" : {
+      "accepts" : 206,
+      "entries" : 206,
+      "methods" : [
+        "106:2 SigmaDslBuilder.xor",
+        "12:14 SCollection.indices",
+        "12:20 SCollection.updated",
+        "12:21 SCollection.updateMany",
+        "12:29 SCollection.zip",
+        "12:30 SCollection.reverse"
+      ],
+      "op" : "Coll.length_kept_at_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "CalcBlake2b256",
+        "ConcreteCollection",
+        "Const",
+        "Filter",
+        "FuncValue",
+        "Global$",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse",
+        "Xor"
+      ],
+      "provenance" : "authored",
+      "rejects" : 0,
+      "tree_shapes" : [
+        {
+          "accepts" : 93,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 0,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 113,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.length_limit_whole_trees_v6.json" : {
+      "accepts" : 22,
+      "entries" : 44,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
+        "12:15 SCollection.flatMap",
+        "12:19 SCollection.patch"
+      ],
+      "op" : "Coll.length_limit_whole_trees_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "BoolToSigmaProp",
+        "ConcreteCollection",
+        "Const",
+        "ConstantPlaceholder",
+        "FuncValue",
+        "GT",
+        "Global$",
+        "MethodCall",
+        "SigmaAnd",
+        "SigmaPropBytes",
+        "SizeOf",
+        "Slice",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 22,
+      "tree_shapes" : [
+        {
+          "accepts" : 5,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 5,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 5,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 6,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
+          "tree_version" : 3
+        },
+        {
+          "accepts" : 6,
+          "constant_segregation" : true,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 6,
           "tree_version" : 3
         }
       ],
@@ -7696,6 +8338,50 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 750,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Coll.patch_length_limit_v6.json" : {
+      "accepts" : 86,
+      "entries" : 182,
+      "methods" : [
+        "12:14 SCollection.indices",
+        "12:19 SCollection.patch",
+        "12:29 SCollection.zip"
+      ],
+      "op" : "Coll.patch_length_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "Const",
+        "FuncValue",
+        "MapCollection",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 96,
+      "tree_shapes" : [
+        {
+          "accepts" : 41,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 46,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 45,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 50,
           "tree_version" : 3
         }
       ],
@@ -9439,6 +10125,41 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 11,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/Global.serialize_length_limit_v6.json" : {
+      "accepts" : 2,
+      "entries" : 6,
+      "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
+      ],
+      "op" : "Global.serialize_length_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "Global$",
+        "MethodCall",
+        "SizeOf",
+        "Slice",
+        "Tuple",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 4,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 4,
           "tree_version" : 3
         }
       ],
@@ -11221,6 +11942,85 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/SigmaProp.propBytes_length_limit_v6.json" : {
+      "accepts" : 0,
+      "entries" : 24,
+      "methods" : [
+        "8:1 SigmaProp.propBytes"
+      ],
+      "op" : "SigmaProp.propBytes_length_limit_v6",
+      "ops" : [
+        "BlockValue",
+        "Const",
+        "MethodCall",
+        "SigmaAnd",
+        "SigmaOr",
+        "SizeOf",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 24,
+      "tree_shapes" : [
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 12,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 0,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 12,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SigmaPropBytes.length_limit_v6.json" : {
+      "accepts" : 32,
+      "entries" : 48,
+      "methods" : [
+      ],
+      "op" : "SigmaPropBytes.length_limit_v6",
+      "ops" : [
+        "BlockValue",
+        "Const",
+        "SigmaAnd",
+        "SigmaOr",
+        "SigmaPropBytes",
+        "SizeOf",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 16,
+      "tree_shapes" : [
+        {
+          "accepts" : 16,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 8,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 16,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 8,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/String.jdk_utf8_decode_v6.json" : {
       "accepts" : 34,
       "entries" : 34,
@@ -11318,6 +12118,46 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SubstConstants.length_limit_v6.json" : {
+      "accepts" : 2,
+      "entries" : 8,
+      "methods" : [
+      ],
+      "op" : "SubstConstants.length_limit_v6",
+      "ops" : [
+        "Append",
+        "BlockValue",
+        "ConcreteCollection",
+        "Const",
+        "SizeOf",
+        "Slice",
+        "SubstConstants",
+        "ValDef",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 6,
+      "tree_shapes" : [
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 3,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 1,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 3,
           "tree_version" : 3
         }
       ],
@@ -17724,8 +18564,10 @@
     },
     "106:2" : {
       "families" : [
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Xor.unequal_sides.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Xor.per_item_cost_base.json",
         "v6/authored/Xor.unequal_sides_v6.json"
@@ -17735,6 +18577,7 @@
     "106:3" : {
       "families" : [
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
@@ -17754,6 +18597,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/Global.serialize_shared_nested.json",
@@ -17880,10 +18724,15 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/OR.item_by_item.json",
         "v5/authored/OR.item_by_item_context.json",
         "v5/authored/XorOf.item_by_item.json",
@@ -17891,13 +18740,18 @@
         "v5/spec/Coll_flatMap_method_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.flatMap_item_by_item_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.specialisation_blind_ops.json",
         "v6/authored/Coll.specialisation_getorelse.json",
         "v6/authored/Coll.specialisation_prefix_suffix.json",
@@ -17920,12 +18774,16 @@
     "12:15" : {
       "families" : [
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/OR.item_by_item_context.json",
         "v5/spec/Coll.flatMap_equivalence.json",
         "v5/spec/Coll_flatMap_method_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.flatMap_item_by_item_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
@@ -17938,18 +18796,22 @@
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/spec/Coll_patch_method_equivalence.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.item_store_type_check.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
@@ -17985,6 +18847,7 @@
       "families" : [
         "v5/authored/AND.item_by_item_context.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -17995,6 +18858,7 @@
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.item_store_type_check.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
@@ -18010,6 +18874,7 @@
     "12:21" : {
       "families" : [
         "v5/authored/AvlTree.item_bind_edges.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
@@ -18017,6 +18882,7 @@
         "v5/spec/Coll_updateMany_method_equivalence.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
@@ -18047,13 +18913,18 @@
     "12:29" : {
       "families" : [
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/OR.item_by_item_context.json",
@@ -18061,15 +18932,20 @@
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.unequal_pairs_readers_v6.json",
@@ -18105,6 +18981,7 @@
     "12:30" : {
       "families" : [
         "v6/authored/AND.item_by_item_context_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_v6.json",
@@ -18190,6 +19067,8 @@
     },
     "12:9" : {
       "families" : [
+        "v5/authored/Coll.append_length_limit.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json"
@@ -18573,7 +19452,9 @@
     },
     "8:1" : {
       "families" : [
-        "v6/authored/SigmaProp.methodcall_ids.json"
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json"
       ],
       "name" : "SigmaProp.propBytes"
     },
@@ -19169,27 +20050,41 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/OR.item_by_item.json",
         "v5/authored/OR.item_by_item_context.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/spec/Coll.append_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768.json",
@@ -19211,6 +20106,7 @@
         "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
@@ -19541,14 +20437,23 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/OR.item_by_item.json",
         "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/authored/XorOf.item_by_item.json",
         "v5/spec/BigInt_methods_equivalence.json",
@@ -19567,11 +20472,18 @@
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768.json",
@@ -19601,7 +20513,10 @@
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/XorOf.item_by_item_v6.json",
@@ -19675,6 +20590,7 @@
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/ConstantPlaceholder.segregated_tuple.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/MethodCall.argument_widening.json",
@@ -19684,6 +20600,7 @@
         "v5/spec/sigmaProp_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/BoolToSigmaProp.activated_version_gate_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/ConstantPlaceholder.segregated_tuple_v6.json",
         "v6/authored/Global.serialize_small_tuple.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
@@ -19935,11 +20852,13 @@
     "CalcBlake2b256" : {
       "families" : [
         "v5/authored/AND.item_by_item.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/OR.item_by_item.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/spec/blake2b256_sha256_equivalence.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
         "v6/authored/Exists.item_by_item_v6.json",
@@ -20030,7 +20949,10 @@
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/Coll.eq_compared_count_generic.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
@@ -20040,6 +20962,7 @@
         "v5/authored/OR.item_by_item.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/SubstConstants.template_tree_version.json",
         "v5/authored/XorOf.item_by_item.json",
@@ -20064,9 +20987,12 @@
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.item_store_type_check.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
@@ -20089,6 +21015,7 @@
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.json",
@@ -20116,6 +21043,7 @@
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/SubstConstants.template_tree_version_v6.json",
         "v6/authored/SubstConstants.wide_new_value.json",
@@ -20199,6 +21127,7 @@
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.item_bind.json",
@@ -20210,13 +21139,19 @@
         "v5/authored/BinOr.item_by_item.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/ByIndex.tuple_item.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.declared_count_at_parse.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/ConstantPlaceholder.segregated_tuple.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
@@ -20232,8 +21167,11 @@
         "v5/authored/SelectField.non_pair.json",
         "v5/authored/SigmaAnd.item_by_item.json",
         "v5/authored/SigmaOr.item_by_item.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/SubstConstants.template_tree_version.json",
         "v5/authored/SubstConstants.type_var_name_range.json",
@@ -20245,6 +21183,7 @@
         "v5/authored/XorOf.item_by_item_context.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/ArithOp.mixed_width.json",
@@ -20261,11 +21200,14 @@
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
+        "v6/authored/Coll.declared_count_at_parse_v6.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.flatMap_item_by_item_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
@@ -20273,6 +21215,8 @@
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.indexOf_item_by_item_v6.json",
         "v6/authored/Coll.item_store_type_check.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
@@ -20280,6 +21224,7 @@
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
@@ -20306,6 +21251,7 @@
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/Global.serialize_shared_nested.json",
@@ -20345,9 +21291,12 @@
         "v6/authored/SigmaAnd.item_by_item_v6.json",
         "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/SubstConstants.item_by_item_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/SubstConstants.template_tree_version_v6.json",
         "v6/authored/SubstConstants.type_var_name_range_v6.json",
@@ -20407,6 +21356,7 @@
         "v5/authored/Coll.eq_compared_count_coa.json",
         "v5/authored/Coll.eq_compared_count_generic.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/ConstantPlaceholder.segregated_tuple.json",
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ.non_pair_tuple_operand.json",
@@ -20445,6 +21395,7 @@
         "v6/authored/AvlTree.per_op_failure_v6.json",
         "v6/authored/AvlTree.unsupported_eval_nodes_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/ConstantPlaceholder.segregated_tuple_v6.json",
         "v6/authored/Context.getVarFromInput.json",
         "v6/authored/Context.getVarFromInput_multi_input.json",
@@ -21189,6 +22140,7 @@
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/Filter.item_by_item.json",
@@ -21202,6 +22154,7 @@
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_v6.json",
@@ -21300,16 +22253,22 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BinAnd.item_by_item.json",
         "v5/authored/BinOr.item_by_item.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/Exists.item_by_item.json",
         "v5/authored/Exponentiate.static_type.json",
@@ -21413,23 +22372,29 @@
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
         "v6/authored/BinAnd.item_by_item_v6.json",
         "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.flatMap_item_by_item_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
@@ -21623,6 +22588,7 @@
       "families" : [
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
         "v5/spec/Byte_LT_GT_NEQ.json",
         "v5/spec/Coll.exists_equivalence.json",
@@ -21636,6 +22602,7 @@
         "v5/spec/Int_LT_GT_NEQ.json",
         "v5/spec/Long_LT_GT_NEQ.json",
         "v5/spec/Short_LT_GT_NEQ.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Comparison.mixed_width.json",
         "v6/authored/Exists.item_by_item_v6.json",
@@ -21914,6 +22881,7 @@
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/BinAnd.item_by_item.json",
         "v5/authored/BinOr.item_by_item.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/OR.item_by_item.json",
         "v5/authored/OR.item_by_item_context.json",
@@ -21931,6 +22899,8 @@
         "v6/authored/BinAnd.item_by_item_v6.json",
         "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
@@ -21959,6 +22929,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/Global.serialize_shared_nested.json",
@@ -22443,13 +23414,18 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/OR.item_by_item.json",
@@ -22461,14 +23437,19 @@
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/EQ.item_by_item_v6.json",
@@ -22508,6 +23489,7 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
         "v5/authored/AvlTree.degenerate_edges.json",
@@ -22535,13 +23517,18 @@
         "v5/authored/Box.accessor_method_form.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.method_type_variable_names.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.preHeader_accessors.json",
@@ -22555,6 +23542,7 @@
         "v5/authored/OR.item_by_item_context.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/Xor.unequal_sides.json",
         "v5/authored/XorOf.item_by_item.json",
@@ -22576,6 +23564,7 @@
         "v5/spec/nested_loops_map_inside_fold.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/AvlTree.bad_proof_bytes_v6.json",
         "v6/authored/AvlTree.degenerate_edges_v6.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
@@ -22592,14 +23581,18 @@
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.flatMap_item_by_item_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
         "v6/authored/Coll.indexOf_item_by_item_v6.json",
         "v6/authored/Coll.item_store_type_check.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
@@ -22607,6 +23600,7 @@
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.prefix_cross_type_equality.json",
         "v6/authored/Coll.prefix_suffix_runtime_item_type.json",
         "v6/authored/Coll.producer_specialisation_witness.json",
@@ -22649,6 +23643,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/Global.serialize_shared_nested.json",
@@ -22681,6 +23676,7 @@
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
@@ -23586,10 +24582,16 @@
     },
     "SigmaAnd" : {
       "families" : [
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/SigmaAnd.item_by_item.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/spec/and_sigma_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/SigmaAnd.item_by_item_v6.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -23620,8 +24622,12 @@
     "SigmaOr" : {
       "families" : [
         "v5/authored/SigmaOr.item_by_item.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/spec/or_sigma_equivalence.json",
         "v6/authored/SigmaOr.item_by_item_v6.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/captured/h231432-fddb21e1303e.json",
         "v6/captured/h28882-c024ed2704d4.json",
         "v6/captured/h28931-costdiverge-colleq.json"
@@ -23632,11 +24638,17 @@
     },
     "SigmaPropBytes" : {
       "families" : [
+        "v5/authored/Coll.flatMap_length_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/spec/SigmaProp.propBytes_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-52c30165e5d5.json",
@@ -23670,10 +24682,17 @@
     "SizeOf" : {
       "families" : [
         "v5/authored/AND.item_by_item.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/ByIndex.tuple_item.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.declared_count_at_parse.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers_pairs.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/ConstantPlaceholder.segregated_tuple.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
@@ -23681,16 +24700,26 @@
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/OR.item_by_item.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/spec/Coll.size_equivalence.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
+        "v6/authored/Coll.declared_count_at_parse_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.store_runtime_array_class.json",
         "v6/authored/Coll.unequal_pairs_readers_v6.json",
@@ -23708,6 +24737,7 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768.json",
@@ -23730,6 +24760,9 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Tuple.binding_provenance_var.json",
@@ -23797,23 +24830,38 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/OR.item_by_item.json",
         "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/spec/Coll_slice_method_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -23863,11 +24911,13 @@
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/SubstConstants.template_tree_version.json",
         "v5/authored/SubstConstants.type_var_name_range.json",
@@ -23875,6 +24925,7 @@
         "v5/spec/substConstants_equivalence.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
@@ -23882,6 +24933,7 @@
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/SubstConstants.item_by_item_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/SubstConstants.template_tree_version_v6.json",
         "v6/authored/SubstConstants.type_var_name_range_v6.json",
@@ -23958,6 +25010,7 @@
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Global.serialize_runtime_class.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
@@ -24085,13 +25138,22 @@
     "ValDef" : {
       "families" : [
         "v5/authored/AND.item_by_item.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/OR.item_by_item.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/authored/XorOf.item_by_item.json",
         "v5/spec/BigInt_methods_equivalence.json",
@@ -24109,11 +25171,18 @@
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768.json",
@@ -24142,7 +25211,10 @@
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/XorOf.item_by_item_v6.json",
@@ -24217,16 +25289,22 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AND.item_by_item_context.json",
+        "v5/authored/Append.length_limit.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BinAnd.item_by_item.json",
         "v5/authored/BinOr.item_by_item.json",
+        "v5/authored/Coll.append_length_limit.json",
+        "v5/authored/Coll.flatMap_length_limit.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.hof_per_element_env.json",
+        "v5/authored/Coll.length_kept_at_limit.json",
+        "v5/authored/Coll.length_limit_whole_trees.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Coll.patch_length_limit.json",
         "v5/authored/Exists.item_by_item.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/Filter.item_by_item.json",
@@ -24238,7 +25316,10 @@
         "v5/authored/Option.map.json",
         "v5/authored/SigmaAnd.item_by_item.json",
         "v5/authored/SigmaOr.item_by_item.json",
+        "v5/authored/SigmaProp.propBytes_length_limit.json",
+        "v5/authored/SigmaPropBytes.length_limit.json",
         "v5/authored/SubstConstants.coll_count_range.json",
+        "v5/authored/SubstConstants.length_limit.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/ValDef.id_int_max_bound.json",
         "v5/authored/XorOf.item_by_item.json",
@@ -24329,21 +25410,27 @@
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/Append.length_limit_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
         "v6/authored/BinAnd.item_by_item_v6.json",
         "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/Coll.append_length_limit_v6.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.flatMap_item_by_item_v6.json",
+        "v6/authored/Coll.flatMap_length_limit_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
+        "v6/authored/Coll.length_limit_whole_trees_v6.json",
         "v6/authored/Coll.methodcall_v5_ids.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
+        "v6/authored/Coll.patch_length_limit_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
@@ -24369,6 +25456,7 @@
         "v6/authored/Global.serialize_UnsignedBigInt.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
+        "v6/authored/Global.serialize_length_limit_v6.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/Global.serialize_shared_nested.json",
         "v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.json",
@@ -24400,7 +25488,10 @@
         "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/SigmaAnd.item_by_item_v6.json",
         "v6/authored/SigmaOr.item_by_item_v6.json",
+        "v6/authored/SigmaProp.propBytes_length_limit_v6.json",
+        "v6/authored/SigmaPropBytes.length_limit_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
+        "v6/authored/SubstConstants.length_limit_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
@@ -24509,9 +25600,11 @@
     },
     "Xor" : {
       "families" : [
+        "v5/authored/Coll.length_kept_at_limit.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Xor.unequal_sides.json",
         "v5/spec/Global.xor_equivalence.json",
+        "v6/authored/Coll.length_kept_at_limit_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -24572,12 +25665,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 21340,
+    "accepts" : 22157,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 47725,
-    "files" : 459,
-    "rejects" : 26385,
-    "unwalked" : 2425
+    "entries" : 49475,
+    "files" : 480,
+    "rejects" : 27318,
+    "unwalked" : 2557
   }
 }

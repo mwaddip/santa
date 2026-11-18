@@ -1,0 +1,1961 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "Coll.length_kept_at_limit",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-collection-length-limit",
+  "entries" : [
+    {
+      "name" : "keep-slice-bytes-v0-a2#0",
+      "script" : "[keep: slice|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-bytes-v0-a2#1",
+      "script" : "[keep: filter|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d90128020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-bytes-v0-a2#2",
+      "script" : "[keep: map|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-bytes-v0-a2#3",
+      "script" : "[keep: mapToInt|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d9012802040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-bytes-v0-a2#4",
+      "script" : "[keep: indices|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-bytes-v0-a2#5",
+      "script" : "[keep: zip|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-bytes-v0-a2#6",
+      "script" : "[keep: updated|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a040204000201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-bytes-v0-a2#7",
+      "script" : "[keep: updateMany|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a04021001008301020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-bytes-v0-a2#8",
+      "script" : "[keep: sizeOf|bytes|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-bools-v0-a2#9",
+      "script" : "[keep: slice|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-bools-v0-a2#10",
+      "script" : "[keep: filter|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d90128010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-bools-v0-a2#11",
+      "script" : "[keep: map|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d90128017228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-bools-v0-a2#12",
+      "script" : "[keep: mapToInt|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d9012801040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-bools-v0-a2#13",
+      "script" : "[keep: indices|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-bools-v0-a2#14",
+      "script" : "[keep: zip|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-bools-v0-a2#15",
+      "script" : "[keep: updated|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a040204000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-bools-v0-a2#16",
+      "script" : "[keep: updateMany|bools|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a04021001008301010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-bools-v0-a2#17",
+      "script" : "[keep: sizeOf|bools|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(true),Coll[SBoolean])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SBoolean]),ValUse(1,Coll[SBoolean]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[S…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010d0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-ints-v0-a2#18",
+      "script" : "[keep: slice|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-ints-v0-a2#19",
+      "script" : "[keep: filter|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d90128040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-ints-v0-a2#20",
+      "script" : "[keep: map|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d90128047228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-ints-v0-a2#21",
+      "script" : "[keep: mapToInt|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d9012804040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-ints-v0-a2#22",
+      "script" : "[keep: indices|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-ints-v0-a2#23",
+      "script" : "[keep: zip|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-ints-v0-a2#24",
+      "script" : "[keep: updated|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-ints-v0-a2#25",
+      "script" : "[keep: updateMany|ints|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a04021001008301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-ints-v0-a2#26",
+      "script" : "[keep: sizeOf|ints|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SInt$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SInt$]),ValUse(1,Coll[SInt$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SInt$]),ValUs…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d601100102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-longs-v0-a2#27",
+      "script" : "[keep: slice|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-longs-v0-a2#28",
+      "script" : "[keep: filter|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d90128050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-longs-v0-a2#29",
+      "script" : "[keep: map|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d90128057228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-longs-v0-a2#30",
+      "script" : "[keep: mapToInt|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d9012805040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-longs-v0-a2#31",
+      "script" : "[keep: indices|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-longs-v0-a2#32",
+      "script" : "[keep: zip|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-longs-v0-a2#33",
+      "script" : "[keep: updated|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a040204000502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-longs-v0-a2#34",
+      "script" : "[keep: updateMany|longs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLo…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a04021001008301050502",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-longs-v0-a2#35",
+      "script" : "[keep: sizeOf|longs|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SLong$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SLong$]),ValUse(1,Coll[SLong$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SLong$]),V…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d601110102d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-pairs-v0-a2#36",
+      "script" : "[keep: slice|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-pairs-v0-a2#37",
+      "script" : "[keep: filter|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d90128580101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-pairs-v0-a2#38",
+      "script" : "[keep: map|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d90128587228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-pairs-v0-a2#39",
+      "script" : "[keep: mapToInt|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d9012858040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-pairs-v0-a2#40",
+      "script" : "[keep: indices|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-pairs-v0-a2#41",
+      "script" : "[keep: zip|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-pairs-v0-a2#42",
+      "script" : "[keep: updated|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a04020400580202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-pairs-v0-a2#43",
+      "script" : "[keep: updateMany|pairs|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray()…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a0402100100830158580202",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-pairs-v0-a2#44",
+      "script" : "[keep: sizeOf|pairs|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll((1,1)),Coll[(SInt$,SInt$)])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[(SInt$,SInt$)]),ValUse(1,Coll[(SInt$,SInt$)]))), ValDef(3,WrappedArray(),Append…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010c58010202d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-collbytes-v0-a2#45",
+      "script" : "[keep: slice|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-collbytes-v0-a2#46",
+      "script" : "[keep: filter|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d901280e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-collbytes-v0-a2#47",
+      "script" : "[keep: map|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d901280e7228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-collbytes-v0-a2#48",
+      "script" : "[keep: mapToInt|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d901280e040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-collbytes-v0-a2#49",
+      "script" : "[keep: indices|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-collbytes-v0-a2#50",
+      "script" : "[keep: zip|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-collbytes-v0-a2#51",
+      "script" : "[keep: updated|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a040204000e020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-collbytes-v0-a2#52",
+      "script" : "[keep: updateMany|collbytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a040210010083010e0e020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-collbytes-v0-a2#53",
+      "script" : "[keep: sizeOf|collbytes|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(Coll(1,1)),Coll[Coll[SByte$]])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[Coll[SByte$]]),ValUse(1,Coll[Coll[SByte$]]))), ValDef(3,WrappedArray(),Appen…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6011a01020101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-sigmaprops-v0-a2#54",
+      "script" : "[keep: slice|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 7987. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 7987,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-sigmaprops-v0-a2#55",
+      "script" : "[keep: filter|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 1015992. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5b37211b47211040004c09a04d90128080101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-sigmaprops-v0-a2#56",
+      "script" : "[keep: map|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 1015992. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d90128087228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-sigmaprops-v0-a2#57",
+      "script" : "[keep: mapToInt|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 1015992. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adb37211b47211040004c09a04d9012808040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-sigmaprops-v0-a2#58",
+      "script" : "[keep: indices|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 18491. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-sigmaprops-v0-a2#59",
+      "script" : "[keep: zip|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 18721. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-sigmaprops-v0-a2#60",
+      "script" : "[keep: updated|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 16001. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14b37211b47211040004c09a0402040008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 16001,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-sigmaprops-v0-a2#61",
+      "script" : "[keep: updateMany|sigmaprops|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigm…` — 100000 at cost 26021. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15b37211b47211040004c09a040210010083010808cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 26021,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-sigmaprops-v0-a2#62",
+      "script" : "[keep: sizeOf|sigmaprops|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)))),Coll[SSigmaProp])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SSigmaProp]),ValUse(1,Coll[SSigmaProp])…` — 100000 at cost 5967. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6011401cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 5967,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-indices-v0-a2#63",
+      "script" : "[keep: slice|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20511. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4db0c0eb37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20511,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-indices-v0-a2#64",
+      "script" : "[keep: filter|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028516. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5db0c0eb37211b47211040004c09a04d90128040101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028516,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-indices-v0-a2#65",
+      "script" : "[keep: map|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028516. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210addb0c0eb37211b47211040004c09a04d90128047228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028516,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-indices-v0-a2#66",
+      "script" : "[keep: mapToInt|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028516. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210addb0c0eb37211b47211040004c09a04d9012804040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028516,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-indices-v0-a2#67",
+      "script" : "[keep: indices|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 31015. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0edb0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 31015,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-indices-v0-a2#68",
+      "script" : "[keep: zip|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 43769. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1ddb0c0eb37211b47211040004c09a0401db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 43769,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-indices-v0-a2#69",
+      "script" : "[keep: updated|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 28525. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14db0c0eb37211b47211040004c09a040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 28525,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-indices-v0-a2#70",
+      "script" : "[keep: updateMany|indices|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 38545. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15db0c0eb37211b47211040004c09a04021001008301040402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 38545,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-indices-v0-a2#71",
+      "script" : "[keep: sizeOf|indices|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — 100000 at cost 18491. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1db0c0eb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18491,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-zip-v0-a2#72",
+      "script" : "[keep: slice|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 20741. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 20741,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-zip-v0-a2#73",
+      "script" : "[keep: filter|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028746. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04d90128560101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028746,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-zip-v0-a2#74",
+      "script" : "[keep: map|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028746. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210addc0c1db37211b47211040004c09a0401b37211b47211040004c09a04d90128567228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028746,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-zip-v0-a2#75",
+      "script" : "[keep: mapToInt|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028746. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210addc0c1db37211b47211040004c09a0401b37211b47211040004c09a04d9012856040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028746,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-zip-v0-a2#76",
+      "script" : "[keep: indices|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 31245. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0edc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 31245,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-zip-v0-a2#77",
+      "script" : "[keep: zip|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 44229. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1ddc0c1db37211b47211040004c09a0401b37211b47211040004c09a0401dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 44229,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-zip-v0-a2#78",
+      "script" : "[keep: updated|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 28755. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04020400560101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 28755,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-zip-v0-a2#79",
+      "script" : "[keep: updateMany|zip|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 38775. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15dc0c1db37211b47211040004c09a0401b37211b47211040004c09a0402100100830156560101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 38775,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-zip-v0-a2#80",
+      "script" : "[keep: sizeOf|zip|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — 100000 at cost 18721. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1dc0c1db37211b47211040004c09a0401b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 18721,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-slice-map-v0-a2#81",
+      "script" : "[keep: slice|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1018012. KEPT: `Coll.slice` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b4adb37211b47211040004c09a04d90128027228040004c09a0c",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1018012,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-filter-map-v0-a2#82",
+      "script" : "[keep: filter|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 2026017. KEPT: `Coll.filter` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b5adb37211b47211040004c09a04d90128027228d90128020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 2026017,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-map-map-v0-a2#83",
+      "script" : "[keep: map|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 2026017. KEPT: `Coll.map` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adadb37211b47211040004c09a04d90128027228d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 2026017,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-mapToInt-map-v0-a2#84",
+      "script" : "[keep: mapToInt|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 2026017. KEPT: `Coll.map` (to an `Int`) keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210adadb37211b47211040004c09a04d90128027228d9012802040e",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 2026017,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-indices-map-v0-a2#85",
+      "script" : "[keep: indices|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1028516. KEPT: `Coll.indices` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210db0c0eadb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1028516,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-zip-map-v0-a2#86",
+      "script" : "[keep: zip|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 2038771. KEPT: `Coll.zip` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c1dadb37211b47211040004c09a04d9012802722801adb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 2038771,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updated-map-v0-a2#87",
+      "script" : "[keep: updated|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1026026. KEPT: `Coll.updated` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c14adb37211b47211040004c09a04d901280272280204000201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1026026,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-updateMany-map-v0-a2#88",
+      "script" : "[keep: updateMany|map|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 1036046. KEPT: `Coll.updateMany` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc0c15adb37211b47211040004c09a04d90128027228021001008301020201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1036046,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-sizeOf-map-v0-a2#89",
+      "script" : "[keep: sizeOf|map|v0] `BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SByte$]),V…` — 100000 at cost 1015992. KEPT: `SizeOf` keeps or shortens a length, and 100,000 items pass through it.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210b1adb37211b47211040004c09a04d90128027228",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 1015992,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-xorNode-bytes-v0-a2#90",
+      "script" : "[keep: xorNode|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 10281. KEPT: `Xor` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b3721072109bb37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 10281,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-xorMethod-bytes-v0-a2#91",
+      "script" : "[keep: xorMethod|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 10290. KEPT: `Global.xor` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210dc6a02dd02b37211b47211040004c09a04b37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 100000
+        },
+        "cost" : 10290,
+        "error" : null
+      }
+    },
+    {
+      "name" : "keep-blake-bytes-v0-a2#92",
+      "script" : "[keep: blake|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 32 at cost 11461. KEPT: `blake2b256` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00b1d811d6010e0101d602b372017201d603b372027202d604b372037203d605b372047204d606b372057205d607b372067206d608b372077207d609b372087208d60ab372097209d60bb3720a720ad60cb3720b720bd60db3720c720cd60eb3720d720dd60fb3720e720ed610b3720f720fd611b372107210cbb37211b47211040004c09a04",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 32
+        },
+        "cost" : 11461,
+        "error" : null
+      }
+    }
+  ]
+}
