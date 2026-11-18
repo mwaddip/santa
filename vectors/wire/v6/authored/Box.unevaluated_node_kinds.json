@@ -360,6 +360,116 @@
         "activated" : 3,
         "ergoTree" : 0
       }
+    },
+    {
+      "name" : "unevaluated-mod_q_on_boolean-v0-box#32",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(ModQ(true) == BigInt 1) — ModQ over a Boolean — at tree version 0, UNSIZED. `ModQSerializer` / `ModQArithOpSerializer` take the operand with `asBigInt`, an erased cast, and neither node checks it, so the JVM parses the tree (ModQ is typed BigInt whatever it holds) and the carrier round-trips to its own bytes; evaluating it throws (the eval family). An implementation that type-checks the operand at parse refuses the carrier: an over-reject.",
+      "bytes_hex" : "c0843d00d193e70101060101010000f91ee1a5f78346e9621e8bb02a4524d71128b01062f93dca4cc3ebdde2066a2f00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "unevaluated-mod_q_on_boolean-v3-box#33",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(ModQ(true) == BigInt 1) — ModQ over a Boolean — at tree version 3, SIZE-FLAGGED. The same parse and round-trip to its own bytes.",
+      "bytes_hex" : "c0843d0b08d193e70101060101010000f91ee1a5f78346e9621e8bb02a4524d71128b01062f93dca4cc3ebdde2066a2f00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "unevaluated-mod_q_on_int-v0-box#34",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(ModQ(1) == BigInt 1) — ModQ over an Int — at tree version 0, UNSIZED. `ModQSerializer` / `ModQArithOpSerializer` take the operand with `asBigInt`, an erased cast, and neither node checks it, so the JVM parses the tree (ModQ is typed BigInt whatever it holds) and the carrier round-trips to its own bytes; evaluating it throws (the eval family). An implementation that type-checks the operand at parse refuses the carrier: an over-reject.",
+      "bytes_hex" : "c0843d00d193e70402060101010000faedcb37463565443d22e19cc1f075f3c0318d638f36f2de8d1182ec675202dd00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "unevaluated-mod_q_on_int-v3-box#35",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(ModQ(1) == BigInt 1) — ModQ over an Int — at tree version 3, SIZE-FLAGGED. The same parse and round-trip to its own bytes.",
+      "bytes_hex" : "c0843d0b08d193e70402060101010000faedcb37463565443d22e19cc1f075f3c0318d638f36f2de8d1182ec675202dd00",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "unevaluated-plus_mod_q_boolean_left-v0-box#36",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(PlusModQ(true, BigInt 1) == BigInt 1) — a Boolean left operand — at tree version 0, UNSIZED. `ModQSerializer` / `ModQArithOpSerializer` take the operand with `asBigInt`, an erased cast, and neither node checks it, so the JVM parses the tree (ModQ is typed BigInt whatever it holds) and the carrier round-trips to its own bytes; evaluating it throws (the eval family). An implementation that type-checks the operand at parse refuses the carrier: an over-reject.",
+      "bytes_hex" : "c0843d00d193e801010601010601010100001ad66acd6cb50466c76df38df4cc670bbef9d9e407a52cd492fd413c0d6f6f5100",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "unevaluated-plus_mod_q_boolean_left-v3-box#37",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(PlusModQ(true, BigInt 1) == BigInt 1) — a Boolean left operand — at tree version 3, SIZE-FLAGGED. The same parse and round-trip to its own bytes.",
+      "bytes_hex" : "c0843d0b0bd193e801010601010601010100001ad66acd6cb50466c76df38df4cc670bbef9d9e407a52cd492fd413c0d6f6f5100",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "unevaluated-plus_mod_q_int_right-v0-box#38",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(PlusModQ(BigInt 1, 1) == BigInt 1) — an Int right operand — at tree version 0, UNSIZED. `ModQSerializer` / `ModQArithOpSerializer` take the operand with `asBigInt`, an erased cast, and neither node checks it, so the JVM parses the tree (ModQ is typed BigInt whatever it holds) and the carrier round-trips to its own bytes; evaluating it throws (the eval family). An implementation that type-checks the operand at parse refuses the carrier: an over-reject.",
+      "bytes_hex" : "c0843d00d193e806010104020601010100001149313007af62ea729d6c45bf6c343e5c4784ac187729307a7dd633eea2065300",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "unevaluated-plus_mod_q_int_right-v3-box#39",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(PlusModQ(BigInt 1, 1) == BigInt 1) — an Int right operand — at tree version 3, SIZE-FLAGGED. The same parse and round-trip to its own bytes.",
+      "bytes_hex" : "c0843d0b0bd193e806010104020601010100001149313007af62ea729d6c45bf6c343e5c4784ac187729307a7dd633eea2065300",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "unevaluated-minus_mod_q_booleans-v0-box#40",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(MinusModQ(true, false) == BigInt 1) — two Boolean operands — at tree version 0, UNSIZED. `ModQSerializer` / `ModQArithOpSerializer` take the operand with `asBigInt`, an erased cast, and neither node checks it, so the JVM parses the tree (ModQ is typed BigInt whatever it holds) and the carrier round-trips to its own bytes; evaluating it throws (the eval family). An implementation that type-checks the operand at parse refuses the carrier: an over-reject.",
+      "bytes_hex" : "c0843d00d193e901010100060101010000ae75bb3127fc8b919ad22270c06b8fa47366757976774410834ce329df0d20c400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "unevaluated-minus_mod_q_booleans-v3-box#41",
+      "kind" : "Box",
+      "source" : "santa:authored-unevaluated-node-kinds",
+      "description" : "sigmaProp(MinusModQ(true, false) == BigInt 1) — two Boolean operands — at tree version 3, SIZE-FLAGGED. The same parse and round-trip to its own bytes.",
+      "bytes_hex" : "c0843d0b0ad193e901010100060101010000ae75bb3127fc8b919ad22270c06b8fa47366757976774410834ce329df0d20c400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

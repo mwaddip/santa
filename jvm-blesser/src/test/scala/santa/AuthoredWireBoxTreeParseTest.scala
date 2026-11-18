@@ -221,7 +221,8 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
     case (op, kind) =>
       test(s"$kind parse acceptance: unchecked nodes parse; erased casts, builder constraints and a mistyped item reject") {
         val es = entries(op)
-        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2) ++ List(true, false) ++ SoftThenHardTrees.map(_._2))
+        assertEquals(es.map(isReject), AcceptanceTrees.map(_._2) ++ List(true, false) ++ SoftThenHardTrees.map(_._2) ++
+          List.fill(4)(false))
         AcceptanceTrees.zip(es).foreach { case ((tree, _), e) =>
           assert(bytesHex(e).contains(Value + tree + Fields), s"candidate with tree $tree")
         }
@@ -237,8 +238,11 @@ class AuthoredWireBoxTreeParseTest extends munit.FunSuite {
         // TrueLeaf and FalseLeaf are Boolean constants: the JVM writes them back as 01 01 and 01 00, not 7f and 80.
         // A v0 MethodCall with no arguments is written back as a PropertyCall: dc and the argument count become db.
         def rewritten(e: Json): Option[String] = e.hcursor.get[String]("expected_bytes_hex").toOption
+        // ergots' request (2026-11-18), #54 on: the size-flagged twins of #2 / #3, written back with the TRUE size.
         val want = Map(2 -> ("00d17f", "00d10101"), 3 -> ("00d180", "00d10100"),
-          44 -> ("00d1e6dc650bfe00", "00d1e6db650bfe"))
+          44 -> ("00d1e6dc650bfe00", "00d1e6db650bfe"),
+          54 -> ("0b02d17f", "0b03d10101"), 55 -> ("0b02d180", "0b03d10100"),
+          56 -> ("0802d17f", "0803d10101"), 57 -> ("0802d180", "0803d10100"))
         es.zipWithIndex.foreach { case (e, i) =>
           want.get(i) match {
             case Some((from, to)) =>

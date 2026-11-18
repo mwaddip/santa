@@ -45,8 +45,8 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 27,478 entries across 431 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 25,390
+- ✅ **A blessed eval corpus — 27,488 entries across 431 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 25,400
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
   spends; 8,206 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
@@ -56,7 +56,7 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
   `SigmaProp` through), **v5** (8,966 — the cumulative
-  v5/mainnet method surface) and **v6** (18,494 — the v6 new-feature surface). Each entry is
+  v5/mainnet method surface) and **v6** (18,504 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does

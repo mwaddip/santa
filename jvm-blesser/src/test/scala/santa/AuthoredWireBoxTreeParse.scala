@@ -616,7 +616,30 @@ object AuthoredWireBoxTreeParse extends BoxTreeWireFixtures {
           "crosses the box window. Round-trip identity." +
           (if (kind == "Transaction") " A second output follows, so the parser's unchecked peek before the trip " +
             "lands on a real byte." else ""),
-          wrapMid(orderingCand("0402")), degrade = Some(1014))) ++ softThenHardEntries(kind, wrap)
+          wrapMid(orderingCand("0402")), degrade = Some(1014))) ++ softThenHardEntries(kind, wrap) ++
+        sizedLeafEntries(kind, wrap)
+    }
+
+    // ergots' request of 2026-11-18 (its six-opcodes re-grade note), entries #54 on: the SIZE-FLAGGED twins of #2 / #3.
+    // TrueLeaf / FalseLeaf as their own opcode in a sized tree; the box writer writes the parsed tree back from its
+    // structure, so the constant form comes back WITH ITS TRUE SIZE (03, one byte longer than the 02 declared).
+    def sizedLeafEntries(kind: String, wrap: Array[Byte] => Array[Byte]): Seq[Json] = {
+      val k = kind.toLowerCase
+      val subject = if (kind == "Box") "A bare box" else "A transaction output"
+      def cand(tree: String): Array[Byte] = wrap(Value ++ b(tree) ++ Fields)
+      def twin(n: Int, leaf: String, op: String, value: String, header: String, version: String): Json =
+        acceptRewritten(s"$k-c3-${leaf.toLowerCase}-opcode-sized-$version-accept#$n", kind,
+          s"$subject whose SIZE-FLAGGED tree version $version (header $header, declared size 2) is " +
+          s"BoolToSigmaProp($leaf) with $leaf as its own opcode $op: the size-flagged twin of #${if (leaf == "TrueLeaf") 2 else 3}. " +
+          s"It parses, and the box writer writes the parsed tree back from its structure (ErgoBoxCandidate.scala:142) as " +
+          s"the Boolean constant WITH THE TRUE SIZE: $header 03 d1 01 $value. NON-IDENTITY, and the size changes with the " +
+          "body. An impl that keeps the opcode, keeps the declared size, or does not parse it, diverges.",
+          cand(s"${header}02d1$op"), rewritten = cand(s"${header}03d101$value"))
+      Seq(
+        twin(54, "TrueLeaf", "7f", "01", "0b", "3"),
+        twin(55, "FalseLeaf", "80", "00", "0b", "3"),
+        twin(56, "TrueLeaf", "7f", "01", "08", "0"),
+        twin(57, "FalseLeaf", "80", "00", "08", "0"))
     }
 
     // ergots' second request of 2026-09-30, entries #48 on: the mirror of #46: a soft failure read BEFORE a construction

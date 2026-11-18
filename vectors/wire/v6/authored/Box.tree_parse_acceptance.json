@@ -627,6 +627,54 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "box-c3-trueleaf-opcode-sized-3-accept#54",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A bare box whose SIZE-FLAGGED tree version 3 (header 0b, declared size 2) is BoolToSigmaProp(TrueLeaf) with TrueLeaf as its own opcode 7f: the size-flagged twin of #2. It parses, and the box writer writes the parsed tree back from its structure (ErgoBoxCandidate.scala:142) as the Boolean constant WITH THE TRUE SIZE: 0b 03 d1 01 01. NON-IDENTITY, and the size changes with the body. An impl that keeps the opcode, keeps the declared size, or does not parse it, diverges.",
+      "bytes_hex" : "c0843d0b02d17f0100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d0b03d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-c3-falseleaf-opcode-sized-3-accept#55",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A bare box whose SIZE-FLAGGED tree version 3 (header 0b, declared size 2) is BoolToSigmaProp(FalseLeaf) with FalseLeaf as its own opcode 80: the size-flagged twin of #3. It parses, and the box writer writes the parsed tree back from its structure (ErgoBoxCandidate.scala:142) as the Boolean constant WITH THE TRUE SIZE: 0b 03 d1 01 00. NON-IDENTITY, and the size changes with the body. An impl that keeps the opcode, keeps the declared size, or does not parse it, diverges.",
+      "bytes_hex" : "c0843d0b02d1800100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d0b03d101000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-c3-trueleaf-opcode-sized-0-accept#56",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A bare box whose SIZE-FLAGGED tree version 0 (header 08, declared size 2) is BoolToSigmaProp(TrueLeaf) with TrueLeaf as its own opcode 7f: the size-flagged twin of #2. It parses, and the box writer writes the parsed tree back from its structure (ErgoBoxCandidate.scala:142) as the Boolean constant WITH THE TRUE SIZE: 08 03 d1 01 01. NON-IDENTITY, and the size changes with the body. An impl that keeps the opcode, keeps the declared size, or does not parse it, diverges.",
+      "bytes_hex" : "c0843d0802d17f0100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d0803d101010100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-c3-falseleaf-opcode-sized-0-accept#57",
+      "kind" : "Box",
+      "source" : "santa:authored-box-tree-parse",
+      "description" : "A bare box whose SIZE-FLAGGED tree version 0 (header 08, declared size 2) is BoolToSigmaProp(FalseLeaf) with FalseLeaf as its own opcode 80: the size-flagged twin of #3. It parses, and the box writer writes the parsed tree back from its structure (ErgoBoxCandidate.scala:142) as the Boolean constant WITH THE TRUE SIZE: 08 03 d1 01 00. NON-IDENTITY, and the size changes with the body. An impl that keeps the opcode, keeps the declared size, or does not parse it, diverges.",
+      "bytes_hex" : "c0843d0802d1800100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d0803d101000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

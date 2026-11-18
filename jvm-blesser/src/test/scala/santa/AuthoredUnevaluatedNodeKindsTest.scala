@@ -19,14 +19,33 @@ class AuthoredUnevaluatedNodeKindsTest extends munit.FunSuite {
     "sigma_prop_is_proven", "tagged_variable", "create_avl_tree_four_value",
     "bit_or", "bit_and", "bit_xor", "bit_inversion")
 
-  test("thirteen node kinds in order, then the one extra v0 encoding") {
-    assertEquals(entries.size, 14)
-    entries.zip(Slugs :+ "create_avl_tree_four_value_getvar").zipWithIndex.foreach {
+  /** ergots' request (2026-11-18): the ModQ nodes over an operand of another type, appended. */
+  private val OtherOperand = List("mod_q_on_boolean", "mod_q_on_int", "plus_mod_q_boolean_left",
+    "plus_mod_q_int_right", "minus_mod_q_booleans")
+
+  test("thirteen node kinds in order, then the one extra v0 encoding, then the other-operand ModQ nodes") {
+    assertEquals(entries.size, 14 + 2 * OtherOperand.size)
+    entries.take(14).zip(Slugs :+ "create_avl_tree_four_value_getvar").zipWithIndex.foreach {
       case ((e, slug), i) => assertEquals(str(e, "name"), s"$slug-errored#$i")
+    }
+    entries.drop(14).zip(OtherOperand.flatMap(s => List(s"$s-errored", s"$s-v0-errored"))).zipWithIndex.foreach {
+      case ((e, name), i) => assertEquals(str(e, "name"), s"$name#${14 + i}")
     }
     assertEquals(UnevaluatedNodeTrees.nodes.map(_.slug), Slugs)
     assertEquals(UnevaluatedNodeTrees.extraEncodings.map(_.slug),
       List("create_avl_tree_four_value_getvar"))
+    assertEquals(UnevaluatedNodeTrees.otherOperand.map(_.slug), OtherOperand)
+  }
+
+  test("the other-operand trees hold a Boolean or Int constant where ModQ declares a BigInt, and expect errored") {
+    // EQ(<node>, BigInt 1) under BoolToSigmaProp: d1 93 <node> 06 01 01; ModQ e7, PlusModQ e8, MinusModQ e9
+    val want = Map("mod_q_on_boolean" -> "d193e70101060101", "mod_q_on_int" -> "d193e70402060101",
+      "plus_mod_q_boolean_left" -> "d193e80101060101060101", "plus_mod_q_int_right" -> "d193e80601010402060101",
+      "minus_mod_q_booleans" -> "d193e9010101000601 01".replace(" ", ""))
+    UnevaluatedNodeTrees.otherOperand.foreach(n => assertEquals(n.body, want(n.slug), n.slug))
+    entries.drop(14).foreach { e =>
+      assertEquals(e.hcursor.downField("expected").get[String]("error").toOption, Some("errored"), str(e, "name"))
+    }
   }
 
   test("thirteen v3 size-flagged trees plus one v0 unsized; every row expects errored") {
@@ -35,7 +54,7 @@ class AuthoredUnevaluatedNodeKindsTest extends munit.FunSuite {
         str(e, "name"))
       assertEquals(e.hcursor.downField("version").get[Int]("activated").toOption, Some(3))
     }
-    val (v3s, v0s) = entries.partition(
+    val (v3s, v0s) = entries.take(14).partition(
       _.hcursor.downField("version").get[Int]("ergoTree").toOption.contains(3))
     assertEquals(v3s.size, 13)
     assertEquals(v0s.size, 1)

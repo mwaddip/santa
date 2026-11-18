@@ -124,8 +124,30 @@ object UnevaluatedNodeTrees {
       "way to ask a reader whether it takes four values or three plus an option tag",
       bodyOf(BoolToSigmaProp(EQ(createAvlTree(getVarInt), createAvlTree(getVarInt))))))
 
+  /** The ModQ nodes over an operand of ANOTHER type (ergots' request, 2026-11-18,
+    * `prompts/santa-six-opcodes-regrade-2026-11-18.md` on its side). `ModQSerializer` builds
+    * `ModQ(r.getValue().asBigInt)` and `ModQArithOpSerializer` `ModQArithOp(left.asBigInt,
+    * right.asBigInt, opCode)`: `asBigInt` is an erased cast and neither node checks its operand, so
+    * the tree parses (ModQ's type is BigInt whatever it holds, so the EQ around it is well-typed),
+    * and evaluating it throws like every one of the thirteen. Built here with the same erased cast. */
+  private def asBig(v: Value[SType]): Value[SBigInt.type] = v.asInstanceOf[Value[SBigInt.type]]
+  val otherOperand: Seq[Node] = Seq(
+    Node("mod_q_on_boolean", "sigmaProp(ModQ(true) == BigInt 1) — ModQ over a Boolean",
+      bodyOf(BoolToSigmaProp(EQ(ModQ(asBig(BooleanConstant(true))), BigIntConstant(1))))),
+    Node("mod_q_on_int", "sigmaProp(ModQ(1) == BigInt 1) — ModQ over an Int",
+      bodyOf(BoolToSigmaProp(EQ(ModQ(asBig(IntConstant(1))), BigIntConstant(1))))),
+    Node("plus_mod_q_boolean_left", "sigmaProp(PlusModQ(true, BigInt 1) == BigInt 1) — a Boolean left operand",
+      bodyOf(BoolToSigmaProp(EQ(ModQArithOp(asBig(BooleanConstant(true)), BigIntConstant(1),
+        ModQArithOp.PlusModQ.opCode), BigIntConstant(1))))),
+    Node("plus_mod_q_int_right", "sigmaProp(PlusModQ(BigInt 1, 1) == BigInt 1) — an Int right operand",
+      bodyOf(BoolToSigmaProp(EQ(ModQArithOp(BigIntConstant(1), asBig(IntConstant(1)),
+        ModQArithOp.PlusModQ.opCode), BigIntConstant(1))))),
+    Node("minus_mod_q_booleans", "sigmaProp(MinusModQ(true, false) == BigInt 1) — two Boolean operands",
+      bodyOf(BoolToSigmaProp(EQ(ModQArithOp(asBig(BooleanConstant(true)), asBig(BooleanConstant(false)),
+        ModQArithOp.MinusModQ.opCode), BigIntConstant(1))))))
+
   def nodeBySlug(slug: String): Node =
-    (nodes ++ extraEncodings).find(_.slug == slug)
+    (nodes ++ extraEncodings ++ otherOperand).find(_.slug == slug)
       .getOrElse(sys.error(s"no such node kind: $slug"))
 
   // ── the reject arms ──────────────────────────────────────────────────────────────────────────

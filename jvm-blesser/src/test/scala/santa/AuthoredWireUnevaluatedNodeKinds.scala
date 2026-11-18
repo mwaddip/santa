@@ -179,7 +179,21 @@ object AuthoredWireUnevaluatedNodeKinds {
         "through a node that never evaluates.",
         carrier(kind, "spip-filter-v0", spipFilterTree), V0,
         Seq("ClassCastException", "SCollection")))
-    v0Accepts ++ v3Accepts ++ rejects
+    // ergots' request (2026-11-18): the ModQ nodes over an operand of another type. Appended, so the entries above
+    // keep their numbers.
+    val otherOperand = UnevaluatedNodeTrees.otherOperand.flatMap { n =>
+      Seq(
+        accept(kind, s"unevaluated-${n.slug}-v0-$suffix#${next()}",
+          s"${n.what} — at tree version 0, UNSIZED. `ModQSerializer` / `ModQArithOpSerializer` take the operand " +
+          "with `asBigInt`, an erased cast, and neither node checks it, so the JVM parses the tree (ModQ is typed " +
+          "BigInt whatever it holds) and the carrier round-trips to its own bytes; evaluating it throws (the eval " +
+          "family). An implementation that type-checks the operand at parse refuses the carrier: an over-reject.",
+          carrier(kind, n.slug, UnevaluatedNodeTrees.v0(n.body)), V0),
+        accept(kind, s"unevaluated-${n.slug}-v3-$suffix#${next()}",
+          s"${n.what} — at tree version 3, SIZE-FLAGGED. The same parse and round-trip to its own bytes.",
+          carrier(kind, n.slug, UnevaluatedNodeTrees.v3(n.body)), Activated))
+    }
+    v0Accepts ++ v3Accepts ++ rejects ++ otherOperand
   }
 
   def extract(): Map[String, Json] = {

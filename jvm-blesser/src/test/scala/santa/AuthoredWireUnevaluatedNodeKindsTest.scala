@@ -16,11 +16,19 @@ class AuthoredWireUnevaluatedNodeKindsTest extends munit.FunSuite {
   private def treeVer(e: Json): Int =
     e.hcursor.downField("version").get[Int]("ergoTree").toOption.getOrElse(fail("ergoTree"))
 
-  test("both kinds: 13 v0 accepts, 13 v3 accepts, 6 rejects — 32 rows") {
+  test("both kinds: 13 v0 accepts, 13 v3 accepts, 6 rejects — 32 rows; then 5 other-operand ModQ nodes x 2") {
     assertEquals(vectors.keySet, Set(B.OpBox, B.OpTransaction))
     Seq(B.OpBox, B.OpTransaction).foreach { op =>
-      val es = entries(op)
-      assertEquals(es.size, 32, op)
+      val all = entries(op)
+      assertEquals(all.size, 42, op)
+      // ergots' request (2026-11-18), appended: every one accepts, unsized v0 then sized v3
+      val other = all.drop(32)
+      assertEquals(other.map(e => str(e, "name").split('#').head),
+        UnevaluatedNodeTrees.otherOperand.flatMap(n => Seq(s"unevaluated-${n.slug}-v0", s"unevaluated-${n.slug}-v3"))
+          .map(_ + (if (op == B.OpBox) "-box" else "-tx")).toList, op)
+      other.foreach(e => assert(e.hcursor.get[String]("error").toOption.isEmpty, s"${str(e, "name")} accepts"))
+      assertEquals(other.map(treeVer), List.fill(5)(List(0, 3)).flatten, op)
+      val es = all.take(32)
       val (accepts, rejects) = es.partition(_.hcursor.get[String]("error").toOption.isEmpty)
       assertEquals(accepts.size, 26, s"$op accepts")
       assertEquals(rejects.size, 6, s"$op rejects")
@@ -49,7 +57,7 @@ class AuthoredWireUnevaluatedNodeKindsTest extends munit.FunSuite {
       entries(op).filter(_.hcursor.get[String]("error").toOption.isEmpty).foreach { e =>
         val carrier = str(e, "bytes_hex")
         // `bit_shift_right` is a PREFIX of `bit_shift_right_zeroed`, so take the LONGEST match
-        val node = (UnevaluatedNodeTrees.nodes ++ UnevaluatedNodeTrees.extraEncodings)
+        val node = (UnevaluatedNodeTrees.nodes ++ UnevaluatedNodeTrees.extraEncodings ++ UnevaluatedNodeTrees.otherOperand)
           .filter(n => str(e, "name").contains(s"-${n.slug}-"))
           .sortBy(-_.slug.length).headOption.getOrElse(fail(s"no node kind in ${str(e, "name")}"))
         val tree = if (treeVer(e) == 0) UnevaluatedNodeTrees.v0(node.body)

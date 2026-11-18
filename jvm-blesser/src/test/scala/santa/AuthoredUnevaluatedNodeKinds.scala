@@ -46,7 +46,19 @@ object AuthoredUnevaluatedNodeKinds {
         UnevaluatedNodeTrees.v0(n.body),
         s"${n.slug}-errored#${UnevaluatedNodeTrees.nodes.size + j}", dummyInput, V3, 0)
     }
-    val entries = v3Entries ++ v0Entries
+    // ergots' request (2026-11-18): the ModQ nodes over an operand of another type, which the JVM parses (an erased
+    // cast, no operand check) and, like every one of the thirteen, does not evaluate. Appended, at tree v3 (sized)
+    // and v0 (unsized), so the entries above keep their numbers.
+    val base = UnevaluatedNodeTrees.nodes.size + UnevaluatedNodeTrees.extraEncodings.size
+    val otherEntries = UnevaluatedNodeTrees.otherOperand.zipWithIndex.flatMap { case (n, j) =>
+      val what = s"${n.what}: the operand is taken by an erased cast and never checked, so the tree parses"
+      Seq(
+        SpecExtract.authoredRejectEntry(Op, s"$what  // parsed, never evaluated: no `eval` override -> errored",
+          UnevaluatedNodeTrees.v3(n.body), s"${n.slug}-errored#${base + 2 * j}", dummyInput, V3),
+        SpecExtract.authoredRejectEntryV(Op, s"$what (tree v0)  // parsed, never evaluated: no `eval` override -> errored",
+          UnevaluatedNodeTrees.v0(n.body), s"${n.slug}-v0-errored#${base + 2 * j + 1}", dummyInput, V3, 0))
+    }
+    val entries = v3Entries ++ v0Entries ++ otherEntries
     // SpecExtract stamps 6.0.3; this family was blessed on the current oracle, as
     // AuthoredEvalNonPairTuple does for the same reason.
     Map(Op -> SpecExtract.authoredEnvelope(Op, entries, Source)
