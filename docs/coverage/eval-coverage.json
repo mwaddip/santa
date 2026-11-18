@@ -37,30 +37,82 @@
       "version" : "v4"
     },
     "v5/authored/AND.item_by_item.json" : {
-      "accepts" : 101,
-      "entries" : 156,
+      "accepts" : 624,
+      "entries" : 1329,
       "methods" : [
       ],
       "op" : "AND.item_by_item",
       "ops" : [
         "/",
         "AND",
+        "Append",
         "BinAnd",
+        "BlockValue",
+        "ByIndex",
         "CalcBlake2b256",
         "ConcreteCollection",
         "Const",
         "EQ",
-        "SizeOf"
+        "Filter",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "MapCollection",
+        "SelectField",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 55,
+      "rejects" : 705,
       "tree_shapes" : [
         {
-          "accepts" : 101,
+          "accepts" : 624,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 55,
+          "rejects" : 705,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/AND.item_by_item_context.json" : {
+      "accepts" : 9,
+      "entries" : 40,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "99:8 Box.tokens"
+      ],
+      "op" : "AND.item_by_item_context",
+      "ops" : [
+        "AND",
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "MinerPubkey$",
+        "OptionGet",
+        "Outputs$",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 31,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 31,
           "tree_version" : 0
         }
       ],
@@ -904,6 +956,68 @@
           "has_deserialize" : false,
           "has_size" : false,
           "rejects" : 7,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/BinAnd.item_by_item.json" : {
+      "accepts" : 23,
+      "entries" : 104,
+      "methods" : [
+      ],
+      "op" : "BinAnd.item_by_item",
+      "ops" : [
+        "/",
+        "BinAnd",
+        "Const",
+        "EQ",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 81,
+      "tree_shapes" : [
+        {
+          "accepts" : 23,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 81,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/BinOr.item_by_item.json" : {
+      "accepts" : 23,
+      "entries" : 104,
+      "methods" : [
+      ],
+      "op" : "BinOr.item_by_item",
+      "ops" : [
+        "/",
+        "BinOr",
+        "Const",
+        "EQ",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 81,
+      "tree_shapes" : [
+        {
+          "accepts" : 23,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 81,
           "tree_version" : 0
         }
       ],
@@ -1942,6 +2056,33 @@
       "unwalked" : 42,
       "version" : "v5"
     },
+    "v5/authored/Exists.item_by_item.json" : {
+      "accepts" : 72,
+      "entries" : 348,
+      "methods" : [
+      ],
+      "op" : "Exists.item_by_item",
+      "ops" : [
+        "Const",
+        "Exists",
+        "FuncValue",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 276,
+      "tree_shapes" : [
+        {
+          "accepts" : 72,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 276,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
     "v5/authored/Exponentiate.static_type.json" : {
       "accepts" : 132,
       "entries" : 498,
@@ -1992,6 +2133,60 @@
         }
       ],
       "unwalked" : 324,
+      "version" : "v5"
+    },
+    "v5/authored/Filter.item_by_item.json" : {
+      "accepts" : 4,
+      "entries" : 348,
+      "methods" : [
+      ],
+      "op" : "Filter.item_by_item",
+      "ops" : [
+        "Const",
+        "Filter",
+        "FuncValue",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 344,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 344,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/ForAll.item_by_item.json" : {
+      "accepts" : 72,
+      "entries" : 348,
+      "methods" : [
+      ],
+      "op" : "ForAll.item_by_item",
+      "ops" : [
+        "Const",
+        "ForAll",
+        "FuncValue",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 276,
+      "tree_shapes" : [
+        {
+          "accepts" : 72,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 276,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
       "version" : "v5"
     },
     "v5/authored/FuncValue.non_unary_arity.json" : {
@@ -2148,31 +2343,83 @@
       "version" : "v5"
     },
     "v5/authored/OR.item_by_item.json" : {
-      "accepts" : 102,
-      "entries" : 157,
+      "accepts" : 626,
+      "entries" : 1331,
       "methods" : [
       ],
       "op" : "OR.item_by_item",
       "ops" : [
         "/",
+        "Append",
         "BinOr",
+        "BlockValue",
         "BoolToSigmaProp",
+        "ByIndex",
         "CalcBlake2b256",
         "ConcreteCollection",
         "Const",
         "EQ",
+        "Filter",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "MapCollection",
         "OR",
-        "SizeOf"
+        "SelectField",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 55,
+      "rejects" : 705,
       "tree_shapes" : [
         {
-          "accepts" : 102,
+          "accepts" : 626,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 55,
+          "rejects" : 705,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/OR.item_by_item_context.json" : {
+      "accepts" : 9,
+      "entries" : 40,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "99:8 Box.tokens"
+      ],
+      "op" : "OR.item_by_item_context",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "MinerPubkey$",
+        "OR",
+        "OptionGet",
+        "Outputs$",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 31,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 31,
           "tree_version" : 0
         }
       ],
@@ -2278,6 +2525,64 @@
           "has_deserialize" : false,
           "has_size" : false,
           "rejects" : 1,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SigmaAnd.item_by_item.json" : {
+      "accepts" : 2,
+      "entries" : 103,
+      "methods" : [
+      ],
+      "op" : "SigmaAnd.item_by_item",
+      "ops" : [
+        "Const",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "SigmaAnd",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 101,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 101,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/SigmaOr.item_by_item.json" : {
+      "accepts" : 2,
+      "entries" : 103,
+      "methods" : [
+      ],
+      "op" : "SigmaOr.item_by_item",
+      "ops" : [
+        "Const",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "SigmaOr",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 101,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 101,
           "tree_version" : 0
         }
       ],
@@ -2616,6 +2921,81 @@
           "has_size" : true,
           "rejects" : 0,
           "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/XorOf.item_by_item.json" : {
+      "accepts" : 116,
+      "entries" : 1018,
+      "methods" : [
+      ],
+      "op" : "XorOf.item_by_item",
+      "ops" : [
+        "BlockValue",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "MapCollection",
+        "SelectField",
+        "ValDef",
+        "ValUse",
+        "XorOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 902,
+      "tree_shapes" : [
+        {
+          "accepts" : 116,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 902,
+          "tree_version" : 0
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v5"
+    },
+    "v5/authored/XorOf.item_by_item_context.json" : {
+      "accepts" : 7,
+      "entries" : 40,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "99:8 Box.tokens"
+      ],
+      "op" : "XorOf.item_by_item_context",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "MinerPubkey$",
+        "OptionGet",
+        "Outputs$",
+        "Self$",
+        "XorOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 33,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 33,
+          "tree_version" : 0
         }
       ],
       "unwalked" : 0,
@@ -5401,39 +5781,99 @@
       "unwalked" : 0,
       "version" : "v5"
     },
+    "v6/authored/AND.item_by_item_context_v6.json" : {
+      "accepts" : 18,
+      "entries" : 80,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "99:8 Box.tokens"
+      ],
+      "op" : "AND.item_by_item_context_v6",
+      "ops" : [
+        "AND",
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "MinerPubkey$",
+        "OptionGet",
+        "Outputs$",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 62,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 31,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 31,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/AND.item_by_item_v6.json" : {
-      "accepts" : 202,
-      "entries" : 312,
+      "accepts" : 1284,
+      "entries" : 2811,
       "methods" : [
       ],
       "op" : "AND.item_by_item_v6",
       "ops" : [
         "/",
         "AND",
+        "Append",
         "BinAnd",
+        "BlockValue",
+        "ByIndex",
         "CalcBlake2b256",
         "ConcreteCollection",
         "Const",
         "EQ",
-        "SizeOf"
+        "Filter",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "MapCollection",
+        "SelectField",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 110,
+      "rejects" : 1527,
       "tree_shapes" : [
         {
-          "accepts" : 101,
+          "accepts" : 624,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 55,
+          "rejects" : 705,
           "tree_version" : 0
         },
         {
-          "accepts" : 101,
+          "accepts" : 660,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 55,
+          "rejects" : 822,
           "tree_version" : 3
         }
       ],
@@ -6046,6 +6486,84 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 3,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/BinAnd.item_by_item_v6.json" : {
+      "accepts" : 49,
+      "entries" : 223,
+      "methods" : [
+      ],
+      "op" : "BinAnd.item_by_item_v6",
+      "ops" : [
+        "/",
+        "BinAnd",
+        "Const",
+        "EQ",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 174,
+      "tree_shapes" : [
+        {
+          "accepts" : 23,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 81,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 26,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 93,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/BinOr.item_by_item_v6.json" : {
+      "accepts" : 49,
+      "entries" : 223,
+      "methods" : [
+      ],
+      "op" : "BinOr.item_by_item_v6",
+      "ops" : [
+        "/",
+        "BinOr",
+        "Const",
+        "EQ",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 174,
+      "tree_shapes" : [
+        {
+          "accepts" : 23,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 81,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 26,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 93,
           "tree_version" : 3
         }
       ],
@@ -7729,6 +8247,41 @@
       "unwalked" : 99,
       "version" : "v6"
     },
+    "v6/authored/Exists.item_by_item_v6.json" : {
+      "accepts" : 156,
+      "entries" : 756,
+      "methods" : [
+      ],
+      "op" : "Exists.item_by_item_v6",
+      "ops" : [
+        "Const",
+        "Exists",
+        "FuncValue",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 600,
+      "tree_shapes" : [
+        {
+          "accepts" : 72,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 276,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 84,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 324,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/Exponentiate.static_type_v6.json" : {
       "accepts" : 260,
       "entries" : 822,
@@ -7789,6 +8342,76 @@
         }
       ],
       "unwalked" : 492,
+      "version" : "v6"
+    },
+    "v6/authored/Filter.item_by_item_v6.json" : {
+      "accepts" : 8,
+      "entries" : 756,
+      "methods" : [
+      ],
+      "op" : "Filter.item_by_item_v6",
+      "ops" : [
+        "Const",
+        "Filter",
+        "FuncValue",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 748,
+      "tree_shapes" : [
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 344,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 4,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 404,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/ForAll.item_by_item_v6.json" : {
+      "accepts" : 156,
+      "entries" : 756,
+      "methods" : [
+      ],
+      "op" : "ForAll.item_by_item_v6",
+      "ops" : [
+        "Const",
+        "ForAll",
+        "FuncValue",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 600,
+      "tree_shapes" : [
+        {
+          "accepts" : 72,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 276,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 84,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 324,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
       "version" : "v6"
     },
     "v6/authored/FunDef.nTpeArgs_count_bound.json" : {
@@ -9906,40 +10529,100 @@
       "unwalked" : 0,
       "version" : "v6"
     },
+    "v6/authored/OR.item_by_item_context_v6.json" : {
+      "accepts" : 18,
+      "entries" : 80,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "99:8 Box.tokens"
+      ],
+      "op" : "OR.item_by_item_context_v6",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "MinerPubkey$",
+        "OR",
+        "OptionGet",
+        "Outputs$",
+        "Self$"
+      ],
+      "provenance" : "authored",
+      "rejects" : 62,
+      "tree_shapes" : [
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 31,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 9,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 31,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
     "v6/authored/OR.item_by_item_v6.json" : {
-      "accepts" : 204,
-      "entries" : 314,
+      "accepts" : 1288,
+      "entries" : 2815,
       "methods" : [
       ],
       "op" : "OR.item_by_item_v6",
       "ops" : [
         "/",
+        "Append",
         "BinOr",
+        "BlockValue",
         "BoolToSigmaProp",
+        "ByIndex",
         "CalcBlake2b256",
         "ConcreteCollection",
         "Const",
         "EQ",
+        "Filter",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "MapCollection",
         "OR",
-        "SizeOf"
+        "SelectField",
+        "SizeOf",
+        "Slice",
+        "ValDef",
+        "ValUse"
       ],
       "provenance" : "authored",
-      "rejects" : 110,
+      "rejects" : 1527,
       "tree_shapes" : [
         {
-          "accepts" : 102,
+          "accepts" : 626,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : false,
-          "rejects" : 55,
+          "rejects" : 705,
           "tree_version" : 0
         },
         {
-          "accepts" : 102,
+          "accepts" : 662,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 55,
+          "rejects" : 822,
           "tree_version" : 3
         }
       ],
@@ -10088,6 +10771,80 @@
           "has_deserialize" : false,
           "has_size" : true,
           "rejects" : 0,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SigmaAnd.item_by_item_v6.json" : {
+      "accepts" : 4,
+      "entries" : 221,
+      "methods" : [
+      ],
+      "op" : "SigmaAnd.item_by_item_v6",
+      "ops" : [
+        "Const",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "SigmaAnd",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 217,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 101,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 116,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/SigmaOr.item_by_item_v6.json" : {
+      "accepts" : 4,
+      "entries" : 221,
+      "methods" : [
+      ],
+      "op" : "SigmaOr.item_by_item_v6",
+      "ops" : [
+        "Const",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "SigmaOr",
+        "ValUse"
+      ],
+      "provenance" : "authored",
+      "rejects" : 217,
+      "tree_shapes" : [
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 101,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 2,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 116,
           "tree_version" : 3
         }
       ],
@@ -11025,6 +11782,97 @@
           "has_size" : true,
           "rejects" : 0,
           "tree_version" : 1
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/XorOf.item_by_item_context_v6.json" : {
+      "accepts" : 14,
+      "entries" : 80,
+      "methods" : [
+        "101:1 Context.dataInputs",
+        "101:2 Context.headers",
+        "101:3 Context.preHeader",
+        "99:8 Box.tokens"
+      ],
+      "op" : "XorOf.item_by_item_context_v6",
+      "ops" : [
+        "ByIndex",
+        "Const",
+        "Context$",
+        "ExtractRegisterAs",
+        "GetVar",
+        "Height$",
+        "Inputs$",
+        "MethodCall",
+        "MinerPubkey$",
+        "OptionGet",
+        "Outputs$",
+        "Self$",
+        "XorOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 66,
+      "tree_shapes" : [
+        {
+          "accepts" : 7,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 33,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 7,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 33,
+          "tree_version" : 3
+        }
+      ],
+      "unwalked" : 0,
+      "version" : "v6"
+    },
+    "v6/authored/XorOf.item_by_item_v6.json" : {
+      "accepts" : 232,
+      "entries" : 2189,
+      "methods" : [
+      ],
+      "op" : "XorOf.item_by_item_v6",
+      "ops" : [
+        "BlockValue",
+        "ByIndex",
+        "ConcreteCollection",
+        "Const",
+        "FuncValue",
+        "Global$",
+        "GroupGenerator$",
+        "MapCollection",
+        "SelectField",
+        "ValDef",
+        "ValUse",
+        "XorOf"
+      ],
+      "provenance" : "authored",
+      "rejects" : 1957,
+      "tree_shapes" : [
+        {
+          "accepts" : 116,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : false,
+          "rejects" : 902,
+          "tree_version" : 0
+        },
+        {
+          "accepts" : 116,
+          "constant_segregation" : false,
+          "has_deserialize" : false,
+          "has_size" : true,
+          "rejects" : 1055,
+          "tree_version" : 3
         }
       ],
       "unwalked" : 0,
@@ -16161,9 +17009,15 @@
     },
     "101:1" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Context.properties.json",
+        "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112379-8c12d3f6ce28.json",
         "v6/captured/h113569-a967385bcebd.json",
@@ -16198,34 +17052,46 @@
     },
     "101:2" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.properties.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
-        "v6/authored/SubstConstants.lift_by_class_v6.json"
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json"
       ],
       "name" : "Context.headers"
     },
     "101:3" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.preHeader_accessors.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/MethodCall.argument_widening_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h1542-1b5c260a496a.json"
       ],
       "name" : "Context.preHeader"
@@ -17369,18 +18235,24 @@
     },
     "99:8" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.token_window_const.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/Box_properties_equivalence.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Coll.pair_shape_map.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Global.deserializeTo_Box_token_window.json",
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112291-52c30165e5d5.json",
@@ -17768,6 +18640,8 @@
       "families" : [
         "v5/authored/AND.item_by_item.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/OR.item_by_item.json",
@@ -17780,6 +18654,8 @@
         "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/ArithOp.division_overflow.json",
         "v6/authored/BigInt.range_check_tree_version.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/GroupElement.exp_methodcall_wide_exponent.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
@@ -17820,7 +18696,9 @@
     "AND" : {
       "families" : [
         "v5/authored/AND.item_by_item.json",
+        "v5/authored/AND.item_by_item_context.json",
         "v5/spec/allOf_equivalence.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -17870,11 +18748,14 @@
     },
     "Append" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/spec/Coll.append_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
@@ -17905,6 +18786,7 @@
         "v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x32768.json",
         "v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x4096.json",
         "v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x8192.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h231432-fb4744c753de.json",
@@ -18104,9 +18986,11 @@
     "BinAnd" : {
       "families" : [
         "v5/authored/AND.item_by_item.json",
+        "v5/authored/BinAnd.item_by_item.json",
         "v5/spec/and_boolean_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/AND.item_by_item_v6.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -18168,9 +19052,11 @@
     },
     "BinOr" : {
       "families" : [
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/OR.item_by_item.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v5/spec/or_boolean_equivalence.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h112291-52c30165e5d5.json",
@@ -18226,13 +19112,16 @@
     },
     "BlockValue" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/ValDef.id_int_max_bound.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -18247,6 +19136,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
@@ -18277,11 +19167,13 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -18441,6 +19333,8 @@
     "ByIndex" : {
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
+        "v5/authored/AND.item_by_item.json",
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
@@ -18454,10 +19348,16 @@
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/Coll_apply_method_equivalence.json",
         "v5/spec/Coll_getOrElse_method_equivalence.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/ArithOp.mixed_width.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
@@ -18480,6 +19380,8 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
@@ -18488,6 +19390,8 @@
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Value.checkType_lazy_default.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -18700,6 +19604,7 @@
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/SubstConstants.template_tree_version.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/authored/atLeast.children_cap.json",
         "v5/authored/atLeast_with_a_degenerate_bound.json",
         "v5/authored/substConstants_version_source_outer_v2.json",
@@ -18781,6 +19686,7 @@
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/authored/substConstants_version_source_outer_v3.json",
@@ -18854,6 +19760,7 @@
       "families" : [
         "v4/authored/BoolToSigmaProp.activated_version_gate_v4.json",
         "v5/authored/AND.item_by_item.json",
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/ArithOp.numeric_kind_mismatch.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/AvlTree.item_bind.json",
@@ -18861,6 +19768,8 @@
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/AvlTree.method_call_charge_order.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/BoolToSigmaProp.activated_version_gate.json",
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.generic_producers.json",
@@ -18872,12 +19781,18 @@
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
+        "v5/authored/Exists.item_by_item.json",
         "v5/authored/Exponentiate.static_type.json",
+        "v5/authored/Filter.item_by_item.json",
+        "v5/authored/ForAll.item_by_item.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/MultiplyGroup.static_type.json",
         "v5/authored/OR.item_by_item.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SelectField.non_pair.json",
+        "v5/authored/SigmaAnd.item_by_item.json",
+        "v5/authored/SigmaOr.item_by_item.json",
         "v5/authored/String.jdk_utf8_decode.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/SubstConstants.lift_by_class.json",
@@ -18887,6 +19802,9 @@
         "v5/authored/Tuple.non_pair_arity3.json",
         "v5/authored/Xor.unequal_sides.json",
         "v5/authored/XorOf.activated_version_gate.json",
+        "v5/authored/XorOf.item_by_item.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/ArithOp.division_overflow.json",
@@ -18898,6 +19816,8 @@
         "v6/authored/AvlTree.method_call_charge_order_v6.json",
         "v6/authored/BigInt.range_check_tree_version.json",
         "v6/authored/BigInt.shift_and_inverse_range_edges.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/BoolToSigmaProp.activated_version_gate_v6.json",
         "v6/authored/ByIndex.default_specialisation.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
@@ -18936,7 +19856,10 @@
         "v6/authored/EQ.comparer_dispatch.json",
         "v6/authored/EQ.cross_width_numeric.json",
         "v6/authored/Evaluation.stypeToRType_sites_v6.json",
+        "v6/authored/Exists.item_by_item_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
+        "v6/authored/Filter.item_by_item_v6.json",
+        "v6/authored/ForAll.item_by_item_v6.json",
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/Global.serialize_coll_count_range.json",
         "v6/authored/Global.serialize_count_range_at_depth.json",
@@ -18973,8 +19896,11 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Negation.mixed_width.json",
         "v6/authored/Numeric.methodcall_ids.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SigmaAnd.item_by_item_v6.json",
+        "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
@@ -18996,6 +19922,8 @@
         "v6/authored/Xor.per_item_cost_base.json",
         "v6/authored/Xor.unequal_sides_v6.json",
         "v6/authored/XorOf.activated_version_gate_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/spec/decode-point.json"
       ],
       "op_codes" : [
@@ -19171,6 +20099,7 @@
     },
     "Context$" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
@@ -19180,7 +20109,10 @@
         "v5/authored/Context.properties.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
@@ -19195,8 +20127,10 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.receiver_kind.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
         "v6/captured/h112379-8c12d3f6ce28.json",
@@ -19293,6 +20227,8 @@
         "v5/authored/AND.item_by_item.json",
         "v5/authored/AvlTree.digest_any_collection.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/ByIndex.tuple_item.json",
         "v5/authored/Coll.eq_compared_count_coa.json",
@@ -19320,6 +20256,8 @@
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
         "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/ByIndex.tuple_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
@@ -19428,11 +20366,13 @@
       "families" : [
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
+        "v5/authored/Exists.item_by_item.json",
         "v5/spec/Coll.exists_equivalence.json",
         "v5/spec/Coll_exists_with_nested_If.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Exists.item_by_item_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -19639,6 +20579,7 @@
     },
     "ExtractRegisterAs" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -19649,9 +20590,12 @@
         "v5/authored/Evaluation.stypeToRType_sites.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/Conditional_access_to_registers.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
@@ -19662,9 +20606,11 @@
         "v6/authored/Global.deserializeTo_Box_type_var_name_range.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -19790,12 +20736,16 @@
     },
     "Filter" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
+        "v5/authored/Filter.item_by_item.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/Coll.filter_equivalence.json",
         "v5/spec/Coll_filter.json",
         "v5/spec/Coll_filter_with_nested_If.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
@@ -19803,7 +20753,9 @@
         "v6/authored/Coll.pair_shape_restored.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Filter.item_by_item_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json"
       ],
       "op_codes" : [
@@ -19859,10 +20811,12 @@
       "families" : [
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
+        "v5/authored/ForAll.item_by_item.json",
         "v5/spec/Coll.forall_equivalence.json",
         "v5/spec/Coll_forall_with_nested_If.json",
         "v6/authored/Coll.hof_element_type_mismatch.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/ForAll.item_by_item_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -19884,21 +20838,31 @@
     },
     "FuncValue" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Coll.unequal_pairs_readers.json",
+        "v5/authored/Exists.item_by_item.json",
         "v5/authored/Exponentiate.static_type.json",
+        "v5/authored/Filter.item_by_item.json",
+        "v5/authored/ForAll.item_by_item.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
+        "v5/authored/SigmaAnd.item_by_item.json",
+        "v5/authored/SigmaOr.item_by_item.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -19985,9 +20949,12 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.eq_item_type.json",
         "v6/authored/Coll.flatMap_element_type.json",
@@ -20002,7 +20969,10 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Exists.item_by_item_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
+        "v6/authored/Filter.item_by_item_v6.json",
+        "v6/authored/ForAll.item_by_item_v6.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -20026,15 +20996,19 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SigmaAnd.item_by_item_v6.json",
+        "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -20243,6 +21217,7 @@
     },
     "GetVar" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Box.sub_min_value.json",
@@ -20253,9 +21228,11 @@
         "v5/authored/Context.extension_key_domain.json",
         "v5/authored/EQ_of_SigmaProp.json",
         "v5/authored/Evaluation.stypeToRType_sites.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -20342,6 +21319,7 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
@@ -20371,10 +21349,12 @@
         "v6/authored/Header.property_accessors.json",
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Unevaluated.node_kinds.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -20460,14 +21440,24 @@
     },
     "Global$" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/AvlTree.item_bind_context.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/OR.item_by_item.json",
+        "v5/authored/SigmaAnd.item_by_item.json",
+        "v5/authored/SigmaOr.item_by_item.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/Xor.unequal_sides.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
@@ -20519,13 +21509,17 @@
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
+        "v6/authored/SigmaAnd.item_by_item_v6.json",
+        "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Xor.per_item_cost_base.json",
         "v6/authored/Xor.unequal_sides_v6.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/captured/h28474-527dd0cad822.json",
         "v6/captured/h33615-7f2709218327.json",
         "v6/spec/Global.decodeNbits.json",
@@ -20548,10 +21542,20 @@
     },
     "GroupGenerator$" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/OR.item_by_item.json",
+        "v5/authored/SigmaAnd.item_by_item.json",
+        "v5/authored/SigmaOr.item_by_item.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/groupGenerator_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Append.reference_array_store.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.append_node_array_class.json",
         "v6/authored/Coll.append_runtime_item_type.json",
         "v6/authored/Coll.indexOf_comparer_dispatch.json",
@@ -20563,7 +21567,11 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
-        "v6/authored/Numeric.methodcall_ids.json"
+        "v6/authored/Numeric.methodcall_ids.json",
+        "v6/authored/OR.item_by_item_v6.json",
+        "v6/authored/SigmaAnd.item_by_item_v6.json",
+        "v6/authored/SigmaOr.item_by_item_v6.json",
+        "v6/authored/XorOf.item_by_item_v6.json"
       ],
       "op_codes" : [
         "0x82"
@@ -20571,10 +21579,16 @@
     },
     "Height$" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -20742,17 +21756,23 @@
     },
     "Inputs$" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.patch_array_class_context_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -20943,6 +21963,7 @@
     },
     "MapCollection" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
@@ -20952,10 +21973,13 @@
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/Coll_map_method_equivalence.json",
         "v5/spec/Coll_map_with_nested_if.json",
         "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
@@ -20970,8 +21994,10 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_no_writer_arm.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
         "v6/captured/h257245-6b21a028a98c.json",
@@ -20997,6 +22023,7 @@
     },
     "MethodCall" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.bad_proof_bytes.json",
         "v5/authored/AvlTree.contains.json",
         "v5/authored/AvlTree.degenerate_edges.json",
@@ -21040,10 +22067,12 @@
         "v5/authored/GroupElement.canonical_bytes.json",
         "v5/authored/MethodCall.argument_widening.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/Option.map.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/Xor.unequal_sides.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/Box_properties_equivalence.json",
         "v5/spec/Coll.flatMap_equivalence.json",
@@ -21059,6 +22088,7 @@
         "v5/spec/decodePoint_GroupElement.getEncoded_equivalence.json",
         "v5/spec/groupGenerator_equivalence.json",
         "v5/spec/nested_loops_map_inside_fold.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.bad_proof_bytes_v6.json",
         "v6/authored/AvlTree.degenerate_edges_v6.json",
         "v6/authored/AvlTree.digest_any_collection_v6.json",
@@ -21158,6 +22188,7 @@
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Numeric.methodcall_ids.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SigmaProp.methodcall_ids.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
@@ -21173,6 +22204,7 @@
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Xor.per_item_cost_base.json",
         "v6/authored/Xor.unequal_sides_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -21267,10 +22299,16 @@
     },
     "MinerPubkey$" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Context.op_forms.json",
         "v5/authored/Context.properties.json",
-        "v6/authored/Coll.patch_array_class_context_v6.json"
+        "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
+        "v6/authored/Coll.patch_array_class_context_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json"
       ],
       "op_codes" : [
         "0xac"
@@ -21381,7 +22419,9 @@
     "OR" : {
       "families" : [
         "v5/authored/OR.item_by_item.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/spec/anyOf_equivalence.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json"
       ],
@@ -21391,6 +22431,7 @@
     },
     "OptionGet" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Box.eq_id_basis.json",
         "v5/authored/Box.signed_view_u64.json",
@@ -21401,8 +22442,10 @@
         "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/EQ_of_SigmaProp.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/Option.method_type_variable_names.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -21489,6 +22532,7 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
         "v6/authored/Box.getReg_dynamic_index.json",
@@ -21518,6 +22562,7 @@
         "v6/authored/Header.version_unparsedbytes_gate.json",
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
@@ -21525,6 +22570,7 @@
         "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -21698,16 +22744,22 @@
     },
     "Outputs$" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.generic_producers_pairs.json",
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
+        "v5/authored/OR.item_by_item_context.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_pairs_v6.json",
         "v6/authored/Context.method_call_no_args_v6.json",
         "v6/authored/Context.property_call_forms_v6.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -21771,6 +22823,7 @@
     },
     "SelectField" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Box.signed_view_u64.json",
         "v5/authored/Coll.generic_producers.json",
@@ -21780,7 +22833,9 @@
         "v5/authored/Coll.patch_array_class_context.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/SelectField.non_pair.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/BigInt_LE_GE.json",
         "v5/spec/BigInt_LT_GT_NEQ.json",
@@ -21826,6 +22881,7 @@
         "v5/spec/or_sigma_equivalence.json",
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.method_type_variable_names_v6.json",
@@ -21836,6 +22892,7 @@
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -21843,6 +22900,7 @@
         "v6/authored/Tuple.small_tuples.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -21921,6 +22979,7 @@
     },
     "Self$" : {
       "families" : [
+        "v5/authored/AND.item_by_item_context.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
@@ -21929,7 +22988,10 @@
         "v5/authored/Context.method_call_no_args.json",
         "v5/authored/Context.property_call_forms.json",
         "v5/authored/MethodCall.argument_widening.json",
+        "v5/authored/OR.item_by_item_context.json",
         "v5/authored/SubstConstants.lift_by_class.json",
+        "v5/authored/XorOf.item_by_item_context.json",
+        "v6/authored/AND.item_by_item_context_v6.json",
         "v6/authored/Append.reference_array_store.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/Box.getReg_adversarial.json",
@@ -21951,9 +23013,11 @@
         "v6/authored/MethodCall.argument_widening_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
+        "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
         "v6/authored/Value.checkType_lazy_default.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -22018,8 +23082,10 @@
     },
     "SigmaAnd" : {
       "families" : [
+        "v5/authored/SigmaAnd.item_by_item.json",
         "v5/spec/and_sigma_equivalence.json",
         "v6/authored/Coll.append_concat_v6.json",
+        "v6/authored/SigmaAnd.item_by_item_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -22049,7 +23115,9 @@
     },
     "SigmaOr" : {
       "families" : [
+        "v5/authored/SigmaOr.item_by_item.json",
         "v5/spec/or_sigma_equivalence.json",
+        "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/captured/h231432-fddb21e1303e.json",
         "v6/captured/h28882-c024ed2704d4.json",
         "v6/captured/h28931-costdiverge-colleq.json"
@@ -22218,17 +23286,21 @@
     },
     "Slice" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.generic_producers_census.json",
         "v5/authored/Coll.object_arrays_by_class.json",
         "v5/authored/Coll.patch_array_class.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/spec/Coll_slice_method_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.generic_producers_census_v6.json",
         "v6/authored/Coll.generic_producers_v6.json",
         "v6/authored/Coll.object_arrays_by_class_v6.json",
         "v6/authored/Coll.patch_array_class_v6.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -22498,13 +23570,16 @@
     },
     "ValDef" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
         "v5/authored/Exponentiate.static_type.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/ValDef.id_int_max_bound.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/BigInt_methods_equivalence.json",
         "v5/spec/Byte_methods_equivalence.json",
         "v5/spec/Coll_fold_with_nested_If.json",
@@ -22519,6 +23594,7 @@
         "v5/spec/Long_methods_equivalence.json",
         "v5/spec/Short_methods_equivalence.json",
         "v5/spec/lazy_or_and_and_boolean_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
@@ -22549,11 +23625,13 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111814-51ad38443b00.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -22623,21 +23701,31 @@
     },
     "ValUse" : {
       "families" : [
+        "v5/authored/AND.item_by_item.json",
         "v5/authored/Apply.non_unary_arity.json",
         "v5/authored/AvlTree.item_bind_context.json",
         "v5/authored/AvlTree.item_bind_edges.json",
         "v5/authored/BigInt.out_of_range_below_v3.json",
+        "v5/authored/BinAnd.item_by_item.json",
+        "v5/authored/BinOr.item_by_item.json",
         "v5/authored/Coll.generic_producers.json",
         "v5/authored/Coll.hof_per_element_env.json",
         "v5/authored/Coll.patch_array_class.json",
         "v5/authored/Coll.patch_array_class_context.json",
+        "v5/authored/Exists.item_by_item.json",
         "v5/authored/Exponentiate.static_type.json",
+        "v5/authored/Filter.item_by_item.json",
+        "v5/authored/ForAll.item_by_item.json",
         "v5/authored/FuncValue.non_unary_arity.json",
         "v5/authored/MultiplyGroup.static_type.json",
+        "v5/authored/OR.item_by_item.json",
         "v5/authored/Option.map.json",
+        "v5/authored/SigmaAnd.item_by_item.json",
+        "v5/authored/SigmaOr.item_by_item.json",
         "v5/authored/SubstConstants.coll_count_range.json",
         "v5/authored/SubstConstants.lift_by_class.json",
         "v5/authored/ValDef.id_int_max_bound.json",
+        "v5/authored/XorOf.item_by_item.json",
         "v5/spec/Advanced_Box_test.json",
         "v5/spec/AvlTree_properties_equivalence.json",
         "v5/spec/BigInt_LE_GE.json",
@@ -22723,8 +23811,11 @@
         "v5/spec/substConstants_equivalence.json",
         "v5/spec/verify_should_respect_Context.initCost.json",
         "v5/spec/xorOf_equivalence.json",
+        "v6/authored/AND.item_by_item_v6.json",
         "v6/authored/AvlTree.item_bind_context_v6.json",
         "v6/authored/AvlTree.item_bind_edges_v6.json",
+        "v6/authored/BinAnd.item_by_item_v6.json",
+        "v6/authored/BinOr.item_by_item_v6.json",
         "v6/authored/Coll.append_concat_v6.json",
         "v6/authored/Coll.flatMap_element_type.json",
         "v6/authored/Coll.generic_producers_v6.json",
@@ -22738,7 +23829,10 @@
         "v6/authored/Coll.reference_store_ops.json",
         "v6/authored/Coll.specialisation_pair_prefix.json",
         "v6/authored/Coll.zip_unequal_sides_v6.json",
+        "v6/authored/Exists.item_by_item_v6.json",
         "v6/authored/Exponentiate.static_type_v6.json",
+        "v6/authored/Filter.item_by_item_v6.json",
+        "v6/authored/ForAll.item_by_item_v6.json",
         "v6/authored/FunDef.nTpeArgs_count_bound.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/Global.serialize_AvlTree.json",
@@ -22781,8 +23875,11 @@
         "v6/authored/HOF_function_in_Coll_of_SFunc.json",
         "v6/authored/MethodCall.unspecialised_call_names_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
+        "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/STypeVar.name_length_bound.json",
         "v6/authored/STypeVar.name_utf8_leniency.json",
+        "v6/authored/SigmaAnd.item_by_item_v6.json",
+        "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/authored/SubstConstants.coll_count_range_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
@@ -22790,6 +23887,7 @@
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
+        "v6/authored/XorOf.item_by_item_v6.json",
         "v6/authored/substConstants_declared_size_u32.json",
         "v6/authored/substConstants_template_forms.json",
         "v6/captured/h111766-67eb9e994be2.json",
@@ -22907,9 +24005,13 @@
     "XorOf" : {
       "families" : [
         "v5/authored/XorOf.activated_version_gate.json",
+        "v5/authored/XorOf.item_by_item.json",
+        "v5/authored/XorOf.item_by_item_context.json",
         "v5/spec/xorOf_equivalence.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
-        "v6/authored/XorOf.activated_version_gate_v6.json"
+        "v6/authored/XorOf.activated_version_gate_v6.json",
+        "v6/authored/XorOf.item_by_item_context_v6.json",
+        "v6/authored/XorOf.item_by_item_v6.json"
       ],
       "op_codes" : [
         "0xff"
@@ -22948,12 +24050,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 12982,
+    "accepts" : 17242,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 27488,
-    "files" : 431,
-    "rejects" : 14506,
+    "entries" : 43016,
+    "files" : 453,
+    "rejects" : 25774,
     "unwalked" : 2425
   }
 }

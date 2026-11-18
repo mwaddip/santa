@@ -45,18 +45,19 @@ Four tiers:
 The **eval tier is closed and scaled**, and the conformance loop is already surfacing
 genuine cross-implementation divergences — which is exactly its job. What runs today:
 
-- ✅ **A blessed eval corpus — 27,488 entries across 431 vector files**: 2,026 produced by
-  the JVM reference interpreter (`sigma-state`) from its own language specification, 25,400
+- ✅ **A blessed eval corpus — 43,016 entries across 453 vector files**: 2,026 produced by
+  the JVM reference interpreter (`sigma-state`) from its own language specification, 40,928
   authored gap-fillers (oracle-blessed, never spec-copied) and 62 captured from testnet
-  spends; 8,206 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
+  spends; 8,566 of them evaluate under a full context (`santa-eval/v6-fullctx`: the 62 captured, 2,359 authored
   `substConstants` rows that read `CONTEXT.headers`, the pre-header and `SELF`, 1,047 authored `patch` rows over
   the collections a context brings, 1,956 over the ones a node holds generic, 1,875 over R2 read as a register
-  and every box of a transaction, and 907 AvlTree calls given a box, a header, the context or a register's value as
-  an item); version-split into **v4** (18
+  and every box of a transaction, 907 AvlTree calls given a box, a header, the context or a register's value as
+  an item, and 360 AND / OR / XorOf calls over a register's, a variable's or the context's collection); version-split
+  into **v4** (18
   entries — below the JIT activation,
   activated 0 or 1: the one 4.x behaviour mainnet history needs, `BoolToSigmaProp` passing a
-  `SigmaProp` through), **v5** (8,966 — the cumulative
-  v5/mainnet method surface) and **v6** (18,504 — the v6 new-feature surface). Each entry is
+  `SigmaProp` through), **v5** (13,909 — the cumulative
+  v5/mainnet method surface) and **v6** (29,089 — the v6 new-feature surface). Each entry is
   `ErgoTree bytes (+ input) → typed value + raw JIT cost`, committed with the
   `(activated, ergoTree)` version it was blessed under. 17 of them are **bounded files** (one entry and a
   `limits` budget, 1 GiB / 10 s): rows where an implementation can do unbounded work the reference never does
@@ -297,6 +298,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
     throws. An empty collection of another item type answers; a pair throws.
   - A collection expression evaluates every item first, so `anyOf(Coll(true, 1 / 0 == 1))` throws and the box does
     not spend, where `true || (1 / 0 == 1)` spends.
+  - `and-or-item-by-item-context` (52 / 26): sigma-rust's whole trees over a register's, a variable's or a constant's
+    collection, spent in its box with its extension. The eval tier adds every producer of the collection, every
+    carrier of a tuple, and the neighbour nodes (`XorOf`, `Exists`, `ForAll`, `Filter`, `||` / `&&`, `SigmaAnd` /
+    `SigmaOr`), each with its own reading.
 
   **A tree above the activated version** (`tree-version-above-activated`, 12 entries at block versions 4 and 3):
   - a node reads a box from the UTXO set outside any version context, so a box whose tree is above the activated

@@ -1,0 +1,1949 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "BinAnd.item_by_item",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "BinAnd-lazy-n-divzero-v0-a2#0",
+      "script" : "[BinAnd|lazy|n-divzero|v0] `BinAnd(TrueLeaf,EQ(Divide(IntConstant(1), IntConstant(0)),IntConstant(1)))` — THROWS AT EVALUATION (ArithmeticException: / by zero). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101939d040204000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-lazy-n-divone-v0-a2#1",
+      "script" : "[BinAnd|lazy|n-divone|v0] `BinAnd(TrueLeaf,EQ(Divide(IntConstant(1), IntConstant(1)),IntConstant(1)))` — true at cost 58. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101939d040204020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 58,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Byte0-v0-a2#2",
+      "script" : "[BinAnd|dK|Byte0|v0] `BinAnd(FalseLeaf,ConstantNode(0,SByte$))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01000200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Byte0-v0-a2#3",
+      "script" : "[BinAnd|nK|Byte0|v0] `BinAnd(TrueLeaf,ConstantNode(0,SByte$))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01010200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Byte0-v0-a2#4",
+      "script" : "[BinAnd|Kd|Byte0|v0] `BinAnd(ConstantNode(0,SByte$),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed02000100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Byte0-v0-a2#5",
+      "script" : "[BinAnd|Kn|Byte0|v0] `BinAnd(ConstantNode(0,SByte$),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed02000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Byte0-v0-a2#6",
+      "script" : "[BinAnd|KK|Byte0|v0] `BinAnd(ConstantNode(0,SByte$),ConstantNode(0,SByte$))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed02000200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Byte1-v0-a2#7",
+      "script" : "[BinAnd|dK|Byte1|v0] `BinAnd(FalseLeaf,ConstantNode(1,SByte$))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01000201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Byte1-v0-a2#8",
+      "script" : "[BinAnd|nK|Byte1|v0] `BinAnd(TrueLeaf,ConstantNode(1,SByte$))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Byte1-v0-a2#9",
+      "script" : "[BinAnd|Kd|Byte1|v0] `BinAnd(ConstantNode(1,SByte$),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed02010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Byte1-v0-a2#10",
+      "script" : "[BinAnd|Kn|Byte1|v0] `BinAnd(ConstantNode(1,SByte$),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed02010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Byte1-v0-a2#11",
+      "script" : "[BinAnd|KK|Byte1|v0] `BinAnd(ConstantNode(1,SByte$),ConstantNode(1,SByte$))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed02010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Short-v0-a2#12",
+      "script" : "[BinAnd|dK|Short|v0] `BinAnd(FalseLeaf,ConstantNode(5,SShort$))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100030a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Short-v0-a2#13",
+      "script" : "[BinAnd|nK|Short|v0] `BinAnd(TrueLeaf,ConstantNode(5,SShort$))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101030a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Short-v0-a2#14",
+      "script" : "[BinAnd|Kd|Short|v0] `BinAnd(ConstantNode(5,SShort$),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed030a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Short-v0-a2#15",
+      "script" : "[BinAnd|Kn|Short|v0] `BinAnd(ConstantNode(5,SShort$),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed030a0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Short-v0-a2#16",
+      "script" : "[BinAnd|KK|Short|v0] `BinAnd(ConstantNode(5,SShort$),ConstantNode(5,SShort$))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed030a030a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Int1-v0-a2#17",
+      "script" : "[BinAnd|dK|Int1|v0] `BinAnd(FalseLeaf,IntConstant(1))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01000402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Int1-v0-a2#18",
+      "script" : "[BinAnd|nK|Int1|v0] `BinAnd(TrueLeaf,IntConstant(1))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Int1-v0-a2#19",
+      "script" : "[BinAnd|Kd|Int1|v0] `BinAnd(IntConstant(1),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed04020100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Int1-v0-a2#20",
+      "script" : "[BinAnd|Kn|Int1|v0] `BinAnd(IntConstant(1),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed04020101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Int1-v0-a2#21",
+      "script" : "[BinAnd|KK|Int1|v0] `BinAnd(IntConstant(1),IntConstant(1))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed04020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Int5-v0-a2#22",
+      "script" : "[BinAnd|dK|Int5|v0] `BinAnd(FalseLeaf,IntConstant(5))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Int5-v0-a2#23",
+      "script" : "[BinAnd|nK|Int5|v0] `BinAnd(TrueLeaf,IntConstant(5))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Int5-v0-a2#24",
+      "script" : "[BinAnd|Kd|Int5|v0] `BinAnd(IntConstant(5),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed040a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Int5-v0-a2#25",
+      "script" : "[BinAnd|Kn|Int5|v0] `BinAnd(IntConstant(5),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed040a0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Int5-v0-a2#26",
+      "script" : "[BinAnd|KK|Int5|v0] `BinAnd(IntConstant(5),IntConstant(5))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed040a040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Long-v0-a2#27",
+      "script" : "[BinAnd|dK|Long|v0] `BinAnd(FalseLeaf,LongConstant(5))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100050a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Long-v0-a2#28",
+      "script" : "[BinAnd|nK|Long|v0] `BinAnd(TrueLeaf,LongConstant(5))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101050a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Long-v0-a2#29",
+      "script" : "[BinAnd|Kd|Long|v0] `BinAnd(LongConstant(5),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed050a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Long-v0-a2#30",
+      "script" : "[BinAnd|Kn|Long|v0] `BinAnd(LongConstant(5),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed050a0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Long-v0-a2#31",
+      "script" : "[BinAnd|KK|Long|v0] `BinAnd(LongConstant(5),LongConstant(5))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed050a050a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-BigInt-v0-a2#32",
+      "script" : "[BinAnd|dK|BigInt|v0] `BinAnd(FalseLeaf,ConstantNode(CBigInt(5),SBigInt$))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-BigInt-v0-a2#33",
+      "script" : "[BinAnd|nK|BigInt|v0] `BinAnd(TrueLeaf,ConstantNode(CBigInt(5),SBigInt$))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-BigInt-v0-a2#34",
+      "script" : "[BinAnd|Kd|BigInt|v0] `BinAnd(ConstantNode(CBigInt(5),SBigInt$),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0601050100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-BigInt-v0-a2#35",
+      "script" : "[BinAnd|Kn|BigInt|v0] `BinAnd(ConstantNode(CBigInt(5),SBigInt$),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0601050101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-BigInt-v0-a2#36",
+      "script" : "[BinAnd|KK|BigInt|v0] `BinAnd(ConstantNode(CBigInt(5),SBigInt$),ConstantNode(CBigInt(5),SBigInt$))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed060105060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-GroupElement-v0-a2#37",
+      "script" : "[BinAnd|dK|GroupElement|v0] `BinAnd(FalseLeaf,ConstantNode(ECPoint(79be66,483ada,...),SGroupElement))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-GroupElement-v0-a2#38",
+      "script" : "[BinAnd|nK|GroupElement|v0] `BinAnd(TrueLeaf,ConstantNode(ECPoint(79be66,483ada,...),SGroupElement))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-GroupElement-v0-a2#39",
+      "script" : "[BinAnd|Kd|GroupElement|v0] `BinAnd(ConstantNode(ECPoint(79be66,483ada,...),SGroupElement),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-GroupElement-v0-a2#40",
+      "script" : "[BinAnd|Kn|GroupElement|v0] `BinAnd(ConstantNode(ECPoint(79be66,483ada,...),SGroupElement),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-GroupElement-v0-a2#41",
+      "script" : "[BinAnd|KK|GroupElement|v0] `BinAnd(ConstantNode(ECPoint(79be66,483ada,...),SGroupElement),ConstantNode(ECPoint(79be66,483ada,...),SGroupElement))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-SigmaProp-v0-a2#42",
+      "script" : "[BinAnd|dK|SigmaProp|v0] `BinAnd(FalseLeaf,ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-SigmaProp-v0-a2#43",
+      "script" : "[BinAnd|nK|SigmaProp|v0] `BinAnd(TrueLeaf,ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-SigmaProp-v0-a2#44",
+      "script" : "[BinAnd|Kd|SigmaProp|v0] `BinAnd(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-SigmaProp-v0-a2#45",
+      "script" : "[BinAnd|Kn|SigmaProp|v0] `BinAnd(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-SigmaProp-v0-a2#46",
+      "script" : "[BinAnd|KK|SigmaProp|v0] `BinAnd(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp),ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaProp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179808cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Unit-v0-a2#47",
+      "script" : "[BinAnd|dK|Unit|v0] `BinAnd(FalseLeaf,ConstantNode((),SUnit))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010062",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Unit-v0-a2#48",
+      "script" : "[BinAnd|nK|Unit|v0] `BinAnd(TrueLeaf,ConstantNode((),SUnit))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010162",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Unit-v0-a2#49",
+      "script" : "[BinAnd|Kd|Unit|v0] `BinAnd(ConstantNode((),SUnit),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed620100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Unit-v0-a2#50",
+      "script" : "[BinAnd|Kn|Unit|v0] `BinAnd(ConstantNode((),SUnit),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed620101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Unit-v0-a2#51",
+      "script" : "[BinAnd|KK|Unit|v0] `BinAnd(ConstantNode((),SUnit),ConstantNode((),SUnit))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed6262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Coll_Byte_-v0-a2#52",
+      "script" : "[BinAnd|dK|Coll[Byte]|v0] `BinAnd(FalseLeaf,ConstantNode(Coll(1),Coll[SByte$]))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01000e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Coll_Byte_-v0-a2#53",
+      "script" : "[BinAnd|nK|Coll[Byte]|v0] `BinAnd(TrueLeaf,ConstantNode(Coll(1),Coll[SByte$]))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01010e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Coll_Byte_-v0-a2#54",
+      "script" : "[BinAnd|Kd|Coll[Byte]|v0] `BinAnd(ConstantNode(Coll(1),Coll[SByte$]),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0e01010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Coll_Byte_-v0-a2#55",
+      "script" : "[BinAnd|Kn|Coll[Byte]|v0] `BinAnd(ConstantNode(Coll(1),Coll[SByte$]),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0e01010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Coll_Byte_-v0-a2#56",
+      "script" : "[BinAnd|KK|Coll[Byte]|v0] `BinAnd(ConstantNode(Coll(1),Coll[SByte$]),ConstantNode(Coll(1),Coll[SByte$]))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0e01010e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Coll_Boolean_-v0-a2#57",
+      "script" : "[BinAnd|dK|Coll[Boolean]|v0] `BinAnd(FalseLeaf,ConstantNode(Coll(true),Coll[SBoolean]))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01000d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Coll_Boolean_-v0-a2#58",
+      "script" : "[BinAnd|nK|Coll[Boolean]|v0] `BinAnd(TrueLeaf,ConstantNode(Coll(true),Coll[SBoolean]))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01010d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Coll_Boolean_-v0-a2#59",
+      "script" : "[BinAnd|Kd|Coll[Boolean]|v0] `BinAnd(ConstantNode(Coll(true),Coll[SBoolean]),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0d01010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Coll_Boolean_-v0-a2#60",
+      "script" : "[BinAnd|Kn|Coll[Boolean]|v0] `BinAnd(ConstantNode(Coll(true),Coll[SBoolean]),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0d01010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Coll_Boolean_-v0-a2#61",
+      "script" : "[BinAnd|KK|Coll[Boolean]|v0] `BinAnd(ConstantNode(Coll(true),Coll[SBoolean]),ConstantNode(Coll(true),Coll[SBoolean]))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0d01010d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-_Int_Int_-v0-a2#62",
+      "script" : "[BinAnd|dK|(Int,Int)|v0] `BinAnd(FalseLeaf,ConstantNode((5,5),(SInt$,SInt$)))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100580a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-_Int_Int_-v0-a2#63",
+      "script" : "[BinAnd|nK|(Int,Int)|v0] `BinAnd(TrueLeaf,ConstantNode((5,5),(SInt$,SInt$)))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101580a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-_Int_Int_-v0-a2#64",
+      "script" : "[BinAnd|Kd|(Int,Int)|v0] `BinAnd(ConstantNode((5,5),(SInt$,SInt$)),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed580a0a0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-_Int_Int_-v0-a2#65",
+      "script" : "[BinAnd|Kn|(Int,Int)|v0] `BinAnd(ConstantNode((5,5),(SInt$,SInt$)),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed580a0a0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-_Int_Int_-v0-a2#66",
+      "script" : "[BinAnd|KK|(Int,Int)|v0] `BinAnd(ConstantNode((5,5),(SInt$,SInt$)),ConstantNode((5,5),(SInt$,SInt$)))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed580a0a580a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-_Bool_Bool_Bool_-v0-a2#67",
+      "script" : "[BinAnd|dK|(Bool,Bool,Bool)|v0] `BinAnd(FalseLeaf,ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010048010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-_Bool_Bool_Bool_-v0-a2#68",
+      "script" : "[BinAnd|nK|(Bool,Bool,Bool)|v0] `BinAnd(TrueLeaf,ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010148010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-_Bool_Bool_Bool_-v0-a2#69",
+      "script" : "[BinAnd|Kd|(Bool,Bool,Bool)|v0] `BinAnd(ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed480101010101010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-_Bool_Bool_Bool_-v0-a2#70",
+      "script" : "[BinAnd|Kn|(Bool,Bool,Bool)|v0] `BinAnd(ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed480101010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-_Bool_Bool_Bool_-v0-a2#71",
+      "script" : "[BinAnd|KK|(Bool,Bool,Bool)|v0] `BinAnd(ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)),ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed4801010101010148010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-AvlTree-v0-a2#72",
+      "script" : "[BinAnd|dK|AvlTree|v0] `BinAnd(FalseLeaf,ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010064000000000000000000000000000000000000000000000000000000000000000000072000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-AvlTree-v0-a2#73",
+      "script" : "[BinAnd|nK|AvlTree|v0] `BinAnd(TrueLeaf,ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010164000000000000000000000000000000000000000000000000000000000000000000072000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-AvlTree-v0-a2#74",
+      "script" : "[BinAnd|Kd|AvlTree|v0] `BinAnd(ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed640000000000000000000000000000000000000000000000000000000000000000000720000100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-AvlTree-v0-a2#75",
+      "script" : "[BinAnd|Kn|AvlTree|v0] `BinAnd(ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed640000000000000000000000000000000000000000000000000000000000000000000720000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-AvlTree-v0-a2#76",
+      "script" : "[BinAnd|KK|AvlTree|v0] `BinAnd(ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree),ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed6400000000000000000000000000000000000000000000000000000000000000000007200064000000000000000000000000000000000000000000000000000000000000000000072000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-String-v0-a2#77",
+      "script" : "[BinAnd|dK|String|v0] `BinAnd(FalseLeaf,ConstantNode(a,SString))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-String-v0-a2#78",
+      "script" : "[BinAnd|nK|String|v0] `BinAnd(TrueLeaf,ConstantNode(a,SString))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-String-v0-a2#79",
+      "script" : "[BinAnd|Kd|String|v0] `BinAnd(ConstantNode(a,SString),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed6601610100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-String-v0-a2#80",
+      "script" : "[BinAnd|Kn|String|v0] `BinAnd(ConstantNode(a,SString),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed6601610101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-String-v0-a2#81",
+      "script" : "[BinAnd|KK|String|v0] `BinAnd(ConstantNode(a,SString),ConstantNode(a,SString))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed660161660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Box-v0-a2#82",
+      "script" : "[BinAnd|dK|Box|v0] `BinAnd(FalseLeaf,ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValue(Co…` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010063c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000111111111111111111111111111111111111111111111111111111111111111100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Box-v0-a2#83",
+      "script" : "[BinAnd|nK|Box|v0] `BinAnd(TrueLeaf,ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValue(Col…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000111111111111111111111111111111111111111111111111111111111111111100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Box-v0-a2#84",
+      "script" : "[BinAnd|Kd|Box|v0] `BinAnd(ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValue(Coll(0,8,-51…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed63c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817986400001111111111111111111111111111111111111111111111111111111111111111000100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Box-v0-a2#85",
+      "script" : "[BinAnd|Kn|Box|v0] `BinAnd(ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValue(Coll(0,8,-51…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed63c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817986400001111111111111111111111111111111111111111111111111111111111111111000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Box-v0-a2#86",
+      "script" : "[BinAnd|KK|Box|v0] `BinAnd(ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValue(Coll(0,8,-51…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed63c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000011111111111111111111111111111111111111111111111111111111111111110063c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000111111111111111111111111111111111111111111111111111111111111111100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Global-v0-a2#87",
+      "script" : "[BinAnd|dK|Global|v0] `BinAnd(FalseLeaf,Global$(221))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Global-v0-a2#88",
+      "script" : "[BinAnd|nK|Global|v0] `BinAnd(TrueLeaf,Global$(221))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Global-v0-a2#89",
+      "script" : "[BinAnd|Kd|Global|v0] `BinAnd(Global$(221),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eddd0100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Global-v0-a2#90",
+      "script" : "[BinAnd|Kn|Global|v0] `BinAnd(Global$(221),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eddd0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Global-v0-a2#91",
+      "script" : "[BinAnd|KK|Global|v0] `BinAnd(Global$(221),Global$(221))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eddddd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Lambda-v0-a2#92",
+      "script" : "[BinAnd|dK|Lambda|v0] `BinAnd(FalseLeaf,FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0100d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Lambda-v0-a2#93",
+      "script" : "[BinAnd|nK|Lambda|v0] `BinAnd(TrueLeaf,FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)))` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed0101d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Lambda-v0-a2#94",
+      "script" : "[BinAnd|Kd|Lambda|v0] `BinAnd(FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00edd901010172010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Lambda-v0-a2#95",
+      "script" : "[BinAnd|Kn|Lambda|v0] `BinAnd(FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00edd901010172010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Lambda-v0-a2#96",
+      "script" : "[BinAnd|KK|Lambda|v0] `BinAnd(FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)),FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)))` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00edd90101017201d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dK-Generator-v0-a2#97",
+      "script" : "[BinAnd|dK|Generator|v0] `BinAnd(FalseLeaf,GroupGenerator$(130))` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010082",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nK-Generator-v0-a2#98",
+      "script" : "[BinAnd|nK|Generator|v0] `BinAnd(TrueLeaf,GroupGenerator$(130))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed010182",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kd-Generator-v0-a2#99",
+      "script" : "[BinAnd|Kd|Generator|v0] `BinAnd(GroupGenerator$(130),FalseLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed820100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-Kn-Generator-v0-a2#100",
+      "script" : "[BinAnd|Kn|Generator|v0] `BinAnd(GroupGenerator$(130),TrueLeaf)` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed820101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-KK-Generator-v0-a2#101",
+      "script" : "[BinAnd|KK|Generator|v0] `BinAnd(GroupGenerator$(130),GroupGenerator$(130))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed8282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "BinAnd-dn-none-v0-a2#102",
+      "script" : "[BinAnd|dn|none|v0] `BinAnd(FalseLeaf,TrueLeaf)` — false at cost 25. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01000101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "BinAnd-nd-none-v0-a2#103",
+      "script" : "[BinAnd|nd|none|v0] `BinAnd(TrueLeaf,FalseLeaf)` — false at cost 30. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00ed01010100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 30,
+        "error" : null
+      }
+    }
+  ]
+}

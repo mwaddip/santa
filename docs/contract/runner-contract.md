@@ -234,8 +234,11 @@ reconstruction rules, which every conforming implementation of this schema must 
   their outputs carry. The `AvlTree.item_bind_context` families (2026-11-18) carry the same header and pre-header,
   sigma-rust's review `SELF` (1,000,000 nanoErg, the generator's P2PK, created at 100, R4 = `(Coll[Byte](1), 5, 0)`,
   R5 = `Coll((Coll[Byte](3), 5))`, R6 = `Coll[Int](10)`), ONE output (1,000,000 nanoErg to the same P2PK, created at
-  100), and its context variables 1 to 7 as RAW `Value` bindings on the rows that read a variable only. They sit at
-  activated 2 (the `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
+  100), and its context variables 1 to 7 as RAW `Value` bindings on the rows that read a variable only. The
+  `{AND,OR,XorOf}.item_by_item_context` families (2026-11-18) carry the same header, pre-header and one output, and
+  sigma-rust's round `SELF` (R4..R9: `(true, 5, true)`, `(false, 5, true)`, `Coll(true, false, true)`, `Coll[Int](5)`,
+  `(5, true, false)`, an empty `Coll[Int]`), its context variables 1 to 8 as RAW `Value` bindings on the rows that read a
+  variable only. They sit at activated 2 (the `v5` slot) as well as 3: the schema's `v6` names its revision, not the protocol version. A runner takes the
   activated version from the entry, or from the pre-header's version less one; the two agree on every entry.
 
 ## 3. Preconditions, postconditions, invariants

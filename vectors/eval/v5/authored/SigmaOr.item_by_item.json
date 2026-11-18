@@ -1,0 +1,1868 @@
+{
+  "schema" : "santa-eval/v2",
+  "op" : "SigmaOr.item_by_item",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "SigmaOr-PK-Byte0-v0-a2#0",
+      "script" : "[SigmaOr|PK|Byte0|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(0,SByte$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Byte0-v0-a2#1",
+      "script" : "[SigmaOr|KP|Byte0|v0] `SigmaOr(WrappedArray(ConstantNode(0,SByte$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02020008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Byte0-v0-a2#2",
+      "script" : "[SigmaOr|PKP|Byte0|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(0,SByte$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798020008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Byte0-v0-a2#3",
+      "script" : "[SigmaOr|KK|Byte0|v0] `SigmaOr(WrappedArray(ConstantNode(0,SByte$), ConstantNode(0,SByte$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0202000200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Byte0-v0-a2#4",
+      "script" : "[SigmaOr|K|Byte0|v0] `SigmaOr(WrappedArray(ConstantNode(0,SByte$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb010200",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Byte1-v0-a2#5",
+      "script" : "[SigmaOr|PK|Byte1|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(1,SByte$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Byte1-v0-a2#6",
+      "script" : "[SigmaOr|KP|Byte1|v0] `SigmaOr(WrappedArray(ConstantNode(1,SByte$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02020108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Byte1-v0-a2#7",
+      "script" : "[SigmaOr|PKP|Byte1|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(1,SByte$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798020108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Byte1-v0-a2#8",
+      "script" : "[SigmaOr|KK|Byte1|v0] `SigmaOr(WrappedArray(ConstantNode(1,SByte$), ConstantNode(1,SByte$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0202010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Byte1-v0-a2#9",
+      "script" : "[SigmaOr|K|Byte1|v0] `SigmaOr(WrappedArray(ConstantNode(1,SByte$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb010201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Short-v0-a2#10",
+      "script" : "[SigmaOr|PK|Short|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(5,SShort$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798030a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Short-v0-a2#11",
+      "script" : "[SigmaOr|KP|Short|v0] `SigmaOr(WrappedArray(ConstantNode(5,SShort$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02030a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Short-v0-a2#12",
+      "script" : "[SigmaOr|PKP|Short|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(5,SShort$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798030a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Short-v0-a2#13",
+      "script" : "[SigmaOr|KK|Short|v0] `SigmaOr(WrappedArray(ConstantNode(5,SShort$), ConstantNode(5,SShort$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02030a030a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Short-v0-a2#14",
+      "script" : "[SigmaOr|K|Short|v0] `SigmaOr(WrappedArray(ConstantNode(5,SShort$)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Short cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01030a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Int1-v0-a2#15",
+      "script" : "[SigmaOr|PK|Int1|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), IntConstant(1)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Int1-v0-a2#16",
+      "script" : "[SigmaOr|KP|Int1|v0] `SigmaOr(WrappedArray(IntConstant(1), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02040208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Int1-v0-a2#17",
+      "script" : "[SigmaOr|PKP|Int1|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), IntConstant(1), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Int1-v0-a2#18",
+      "script" : "[SigmaOr|KK|Int1|v0] `SigmaOr(WrappedArray(IntConstant(1), IntConstant(1)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0204020402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Int1-v0-a2#19",
+      "script" : "[SigmaOr|K|Int1|v0] `SigmaOr(WrappedArray(IntConstant(1)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb010402",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Int5-v0-a2#20",
+      "script" : "[SigmaOr|PK|Int5|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), IntConstant(5)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Int5-v0-a2#21",
+      "script" : "[SigmaOr|KP|Int5|v0] `SigmaOr(WrappedArray(IntConstant(5), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02040a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Int5-v0-a2#22",
+      "script" : "[SigmaOr|PKP|Int5|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), IntConstant(5), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798040a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Int5-v0-a2#23",
+      "script" : "[SigmaOr|KK|Int5|v0] `SigmaOr(WrappedArray(IntConstant(5), IntConstant(5)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02040a040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Int5-v0-a2#24",
+      "script" : "[SigmaOr|K|Int5|v0] `SigmaOr(WrappedArray(IntConstant(5)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01040a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Long-v0-a2#25",
+      "script" : "[SigmaOr|PK|Long|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), LongConstant(5)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798050a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Long-v0-a2#26",
+      "script" : "[SigmaOr|KP|Long|v0] `SigmaOr(WrappedArray(LongConstant(5), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02050a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Long-v0-a2#27",
+      "script" : "[SigmaOr|PKP|Long|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), LongConstant(5), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798050a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Long-v0-a2#28",
+      "script" : "[SigmaOr|KK|Long|v0] `SigmaOr(WrappedArray(LongConstant(5), LongConstant(5)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02050a050a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Long-v0-a2#29",
+      "script" : "[SigmaOr|K|Long|v0] `SigmaOr(WrappedArray(LongConstant(5)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Long cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01050a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-BigInt-v0-a2#30",
+      "script" : "[SigmaOr|PK|BigInt|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(CBigInt(5),SBigInt$)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-BigInt-v0-a2#31",
+      "script" : "[SigmaOr|KP|BigInt|v0] `SigmaOr(WrappedArray(ConstantNode(CBigInt(5),SBigInt$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0206010508cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-BigInt-v0-a2#32",
+      "script" : "[SigmaOr|PKP|BigInt|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(CBigInt(5),SBigInt$), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179806010508cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-BigInt-v0-a2#33",
+      "script" : "[SigmaOr|KK|BigInt|v0] `SigmaOr(WrappedArray(ConstantNode(CBigInt(5),SBigInt$), ConstantNode(CBigInt(5),SBigInt$)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02060105060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-BigInt-v0-a2#34",
+      "script" : "[SigmaOr|K|BigInt|v0] `SigmaOr(WrappedArray(ConstantNode(CBigInt(5),SBigInt$)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBigInt cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01060105",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-GroupElement-v0-a2#35",
+      "script" : "[SigmaOr|PK|GroupElement|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(ECPoint(79be66,483ada,...),SGroupElement)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-GroupElement-v0-a2#36",
+      "script" : "[SigmaOr|KP|GroupElement|v0] `SigmaOr(WrappedArray(ConstantNode(ECPoint(79be66,483ada,...),SGroupElement), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179808cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-GroupElement-v0-a2#37",
+      "script" : "[SigmaOr|PKP|GroupElement|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(ECPoint(79be66,483ada,...),SGroupElement), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigma…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179808cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-GroupElement-v0-a2#38",
+      "script" : "[SigmaOr|KK|GroupElement|v0] `SigmaOr(WrappedArray(ConstantNode(ECPoint(79be66,483ada,...),SGroupElement), ConstantNode(ECPoint(79be66,483ada,...),SGroupElement)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-GroupElement-v0-a2#39",
+      "script" : "[SigmaOr|K|GroupElement|v0] `SigmaOr(WrappedArray(ConstantNode(ECPoint(79be66,483ada,...),SGroupElement)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01070279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Unit-v0-a2#40",
+      "script" : "[SigmaOr|PK|Unit|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode((),SUnit)))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179862",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Unit-v0-a2#41",
+      "script" : "[SigmaOr|KP|Unit|v0] `SigmaOr(WrappedArray(ConstantNode((),SUnit), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb026208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Unit-v0-a2#42",
+      "script" : "[SigmaOr|PKP|Unit|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode((),SUnit), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817986208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Unit-v0-a2#43",
+      "script" : "[SigmaOr|KK|Unit|v0] `SigmaOr(WrappedArray(ConstantNode((),SUnit), ConstantNode((),SUnit)))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb026262",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Unit-v0-a2#44",
+      "script" : "[SigmaOr|K|Unit|v0] `SigmaOr(WrappedArray(ConstantNode((),SUnit)))` — THROWS AT EVALUATION (ClassCastException: class scala.runtime.BoxedUnit cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0162",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Coll_Byte_-v0-a2#45",
+      "script" : "[SigmaOr|PK|Coll[Byte]|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Coll(1),Coll[SByte$])))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Coll_Byte_-v0-a2#46",
+      "script" : "[SigmaOr|KP|Coll[Byte]|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(1),Coll[SByte$]), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb020e010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Coll_Byte_-v0-a2#47",
+      "script" : "[SigmaOr|PKP|Coll[Byte]|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Coll(1),Coll[SByte$]), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980e010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Coll_Byte_-v0-a2#48",
+      "script" : "[SigmaOr|KK|Coll[Byte]|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(1),Coll[SByte$]), ConstantNode(Coll(1),Coll[SByte$])))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb020e01010e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Coll_Byte_-v0-a2#49",
+      "script" : "[SigmaOr|K|Coll[Byte]|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(1),Coll[SByte$])))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcB$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb010e0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Coll_Boolean_-v0-a2#50",
+      "script" : "[SigmaOr|PK|Coll[Boolean]|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Coll(true),Coll[SBoolean])))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Coll_Boolean_-v0-a2#51",
+      "script" : "[SigmaOr|KP|Coll[Boolean]|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(true),Coll[SBoolean]), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb020d010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Coll_Boolean_-v0-a2#52",
+      "script" : "[SigmaOr|PKP|Coll[Boolean]|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Coll(true),Coll[SBoolean]), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980d010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Coll_Boolean_-v0-a2#53",
+      "script" : "[SigmaOr|KK|Coll[Boolean]|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(true),Coll[SBoolean]), ConstantNode(Coll(true),Coll[SBoolean])))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb020d01010d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Coll_Boolean_-v0-a2#54",
+      "script" : "[SigmaOr|K|Coll[Boolean]|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(true),Coll[SBoolean])))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray$mcZ$sp cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb010d0101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-_Int_Int_-v0-a2#55",
+      "script" : "[SigmaOr|PK|(Int,Int)|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode((5,5),(SInt$,SInt$))))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798580a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-_Int_Int_-v0-a2#56",
+      "script" : "[SigmaOr|KP|(Int,Int)|v0] `SigmaOr(WrappedArray(ConstantNode((5,5),(SInt$,SInt$)), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02580a0a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-_Int_Int_-v0-a2#57",
+      "script" : "[SigmaOr|PKP|(Int,Int)|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode((5,5),(SInt$,SInt$)), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798580a0a08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-_Int_Int_-v0-a2#58",
+      "script" : "[SigmaOr|KK|(Int,Int)|v0] `SigmaOr(WrappedArray(ConstantNode((5,5),(SInt$,SInt$)), ConstantNode((5,5),(SInt$,SInt$))))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02580a0a580a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-_Int_Int_-v0-a2#59",
+      "script" : "[SigmaOr|K|(Int,Int)|v0] `SigmaOr(WrappedArray(ConstantNode((5,5),(SInt$,SInt$))))` — THROWS AT EVALUATION (ClassCastException: class scala.Tuple2 cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01580a0a",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-_Bool_Bool_Bool_-v0-a2#60",
+      "script" : "[SigmaOr|PK|(Bool,Bool,Bool)|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179848010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-_Bool_Bool_Bool_-v0-a2#61",
+      "script" : "[SigmaOr|KP|(Bool,Bool,Bool)|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb024801010101010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-_Bool_Bool_Bool_-v0-a2#62",
+      "script" : "[SigmaOr|PKP|(Bool,Bool,Bool)|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...)…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817984801010101010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-_Bool_Bool_Bool_-v0-a2#63",
+      "script" : "[SigmaOr|KK|(Bool,Bool,Bool)|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean)), ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb024801010101010148010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-_Bool_Bool_Bool_-v0-a2#64",
+      "script" : "[SigmaOr|K|(Bool,Bool,Bool)|v0] `SigmaOr(WrappedArray(ConstantNode(Coll(true,true,true),(SBoolean,SBoolean,SBoolean))))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CollOverArray cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0148010101010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-AvlTree-v0-a2#65",
+      "script" : "[SigmaOr|PK|AvlTree|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000000000000000000000000000000000000000000000000000000000000000000072000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-AvlTree-v0-a2#66",
+      "script" : "[SigmaOr|KP|AvlTree|v0] `SigmaOr(WrappedArray(ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree), ConstantNode(SigmaProp(ProveDlog(ECPoint(79…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb026400000000000000000000000000000000000000000000000000000000000000000007200008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-AvlTree-v0-a2#67",
+      "script" : "[SigmaOr|PKP|AvlTree|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817986400000000000000000000000000000000000000000000000000000000000000000007200008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-AvlTree-v0-a2#68",
+      "script" : "[SigmaOr|KK|AvlTree|v0] `SigmaOr(WrappedArray(ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree), ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb026400000000000000000000000000000000000000000000000000000000000000000007200064000000000000000000000000000000000000000000000000000000000000000000072000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-AvlTree-v0-a2#69",
+      "script" : "[SigmaOr|K|AvlTree|v0] `SigmaOr(WrappedArray(ConstantNode(CAvlTree(AvlTreeData(Coll(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),AvlTreeFlags(true,true,true),32,None)),SAvlTree)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CAvlTree cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0164000000000000000000000000000000000000000000000000000000000000000000072000",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-String-v0-a2#70",
+      "script" : "[SigmaOr|PK|String|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(a,SString)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-String-v0-a2#71",
+      "script" : "[SigmaOr|KP|String|v0] `SigmaOr(WrappedArray(ConstantNode(a,SString), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0266016108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-String-v0-a2#72",
+      "script" : "[SigmaOr|PKP|String|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(a,SString), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179866016108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-String-v0-a2#73",
+      "script" : "[SigmaOr|KK|String|v0] `SigmaOr(WrappedArray(ConstantNode(a,SString), ConstantNode(a,SString)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02660161660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-String-v0-a2#74",
+      "script" : "[SigmaOr|K|String|v0] `SigmaOr(WrappedArray(ConstantNode(a,SString)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.String cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01660161",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Box-v0-a2#75",
+      "script" : "[SigmaOr|PK|Box|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,2…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179863c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000111111111111111111111111111111111111111111111111111111111111111100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Box-v0-a2#76",
+      "script" : "[SigmaOr|KP|Box|v0] `SigmaOr(WrappedArray(ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValu…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0263c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000011111111111111111111111111111111111111111111111111111111111111110008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Box-v0-a2#77",
+      "script" : "[SigmaOr|PKP|Box|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,2…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179863c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000011111111111111111111111111111111111111111111111111111111111111110008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Box-v0-a2#78",
+      "script" : "[SigmaOr|KK|Box|v0] `SigmaOr(WrappedArray(ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValu…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0263c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000011111111111111111111111111111111111111111111111111111111111111110063c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000111111111111111111111111111111111111111111111111111111111111111100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Box-v0-a2#79",
+      "script" : "[SigmaOr|K|Box|v0] `SigmaOr(WrappedArray(ConstantNode(Box(id=Coll(-125,47,-127,-69,-96,96,-69,12,29,-67,-126,-83,-103,30,-10,-41,30,71,30,-51,-115,-37,-2,49,-85,76,24,52,-100,84,-28,-32); value=1000000; regs=Coll(TestValue(1000000),TestValu…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0163c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000111111111111111111111111111111111111111111111111111111111111111100",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Global-v0-a2#80",
+      "script" : "[SigmaOr|PK|Global|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), Global$(221)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Global-v0-a2#81",
+      "script" : "[SigmaOr|KP|Global|v0] `SigmaOr(WrappedArray(Global$(221), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02dd08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Global-v0-a2#82",
+      "script" : "[SigmaOr|PKP|Global|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), Global$(221), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798dd08cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Global-v0-a2#83",
+      "script" : "[SigmaOr|KK|Global|v0] `SigmaOr(WrappedArray(Global$(221), Global$(221)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02dddd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Global-v0-a2#84",
+      "script" : "[SigmaOr|K|Global|v0] `SigmaOr(WrappedArray(Global$(221)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CSigmaDslBuilder$ cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01dd",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Lambda-v0-a2#85",
+      "script" : "[SigmaOr|PK|Lambda|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean))))` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Lambda-v0-a2#86",
+      "script" : "[SigmaOr|KP|Lambda|v0] `SigmaOr(WrappedArray(FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02d9010101720108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Lambda-v0-a2#87",
+      "script" : "[SigmaOr|PKP|Lambda|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSig…` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798d9010101720108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Lambda-v0-a2#88",
+      "script" : "[SigmaOr|KK|Lambda|v0] `SigmaOr(WrappedArray(FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean)), FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean))))` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02d90101017201d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Lambda-v0-a2#89",
+      "script" : "[SigmaOr|K|Lambda|v0] `SigmaOr(WrappedArray(FuncValue(WrappedArray((1,SBoolean)),ValUse(1,SBoolean))))` — THROWS AT EVALUATION (ClassCastException: class sigma.ast.FuncValue$$Lambda cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb01d90101017201",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Generator-v0-a2#90",
+      "script" : "[SigmaOr|PK|Generator|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), GroupGenerator$(130)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179882",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Generator-v0-a2#91",
+      "script" : "[SigmaOr|KP|Generator|v0] `SigmaOr(WrappedArray(GroupGenerator$(130), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb028208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Generator-v0-a2#92",
+      "script" : "[SigmaOr|PKP|Generator|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), GroupGenerator$(130), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817988208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Generator-v0-a2#93",
+      "script" : "[SigmaOr|KK|Generator|v0] `SigmaOr(WrappedArray(GroupGenerator$(130), GroupGenerator$(130)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb028282",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Generator-v0-a2#94",
+      "script" : "[SigmaOr|K|Generator|v0] `SigmaOr(WrappedArray(GroupGenerator$(130)))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CGroupElement cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0182",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PK-Boolean-v0-a2#95",
+      "script" : "[SigmaOr|PK|Boolean|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), TrueLeaf))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817980101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KP-Boolean-v0-a2#96",
+      "script" : "[SigmaOr|KP|Boolean|v0] `SigmaOr(WrappedArray(TrueLeaf, ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb02010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PKP-Boolean-v0-a2#97",
+      "script" : "[SigmaOr|PKP|Boolean|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), TrueLeaf, ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0308cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798010108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-KK-Boolean-v0-a2#98",
+      "script" : "[SigmaOr|KK|Boolean|v0] `SigmaOr(WrappedArray(TrueLeaf, TrueLeaf))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0201010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-K-Boolean-v0-a2#99",
+      "script" : "[SigmaOr|K|Boolean|v0] `SigmaOr(WrappedArray(TrueLeaf))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Boolean cannot be cast to class sigma.SigmaProp). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb010101",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "SigmaOr-PP-none-v0-a2#100",
+      "script" : "[SigmaOr|PP|none|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp), ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — <sigmaprop> at cost 24. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0208cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179808cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "9702cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 24,
+        "error" : null
+      }
+    },
+    {
+      "name" : "SigmaOr-P-none-v0-a2#101",
+      "script" : "[SigmaOr|P|none|v0] `SigmaOr(WrappedArray(ConstantNode(SigmaProp(ProveDlog(ECPoint(79be66,483ada,...))),SSigmaProp)))` — <sigmaprop> at cost 17. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb0108cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "SigmaProp",
+          "raw_hex" : "cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+        },
+        "cost" : 17,
+        "error" : null
+      }
+    },
+    {
+      "name" : "SigmaOr-empty-none-v0-a2#102",
+      "script" : "[SigmaOr|empty|none|v0] `SigmaOr(WrappedArray())` — THROWS AT EVALUATION (IllegalArgumentException). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "00eb00",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2547 @@
+{
+  "schema" : "santa-eval/v6-fullctx",
+  "op" : "AND.item_by_item_context",
+  "blessed_by" : "jvm:sigma-state-6.0.7",
+  "source" : "santa:authored-and-or-item-by-item",
+  "entries" : [
+    {
+      "name" : "AND-var-own-t_true_5_true_-v0-a2#0",
+      "script" : "[AND|var|own|t(true,5,true)|v0] `AND(OptionGet(GetVar(1,Option[(SBoolean,SInt$,SBoolean)])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30148010401",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-asCollBoolean-t_true_5_true_-v0-a2#1",
+      "script" : "[AND|var|asCollBoolean|t(true,5,true)|v0] `AND(OptionGet(GetVar(1,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[Coll[Boolean]](1): invalid type of value TestValue(Coll(true,5,true)) at id=1). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3010d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-t_false_5_true_-v0-a2#2",
+      "script" : "[AND|var|own|t(false,5,true)|v0] `AND(OptionGet(GetVar(2,Option[(SBoolean,SInt$,SBoolean)])))` — false at cost 40. NEVER READ: the item of another kind is never read (it comes after the deciding item, or nothing walks it), so the call answers; a port that casts or checks every item first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30248010401",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-var-asCollBoolean-t_false_5_true_-v0-a2#3",
+      "script" : "[AND|var|asCollBoolean|t(false,5,true)|v0] `AND(OptionGet(GetVar(2,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[Coll[Boolean]](2): invalid type of value TestValue(Coll(false,5,true)) at id=2). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3020d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-cb_true_false_true_-v0-a2#4",
+      "script" : "[AND|var|own|cb(true,false,true)|v0] `AND(OptionGet(GetVar(3,Option[Coll[SBoolean]])))` — false at cost 40. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3030d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-var-asTuple-cb_true_false_true_-v0-a2#5",
+      "script" : "[AND|var|asTuple|cb(true,false,true)|v0] `AND(OptionGet(GetVar(3,Option[(SBoolean,SInt$,SBoolean)])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[(Boolean, Int, Boolean)](3): invalid type of value TestValue(Coll(true,false,true)) at id=3). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30348010401",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-ci_5_-v0-a2#6",
+      "script" : "[AND|var|own|ci(5)|v0] `AND(OptionGet(GetVar(4,Option[Coll[SInt$]])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30410",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-asCollBoolean-ci_5_-v0-a2#7",
+      "script" : "[AND|var|asCollBoolean|ci(5)|v0] `AND(OptionGet(GetVar(4,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[Coll[Boolean]](4): invalid type of value TestValue(Coll(5)) at id=4). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3040d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-int5-v0-a2#8",
+      "script" : "[AND|var|own|int5|v0] `AND(OptionGet(GetVar(5,Option[SInt$])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30504",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-asCollBoolean-int5-v0-a2#9",
+      "script" : "[AND|var|asCollBoolean|int5|v0] `AND(OptionGet(GetVar(5,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[Coll[Boolean]](5): invalid type of value TestValue(5) at id=5). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3050d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-t_5_true_false_-v0-a2#10",
+      "script" : "[AND|var|own|t(5,true,false)|v0] `AND(OptionGet(GetVar(6,Option[(SInt$,SBoolean,SBoolean)])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30648040101",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-asCollBoolean-t_5_true_false_-v0-a2#11",
+      "script" : "[AND|var|asCollBoolean|t(5,true,false)|v0] `AND(OptionGet(GetVar(6,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[Coll[Boolean]](6): invalid type of value TestValue(Coll(5,true,false)) at id=6). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3060d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-ci_-v0-a2#12",
+      "script" : "[AND|var|own|ci()|v0] `AND(OptionGet(GetVar(7,Option[Coll[SInt$]])))` — true at cost 40. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30710",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-var-asCollBoolean-ci_-v0-a2#13",
+      "script" : "[AND|var|asCollBoolean|ci()|v0] `AND(OptionGet(GetVar(7,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[Coll[Boolean]](7): invalid type of value TestValue(Coll()) at id=7). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3070d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-var-own-cb_false_true_false_-v0-a2#14",
+      "script" : "[AND|var|own|cb(false,true,false)|v0] `AND(OptionGet(GetVar(8,Option[Coll[SBoolean]])))` — false at cost 40. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e3080d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 40,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-var-asTuple-cb_false_true_false_-v0-a2#15",
+      "script" : "[AND|var|asTuple|cb(false,true,false)|v0] `AND(OptionGet(GetVar(8,Option[(SBoolean,SInt$,SBoolean)])))` — THROWS AT EVALUATION (InvalidType: Cannot getVar[(Boolean, Int, Boolean)](8): invalid type of value TestValue(Coll(false,true,false)) at id=8). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4e30848010401",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          "1" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401010a01"
+          },
+          "2" : {
+            "kind" : "Value",
+            "bytes_hex" : "48010401000a01"
+          },
+          "3" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0305"
+          },
+          "4" : {
+            "kind" : "Value",
+            "bytes_hex" : "10010a"
+          },
+          "5" : {
+            "kind" : "Value",
+            "bytes_hex" : "040a"
+          },
+          "6" : {
+            "kind" : "Value",
+            "bytes_hex" : "480401010a0100"
+          },
+          "7" : {
+            "kind" : "Value",
+            "bytes_hex" : "1000"
+          },
+          "8" : {
+            "kind" : "Value",
+            "bytes_hex" : "0d0302"
+          }
+        },
+        "input_extensions" : [
+          {
+            "1" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401010a01"
+            },
+            "2" : {
+              "kind" : "Value",
+              "bytes_hex" : "48010401000a01"
+            },
+            "3" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0305"
+            },
+            "4" : {
+              "kind" : "Value",
+              "bytes_hex" : "10010a"
+            },
+            "5" : {
+              "kind" : "Value",
+              "bytes_hex" : "040a"
+            },
+            "6" : {
+              "kind" : "Value",
+              "bytes_hex" : "480401010a0100"
+            },
+            "7" : {
+              "kind" : "Value",
+              "bytes_hex" : "1000"
+            },
+            "8" : {
+              "kind" : "Value",
+              "bytes_hex" : "0d0302"
+            }
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-own-R4-t_true_5_true_-v0-a2#16",
+      "script" : "[AND|reg|own|R4|t(true,5,true)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(SBoolean,SInt$,SBoolean)])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a70448010401",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-asCollBoolean-R4-t_true_5_true_-v0-a2#17",
+      "script" : "[AND|reg|asCollBoolean|R4|t(true,5,true)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R4,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getReg[Coll[Boolean]](4): invalid type of value TestValue(Coll(true,5,true)) at id=4). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a7040d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-own-R5-t_false_5_true_-v0-a2#18",
+      "script" : "[AND|reg|own|R5|t(false,5,true)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R5,Option[(SBoolean,SInt$,SBoolean)])))` — false at cost 90. NEVER READ: the item of another kind is never read (it comes after the deciding item, or nothing walks it), so the call answers; a port that casts or checks every item first refuses here.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a70548010401",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-reg-asCollBoolean-R5-t_false_5_true_-v0-a2#19",
+      "script" : "[AND|reg|asCollBoolean|R5|t(false,5,true)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R5,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getReg[Coll[Boolean]](5): invalid type of value TestValue(Coll(false,5,true)) at id=5). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a7050d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-own-R6-cb_true_false_true_-v0-a2#20",
+      "script" : "[AND|reg|own|R6|cb(true,false,true)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R6,Option[Coll[SBoolean]])))` — false at cost 90. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a7060d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : false
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-reg-own-R7-ci_5_-v0-a2#21",
+      "script" : "[AND|reg|own|R7|ci(5)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R7,Option[Coll[SInt$]])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a70710",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-asCollBoolean-R7-ci_5_-v0-a2#22",
+      "script" : "[AND|reg|asCollBoolean|R7|ci(5)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R7,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getReg[Coll[Boolean]](7): invalid type of value TestValue(Coll(5)) at id=7). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a7070d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-own-R8-t_5_true_false_-v0-a2#23",
+      "script" : "[AND|reg|own|R8|t(5,true,false)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(SInt$,SBoolean,SBoolean)])))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a70848040101",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-asCollBoolean-R8-t_5_true_false_-v0-a2#24",
+      "script" : "[AND|reg|asCollBoolean|R8|t(5,true,false)|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R8,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getReg[Coll[Boolean]](8): invalid type of value TestValue(Coll(5,true,false)) at id=8). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a7080d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-reg-own-R9-ci_-v0-a2#25",
+      "script" : "[AND|reg|own|R9|ci()|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R9,Option[Coll[SInt$]])))` — true at cost 90. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a70910",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 90,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-reg-asCollBoolean-R9-ci_-v0-a2#26",
+      "script" : "[AND|reg|asCollBoolean|R9|ci()|v0] `AND(OptionGet(ExtractRegisterAs(Self$(167),R9,Option[Coll[SBoolean]])))` — THROWS AT EVALUATION (InvalidType: Cannot getReg[Coll[Boolean]](9): invalid type of value TestValue(Coll()) at id=9). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e4c6a7090d",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-SELF-v0-a2#27",
+      "script" : "[AND|ctxkind|SELF|v0] `AND(Self$(167))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096a7",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-CONTEXT-v0-a2#28",
+      "script" : "[AND|ctxkind|CONTEXT|v0] `AND(Context$(254))` — THROWS AT EVALUATION (ClassCastException: class sigmastate.eval.CContext cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-HEIGHT-v0-a2#29",
+      "script" : "[AND|ctxkind|HEIGHT|v0] `AND(Height$(163))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Integer cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096a3",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-INPUTS-v0-a2#30",
+      "script" : "[AND|ctxkind|INPUTS|v0] `AND(Inputs$(164))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096a4",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-OUTPUTS-v0-a2#31",
+      "script" : "[AND|ctxkind|OUTPUTS|v0] `AND(Outputs$(165))` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CBox cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096a5",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-dataInputs-v0-a2#32",
+      "script" : "[AND|ctxkind|dataInputs|v0] `AND(MethodCall(Context$(254),SMethod(SContextMethods,dataInputs,(SContext) => Coll[SBox],1,FixedCost(JitCost(15)),List(),MethodIRInfo(Some(<function1>),None,None),Some(OperationInfo(Some(PropertyCall$(219)),,ArrayBuffer(…` — true at cost 35. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096db6501fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 35,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-ctxkind-headers-v0-a2#33",
+      "script" : "[AND|ctxkind|headers|v0] `AND(MethodCall(Context$(254),SMethod(SContextMethods,headers,(SContext) => Coll[SHeader],2,FixedCost(JitCost(15)),List(),MethodIRInfo(Some(<function1>),None,None),Some(OperationInfo(Some(PropertyCall$(219)),,ArrayBuffer(…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CHeader cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096db6502fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-header0-v0-a2#34",
+      "script" : "[AND|ctxkind|header0|v0] `AND(ByIndex(MethodCall(Context$(254),SMethod(SContextMethods,headers,(SContext) => Coll[SHeader],2,FixedCost(JitCost(15)),List(),MethodIRInfo(Some(<function1>),None,None),Some(OperationInfo(Some(PropertyCall$(219)),,Arra…` — THROWS AT EVALUATION (ClassCastException: class sigma.data.CHeader cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096b2db6502fe040000",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-preHeader-v0-a2#35",
+      "script" : "[AND|ctxkind|preHeader|v0] `AND(MethodCall(Context$(254),SMethod(SContextMethods,preHeader,(SContext) => SPreHeader,3,FixedCost(JitCost(15)),List(),MethodIRInfo(Some(<function1>),None,None),Some(OperationInfo(Some(PropertyCall$(219)),,ArrayBuffer(A…` — THROWS AT EVALUATION (ClassCastException: class sigmastate.eval.CPreHeader cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096db6503fe",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-SELF.tokens-v0-a2#36",
+      "script" : "[AND|ctxkind|SELF.tokens|v0] `AND(MethodCall(Self$(167),SMethod(SBoxMethods,tokens,(SBox) => Coll[(Coll[SByte$],SLong$)],8,FixedCost(JitCost(15)),List(),MethodIRInfo(Some(<function1>),None,None),Some(OperationInfo(Some(PropertyCall$(219)),Secondary t…` — true at cost 44. VALUE: a control, or a neighbour node's answer at the jars' cost.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096db6308a7",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Boolean",
+          "value" : true
+        },
+        "cost" : 44,
+        "error" : null
+      }
+    },
+    {
+      "name" : "AND-ctxkind-getVar_Int_5_-v0-a2#37",
+      "script" : "[AND|ctxkind|getVar[Int](5)|v0] `AND(GetVar(5,Option[SInt$]))` — THROWS AT EVALUATION (ClassCastException: class scala.None$ cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e30504",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-getVar_Int_99_-v0-a2#38",
+      "script" : "[AND|ctxkind|getVar[Int](99)|v0] `AND(GetVar(99,Option[SInt$]))` — THROWS AT EVALUATION (ClassCastException: class scala.None$ cannot be cast to class sigma.Coll). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096e36304",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    },
+    {
+      "name" : "AND-ctxkind-minerPubKey-v0-a2#39",
+      "script" : "[AND|ctxkind|minerPubKey|v0] `AND(MinerPubkey$(172))` — THROWS AT EVALUATION (ClassCastException: class java.lang.Byte cannot be cast to class java.lang.Boolean). REFUSED: an item of another kind is read, the input is no collection, an item throws, or the tree is refused at parse.  // tree v0, activated 2",
+      "tree_bytes_hex" : "0096ac",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 0
+      },
+      "context" : {
+        "self_index" : 0,
+        "inputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f8179864000648010401010a0148010401000a010d030510010a480401010a01001000111111111111111111111111111111111111111111111111111111111111111100"
+        ],
+        "data_inputs" : [
+        ],
+        "outputs" : [
+          "c0843d0008cd0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798640000333333333333333333333333333333333333333333333333333333333333333300"
+        ],
+        "headers" : [
+          "03aebae7765c8d1c0349b735d31c1e66fcd2442e632049c461c55fb196c21d2b7e4d41efc816f855d9d6e3cab68be6453b1d7c9a5a815016bcecd68f05509dc194a36723709ba917c6d25a3d9affd01f6caabbee498db075fc83e3ab4ccc4137554594ba1b326d52cb4016a5920da9beffc00aa7048e145ac6cbac616c18de7d7e00c0fda7df97317fee7f826c9c972c1988ec589ae8a994a1c5dc3dbf2d5d473a586cf0ec631c3f07000000bf9440000000000279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f817989225fc410e1f522e"
+        ],
+        "pre_header_hex" : "03f9cffe9b07f6a9a8d745953cede03e2648596d657eb96448da96de5f81ab82a480a7afdf973180808038c094400279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798000000",
+        "height" : 1051200,
+        "extension" : {
+          
+        },
+        "input_extensions" : [
+          {
+            
+          }
+        ]
+      },
+      "expected" : {
+        "value" : null,
+        "cost" : null,
+        "error" : "errored"
+      }
+    }
+  ]
+}
