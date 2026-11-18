@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import {
   parseTree, serializeTree, isUnparsedTree, evaluateWith, makeContext, EvalError,
-  parseSValue, serializeSValue, parseSType, serializeSType, STypeParseError, SValueParseError, SValueSerializeError, ErgoTreeParseError, ErgoTreeSerializeError, ExprParseError, type SType,
+  parseSValue, serializeSValue, parseSType, serializeSType, STypeParseError, SValueParseError, SValueSerializeError, ErgoTreeParseError, ErgoTreeSerializeError, type SType,
   parseSigmaBoolean, serializeSigmaBoolean, SigmaBooleanParseError, SigmaBooleanSerializeError,
   type ContextExtension, type ErgoBox, type PreHeader,
 } from '@ergots/ergoscript'
@@ -95,29 +95,27 @@ export function runEntry(schema: string, e: Entry, readExt: ExtensionReader = nu
 function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Result {
   const treeVersion = e.version.ergoTree
 
-  // [0] parseTree — ergots' TYPED parse refusals are the library deciding the TREE is
+  // [0] parseTree — ergots' codec refusing the tree's bytes is the library deciding the TREE is
   //     invalid — a faithful reject ⇒ `errored` (contract §3 Refused→errored; mirrors the
   //     eval-stage EvalError arm below and the blitzen input-refusal precedent). The
   //     corpus deliberately carries version-gated/malformed reject trees, so the old "any
-  //     parse failure is a harness bug" assumption no longer holds at this stage:
-  //       - SValueParseError    — e.g. the SOption DATA-constant tree-version gate.
-  //       - ErgoTreeParseError  — the library's verdict on REAL tree bytes it rejects on a
-  //         rule (rule-1012 header-version-requires-size, body-size-overflow, oversized,
-  //         trailing-bytes, too-many-constants, subst-*). EXCEPT code 'empty' (no tree to
-  //         parse) — only a malformed vector produces that, so it stays an unrecognized
-  //         failure ⇒ panic-net (surfaced loudly, not silently called a library reject).
-  //       - ExprParseError      — a body/expression-level parse refusal (e.g. FunDef nTpeArgs
-  //         count > 127, the JVM signed-byte size read; ergots root-exported the class for this).
+  //     parse failure is a harness bug" assumption no longer holds at this stage. A refusal is
+  //     what the wire arm counts as one (codec-errors.ts isWireCodecError, ONE classifier for
+  //     both arms): the typed codec errors (SValueParseError — e.g. the SOption DATA-constant
+  //     tree-version gate; ErgoTreeParseError on a rule — rule-1012, body-size-overflow,
+  //     oversized, trailing-bytes, too-many-constants, subst-*; ExprParseError — e.g. FunDef
+  //     nTpeArgs > 127; STypeParseError; …) and the reader's ReaderError (the bytes end before
+  //     what they declare, e.g. a collection's declared count with fewer items: the JVM refuses
+  //     at the count, ergots at the end of the bytes). EXCEPT ErgoTreeParseError code 'empty'
+  //     (no tree to parse) — only a malformed vector produces that, so it stays an
+  //     unrecognized failure ⇒ panic-net (surfaced loudly, not silently called a library reject).
   //     Any OTHER parse throw is still a bridge bug and falls to runEntry's panic-net.
   let tree: ReturnType<typeof parseTree>
   try {
     tree = parseTree(hexToBytes(e.tree_bytes_hex))
   } catch (err) {
-    if (err instanceof SValueParseError) return { value: null, cost: null, error: 'errored' }
-    if (err instanceof ErgoTreeParseError && err.code !== 'empty') {
-      return { value: null, cost: null, error: 'errored' }
-    }
-    if (err instanceof ExprParseError) return { value: null, cost: null, error: 'errored' }
+    if (err instanceof ErgoTreeParseError && err.code === 'empty') throw err
+    if (isWireCodecError(err)) return { value: null, cost: null, error: 'errored' }
     throw err
   }
   // A size-flagged soft-fork tree degrades to UnparsedErgoTree on master's parseTree; SANTA's eval

@@ -65,7 +65,7 @@ no "abstain"; scope is the input subset you run):
 | outcome (`error`) | meaning |
 |---|---|
 | **success** (`null`) | evaluated; `value`+`cost` present; structural-match vs blessed `expected` decides nice/naughty |
-| **errored** (`"errored"`) | ergots implements the op and eval threw (coarse — no reason taxonomy) |
+| **errored** (`"errored"`) | ergots implements the op and eval threw, or its codec refused the tree's bytes at parse — a typed codec error or the reader's `ReaderError`, by the one classifier the wire arm uses (`src/codec-errors.ts`) (coarse — no reason taxonomy) |
 | **not-implemented** (`"not-implemented"`) | ergots has no impl for this op/method/type — a coverage gap; route to ergots |
 | **panicked** (`"panicked"`) | an otherwise-uncaught throw on this entry, caught so the run continues — always coal, message in `note`; a runner must never abort the file. ergots failing on its *own* terms (e.g. its codec rejecting a Header ts > 2⁵³) lands here too — a faithful divergence, not pre-classified |
 
