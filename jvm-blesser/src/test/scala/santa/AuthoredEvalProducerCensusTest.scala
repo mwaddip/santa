@@ -153,7 +153,7 @@ class AuthoredEvalProducerCensusTest extends munit.FunSuite {
   }
 
   test("THE RULE, census: generic answers every call; a specialised control answers only where no call reads the " +
-    "class; a tuple expression read at its tuple type throws whatever the call") {
+    "class; a tuple expression's `._1` throws whatever the call") {
     all.filterNot(_._1.pairs).foreach { case (r, o) =>
       val want = B.kind(r) match {
         case B.Generic     => true

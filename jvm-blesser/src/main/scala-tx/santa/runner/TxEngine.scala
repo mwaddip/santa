@@ -47,10 +47,16 @@ object TxEngine extends ApiCodecs {
   /** An identity hash as Object.toString writes it: `@` and the hex hash code, after a class name or an array's type. */
   private val IdentityHash = """(?<=[\w$;\[])@[0-9a-f]{1,8}(?!\w)""".r
 
+  /** A lambda's hidden class as the JVM names it, `$$Lambda$679/0x00007b515c407778`: its index and address. */
+  private val LambdaClass = """\$\$Lambda\$[0-9]+(/0x[0-9a-f]+)?""".r
+
   /** A failure as a reason: the exception's class and message, with each identity hash (as in `[B@4b023973`) written
-    * `@<hash>`. The hash changes from run to run, and reasons are blessed into vectors. */
-  private[santa] def reasonOf(e: Throwable): String =
-    IdentityHash.replaceAllIn(s"${e.getClass.getName}: ${e.getMessage}", "@<hash>")
+    * `@<hash>` and each lambda's hidden class written `$$Lambda`. Both change from run to run, and reasons are blessed
+    * into vectors. */
+  private[santa] def reasonOf(e: Throwable): String = {
+    val withoutLambdas = LambdaClass.replaceAllIn(s"${e.getClass.getName}: ${e.getMessage}", "\\$\\$Lambda")
+    IdentityHash.replaceAllIn(withoutLambdas, "@<hash>")
+  }
 
   /** Validate one tx. activated = the vector's version.activated (3 for v6);
     * blockVersion = activated + 1. ts/nBits are cosmetic (preHeader). */

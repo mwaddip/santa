@@ -18,7 +18,8 @@ package santa
 //    transaction: a data input's, an output's and a second input's R1, R3 and expression registers, getVarFromInput,
 //    collection expressions two deep, an empty one, one holding an expression and a constant, options, the v6
 //    getReg; the controls (constants, a token id, `propositionBytes`, an output's `id`). A Tuple EXPRESSION in a
-//    register or variable read at its tuple type throws whatever the call (OptionGet's type check).
+//    register or variable is a Coll[Any]: the read hands it back (the readers check only the stored type), and `._1`
+//    throws whatever the call (SelectField matches a Tuple2 only; Tuple.binding_provenance's P rows).
 //
 // THE ROWS: sigma-rust's (src/test/resources/sigma-rust-patch-array-class/rows-producer-{pairs,census}.tsv, its
 // ClassProbe2's answers on the 6.0.7 jars beside each as an independent cross-check), each a bare root at tree version
@@ -444,8 +445,9 @@ object AuthoredEvalProducerCensus {
       }
     } else (kind(r), readsClass(r), answers) match {
       case (TupleRead, _, false) =>
-        s"THE READ THROWS: the receiver is $holder, a Coll[Any] on the JVM, which OptionGet's type check refuses " +
-          "at the tuple type, whatever the call."
+        s"THE ITEM SELECTION THROWS: the receiver is $holder, a Coll[Any] on the JVM. The read hands it back (the " +
+          "readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, " +
+          "whatever the call."
       case (Generic, true, true) =>
         s"NODE'S CLASS: the receiver is $holder, a GENERIC collection on a node: ${what(r)}, and the call answers. " +
           "A port that holds it specialised refuses here."

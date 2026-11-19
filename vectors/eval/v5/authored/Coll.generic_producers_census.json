@@ -6,7 +6,7 @@
   "entries" : [
     {
       "name" : "value-B.SELF.R4.tuple3._1-v0-a2#0",
-      "script" : "[value|B.SELF.R4.tuple3._1|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[value|B.SELF.R4.tuple3._1|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "008ce4c6a704480e040401",
       "version" : {
         "activated" : 2,
@@ -50,7 +50,7 @@
     },
     {
       "name" : "patch-B.SELF.R4.tuple3._1-Iconst0-v0-a2#1",
-      "script" : "[patch|B.SELF.R4.tuple3._1|Iconst0|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.SELF.R4.tuple3._1|Iconst0|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6a704480e0404010304009501000e010110000400",
       "version" : {
         "activated" : 2,
@@ -94,7 +94,7 @@
     },
     {
       "name" : "patch.direct-B.SELF.R4.tuple3._1-Iconst0-v0-a2#2",
-      "script" : "[patch.direct|B.SELF.R4.tuple3._1|Iconst0|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch.direct|B.SELF.R4.tuple3._1|Iconst0|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6a704480e04040103040010000400",
       "version" : {
         "activated" : 2,
@@ -138,7 +138,7 @@
     },
     {
       "name" : "patch-B.SELF.R4.tuple3._1-ctl0-v0-a2#3",
-      "script" : "[patch|B.SELF.R4.tuple3._1|ctl0|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.SELF.R4.tuple3._1|ctl0|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6a704480e0404010304000e000400",
       "version" : {
         "activated" : 2,
@@ -182,7 +182,7 @@
     },
     {
       "name" : "byIndex.in-B.SELF.R4.tuple3._1-other-v0-a2#4",
-      "script" : "[byIndex.in|B.SELF.R4.tuple3._1|other|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[byIndex.in|B.SELF.R4.tuple3._1|other|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00b28ce4c6a704480e0404010400010101",
       "version" : {
         "activated" : 2,
@@ -226,7 +226,7 @@
     },
     {
       "name" : "getOrElse.in-B.SELF.R4.tuple3._1-other-v0-a2#5",
-      "script" : "[getOrElse.in|B.SELF.R4.tuple3._1|other|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.in|B.SELF.R4.tuple3._1|other|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4c6a704480e0404010204000101",
       "version" : {
         "activated" : 2,
@@ -270,7 +270,7 @@
     },
     {
       "name" : "getOrElse.out-B.SELF.R4.tuple3._1-other-v0-a2#6",
-      "script" : "[getOrElse.out|B.SELF.R4.tuple3._1|other|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE READ THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.out|B.SELF.R4.tuple3._1|other|v0] `SELF.R4[(Coll[Byte], Int, Int)].get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R4,Option[(Coll[SByte$],SInt$,SInt$)])) expected type…). THE ITEM SELECTION THROWS: the receiver is the first item of R4, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4c6a704480e0404010204120101",
       "version" : {
         "activated" : 2,
@@ -1413,7 +1413,7 @@
     },
     {
       "name" : "value-B.SELF.R8.tuple2._1-v0-a2#28",
-      "script" : "[value|B.SELF.R8.tuple2._1|v0] `SELF.R8[(Coll[Byte], Int)].get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[value|B.SELF.R8.tuple2._1|v0] `SELF.R8[(Coll[Byte], Int)].get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "008ce4c6a7083c0e0401",
       "version" : {
         "activated" : 2,
@@ -1457,7 +1457,7 @@
     },
     {
       "name" : "patch-B.SELF.R8.tuple2._1-Iconst0-v0-a2#29",
-      "script" : "[patch|B.SELF.R8.tuple2._1|Iconst0|v0] `SELF.R8[(Coll[Byte], Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.SELF.R8.tuple2._1|Iconst0|v0] `SELF.R8[(Coll[Byte], Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6a7083c0e04010304009501000e010110000400",
       "version" : {
         "activated" : 2,
@@ -1501,7 +1501,7 @@
     },
     {
       "name" : "patch.direct-B.SELF.R8.tuple2._1-Iconst0-v0-a2#30",
-      "script" : "[patch.direct|B.SELF.R8.tuple2._1|Iconst0|v0] `SELF.R8[(Coll[Byte], Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch.direct|B.SELF.R8.tuple2._1|Iconst0|v0] `SELF.R8[(Coll[Byte], Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6a7083c0e040103040010000400",
       "version" : {
         "activated" : 2,
@@ -1545,7 +1545,7 @@
     },
     {
       "name" : "patch-B.SELF.R8.tuple2._1-ctl0-v0-a2#31",
-      "script" : "[patch|B.SELF.R8.tuple2._1|ctl0|v0] `SELF.R8[(Coll[Byte], Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.SELF.R8.tuple2._1|ctl0|v0] `SELF.R8[(Coll[Byte], Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6a7083c0e04010304000e000400",
       "version" : {
         "activated" : 2,
@@ -1589,7 +1589,7 @@
     },
     {
       "name" : "byIndex.in-B.SELF.R8.tuple2._1-other-v0-a2#32",
-      "script" : "[byIndex.in|B.SELF.R8.tuple2._1|other|v0] `SELF.R8[(Coll[Byte], Int)].get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[byIndex.in|B.SELF.R8.tuple2._1|other|v0] `SELF.R8[(Coll[Byte], Int)].get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00b28ce4c6a7083c0e04010400010101",
       "version" : {
         "activated" : 2,
@@ -1633,7 +1633,7 @@
     },
     {
       "name" : "getOrElse.in-B.SELF.R8.tuple2._1-other-v0-a2#33",
-      "script" : "[getOrElse.in|B.SELF.R8.tuple2._1|other|v0] `SELF.R8[(Coll[Byte], Int)].get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.in|B.SELF.R8.tuple2._1|other|v0] `SELF.R8[(Coll[Byte], Int)].get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4c6a7083c0e04010204000101",
       "version" : {
         "activated" : 2,
@@ -1677,7 +1677,7 @@
     },
     {
       "name" : "getOrElse.out-B.SELF.R8.tuple2._1-other-v0-a2#34",
-      "script" : "[getOrElse.out|B.SELF.R8.tuple2._1|other|v0] `SELF.R8[(Coll[Byte], Int)].get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE READ THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.out|B.SELF.R8.tuple2._1|other|v0] `SELF.R8[(Coll[Byte], Int)].get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(Self$(167),R8,Option[(Coll[SByte$],SInt$)])) expected type: (Col…). THE ITEM SELECTION THROWS: the receiver is the first item of R8, a Tuple EXPRESSION of two, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4c6a7083c0e04010204120101",
       "version" : {
         "activated" : 2,
@@ -3281,7 +3281,7 @@
     },
     {
       "name" : "value-B.var2.tuple3._1-v0-a2#59",
-      "script" : "[value|B.var2.tuple3._1|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[value|B.var2.tuple3._1|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "008ce4e302480e040401",
       "version" : {
         "activated" : 2,
@@ -3442,7 +3442,7 @@
     },
     {
       "name" : "patch-B.var2.tuple3._1-Iconst0-v0-a2#60",
-      "script" : "[patch|B.var2.tuple3._1|Iconst0|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.var2.tuple3._1|Iconst0|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4e302480e0404010304009501000e010110000400",
       "version" : {
         "activated" : 2,
@@ -3603,7 +3603,7 @@
     },
     {
       "name" : "patch.direct-B.var2.tuple3._1-Iconst0-v0-a2#61",
-      "script" : "[patch.direct|B.var2.tuple3._1|Iconst0|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch.direct|B.var2.tuple3._1|Iconst0|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4e302480e04040103040010000400",
       "version" : {
         "activated" : 2,
@@ -3764,7 +3764,7 @@
     },
     {
       "name" : "patch-B.var2.tuple3._1-ctl0-v0-a2#62",
-      "script" : "[patch|B.var2.tuple3._1|ctl0|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.var2.tuple3._1|ctl0|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4e302480e0404010304000e000400",
       "version" : {
         "activated" : 2,
@@ -3925,7 +3925,7 @@
     },
     {
       "name" : "byIndex.in-B.var2.tuple3._1-other-v0-a2#63",
-      "script" : "[byIndex.in|B.var2.tuple3._1|other|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[byIndex.in|B.var2.tuple3._1|other|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00b28ce4e302480e0404010400010101",
       "version" : {
         "activated" : 2,
@@ -4086,7 +4086,7 @@
     },
     {
       "name" : "getOrElse.in-B.var2.tuple3._1-other-v0-a2#64",
-      "script" : "[getOrElse.in|B.var2.tuple3._1|other|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.in|B.var2.tuple3._1|other|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4e302480e0404010204000101",
       "version" : {
         "activated" : 2,
@@ -4247,7 +4247,7 @@
     },
     {
       "name" : "getOrElse.out-B.var2.tuple3._1-other-v0-a2#65",
-      "script" : "[getOrElse.out|B.var2.tuple3._1|other|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE READ THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.out|B.var2.tuple3._1|other|v0] `getVar[(Coll[Byte], Int, Int)](2).get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(GetVar(2,Option[(Coll[SByte$],SInt$,SInt$)])) expected type: (Coll[SByte$],SInt$,S…). THE ITEM SELECTION THROWS: the receiver is the first item of variable 2, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4e302480e0404010204120101",
       "version" : {
         "activated" : 2,
@@ -22501,7 +22501,7 @@
     },
     {
       "name" : "value-B.OUT0.R7.tuple3._1-v0-a2#227",
-      "script" : "[value|B.OUT0.R7.tuple3._1|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[value|B.OUT0.R7.tuple3._1|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "008ce4c6b2a504000007480e040401",
       "version" : {
         "activated" : 2,
@@ -22545,7 +22545,7 @@
     },
     {
       "name" : "patch-B.OUT0.R7.tuple3._1-Iconst0-v0-a2#228",
-      "script" : "[patch|B.OUT0.R7.tuple3._1|Iconst0|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.OUT0.R7.tuple3._1|Iconst0|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant behind `if (false) <one item of the receiver's> else <it>` — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6b2a504000007480e0404010304009501000e010110000400",
       "version" : {
         "activated" : 2,
@@ -22589,7 +22589,7 @@
     },
     {
       "name" : "patch.direct-B.OUT0.R7.tuple3._1-Iconst0-v0-a2#229",
-      "script" : "[patch.direct|B.OUT0.R7.tuple3._1|Iconst0|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch.direct|B.OUT0.R7.tuple3._1|Iconst0|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Int] constant itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6b2a504000007480e04040103040010000400",
       "version" : {
         "activated" : 2,
@@ -22633,7 +22633,7 @@
     },
     {
       "name" : "patch-B.OUT0.R7.tuple3._1-ctl0-v0-a2#230",
-      "script" : "[patch|B.OUT0.R7.tuple3._1|ctl0|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[patch|B.OUT0.R7.tuple3._1|ctl0|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.patch(0, <arg>, 0)`, the patch an EMPTY Coll[Byte] constant (the receiver's own type) itself — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c138ce4c6b2a504000007480e0404010304000e000400",
       "version" : {
         "activated" : 2,
@@ -22677,7 +22677,7 @@
     },
     {
       "name" : "byIndex.in-B.OUT0.R7.tuple3._1-other-v0-a2#231",
-      "script" : "[byIndex.in|B.OUT0.R7.tuple3._1|other|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[byIndex.in|B.OUT0.R7.tuple3._1|other|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1(0)` as ByIndex with a default (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00b28ce4c6b2a504000007480e0404010400010101",
       "version" : {
         "activated" : 2,
@@ -22721,7 +22721,7 @@
     },
     {
       "name" : "getOrElse.in-B.OUT0.R7.tuple3._1-other-v0-a2#232",
-      "script" : "[getOrElse.in|B.OUT0.R7.tuple3._1|other|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.in|B.OUT0.R7.tuple3._1|other|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.getOrElse(0, <default>)` (in range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4c6b2a504000007480e0404010204000101",
       "version" : {
         "activated" : 2,
@@ -22765,7 +22765,7 @@
     },
     {
       "name" : "getOrElse.out-B.OUT0.R7.tuple3._1-other-v0-a2#233",
-      "script" : "[getOrElse.out|B.OUT0.R7.tuple3._1|other|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE READ THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM, which OptionGet's type check refuses at the tuple type, whatever the call.  // tree v0, activated 2",
+      "script" : "[getOrElse.out|B.OUT0.R7.tuple3._1|other|v0] `OUTPUTS(0).R7[(Coll[Byte], Int, Int)].get._1.getOrElse(9, <default>)` (out of range), the default `true` (a Boolean) — THROWS AT EVALUATION (InterpreterException: Invalid type returned by evaluator: expression: OptionGet(ExtractRegisterAs(ByIndex(Outputs$(165),IntConstant(0),None),R7,Option[(Coll[SByte…). THE ITEM SELECTION THROWS: the receiver is the first item of an output's R7, a Tuple EXPRESSION of three, a Coll[Any] on the JVM. The read hands it back (the readers check only the stored type), and `SelectField` (`._1`), which matches a Tuple2 only, refuses it, whatever the call.  // tree v0, activated 2",
       "tree_bytes_hex" : "00dc0c028ce4c6b2a504000007480e0404010204120101",
       "version" : {
         "activated" : 2,

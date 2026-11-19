@@ -20,6 +20,13 @@ class TxEngineReasonTest extends munit.FunSuite {
       "java.lang.RuntimeException: ErgoTree(0,WrappedArray(),[B@<hash>,Some(false))")
   }
 
+  test("a lambda's hidden class (its index and address change run to run) becomes $$Lambda") {
+    val e = new RuntimeException("Some(sigma.ast.SBoxMethods$$$Lambda$679/0x00007b515c407778@6d1e7682)), " +
+      "Some(sigma.ast.SContextMethods$$$Lambda$700/0x00007415f43b6f60@1b2c3d4e))")
+    assertEquals(TxEngine.reasonOf(e), "java.lang.RuntimeException: Some(sigma.ast.SBoxMethods$$$Lambda@<hash>)), " +
+      "Some(sigma.ast.SContextMethods$$$Lambda@<hash>))")
+  }
+
   test("a message with no identity hash is kept as it is, and so is a null message") {
     val m = "Box size should not exceed 4096. 006075be1fac: #0 => Success((false,16)), user@example"
     assertEquals(TxEngine.reasonOf(new RuntimeException(m)), s"java.lang.RuntimeException: $m")
