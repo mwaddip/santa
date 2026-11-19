@@ -33,21 +33,30 @@ class AuthoredEvalTupleBindingProvenanceTest extends munit.FunSuite {
   }
   private def bindingHex(e: Json): String = {
     val c = e.hcursor
-    val j = c.downField("input").focus.filter(_ => id(e).matches("[CX]1"))
+    // a register row's `input` is var 1's index, not the binding under test
+    val j = c.downField("selfRegisters").downField("4").focus
       .orElse(c.downField("inputs").downN(0).downField("extension").downField("1").focus)
-      .orElse(c.downField("selfRegisters").downField("4").focus)
+      .orElse(c.downField("input").focus)
       .getOrElse(fail(s"${id(e)}: no binding"))
     assertEquals(j.hcursor.get[String]("kind").toOption, Some("Value"), s"${id(e)} must bind a Value")
     j.hcursor.get[String]("bytes_hex").toOption.getOrElse(fail("bytes_hex"))
   }
   private val int3 = """{"kind":"Int","value":3}"""
 
-  test("2 + 2 + 8 rows; X bindings are EXPRESSIONS, C bindings CONSTANTS, each X on its C twin's tree") {
-    assertEquals((entries(B.OpVar).size, entries(B.OpInputVar).size, entries(B.OpRegister).size), (2, 2, 8))
+  private def isExpressionRow(e: Json): Boolean = id(e).startsWith("X") || id(e).matches("P\\d+x")
+
+  test("2+24 + 2 + 8+24 rows; X bindings are EXPRESSIONS, C bindings CONSTANTS, each X on its C twin's tree") {
+    assertEquals((entries(B.OpVar).size, entries(B.OpInputVar).size, entries(B.OpRegister).size), (26, 2, 32))
     all.foreach { e =>
       val lead = Integer.parseInt(bindingHex(e).take(2), 16)
-      if (id(e).startsWith("X")) assert(lead == 0x86 || lead == 0x83, s"${id(e)}: lead byte $lead is not an expression")
+      if (isExpressionRow(e)) assert(lead == 0x86 || lead == 0x83, s"${id(e)}: lead byte $lead is not an expression")
       else assert(lead <= 0x70, s"${id(e)}: lead byte $lead is not a constant's type code")
+    }
+    // appended, never renumbered: each name's `#i` is its index in the file
+    List(B.OpVar, B.OpInputVar, B.OpRegister).foreach { op =>
+      entries(op).zipWithIndex.foreach { case (e, i) =>
+        assert(str(e, "name").endsWith(s"#$i"), s"$op entry $i: ${str(e, "name")}")
+      }
     }
     (1 to 6).foreach { n =>
       assertEquals(str(row(s"X$n"), "tree_bytes_hex"), str(row(s"C$n"), "tree_bytes_hex"), s"X$n vs C$n tree")
@@ -106,11 +115,48 @@ class AuthoredEvalTupleBindingProvenanceTest extends munit.FunSuite {
     assertEquals(r.map { case (value, cost) => (value.noSpaces, cost) }, Right(verdict(row("C5"))))
   }
 
+  // THE PAIR ROWS: per consumer, the constant's and the expression's answer (None = errored), and the cost of an
+  // answer by position (the register read costs 50 more than var 1's; P10 answers on neither side).
+  private val pairJson = """{"kind":"Tuple","items":[{"kind":"Int","value":1},{"kind":"Int","value":2}]}"""
+  private val collAnyJson =
+    """{"kind":"Coll","elem":{"tag":"SAny"},"items":[{"kind":"Int","value":1},{"kind":"Int","value":2}]}"""
+  private def bool(b: Boolean) = s"""{"kind":"Boolean","value":$b}"""
+  private def int(i: Int) = s"""{"kind":"Int","value":$i}"""
+  private val pairAnswers: Seq[(Option[String], Option[String])] = Seq(
+    (Some(bool(true)), Some(bool(true))), (Some(pairJson), Some(collAnyJson)),
+    (Some(bool(true)), None), (Some(bool(true)), None), (Some(bool(false)), None), (Some(bool(true)), None),
+    (None, Some(int(2))), (None, Some(int(1))), (None, Some(int(2))), (None, None),
+    (Some(int(1)), None), (Some(int(2)), None))
+  private val pairCosts = Map(
+    B.OpRegister -> Seq(70L, 75L, 90L, 90L, 90L, 160L, 89L, 110L, 110L, 0L, 85L, 85L),
+    B.OpVar      -> Seq(20L, 25L, 40L, 40L, 40L, 60L, 39L, 60L, 60L, 0L, 35L, 35L))
+  private def isErrored(e: Json): Boolean =
+    e.hcursor.downField("expected").get[String]("error").toOption.contains("errored")
+
+  test("THE PAIR ROWS: the read never refuses; isDefined / get / SizeOf / ByIndex take the Coll[Any], EQ / NEQ / SelectField refuse it") {
+    assertEquals(B.PairConsumers.map(_.n), (1 to 12).toList)
+    List(B.OpRegister, B.OpVar).foreach { op =>
+      val rows = entries(op).filter(e => id(e).matches("P\\d+[cx]")).map(e => id(e) -> e).toMap
+      assertEquals(rows.size, 24, op)
+      pairAnswers.zipWithIndex.foreach { case ((constant, expression), i) =>
+        val n = i + 1
+        assertEquals(str(rows(s"P${n}x"), "tree_bytes_hex"), str(rows(s"P${n}c"), "tree_bytes_hex"), s"$op P$n tree")
+        Seq("c" -> constant, "x" -> expression).foreach { case (tag, answer) =>
+          val e = rows(s"P$n$tag")
+          answer match {
+            case Some(v) => assertEquals(verdict(e), (v, pairCosts(op)(i)), s"$op P$n$tag")
+            case None    => assert(isErrored(e), s"$op P$n$tag must be errored")
+          }
+        }
+      }
+    }
+  }
+
   test("every row states its role: C rows are CONTROLS, X rows SEPARATING") {
     all.foreach { e =>
       val d = str(e, "script")
-      if (id(e).startsWith("C")) assert(d.contains("CONTROL"), s"${id(e)}: $d")
-      else assert(d.contains("SEPARATING"), s"${id(e)} must say what it separates: $d")
+      if (isExpressionRow(e)) assert(d.contains("SEPARATING"), s"${id(e)} must say what it separates: $d")
+      else assert(d.contains("CONTROL"), s"${id(e)}: $d")
     }
   }
 

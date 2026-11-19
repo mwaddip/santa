@@ -12376,8 +12376,8 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.binding_provenance_register.json" : {
-      "accepts" : 8,
-      "entries" : 8,
+      "accepts" : 21,
+      "entries" : 32,
       "methods" : [
         "12:29 SCollection.zip"
       ],
@@ -12388,19 +12388,22 @@
         "EQ",
         "ExtractRegisterAs",
         "MethodCall",
+        "NEQ",
         "OptionGet",
+        "OptionIsDefined",
+        "SelectField",
         "Self$",
         "SizeOf"
       ],
       "provenance" : "authored",
-      "rejects" : 0,
+      "rejects" : 11,
       "tree_shapes" : [
         {
-          "accepts" : 8,
+          "accepts" : 21,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 0,
+          "rejects" : 11,
           "tree_version" : 3
         }
       ],
@@ -12408,25 +12411,31 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.binding_provenance_var.json" : {
-      "accepts" : 2,
-      "entries" : 2,
+      "accepts" : 15,
+      "entries" : 26,
       "methods" : [
       ],
       "op" : "Tuple.binding_provenance_var",
       "ops" : [
+        "ByIndex",
+        "Const",
+        "EQ",
         "GetVar",
+        "NEQ",
         "OptionGet",
+        "OptionIsDefined",
+        "SelectField",
         "SizeOf"
       ],
       "provenance" : "authored",
-      "rejects" : 0,
+      "rejects" : 11,
       "tree_shapes" : [
         {
-          "accepts" : 2,
+          "accepts" : 15,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 0,
+          "rejects" : 11,
           "tree_version" : 3
         }
       ],
@@ -20743,6 +20752,7 @@
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -21309,6 +21319,7 @@
         "v6/authored/SubstConstants.wide_new_value.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -21697,6 +21708,7 @@
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -23866,6 +23878,8 @@
         "v6/authored/Exponentiate.static_type_v6.json",
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h210076-842bb218d145.json",
@@ -24231,6 +24245,8 @@
         "v6/authored/MethodCall.static_type_substitution_v6.json",
         "v6/authored/MethodCall.v5_methods_dedicated_node_control.json",
         "v6/authored/MethodCall.v5_methods_missing_in_rust.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Value.checkType_lazy_default.json",
         "v6/captured/h231432-fb4744c753de.json",
         "v6/captured/h231515-0b800cbc6640.json",
@@ -24403,6 +24419,8 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_type_check.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
@@ -25677,12 +25695,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 22226,
+    "accepts" : 22252,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 49823,
+    "entries" : 49871,
     "files" : 480,
-    "rejects" : 27597,
+    "rejects" : 27619,
     "unwalked" : 2557
   }
 }

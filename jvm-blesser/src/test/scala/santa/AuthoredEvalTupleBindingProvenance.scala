@@ -21,6 +21,16 @@ package santa
 // And the deserializer is not consistent with itself: a non-pair tuple NESTED in a pair element gets
 // stypeToRType's TupleType, not Coll[Any], so against a pair constant the order inverts (C6/X6).
 //
+// THE PAIR ROWS (P1-P12, appended 2026-11-19 at ergots' request; spike santa.spike.PairTupleExpressionProbe).
+// A two-item Tuple EXPRESSION's `.value` is a Coll[Any] too, while a pair CONSTANT is a Scala Tuple2
+// (Evaluation.toDslTuple pairs up at arity 2). Read at its pair type the expression is NOT refused at
+// the read: `CBox.getReg` (CBox.scala:32) and `CContext.getVar` (CContext.scala:60) check only the
+// type the value was stored with, and `OptionGet` is `opt.get`. A consumer decides: `isDefined`, the
+// bare `get`, `SizeOf` and `ByIndex` take the Coll[Any] as it is; `EQ` / `NEQ` (`Value.checkType` on
+// each operand, trees.scala:1206/1208/1226) and `SelectField` (matches a Tuple2) refuse it. Measured
+// identical, value and cost, at activated 3 on a v0 tree and at activated 2; authored at this family's
+// activated 3 / tree v3, in SELF.R4 and in var 1.
+//
 // One op per schema: var 1 (santa-eval/v2), a per-input var (v3), SELF's register (v4). Every tree
 // and every binding's bytes are written by the JVM's own serializers from the AST below.
 
@@ -107,6 +117,96 @@ object AuthoredEvalTupleBindingProvenance {
     tree(any(EQ(any(zipped), any(pairs))))
   }
 
+  val Tp = STuple(SInt, SInt)
+  /** The pair (1, 2) as a CONSTANT: a Scala Tuple2 at runtime. */
+  val PairConst: Constant[STuple] = mkConst[STuple]((1, 2), Tp)
+  /** The same pair as an evaluated EXPRESSION (opcode 0x86): its `.value` is a Coll[Any] (values.scala:818-822). */
+  val PairExpr: Value[SType] = any(Tuple(IndexedSeq[Value[SType]](IntConstant(1), IntConstant(2))))
+
+  /** Where the pair is read from: SELF.R4 or var 1. */
+  private[santa] case class PairPos(prefix: String, read: Value[SType], text: String, where: String, reader: String)
+  private[santa] val PairRegister = PairPos("register", any(ExtractRegisterAs(Self, ErgoBox.R4, SOption(Tp))),
+    "SELF.R4[(Int, Int)]", "R4", "`CBox.getReg` (CBox.scala:32)")
+  private[santa] val PairVar = PairPos("getvar", any(GetVar(1.toByte, Tp)),
+    "getVar[(Int, Int)](1)", "var 1", "`CContext.getVar` (CContext.scala:60)")
+
+  /** One consumer of the pair-typed read: `code` with `R` for the read, the tree over the read, whether the
+    * constant (a Tuple2) and the expression (a Coll[Any]) answer, and what each does. */
+  private[santa] case class PairConsumer(n: Int, slug: String, code: String, root: Value[SType] => Value[SType],
+      constantOk: Boolean, constant: String, expressionOk: Boolean, expression: PairPos => String)
+  private def got(read: Value[SType]): Value[SType] = any(OptionGet(asOpt(read)))
+  private val pairTypeError = "ERRORED (InterpreterException `Invalid type returned by evaluator`, naming the OptionGet)"
+  private val castError = "ERRORED (ClassCastException: a Scala Tuple2 is not a Coll)"
+  private[santa] val PairConsumers: Seq[PairConsumer] = Seq(
+    PairConsumer(1, "isdefined", "R.isDefined", r => any(OptionIsDefined(asOpt(r))),
+      true, "`true`. CONTROL for P1x: `OptionIsDefined` never reads the value.",
+      true, p => s"`true`, as its constant twin: ${p.reader} checks only the type the value was stored with, so " +
+        "the read hands back the expression's Coll[Any], and `OptionIsDefined` never looks at it. SEPARATING: an " +
+        "implementation that refuses a pair-typed Tuple expression AT THE READ refuses this."),
+    PairConsumer(2, "get", "R.get", got,
+      true, "the pair `(1, 2)` (a Scala Tuple2). CONTROL for P2x.",
+      true, _ => "`Coll[Any](1, 2)`, encoded `{\"kind\":\"Coll\",\"elem\":{\"tag\":\"SAny\"},…}`, at its twin's cost: " +
+        "`OptionGet` is `opt.get` (transformers.scala:598) and checks nothing, so the root's value is the " +
+        "expression's `Tuple.value` (values.scala:818-822) under a pair type. SEPARATING: refusing at the read, or " +
+        "answering a pair, is red."),
+    PairConsumer(3, "eq-constant", "R.get == (1, 2)", r => any(EQ(got(r), any(PairConst))),
+      true, "`true`. CONTROL for P3x.",
+      false, _ => s"$pairTypeError: `EQ` type-checks its LEFT operand before it compares (trees.scala:1206, " +
+        "`Value.checkType` → `SType.isValueOfType`, which wants a Tuple2 for a pair type, SType.scala:200). " +
+        "SEPARATING: an implementation that compares the Coll[Any] with the pair (answering `false`) is red."),
+    PairConsumer(4, "constant-eq", "(1, 2) == R.get", r => any(EQ(any(PairConst), got(r))),
+      true, "`true`. CONTROL for P4x.",
+      false, _ => s"$pairTypeError: the same check on the RIGHT operand (trees.scala:1208), after the constant on " +
+        "the left passed its own. SEPARATING: an implementation that checks only the left operand is red."),
+    PairConsumer(5, "neq-constant", "R.get != (1, 2)", r => any(NEQ(got(r), any(PairConst))),
+      true, "`false`. CONTROL for P5x.",
+      false, _ => s"$pairTypeError: `NEQ` checks its operands as `EQ` does (trees.scala:1226). SEPARATING: " +
+        "answering `true` (a collection is not the pair) is red."),
+    PairConsumer(6, "eq-self", "R.get == R.get", r => any(EQ(got(r), got(r))),
+      true, "`true`. CONTROL for P6x.",
+      false, _ => s"$pairTypeError: both sides are the same Coll[Any], but the left operand's check refuses it " +
+        "before anything is compared (trees.scala:1206). SEPARATING: comparing the two equal collections " +
+        "(answering `true`) is red."),
+    PairConsumer(7, "size", "R.get.size", r => any(SizeOf(asColl(got(r)))),
+      false, s"$castError: `SizeOf` (transformers.scala:357) takes its input as a collection. CONTROL for P7x.",
+      true, _ => "`2`: the static type is a pair, but `STuple` extends `SCollection[SAny]`, so the tree parses, " +
+        "and `SizeOf` takes the value as the collection it is. SEPARATING: refusing at the read, or refusing a " +
+        "pair-typed `SizeOf`, is red."),
+    PairConsumer(8, "byindex0", "R.get(0)", r => any(ByIndex(asColl(got(r)), IntConstant(0), None)),
+      false, s"$castError: `ByIndex` (transformers.scala:249) takes its input as a collection. CONTROL for P8x.",
+      true, _ => "`1`, the first item of the Coll[Any]; the node's type is the pair's item type, `Any`. " +
+        "SEPARATING: refusing at the read or at the node is red."),
+    PairConsumer(9, "byindex1", "R.get(1)", r => any(ByIndex(asColl(got(r)), IntConstant(1), None)),
+      false, s"$castError, as P8c. CONTROL for P9x.",
+      true, _ => "`2`, the second item. SEPARATING: refusing at the read or at the node is red."),
+    PairConsumer(10, "byindex2", "R.get(2)", r => any(ByIndex(asColl(got(r)), IntConstant(2), None)),
+      false, s"$castError, as P8c. CONTROL for P10x.",
+      false, _ => "ERRORED (ArrayIndexOutOfBoundsException): the Coll[Any] holds exactly the pair's two items. " +
+        "SEPARATING: an implementation that reads past them or answers a default is red."),
+    PairConsumer(11, "field1", "R.get._1", r => any(SelectField(asTup(got(r)), 1.toByte)),
+      true, "`1`. CONTROL for P11x.",
+      false, _ => s"$pairTypeError: `SelectField` (transformers.scala:291) matches a Tuple2 and anything else is " +
+        "`Value.typeError(input, …)`, which names its INPUT. The read itself did not refuse (P1x, P2x). " +
+        "SEPARATING: selecting the item from the Coll[Any] is red."),
+    PairConsumer(12, "field2", "R.get._2", r => any(SelectField(asTup(got(r)), 2.toByte)),
+      true, "`2`. CONTROL for P12x.",
+      false, _ => s"$pairTypeError, as P11x, for the second item. SEPARATING: selecting the item from the " +
+        "Coll[Any] is red."))
+  private def asTup(v: Value[_ <: SType]): Value[STuple] = v.asInstanceOf[Value[STuple]]
+
+  /** The pair rows for one position, constant then expression per consumer, numbered from `base`. */
+  private def pairEntries(pos: PairPos, base: Int)(entry: (String, String, String, Boolean, Value[SType]) => Json): Seq[Json] =
+    PairConsumers.zipWithIndex.flatMap { case (c, i) =>
+      val t = tree(c.root(pos.read))
+      val code = c.code.replace("R", pos.text)
+      Seq((c.constantOk, "c", "constant", "CONSTANT", c.constant, any(PairConst)),
+          (c.expressionOk, "x", "expression", "Tuple EXPRESSION", c.expression(pos), PairExpr))
+        .zipWithIndex.map { case ((ok, tag, kind, label, says, bound), j) =>
+          val name = s"${pos.prefix}-pair-$kind-${c.slug}-${if (ok) "accept" else "errored"}#${base + 2 * i + j}"
+          entry(s"[P${c.n}$tag] `$code`, ${pos.where} = the pair $label — $says", t, name, ok, bound)
+        }
+    }
+
   private val int0 = Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0))
   private def stamped(j: Json): Json = j.mapObject(_.add("blessed_by", Json.fromString(Stamp)))
 
@@ -122,7 +222,11 @@ object AuthoredEvalTupleBindingProvenance {
         "[X1] the same tree, var 1 = the Tuple EXPRESSION (opcode 0x86) — `3` at 39, " + sameAsConstant + ". " +
         "SEPARATING: a node's extension reader is `getValue` (ContextExtension.scala:61), which takes an " +
         "evaluated expression; a reader that reads only a constant there refuses it.",
-        TreeVar, "getvar-tuple-expression-accept#1", binding(TupleExpr), V3, ergoTree = 3))
+        TreeVar, "getvar-tuple-expression-accept#1", binding(TupleExpr), V3, ergoTree = 3)) ++
+      pairEntries(PairVar, 2) { (script, t, name, ok, bound) =>
+        if (ok) SpecExtract.authoredEntryV(OpVar, script, t, name, binding(bound), V3, ergoTree = 3)
+        else SpecExtract.authoredRejectEntryV(OpVar, script, t, name, binding(bound), V3, ergoTree = 3)
+      }
     val inputEntries = Seq(
       SpecExtract.authoredV3Entry(OpInputVar,
         "[C2] `getVarFromInput[(Int, Int, Int)](0, 1).get.size`, input 0's var 1 = the tuple CONSTANT — `3` " +
@@ -168,7 +272,11 @@ object AuthoredEvalTupleBindingProvenance {
       reg("X6", "the same, R4 = the ConcreteCollection EXPRESSION — `true` at 146: zipped, its item type is " +
         "Pair(TupleType, Int), the tree constant's, so the comparison reaches the items. SEPARATING: the " +
         "producer decides the verdict in the opposite direction to X5. (V4.)",
-        TreeRegZipEq, "register-coll-expression-zip-eq-accept#7", CollExpr))
+        TreeRegZipEq, "register-coll-expression-zip-eq-accept#7", CollExpr)) ++
+      pairEntries(PairRegister, 8) { (script, t, name, ok, bound) =>
+        if (ok) SpecExtract.authoredV4Entry(OpRegister, script, t, name, Map(4 -> binding(bound)), int0, V3)
+        else SpecExtract.authoredV4RejectEntry(OpRegister, script, t, name, Map(4 -> binding(bound)), int0, V3)
+      }
     Map(
       OpVar -> stamped(SpecExtract.authoredEnvelope(OpVar, varEntries, Source)),
       OpInputVar -> stamped(SpecExtract.authoredV3Envelope(OpInputVar, inputEntries, Source)),

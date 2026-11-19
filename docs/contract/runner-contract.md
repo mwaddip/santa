@@ -195,8 +195,9 @@ reconstruction rules, which every conforming implementation of this schema must 
   (`Coll.generic_producers_pairs`). The rule holds for every box of the transaction, not only SELF: a data input's, an
   output's and a second input's R1, R3 bytes and expression registers, `getVarFromInput`, `creationInfo`'s bytes, and
   expressions two deep, empty, or beside a constant are GENERIC; their constants, token ids, `propositionBytes` and an
-  output's `id` are SPECIALISED. A Tuple EXPRESSION in a register or variable read at its tuple type throws, whatever
-  the call (`Coll.generic_producers_census`).
+  output's `id` are SPECIALISED. A Tuple EXPRESSION in a register or variable is a collection of `Any` at every arity,
+  a pair included (see the Tuple note in §4). The read itself never refuses it, but `._1` / `._2` throw on it,
+  so every call behind them throws (`Coll.generic_producers_census`).
 - **`lastBlockUtxoRoot`** is derived from `headers[0].stateRoot` as
   `AvlTreeData{ digest = headers[0].stateRoot (33 bytes), flags = 0x07 (all ops),
   keyLength = 32, valueLengthOpt = None }` — serialized `<stateRoot 33B> 07 20 00`.
@@ -411,6 +412,19 @@ wherever a collection is wanted — `SizeOf`, `ByIndex`, `Exists`, `Fold`, `AND`
 cannot reproduce both halves. Vectors: `eval/v6/authored/Tuple.non_pair_value_{ops,gates}.json`,
 `wire/v6/authored/*.non_pair_tuple_operand.json`,
 `transaction/v6/authored/non-pair-tuple-spend.json`.
+
+**A pair can be a collection too: a `Tuple` EXPRESSION.** A `Tuple` node's value is a collection of `Any` at
+**every** arity (`Tuple.value`, `values.scala:818-822`). So a two-item `Tuple` expression bound in a register or a
+variable (the `Value` binding form below) is a `Coll[Any]` under a pair type, while the pair CONSTANT is a pair.
+
+Reading it at its pair type does not refuse it. `CBox.getReg` and `CContext.getVar` check only the type the value
+was stored with, and `OptionGet` checks nothing. What happens next depends on the consumer:
+- **Answer on the collection:** `isDefined`, the bare `get` (it encodes as `{"kind":"Coll","elem":{"tag":"SAny"},…}`),
+  `SizeOf` and `ByIndex`. On the pair constant, `SizeOf` and `ByIndex` throw instead.
+- **Refuse it:** `EQ` / `NEQ`, which type-check each operand first, and `SelectField` (`._1` / `._2`), which matches
+  a pair only.
+
+Vectors: the P rows of `eval/v6/authored/Tuple.binding_provenance_{register,var}.json`.
 
 **And the decode/encode asymmetry that follows from it.** `{"kind":"Tuple",…}` is an INPUT form at
 every arity, but decode-then-encode is the identity only for a **pair**. A non-pair tuple value, if
