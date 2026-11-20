@@ -860,7 +860,7 @@ fn brief(v: &Value, max: usize) -> String {
 }
 
 /// The expected side of one red entry, by tier: eval "value @ cost" (or the expected
-/// error tag), wire "roundtrip <bytes…>" (the bytes grade_wire compares against:
+/// error tag), wire "roundtrip <bytes…>" (the bytes the wire grading type compares against:
 /// `expected_bytes_hex` when present, else the input) or a reject entry's error tag,
 /// tx "valid <v> @ cost <c>", chain per-kind phrase (nbits / parameters+update).
 fn expected_brief(e: &Value, is_wire: bool, is_tx: bool, is_chain: bool) -> String {
@@ -2005,7 +2005,7 @@ mod tests {
 
     #[test]
     fn expected_brief_wire_follows_the_grader() {
-        // A wire entry's expected side is what grade_wire compares against: `errored` for a reject entry,
+        // A wire entry's expected side is what the wire grading type compares against: `errored` for a reject entry,
         // `expected_bytes_hex` for a non-identity round-trip, the entry's own bytes otherwise. A panicked or
         // not-implemented reject entry used to read "roundtrip <input bytes>".
         let brief = |e: serde_json::Value| super::expected_brief(&e, true, false, false);
