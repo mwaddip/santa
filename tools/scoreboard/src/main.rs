@@ -322,6 +322,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
         body.push_str("</tr>\n");
     }
 
+    let notes = grader_notes(results);
     let details = coal_details(results);
     let escaped_git_ref = html_escape(git_ref);
     format!(
@@ -363,6 +364,9 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
  details.coal-details table.coal-table code {{ word-break: break-all; }}
  details.coal-details .dim {{ color: #a33; }}
  details.coal-details .note {{ color: #666; }}
+ section.grader-notes details.grader-note {{ margin: .5rem 0; border: 1px solid #e0c060; border-radius: 4px; padding: .35rem .8rem; background: #fffbea; }}
+ section.grader-notes summary {{ cursor: pointer; }}
+ section.grader-notes table.coal-table th, section.grader-notes table.coal-table td {{ border: 1px solid #e6d9a8; padding: .2rem .5rem; font-size: .82rem; text-align: left; }}
 </style></head><body>
 <h1>SANTA conformance scoreboard</h1>
 <p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.</p>
@@ -373,7 +377,7 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 <tbody>
 {body}</tbody>
 </table>
-{details}
+{notes}{details}
 <div class="legend">
 <div><span class="sw nice"></span><b>green</b> — value + cost pass (wire: round-trip-ok)</div>
 <div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
@@ -387,6 +391,68 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 </body></html>
 "#
     )
+}
+
+/// The canary's note (runner-integration §4.4): one entry per runner whose own grading disagrees with SANTA's re-grade
+/// of its actuals — the board shows SANTA's, and the package maintainer needs to patch their grader or runner. Rows
+/// without a `grader` (results from before the canary) and agreeing ones get none.
+fn grader_notes(results: &Value) -> String {
+    let notes: Vec<String> = results["runners"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|r| r["grader"]["agrees"] == false)
+        .map(|r| {
+            let g = &r["grader"];
+            let label = r["label"].as_str().or(r["name"].as_str()).unwrap_or("?");
+            let count = g["disagreement_count"].as_u64().unwrap_or(0);
+            let files = |k: &str| -> Vec<String> {
+                g[k].as_array().into_iter().flatten().filter_map(|f| f.as_str()).map(html_escape).collect()
+            };
+            let (missing, extra) = (files("missing_files"), files("extra_files"));
+            let mut summary = format!("\u{26a0}\u{fe0f} <b>{}</b>: its own grading disagrees with SANTA's on {count} entries",
+                html_escape(label));
+            if !missing.is_empty() {
+                summary.push_str(&format!(", and it did not grade {} file(s) of its scope", missing.len()));
+            }
+            if !extra.is_empty() {
+                summary.push_str(&format!(", and it graded {} file(s) outside its scope", extra.len()));
+            }
+            let list = |what: &str, xs: &[String]| -> String {
+                if xs.is_empty() {
+                    return String::new();
+                }
+                let codes: Vec<String> = xs.iter().map(|x| format!("<code>{x}</code>")).collect();
+                format!("<p>{what}: {}</p>\n", codes.join(", "))
+            };
+            let listed: Vec<&Value> = g["disagreements"].as_array().into_iter().flatten().collect();
+            let cell = |d: &Value, k: &str| html_escape(d[k].as_str().unwrap_or(""));
+            let rows: String = listed
+                .iter()
+                .map(|d| format!(
+                    "<tr><td><code>{}</code></td><td><code>{}</code></td><td>{}</td><td>{}</td><td>{}</td></tr>\n",
+                    cell(d, "file"), cell(d, "entry"), cell(d, "dim"), cell(d, "runner"), cell(d, "santa")))
+                .collect();
+            let more = match count.saturating_sub(listed.len() as u64) {
+                0 => String::new(),
+                n => format!("<p>and {n} more</p>\n"),
+            };
+            let table = if listed.is_empty() {
+                String::new()
+            } else {
+                format!("<table class=\"coal-table\">\n<tr><th>vector file</th><th>entry</th><th>dimension</th><th>runner</th>\
+                    <th>SANTA</th></tr>\n{rows}</table>\n")
+            };
+            format!("<details class=\"grader-note\"><summary>{summary}</summary>\n<p>The board shows SANTA's re-grade; the \
+                package maintainer needs to patch their grader or runner.</p>\n{}{}{table}{more}</details>\n",
+                list("Not graded", &missing), list("Outside its scope", &extra))
+        })
+        .collect();
+    if notes.is_empty() {
+        return String::new();
+    }
+    format!("<section class=\"grader-notes\">\n<h2>Where a runner's own grading disagrees with SANTA's</h2>\n{}</section>\n",
+        notes.concat())
 }
 
 /// Per-runner collapsible coal-detail tables, rendered below the matrix. One `<details>`
@@ -1416,4 +1482,40 @@ mod tests {
         assert!(!plain.contains("kinds") && !plain.contains("activation"), "{plain}");
         assert_eq!(plain.matches("class=\"src\"").count(), 1, "{plain}");
     }
+
+    fn with_grader(grader: Option<Value>) -> Value {
+        let mut r = json!({"name": "dasher", "label": "dasher (ergots)", "mark": "coal", "red_total": 1,
+                           "slices": {"eval/v6/authored": {"value_nice": 1, "value_total": 2, "red": []}}});
+        if let Some(g) = grader {
+            r["grader"] = g;
+        }
+        json!({"schema": "santa-results/v1", "runners": [r]})
+    }
+
+    /// A runner whose own grading disagrees with SANTA's re-grade gets a note below the board.
+    #[test]
+    fn a_disagreeing_grader_gets_a_note_below_the_board() {
+        let html = dashboard(&with_grader(Some(json!({
+            "agrees": false, "disagreement_count": 2, "missing_files": ["eval/v6/authored/x.json"], "extra_files": [],
+            "disagreements": [
+                {"file": "eval/v6/authored/a.json", "entry": "a#0", "dim": "value", "runner": "nice", "santa": "red"},
+                {"file": "eval/v6/authored/b.json", "entry": "b#1", "dim": "cost", "runner": "red", "santa": "nice"}
+            ]}))), "(test)");
+        assert!(html.contains("class=\"grader-notes\""));
+        assert!(html.contains("dasher (ergots)"));
+        assert!(html.contains("2 entries"));
+        assert!(html.contains("eval/v6/authored/x.json"));
+        assert!(html.contains("The board shows SANTA's re-grade; the package maintainer needs to patch their grader or runner."));
+        assert!(html.contains("<td><code>eval/v6/authored/a.json</code></td><td><code>a#0</code></td><td>value</td><td>nice</td><td>red</td>"));
+        assert!(html.contains("<td><code>b#1</code></td><td>cost</td><td>red</td><td>nice</td>"));
+    }
+
+    /// An agreeing grader, or a row from before the canary (no `grader`), gets no note.
+    #[test]
+    fn agreeing_or_older_rows_get_no_note() {
+        let agrees = json!({"agrees": true, "disagreement_count": 0, "missing_files": [], "extra_files": [], "disagreements": []});
+        assert!(!dashboard(&with_grader(Some(agrees)), "(test)").contains("class=\"grader-notes\""));
+        assert!(!dashboard(&with_grader(None), "(test)").contains("class=\"grader-notes\""));
+    }
 }
+
