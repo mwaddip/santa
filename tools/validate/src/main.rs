@@ -285,6 +285,9 @@ fn main() -> ExitCode {
         .map(|f| { let d = load(&f); (f, d) })
         .collect();
     errs += limits_guard(&all);
+    if let Ok(grading) = santa_check::grading::Grading::parse(&load(&grading_file)) {
+        errs += grading_label_guard(&all, &grading);
+    }
 
     println!(
         "\n=== {} ===",
@@ -1311,6 +1314,22 @@ fn grading_guard(root: &Path) -> u32 {
             }
         }
     }
+    bad
+}
+
+/// Every vector file that names a grading label (`grading`) names one `vectors/grading.json` defines.
+fn grading_label_guard(docs: &[(PathBuf, Value)], grading: &santa_check::grading::Grading) -> u32 {
+    println!("\n[grading] vector files' own labels:");
+    let mut bad = 0;
+    let mut named = 0;
+    for (f, doc) in docs.iter().filter(|(_, d)| d.get("grading").is_some()) {
+        named += 1;
+        if let Err(e) = grading.label_for("", doc) {
+            println!("  [WRONG] {}: {e}", f.display());
+            bad += 1;
+        }
+    }
+    println!("[grading] {named} file(s) name a label, {bad} wrong");
     bad
 }
 
@@ -2701,5 +2720,37 @@ mod tests {
         let doc = load(&root.join("vectors/grading.json"));
         let errs: Vec<String> = v.iter_errors(&doc).map(|e| e.to_string()).collect();
         assert!(errs.is_empty(), "{errs:?}");
+    }
+
+    /// Every tier's vector schema admits an optional string `grading` (the file's grading label): a real file of the
+    /// tier validates with one added, and not with a non-string one.
+    #[test]
+    fn every_vector_schema_admits_a_grading_label() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        for t in ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] {
+            let v = jsonschema::validator_for(&load(&root.join(format!("schema/santa-{t}.vector.schema.json")))).unwrap();
+            let file = json_files(&root.join("vectors").join(t)).into_iter().next().expect("a vector of the tier");
+            let mut doc = load(&file);
+            assert!(v.is_valid(&doc), "{t}: {} as committed", file.display());
+            doc["grading"] = json!(t);
+            assert!(v.is_valid(&doc), "{t}: with a grading label");
+            doc["grading"] = json!(5);
+            assert!(!v.is_valid(&doc), "{t}: a grading label is a string");
+        }
+    }
+
+    /// A vector file naming a grading label that `vectors/grading.json` does not define is counted.
+    #[test]
+    fn an_unknown_grading_label_is_counted() {
+        let grading = santa_check::grading::Grading::parse(&load(
+            &Path::new(env!("CARGO_MANIFEST_DIR")).join("../../vectors/grading.json"),
+        ))
+        .unwrap();
+        let docs = vec![
+            (PathBuf::from("a.json"), json!({ "grading": "nope" })),
+            (PathBuf::from("b.json"), json!({ "grading": "eval" })),
+            (PathBuf::from("c.json"), json!({})),
+        ];
+        assert_eq!(grading_label_guard(&docs, &grading), 1);
     }
 }

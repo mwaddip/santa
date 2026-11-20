@@ -7,6 +7,10 @@
   "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
   "properties": {
+    "grading": {
+      "description": "This file's grading label (vectors/grading.json, docs/contract/grading.md); absent = the tier's default.",
+      "type": "string"
+    },
     "schema": { "enum": ["santa-wire/v1"] },
     "op": { "description": "Structure-family slice label.", "type": "string", "minLength": 1 },
     "limits": {

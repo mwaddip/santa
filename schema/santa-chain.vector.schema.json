@@ -7,6 +7,10 @@
   "required": ["schema", "blessed_by", "entries"],
   "additionalProperties": false,
   "properties": {
+    "grading": {
+      "description": "This file's grading label (vectors/grading.json, docs/contract/grading.md); absent = the tier's default.",
+      "type": "string"
+    },
     "schema": { "const": "santa-chain/v1" },
     "op": { "type": "string", "minLength": 1 },
     "limits": {

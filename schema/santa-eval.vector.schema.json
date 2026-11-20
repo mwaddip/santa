@@ -7,6 +7,10 @@
   "required": ["schema", "op", "blessed_by", "entries"],
   "additionalProperties": false,
   "properties": {
+    "grading": {
+      "description": "This file's grading label (vectors/grading.json, docs/contract/grading.md); absent = the tier's default.",
+      "type": "string"
+    },
     "schema": {
       "description": "Tier + version discriminator.",
       "enum": ["santa-eval/v1", "santa-eval/v2", "santa-eval/v3", "santa-eval/v4", "santa-eval/v5", "santa-eval/v6-fullctx"]

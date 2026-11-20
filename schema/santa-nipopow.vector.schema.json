@@ -6,6 +6,10 @@
   "required": ["schema", "blessed_by", "chain", "entries"],
   "additionalProperties": false,
   "properties": {
+    "grading": {
+      "description": "This file's grading label (vectors/grading.json, docs/contract/grading.md); absent = the tier's default.",
+      "type": "string"
+    },
     "schema": { "const": "santa-nipopow/v1" },
     "limits": {
       "description": "A bounded file (runner-integration.md §3a): every runner runs it in its own process under this budget, memory in MiB and wall-clock time in seconds, enforced from outside. A bounded file holds exactly one entry; ./validate also holds the budget under the ceilings (4096 MiB, 60 s).",
