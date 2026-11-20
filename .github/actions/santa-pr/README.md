@@ -33,6 +33,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # the base and head are graded from this checkout
+          persist-credentials: false # nothing after the checkout talks to GitHub with git
       - uses: mwaddip/santa/.github/actions/santa-pr@main
         # with:
         #   runner-path: santa      # the runner's directory in this repository (default santa)
@@ -60,11 +61,22 @@ jobs:
     if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: download the check's artifact
+      - name: read the check's artifact
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.event.workflow_run.id }}
-        run: gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name santa-pr --dir santa-pr
+        run: |
+          set -euo pipefail
+          # The artifact comes from the pull request's run, so it is read as data and never extracted: its zip is
+          # fetched and the two files the comment needs are read out of it as text, so nothing in it picks a path on
+          # this runner's disk.
+          id=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/artifacts" \
+                 --jq '.artifacts[] | select(.name == "santa-pr") | .id')
+          [[ "$id" =~ ^[0-9]+$ ]] || { echo "run $RUN_ID has no single santa-pr artifact"; exit 1; }
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > santa-pr.zip
+          mkdir santa-pr
+          unzip -p santa-pr.zip pr.json > santa-pr/pr.json
+          unzip -p santa-pr.zip comment.md > santa-pr/comment.md
       - name: post or update the comment
         env:
           GH_TOKEN: ${{ github.token }}
@@ -83,9 +95,10 @@ jobs:
           fi
           marker='<!-- santa-pr -->'
           { echo "$marker"; cat santa-pr/comment.md; } > body.md
-          id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$pr/comments" \
-                 --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$marker\"))) | .id" \
-               | head -n 1)
+          ids=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$pr/comments" \
+                  --jq ".[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$marker\"))) | .id")
+          # the first, without a pipe into head: under pipefail gh could fail on the pipe head closed
+          id=${ids%%$'\n'*}
           if [ -n "$id" ]; then
             gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -F body=@body.md > /dev/null
           else
