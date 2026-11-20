@@ -197,9 +197,13 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                         if g("exceeded") > 0 { t.push_str(&format!(" \u{b7} exceeded {}", g("exceeded"))); }
                         // Append dim-labelled details for genuine divergences (valid/cost) — skip
                         // not-implemented entries since they are already counted in the not-impl N summary.
-                        for entry in &red_arr {
+                        // At most five, then a count: the file pages list them all.
+                        let divergent: Vec<&Value> = red_arr
+                            .iter()
+                            .filter(|e| e.get("dim").and_then(|v| v.as_str()) != Some("not-implemented"))
+                            .collect();
+                        for entry in divergent.iter().take(5) {
                             let dim = entry.get("dim").and_then(|v| v.as_str()).unwrap_or("?");
-                            if dim == "not-implemented" { continue; }
                             let name = entry.get("entry").and_then(|v| v.as_str()).unwrap_or("?");
                             t.push_str(&format!(" \u{b7} [{dim}] {}", html_escape(name)));
                             if let Some(note) = entry.get("note").and_then(|v| v.as_str()) {
@@ -207,6 +211,9 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
                                 let brief = note.lines().next().unwrap_or(note);
                                 t.push_str(&format!(": {}", html_escape(brief)));
                             }
+                        }
+                        if divergent.len() > 5 {
+                            t.push_str(&format!(" \u{b7} \u{2026} and {} more", divergent.len() - 5));
                         }
                         t
                     } else if is_block {
@@ -394,57 +401,33 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
 /// coverage/roadmap dims visibly labelled rather than filtered).
 fn coal_details(results: &Value) -> String {
     let coal_icon = "\u{1faa8}"; // 🪨
-    let runners = results.get("runners").and_then(|r| r.as_array()).cloned().unwrap_or_default();
-    let empty = serde_json::Map::new();
     let mut blocks = String::new();
-    for r in &runners {
-        let name = r.get("name").and_then(|n| n.as_str()).unwrap_or("?");
-        let slices = r.get("slices").and_then(|s| s.as_object()).unwrap_or(&empty);
-        let mut total = 0usize;
-        let mut groups: Vec<(String, Vec<String>)> = Vec::new();
-        for (sk, slice) in slices.iter().collect::<BTreeMap<_, _>>() {
-            let red_arr = slice.get("red").and_then(|x| x.as_array()).cloned().unwrap_or_default();
-            if red_arr.is_empty() {
-                continue;
-            }
-            let mut rows = Vec::new();
-            for e in &red_arr {
-                let s = |f: &str| e.get(f).and_then(|v| v.as_str()).unwrap_or("");
-                let (op, entry, dim) = (s("op"), s("entry"), s("dim"));
-                let title = match e.get("script").and_then(|v| v.as_str()) {
-                    Some(sc) => format!(" title=\"{}\"", html_escape(sc)),
-                    None => String::new(),
-                };
-                let message = e.get("note").and_then(|v| v.as_str())
-                    .map(|n| n.lines().next().unwrap_or(n))
-                    .unwrap_or("");
-                rows.push(format!(
-                    "<tr><td{title}><code>{} / {}</code> <span class=\"dim\">[{}]</span></td>\
-<td><code>{}</code></td><td><code>{}</code></td><td class=\"note\">{}</td></tr>",
-                    html_escape(if op.is_empty() { "?" } else { op }),
-                    html_escape(if entry.is_empty() { "?" } else { entry }),
-                    html_escape(if dim.is_empty() { "?" } else { dim }),
-                    html_escape(s("expected")),
-                    html_escape(s("got")),
-                    html_escape(message)
-                ));
-            }
-            total += red_arr.len();
-            groups.push((sk.clone(), rows));
-        }
-        if total == 0 {
-            continue; // fully-green (or out-of-scope) libraries get no block at all
-        }
-        let control = if CONTROL_RUNNERS.contains(&name) { " <em>(control)</em>" } else { "" };
+    for (name, slices) in coal_by_file(results) {
+        let total: usize = slices.values().flat_map(|files| files.values()).map(Vec::len).sum();
+        let control = if CONTROL_RUNNERS.contains(&name.as_str()) { " <em>(control)</em>" } else { "" };
         blocks.push_str(&format!(
             "<details class=\"coal-details\"><summary>{coal_icon} <b>{}</b>{control} \u{2014} {total} coal</summary>\n",
-            html_escape(name)
+            html_escape(&name)
         ));
-        for (sk, rows) in groups {
+        for (sk, files) in &slices {
+            let mut rows: Vec<(&String, &Vec<&Value>)> = files.iter().collect();
+            rows.sort_by(|a, b| b.1.len().cmp(&a.1.len()).then_with(|| a.0.cmp(b.0)));
+            let rows: Vec<String> = rows
+                .into_iter()
+                .map(|(op, reds)| {
+                    format!(
+                        "<tr><td><a href=\"{}\"><code>{}</code></a></td><td>{}</td><td>{}</td></tr>",
+                        page_path(&name, sk, op),
+                        html_escape(op),
+                        reds.len(),
+                        html_escape(&dim_split(reds))
+                    )
+                })
+                .collect();
             blocks.push_str(&format!(
                 "<h3 class=\"slice-h\">{}</h3>\n<table class=\"coal-table\">\n\
-<tr><th>vector / entry</th><th>expected</th><th>result</th><th>message</th></tr>\n{}\n</table>\n",
-                html_escape(&sk),
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>\n{}\n</table>\n",
+                html_escape(sk),
                 rows.join("\n")
             ));
         }
@@ -454,10 +437,121 @@ fn coal_details(results: &Value) -> String {
         return String::new(); // a fully-green grid renders no section at all
     }
     format!(
-        "<h2>Coal details</h2>\n<p class=\"meta\">Every red instance behind the matrix counts, \
-grouped by library \u{2014} collapsed by default, click a library to expand. Hover a \
-vector name for its script.</p>\n{blocks}"
+        "<h2>Coal details</h2>\n<p class=\"meta\">Every red instance behind the matrix counts, by library and \
+vector file \u{2014} collapsed by default, click a library to expand. Each file links to a page listing its \
+entries (hover an entry for its script).</p>\n{blocks}"
     )
+}
+
+/// Each runner's red entries: runner -> slice -> vector file (op) -> its red entries, in the order conform listed
+/// them. Runners and slices without red entries are left out.
+type CoalByFile<'a> = Vec<(String, BTreeMap<String, BTreeMap<String, Vec<&'a Value>>>)>;
+
+fn coal_by_file(results: &Value) -> CoalByFile<'_> {
+    let mut out = Vec::new();
+    for r in results.get("runners").and_then(|r| r.as_array()).into_iter().flatten() {
+        let name = r.get("name").and_then(|n| n.as_str()).unwrap_or("?").to_string();
+        let mut slices: BTreeMap<String, BTreeMap<String, Vec<&Value>>> = BTreeMap::new();
+        for (sk, slice) in r.get("slices").and_then(|s| s.as_object()).into_iter().flatten() {
+            for e in slice.get("red").and_then(|x| x.as_array()).into_iter().flatten() {
+                let op = e.get("op").and_then(|v| v.as_str()).filter(|o| !o.is_empty()).unwrap_or("?");
+                slices.entry(sk.clone()).or_default().entry(op.to_string()).or_default().push(e);
+            }
+        }
+        if !slices.is_empty() {
+            out.push((name, slices));
+        }
+    }
+    out
+}
+
+/// "value 12 · cost 3": a file's red entries by dimension, the largest first.
+fn dim_split(reds: &[&Value]) -> String {
+    let mut by: BTreeMap<&str, usize> = BTreeMap::new();
+    for e in reds {
+        *by.entry(e.get("dim").and_then(|v| v.as_str()).unwrap_or("?")).or_default() += 1;
+    }
+    let mut v: Vec<(&str, usize)> = by.into_iter().collect();
+    v.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(b.0)));
+    v.iter().map(|(d, n)| format!("{d} {n}")).collect::<Vec<_>>().join(" \u{b7} ")
+}
+
+/// A path segment safe in a file name and a URL: anything but `[A-Za-z0-9._-]` becomes `_`.
+fn path_safe(s: &str) -> String {
+    s.chars().map(|c| if c.is_ascii_alphanumeric() || "._-".contains(c) { c } else { '_' }).collect()
+}
+
+/// A vector file's coal page, relative to the site root: `coal/<runner>/<tier>/<version>/<provenance>/<op>.html`.
+fn page_path(runner: &str, slice: &str, op: &str) -> String {
+    let slice: Vec<String> = slice.split('/').map(path_safe).collect();
+    format!("coal/{}/{}/{}.html", path_safe(runner), slice.join("/"), path_safe(op))
+}
+
+/// One page per vector file with red entries: (its path under the site root, its HTML). Each lists the file's
+/// red entries: entry and dimension (the script, when conform recorded one, as the hover title) | expected | result
+/// | message (the note's first line). The briefs are conform's, pre-rendered at grading time; entries from an older
+/// results.json without them render empty cells.
+fn coal_pages(results: &Value) -> Vec<(String, String)> {
+    let mut pages = Vec::new();
+    for (name, slices) in coal_by_file(results) {
+        for (sk, files) in &slices {
+            for (op, reds) in files {
+                let path = page_path(&name, sk, op);
+                let up = "../".repeat(path.matches('/').count());
+                let rows: Vec<String> = reds
+                    .iter()
+                    .map(|e| {
+                        let s = |f: &str| e.get(f).and_then(|v| v.as_str()).unwrap_or("");
+                        let title = match e.get("script").and_then(|v| v.as_str()) {
+                            Some(sc) => format!(" title=\"{}\"", html_escape(sc)),
+                            None => String::new(),
+                        };
+                        let message = e.get("note").and_then(|v| v.as_str()).map(|n| n.lines().next().unwrap_or(n));
+                        format!(
+                            "<tr><td{title}><code>{}</code> <span class=\"dim\">[{}]</span></td>\
+<td><code>{}</code></td><td><code>{}</code></td><td class=\"note\">{}</td></tr>",
+                            html_escape(if s("entry").is_empty() { "?" } else { s("entry") }),
+                            html_escape(if s("dim").is_empty() { "?" } else { s("dim") }),
+                            html_escape(s("expected")),
+                            html_escape(s("got")),
+                            html_escape(message.unwrap_or(""))
+                        )
+                    })
+                    .collect();
+                let html = format!(
+                    r#"<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>{runner} · {slice}/{op}: coal</title>
+<style>
+ body {{ font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }}
+ table {{ border-collapse: collapse; margin-top: 1rem; }}
+ th, td {{ border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }}
+ th {{ background: #f4f4f4; }}
+ code {{ font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }}
+ .dim {{ color: #666; font-size: .85em; }}
+ td.note {{ color: #555; font-size: .9em; }}
+</style></head><body>
+<p><a href="{up}index.html">&larr; the scoreboard</a></p>
+<h1>{runner} &middot; <code>{slice}/{op}</code></h1>
+<p>{n} red ({split})</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+{rows}
+</table>
+</body></html>
+"#,
+                    runner = html_escape(&name),
+                    slice = html_escape(sk),
+                    op = html_escape(op),
+                    n = reds.len(),
+                    split = html_escape(&dim_split(reds)),
+                    rows = rows.join("\n")
+                );
+                pages.push((path, html));
+            }
+        }
+    }
+    pages
 }
 
 /// tools/scoreboard -> repo root (CWD-independent; the mise wrapper runs us from tools/).
@@ -491,7 +585,17 @@ fn main() {
     fs::write(&index, dashboard(&results, &git_ref))
         .unwrap_or_else(|e| panic!("scoreboard: write {}: {e}", index.display()));
 
-    println!("scoreboard: wrote {} badges + {}", pairs.len(), index.display());
+    // One page per vector file with red entries; the old ones go first, so a file no longer red leaves no page.
+    let _ = fs::remove_dir_all(out_dir.join("coal"));
+    let pages = coal_pages(&results);
+    for (rel, html) in &pages {
+        let path = out_dir.join(rel);
+        fs::create_dir_all(path.parent().expect("a page path has a parent"))
+            .unwrap_or_else(|e| panic!("scoreboard: create {}: {e}", path.display()));
+        fs::write(&path, html).unwrap_or_else(|e| panic!("scoreboard: write {}: {e}", path.display()));
+    }
+
+    println!("scoreboard: wrote {} badges + {} + {} coal pages", pairs.len(), index.display(), pages.len());
 }
 
 #[cfg(test)]
@@ -593,17 +697,28 @@ mod tests {
         assert!(!html.contains("<b>dasher</b> \u{2014}"), "green dasher must have no block");
         // DEFAULT COLLAPSED: plain <details>, never <details open>
         assert!(!html.contains("<details open"), "details must default collapsed");
-        // grouped by slice, instances carry op / entry [dim] in the table's name column
+        // grouped by slice, one row per vector file: its red entries, their dimensions, a link to its own page
         assert!(html.contains("<h3 class=\"slice-h\">eval/v6/authored</h3>"));
-        assert!(html.contains("<code>x / a</code> <span class=\"dim\">[cost]</span>"));
-        assert!(html.contains("<span class=\"dim\">[panicked]</span>"));
-        // the 4-column table shape
-        assert!(html.contains("<th>vector / entry</th><th>expected</th><th>result</th><th>message</th>"));
+        assert!(html.contains(
+            "<td><a href=\"coal/blitzen-eni/eval/v6/authored/x.html\"><code>x</code></a></td><td>1</td><td>cost 1</td>"),
+            "{html}");
+        assert!(html.contains(
+            "<td><a href=\"coal/blitzen-eni/eval/v6/authored/z.html\"><code>z</code></a></td><td>1</td><td>panicked 1</td>"));
+        // the page itself carries no per-entry rows: they are on the file pages
+        assert!(!html.contains("<th>vector / entry</th>"), "no entry table on the index");
+    }
+
+    fn page<'a>(pages: &'a [(String, String)], path: &str) -> &'a str {
+        let found = pages.iter().find(|(p, _)| p == path).map(|(_, h)| h.as_str());
+        found.unwrap_or_else(|| panic!("no page {path}: {:?}", pages.iter().map(|(p, _)| p).collect::<Vec<_>>()))
     }
 
     #[test]
-    fn coal_details_renders_columns_note_and_script_title() {
-        let html = dashboard(&tx_fixture(), "test");
+    fn coal_pages_render_columns_note_and_script_title() {
+        let pages = coal_pages(&tx_fixture());
+        let html = page(&pages, "coal/blitzen-develop/transaction/v6/captured/atleast-degenerate-bound-184137.html");
+        // the 4-column table shape
+        assert!(html.contains("<th>entry</th><th>expected</th><th>result</th><th>message</th>"), "{html}");
         // note's first line lands in the message column
         assert!(html.contains("<td class=\"note\">Verifier error: AtLeast bound</td>"),
             "a red entry's note must render (first line) in the message column");
@@ -614,11 +729,35 @@ mod tests {
         assert!(html.contains("title=\"{ sigmaProp(...) }\""),
             "the entry's script must render as the name cell title");
         // entries without expected/got (older results.json) render empty cells, not a crash
-        assert!(html.contains("<td><code></code></td><td><code></code></td>"),
+        let bare = page(&pages, "coal/blitzen-develop/transaction/v6/captured/bigint-downcast-2666.html");
+        assert!(bare.contains("<td><code></code></td><td><code></code></td>"),
             "absent briefs must render as empty cells");
         // dasher's all-not-impl tx reds still count + list (visibly labelled, not filtered)
-        assert!(html.contains("<b>dasher</b> \u{2014} 4 coal"));
-        assert!(html.contains("<span class=\"dim\">[not-implemented]</span>"));
+        assert!(dashboard(&tx_fixture(), "test").contains("<b>dasher</b> \u{2014} 4 coal"));
+        let dasher = page(&pages, "coal/dasher/transaction/v6/captured/bigint-downcast-2666.html");
+        assert!(dasher.contains("<span class=\"dim\">[not-implemented]</span>"));
+    }
+
+    fn one_file_with_reds(n: usize) -> Value {
+        let reds: Vec<Value> = (0..n)
+            .map(|i| json!({"dim": "value", "entry": format!("e#{i}"), "op": "big", "expected": "1", "got": "2",
+                            "script": "{ sigmaProp(HEIGHT > 100) && some long script text }"}))
+            .collect();
+        json!({"schema": "santa-results/v1", "runners": [
+            {"name": "dev", "mark": "coal", "red_total": n, "slices": {
+                "eval/v6/authored": {"value_nice": 0, "value_total": n, "red": reds}}}]})
+    }
+
+    /// The index stays the matrix and per-file counts however many entries are red; the entries are on the file
+    /// pages. (Inlining every red entry made the page 131 MB, over GitHub Pages' 100 MB file limit.)
+    #[test]
+    fn the_index_does_not_grow_with_red_entries() {
+        let small = dashboard(&one_file_with_reds(10), "r").len();
+        let large = dashboard(&one_file_with_reds(10_000), "r").len();
+        assert!(large - small < 100, "index grew by {} bytes for 9,990 more reds", large - small);
+        let pages = coal_pages(&one_file_with_reds(10_000));
+        assert_eq!(pages.len(), 1);
+        assert_eq!(page(&pages, "coal/dev/eval/v6/authored/big.html").matches("<tr><td").count(), 10_000);
     }
 
     #[test]
@@ -634,6 +773,21 @@ mod tests {
         assert!(!html.contains("Coal details"), "a green grid must render no details section");
         assert!(!html.contains("<details class=\"coal-details\">"),
             "no details element on a green grid (the CSS selector alone may remain)");
+        assert!(coal_pages(&data).is_empty(), "a green grid writes no coal pages");
+    }
+
+    /// A transaction cell's tooltip names at most five red entries, then counts the rest.
+    #[test]
+    fn tx_tooltip_names_at_most_five_entries() {
+        let reds: Vec<Value> = (0..20)
+            .map(|i| json!({"dim": "valid", "entry": format!("t{i}"), "op": format!("t{i}"), "note": "why"}))
+            .collect();
+        let data = json!({"schema": "santa-results/v1", "runners": [
+            {"name": "dev", "mark": "coal", "red_total": 20, "slices": {"transaction/v6/captured": {
+                "tx_valid_total": 20, "tx_valid_nice": 0, "red": reds}}}]});
+        let html = dashboard(&data, "r");
+        assert_eq!(html.matches("[valid] t").count(), 5, "{html}");
+        assert!(html.contains("\u{2026} and 15 more"), "{html}");
     }
 
     #[test]
@@ -1233,7 +1387,8 @@ mod tests {
           ]
         });
         let html = dashboard(&r, "abc123");
-        assert_eq!(html.matches("exceeded 1").count(), 2, "{html}");
+        // the tooltips' " · exceeded 1" (the coal section's dimension split says "exceeded 1" too)
+        assert_eq!(html.matches(" \u{b7} exceeded 1").count(), 2, "{html}");
     }
 
     /// The header line of a one-runner dashboard (the column's `<th>`), for the declared-scope tests.
