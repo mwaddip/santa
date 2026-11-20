@@ -275,9 +275,15 @@ fn main() -> ExitCode {
     errs += nipopow_path_guard(&root, &nipopow_files);
     errs += nipopow_actuals_guards(&nipopow_act_validator);
 
+    errs += grading_guard(&root);
+
     // Bounded files, every tier: `limits` within the ceilings and exactly one entry (santa_check::limits).
-    let all: Vec<(PathBuf, Value)> =
-        json_files(&root.join("vectors")).into_iter().map(|f| { let d = load(&f); (f, d) }).collect();
+    let grading_file = root.join("vectors").join("grading.json");
+    let all: Vec<(PathBuf, Value)> = json_files(&root.join("vectors"))
+        .into_iter()
+        .filter(|f| f != &grading_file)
+        .map(|f| { let d = load(&f); (f, d) })
+        .collect();
     errs += limits_guard(&all);
 
     println!(
@@ -1276,6 +1282,38 @@ fn nipopow_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
 /// carries note (forbidden elsewhere, mirroring block/wire/authds).
 /// A bounded file (top-level `limits`, runner-integration.md §3a) declares a budget within the ceilings (4096 MiB,
 /// 60 s) and holds exactly one entry. One `[WRONG]` line per file that does not.
+/// The grading rules (`vectors/grading.json`): valid against their schema, parsed by santa-check's interpreter, and
+/// a default label for every tier.
+fn grading_guard(root: &Path) -> u32 {
+    println!("\n[grading] vectors/grading.json:");
+    let doc = load(&root.join("vectors").join("grading.json"));
+    let schema = load(&root.join("schema").join("santa-grading.schema.json"));
+    let validator = jsonschema::validator_for(&schema).expect("grading schema invalid");
+    let mut bad = 0;
+    for e in validator.iter_errors(&doc) {
+        println!("  [WRONG] schema: {e}");
+        bad += 1;
+    }
+    match santa_check::grading::Grading::parse(&doc) {
+        Err(e) => {
+            println!("  [WRONG] {e}");
+            bad += 1;
+        }
+        Ok(g) => {
+            for t in ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] {
+                match g.label_for(t, &json!({})) {
+                    Ok(l) => println!("  [OK] {t}: {l}"),
+                    Err(e) => {
+                        println!("  [WRONG] {t}: {e}");
+                        bad += 1;
+                    }
+                }
+            }
+        }
+    }
+    bad
+}
+
 fn limits_guard(docs: &[(PathBuf, Value)]) -> u32 {
     println!("\n[limits] bounded-file guard:");
     let mut bad = 0;
@@ -2643,5 +2681,25 @@ mod tests {
         assert!(!v.is_valid(&v2(json!({ "kind": "Value", "bytes_hex": "0E" }))), "upper-case hex must fail");
         assert!(!v.is_valid(&v2(json!({ "kind": "Value", "bytes_hex": "0e", "tpe": "SInt" }))),
             "a Value carries its bytes only: the type is in them");
+    }
+
+    /// `vectors/grading.json` parses, and every tier has a default label naming a grading type.
+    #[test]
+    fn the_committed_grading_file_parses_and_covers_every_tier() {
+        let doc = load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../vectors/grading.json"));
+        let g = santa_check::grading::Grading::parse(&doc).unwrap_or_else(|e| panic!("{e}"));
+        for t in ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] {
+            g.label_for(t, &json!({})).unwrap_or_else(|e| panic!("{t}: {e}"));
+        }
+    }
+
+    /// The grading file's schema accepts the committed file.
+    #[test]
+    fn the_grading_schema_accepts_the_committed_file() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let v = jsonschema::validator_for(&load(&root.join("schema/santa-grading.schema.json"))).expect("valid schema");
+        let doc = load(&root.join("vectors/grading.json"));
+        let errs: Vec<String> = v.iter_errors(&doc).map(|e| e.to_string()).collect();
+        assert!(errs.is_empty(), "{errs:?}");
     }
 }

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-grading.schema.json",
+  "title": "SANTA grading rules (vectors/grading.json)",
+  "description": "Every way SANTA grades an entry, as data: grading types by label, and a default label per tier. A vector file may name another label in its envelope (`grading`). The language is specified in docs/contract/grading.md; santa-check and every runner interpret this file.",
+  "type": "object",
+  "required": ["schema", "tiers", "types"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "santa-grading/v1" },
+    "tiers": {
+      "description": "Each tier's default grading label.",
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "types": {
+      "description": "The grading types, by label.",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/type" }
+    }
+  },
+  "$defs": {
+    "path": {
+      "description": "A path into the actual, the entry's expected (`expected.…` = `entry.expected.…`), the entry, or the vector file's envelope; then `.`-separated object keys.",
+      "type": "string",
+      "pattern": "^(actual|expected|entry|file)(\\.[^.]+)*$"
+    },
+    "operand": {
+      "oneOf": [
+        { "type": "object", "required": ["path"], "additionalProperties": false,
+          "properties": { "path": { "$ref": "#/$defs/path" } } },
+        { "type": "object", "required": ["lit"], "additionalProperties": false,
+          "properties": { "lit": true } },
+        { "type": "object", "required": ["first"], "additionalProperties": false,
+          "properties": { "first": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/path" } } } },
+        { "type": "object", "required": ["pluck", "field"], "additionalProperties": false,
+          "properties": { "pluck": { "$ref": "#/$defs/path" }, "field": { "type": "string" } } }
+      ]
+    },
+    "comparison": {
+      "type": "object",
+      "required": ["a", "b"],
+      "additionalProperties": false,
+      "properties": {
+        "a": { "$ref": "#/$defs/operand" },
+        "b": { "$ref": "#/$defs/operand" },
+        "case_insensitive": { "type": "boolean" }
+      }
+    },
+    "dim": {
+      "type": "object",
+      "required": ["name", "compare"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "compare": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/comparison" } },
+        "requires": { "type": "array", "items": { "type": "string" } },
+        "claimed": { "type": "boolean" },
+        "clean": { "type": "boolean" }
+      }
+    },
+    "branch": {
+      "type": "object",
+      "required": ["dims"],
+      "additionalProperties": false,
+      "properties": {
+        "when": { "type": "object", "propertyNames": { "$ref": "#/$defs/path" } },
+        "dims": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/dim" } }
+      }
+    },
+    "type": {
+      "type": "object",
+      "required": ["branches"],
+      "additionalProperties": false,
+      "properties": {
+        "branches": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/branch" } },
+        "unmatched": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

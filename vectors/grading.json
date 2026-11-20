@@ -1,0 +1,135 @@
+{
+  "schema": "santa-grading/v1",
+  "tiers": {
+    "eval": "eval",
+    "wire": "wire",
+    "transaction": "transaction",
+    "block": "block",
+    "chain": "chain",
+    "authds": "authds",
+    "nipopow": "nipopow"
+  },
+  "types": {
+    "eval": {
+      "branches": [
+        { "when": { "expected.error": "errored" },
+          "dims": [
+            { "name": "reject", "clean": false,
+              "compare": [ { "a": { "path": "actual.error" }, "b": { "lit": "errored" } } ] } ] },
+        { "dims": [
+            { "name": "value",
+              "compare": [ { "a": { "path": "actual.value" }, "b": { "path": "expected.value" } } ] },
+            { "name": "cost", "requires": ["value"], "claimed": true,
+              "compare": [ { "a": { "path": "actual.cost" }, "b": { "path": "expected.cost" } } ] } ] }
+      ]
+    },
+    "wire": {
+      "branches": [
+        { "when": { "entry.error": "errored" },
+          "dims": [
+            { "name": "reject", "clean": false,
+              "compare": [ { "a": { "path": "actual.error" }, "b": { "lit": "errored" } } ] } ] },
+        { "dims": [
+            { "name": "roundtrip",
+              "compare": [ { "a": { "path": "actual.bytes_hex" },
+                             "b": { "first": ["entry.expected_bytes_hex", "entry.bytes_hex"] },
+                             "case_insensitive": true } ] } ] }
+      ]
+    },
+    "transaction": {
+      "branches": [
+        { "when": { "expected.valid": true },
+          "dims": [
+            { "name": "valid",
+              "compare": [ { "a": { "path": "actual.valid" }, "b": { "lit": true } } ] },
+            { "name": "cost", "requires": ["valid"], "claimed": true,
+              "compare": [ { "a": { "path": "actual.cost" }, "b": { "path": "expected.cost" } } ] } ] },
+        { "dims": [
+            { "name": "valid",
+              "compare": [ { "a": { "path": "actual.valid" }, "b": { "lit": false } } ] } ] }
+      ]
+    },
+    "block": {
+      "branches": [
+        { "when": { "expected.valid": true },
+          "dims": [
+            { "name": "valid",
+              "compare": [ { "a": { "path": "actual.valid" }, "b": { "lit": true } } ] },
+            { "name": "post_digest", "requires": ["valid"],
+              "compare": [ { "a": { "path": "actual.post_digest" }, "b": { "path": "expected.post_digest" } } ] },
+            { "name": "cost", "requires": ["post_digest"], "claimed": true,
+              "compare": [ { "a": { "path": "actual.cost" }, "b": { "path": "expected.cost" } } ] } ] },
+        { "dims": [
+            { "name": "valid",
+              "compare": [ { "a": { "path": "actual.valid" }, "b": { "lit": false } } ] } ] }
+      ]
+    },
+    "chain": {
+      "branches": [
+        { "when": { "entry.kind": "retargeting" },
+          "dims": [
+            { "name": "value",
+              "compare": [ { "a": { "path": "actual.nbits" }, "b": { "path": "expected.nbits" } } ] } ] },
+        { "when": { "entry.kind": "voting", "expected.error": "errored" },
+          "dims": [
+            { "name": "value", "clean": false,
+              "compare": [ { "a": { "path": "actual.error" }, "b": { "lit": "errored" } } ] } ] },
+        { "when": { "entry.kind": "voting" },
+          "dims": [
+            { "name": "value",
+              "compare": [ { "a": { "path": "actual.parameters" }, "b": { "path": "expected.parameters" } },
+                           { "a": { "path": "actual.activated_update" }, "b": { "path": "expected.activated_update" } } ] } ] },
+        { "when": { "entry.kind": "fork_vote_gate", "expected.error": "errored" },
+          "dims": [
+            { "name": "value", "clean": false,
+              "compare": [ { "a": { "path": "actual.error" }, "b": { "lit": "errored" } } ] } ] },
+        { "when": { "entry.kind": "fork_vote_gate" },
+          "dims": [
+            { "name": "value",
+              "compare": [ { "a": { "path": "actual.valid" }, "b": { "path": "expected.valid" } } ] } ] },
+        { "when": { "entry.kind": "header_votes" },
+          "dims": [
+            { "name": "value",
+              "compare": [ { "a": { "path": "actual.valid" }, "b": { "path": "expected.valid" } } ] } ] }
+      ],
+      "unmatched": ["value"]
+    },
+    "authds": {
+      "branches": [
+        { "when": { "entry.kind": "avl_prove" },
+          "dims": [
+            { "name": "proof",
+              "compare": [ { "a": { "path": "actual.proofs" }, "b": { "path": "expected.proofs" } } ] },
+            { "name": "digest",
+              "compare": [ { "a": { "path": "actual.digests" }, "b": { "path": "expected.digests" } } ] } ] },
+        { "when": { "entry.kind": "avl_verify", "expected.proof_accepted": true },
+          "dims": [
+            { "name": "accepted",
+              "compare": [ { "a": { "path": "actual.proof_accepted" }, "b": { "path": "expected.proof_accepted" } } ] },
+            { "name": "results", "requires": ["accepted"],
+              "compare": [ { "a": { "path": "actual.results" }, "b": { "path": "expected.results" } } ] },
+            { "name": "digest", "requires": ["results"],
+              "compare": [ { "a": { "path": "actual.new_digest_hex" }, "b": { "path": "expected.new_digest_hex" } } ] } ] },
+        { "when": { "entry.kind": "avl_verify" },
+          "dims": [
+            { "name": "accepted",
+              "compare": [ { "a": { "path": "actual.proof_accepted" }, "b": { "path": "expected.proof_accepted" } } ] } ] }
+      ],
+      "unmatched": ["proof", "digest"]
+    },
+    "nipopow": {
+      "branches": [
+        { "when": { "entry.kind": "nipopow_interlinks" },
+          "dims": [
+            { "name": "interlinks",
+              "compare": [ { "a": { "pluck": "file.chain", "field": "interlinks" }, "b": { "path": "actual.interlinks" } } ] } ] },
+        { "when": { "entry.kind": "nipopow_prove" },
+          "dims": [
+            { "name": "proof",
+              "compare": [ { "a": { "path": "actual.proofHex" }, "b": { "path": "expected.proofHex" },
+                             "case_insensitive": true } ] } ] }
+      ],
+      "unmatched": ["proof"]
+    }
+  }
+}

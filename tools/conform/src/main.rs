@@ -52,6 +52,9 @@ fn parse_relpath(rel: &str) -> (String, String, String, String) {
 
 type Vec5 = (String, String, String, String, String); // (rel, tier, version, prov, op)
 
+/// The grading rules, at the vectors root (santa-grading/v1).
+const GRADING_FILE: &str = "grading.json";
+
 /// One recursive walk of vectors/, sorted by relpath.
 fn discover_vectors(vectors: &Path) -> Vec<Vec5> {
     fn walk(d: &Path, base: &Path, out: &mut Vec<String>) {
@@ -68,6 +71,8 @@ fn discover_vectors(vectors: &Path) -> Vec<Vec5> {
     }
     let mut rels = Vec::new();
     walk(vectors, vectors, &mut rels);
+    // The grading rules sit at the vectors root; they are not a vector.
+    rels.retain(|r| r != GRADING_FILE);
     rels.sort();
     rels.into_iter()
         .map(|rel| {
@@ -2825,5 +2830,20 @@ mod tests {
                    "santa-run exceeded the safety ceiling (memory 4096 MiB)");
         assert_eq!(super::fail_message(&super::RunFail::Exit(101)), "santa-run exited 101: could not build/run");
         assert_eq!(super::fail_message(&super::RunFail::Bound("boom".into())), "boom");
+    }
+
+    /// `vectors/grading.json` is the grading rules, not a vector: discovery skips it.
+    #[test]
+    fn discovery_skips_the_grading_file() {
+        let tmp = std::env::temp_dir().join(format!("conform-grading-skip-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&tmp);
+        let dir = tmp.join("eval").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("x.json"), "{}").unwrap();
+        fs::write(tmp.join("grading.json"), "{}").unwrap();
+        let v = super::discover_vectors(&tmp);
+        assert_eq!(v.len(), 1);
+        assert_eq!(v[0].0, "eval/v6/authored/x.json");
+        fs::remove_dir_all(&tmp).ok();
     }
 }
