@@ -395,7 +395,9 @@ fn resolve_impl(impl_: Option<&str>, name: &str, cache_dir: &Path) -> Result<Res
 }
 
 /// A plain path, graded in place, uncommitted edits included: `<cache_dir>/local/<name>` links to it (the clone cache
-/// is left alone), and the sha carries `-dirty` when the tree has uncommitted changes.
+/// is left alone), and the sha carries `-dirty` when the tree has uncommitted changes. The checkout handed to a hosted
+/// runner is the tree's REAL path, not the link: run through the link, its build would record the same crates under
+/// two paths in one target dir, and the developer's next build of it there would fail.
 fn in_place(dir: &Path, name: &str, cache_dir: &Path) -> Resolved {
     let dir = fs::canonicalize(dir).unwrap_or_else(|e| die(format!("impl {}: {e}", dir.display())));
     let here = cache_dir.join("local");
@@ -410,7 +412,7 @@ fn in_place(dir: &Path, name: &str, cache_dir: &Path) -> Resolved {
             None => head,
         }
     });
-    Resolved { arg: here.to_string_lossy().into_owned(), checkout: Some(link), sha }
+    Resolved { arg: here.to_string_lossy().into_owned(), checkout: Some(dir), sha }
 }
 
 /// Why a runner has no grades this run (a ⚠️ row, not a 🪨).
@@ -1850,9 +1852,12 @@ mod tests {
         let sha = git_commit(&wt, "w1");
         let cache = tmp.join("cache");
         let r = resolve_impl(Some(wt.to_str().unwrap()), "ergots", &cache).unwrap();
+        // a runner that finds its impl as <impl-path>/<name> sees the tree through that link…
         let seen = PathBuf::from(&r.arg).join("ergots");
-        assert_eq!(r.checkout.as_deref(), Some(seen.as_path()));
         assert_eq!(fs::canonicalize(&seen).unwrap(), fs::canonicalize(&wt).unwrap());
+        // …while a hosted runner is handed the tree's REAL path: run through the link, its build would record the
+        // same crates under two paths in one target dir (the developer's next build of it then fails)
+        assert_eq!(r.checkout, Some(fs::canonicalize(&wt).unwrap()));
         assert!(!cache.join("ergots").exists(), "in place must not touch the clone cache");
         assert_eq!(r.sha.as_deref(), Some(sha.as_str()));
         fs::write(wt.join("VERSION"), "w2-uncommitted\n").unwrap();

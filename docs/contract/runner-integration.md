@@ -280,7 +280,9 @@ diverges from the blessed `expected`, the runner is wrong — surfaced as RED, r
   touched). `<url>#<ref>` is checked out as in §2; a **plain path** is graded **in place**, uncommitted edits
   included, and `results.json` records its sha as `<sha>-dirty` when the tree has uncommitted changes. Either way
   the runner finds the impl at `<impl-path>/<repo-name>` under the CONFIGURED impl's repo name, whatever the
-  directory is called. A runner that patches the impl it builds against (§3) must not be pointed at a working tree.
+  directory is called; a runner the implementation hosts is invoked at the tree's real path, never through that
+  link (through it, a build would record the same crates under two paths in one target dir). A runner that patches
+  the impl it builds against (§3) must not be pointed at a working tree.
 - The cached clone (`.santa/<name>/<repo-name>`) follows the spec's url, and `<url>#<branch>` is that url's branch
   tip, checked out detached; a pinned commit no branch holds is fetched by sha. So a run against a local checkout
   never leaks into the next run against the upstream.
