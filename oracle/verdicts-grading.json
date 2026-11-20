@@ -1,0 +1,2818 @@
+{
+ "schema": "santa-oracle-grading/v1",
+ "description": "Verdict meta-vectors for the grading language (docs/contract/grading.md): (label, entry, file, actual, claims_cost) -> the verdict, as santa_check::grading::Verdict::to_json writes it (graded dimensions only; a null actual is a missing one). An interpreter of vectors/grading.json is conformant iff it reproduces every verdict. Carried over from the per-tier oracle files, plus nipopow.",
+ "cases": [
+  {
+   "name": "eval/accept-nice",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 6
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice",
+     "cost": "nice"
+    }
+   }
+  },
+  {
+   "name": "eval/value-mismatch",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 7
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/cost-mismatch-when-claimed",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 6
+    },
+    "cost": 37,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice",
+     "cost": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/cost-mismatch-not-claimed-is-na",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 6
+    },
+    "cost": 37,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "eval/cost-null-while-claimed-is-coal",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 6
+    },
+    "cost": null,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice",
+     "cost": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/value-coal-suppresses-cost",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 7
+    },
+    "cost": 37,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/eq-object-key-order-insensitive",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "value": 6,
+      "kind": "Int"
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 6
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice",
+     "cost": "nice"
+    }
+   }
+  },
+  {
+   "name": "eval/neq-array-order-sensitive",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Coll",
+      "items": [
+       2,
+       1
+      ]
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Coll",
+     "items": [
+      1,
+      2
+     ]
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/neq-bool-is-not-int",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": 1,
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": true,
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/neq-null-only-equals-null",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": 0,
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/eq-long-as-string-exact",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Long",
+      "value": "3"
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Long",
+     "value": "3"
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice",
+     "cost": "nice"
+    }
+   }
+  },
+  {
+   "name": "eval/neq-string-vs-number-kinds",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Long",
+      "value": 3
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Long",
+     "value": "3"
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/eq-nested-recursive",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Tuple",
+      "items": [
+       {
+        "kind": "Int",
+        "value": 1
+       },
+       {
+        "kind": "Long",
+        "value": "2"
+       }
+      ]
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Tuple",
+     "items": [
+      {
+       "kind": "Int",
+       "value": 1
+      },
+      {
+       "kind": "Long",
+       "value": "2"
+      }
+     ]
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice",
+     "cost": "nice"
+    }
+   }
+  },
+  {
+   "name": "eval/errored-on-accept-is-value-coal",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "errored"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/reject-nice-both-errored",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": null,
+     "cost": null,
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "errored"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "reject": "nice"
+    }
+   }
+  },
+  {
+   "name": "eval/reject-divergence-accepted-what-jvm-rejects",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": null,
+     "cost": null,
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "value": {
+     "kind": "Int",
+     "value": 6
+    },
+    "cost": 36,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "reject": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/coverage-not-implemented-on-accept",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "eval/coverage-not-implemented-precedence-over-reject",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": null,
+     "cost": null,
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "eval/totality-breach-missing-actual-is-value-coal",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": null,
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/panicked-on-accept-is-coal",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "panicked",
+    "note": "encode: unmodeled ergots result kind 'X'"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "eval/panicked-on-reject-is-coal-not-nice",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": null,
+     "cost": null,
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "panicked",
+    "note": "boom in the reject path"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "eval/panicked-verdict-ignores-claims-cost",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "value": null,
+    "cost": null,
+    "error": "panicked",
+    "note": "x"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "eval/exceeded-on-accept-is-coal",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": {
+      "kind": "Int",
+      "value": 6
+     },
+     "cost": 36,
+     "error": null
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "memory",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "memory"
+   }
+  },
+  {
+   "name": "eval/exceeded-on-reject-is-coal-not-nice",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": null,
+     "cost": null,
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "time",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "time"
+   }
+  },
+  {
+   "name": "wire/roundtrip-ok",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "bytes_hex": "c0843d09",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "nice"
+    }
+   }
+  },
+  {
+   "name": "wire/roundtrip-ok-hex-case-insensitive",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "bytes_hex": "C0843D09",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "nice"
+    }
+   }
+  },
+  {
+   "name": "wire/bytes-differ-is-coal",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "bytes_hex": "c0843d0900",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/errored-reserialize-is-differ",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "bytes_hex": null,
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/not-implemented-is-coverage",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "bytes_hex": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "wire/panicked-is-coal",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "bytes_hex": null,
+    "error": "panicked",
+    "note": "boom in the box serializer"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "wire/totality-breach-null-actual-is-differ",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": null,
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/nonidentity-canonical-match-is-nice",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "00",
+    "expected_bytes_hex": "11"
+   },
+   "actual": {
+    "bytes_hex": "11",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "nice"
+    }
+   }
+  },
+  {
+   "name": "wire/nonidentity-echo-of-input-is-differ",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "00",
+    "expected_bytes_hex": "11"
+   },
+   "actual": {
+    "bytes_hex": "00",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/reject-expected-errored-actual-is-nice",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "1a0168",
+    "error": "errored"
+   },
+   "actual": {
+    "bytes_hex": null,
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "reject": "nice"
+    }
+   }
+  },
+  {
+   "name": "wire/reject-expected-but-produced-bytes-is-coal",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "1a0168",
+    "error": "errored"
+   },
+   "actual": {
+    "bytes_hex": "1a0168",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "reject": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/reject-expected-null-actual-is-differ",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "1a0168",
+    "error": "errored"
+   },
+   "actual": null,
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "reject": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/reject-expected-panicked-stays-panicked",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "1a0168",
+    "error": "errored"
+   },
+   "actual": {
+    "bytes_hex": null,
+    "error": "panicked",
+    "note": "boom in the tree parser"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "wire/reject-expected-not-implemented-is-coverage",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "1a0168",
+    "error": "errored"
+   },
+   "actual": {
+    "bytes_hex": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "wire/exceeded-on-accept-is-coal",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "c0843d09"
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "memory",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "memory"
+   }
+  },
+  {
+   "name": "wire/exceeded-on-reject-is-coal-not-nice",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "1a0168",
+    "error": "errored"
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "time",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "time"
+   }
+  },
+  {
+   "name": "transaction/accept-nice",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": 14846,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "cost": 14846,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "cost": "nice"
+    }
+   }
+  },
+  {
+   "name": "transaction/accept-valid-mismatch-coal",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": null,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": false,
+    "cost": null,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "red"
+    }
+   }
+  },
+  {
+   "name": "transaction/accept-cost-mismatch",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": 14846,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "cost": 9999,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "cost": "red"
+    }
+   }
+  },
+  {
+   "name": "transaction/accept-cost-unclaimed",
+   "description": "A runner that does not claim the cost dimension (manifest cost:false): cost is not graded, whatever it answers.",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": 14846,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "cost": 9999,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice"
+    }
+   }
+  },
+  {
+   "name": "transaction/accept-cost-null-while-claimed-is-coal",
+   "description": "A runner that claims the cost dimension and answers cost:null on an accepted spend is cost-not-implemented: coal on the cost dimension, as on the eval tier.",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": 14846,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "cost": null,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "cost": "red"
+    }
+   }
+  },
+  {
+   "name": "transaction/accept-expected-cost-null-is-na",
+   "description": "A value-only vector (expected.cost null): cost is not graded, even for a runner that claims it.",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": null,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "cost": 14846,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice"
+    }
+   }
+  },
+  {
+   "name": "transaction/accept-not-impl-coverage",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": null,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": null,
+    "cost": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "transaction/accept-panicked-coal",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": null,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": null,
+    "cost": null,
+    "error": "panicked",
+    "note": "OOM in validateStateful"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "transaction/reject-nice",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "cost": null,
+     "reason": "script evaluation failed"
+    }
+   },
+   "actual": {
+    "valid": false,
+    "cost": null,
+    "error": null,
+    "reason": "token preservation violated"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice"
+    }
+   }
+  },
+  {
+   "name": "transaction/reject-errored-coal",
+   "description": "BY DESIGN: errored on a reject vector is coal, not a clean rejection. The tx tier explicitly separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null). Differs from the eval reject arm where errored IS the clean reject.",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "cost": null,
+     "reason": "script evaluation failed"
+    }
+   },
+   "actual": {
+    "valid": null,
+    "cost": null,
+    "error": "errored",
+    "reason": "decode boom"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "red"
+    }
+   }
+  },
+  {
+   "name": "transaction/exceeded-on-accept-is-coal",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": null,
+     "reason": null
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "memory",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "memory"
+   }
+  },
+  {
+   "name": "transaction/exceeded-on-reject-is-coal-not-nice",
+   "label": "transaction",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "cost": null,
+     "reason": "script evaluation failed"
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "time",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "time"
+   }
+  },
+  {
+   "name": "block/accept-all-nice",
+   "description": "Accept vector: valid:true, post_digest matches, cost matches -> all three dims nice.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+    "cost": 12500,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "post_digest": "nice",
+     "cost": "nice"
+    }
+   }
+  },
+  {
+   "name": "block/accept-valid-coal",
+   "description": "Accept vector: conformer returned valid:false — valid dim is coal, post_digest and cost both n/a.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": false,
+    "post_digest": null,
+    "cost": null,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "red"
+    }
+   }
+  },
+  {
+   "name": "block/accept-digest-coal",
+   "description": "Accept vector: valid nice, but post_digest mismatch -> digest coal, cost n/a (digest failed).",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "post_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "cost": 12500,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "post_digest": "red"
+    }
+   }
+  },
+  {
+   "name": "block/accept-cost-coal",
+   "description": "Accept vector: valid nice, post_digest matches, cost mismatch -> cost coal.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+    "cost": 9999,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "post_digest": "nice",
+     "cost": "red"
+    }
+   }
+  },
+  {
+   "name": "block/accept-cost-unclaimed",
+   "description": "Accept vector, a runner that does not claim the cost dimension (manifest cost:false): cost n/a, whatever it answers.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+    "cost": 9999,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "post_digest": "nice"
+    }
+   }
+  },
+  {
+   "name": "block/accept-cost-null-while-claimed-is-coal",
+   "description": "Accept vector, valid and post_digest nice, a runner that claims the cost dimension answers cost:null -> cost-not-implemented: cost coal, as on the eval tier.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": true,
+    "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+    "cost": null,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "post_digest": "nice",
+     "cost": "red"
+    }
+   }
+  },
+  {
+   "name": "block/reject-nice",
+   "description": "Reject vector: expected valid:false, actual valid:false error:null -> valid nice, post_digest n/a, cost n/a.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "post_digest": null,
+     "cost": null,
+     "reason": "block script failed"
+    }
+   },
+   "actual": {
+    "valid": false,
+    "post_digest": null,
+    "cost": null,
+    "error": null,
+    "reason": "script evaluation error"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice"
+    }
+   }
+  },
+  {
+   "name": "block/reject-errored-coal",
+   "description": "BY DESIGN: errored on a reject vector is coal, not a clean rejection. Block tier mirrors tx tier: clean-reject = valid:false error:null; failed-verdict = error:errored valid:null.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "post_digest": null,
+     "cost": null,
+     "reason": "block script failed"
+    }
+   },
+   "actual": {
+    "valid": null,
+    "post_digest": null,
+    "cost": null,
+    "error": "errored"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "red"
+    }
+   }
+  },
+  {
+   "name": "block/not-implemented",
+   "description": "Not-implemented: coverage verdict, not coal.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": null,
+    "post_digest": null,
+    "cost": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "block/panicked",
+   "description": "Panicked actual: coal unconditionally before any expected check.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "valid": null,
+    "post_digest": null,
+    "cost": null,
+    "error": "panicked",
+    "note": "block validation panic"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "block/panicked-on-reject-still-coal",
+   "description": "Panicked on a reject vector: coal unconditionally (a crash is not a clean rejection).",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "post_digest": null,
+     "cost": null,
+     "reason": "block script failed"
+    }
+   },
+   "actual": {
+    "valid": null,
+    "post_digest": null,
+    "cost": null,
+    "error": "panicked",
+    "note": "panic in reject path"
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "block/exceeded-on-accept-is-coal",
+   "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+     "cost": 12500,
+     "reason": null
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "memory",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "memory"
+   }
+  },
+  {
+   "name": "block/exceeded-on-reject-is-coal-not-nice",
+   "description": "A budget hit on a reject vector is not a clean rejection.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": false,
+     "post_digest": null,
+     "cost": null,
+     "reason": "block script failed"
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "time",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "time"
+   }
+  },
+  {
+   "name": "chain/retargeting-nice",
+   "description": "Retargeting: actual nbits matches expected nbits, error null → value nice.",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "nbits": 84150434,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/retargeting-nbits-coal",
+   "description": "Retargeting: nbits mismatch → value coal.",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "nbits": 84128203,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/retargeting-errored-coal",
+   "description": "Retargeting: error:errored where a value is expected → coal. v1 corpus is accept-shaped so errored is always red.",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "nbits": null,
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/voting-nice",
+   "description": "Voting: parameters deep-equal AND activated_update string-equal → value nice.",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "parameters": {
+      "table": {
+       "1": 1250000,
+       "123": 4
+      }
+     },
+     "activated_update": "0000"
+    }
+   },
+   "actual": {
+    "parameters": {
+     "table": {
+      "1": 1250000,
+      "123": 4
+     }
+    },
+    "activated_update": "0000",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/voting-table-coal",
+   "description": "Voting: parameters mismatch (one value differs) → value coal.",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "parameters": {
+      "table": {
+       "1": 1250000,
+       "123": 4
+      }
+     },
+     "activated_update": "0000"
+    }
+   },
+   "actual": {
+    "parameters": {
+     "table": {
+      "1": 1250001,
+      "123": 4
+     }
+    },
+    "activated_update": "0000",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/voting-update-coal",
+   "description": "Voting: table matches but activated_update differs (non-empty vs empty) → value coal. Graded by string equality: '0000' ≠ '02d701990300'.",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "parameters": {
+      "table": {
+       "1": 1250000
+      }
+     },
+     "activated_update": "0000"
+    }
+   },
+   "actual": {
+    "parameters": {
+     "table": {
+      "1": 1250000
+     }
+    },
+    "activated_update": "02d701990300",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/not-implemented",
+   "description": "Not-implemented: coverage verdict, not coal.",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "nbits": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "chain/panicked",
+   "description": "Panicked actual: coal unconditionally before any expected check.",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "nbits": null,
+    "error": "panicked",
+    "note": "overflow in difficulty calculation"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "chain/unknown-kind-coal",
+   "description": "Unknown kind in a graded run is coal — never a silent pass (contract §4).",
+   "label": "chain",
+   "entry": {
+    "kind": "future-kind",
+    "expected": {
+     "nbits": 1
+    }
+   },
+   "actual": {
+    "nbits": 1,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/voting-reject-errored-nice",
+   "description": "Voting reject vector (expected.error errored): the runner's errored envelope is the graded NICE outcome (JVM throw parity, contract §2 reject form).",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "parameters": null,
+    "activated_update": null,
+    "error": "errored",
+    "note": "java.util.NoSuchElementException: key not found: 121"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/voting-reject-value-coal",
+   "description": "Voting reject vector: a produced value where the JVM throws is coal.",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "parameters": {
+     "table": {
+      "1": 1250000
+     }
+    },
+    "activated_update": "0000",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/voting-reject-panicked-coal",
+   "description": "Voting reject vector: panicked precedes the reject check — throw parity means catching + classifying, never crashing.",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "parameters": null,
+    "activated_update": null,
+    "error": "panicked",
+    "note": "uncaught"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "chain/voting-reject-not-implemented-coverage",
+   "description": "Voting reject vector: not-implemented still grades coverage (the growth-ledger stance holds on reject vectors).",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "parameters": null,
+    "activated_update": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "chain/gate-pass-nice",
+   "description": "fork_vote_gate: pass expected, pass emitted - nice.",
+   "label": "chain",
+   "entry": {
+    "kind": "fork_vote_gate",
+    "expected": {
+     "valid": true
+    }
+   },
+   "actual": {
+    "valid": true,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/gate-prohibition-nice",
+   "description": "fork_vote_gate: the rule-407 prohibition is a CLEAN verdict - valid:false expected and emitted - nice.",
+   "label": "chain",
+   "entry": {
+    "kind": "fork_vote_gate",
+    "expected": {
+     "valid": false
+    }
+   },
+   "actual": {
+    "valid": false,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/gate-valid-mismatch-coal",
+   "description": "fork_vote_gate: verdict flip (pass where prohibition expected) - coal.",
+   "label": "chain",
+   "entry": {
+    "kind": "fork_vote_gate",
+    "expected": {
+     "valid": false
+    }
+   },
+   "actual": {
+    "valid": true,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/gate-reject-errored-nice",
+   "description": "fork_vote_gate reject vector (the eager .get class): errored is the graded nice outcome.",
+   "label": "chain",
+   "entry": {
+    "kind": "fork_vote_gate",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "valid": null,
+    "error": "errored",
+    "note": "java.util.NoSuchElementException: None.get"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/gate-reject-clean-prohibition-coal",
+   "description": "fork_vote_gate reject vector: a conformer folding the missing-121 throw into valid:false is consensus-equivalent in-band but red by design (contract S2 - the split pins mechanics finer than the JVM observable).",
+   "label": "chain",
+   "entry": {
+    "kind": "fork_vote_gate",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "valid": false,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "chain/exceeded-on-accept-is-coal",
+   "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "memory",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "memory"
+   }
+  },
+  {
+   "name": "chain/exceeded-on-reject-is-coal-not-nice",
+   "description": "A budget hit on a reject entry is not a clean rejection.",
+   "label": "chain",
+   "entry": {
+    "kind": "voting",
+    "expected": {
+     "error": "errored"
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "time",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "time"
+   }
+  },
+  {
+   "name": "authds/prove-both-nice",
+   "description": "avl_prove: proofs and digests both match expected exactly, error null → proof nice, digest nice.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "proofs": [
+     "aa",
+     "bb"
+    ],
+    "digests": [
+     "11",
+     "22"
+    ],
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "nice",
+     "digest": "nice"
+    }
+   }
+  },
+  {
+   "name": "authds/prove-proof-coal-digest-nice",
+   "description": "avl_prove: the proof bytes diverge from the canonical proof (a non-canonical serialization) while the resulting digest still matches expected. proof and digest are independent — the digest match must not suppress the proof mismatch, because a digest-correct/proof-wrong runner is precisely the defect class (non-canonical AVL proof bytes) this tier exists to catch.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "proofs": [
+     "ff",
+     "bb"
+    ],
+    "digests": [
+     "11",
+     "22"
+    ],
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red",
+     "digest": "nice"
+    }
+   }
+  },
+  {
+   "name": "authds/prove-both-coal-data-mismatch",
+   "description": "avl_prove: both the proof bytes and the digest diverge from expected → both dimensions grade coal, independently of each other.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "proofs": [
+     "ff",
+     "bb"
+    ],
+    "digests": [
+     "99",
+     "22"
+    ],
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red",
+     "digest": "red"
+    }
+   }
+  },
+  {
+   "name": "authds/prove-errored-coal",
+   "description": "avl_prove: the runner reports an error even though the proof and digest values it produced happen to match expected byte-for-byte (stale data from a previous entry, or a partially populated actual). A non-null error must veto both dimensions regardless of value equality — a failed run is never gradeable as nice.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "proofs": [
+     "aa",
+     "bb"
+    ],
+    "digests": [
+     "11",
+     "22"
+    ],
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red",
+     "digest": "red"
+    }
+   }
+  },
+  {
+   "name": "authds/verify-full-nice",
+   "description": "avl_verify: the proof is accepted as expected, every operation result matches, and the resulting digest matches → all three dimensions nice.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": true,
+     "results": [
+      {
+       "ok": true,
+       "value": null
+      }
+     ],
+     "new_digest_hex": "33"
+    }
+   },
+   "actual": {
+    "proof_accepted": true,
+    "results": [
+     {
+      "ok": true,
+      "value": null
+     }
+    ],
+    "new_digest_hex": "33",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "accepted": "nice",
+     "results": "nice",
+     "digest": "nice"
+    }
+   }
+  },
+  {
+   "name": "authds/verify-over-accept-coal",
+   "description": "avl_verify: the reference verifier refuses this proof (proof_accepted:false) but the runner anchors it anyway (proof_accepted:true) — an over-accept, the failure mode the reject arm exists to catch. accepted grades coal, and there is nothing legitimate downstream to grade, so results and digest are n/a rather than compared against data the reference never produced.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": false,
+     "results": [],
+     "new_digest_hex": null
+    }
+   },
+   "actual": {
+    "proof_accepted": true,
+    "results": [
+     {
+      "ok": true,
+      "value": null
+     }
+    ],
+    "new_digest_hex": "33",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "accepted": "red"
+    }
+   }
+  },
+  {
+   "name": "authds/verify-rejected-proof-nice",
+   "description": "avl_verify: both the reference and the runner refuse the proof at the same starting digest under the same settings. Reproducing a rejection is itself a nice verdict; results and digest are n/a because no operations were legitimately attempted on either side.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": false,
+     "results": [],
+     "new_digest_hex": null
+    }
+   },
+   "actual": {
+    "proof_accepted": false,
+    "results": [],
+    "new_digest_hex": null,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "accepted": "nice"
+    }
+   }
+  },
+  {
+   "name": "authds/verify-results-mismatch-suppresses-digest",
+   "description": "avl_verify: the proof is accepted on both sides, but one operation's outcome differs (ok:true vs ok:false) → results grades coal. digest is downstream of the operations, not parallel to them, so it is suppressed to n/a rather than compared — a digest computed after a divergent operation sequence carries no information.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": true,
+     "results": [
+      {
+       "ok": true,
+       "value": null
+      }
+     ],
+     "new_digest_hex": "33"
+    }
+   },
+   "actual": {
+    "proof_accepted": true,
+    "results": [
+     {
+      "ok": false,
+      "value": null
+     }
+    ],
+    "new_digest_hex": "33",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "accepted": "nice",
+     "results": "red"
+    }
+   }
+  },
+  {
+   "name": "authds/verify-digest-mismatch-alone-is-coal",
+   "description": "avl_verify: proof_accepted matches and every operation result matches, but the final digest differs from expected — the realistic shape of a subtly-broken AVL implementation that reproduces every individual operation correctly yet computes the wrong final root. digest grades coal on its own merits; accepted and results are unaffected, because a wrong root does not retroactively invalidate operations that were themselves reproduced correctly.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": true,
+     "results": [
+      {
+       "ok": true,
+       "value": null
+      }
+     ],
+     "new_digest_hex": "33"
+    }
+   },
+   "actual": {
+    "proof_accepted": true,
+    "results": [
+     {
+      "ok": true,
+      "value": null
+     }
+    ],
+    "new_digest_hex": "ff",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "accepted": "nice",
+     "results": "nice",
+     "digest": "red"
+    }
+   }
+  },
+  {
+   "name": "authds/verify-poisoned-null-digest-nice",
+   "description": "avl_verify: a failing operation poisons the verifier so it reports no digest — new_digest_hex:null is a real, meaningful value here, not an absent field. Both sides poisoned identically is a correctly reproduced verdict, so digest grades nice via null-equals-null, not n/a and not coal.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": true,
+     "results": [
+      {
+       "ok": false,
+       "value": null
+      }
+     ],
+     "new_digest_hex": null
+    }
+   },
+   "actual": {
+    "proof_accepted": true,
+    "results": [
+     {
+      "ok": false,
+      "value": null
+     }
+    ],
+    "new_digest_hex": null,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "accepted": "nice",
+     "results": "nice",
+     "digest": "nice"
+    }
+   }
+  },
+  {
+   "name": "authds/panicked",
+   "description": "A runner crash grades panicked unconditionally, before the entry's kind or expected values are even consulted — checked ahead of every other precedence rule.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "proofs": null,
+    "digests": null,
+    "error": "panicked",
+    "note": "index out of bounds in tree rebuild"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "panicked"
+   }
+  },
+  {
+   "name": "authds/not-implemented",
+   "description": "A conformer with no prover declares not-implemented rather than attempting the operation. This is a coverage/growth-ledger cell, not a coal verdict — checked after panicked but before any value grading.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "proofs": null,
+    "digests": null,
+    "error": "not-implemented"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "authds/unknown-kind-coal",
+   "description": "An entry kind this grader does not recognize (a future or malformed kind discriminator) must never silently pass — it grades coal on every dimension of the default authds_prove shape rather than defaulting to nice.",
+   "label": "authds",
+   "entry": {
+    "kind": "merkle_prove",
+    "expected": {}
+   },
+   "actual": {
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red",
+     "digest": "red"
+    }
+   }
+  },
+  {
+   "name": "authds/exceeded-on-accept-is-coal",
+   "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_prove",
+    "expected": {
+     "proofs": [
+      "aa",
+      "bb"
+     ],
+     "digests": [
+      "11",
+      "22"
+     ]
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "memory",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "memory"
+   }
+  },
+  {
+   "name": "authds/exceeded-on-reject-is-coal-not-nice",
+   "description": "A budget hit where the proof is rejected is not a clean rejection.",
+   "label": "authds",
+   "entry": {
+    "kind": "avl_verify",
+    "expected": {
+     "proof_accepted": false,
+     "results": [],
+     "new_digest_hex": null
+    }
+   },
+   "actual": {
+    "error": "exceeded",
+    "limit": "time",
+    "budget": {
+     "memory_mb": 1024,
+     "wall_s": 10
+    }
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "exceeded",
+    "limit": "time"
+   }
+  },
+  {
+   "name": "nipopow/interlinks-nice",
+   "description": "every header's interlinks equal the file chain's",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_interlinks"
+   },
+   "file": {
+    "chain": [
+     {
+      "interlinks": [
+       "aa"
+      ]
+     },
+     {
+      "interlinks": [
+       "aa",
+       "bb"
+      ]
+     }
+    ]
+   },
+   "actual": {
+    "interlinks": [
+     [
+      "aa"
+     ],
+     [
+      "aa",
+      "bb"
+     ]
+    ],
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "interlinks": "nice"
+    }
+   }
+  },
+  {
+   "name": "nipopow/interlinks-one-header-differs",
+   "description": "one header's interlink vector differs",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_interlinks"
+   },
+   "file": {
+    "chain": [
+     {
+      "interlinks": [
+       "aa"
+      ]
+     },
+     {
+      "interlinks": [
+       "aa",
+       "bb"
+      ]
+     }
+    ]
+   },
+   "actual": {
+    "interlinks": [
+     [
+      "aa"
+     ],
+     [
+      "aa",
+      "cc"
+     ]
+    ],
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "interlinks": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/interlinks-short",
+   "description": "fewer interlink vectors than headers",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_interlinks"
+   },
+   "file": {
+    "chain": [
+     {
+      "interlinks": [
+       "aa"
+      ]
+     },
+     {
+      "interlinks": [
+       "aa",
+       "bb"
+      ]
+     }
+    ]
+   },
+   "actual": {
+    "interlinks": [
+     [
+      "aa"
+     ]
+    ],
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "interlinks": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/interlinks-errored",
+   "description": "an errored actual is not clean",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_interlinks"
+   },
+   "file": {
+    "chain": [
+     {
+      "interlinks": [
+       "aa"
+      ]
+     },
+     {
+      "interlinks": [
+       "aa",
+       "bb"
+      ]
+     }
+    ]
+   },
+   "actual": {
+    "interlinks": [
+     [
+      "aa"
+     ],
+     [
+      "aa",
+      "bb"
+     ]
+    ],
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "interlinks": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/prove-nice",
+   "description": "the proof bytes equal the expected",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_prove",
+    "expected": {
+     "proofHex": "0a1b"
+    }
+   },
+   "actual": {
+    "proofHex": "0a1b",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "nice"
+    }
+   }
+  },
+  {
+   "name": "nipopow/prove-upper-case-nice",
+   "description": "proof hex compares case-insensitively",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_prove",
+    "expected": {
+     "proofHex": "0a1b"
+    }
+   },
+   "actual": {
+    "proofHex": "0A1B",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "nice"
+    }
+   }
+  },
+  {
+   "name": "nipopow/prove-red",
+   "description": "different proof bytes",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_prove",
+    "expected": {
+     "proofHex": "0a1b"
+    }
+   },
+   "actual": {
+    "proofHex": "0a1c",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/prove-errored",
+   "description": "an errored actual has no proof",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_prove",
+    "expected": {
+     "proofHex": "0a1b"
+    }
+   },
+   "actual": {
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/prove-not-implemented",
+   "description": "not-implemented takes precedence",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_prove",
+    "expected": {
+     "proofHex": "0a1b"
+    }
+   },
+   "actual": {
+    "error": "not-implemented"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "not-implemented"
+   }
+  },
+  {
+   "name": "nipopow/unknown-kind",
+   "description": "an entry kind no branch knows is red on proof (unmatched)",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_other"
+   },
+   "actual": {},
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red"
+    }
+   }
+  }
+ ]
+}

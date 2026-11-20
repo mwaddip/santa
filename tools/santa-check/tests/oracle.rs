@@ -1,12 +1,32 @@
 //! Prove santa-check reproduces the SANTA verdict-oracle (../../oracle/*.json) — §6 made executable,
 //! the same contract tools/test_oracle.py holds compare.py to. Both must agree on every verdict.
+use santa_check::grading::{Grading, Input};
 use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_transaction, grade_wire};
-use serde_json::Value;
+use serde_json::{json, Value};
 use std::{fs, path::Path};
+
+fn grading() -> Grading {
+    let p = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../vectors/grading.json");
+    Grading::parse(&serde_json::from_str(&fs::read_to_string(p).unwrap()).unwrap()).unwrap_or_else(|e| panic!("{e}"))
+}
+
+/// One `santa-oracle-grading/v1` case through the interpreter: its label, entry, file envelope (default `{}`), actual
+/// (`null` = missing) and cost claim (default false) -> the verdict as `Verdict::to_json` writes it.
+fn interpret(g: &Grading, c: &Value) -> Value {
+    let empty = json!({});
+    let input = Input {
+        entry: &c["entry"],
+        actual: Some(&c["actual"]).filter(|a| !a.is_null()),
+        file: c.get("file").unwrap_or(&empty),
+        claims_cost: c["claims_cost"].as_bool().unwrap_or(false),
+    };
+    g.grade(c["label"].as_str().expect("a label"), &input).map_or_else(|e| json!({ "error": e.to_string() }), |v| v.to_json())
+}
 
 #[test]
 fn reproduces_verdict_oracle() {
     let oracle_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle");
+    let g = grading();
     let mut total = 0usize;
     let mut fails: Vec<String> = Vec::new();
     for entry in fs::read_dir(&oracle_dir).expect("read oracle/ dir") {
@@ -25,6 +45,7 @@ fn reproduces_verdict_oracle() {
                 "santa-oracle-chain/v1" => grade_chain(&c["actual"], &c["entry"]),
                 "santa-oracle-authds/v1" => grade_authds(&c["actual"], &c["entry"]),
                 "santa-oracle/v1" => grade(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap()),
+                "santa-oracle-grading/v1" => interpret(&g, c),
                 _ => panic!("unknown oracle schema: {schema:?} in {}", p.display()),
             };
             if got != c["verdict"] {
@@ -40,3 +61,22 @@ fn reproduces_verdict_oracle() {
     );
     eprintln!("santa-check reproduces all {total} oracle verdicts");
 }
+
+/// The grading oracle exercises every grading type: each label in `vectors/grading.json` has cases, and each case's
+/// label exists.
+#[test]
+fn the_grading_oracle_covers_every_label() {
+    let p = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/verdicts-grading.json");
+    let doc: Value = serde_json::from_str(&fs::read_to_string(&p).expect("oracle/verdicts-grading.json")).unwrap();
+    assert_eq!(doc["schema"], "santa-oracle-grading/v1");
+    let g = grading();
+    let cases = doc["cases"].as_array().unwrap();
+    for label in g.types.keys() {
+        assert!(cases.iter().any(|c| c["label"] == label.as_str()), "no oracle case for the grading type {label}");
+    }
+    for c in cases {
+        let label = c["label"].as_str().unwrap();
+        assert!(g.types.contains_key(label), "{}: unknown label {label}", c["name"]);
+    }
+}
+

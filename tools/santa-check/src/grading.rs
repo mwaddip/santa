@@ -324,14 +324,19 @@ pub enum Verdict {
 }
 
 impl Verdict {
-    /// The verdict as the oracle writes it.
+    /// The verdict as the oracle writes it. Only graded dimensions appear: an `n/a` one is not graded, so an oracle
+    /// verdict does not depend on which ungraded dimensions a branch happens to list.
     pub fn to_json(&self) -> Value {
         match self {
             Verdict::Exceeded { limit } => serde_json::json!({ "outcome": "exceeded", "limit": limit }),
             Verdict::Panicked => serde_json::json!({ "outcome": "panicked" }),
             Verdict::NotImplemented => serde_json::json!({ "outcome": "not-implemented" }),
             Verdict::Graded(dims) => {
-                let dims: Map<String, Value> = dims.iter().map(|(n, g)| (n.clone(), Value::from(g.as_str()))).collect();
+                let dims: Map<String, Value> = dims
+                    .iter()
+                    .filter(|(_, g)| *g != Grade::NotApplicable)
+                    .map(|(n, g)| (n.clone(), Value::from(g.as_str())))
+                    .collect();
                 serde_json::json!({ "outcome": "graded", "dims": dims })
             }
         }
