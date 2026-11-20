@@ -133,10 +133,13 @@ The orchestrator performs discovery + filtering and stages the runner's selected
 
 **A schema the runner was not written for is `not-implemented`.** A runner dispatches on a vector's `schema` by
 exact name and version, and a vector whose schema it does not know (a newer version of one it handles, or a tier it
-does not mount) gets `not-implemented` for every entry. It never reads such a vector as a schema it knows: a new
-envelope read as an old one fills in missing fields with defaults and shows as false divergences (it happened with
-the eval envelopes v3, v4 and v5). So a schema SANTA adds reaches every implementation as `not-implemented` until its
-runner learns it, which matters most for a runner the implementation hosts, whose code SANTA cannot change.
+does not mount) gets `not-implemented` for every entry, as the tier-neutral actual `{"error": "not-implemented"}`
+and nothing else: the runner cannot know the actual shape of a schema it was not written for, and every tier's
+actuals schema admits that form (any other outcome keeps the tier's own shape). It never reads such a vector as a
+schema it knows: a new envelope read as an old one fills in missing fields with defaults and shows as false
+divergences (it happened with the eval envelopes v3, v4 and v5). So a schema SANTA adds reaches every implementation
+as `not-implemented` until its runner learns it, which matters most for a runner the implementation hosts, whose
+code SANTA cannot change.
 
 **Exit 0** = it ran (actuals written). **Non-zero** = the runner itself failed to run — distinct
 from a per-entry `errored`, which is a normal outcome *inside* the actuals (eval contract §3). The

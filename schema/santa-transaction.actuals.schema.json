@@ -5,8 +5,15 @@
   "description": "A runner's output for one transaction vector: each entry name -> { valid, cost, error, reason? }. valid is non-null IFF error is null (the runner produced a verdict). valid:false is a normal value (clean rejection), distinct from error:errored. Reason is a diagnostic note, never graded.",
   "type": "object",
   "minProperties": 1,
-  "additionalProperties": { "$ref": "#/$defs/result" },
+  "additionalProperties": { "anyOf": [{ "$ref": "#/$defs/result" }, { "$ref": "#/$defs/not_implemented" }] },
   "$defs": {
+    "not_implemented": {
+      "description": "The tier-neutral not-implemented actual (runner-integration §3), admitted in every tier: what a runner answers for each entry of a vector whose schema it was not written for, since it cannot know that schema's actual shape. Every other outcome uses the tier's own result.",
+      "type": "object",
+      "required": ["error"],
+      "additionalProperties": false,
+      "properties": { "error": { "const": "not-implemented" } }
+    },
     "result": {
       "type": "object",
       "required": ["valid", "cost", "error"],

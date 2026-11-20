@@ -5,8 +5,15 @@
   "description": "A runner's output for one vector: an object mapping each entry's `name` to the runner's own { value, cost, error }. Normative companion to docs/contract/runner-contract.md §3-5. SValue/SType definitions are reused from the vector schema by $ref.",
   "type": "object",
   "minProperties": 1,
-  "additionalProperties": { "$ref": "#/$defs/result" },
+  "additionalProperties": { "anyOf": [{ "$ref": "#/$defs/result" }, { "$ref": "#/$defs/not_implemented" }] },
   "$defs": {
+    "not_implemented": {
+      "description": "The tier-neutral not-implemented actual (runner-integration §3), admitted in every tier: what a runner answers for each entry of a vector whose schema it was not written for, since it cannot know that schema's actual shape. Every other outcome uses the tier's own result.",
+      "type": "object",
+      "required": ["error"],
+      "additionalProperties": false,
+      "properties": { "error": { "const": "not-implemented" } }
+    },
     "result": {
       "description": "One entry's actual outcome (runner-contract §3). Success: value (SValue) + cost (number) + error null. Otherwise value null + cost null + error one of 'errored' / 'not-implemented' / 'panicked' (the last carrying a 'note'). A vector's `expected` uses the narrower {null, errored} subset (the oracle never abstains).",
       "type": "object",

@@ -1337,6 +1337,38 @@ mod tests {
         }
     }
 
+    /// A runner answering a schema it does not know cannot know that tier's actual shape, so `{"error":
+    /// "not-implemented"}` alone is an actual in every tier (runner-integration §3). The bare form is closed and
+    /// is for not-implemented only: a bare `errored` stays refused where the tier's result requires more.
+    #[test]
+    fn every_actuals_schema_admits_the_tier_neutral_not_implemented() {
+        let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../schema");
+        let vec_schema = load(&dir.join("santa-eval.vector.schema.json"));
+        let registry = Registry::new()
+            .add(vec_schema["$id"].as_str().expect("vector schema $id"), Resource::from_contents(vec_schema.clone()))
+            .expect("register vector schema")
+            .prepare()
+            .expect("prepare registry");
+        for t in ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] {
+            let v = jsonschema::options()
+                .with_registry(&registry)
+                .build(&load(&dir.join(format!("santa-{t}.actuals.schema.json"))))
+                .unwrap_or_else(|e| panic!("{t} actuals schema invalid: {e}"));
+            assert!(v.is_valid(&json!({"x#0": {"error": "not-implemented"}})), "{t}: the bare not-implemented");
+            assert!(
+                !v.is_valid(&json!({"x#0": {"error": "not-implemented", "extra": 1}})),
+                "{t}: the bare form is closed"
+            );
+        }
+        for t in ["eval", "wire", "transaction", "block"] {
+            let v = jsonschema::options()
+                .with_registry(&registry)
+                .build(&load(&dir.join(format!("santa-{t}.actuals.schema.json"))))
+                .unwrap_or_else(|e| panic!("{t} actuals schema invalid: {e}"));
+            assert!(!v.is_valid(&json!({"x#0": {"error": "errored"}})), "{t}: a bare errored");
+        }
+    }
+
     #[test]
     fn limits_guard_counts_each_bad_bounded_file() {
         let doc = |limits: Option<Value>, n: usize| {
