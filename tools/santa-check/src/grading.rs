@@ -3,6 +3,7 @@
 //! when its comparisons hold. The parser is strict: an unknown key, operand form, path root or schema version is
 //! refused, never guessed at.
 
+use crate::structural_equal;
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
 use std::fmt;
@@ -293,6 +294,149 @@ impl Grading {
     }
 }
 
+// ── the interpreter ─────────────────────────────────────────────────────────────────────────────────────────────
+
+/// One dimension's grade: `NotApplicable` is not graded (not counted).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Grade {
+    Nice,
+    Red,
+    NotApplicable,
+}
+
+impl Grade {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Grade::Nice => "nice",
+            Grade::Red => "red",
+            Grade::NotApplicable => "n/a",
+        }
+    }
+}
+
+/// An entry's verdict: one of the global outcomes, or its dimensions in the branch's order.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Verdict {
+    Exceeded { limit: Value },
+    Panicked,
+    NotImplemented,
+    Graded(Vec<(String, Grade)>),
+}
+
+impl Verdict {
+    /// The verdict as the oracle writes it.
+    pub fn to_json(&self) -> Value {
+        match self {
+            Verdict::Exceeded { limit } => serde_json::json!({ "outcome": "exceeded", "limit": limit }),
+            Verdict::Panicked => serde_json::json!({ "outcome": "panicked" }),
+            Verdict::NotImplemented => serde_json::json!({ "outcome": "not-implemented" }),
+            Verdict::Graded(dims) => {
+                let dims: Map<String, Value> = dims.iter().map(|(n, g)| (n.clone(), Value::from(g.as_str()))).collect();
+                serde_json::json!({ "outcome": "graded", "dims": dims })
+            }
+        }
+    }
+}
+
+/// What one entry is graded from: the vector entry (with its `expected`), the runner's actual (absent = `{}`), the
+/// vector file's envelope, and whether the runner claims the cost dimension.
+pub struct Input<'a> {
+    pub entry: &'a Value,
+    pub actual: Option<&'a Value>,
+    pub file: &'a Value,
+    pub claims_cost: bool,
+}
+
+struct Ctx<'v> {
+    actual: &'v Value,
+    entry: &'v Value,
+    file: &'v Value,
+}
+
+impl Path {
+    fn resolve<'v>(&self, ctx: &Ctx<'v>) -> Option<&'v Value> {
+        let start = match self.root {
+            Root::Actual => ctx.actual,
+            Root::Expected => ctx.entry.get("expected")?,
+            Root::Entry => ctx.entry,
+            Root::File => ctx.file,
+        };
+        self.keys.iter().try_fold(start, |v, k| v.get(k.as_str()))
+    }
+}
+
+impl Operand {
+    fn eval(&self, ctx: &Ctx) -> Value {
+        match self {
+            Operand::Path(p) => p.resolve(ctx).cloned().unwrap_or(Value::Null),
+            Operand::Lit(v) => v.clone(),
+            Operand::First(paths) => paths
+                .iter()
+                .find_map(|p| p.resolve(ctx).filter(|v| !v.is_null()))
+                .cloned()
+                .unwrap_or(Value::Null),
+            Operand::Pluck { list, field } => match list.resolve(ctx) {
+                Some(Value::Array(items)) => {
+                    Value::Array(items.iter().map(|i| i.get(field.as_str()).cloned().unwrap_or(Value::Null)).collect())
+                }
+                _ => Value::Null,
+            },
+        }
+    }
+}
+
+impl Comparison {
+    fn holds(&self, ctx: &Ctx) -> bool {
+        let (a, b) = (self.a.eval(ctx), self.b.eval(ctx));
+        if self.case_insensitive {
+            matches!((&a, &b), (Value::String(x), Value::String(y)) if x.eq_ignore_ascii_case(y))
+        } else {
+            structural_equal(&a, &b)
+        }
+    }
+}
+
+impl Grading {
+    /// Grades one entry by the type `label`: the global outcomes first, then the first branch whose `when` holds.
+    pub fn grade(&self, label: &str, input: &Input) -> Result<Verdict, GradingError> {
+        let t = self.types.get(label).ok_or_else(|| GradingError::UnknownLabel(label.to_string()))?;
+        let empty = Value::Object(Map::new());
+        let actual = input.actual.unwrap_or(&empty);
+        match actual.get("error").and_then(Value::as_str) {
+            Some("exceeded") => {
+                return Ok(Verdict::Exceeded { limit: actual.get("limit").cloned().unwrap_or(Value::Null) });
+            }
+            Some("panicked") => return Ok(Verdict::Panicked),
+            Some("not-implemented") => return Ok(Verdict::NotImplemented),
+            _ => {}
+        }
+        let ctx = Ctx { actual, entry: input.entry, file: input.file };
+        let holds = |b: &&Branch| b.when.iter().all(|(p, lit)| structural_equal(p.resolve(&ctx).unwrap_or(&Value::Null), lit));
+        let Some(branch) = t.branches.iter().find(holds) else {
+            if t.unmatched.is_empty() {
+                return Err(GradingError::NoBranch { label: label.to_string() });
+            }
+            return Ok(Verdict::Graded(t.unmatched.iter().map(|d| (d.clone(), Grade::Red)).collect()));
+        };
+        let clean = actual.get("error").is_none_or(Value::is_null);
+        let mut dims: Vec<(String, Grade)> = Vec::with_capacity(branch.dims.len());
+        for d in &branch.dims {
+            let required = d.requires.iter().all(|r| dims.iter().any(|(n, g)| n == r && *g == Grade::Nice));
+            let claimed = !d.claimed || (input.claims_cost && !d.compare[0].b.eval(&ctx).is_null());
+            let grade = if !required || !claimed {
+                Grade::NotApplicable
+            } else if (!d.clean || clean) && d.compare.iter().all(|c| c.holds(&ctx)) {
+                Grade::Nice
+            } else {
+                Grade::Red
+            };
+            dims.push((d.name.clone(), grade));
+        }
+        Ok(Verdict::Graded(dims))
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -396,5 +540,150 @@ mod tests {
     fn label_for_refuses_an_unknown_label() {
         let g = Grading::parse(&minimal()).unwrap();
         assert_eq!(g.label_for("eval", &json!({ "grading": "nope" })).unwrap_err(), GradingError::UnknownLabel("nope".into()));
+    }
+
+    // ── the interpreter ─────────────────────────────────────────────────────────────────────────────────────────
+
+    /// A grading file with one type, `t`, the default of the tier `t`.
+    fn one(t: serde_json::Value) -> Grading {
+        Grading::parse(&json!({ "schema": "santa-grading/v1", "tiers": { "t": "t" }, "types": { "t": t } })).expect("parses")
+    }
+
+    fn grade_with(g: &Grading, entry: serde_json::Value, actual: Option<serde_json::Value>, file: serde_json::Value, claims_cost: bool) -> Result<Verdict, GradingError> {
+        g.grade("t", &Input { entry: &entry, actual: actual.as_ref(), file: &file, claims_cost })
+    }
+
+    fn graded(dims: &[(&str, Grade)]) -> Verdict {
+        Verdict::Graded(dims.iter().map(|(n, g)| (n.to_string(), *g)).collect())
+    }
+
+    fn cmp(a: serde_json::Value, b: serde_json::Value) -> serde_json::Value {
+        json!({ "a": a, "b": b })
+    }
+
+    fn eval_type() -> Grading {
+        Grading::parse(&minimal()).map(|mut g| {
+            g.tiers.insert("t".into(), "eval".into());
+            g.types.insert("t".into(), g.types["eval"].clone());
+            g
+        }).unwrap()
+    }
+
+    #[test]
+    fn precedence_beats_every_branch() {
+        let g = eval_type();
+        let errored = json!({ "expected": { "error": "errored" } });
+        let v = grade_with(&g, errored.clone(), Some(json!({ "error": "exceeded", "limit": "memory" })), json!({}), true).unwrap();
+        assert_eq!(v, Verdict::Exceeded { limit: json!("memory") });
+        assert_eq!(grade_with(&g, errored.clone(), Some(json!({ "error": "panicked", "note": "x" })), json!({}), true).unwrap(), Verdict::Panicked);
+        assert_eq!(grade_with(&g, errored, Some(json!({ "error": "not-implemented" })), json!({}), true).unwrap(), Verdict::NotImplemented);
+    }
+
+    #[test]
+    fn the_first_matching_branch_applies() {
+        let g = eval_type();
+        let v = grade_with(&g, json!({ "expected": { "error": "errored" } }), Some(json!({ "error": "errored" })), json!({}), true).unwrap();
+        assert_eq!(v, graded(&[("reject", Grade::Nice)]));
+        let entry = json!({ "expected": { "value": 1, "cost": 5 } });
+        let v = grade_with(&g, entry, Some(json!({ "value": 1, "cost": 5, "error": null })), json!({}), true).unwrap();
+        assert_eq!(v, graded(&[("value", Grade::Nice), ("cost", Grade::Nice)]));
+    }
+
+    #[test]
+    fn a_missing_actual_is_the_empty_object() {
+        let v = grade_with(&eval_type(), json!({ "expected": { "value": 1, "cost": 5 } }), None, json!({}), true).unwrap();
+        assert_eq!(v, graded(&[("value", Grade::Red), ("cost", Grade::NotApplicable)]));
+    }
+
+    #[test]
+    fn clean_requires_a_null_error() {
+        let entry = json!({ "expected": { "value": 1, "cost": 5 } });
+        let v = grade_with(&eval_type(), entry, Some(json!({ "value": 1, "cost": 5, "error": "errored" })), json!({}), true).unwrap();
+        assert_eq!(v, graded(&[("value", Grade::Red), ("cost", Grade::NotApplicable)]));
+    }
+
+    #[test]
+    fn a_reject_dim_is_not_clean() {
+        let entry = json!({ "expected": { "error": "errored" } });
+        let v = grade_with(&eval_type(), entry.clone(), Some(json!({ "error": "errored" })), json!({}), true).unwrap();
+        assert_eq!(v, graded(&[("reject", Grade::Nice)]));
+        let v = grade_with(&eval_type(), entry, Some(json!({ "value": 1, "error": null })), json!({}), true).unwrap();
+        assert_eq!(v, graded(&[("reject", Grade::Red)]));
+    }
+
+    #[test]
+    fn numbers_compare_numerically() {
+        let entry = json!({ "expected": { "value": 5, "cost": 5 } });
+        let v = grade_with(&eval_type(), entry, Some(json!({ "value": 5.0, "cost": 5, "error": null })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("value", Grade::Nice), ("cost", Grade::NotApplicable)]));
+    }
+
+    #[test]
+    fn case_insensitive_needs_two_strings() {
+        let mut c = cmp(json!({ "path": "actual.h" }), json!({ "path": "expected.h" }));
+        c["case_insensitive"] = json!(true);
+        let g = one(json!({ "branches": [ { "dims": [ { "name": "h", "compare": [c] } ] } ] }));
+        let nice = grade_with(&g, json!({ "expected": { "h": "ab" } }), Some(json!({ "h": "AB" })), json!({}), false).unwrap();
+        assert_eq!(nice, graded(&[("h", Grade::Nice)]));
+        let red = grade_with(&g, json!({ "expected": {} }), Some(json!({})), json!({}), false).unwrap();
+        assert_eq!(red, graded(&[("h", Grade::Red)]));
+    }
+
+    #[test]
+    fn first_takes_the_first_present_path() {
+        let b = json!({ "first": ["entry.expected_bytes_hex", "entry.bytes_hex"] });
+        let g = one(json!({ "branches": [ { "dims": [ { "name": "roundtrip", "compare": [cmp(json!({ "path": "actual.bytes_hex" }), b)] } ] } ] }));
+        let v = grade_with(&g, json!({ "bytes_hex": "01" }), Some(json!({ "bytes_hex": "01" })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("roundtrip", Grade::Nice)]));
+        let v = grade_with(&g, json!({ "bytes_hex": "01", "expected_bytes_hex": "02" }), Some(json!({ "bytes_hex": "01" })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("roundtrip", Grade::Red)]));
+    }
+
+    #[test]
+    fn pluck_maps_a_list() {
+        let a = json!({ "pluck": "file.chain", "field": "interlinks" });
+        let g = one(json!({ "branches": [ { "dims": [ { "name": "interlinks", "compare": [cmp(a, json!({ "path": "actual.interlinks" }))] } ] } ] }));
+        let file = json!({ "chain": [ { "interlinks": [1] }, { "interlinks": [2] } ] });
+        let v = grade_with(&g, json!({}), Some(json!({ "interlinks": [[1], [2]] })), file.clone(), false).unwrap();
+        assert_eq!(v, graded(&[("interlinks", Grade::Nice)]));
+        let v = grade_with(&g, json!({}), Some(json!({ "interlinks": [[1], [3]] })), file, false).unwrap();
+        assert_eq!(v, graded(&[("interlinks", Grade::Red)]));
+    }
+
+    #[test]
+    fn requires_makes_a_dim_not_applicable() {
+        let g = one(json!({ "branches": [ { "dims": [
+            { "name": "valid", "compare": [cmp(json!({ "path": "actual.valid" }), json!({ "lit": true }))] },
+            { "name": "post_digest", "requires": ["valid"],
+              "compare": [cmp(json!({ "path": "actual.post_digest" }), json!({ "path": "expected.post_digest" }))] } ] } ] }));
+        let v = grade_with(&g, json!({ "expected": { "post_digest": "aa" } }), Some(json!({ "valid": false, "post_digest": "aa" })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("valid", Grade::Red), ("post_digest", Grade::NotApplicable)]));
+    }
+
+    #[test]
+    fn claimed_needs_the_claim_and_an_expected() {
+        let g = one(json!({ "branches": [ { "dims": [
+            { "name": "cost", "claimed": true, "compare": [cmp(json!({ "path": "actual.cost" }), json!({ "path": "expected.cost" }))] } ] } ] }));
+        let five = json!({ "expected": { "cost": 5 } });
+        assert_eq!(grade_with(&g, five.clone(), Some(json!({ "cost": 5 })), json!({}), false).unwrap(), graded(&[("cost", Grade::NotApplicable)]));
+        assert_eq!(grade_with(&g, json!({ "expected": { "cost": null } }), Some(json!({ "cost": 5 })), json!({}), true).unwrap(), graded(&[("cost", Grade::NotApplicable)]));
+        assert_eq!(grade_with(&g, five, Some(json!({ "cost": null })), json!({}), true).unwrap(), graded(&[("cost", Grade::Red)]));
+    }
+
+    #[test]
+    fn unmatched_dims_are_red() {
+        let g = one(json!({ "branches": [ { "when": { "entry.kind": "a" },
+            "dims": [ { "name": "value", "compare": [cmp(json!({ "path": "actual.v" }), json!({ "path": "expected.v" }))] } ] } ],
+            "unmatched": ["value"] }));
+        let v = grade_with(&g, json!({ "kind": "b", "expected": { "v": 1 } }), Some(json!({ "v": 1 })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("value", Grade::Red)]));
+    }
+
+    #[test]
+    fn no_branch_and_no_unmatched_is_an_error() {
+        let g = one(json!({ "branches": [ { "when": { "entry.kind": "a" },
+            "dims": [ { "name": "value", "compare": [cmp(json!({ "path": "actual.v" }), json!({ "path": "expected.v" }))] } ] } ] }));
+        let e = grade_with(&g, json!({ "kind": "b" }), Some(json!({})), json!({}), false).unwrap_err();
+        assert_eq!(e, GradingError::NoBranch { label: "t".into() });
     }
 }
