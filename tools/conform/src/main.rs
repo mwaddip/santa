@@ -15,7 +15,8 @@ use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
 use std::path::{Component, Path, PathBuf};
-use std::process::{Command, ExitCode};
+use std::process::{Command, ExitCode, ExitStatus};
+use std::time::{Duration, Instant};
 use std::{env, fs};
 
 /// Protocol slots, ordered; cumulative (a runner's version implies all lower). `v4` is everything below the JIT
@@ -449,6 +450,7 @@ fn in_place(dir: &Path, name: &str, cache_dir: &Path) -> Resolved {
 }
 
 /// Why a runner has no grades this run (a ⚠️ row, not a 🪨).
+#[derive(Debug)]
 enum RunFail {
     /// santa-run exited non-zero: build, impl checkout, or a crash over the ordinary files.
     Exit(i32),
@@ -466,6 +468,63 @@ fn fail_message(f: &RunFail) -> String {
         RunFail::Ceiling(l) => format!("santa-run exceeded the safety ceiling ({l})"),
         RunFail::Bound(m) => m.clone(),
         RunFail::Hosted(m) => format!("the implementation's runner: {m}"),
+    }
+}
+
+/// The whole-run ceiling (runner-integration §3a): it protects the machine and never grades.
+struct Ceiling {
+    data_mb: u64,
+    wall_s: u64,
+}
+
+/// RLIMIT_DATA at twice the largest budget ./validate allows (4096 MiB), so a runner's backstop for a bounded child
+/// (`max(4096, 2 × memory_mb)`) fits beneath it; a wall timeout long enough for a cold build (plan 3 measured < 1 min).
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+const CEILING: Ceiling = Ceiling { data_mb: 8192, wall_s: 1800 };
+
+/// Runs `cmd` in a process group of its own under the ceiling: RLIMIT_DATA per process (soft = hard), and the whole
+/// group killed at the wall timeout. A group member left behind by a run that exited is killed too.
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+fn run_under_ceiling(cmd: &mut Command, c: &Ceiling) -> Result<ExitStatus, RunFail> {
+    use std::os::unix::process::CommandExt;
+    let bytes = (c.data_mb * 1024 * 1024) as libc::rlim_t;
+    // SAFETY: setsid and setrlimit are async-signal-safe; the closure allocates nothing.
+    unsafe {
+        cmd.pre_exec(move || {
+            if libc::setsid() == -1 {
+                return Err(std::io::Error::last_os_error());
+            }
+            let lim = libc::rlimit { rlim_cur: bytes, rlim_max: bytes };
+            if libc::setrlimit(libc::RLIMIT_DATA, &lim) != 0 {
+                return Err(std::io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = cmd.spawn().map_err(|_| RunFail::Exit(1))?;
+    let group = child.id() as libc::pid_t;
+    // SAFETY: killpg on the group this function created.
+    let kill_group = || unsafe {
+        libc::killpg(group, libc::SIGKILL);
+    };
+    let deadline = Instant::now() + Duration::from_secs(c.wall_s);
+    loop {
+        match child.try_wait() {
+            Ok(Some(status)) => {
+                kill_group();
+                return Ok(status);
+            }
+            Ok(None) if Instant::now() >= deadline => {
+                kill_group();
+                let _ = child.wait();
+                return Err(RunFail::Ceiling(format!("time {} s", c.wall_s)));
+            }
+            Ok(None) => std::thread::sleep(Duration::from_millis(100)),
+            Err(_) => {
+                kill_group();
+                return Err(RunFail::Exit(1));
+            }
+        }
     }
 }
 
@@ -2941,6 +3000,51 @@ mod tests {
         assert!(e(json!({"version": "v6", "tiers": ["eval", "eval"]})).contains("eval"), "repeated tier");
         assert!(e(json!({"version": "v6", "tiers": ["wire"], "kinds": ["Box", "Box"]})).contains("Box"), "repeated kind");
         assert!(super::parse_scope(&json!({"version": "v6", "tiers": ["eval", "wire"], "kinds": ["Box"]})).is_ok());
+    }
+
+    /// A script the ceiling tests run as `bash <script>`: executing a file just written races with other test threads'
+    /// forks ("text file busy"), reading it does not.
+    fn ceiling_script(tag: &str, body: &str) -> PathBuf {
+        let d = std::env::temp_dir().join(format!("conform-ceiling-{}-{tag}", std::process::id()));
+        let _ = fs::remove_dir_all(&d);
+        fs::create_dir_all(&d).unwrap();
+        let s = d.join("run.sh");
+        fs::write(&s, format!("#!/usr/bin/env bash\n{body}\n")).unwrap();
+        use std::os::unix::fs::PermissionsExt;
+        fs::set_permissions(&s, fs::Permissions::from_mode(0o755)).unwrap();
+        s
+    }
+
+    /// A run past its wall time is killed: the safety ceiling (time).
+    #[test]
+    fn the_ceiling_kills_a_run_past_its_wall_time() {
+        let s = ceiling_script("wall", "sleep 30");
+        let t0 = std::time::Instant::now();
+        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 1 });
+        assert!(matches!(&r, Err(super::RunFail::Ceiling(l)) if l == "time 1 s"), "{:?}", r.as_ref().map(|s| s.code()));
+        assert!(t0.elapsed() < std::time::Duration::from_secs(5));
+    }
+
+    /// The whole process group dies at the ceiling, a grandchild included.
+    #[test]
+    fn the_ceiling_kills_the_whole_group() {
+        let s = ceiling_script("group", "sleep 30 &\necho $! > \"$(dirname \"$0\")/child.pid\"\nsleep 30");
+        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 1 });
+        assert!(matches!(r, Err(super::RunFail::Ceiling(_))));
+        let pid = fs::read_to_string(s.parent().unwrap().join("child.pid")).unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(200));
+        let alive = Command::new("kill").args(["-0", pid.trim()]).status().unwrap().success();
+        assert!(!alive, "the grandchild {} outlived the ceiling", pid.trim());
+    }
+
+    /// Each process runs under the data limit.
+    #[test]
+    fn the_ceiling_limits_each_process_data() {
+        let s = ceiling_script("data", "exec python3 -I -c 'bytearray(64 << 20)'");
+        let small = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 32, wall_s: 30 });
+        assert!(matches!(&small, Ok(st) if !st.success()));
+        let big = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 30 });
+        assert!(matches!(&big, Ok(st) if st.success()));
     }
 }
 
