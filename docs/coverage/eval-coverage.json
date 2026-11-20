@@ -12376,9 +12376,10 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.binding_provenance_register.json" : {
-      "accepts" : 21,
-      "entries" : 32,
+      "accepts" : 23,
+      "entries" : 34,
       "methods" : [
+        "106:3 SigmaDslBuilder.serialize",
         "12:29 SCollection.zip"
       ],
       "op" : "Tuple.binding_provenance_register",
@@ -12387,6 +12388,7 @@
         "Const",
         "EQ",
         "ExtractRegisterAs",
+        "Global$",
         "MethodCall",
         "NEQ",
         "OptionGet",
@@ -12399,7 +12401,7 @@
       "rejects" : 11,
       "tree_shapes" : [
         {
-          "accepts" : 21,
+          "accepts" : 23,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -12411,9 +12413,10 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.binding_provenance_var.json" : {
-      "accepts" : 15,
-      "entries" : 26,
+      "accepts" : 17,
+      "entries" : 28,
       "methods" : [
+        "106:3 SigmaDslBuilder.serialize"
       ],
       "op" : "Tuple.binding_provenance_var",
       "ops" : [
@@ -12421,6 +12424,8 @@
         "Const",
         "EQ",
         "GetVar",
+        "Global$",
+        "MethodCall",
         "NEQ",
         "OptionGet",
         "OptionIsDefined",
@@ -12431,7 +12436,7 @@
       "rejects" : 11,
       "tree_shapes" : [
         {
-          "accepts" : 15,
+          "accepts" : 17,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -12474,21 +12479,26 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.non_pair_value_gates.json" : {
-      "accepts" : 9,
-      "entries" : 16,
+      "accepts" : 25,
+      "entries" : 39,
       "methods" : [
         "12:10 SCollection.apply"
       ],
       "op" : "Tuple.non_pair_value_gates",
       "ops" : [
         "+",
+        "Apply",
         "BoolToSigmaProp",
         "ByIndex",
         "ConcreteCollection",
         "Const",
         "EQ",
+        "Exists",
+        "Filter",
         "Fold",
+        "ForAll",
         "FuncValue",
+        "MapCollection",
         "MethodCall",
         "SelectField",
         "SizeOf",
@@ -12497,14 +12507,14 @@
         "min"
       ],
       "provenance" : "authored",
-      "rejects" : 7,
+      "rejects" : 14,
       "tree_shapes" : [
         {
-          "accepts" : 9,
+          "accepts" : 25,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 7,
+          "rejects" : 14,
           "tree_version" : 3
         }
       ],
@@ -18632,6 +18642,8 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/Option.method_type_variable_names_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/spec/Global.deserializeTo_header.json",
         "v6/spec/Global.serialize_Byte.json",
@@ -20261,6 +20273,7 @@
         "v6/authored/MultiplyGroup.static_type_v6.json",
         "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/Tuple.non_pair_type_check.json",
+        "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.json",
         "v6/authored/Value.checkType_sites.json",
         "v6/authored/substConstants_declared_size_u32.json",
@@ -21795,6 +21808,7 @@
         "v6/authored/Exists.item_by_item_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/OR.item_by_item_v6.json",
+        "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h111927-7b445b01f356.json",
@@ -22183,6 +22197,7 @@
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
         "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
+        "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json"
       ],
       "op_codes" : [
@@ -22251,6 +22266,7 @@
         "v6/authored/Coll.zip_unequal_sides_v6.json",
         "v6/authored/ForAll.item_by_item_v6.json",
         "v6/authored/Global.powHit_feeding_Coll_HOF.json",
+        "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/captured/h111766-67eb9e994be2.json",
         "v6/captured/h261770-5dad90a5021b.json",
@@ -22979,6 +22995,8 @@
         "v6/authored/SigmaOr.item_by_item_v6.json",
         "v6/authored/String.jdk_utf8_decode_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
         "v6/authored/Tuple.non_pair_value_type_directed.json",
         "v6/authored/Xor.per_item_cost_base.json",
@@ -23482,6 +23500,7 @@
         "v6/authored/OR.item_by_item_context_v6.json",
         "v6/authored/OR.item_by_item_v6.json",
         "v6/authored/SubstConstants.lift_by_class_v6.json",
+        "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/XorOf.item_by_item_v6.json",
         "v6/captured/h231432-fb4744c753de.json",
@@ -23703,6 +23722,7 @@
         "v6/authored/SubstConstants.lift_by_class_v6.json",
         "v6/authored/Tuple.binding_provenance_input_var.json",
         "v6/authored/Tuple.binding_provenance_register.json",
+        "v6/authored/Tuple.binding_provenance_var.json",
         "v6/authored/Tuple.non_pair_value_gates.json",
         "v6/authored/Tuple.non_pair_value_ops.json",
         "v6/authored/Tuple.non_pair_value_producers.json",
@@ -25695,12 +25715,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 22252,
+    "accepts" : 22272,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 49871,
+    "entries" : 49898,
     "files" : 480,
-    "rejects" : 27619,
+    "rejects" : 27626,
     "unwalked" : 2557
   }
 }

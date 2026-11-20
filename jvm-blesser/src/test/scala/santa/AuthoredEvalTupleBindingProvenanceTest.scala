@@ -45,8 +45,8 @@ class AuthoredEvalTupleBindingProvenanceTest extends munit.FunSuite {
 
   private def isExpressionRow(e: Json): Boolean = id(e).startsWith("X") || id(e).matches("P\\d+x")
 
-  test("2+24 + 2 + 8+24 rows; X bindings are EXPRESSIONS, C bindings CONSTANTS, each X on its C twin's tree") {
-    assertEquals((entries(B.OpVar).size, entries(B.OpInputVar).size, entries(B.OpRegister).size), (26, 2, 32))
+  test("2+26 + 2 + 8+26 rows; X bindings are EXPRESSIONS, C bindings CONSTANTS, each X on its C twin's tree") {
+    assertEquals((entries(B.OpVar).size, entries(B.OpInputVar).size, entries(B.OpRegister).size), (28, 2, 34))
     all.foreach { e =>
       val lead = Integer.parseInt(bindingHex(e).take(2), 16)
       if (isExpressionRow(e)) assert(lead == 0x86 || lead == 0x83, s"${id(e)}: lead byte $lead is not an expression")
@@ -122,22 +122,25 @@ class AuthoredEvalTupleBindingProvenanceTest extends munit.FunSuite {
     """{"kind":"Coll","elem":{"tag":"SAny"},"items":[{"kind":"Int","value":1},{"kind":"Int","value":2}]}"""
   private def bool(b: Boolean) = s"""{"kind":"Boolean","value":$b}"""
   private def int(i: Int) = s"""{"kind":"Int","value":$i}"""
+  private val bytes0204 =
+    """{"kind":"Coll","elem":{"tag":"SByte"},"items":[{"kind":"Byte","value":2},{"kind":"Byte","value":4}]}"""
   private val pairAnswers: Seq[(Option[String], Option[String])] = Seq(
     (Some(bool(true)), Some(bool(true))), (Some(pairJson), Some(collAnyJson)),
     (Some(bool(true)), None), (Some(bool(true)), None), (Some(bool(false)), None), (Some(bool(true)), None),
     (None, Some(int(2))), (None, Some(int(1))), (None, Some(int(2))), (None, None),
-    (Some(int(1)), None), (Some(int(2)), None))
+    (Some(int(1)), None), (Some(int(2)), None),
+    (Some(bytes0204), Some(bytes0204)))
   private val pairCosts = Map(
-    B.OpRegister -> Seq(70L, 75L, 90L, 90L, 90L, 160L, 89L, 110L, 110L, 0L, 85L, 85L),
-    B.OpVar      -> Seq(20L, 25L, 40L, 40L, 40L, 60L, 39L, 60L, 60L, 0L, 35L, 35L))
+    B.OpRegister -> Seq(70L, 75L, 90L, 90L, 90L, 160L, 89L, 110L, 110L, 0L, 85L, 85L, 100L),
+    B.OpVar      -> Seq(20L, 25L, 40L, 40L, 40L, 60L, 39L, 60L, 60L, 0L, 35L, 35L, 50L))
   private def isErrored(e: Json): Boolean =
     e.hcursor.downField("expected").get[String]("error").toOption.contains("errored")
 
-  test("THE PAIR ROWS: the read never refuses; isDefined / get / SizeOf / ByIndex take the Coll[Any], EQ / NEQ / SelectField refuse it") {
-    assertEquals(B.PairConsumers.map(_.n), (1 to 12).toList)
+  test("THE PAIR ROWS: the read never refuses; isDefined / get / SizeOf / ByIndex / serialize take the Coll[Any], EQ / NEQ / SelectField refuse it") {
+    assertEquals(B.PairConsumers.map(_.n), (1 to 13).toList)
     List(B.OpRegister, B.OpVar).foreach { op =>
       val rows = entries(op).filter(e => id(e).matches("P\\d+[cx]")).map(e => id(e) -> e).toMap
-      assertEquals(rows.size, 24, op)
+      assertEquals(rows.size, 26, op)
       pairAnswers.zipWithIndex.foreach { case ((constant, expression), i) =>
         val n = i + 1
         assertEquals(str(rows(s"P${n}x"), "tree_bytes_hex"), str(rows(s"P${n}c"), "tree_bytes_hex"), s"$op P$n tree")

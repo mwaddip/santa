@@ -29,7 +29,8 @@ package santa
 // bare `get`, `SizeOf` and `ByIndex` take the Coll[Any] as it is; `EQ` / `NEQ` (`Value.checkType` on
 // each operand, trees.scala:1206/1208/1226) and `SelectField` (matches a Tuple2) refuse it. Measured
 // identical, value and cost, at activated 3 on a v0 tree and at activated 2; authored at this family's
-// activated 3 / tree v3, in SELF.R4 and in var 1.
+// activated 3 / tree v3, in SELF.R4 and in var 1. P13 (appended 2026-11-20): `Global.serialize` writes `0204`
+// for both, by the static pair type.
 //
 // One op per schema: var 1 (santa-eval/v2), a per-input var (v3), SELF's register (v4). Every tree
 // and every binding's bytes are written by the JVM's own serializers from the AST below.
@@ -191,7 +192,15 @@ object AuthoredEvalTupleBindingProvenance {
     PairConsumer(12, "field2", "R.get._2", r => any(SelectField(asTup(got(r)), 2.toByte)),
       true, "`2`. CONTROL for P12x.",
       false, _ => s"$pairTypeError, as P11x, for the second item. SEPARATING: selecting the item from the " +
-        "Coll[Any] is red."))
+        "Coll[Any] is red."),
+    // appended 2026-11-20 (ergots' request; spike santa.spike.ErgotsStage2RequestsProbe)
+    PairConsumer(13, "serialize", "Global.serialize(R.get)",
+      r => any(MethodCall(Global, SGlobalMethods.serializeMethod, IndexedSeq(got(r)), Map())),
+      true, "`0204`: `Global.serialize` writes by the argument's STATIC type (methods.scala:1982), the pair's two " +
+        "Ints. CONTROL for P13x.",
+      true, _ => "`0204`, the same bytes at its twin's cost: the static type is the pair, and the writer takes a " +
+        "Tuple2 or a Coll[Any] alike (`Evaluation.fromDslTuple`, Evaluation.scala:91). SEPARATING: refusing at the " +
+        "read, refusing to write a Coll[Any] under a pair type, or writing it as a collection (a length first) is red."))
   private def asTup(v: Value[_ <: SType]): Value[STuple] = v.asInstanceOf[Value[STuple]]
 
   /** The pair rows for one position, constant then expression per consumer, numbered from `base`. */

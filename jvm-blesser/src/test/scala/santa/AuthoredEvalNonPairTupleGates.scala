@@ -42,6 +42,14 @@ package santa
 // the half that can be committed today, and C6 is what makes it about the ARITY rather than about
 // `ConcreteCollection`: the same shape built from PAIRS returns 2.
 
+// APPENDED 2026-11-20 (ergots' stage-2 review; spike santa.spike.ErgotsStage2RequestsProbe):
+//   G11-G14 / C7-C9  the arithmetic gate with UnsignedBigInt items — `key 97` on the left whatever the item holds,
+//                    and the asymmetry (an `Any` operand on the right answers at the control's cost);
+//   G15-G22 / C10-C17  a lambda's ARGUMENT is a third `checkType` site (`values.scala:1074`): ForAll / Exists / Map /
+//                    Filter over ONE data `(Int, Int, Int)` throw `Unsupported tuple type`, over an EMPTY one they
+//                    answer (the lambda is never applied), and the empty Map / Filter results differ in their item
+//                    type (the lambda's tuple type against the data constant's Coll[Any]).
+
 import io.circe.Json
 
 object AuthoredEvalNonPairTupleGates {
@@ -129,7 +137,80 @@ object AuthoredEvalNonPairTupleGates {
     ("C6", "concrete_collection_of_pairs_control", "0b10b1830258860204020404860204060408", true,
       "**CONTROL for G10** — the same shape built from PAIRS: `SizeOf(Coll((1,2), (3,4)))` is **2 " +
       "at cost 84**. `ConcreteCollection` takes pairs happily, so G10 is about the ARITY and not " +
-      "about building a collection of tuples."))
+      "about building a collection of tuples."),
+    // ── appended 2026-11-20 (ergots' stage-2 review; spike santa.spike.ErgotsStage2RequestsProbe) ──
+    ("G11", "plus_left_any_ubi_apply", "0b29d1dad90101099372017201019ab248090909010101020103040000b248090909010101020103040200", false,
+      "`sigmaProp(Apply((x: UnsignedBigInt) => x == x, t(0) + t(1)))` with `t` the CONSTANT `(1u, 2u, 3u)` " +
+      "(UnsignedBigInt items; ergots' tree, byte for byte) — **`KeyNotFoundException: key 97`**: `ByIndex` over " +
+      "a tuple types its result `Any`, and `ArithOp.eval` looks its implementation up by the LEFT operand's type " +
+      "code (97, `SAny`) whatever the item holds — G3's gate with UnsignedBigInt items. The lambda is never " +
+      "reached. **SEPARATING:** an implementation that dispatches on the runtime value (an UnsignedBigInt) answers."),
+    ("C7", "plus_ubi_apply_control", "0b25d1dad90101099372017201019ab21503010101020103040000b21503010101020103040200", true,
+      "**CONTROL for G11** — the same over `Coll[UnsignedBigInt](1u, 2u, 3u)`: a `SigmaProp` (true) at cost 165."),
+    ("G12", "plus_left_any_ubi_both", "0b1d9ab248090909010101020103040000b248090909010101020103040200", false,
+      "`t(0) + t(1)` over the same UnsignedBigInt tuple, as the root — **`KeyNotFoundException: key 97`**, both " +
+      "operands `Any`. **SEPARATING.**"),
+    ("G13", "plus_left_any_ubi_right_ubi", "0b129ab248090909010101020103040000090101", false,
+      "`t(0) + 1u` — **`KeyNotFoundException: key 97`**: a real `UnsignedBigInt` on the right does not help, the " +
+      "LEFT operand picks the implementation. **SEPARATING.**"),
+    ("C8", "plus_ubi_control", "0b199ab21503010101020103040000b21503010101020103040200", true,
+      "**CONTROL for G12/G13** — `c(0) + c(1)` over `Coll[UnsignedBigInt](1u, 2u, 3u)`: `3` at cost 95."),
+    ("G14", "plus_right_any_ubi", "0b129a090101b248090909010101020103040000", true,
+      "`1u + t(0)` — **`2` at cost 60: THE ASYMMETRY with UnsignedBigInt items.** The left operand is an " +
+      "`UnsignedBigInt` constant, so its implementation is found, and the `Any`-typed right operand holds an " +
+      "UnsignedBigInt it can add; identical to C9. **SEPARATING:** an implementation that refuses an `Any` " +
+      "operand on either side is red."),
+    ("C9", "plus_right_ubi_control", "0b109a090101b21503010101020103040000", true,
+      "**CONTROL for G14** — `1u + c(0)`: `2` at cost 60."),
+    ("G15", "forall_empty_data_tuples", "0b11d1af0c4804040400d90101480404040101", true,
+      "`sigmaProp(ForAll(c, (x: (Int, Int, Int)) => true))` with `c` an EMPTY data `Coll[(Int, Int, Int)]` " +
+      "(ergots' tree, byte for byte) — **a `SigmaProp` (true) at cost 29**, as its control: the lambda is never " +
+      "applied, so its argument is never checked. **SEPARATING:** an implementation that refuses a tuple-typed " +
+      "lambda over an empty collection of tuples is red. G16 is the same call over ONE item."),
+    ("C10", "forall_empty_coll_control", "0b0ad1af1c00d90101100101", true,
+      "**CONTROL for G15** — the same over an empty `Coll[Coll[Int]]` with a `Coll[Int]`-typed lambda: true at 29."),
+    ("G16", "forall_one_data_tuple", "0b14d1af0c4804040401020406d90101480404040101", false,
+      "the same call over ONE item, `Coll((1, 2, 3))` — **throws `Unsupported tuple type`**: applying the lambda " +
+      "checks its argument against its declared type (`FuncValue`, `values.scala:1074`: `Value.checkType` → " +
+      "`SType.isValueOfType`, which refuses any arity but 2) — the third `checkType` site after G9 (an " +
+      "accumulator) and G10 (a collection's items). So no lambda over a data collection of non-pair tuples is " +
+      "ever applied. **SEPARATING.**"),
+    ("C11", "forall_one_coll_control", "0b0ed1af1c0103020406d90101100101", true,
+      "**CONTROL for G16** — over `Coll(Coll[Int](1, 2, 3))`: true at 39."),
+    ("G17", "exists_empty_data_tuples", "0b11d1ae0c4804040400d90101480404040101", true,
+      "`sigmaProp(Exists(c, (x: (Int, Int, Int)) => true))` over the EMPTY data `Coll[(Int, Int, Int)]` — **a " +
+      "`SigmaProp` (false) at cost 29**, as its control. **SEPARATING.**"),
+    ("C12", "exists_empty_coll_control", "0b0ad1ae1c00d90101100101", true,
+      "**CONTROL for G17** — over an empty `Coll[Coll[Int]]`: false at 29."),
+    ("G18", "exists_one_data_tuple", "0b14d1ae0c4804040401020406d90101480404040101", false,
+      "`Exists` over ONE item — **throws `Unsupported tuple type`**, the lambda's argument check as in G16. " +
+      "**SEPARATING.**"),
+    ("C13", "exists_one_coll_control", "0b0ed1ae1c0103020406d90101100101", true,
+      "**CONTROL for G18** — over `Coll(Coll[Int](1, 2, 3))`: true at 39."),
+    ("G19", "map_empty_data_tuples", "0b10ad0c4804040400d90101480404047201", true,
+      "`Map(c, (x: (Int, Int, Int)) => x)` as the root over the EMPTY data collection — **an empty collection at " +
+      "cost 31 whose `elem` is the TUPLE type `(Int, Int, Int)`**: `Map` builds its result at the LAMBDA's result " +
+      "type (`stypeToRType` of the tuple, a `TupleType`), not at the input's `Coll[Any]` (compare G21). " +
+      "**SEPARATING:** the value, not only the verdict."),
+    ("C14", "map_empty_coll_control", "0b09ad1c00d90101107201", true,
+      "**CONTROL for G19** — over an empty `Coll[Coll[Int]]`: an empty `Coll[Coll[Int]]` at 31."),
+    ("G20", "map_one_data_tuple", "0b13ad0c4804040401020406d90101480404047201", false,
+      "`Map` over ONE item — **throws `Unsupported tuple type`**, the lambda's argument check as in G16. " +
+      "**SEPARATING.**"),
+    ("C15", "map_one_coll_control", "0b0dad1c0103020406d90101107201", true,
+      "**CONTROL for G20** — over `Coll(Coll[Int](1, 2, 3))`: the same collection at 41."),
+    ("G21", "filter_empty_data_tuples", "0b10b50c4804040400d90101480404040101", true,
+      "`Filter(c, (x: (Int, Int, Int)) => true)` as the root over the EMPTY data collection — **an empty " +
+      "collection at cost 31 whose `elem` is `Coll[Any]`**: `Filter` keeps the input's own item type, which for a " +
+      "data collection of non-pair tuples is `Coll[Any]` (`Tuple.non_pair_value_producers` P5). G19 and G21 " +
+      "differ in nothing but the item type of their empty results. **SEPARATING.**"),
+    ("C16", "filter_empty_coll_control", "0b09b51c00d90101100101", true,
+      "**CONTROL for G21** — over an empty `Coll[Coll[Int]]`: an empty `Coll[Coll[Int]]` at 31."),
+    ("G22", "filter_one_data_tuple", "0b13b50c4804040401020406d90101480404040101", false,
+      "`Filter` over ONE item — **throws `Unsupported tuple type`**, the lambda's argument check as in G16. " +
+      "**SEPARATING.**"),
+    ("C17", "filter_one_coll_control", "0b0db51c0103020406d90101100101", true,
+      "**CONTROL for G22** — over `Coll(Coll[Int](1, 2, 3))`: the same collection at 41."))
 
   def extract(): Map[String, Json] = {
     val entries = rows.zipWithIndex.map { case ((id, slug, tree, accepts, what), i) =>

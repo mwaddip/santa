@@ -409,7 +409,12 @@ wherever a collection is wanted — `SizeOf`, `ByIndex`, `Exists`, `Fold`, `AND`
 `Coll` methods all answer on one — while an operation that needs the backing ARRAY of a class
 (`Append` against a primitive-backed operand, `AtLeast`, the hashes, `ByteArrayToBigInt`, the
 `AvlTree` key/proof arguments) throws. A runner that holds every tuple in one dedicated node
-cannot reproduce both halves. Vectors: `eval/v6/authored/Tuple.non_pair_value_{ops,gates}.json`,
+cannot reproduce both halves. The value also throws (`Unsupported tuple type`) wherever it meets a
+`Value.checkType` at its own tuple type: a `Fold` accumulator, a `ConcreteCollection` item, and a lambda's
+argument. So no lambda over a data collection of non-pair tuples can be applied (`ForAll`, `Exists`, `Map`,
+`Filter`), while over an empty one they answer. Arithmetic picks its implementation by the LEFT operand's
+type, so a tuple item (typed `Any`) on the left throws whatever it holds, and on the right it answers.
+Vectors: `eval/v6/authored/Tuple.non_pair_value_{ops,gates}.json`,
 `wire/v6/authored/*.non_pair_tuple_operand.json`,
 `transaction/v6/authored/non-pair-tuple-spend.json`.
 
@@ -420,7 +425,8 @@ variable (the `Value` binding form below) is a `Coll[Any]` under a pair type, wh
 Reading it at its pair type does not refuse it. `CBox.getReg` and `CContext.getVar` check only the type the value
 was stored with, and `OptionGet` checks nothing. What happens next depends on the consumer:
 - **Answer on the collection:** `isDefined`, the bare `get` (it encodes as `{"kind":"Coll","elem":{"tag":"SAny"},…}`),
-  `SizeOf` and `ByIndex`. On the pair constant, `SizeOf` and `ByIndex` throw instead.
+  `SizeOf` and `ByIndex`. On the pair constant, `SizeOf` and `ByIndex` throw instead. `Global.serialize`
+  writes both forms the same (`0204` for `(1, 2)`), by the static pair type.
 - **Refuse it:** `EQ` / `NEQ`, which type-check each operand first, and `SelectField` (`._1` / `._2`), which matches
   a pair only.
 
