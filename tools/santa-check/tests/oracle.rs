@@ -55,21 +55,46 @@ fn reproduces_verdict_oracle() {
     eprintln!("santa-check reproduces all {total} oracle verdicts");
 }
 
-/// The grading oracle exercises every grading type: each label in `vectors/grading.json` has cases, and each case's
-/// label exists.
+/// The grading oracle exercises every branch of every grading type, and every type's `unmatched` fallback: a change
+/// that breaks any one of them fails a case. Each case's label exists.
 #[test]
-fn the_grading_oracle_covers_every_label() {
+fn the_grading_oracle_covers_every_branch() {
+    use santa_check::grading::Route;
     let p = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../oracle/verdicts-grading.json");
     let doc: Value = serde_json::from_str(&fs::read_to_string(&p).expect("oracle/verdicts-grading.json")).unwrap();
     assert_eq!(doc["schema"], "santa-oracle-grading/v1");
     let g = grading();
-    let cases = doc["cases"].as_array().unwrap();
-    for label in g.types.keys() {
-        assert!(cases.iter().any(|c| c["label"] == label.as_str()), "no oracle case for the grading type {label}");
-    }
-    for c in cases {
+    let empty = json!({});
+    let mut routed: std::collections::BTreeSet<(String, Option<usize>)> = std::collections::BTreeSet::new();
+    for c in doc["cases"].as_array().unwrap() {
         let label = c["label"].as_str().unwrap();
         assert!(g.types.contains_key(label), "{}: unknown label {label}", c["name"]);
+        let input = Input {
+            entry: &c["entry"],
+            actual: Some(&c["actual"]).filter(|a| !a.is_null()),
+            file: c.get("file").unwrap_or(&empty),
+            claims_cost: c["claims_cost"].as_bool().unwrap_or(false),
+        };
+        match g.route(label, &input).unwrap_or_else(|e| panic!("{}: {e}", c["name"])) {
+            Route::Branch(i) => {
+                routed.insert((label.to_string(), Some(i)));
+            }
+            Route::Unmatched => {
+                routed.insert((label.to_string(), None));
+            }
+            Route::Outcome => {}
+        }
     }
+    let mut missing = Vec::new();
+    for (label, t) in &g.types {
+        for i in 0..t.branches.len() {
+            if !routed.contains(&(label.clone(), Some(i))) {
+                missing.push(format!("{label} branch {i}"));
+            }
+        }
+        if !t.unmatched.is_empty() && !routed.contains(&(label.clone(), None)) {
+            missing.push(format!("{label} unmatched"));
+        }
+    }
+    assert!(missing.is_empty(), "no oracle case reaches: {missing:?}");
 }
-

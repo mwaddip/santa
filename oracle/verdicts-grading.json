@@ -2897,6 +2897,91 @@
      "roundtrip": "red"
     }
    }
+  },
+  {
+   "name": "chain/header-votes-valid-true-nice",
+   "description": "header_votes: the verdict equals the expected one (valid).",
+   "label": "chain",
+   "entry": {
+    "kind": "header_votes",
+    "expected": {
+     "valid": true
+    }
+   },
+   "actual": {
+    "valid": true,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/header-votes-valid-false-nice",
+   "description": "header_votes: a clean rejection where the reference rejects (valid false) is nice.",
+   "label": "chain",
+   "entry": {
+    "kind": "header_votes",
+    "expected": {
+     "valid": false
+    }
+   },
+   "actual": {
+    "valid": false,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
+  },
+  {
+   "name": "chain/header-votes-errored-is-red",
+   "description": "header_votes has no reject arm: an errored actual is red, whatever was expected.",
+   "label": "chain",
+   "entry": {
+    "kind": "header_votes",
+    "expected": {
+     "valid": false
+    }
+   },
+   "actual": {
+    "error": "errored"
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "red"
+    }
+   }
+  },
+  {
+   "name": "eval/expected-errored-missing-actual-is-reject-red",
+   "description": "A missing actual is graded as {}: an entry expecting errored is red on reject (the one deliberate difference from the hard-coded grade, which put it on value).",
+   "label": "eval",
+   "entry": {
+    "expected": {
+     "value": null,
+     "cost": null,
+     "error": "errored"
+    }
+   },
+   "actual": null,
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "reject": "red"
+    }
+   }
   }
  ]
 }

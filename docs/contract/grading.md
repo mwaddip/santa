@@ -92,7 +92,8 @@ that does not know it refuses, loudly, as a runner refuses a vector schema it wa
 ## 6. Conformance
 
 [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json) (`santa-oracle-grading/v1`) holds cases of
-`(label, entry, file, actual, claims_cost) → verdict`, at least one per grading type; a `null` actual is a missing one,
+`(label, entry, file, actual, claims_cost) → verdict`, reaching every branch of every type and every `unmatched`
+fallback; a `null` actual is a missing one,
 an absent `file` is `{}`, an absent `claims_cost` is `false`. An interpreter is conformant when it reproduces every
 verdict. `santa-check` runs it on every build of SANTA's tools; a runner checks its own interpreter against the oracle
 of the SANTA checkout it grades with.

@@ -351,6 +351,15 @@ impl Verdict {
     }
 }
 
+/// Where an entry's grading goes: a global outcome (exceeded / panicked / not-implemented), a branch by its index,
+/// or the type's `unmatched` dimensions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Route {
+    Outcome,
+    Branch(usize),
+    Unmatched,
+}
+
 /// What one entry is graded from: the vector entry (with its `expected`), the runner's actual (absent = `{}`), the
 /// vector file's envelope, and whether the runner claims the cost dimension.
 pub struct Input<'a> {
@@ -417,25 +426,45 @@ impl Comparison {
 
 impl Grading {
     /// Grades one entry by the type `label`: the global outcomes first, then the first branch whose `when` holds.
-    pub fn grade(&self, label: &str, input: &Input) -> Result<Verdict, GradingError> {
-        let t = self.types.get(label).ok_or_else(|| GradingError::UnknownLabel(label.to_string()))?;
+    /// Where an entry's grading goes under the type `label`: a global outcome, the first branch whose `when` holds, or
+    /// the type's `unmatched` dimensions.
+    pub fn route(&self, label: &str, input: &Input) -> Result<Route, GradingError> {
         let empty = Value::Object(Map::new());
         let actual = input.actual.unwrap_or(&empty);
-        match actual.get("error").and_then(Value::as_str) {
-            Some("exceeded") => {
-                return Ok(Verdict::Exceeded { limit: actual.get("limit").cloned().unwrap_or(Value::Null) });
-            }
-            Some("panicked") => return Ok(Verdict::Panicked),
-            Some("not-implemented") => return Ok(Verdict::NotImplemented),
-            _ => {}
+        self.route_in(label, &Ctx { actual, entry: input.entry, file: input.file })
+    }
+
+    fn route_in(&self, label: &str, ctx: &Ctx) -> Result<Route, GradingError> {
+        let t = self.types.get(label).ok_or_else(|| GradingError::UnknownLabel(label.to_string()))?;
+        if matches!(ctx.actual.get("error").and_then(Value::as_str), Some("exceeded" | "panicked" | "not-implemented")) {
+            return Ok(Route::Outcome);
         }
+        let holds = |b: &Branch| b.when.iter().all(|(p, lit)| structural_equal(p.resolve(ctx).unwrap_or(&Value::Null), lit));
+        match t.branches.iter().position(holds) {
+            Some(i) => Ok(Route::Branch(i)),
+            None if t.unmatched.is_empty() => Err(GradingError::NoBranch { label: label.to_string() }),
+            None => Ok(Route::Unmatched),
+        }
+    }
+
+    /// Grades one entry by the type `label`: the global outcomes first, then the first branch whose `when` holds.
+    pub fn grade(&self, label: &str, input: &Input) -> Result<Verdict, GradingError> {
+        let empty = Value::Object(Map::new());
+        let actual = input.actual.unwrap_or(&empty);
         let ctx = Ctx { actual, entry: input.entry, file: input.file };
-        let holds = |b: &&Branch| b.when.iter().all(|(p, lit)| structural_equal(p.resolve(&ctx).unwrap_or(&Value::Null), lit));
-        let Some(branch) = t.branches.iter().find(holds) else {
-            if t.unmatched.is_empty() {
-                return Err(GradingError::NoBranch { label: label.to_string() });
+        let t = &self.types[label];
+        let branch = match self.route_in(label, &ctx)? {
+            Route::Outcome => {
+                return Ok(match actual["error"].as_str() {
+                    Some("exceeded") => Verdict::Exceeded { limit: actual.get("limit").cloned().unwrap_or(Value::Null) },
+                    Some("panicked") => Verdict::Panicked,
+                    _ => Verdict::NotImplemented,
+                });
             }
-            return Ok(Verdict::Graded(t.unmatched.iter().map(|d| (d.clone(), Grade::Red)).collect()));
+            Route::Unmatched => {
+                return Ok(Verdict::Graded(t.unmatched.iter().map(|d| (d.clone(), Grade::Red)).collect()));
+            }
+            Route::Branch(i) => &t.branches[i],
         };
         let clean = actual.get("error").is_none_or(Value::is_null);
         let mut dims: Vec<(String, Grade)> = Vec::with_capacity(branch.dims.len());
