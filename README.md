@@ -187,6 +187,19 @@ An eval-tier actuals file, for instance, maps each entry's name to the implement
 Each tier's actuals shape is in its contract and in `schema/santa-<tier>.actuals.schema.json`;
 [runner-integration](docs/contract/runner-integration.md) has the whole calling convention.
 
+**The runner is yours.** Once it lives in your repository you own it, and you are free to build on it: your own
+commands and scripts, a local grading wrapper, debugging modes, its own tests. The one thing to keep intact is the
+interface SANTA runs it through, because that same interface runs your pull request check and your row on the board:
+
+- `runner.json` holds the scope keys and nothing else;
+- `santa-run <impl-path> <vectors-dir> <out-dir>` builds and runs, with the conformer on its last line under
+  `${SANTA_BOUND:+"$SANTA_BOUND"}`;
+- it writes one actuals file per vector, in its tier's actuals shape, and answers `{"error": "not-implemented"}` for a
+  schema it was not written for;
+- it exits 0 when it ran.
+
+ergots' runner, for instance, comes with `santa/grade`, its own kit that runs SANTA's checks on the working tree.
+
 ### 2. Grade locally against SANTA's latest vectors
 
 SANTA runs on **Linux** with a systemd user manager on cgroup v2 (the memory controller delegated to the user, swap
