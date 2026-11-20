@@ -7,3 +7,4 @@ description = "SANTA conformance orchestrator (Rust port of conform.py): presenc
 [dependencies]
 serde_json = "1"
 santa-check = { path = "../santa-check" }
+jsonschema = { version = "0.46", default-features = false }

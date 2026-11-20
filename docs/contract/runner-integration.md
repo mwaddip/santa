@@ -127,6 +127,14 @@ vector** to `<out-dir>/<same-filename>`. The actuals file is the frozen actuals 
                     "note": <string, present iff error == "panicked"> }, … }
 ```
 
+(That is the eval tier's shape; every tier has its own, `schema/santa-<tier>.actuals.schema.json`.)
+
+**`conform` holds every actual to its tier's actuals schema.** An entry whose actual fails it grades `panicked`
+(coal), the note naming the schema and why (`the actual fails santa-block.actuals.schema.json: reason: null is not
+of type "string"`); a file that is not JSON, or not a JSON object, fails every entry of its vector so. The rest of
+the file grades as written. The check applies to what the runner wrote, not to the `exceeded` / `panicked` actuals
+conform writes for a bounded file (§3a).
+
 The orchestrator performs discovery + filtering and stages the runner's selected vectors **flat** into
 `<vectors-dir>` (symlinks). A runner therefore still globs `*.json` one level deep — the nested
 `vectors/<tier>/<version>/<provenance>/` layout is invisible to it.

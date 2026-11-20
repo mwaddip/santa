@@ -8,6 +8,8 @@
 // 45 fields (post-nipopow) exceeds the default 128 limit — bump it with headroom for future tiers
 // rather than fragmenting to_json() into merged sub-objects for a compiler budget, not a design issue.
 #![recursion_limit = "256"]
+use jsonschema::error::ValidationErrorKind;
+use jsonschema::{Registry, Resource, ValidationError, Validator};
 use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_nipopow, grade_transaction, grade_wire};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
@@ -470,23 +472,91 @@ fn read_bound(status: &Path) -> Result<Bound, String> {
     Ok(Bound { bounded, ordinary: read_json(&status.join("ordinary.json")) })
 }
 
+/// The actuals schemas, one validator per tier (`schema/santa-<tier>.actuals.schema.json`), built once per run. The
+/// eval tier's cross-references the eval vector schema's SValue, registered under its `$id`.
+struct ActualsSchemas(BTreeMap<String, Validator>);
+
+impl ActualsSchemas {
+    fn load(root: &Path) -> ActualsSchemas {
+        let dir = root.join("schema");
+        let read = |name: &str| -> Value {
+            let p = dir.join(name);
+            serde_json::from_str(&fs::read_to_string(&p).unwrap_or_else(|e| die(format!("{}: {e}", p.display()))))
+                .unwrap_or_else(|e| die(format!("{}: {e}", p.display())))
+        };
+        let vector = read("santa-eval.vector.schema.json");
+        let id = vector["$id"].as_str().unwrap_or_else(|| die("santa-eval.vector.schema.json has no $id".into())).to_string();
+        let registry = Registry::new()
+            .add(id, Resource::from_contents(vector))
+            .and_then(|r| r.prepare())
+            .unwrap_or_else(|e| die(format!("the eval vector schema: {e}")));
+        let tiers = ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"].map(|t| {
+            let name = format!("santa-{t}.actuals.schema.json");
+            let v = jsonschema::options()
+                .with_registry(&registry)
+                .build(&read(&name))
+                .unwrap_or_else(|e| die(format!("{name}: {e}")));
+            (t.to_string(), v)
+        });
+        ActualsSchemas(tiers.into_iter().collect())
+    }
+
+    /// Why one entry's actual fails its tier's actuals schema, or None when it holds. Where the entry may take the
+    /// tier's own result or the tier-neutral not-implemented (an `anyOf`), the reason given is the tier result's.
+    fn fault(&self, tier: &str, name: &str, actual: &Value) -> Option<String> {
+        let v = self.0.get(tier).unwrap_or_else(|| die(format!("no actuals schema for the tier {tier}")));
+        let doc = Value::Object([(name.to_string(), actual.clone())].into_iter().collect());
+        let err = v.validate(&doc).err()?;
+        let errs: Vec<&ValidationError> = match err.kind() {
+            ValidationErrorKind::AnyOf { context } => context.first().map(|b| b.iter().collect()).unwrap_or_default(),
+            _ => vec![&err],
+        };
+        let errs = if errs.is_empty() { vec![&err] } else { errs };
+        // An error's instance path is /<entry>/<field>…; the entry is the red row's own, so the field is enough.
+        let said: Vec<String> = errs
+            .iter()
+            .take(3)
+            .map(|e| {
+                let path = e.instance_path().to_string();
+                match path.splitn(3, '/').nth(2) {
+                    Some(field) if !field.is_empty() => format!("{field}: {}", brief(&Value::String(e.to_string()), 160)),
+                    _ => brief(&Value::String(e.to_string()), 160),
+                }
+            })
+            .collect();
+        Some(format!("the actual fails santa-{tier}.actuals.schema.json: {}", said.join("; ")))
+    }
+}
+
 /// One staged file's actuals. A bounded file that exceeded its budget or crashed gets the actual conform writes for
-/// each entry (`exceeded` / `panicked`), whatever file its process left; otherwise the runner's file, or {} if absent.
-fn actuals_for(ofile: &Path, record: Option<&Value>, vector: &Value) -> Value {
+/// each entry (`exceeded` / `panicked`), whatever file its process left. Otherwise the runner's file, held to its
+/// tier's actuals schema (runner-integration §3): an entry whose actual fails it is `panicked`, the note saying why,
+/// and a file that is not a JSON object fails every entry so; an absent file is {}.
+fn actuals_for(ofile: &Path, record: Option<&Value>, vector: &Value, schemas: &ActualsSchemas, tier: &str) -> Value {
     let each = |a: Value| -> Value {
         let names = vector["entries"].as_array().into_iter().flatten().filter_map(|e| e["name"].as_str());
         Value::Object(names.map(|n| (n.to_string(), a.clone())).collect())
     };
+    let panicked = |note: String| json!({"error": "panicked", "note": note});
     match record {
         Some(r) if r["result"] == "exceeded" => {
             each(json!({"error": "exceeded", "limit": r["limit"], "budget": r["limits"]}))
         }
-        Some(r) if r["result"] == "crashed" => {
-            each(json!({"error": "panicked", "note": format!("process {}", r["detail"].as_str().unwrap_or("?"))}))
-        }
+        Some(r) if r["result"] == "crashed" => each(panicked(format!("process {}", r["detail"].as_str().unwrap_or("?")))),
         // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the
         // breach rather than silently dropping the vector.
-        _ if ofile.is_file() => serde_json::from_str(&fs::read_to_string(ofile).unwrap()).unwrap(),
+        _ if ofile.is_file() => match serde_json::from_str::<Value>(&fs::read_to_string(ofile).unwrap()) {
+            Err(e) => each(panicked(format!("the actuals file is not JSON: {e}"))),
+            Ok(Value::Object(m)) => Value::Object(
+                m.into_iter()
+                    .map(|(n, a)| match schemas.fault(tier, &n, &a) {
+                        Some(note) => (n, panicked(note)),
+                        None => (n, a),
+                    })
+                    .collect(),
+            ),
+            Ok(_) => each(panicked("the actuals file is not a JSON object".into())),
+        },
         _ => json!({}),
     }
 }
@@ -517,6 +587,7 @@ fn run_one(
     root: &Path,
     vectors: &[Vec5],
     facts: &BTreeMap<String, WireFacts>,
+    schemas: &ActualsSchemas,
 ) -> Result<Ran, (Option<Scope>, RunFail)> {
     let ws = root.join(".santa").join(&m.name);
     let imp = resolve_impl(m.impl_.as_deref(), m.impl_name.as_deref().unwrap_or(""), &ws)
@@ -528,7 +599,7 @@ fn run_one(
             hosted_runner(checkout, path).map_err(|e| (None, RunFail::Hosted(e)))?
         }
     };
-    match run_staged(&run, &imp.arg, &scope, &ws, root, vectors, facts) {
+    match run_staged(&run, &imp.arg, &scope, &ws, root, vectors, facts, schemas) {
         Ok((actuals, failures)) => Ok(Ran { scope, actuals, sha: imp.sha, failures }),
         Err(f) => Err((Some(scope), f)),
     }
@@ -545,6 +616,7 @@ fn run_staged(
     root: &Path,
     vectors: &[Vec5],
     facts: &BTreeMap<String, WireFacts>,
+    schemas: &ActualsSchemas,
 ) -> Result<(BTreeMap<String, Value>, Vec<String>), RunFail> {
     let selected: Vec<&Vec5> = select(vectors, &scope.version, &scope.tiers)
         .into_iter()
@@ -586,15 +658,14 @@ fn run_staged(
     let mut failures = Vec::new();
     for (name, rel) in staged {
         let ofile = odir.join(&name);
-        let act = match bound.bounded.get(&name) {
-            Some(r) if r["result"] != "success" => {
-                failures.push(rel.clone());
-                let vector: Value =
-                    serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&rel)).unwrap()).unwrap();
-                actuals_for(&ofile, Some(r), &vector)
-            }
-            r => actuals_for(&ofile, r, &Value::Null),
-        };
+        let vector: Value =
+            serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&rel)).unwrap()).unwrap();
+        let tier = parse_relpath(&rel).0;
+        let record = bound.bounded.get(&name);
+        if record.is_some_and(|r| r["result"] != "success") {
+            failures.push(rel.clone());
+        }
+        let act = actuals_for(&ofile, record, &vector, schemas, &tier);
         res.insert(rel, act);
     }
     Ok((res, failures))
@@ -1292,10 +1363,11 @@ fn main() -> ExitCode {
     println!("\n=== SANTA conformance · {} runner(s) ===", runners.len());
     let vectors = discover_vectors(&root.join("vectors"));
     let facts = wire_facts(&root.join("vectors"), &vectors).unwrap_or_else(|e| die(e));
+    let schemas = ActualsSchemas::load(&root);
     let mut results: Vec<Value> = Vec::new();
     for m in &runners {
         eprintln!("running {} …", m.name);
-        match run_one(m, &root, &vectors, &facts) {
+        match run_one(m, &root, &vectors, &facts, &schemas) {
             Err((scope, f)) => {
                 let msg = fail_message(&f);
                 // only a santa-run that ran has printed anything above
@@ -2630,7 +2702,7 @@ mod tests {
         fs::write(&ofile, json!({"e#0": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}}).to_string()).unwrap();
         let r = record("exceeded", json!({"limit": "memory"}));
         assert_eq!(
-            super::actuals_for(&ofile, Some(&r), &one_entry_vector()),
+            super::actuals_for(&ofile, Some(&r), &one_entry_vector(), &schemas(), "eval"),
             json!({"e#0": {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}}})
         );
     }
@@ -2640,7 +2712,7 @@ mod tests {
         let d = bound_root("crashed");
         let r = record("crashed", json!({"detail": "exit status 134"}));
         assert_eq!(
-            super::actuals_for(&d.join("x.json"), Some(&r), &one_entry_vector()),
+            super::actuals_for(&d.join("x.json"), Some(&r), &one_entry_vector(), &schemas(), "eval"),
             json!({"e#0": {"error": "panicked", "note": "process exit status 134"}})
         );
     }
@@ -2652,9 +2724,70 @@ mod tests {
         let a = json!({"e#0": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}});
         fs::write(&ofile, a.to_string()).unwrap();
         let r = record("success", json!({}));
-        assert_eq!(super::actuals_for(&ofile, Some(&r), &one_entry_vector()), a);
-        assert_eq!(super::actuals_for(&ofile, None, &one_entry_vector()), a);
-        assert_eq!(super::actuals_for(&d.join("absent.json"), None, &one_entry_vector()), json!({}));
+        let s = schemas();
+        assert_eq!(super::actuals_for(&ofile, Some(&r), &one_entry_vector(), &s, "eval"), a);
+        assert_eq!(super::actuals_for(&ofile, None, &one_entry_vector(), &s, "eval"), a);
+        assert_eq!(super::actuals_for(&d.join("absent.json"), None, &one_entry_vector(), &s, "eval"), json!({}));
+    }
+
+    fn schemas() -> super::ActualsSchemas {
+        super::ActualsSchemas::load(&super::repo_root())
+    }
+
+    /// A runner's file is held to its tier's actuals schema entry by entry: an actual that fails it is `panicked`
+    /// (coal), the note naming the schema and the field; an actual that holds, the tier-neutral not-implemented
+    /// among them, is graded as written.
+    #[test]
+    fn actuals_for_holds_each_entry_to_its_tier_schema() {
+        let d = bound_root("schema-eval");
+        let ofile = d.join("x.json");
+        let vector = json!({"schema": "santa-eval/v2", "entries": [{"name": "e#0"}, {"name": "e#1"}, {"name": "e#2"}]});
+        let ok = json!({"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null});
+        fs::write(&ofile, json!({
+            "e#0": ok,
+            "e#1": {"value": {"kind": "Int", "value": 1}, "cost": "5", "error": null},
+            "e#2": {"error": "not-implemented"}
+        }).to_string()).unwrap();
+        let a = super::actuals_for(&ofile, None, &vector, &schemas(), "eval");
+        assert_eq!(a["e#0"], ok);
+        assert_eq!(a["e#2"], json!({"error": "not-implemented"}));
+        assert_eq!(a["e#1"]["error"], "panicked");
+        assert_eq!(a["e#1"].as_object().unwrap().len(), 2, "{}", a["e#1"]);
+        let note = a["e#1"]["note"].as_str().unwrap();
+        assert!(note.contains("santa-eval.actuals.schema.json") && note.contains("cost: "), "{note}");
+    }
+
+    /// Where an entry may take the tier's own result or the tier-neutral not-implemented (anyOf), the note gives
+    /// why the tier's result fails (here a block accept whose `reason` is null), not the anyOf's summary.
+    #[test]
+    fn actuals_for_names_the_tier_result_fault() {
+        let d = bound_root("schema-block");
+        let ofile = d.join("x.json");
+        let vector = json!({"schema": "santa-block/v1", "entries": [{"name": "b#0"}]});
+        let digest = format!("{}01", "ab".repeat(32));
+        fs::write(&ofile, json!({"b#0": {"valid": true, "post_digest": digest, "cost": 7, "error": null, "reason": null}})
+            .to_string()).unwrap();
+        let a = super::actuals_for(&ofile, None, &vector, &schemas(), "block");
+        assert_eq!(a["b#0"]["error"], "panicked");
+        let note = a["b#0"]["note"].as_str().unwrap();
+        assert!(note.contains("reason: ") && !note.contains("anyOf"), "{note}");
+    }
+
+    /// A file that is not JSON, or not a JSON object, fails every entry of its vector the same way (it used to abort
+    /// the whole run).
+    #[test]
+    fn actuals_for_a_file_that_is_not_an_object_fails_every_entry() {
+        let d = bound_root("schema-file");
+        let ofile = d.join("x.json");
+        let vector = json!({"schema": "santa-eval/v2", "entries": [{"name": "e#0"}, {"name": "e#1"}]});
+        for (body, says) in [("{\"e#0\": ", "not JSON"), ("[1]", "not a JSON object")] {
+            fs::write(&ofile, body).unwrap();
+            let a = super::actuals_for(&ofile, None, &vector, &schemas(), "eval");
+            for n in ["e#0", "e#1"] {
+                assert_eq!(a[n]["error"], "panicked", "{body}");
+                assert!(a[n]["note"].as_str().unwrap().contains(says), "{body}: {}", a[n]);
+            }
+        }
     }
 
     #[test]
