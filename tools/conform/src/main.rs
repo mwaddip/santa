@@ -2784,5 +2784,26 @@ mod tests {
         assert!(e.contains("nope"), "{e}");
         fs::remove_dir_all(&root).ok();
     }
+
+    /// A bounded file whose process went over its budget answers the tier-neutral `{"error": "exceeded", "limit":
+    /// "memory" | "time"}`, which every tier's actuals schema admits; the form is closed, `limit` required.
+    #[test]
+    fn every_actuals_schema_admits_the_tier_neutral_exceeded() {
+        let s = schemas();
+        for tier in ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] {
+            for limit in ["memory", "time"] {
+                let a = json!({"error": "exceeded", "limit": limit});
+                assert_eq!(s.fault(tier, "e", &a), None, "{tier}: {a}");
+            }
+            for a in [
+                json!({"error": "exceeded"}),
+                json!({"error": "exceeded", "limit": "disk"}),
+                json!({"error": "exceeded", "limit": "time", "budget": {"memory_mb": 1024, "wall_s": 10}}),
+                json!({"error": "exceeded", "limit": "time", "note": "x"}),
+            ] {
+                assert!(s.fault(tier, "e", &a).is_some(), "{tier} admits {a}");
+            }
+        }
+    }
 }
 

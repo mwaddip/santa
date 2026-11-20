@@ -5,8 +5,15 @@
   "description": "A runner's output for one authds vector file: each entry name -> a result object. The actuals file carries no kind tag, so the accept/reject asymmetry is keyed off which verdict fields are present, not off kind: an avl_prove verdict is proofs + digests (both non-null); an avl_verify verdict is proof_accepted + results (both non-null, results may be an empty array) + new_digest_hex present as a key (string or null are both legitimate values -- null means a poisoned verifier, not an absent field). error null => a verdict was produced (at least one of the two shapes above, the union shape with the other kind's fields present-and-null is legal); any non-null error forces every verdict field (proofs, digests, proof_accepted, results, new_digest_hex), if present, to null. error == 'panicked' requires note; forbidden otherwise.",
   "type": "object",
   "minProperties": 1,
-  "additionalProperties": { "$ref": "#/$defs/result" },
+  "additionalProperties": { "anyOf": [{ "$ref": "#/$defs/result" }, { "$ref": "#/$defs/exceeded" }] },
   "$defs": {
+    "exceeded": {
+      "description": "The tier-neutral exceeded actual (runner-integration §3a), admitted in every tier: what a runner answers for the entry of a bounded file whose process went over its budget, memory or time.",
+      "type": "object",
+      "required": ["error", "limit"],
+      "additionalProperties": false,
+      "properties": { "error": { "const": "exceeded" }, "limit": { "enum": ["memory", "time"] } }
+    },
     "result": {
       "type": "object",
       "required": ["error"],

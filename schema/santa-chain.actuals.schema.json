@@ -5,8 +5,15 @@
   "description": "A runner's output for one chain vector: each entry name -> per-kind result. Retargeting: { nbits, error, note? }; voting: { parameters, activated_update, error, note? }; fork_vote_gate: { valid, error, note? }. The union shape (other kind's value keys present-and-null) is legal; graders read only the entry's kind's own fields. `note` may accompany both `panicked` (required, carries the caught-panic message) and `errored` (optional, diagnostic). Normative companion to docs/contract/runner-contract-chain.md §3.",
   "type": "object",
   "minProperties": 1,
-  "additionalProperties": { "$ref": "#/$defs/result" },
+  "additionalProperties": { "anyOf": [{ "$ref": "#/$defs/result" }, { "$ref": "#/$defs/exceeded" }] },
   "$defs": {
+    "exceeded": {
+      "description": "The tier-neutral exceeded actual (runner-integration §3a), admitted in every tier: what a runner answers for the entry of a bounded file whose process went over its budget, memory or time.",
+      "type": "object",
+      "required": ["error", "limit"],
+      "additionalProperties": false,
+      "properties": { "error": { "const": "exceeded" }, "limit": { "enum": ["memory", "time"] } }
+    },
     "result": {
       "type": "object",
       "required": ["error"],
