@@ -108,8 +108,8 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
 ## 3. The entrypoint — `santa-run`
 
 An executable at `runners/<name>/santa-run`, or, for a runner the implementation hosts, at
-`<checkout>/<runner>/santa-run` (§2); the calling convention is the same for both (its `<impl-path>` is the directory
-that holds the checkout, so it finds the implementation as `<impl-path>/<repo-name>` like any other runner):
+`<checkout>/<runner>/santa-run` (§2). The calling convention is the same for both; where each finds the implementation
+is below:
 
 ```
 santa-run <impl-path> <vectors-dir> <out-dir>
@@ -179,6 +179,13 @@ clones `<url>` into `<impl-path>/<repo-name>`, §2). A runner MUST use `<impl-pa
 hardcode a shared location — that is what lets two runners pin different refs of the same impl
 without colliding. For a `null` impl, `<impl-path>` is `-`. (E.g. a Cargo runner whose path-dep is
 `../sigma-rust` can `ln -sfn "$1/sigma-rust" ../sigma-rust` in `santa-run`, then build.)
+
+**A runner the implementation hosts finds its checkout from its own location instead:** the checkout its directory
+sits in, resolved by real path (`pwd -P`; for `santa/` at the root, the parent of its directory). `conform` invokes
+it inside the very tree it grades, at that tree's real path, whether a cached clone or a working tree graded in place
+(§6a). There `<impl-path>/<repo-name>` may be a link to the tree, and a build through the link records the same
+sources under two paths (Cargo's target directory did). It still receives `<impl-path>`, and may ignore it. It never
+modifies the checkout, which may be a developer's working tree.
 
 ### Toolchain (self-provisioned, per-runner)
 
@@ -300,7 +307,8 @@ diverges from the blessed `expected`, the runner is wrong — surfaced as RED, r
   included, and `results.json` records its sha as `<sha>-dirty` when the tree has uncommitted changes. Either way
   the runner finds the impl at `<impl-path>/<repo-name>` under the CONFIGURED impl's repo name, whatever the
   directory is called; a runner the implementation hosts is invoked at the tree's real path, never through that
-  link (through it, a build would record the same crates under two paths in one target dir). A runner that patches
+  link (through it, a build would record the same crates under two paths in one target dir), and finds the tree
+  from its own location (§3). A runner that patches
   the impl it builds against (§3) must not be pointed at a working tree.
 - The cached clone (`.santa/<name>/<repo-name>`) follows the spec's url, and `<url>#<branch>` is that url's branch
   tip, checked out detached; a pinned commit no branch holds is fetched by sha. So a run against a local checkout
