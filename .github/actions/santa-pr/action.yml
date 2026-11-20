@@ -21,18 +21,25 @@ inputs:
     description: The head commit (by default the pull request merged into its base, what merging it would give).
     default: ${{ github.sha }}
   santa-ref:
-    description: The SANTA ref whose vectors grade the pull request.
+    description: The SANTA ref whose vectors grade the pull request (a branch, a tag or a full commit sha).
     default: main
 runs:
   using: composite
   steps:
-    - name: check out SANTA
-      uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-      with:
-        repository: mwaddip/santa
-        ref: ${{ inputs.santa-ref }}
-        path: .santa-pr/santa # the vectors and the tools; none of SANTA's own runners runs here
-        persist-credentials: false
+    - name: fetch SANTA, outside this repository's tree
+      shell: bash
+      env:
+        SANTA_REF: ${{ inputs.santa-ref }}
+      run: |
+        set -euo pipefail
+        # The vectors and the tools; none of SANTA's own runners runs here. Not with actions/checkout, which writes
+        # only under the workspace, this repository's checkout: SANTA there would build its tools under this
+        # repository's .cargo/config.toml (cargo reads them upward from its working directory), and conform would
+        # clone this repository inside itself. $RUNNER_TEMP is outside it, and empty at the start of every job.
+        santa="$RUNNER_TEMP/santa"
+        git -c init.defaultBranch=santa init -q "$santa"
+        git -C "$santa" fetch -q --depth 1 https://github.com/mwaddip/santa.git "$SANTA_REF"
+        git -C "$santa" checkout -q --detach FETCH_HEAD
     - name: install mise (the binary; SANTA and the runner provision their own toolchains)
       uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
       with:
@@ -47,7 +54,7 @@ runs:
         BASE: ${{ inputs.base }}
         HEAD: ${{ inputs.head }}
       run: >-
-        "$GITHUB_WORKSPACE/.santa-pr/santa/santa-pr" --runner-dir "$RUNNER_PATH" --label "$LABEL"
+        "$RUNNER_TEMP/santa/santa-pr" --runner-dir "$RUNNER_PATH" --label "$LABEL"
         "$IMPL" "$BASE" "$HEAD"
     - name: collect the delta
       shell: bash
@@ -55,7 +62,7 @@ runs:
         PR: ${{ github.event.pull_request.number }}
         PR_HEAD: ${{ github.event.pull_request.head.sha }}
       run: |
-        out="$GITHUB_WORKSPACE/.santa-pr/santa/.santa/pr"
+        out="$RUNNER_TEMP/santa/.santa/pr"
         cat "$out/summary.md" >> "$GITHUB_STEP_SUMMARY"
         mkdir -p "$GITHUB_WORKSPACE/.santa-pr/artifact"
         cp "$out/comment.md" "$out/delta.json" "$GITHUB_WORKSPACE/.santa-pr/artifact/"
