@@ -31,7 +31,7 @@ run(vector) → actuals
   optional `input`) case with the **blessed** `expected` result the JVM reference produced.
 - **Actuals** is the runner's output: a JSON object mapping each entry's `name` to the
   runner's *own* `{ value, cost, error }` for that entry, where `error` is the outcome tag
-  (§3) — `null` on success, else `errored` / `not-implemented` / `panicked`.
+  (§3) — `null` on success, else `errored` / `not-implemented` / `panicked` (or, for a bounded file, `exceeded`).
 
 Conformance is then a separate comparison step (§5): an entry is **nice** when the
 runner's actual equals the vector's blessed `expected`, **a lump of coal** otherwise.
@@ -289,11 +289,12 @@ reconstruction rules, which every conforming implementation of this schema must 
   it into a softer outcome on the implementation's behalf. Graded coal **unconditionally** (§5/§6),
   even against a reject-expected vector: a crash is not a clean rejection (hence a distinct tag, not a
   reuse of `errored`). `note` (present iff `error == "panicked"`) carries the message for diagnosis.
-- **Exceeded** (an orchestrator outcome, never in a runner's actuals): a bounded file (one entry with a
-  `limits` budget) whose process hit its memory or time budget. `./conform` writes
-  `{ "error": "exceeded", "limit": "memory"|"time", "budget": {…} }` for its entry from santa-bound's record, and
-  a bounded file whose process crashed gets `panicked` with `note` `process <exit status>`. See
-  [runner-integration.md §3a](runner-integration.md#3a-bounded-files).
+- **Exceeded:** `{ "error": "exceeded", "limit": "memory"|"time" }`, the tier-neutral form every tier's actuals
+  schema admits (closed: nothing else in the object) — a bounded file (one entry with a `limits` budget) whose
+  process went over its memory or time budget. The runner bounds the file in a child process and writes it; a
+  bounded file whose process crashed for any other reason is `panicked`, `note` its exit status. See
+  [runner-integration.md §3a](runner-integration.md#3a-bounded-files). (In transition, `./conform` still writes it
+  from santa-bound's record.)
 - **Value-success with cost not claimed:** `{ "value": <SValue>, "cost": null, "error": null }` — the
   runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
   This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
@@ -304,7 +305,7 @@ reconstruction rules, which every conforming implementation of this schema must 
 - **Determinism.** Same vector → byte-stable actuals on every run. No clocks, no RNG, no
   ambient state.
 - **Totality & never-panic.** Every input entry yields exactly one outcome — success,
-  `errored`, `not-implemented`, or `panicked`. A runner never silently
+  `errored`, `not-implemented`, `panicked`, or (a bounded file) `exceeded`. A runner never silently
   drops or omits an entry, and **no single entry may abort the file.** An entry that fails in
   a *recognized* way (`errored`) is a normal outcome — and that includes the implementation
   **refusing input material the oracle blessed**: a clean parse/`try_from` rejection of an
