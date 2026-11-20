@@ -1,0 +1,8 @@
+[package]
+name = "santa-delta"
+version = "0.1.0"
+edition = "2021"
+description = "SANTA's PR delta: two conform results.json (a PR's base and head, graded on one SANTA checkout) -> the grouped markdown comment, the per-entry job summary and the per-entry JSON."
+
+[dependencies]
+serde_json = "1"
