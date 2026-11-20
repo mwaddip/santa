@@ -72,8 +72,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **Blitzen**, for `sigma-rust`:
     - `blitzen-develop`: a submodule, upstream `develop` (value-only), until upstream hosts the runner (in review
       as `santa/`, with the PR check's workflows); its entry then names that directory instead;
-    - `blitzen-mwaddip`: a submodule, the `master` branch of the mwaddip fork (`--features jit-cost`). It took over from
-      the fork's `eni` branch, whose runner was retired on 2026-09-29 after master reproduced it exactly.
+    - `blitzen-mwaddip`: the `master` branch of the mwaddip fork, graded with the fork's own runner (its `santa/`
+      directory, `cost: true`); SANTA's entry only names it.
   - **Comet**: the pure-TS **Fleet SDK**, wire tier only, graded on Fleet's public API: the `Constant`, `Box` and
     `Transaction` kinds, without the rules tied to the activated script version (its declared scope,
     [runner-integration §2](docs/contract/runner-integration.md#2-the-manifest--runnerjson)).
