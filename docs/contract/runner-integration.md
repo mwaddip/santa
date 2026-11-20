@@ -281,9 +281,13 @@ diverges from the blessed `expected`, the runner is wrong — surfaced as RED, r
   tree of a local `<impl>`, on the same checkout's vectors, and writes `santa-delta`'s comparison to
   `.santa/pr/<runner>/`: `comment.md` (per runner the counts of newly red, now green, red another way and still
   red, then one row per vector file), `summary.md` (every entry's expected / got, cut at 1 MiB) and `delta.json`
-  (every entry, both sides). An implementer runs it before pushing; a CI workflow runs it with the PR's head and
-  posts `comment.md`. A commit sha is the unambiguous base. Like `./conform` it needs `santa-bound`'s systemd user
-  manager, so it runs on Linux.
+  (every entry, both sides). An implementer runs it before pushing. A commit sha is the unambiguous base. Like
+  `./conform` it needs `santa-bound`'s systemd user manager, so it runs on Linux.
+- **In CI**, the composite action [`.github/actions/santa-pr`](../../.github/actions/santa-pr/README.md) runs it in
+  the implementation's own workflow (base: the PR's base; head: the PR merged into it) and uploads the delta; a
+  second workflow, on the default branch, posts it as the PR's comment. The split keeps a fork's PR safe: its code
+  runs only with a read-only token, and the write token never meets it. The action's README holds both workflow
+  files.
 
 ## 7. Self-test kit (optional) — SANTA's published-data interface
 
