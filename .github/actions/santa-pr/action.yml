@@ -54,6 +54,9 @@ runs:
         cat "$out/summary.md" >> "$GITHUB_STEP_SUMMARY"
         mkdir -p "$GITHUB_WORKSPACE/.santa-pr/artifact"
         cp "$out/comment.md" "$out/delta.json" "$GITHUB_WORKSPACE/.santa-pr/artifact/"
+        # where the detail is: every entry in the job summary, a build error in the log
+        printf '\n[The check run](%s/%s/actions/runs/%s): every entry in its job summary, any build error in its log.\n' \
+          "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" >> "$GITHUB_WORKSPACE/.santa-pr/artifact/comment.md"
         # The commenter does not trust these: it posts only to the open pull request whose head is PR_HEAD.
         jq -n --arg number "$PR" --arg head "$PR_HEAD" '{number: $number, head: $head}' \
           > "$GITHUB_WORKSPACE/.santa-pr/artifact/pr.json"
