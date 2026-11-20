@@ -21,11 +21,18 @@ package santa
 //         seam from the inline form. (Tree = re-serialization of inline#0 with segregated
 //         constants; blessed from the exact spike bytes.)
 //
-//   SelectField.non_pair    008c6001040a01
+//   SelectField.non_pair    08068c6001040a01
 //     v0 SelectField(Const((Int,)[5]), 1) — a 1-tuple, not a pair. JVM
 //     InterpreterException ("Invalid type returned by evaluator … resulting value:
 //     Coll(5)"): SelectField.eval only matches a runtime Tuple2; a 1-tuple is a Coll
 //     (transformers.scala:300-307).
+//     Carries the SIZE BIT (header 0x08) since 2026-11-20; it was 008c6001040a01. No
+//     serializer writes a tuple TYPE of fewer than 2 items (TypeSerializer), so SELF (the
+//     contract §2 box around the entry's tree) can only be READ, and the box reader's
+//     SigmaProp-root check (rule 1001) refuses an unsized Int root outright (sized: an
+//     UnparsedErgoTree keeping the bytes). Unsized, no implementation, the JVM included,
+//     could build the entry's SELF (found by the sigma-rust session). The oracle parses
+//     with checkType = false either way, so the evaluation and its error are unchanged.
 //
 //   EQ.non_pair_tuple_operand   10060402040404060402040404069386037300730173028603730373047305
 //     seg v0 EQ(Tuple(1,2,3), Tuple(1,2,3)). JVM InterpreterException ("Invalid tuple
@@ -67,7 +74,7 @@ object AuthoredCheckType {
     val selectField = Seq(
       SpecExtract.authoredRejectEntryV(OpSelectField,
         "{ SelectField((5,), 1) — a 1-tuple, not a pair }  // JVM: Invalid type returned by evaluator (1-tuple is a Coll, not a Tuple2)",
-        "008c6001040a01", "selectfield-non-pair-errored#0", dummyInput, Activated, ErgoTreeV0))
+        "08068c6001040a01", "selectfield-non-pair-errored#0", dummyInput, Activated, ErgoTreeV0))
     val eqNonPair = Seq(
       SpecExtract.authoredRejectEntryV(OpEqNonPair,
         "{ EQ((1,2,3), (1,2,3)) — non-pair tuple operands }  // JVM: Invalid tuple — Tuple.eval rejects arity!=2 before EQ compares (ergots over-accepts → true @ 17)",

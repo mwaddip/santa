@@ -41,9 +41,23 @@ class AuthoredCheckTypeTest extends munit.FunSuite {
     assertEquals(tc(0).hcursor.get[String]("tree_bytes_hex").toOption, Some("008602480101010101010402"))
     assertEquals(tc(1).hcursor.get[String]("tree_bytes_hex").toOption, Some("1002480101010101010402860273007301"))
     assertEquals(entries(AuthoredCheckType.OpSelectField).head.hcursor.get[String]("tree_bytes_hex").toOption,
-      Some("008c6001040a01"))
+      Some("08068c6001040a01"))
     assertEquals(entries(AuthoredCheckType.OpEqNonPair).head.hcursor.get[String]("tree_bytes_hex").toOption,
       Some("10060402040404060402040404069386037300730173028603730373047305"))
+  }
+
+  test("SelectField non-pair: SELF around its tree can be built (read, since its 1-item tuple type cannot be written)") {
+    // Contract §2: SELF is the box (value 1000000, the entry's own tree, height 0, zero tx id). No serializer, the
+    // JVM's included, writes a tuple TYPE of fewer than 2 items (TypeSerializer: "Invalid Tuple type with less than 2
+    // items"), so an implementation can only READ that box from its bytes. The box reader checks a SigmaProp root
+    // (rule 1001): an unsized Int-rooted tree is a SerializerException, a sized one an UnparsedErgoTree keeping the
+    // bytes. So the tree carries the size bit (the 2026-11-20 re-author of 008c6001040a01, found by sigma-rust).
+    val tree = entries(AuthoredCheckType.OpSelectField).head.hcursor.get[String]("tree_bytes_hex").toOption.get
+    val boxHex = "c0843d" + tree + "00" * 36
+    val box = scala.util.Try(org.ergoplatform.ErgoBox.sigmaSerializer.parse(
+      sigma.serialization.SigmaSerializer.startReader(scorex.util.encode.Base16.decode(boxHex).get)))
+    assert(box.isSuccess, s"a box around $tree does not parse: $box")
+    assertEquals(scorex.util.encode.Base16.encode(box.get.ergoTree.bytes).toLowerCase, tree)
   }
 
   test("the two tuple-checkType entries are distinct seams (distinct names + bytes)") {
