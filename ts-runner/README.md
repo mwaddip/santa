@@ -39,7 +39,10 @@ point `ergots-impl` at your working tree, or temporarily repoint the `file:` dep
 
 ## Pipeline (per entry)
 
-`parseTree(tree_bytes_hex)` → decode SANTA input JSON → ergots `SValue` + its `SType`, bound
+`parseTree(tree_bytes_hex)` → decode SANTA input JSON → ergots `SValue` + its `SType` → written
+as a constant and read back by ergots' OWN writer and reader at the activated version
+(`jsonBinding` in `src/binding.ts`, as the oracle's `EvalCore.offTheWire` binds it, so the value
+has the shape a node builds, e.g. a collection's class; a failure there is `panicked`), bound
 per the entry's **envelope** (mirroring rudolph's `Runner.scala` dispatch): **v2** — single
 `input` at context **var 1**; **v3** — `inputs[].extension` → one per-input `ContextExtension`
 each (read by `Context.getVarFromInput`; SELF = input 0); **v4** — v2's var 1 **plus**
@@ -48,7 +51,7 @@ each (read by `Context.getVarFromInput`; SELF = input 0); **v4** — v2's var 1 
 `treeVersion = version.ergoTree` (read `ctx.jitCost`; catch `EvalError`) → encode `SValue` →
 canonical SANTA JSON → capture `{value, cost, error}`. The **encode/decode bridge** (`src/encode.ts`,
 `src/decode.ts`, `src/stype.ts`) is the substance; `ergots` `parseSValue`/`serializeSValue` are
-the wire codec for the bytes-kinds (Box/Header/SigmaProp), not the JSON bridge. A **`Value`**
+the wire codec for the bytes-kinds (Box/Header/SigmaProp) and for the JSON binding's round trip. A **`Value`**
 binding (`{kind:"Value", bytes_hex}`, runner contract §4) bypasses the bridge entirely
 (`src/binding.ts`): the bytes are read by ergots' OWN reader for the position — a register by
 `parseAdditionalRegisters`, an extension value by `@ergots/transaction`'s `parseContextExtension` —

@@ -130,10 +130,12 @@ function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Resu
   //           (EvalCore.evalWithInputExtensions);
   //       v4: v2's single `input` (var 1) PLUS `selfRegisters` on SELF's additional registers
   //           R4-R9 — read by dynamic-index Box.getReg (EvalCore.evalWithSelfRegistersAndVar1).
-  //     ANY decode failure of a JSON binding — including an input ergots' own codec rejects at
-  //     runtime (e.g. a Header timestamp > 2⁵³, which @ergots/scorex throws on as ReaderError
-  //     'vlq-overflow') — falls through to runEntry's panic-net ⇒ `panicked`. We record ergots'
-  //     ACTUAL failure (message in `note`); we do not pre-classify it into a softer
+  //     A JSON binding is bound as ergots' OWN reader builds it (binding.ts `jsonBinding`): decoded,
+  //     written as a constant and read back at the activated version, as the oracle binds it
+  //     (EvalCore.offTheWire). ANY failure of a JSON binding — decoding it, or ergots' own codec
+  //     writing or reading it back (e.g. a Header timestamp > 2⁵³, which @ergots/scorex throws on as
+  //     ReaderError 'vlq-overflow') — falls through to runEntry's panic-net ⇒ `panicked`. We record
+  //     ergots' ACTUAL failure (message in `note`); we do not pre-classify it into a softer
   //     "unrepresentable" bucket on ergots' behalf.
   //     A `Value` binding (contract §4) is different: it is the bytes a node reads, read by ergots'
   //     OWN reader for that position (binding.ts), so the reader refusing them is the impl's
@@ -174,20 +176,20 @@ function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Resu
   try {
   if (schema === 'santa-eval/v2') {
     if (!e.input) throw new Error(`missing input in v2 entry '${e.name}'`)
-    const { value, tpe } = extensionBinding(e.input, treeVersion, readExt)
+    const { value, tpe } = extensionBinding(e.input, treeVersion, e.version.activated, readExt)
     // ConstPlaceholder resolution needs the tree's segregated constants; evaluateWith
     // (unlike evaluate) does NOT auto-populate them — pass explicitly.
     ctx = makeContext({ ...ctxBase, extension: { values: { 1: { tpe, value } } } })
   } else if (schema === 'santa-eval/v3') {
     if (!e.inputs) throw new Error(`missing inputs in v3 entry '${e.name}'`)
-    const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion, readExt))
+    const inputExtensions = e.inputs.map((inp) => decodeExtension(inp.extension, treeVersion, e.version.activated, readExt))
     // Top-level extension stays empty (self-getVar reads nothing), exactly as EvalCore's
     // contextWithInputExtensions passes ContextExtension.empty.
     ctx = makeContext({ ...ctxBase, inputExtensions })
   } else if (schema === 'santa-eval/v4') {
     if (!e.input) throw new Error(`missing input in v4 entry '${e.name}'`)
     if (!e.selfRegisters) throw new Error(`missing selfRegisters in v4 entry '${e.name}'`)
-    const { value, tpe } = extensionBinding(e.input, treeVersion, readExt)
+    const { value, tpe } = extensionBinding(e.input, treeVersion, e.version.activated, readExt)
     // v4 replaces selfBox with the register-carrying variant; inputs[0] must track it
     const selfBoxWithRegs = dummySelfBox(e.selfRegisters, treeBytes, treeVersion, e.version.activated)
     ctx = makeContext({
@@ -204,7 +206,7 @@ function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Resu
     // GetVar(absent) that should be None. ergots/sigma-rust treat keys as unsigned 0..255, so a key
     // ≥ 0x80 builds fine here and the spend ACCEPTS — the consensus fork vs the JVM, whose signed-Byte
     // `new Array(maxKey+1)` crashes toSigmaContext (the reject arm's divergence, graded red by conform).
-    ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion, readExt) })
+    ctx = makeContext({ ...ctxBase, extension: decodeExtension(e.extension, treeVersion, e.version.activated, readExt) })
   } else if (schema === 'santa-eval/v6-fullctx') {
     if (!e.context) throw new Error(`missing context in v6-fullctx entry '${e.name}'`)
     // Reconstruct the REAL ErgoLikeContext from the envelope (contract §2): real boxes (held
@@ -215,7 +217,7 @@ function runEntryInner(schema: string, e: Entry, readExt: ExtensionReader): Resu
     // runEntry's panic-net ⇒ `panicked` (the runner's own failure). Mirrors the blitzen-eni /
     // EvalCore.evalFullContext reconstruction and its Refused/Malformed split.
     try {
-      ctx = makeContext(buildFullCtxOpts(e.context, tree, treeVersion, readExt))
+      ctx = makeContext(buildFullCtxOpts(e.context, tree, treeVersion, e.version.activated, readExt))
     } catch (err) {
       if (err instanceof FullCtxRefused) return { value: null, cost: null, error: 'errored' }
       throw err
@@ -262,12 +264,12 @@ const ORACLE_UNBOUND = /\btypeId=99, methodId=7\b/
  *  wire byte on both sides (the 101:12 handler normalizes its signed Byte operand to this
  *  domain), so `Number(id)` is the identity bridge. */
 function decodeExtension(
-  ext: { [varId: string]: SValueJson }, treeVersion: number, readExt: ExtensionReader,
+  ext: { [varId: string]: SValueJson }, treeVersion: number, activated: number, readExt: ExtensionReader,
 ): ContextExtension {
   // master's ContextExtension['values'] is a Map<number, {tpe, value}>.
   const values = new Map<number, ReturnType<typeof decodeSValue>>()
   for (const [id, j] of Object.entries(ext)) {
-    const { value, tpe } = extensionBinding(j, treeVersion, readExt)
+    const { value, tpe } = extensionBinding(j, treeVersion, activated, readExt)
     values.set(Number(id), { tpe, value })
   }
   return { values }
@@ -415,7 +417,8 @@ function decodePreHeader(bytes: Uint8Array): PreHeader {
  *  §2). Library refusals of consensus bytes throw FullCtxRefused (→ errored); envelope
  *  defects throw plain Error (→ panicked). */
 function buildFullCtxOpts(
-  c: FullCtxEnvelope, tree: ReturnType<typeof parseTree>, treeVersion: number, readExt: ExtensionReader,
+  c: FullCtxEnvelope, tree: ReturnType<typeof parseTree>, treeVersion: number, activated: number,
+  readExt: ExtensionReader,
 ): Parameters<typeof makeContext>[0] {
   // Parse a hex-array box field (inputs / data_inputs / outputs). Bad hex / wrong shape is
   // an envelope defect (Malformed ⇒ panicked); a codec rejection of valid-hex bytes the JVM
@@ -482,7 +485,7 @@ function buildFullCtxOpts(
 
   // Per-input ContextExtensions (read by getVarFromInput by index); the SELF input's is also
   // the top-level context.extension (bare getVar), per EvalCore.fullContext.
-  const inputExtensions = (c.input_extensions ?? []).map((ext) => decodeExtension(ext, treeVersion, readExt))
+  const inputExtensions = (c.input_extensions ?? []).map((ext) => decodeExtension(ext, treeVersion, activated, readExt))
   const extension = inputExtensions[c.self_index] ?? { values: new Map() }
 
   // master's parseTree returns ParsedErgoTree | UnparsedErgoTree; a fullctx eval golden is always a

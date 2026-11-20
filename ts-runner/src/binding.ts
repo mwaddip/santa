@@ -1,5 +1,7 @@
-import { ByteReader } from '@ergots/scorex'
-import { parseAdditionalRegisters, type SType, type SValue } from '@ergots/ergoscript'
+import { ByteReader, ByteWriter } from '@ergots/scorex'
+import {
+  parseAdditionalRegisters, parseSType, parseSValue, serializeSType, serializeSValue, type SType, type SValue,
+} from '@ergots/ergoscript'
 import { isWireCodecError } from './codec-errors'
 import { decodeSValue } from './decode'
 import { hexToBytes } from './hex'
@@ -61,12 +63,38 @@ function readWhole<T>(frame: Uint8Array, read: (r: ByteReader) => T): T {
   return out
 }
 
+/** A JSON binding (any SValue form), bound as ergots' OWN reader builds the value: decoded, written as a constant
+ *  (its type, then its data) by ergots' writer and read back whole by its reader, at the entry's activated version
+ *  for both script and tree. That is how the oracle binds it (`EvalCore.offTheWire`: `putValue` then `getValue` at
+ *  `(activated, activated)`; runner contract §4), because a JSON-built value can differ from a node's (a
+ *  collection's class, a collection of non-pair tuples' item type) and a script can see the difference. The data
+ *  reader is used, not a register or extension reader, so rule 1019 does not apply: the corpus binds Option, Header
+ *  and UnsignedBigInt values this way.
+ *
+ *  A failure here is NOT a refusal. A JSON form is the harness handing a function its input, and the oracle
+ *  round-trips every committed one, so ergots' writer or reader failing on it propagates to runEntry's panic-net
+ *  (`panicked`), as any JSON decode failure does. An `errored` would grade a reject row green for the wrong reason. */
+export function jsonBinding(j: JsonObj, treeVersion: number, activated: number): Binding {
+  const built = decodeSValue(j, treeVersion)
+  const w = new ByteWriter()
+  serializeSType(built.tpe, w)
+  serializeSValue(built.tpe, built.value, activated, w)
+  const bytes = w.toBytes()
+  const r = new ByteReader(bytes)
+  const tpe = parseSType(r, activated)
+  const value = parseSValue(tpe, activated, r)
+  if (r.position !== bytes.length) {
+    throw new Error(`ergots read ${r.position} of the ${bytes.length} bytes it wrote for a JSON binding`)
+  }
+  return { tpe, value }
+}
+
 /** A binding at an extension position: var 1 (v2/v4 `input`), a v3 / v5 / full-context extension
  *  value. A `Value` is read by ergots' OWN extension reader, framed as the one-variable extension
  *  `01 01 <bytes>` — the count, then a dummy id: the binding's key is the vector's and the caller
  *  applies it, so a v5 key >= 0x80 still reaches the context the way the key-domain vectors need. */
-export function extensionBinding(j: JsonObj, treeVersion: number, readExt: ExtensionReader): Binding {
-  if (j['kind'] !== 'Value') return decodeSValue(j, treeVersion)
+export function extensionBinding(j: JsonObj, treeVersion: number, activated: number, readExt: ExtensionReader): Binding {
+  if (j['kind'] !== 'Value') return jsonBinding(j, treeVersion, activated)
   if (!readExt) throw new NoExtensionReader()
   const ext = readWhole(framed([0x01, 0x01], hexToBytes(j['bytes_hex'] as string)), readExt)
   const v = ext.values.get(1)
@@ -78,7 +106,7 @@ export function extensionBinding(j: JsonObj, treeVersion: number, readExt: Exten
  *  reader, `parseAdditionalRegisters`, framed as the one-register map `01 <bytes>` and read at the
  *  entry's activated version — as a node reads a box from block version 4 (runner contract §4). */
 export function registerBinding(j: JsonObj, treeVersion: number, activated: number): Binding {
-  if (j['kind'] !== 'Value') return decodeSValue(j, treeVersion)
+  if (j['kind'] !== 'Value') return jsonBinding(j, treeVersion, activated)
   const regs = readWhole(framed([0x01], hexToBytes(j['bytes_hex'] as string)),
     (r) => parseAdditionalRegisters(r, activated))
   const reg = regs[4]
