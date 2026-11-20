@@ -330,6 +330,13 @@ object AuthoredEvalSerializeCostedWriter {
     s"[${r.name}] ${what(r)}$wrap — ${said(r)}. ${label(r)}  // tree v${r.treeVersion}, activated ${r.activated}"
   }
 
+  /** Held rows whose budget is above the default (runner-integration.md §3a: a threshold, not a benchmark). G size-only
+    * 32768x8192: an implementation that answers it right needs 768–832 MiB of data, within a quarter of the default
+    * 1 GiB, so it gets a quarter more. G size-serialize 32768x8192 keeps the default on purpose: the implementation near
+    * its budget there spends about 1 GiB where the reference spends about 170 MiB, which is what the row catches. */
+  val RaisedLimits: Map[String, Json] =
+    Map("G|size-only|32768x8192" -> Json.obj("memory_mb" -> Json.fromInt(1280), "wall_s" -> Json.fromInt(10)))
+
   /** A held row's own file (a bounded file: one entry, `limits`). */
   def boundedKey(r: Row): String = SpecExtract.slug(s"${r.op}_bounded_${r.slug}")
 
@@ -349,7 +356,9 @@ object AuthoredEvalSerializeCostedWriter {
     val files = rs.filterNot(_.held).groupBy(_.op).map { case (op, g) =>
       op -> envelope(op, g.zipWithIndex.map { case (r, i) => entry(r, i) })
     }
-    files ++ rs.filter(_.held).map(r => boundedKey(r) -> SpecExtract.bounded(envelope(r.op, Seq(entry(r, 0)))))
+    files ++ rs.filter(_.held).map { r =>
+      boundedKey(r) -> SpecExtract.bounded(envelope(r.op, Seq(entry(r, 0))), RaisedLimits.getOrElse(r.name, SpecExtract.DefaultLimits))
+    }
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

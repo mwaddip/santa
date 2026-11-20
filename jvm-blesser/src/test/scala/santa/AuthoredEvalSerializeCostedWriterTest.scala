@@ -68,10 +68,12 @@ class AuthoredEvalSerializeCostedWriterTest extends munit.FunSuite {
     // every row on which fork cc29855f ABORTS is held; the largest nested value in the five files is 64 MiB
     assertEquals(rows.filter(_.forkBase.startsWith("ABORT")).filterNot(_.held), Vector.empty)
     assertEquals(authored.filterNot(_.held).flatMap(_.nestedBytes).max, 64L << 20)
-    // each held row: its own file, one entry, the default budget, the entry its row
+    // each held row: its own file, one entry, the default budget (G size-only 32768x8192: 1280 MiB), the entry its row
+    val raised = Json.obj("memory_mb" -> Json.fromInt(1280), "wall_s" -> Json.fromInt(10))
     rows.filter(_.held).foreach { r =>
       val f = v(B.boundedKey(r))
-      assertEquals(f.hcursor.downField("limits").focus, Some(SpecExtract.DefaultLimits), r.name)
+      val budget = if (r.name == "G|size-only|32768x8192") raised else SpecExtract.DefaultLimits
+      assertEquals(f.hcursor.downField("limits").focus, Some(budget), r.name)
       assertEquals(f.hcursor.get[String]("op").toOption, Some(r.op), r.name)
       val es = entries(B.boundedKey(r))
       assertEquals(es.size, 1, r.name)
