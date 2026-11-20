@@ -66,13 +66,12 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   that budget, and a hit grades `exceeded` on that entry alone
   ([runner-integration §3a](docs/contract/runner-integration.md#3a-bounded-files)).
 - ✅ **A runner-agnostic orchestrator — `./conform`** (presence-as-state over `runners/*/`,
-  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Eight runners wired today:
+  one shared comparator, a per-runner **per-slice** 🎁/🪨 table). Seven runners wired today:
   - **Rudolph**: the JVM reference, the all-🎁 control that blessed the corpus.
   - **Dasher**: the pure-TS `ergots` library ([`ts-runner/`](ts-runner/)).
   - **Blitzen**, for `sigma-rust`:
-    - `blitzen`: the runner hosted in sigma-rust itself (`santa/`), on the mwaddip fork's `feat/santa-pr-check`
-      branch, the one headed for upstream `develop` together with the PR check's workflows (value-only);
-    - `blitzen-develop`: a submodule, upstream `develop` (value-only), until upstream hosts the runner;
+    - `blitzen-develop`: a submodule, upstream `develop` (value-only), until upstream hosts the runner (in review
+      as `santa/`, with the PR check's workflows); its entry then names that directory instead;
     - `blitzen-mwaddip`: a submodule, the `master` branch of the mwaddip fork (`--features jit-cost`). It took over from
       the fork's `eni` branch, whose runner was retired on 2026-09-29 after master reproduced it exactly.
   - **Comet**: the pure-TS **Fleet SDK**, wire tier only, graded on Fleet's public API: the `Constant`, `Box` and
