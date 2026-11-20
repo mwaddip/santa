@@ -80,7 +80,8 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   - **Vixen**: arkadianet/ergo.
 
   Each is graded against the JVM-blessed `expected`. The runner is SANTA's; the implementation under test is a
-  dependency.
+  dependency. A runner may instead live in the implementation's own repo, SANTA's entry naming its directory there
+  ([runner-integration §1](docs/contract/runner-integration.md#1-a-runner-is-a-directory)).
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green
   across the entire eval tier** (every v5+v6 spec+authored slice, value, cost, and reject —
   2026-06-10); its remaining reds are roadmap not-impls (the growth ledger). Blitzen-eni

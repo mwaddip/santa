@@ -143,19 +143,24 @@ fn dashboard(results: &Value, git_ref: &str) -> String {
             // weeks in 2026-07: a blank cell that looks like a blank cell carries no information.
             // Distinguish "declared this tier and produced nothing" from "never claimed it".
             let did_not_run = r.get("mark").and_then(|m| m.as_str()) == Some("errored");
-            let declares_tier = r
-                .get("tiers")
-                .and_then(|t| t.as_array())
-                .is_some_and(|ts| {
+            // `tiers: null` = the scope is unknown (an implementation-hosted runner that failed before conform read
+            // its manifest): it may have declared any slice, so none of them may look out of scope.
+            let tiers = r.get("tiers").filter(|t| !t.is_null());
+            let declares_tier = tiers.is_none_or(|t| {
+                t.as_array().is_some_and(|ts| {
                     let tier = sk.split('/').next().unwrap_or("");
                     ts.iter().any(|t| t.as_str() == Some(tier))
-                });
+                })
+            });
             if did_not_run && declares_tier {
-                body.push_str(
-                    "<td class=\"norun\" title=\"runner declared this tier but produced no \
-                     actuals — it failed to build or run, so this slice is UNGRADED, not passing\">\
-                     \u{26a0}</td>",
-                );
+                let why = if tiers.is_some() {
+                    "runner declared this tier but produced no actuals — it failed to build or run"
+                } else {
+                    "runner failed before its declared scope could be read"
+                };
+                body.push_str(&format!(
+                    "<td class=\"norun\" title=\"{why}, so this slice is UNGRADED, not passing\">\u{26a0}</td>"
+                ));
                 continue;
             }
             match slices.get(sk) {
@@ -1183,6 +1188,33 @@ mod tests {
              blank cell into an alarm");
         assert!(!eval_cells.contains("class=\"norun\""),
             "an undeclared tier must NOT be reported as ungraded");
+    }
+
+    /// A runner the implementation hosts declares its scope in its own checkout; when it fails before conform could
+    /// read that, its row has `tiers: null`. Nothing says which slices it would have graded, so every one of them is
+    /// UNGRADED: grey would claim it never declared them (the donner incident again).
+    #[test]
+    fn did_not_run_with_an_unknown_scope_is_ungraded_everywhere() {
+        let results = json!({"runners": [
+            {"name": "rudolph", "label": "rudolph", "version": "v6", "tiers": ["block", "eval"],
+             "cost": true, "mark": "nice", "red_total": 0, "slices": {
+                "block/v6/authored": {"block_valid_total": 7, "block_valid_nice": 7,
+                    "block_valid_coal": 0, "not_impl": 0, "panicked": 0, "red": []},
+                "eval/v6/authored": {"value_total": 1, "value_nice": 1, "value_coal": 0,
+                    "cost_graded": 1, "cost_nice": 1, "cost_coal": 0, "reject_total": 0,
+                    "not_impl": 0, "panicked": 0, "red": []}
+             }},
+            {"name": "dasher", "label": "dasher", "version": Value::Null, "tiers": Value::Null,
+             "cost": Value::Null, "kinds": Value::Null, "activation": Value::Null,
+             "mark": "errored", "red_total": Value::Null, "slices": {},
+             "error": "the implementation's runner: santa/runner/runner.json: No such file or directory (os error 2)"}
+        ]});
+        let html = dashboard(&results, "deadbeef");
+        for slice in ["block/v6/authored", "eval/v6/authored"] {
+            let row = html.split(slice).nth(1).unwrap_or("");
+            let cells = row.split("</tr>").next().unwrap_or("");
+            assert!(cells.contains("class=\"norun\""), "{slice}: an unknown scope is ungraded, not out of scope");
+        }
     }
 
     /// A budget hit (`exceeded`, written by conform for a bounded file) shows in the cell's tooltip in every tier.

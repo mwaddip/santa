@@ -11,8 +11,15 @@
 A runner is a directory `runners/<name>/`. It may be **in-tree** (Rudolph, Dasher today) or a
 **git submodule** pulled by recursive checkout (Blitzen, and external runners) — the orchestrator
 treats them identically. **Presence-as-state:** a dir is run iff it contains a valid `runner.json`
-*and* an executable `santa-run`; anything else is skipped. There is no central registry — add a
-configured dir and it runs; remove it and it's gone.
+*and* either an executable `santa-run` or a `runner` key (below); a dir whose `runner.json` has neither is skipped.
+There is no central registry — add a configured dir and it runs; remove it and it's gone.
+
+A runner may also live **in the implementation's own repo**. SANTA then keeps only its entry,
+`runners/<name>/runner.json`, whose `runner` key names the runner's directory inside the implementation's
+checkout (§2); that directory holds the `santa-run` and a `runner.json` with the runner's scope. The entry has no
+`santa-run` of its own (`conform` refuses a dir with both: two runners would claim it). Every checkout of the
+implementation brings its own runner, so an API change and the runner change it needs land in one commit, and a
+grade at any commit uses that commit's runner. The vectors, the comparator and the actuals schemas stay SANTA's.
 
 Two dirs may wrap the same upstream runner at different checkouts — e.g. `runners/blitzen-develop/`
 and `runners/blitzen-eni/` — to compare an implementation's branches side by side.
@@ -57,16 +64,45 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   staged and not tallied, as a higher version or an undeclared tier; `conform`'s header line, `results.json` and
   the scoreboard show the declared scope.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
-- `conform` refuses a key outside these (a misspelt `kind` / `activations` would silently fall back to a default
-  and change the scope) and a `cost` / `activation` / `control` that is not a JSON boolean.
+- `conform` refuses a key outside these and `runner` (a misspelt `kind` / `activations` would silently fall back to
+  a default and change the scope) and a `cost` / `activation` / `control` that is not a JSON boolean.
 - **`control`** (optional, default `false`) — the oracle's own runner (rudolph). A grid in which a control could not
   build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `results.json`), and the CI
   run fails before it publishes a scoreboard. The same holds for a control that exceeds or crashes on a bounded
   file (§3a). Any other runner that cannot build or run stays a ⚠️ row in the grid.
 
+### A runner the implementation hosts — `runner`
+
+```jsonc
+// SANTA, runners/dasher/runner.json: who the runner is, and where
+{
+  "name":   "dasher",
+  "label":  "dasher (ergots · pure-TS)",
+  "impl":   "https://github.com/mwaddip/ergots.git#master",
+  "runner": "santa/runner"   // a directory in the impl's checkout: plain names only (no root, `..` or `.`)
+}
+// the implementation, santa/runner/runner.json: what it implements
+{ "version": "v6", "tiers": ["eval", "wire", "transaction", "authds"], "cost": true }
+```
+
+- **Each side sets only its own keys.** SANTA's entry holds `name`, `label`, `impl`, `control` and `runner`; the
+  implementation's `runner.json` holds the scope keys (`version`, `tiers`, `cost`, `kinds`, `activation`) and
+  nothing else. `conform` refuses a scope key beside `runner` (it would grade the implementation at SANTA's claim
+  instead of its own), and any other key in the implementation's file (it cannot name itself, point elsewhere, or
+  make itself the control). `runner` needs an `impl`.
+- **The scope is the checked-out commit's.** `conform` checks the impl out first, then reads the implementation's
+  `runner.json`, so a commit that mounts a tier is graded on it. The rules for what a scope declaration may say
+  (above) hold unchanged; the reasons go in the runner's README, beside it in the implementation.
+- **When it cannot run.** A missing or refused `runner.json`, or no executable `santa-run` beside it, is a ⚠️ row
+  ("the implementation's runner: …") whose scope `results.json` records as `null`: nothing says which slices it
+  would have graded, so the scoreboard marks every slice of it UNGRADED. A `santa-run` that fails after the scope
+  was read keeps that scope, as any other runner's does.
+
 ## 3. The entrypoint — `santa-run`
 
-An executable at `runners/<name>/santa-run`:
+An executable at `runners/<name>/santa-run`, or, for a runner the implementation hosts, at
+`<checkout>/<runner>/santa-run` (§2); the calling convention is the same for both (its `<impl-path>` is the directory
+that holds the checkout, so it finds the implementation as `<impl-path>/<repo-name>` like any other runner):
 
 ```
 santa-run <impl-path> <vectors-dir> <out-dir>

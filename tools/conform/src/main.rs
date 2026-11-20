@@ -1,7 +1,8 @@
 //! SANTA conformance orchestrator (Rust port of the former tools/conform.py). Presence-as-state
-//! over runners/*/: each dir with a valid runner.json + executable santa-run is run against the
-//! blessed corpus; the santa-check lib decides nice/coal in-process; a side-by-side table is printed
-//! and the structured result written to .santa/results.json. See docs/contract/runner-integration.md.
+//! over runners/*/: each dir with a valid runner.json + an executable santa-run (or a `runner` key naming the
+//! runner's dir in its implementation's checkout) is run against the blessed corpus; the santa-check lib decides
+//! nice/coal in-process; a side-by-side table is printed and the structured result written to .santa/results.json.
+//! See docs/contract/runner-integration.md.
 // Counts::to_json() is one flat json!{} object whose key count grows with every tier; each
 // additional tier's fields push serde_json's json! macro further into its recursive expansion.
 // 45 fields (post-nipopow) exceeds the default 128 limit — bump it with headroom for future tiers
@@ -11,7 +12,7 @@ use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_nipopow, 
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
-use std::path::{Path, PathBuf};
+use std::path::{Component, Path, PathBuf};
 use std::process::{Command, ExitCode};
 use std::{env, fs};
 
@@ -23,8 +24,11 @@ const VERSIONS: [&str; 3] = ["v4", "v5", "v6"];
 /// manifest may declare the ones it implements (`kinds`); a wire file holds one kind (./validate).
 const WIRE_KINDS: [&str; 7] = ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree", "BlockTransactions"];
 
-/// The keys a runner.json may hold (runner-integration §2); any other is refused.
-const MANIFEST_KEYS: [&str; 9] = ["name", "label", "version", "tiers", "cost", "kinds", "activation", "impl", "control"];
+/// The keys SANTA's runner.json sets for every runner (runner-integration §2).
+const ENTRY_KEYS: [&str; 5] = ["name", "label", "impl", "control", "runner"];
+/// The scope keys, the runner's own claim: in SANTA's runner.json for a runner SANTA hosts, in the implementation's
+/// for one the implementation hosts (`runner`), and then only there.
+const SCOPE_KEYS: [&str; 5] = ["version", "tiers", "cost", "kinds", "activation"];
 
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..") // tools/conform -> repo root
@@ -122,20 +126,20 @@ fn in_scope(rel: &str, facts: &BTreeMap<String, WireFacts>, kinds: &Option<Vec<S
 }
 
 /// The declared scope on a runner's header line: `, kinds=…` when declared, `, activation=False` when not claimed.
-fn scope_suffix(m: &Runner) -> String {
+fn scope_suffix(sc: &Scope) -> String {
     let mut s = String::new();
-    if let Some(ks) = &m.kinds {
+    if let Some(ks) = &sc.kinds {
         s.push_str(&format!(", kinds={}", ks.join(",")));
     }
-    if !m.activation {
+    if !sc.activation {
         s.push_str(", activation=False");
     }
     s
 }
 
-struct Runner {
-    name: String,
-    label: String,
+/// What a runner declares it implements (runner-integration §2): it decides which vectors are staged for it.
+#[derive(Clone, Debug)]
+struct Scope {
     version: String,
     tiers: Vec<String>,
     cost: bool,
@@ -143,26 +147,82 @@ struct Runner {
     kinds: Option<Vec<String>>,
     /// Whether it applies consensus rules tied to the activated script version (`activation`, default true).
     activation: bool,
+}
+
+/// Where a runner's santa-run and its scope live.
+enum Host {
+    /// In SANTA: `runners/<name>/santa-run`, the scope in the same runner.json.
+    Santa { scope: Scope, run: PathBuf },
+    /// In the implementation's repo: `<path>` in its checkout holds santa-run and a runner.json with the scope.
+    Impl(String),
+}
+
+struct Runner {
+    name: String,
+    label: String,
     impl_: Option<String>,
     /// The manifest's `control`: the oracle's own runner, whose not running leaves the grid unanchored.
     control: bool,
-    run: PathBuf,
+    host: Host,
 }
 
-/// A runner.json, read. A declared scope is coarse and must name what it means: an unknown kind, an empty `kinds`
-/// (a wire tier that selects nothing would grade nothing, silently) and `kinds` without the wire tier are errors.
-fn parse_manifest(j: &Value, run: PathBuf) -> Result<Runner, String> {
-    // A misspelt key ("kind", "activations") would silently fall back to a default and widen or narrow the scope.
-    let obj = j.as_object().ok_or("runner.json: not an object")?;
-    if let Some(k) = obj.keys().find(|k| !MANIFEST_KEYS.contains(&k.as_str())) {
-        return Err(format!("runner.json: unknown key {k:?}; known: {MANIFEST_KEYS:?}"));
+impl Runner {
+    /// The scope as far as SANTA's manifest knows it, before any checkout.
+    fn declared(&self) -> Option<&Scope> {
+        match &self.host {
+            Host::Santa { scope, .. } => Some(scope),
+            Host::Impl(_) => None,
+        }
     }
-    let flag = |k: &str, default: bool| match j.get(k) {
+}
+
+/// A manifest's boolean `k`: absent -> `default`; anything but a JSON boolean is refused.
+fn flag(j: &Value, k: &str, default: bool) -> Result<bool, String> {
+    match j.get(k) {
         None => Ok(default),
         Some(Value::Bool(b)) => Ok(*b),
         Some(v) => Err(format!("runner.json: {k:?} is {v}, not a boolean")),
-    };
+    }
+}
+
+/// A runner.json, read. A misspelt key ("kind", "activations") would silently fall back to a default and widen or
+/// narrow the scope, so an unknown key is refused.
+fn parse_manifest(j: &Value, dir: &Path) -> Result<Runner, String> {
+    let obj = j.as_object().ok_or("runner.json: not an object")?;
+    if let Some(k) = obj.keys().find(|k| !ENTRY_KEYS.contains(&k.as_str()) && !SCOPE_KEYS.contains(&k.as_str())) {
+        return Err(format!("runner.json: unknown key {k:?}; known: {ENTRY_KEYS:?} and {SCOPE_KEYS:?}"));
+    }
     let s = |k: &str| j[k].as_str().map(String::from).ok_or_else(|| format!("runner.json: no {k:?}"));
+    let impl_ = j.get("impl").and_then(Value::as_str).map(String::from);
+    let host = match j.get("runner") {
+        None => Host::Santa { scope: parse_scope(j)?, run: dir.join("santa-run") },
+        Some(v) => {
+            let path = runner_path(v)?;
+            if let Some(k) = obj.keys().find(|k| SCOPE_KEYS.contains(&k.as_str())) {
+                return Err(format!("runner.json: {k:?} is the implementation's to declare, in its {path}/runner.json"));
+            }
+            if impl_.as_deref().is_none_or(str::is_empty) {
+                return Err("runner.json: \"runner\" needs an \"impl\" whose checkout holds it".into());
+            }
+            Host::Impl(path)
+        }
+    };
+    Ok(Runner { name: s("name")?, label: s("label")?, impl_, control: flag(j, "control", false)?, host })
+}
+
+/// `runner`: a path inside the implementation's checkout, of plain names only (no root, `..` or `.`).
+fn runner_path(v: &Value) -> Result<String, String> {
+    let p = v.as_str().ok_or("runner.json: \"runner\" is not a string")?;
+    if p.is_empty() || !Path::new(p).components().all(|c| matches!(c, Component::Normal(_))) {
+        return Err(format!("runner.json: \"runner\" {p:?} is not a relative path inside the checkout"));
+    }
+    Ok(p.to_string())
+}
+
+/// A manifest's scope keys. A declared scope is coarse and must name what it means: an unknown kind, an empty
+/// `kinds` (a wire tier that selects nothing would grade nothing, silently) and `kinds` without the wire tier are
+/// errors.
+fn parse_scope(j: &Value) -> Result<Scope, String> {
     let tiers: Vec<String> = j["tiers"]
         .as_array()
         .ok_or("runner.json: no \"tiers\"")?
@@ -190,21 +250,39 @@ fn parse_manifest(j: &Value, run: PathBuf) -> Result<Runner, String> {
             Some(ks)
         }
     };
-    Ok(Runner {
-        name: s("name")?,
-        label: s("label")?,
-        version: s("version")?,
+    Ok(Scope {
+        version: j["version"].as_str().map(String::from).ok_or("runner.json: no \"version\"")?,
         tiers,
-        cost: flag("cost", true)?,
+        cost: flag(j, "cost", true)?,
         kinds,
-        activation: flag("activation", true)?,
-        impl_: j.get("impl").and_then(Value::as_str).map(String::from),
-        control: flag("control", false)?,
-        run,
+        activation: flag(j, "activation", true)?,
     })
 }
 
-/// presence-as-state: a runner dir is valid iff it has runner.json + an executable santa-run.
+/// The runner.json of a runner the implementation hosts: the scope keys and nothing SANTA sets.
+fn parse_hosted_manifest(j: &Value) -> Result<Scope, String> {
+    let obj = j.as_object().ok_or("runner.json: not an object")?;
+    if let Some(k) = obj.keys().find(|k| !SCOPE_KEYS.contains(&k.as_str())) {
+        return Err(format!("runner.json: {k:?} is not the implementation's to set; it holds only {SCOPE_KEYS:?}"));
+    }
+    parse_scope(j)
+}
+
+/// A hosted runner in its checkout: the scope from `<path>/runner.json`, and the santa-run beside it.
+fn hosted_runner(checkout: &Path, path: &str) -> Result<(Scope, PathBuf), String> {
+    let dir = checkout.join(path);
+    let text = fs::read_to_string(dir.join("runner.json")).map_err(|e| format!("{path}/runner.json: {e}"))?;
+    let j: Value = serde_json::from_str(&text).map_err(|e| format!("{path}/runner.json: {e}"))?;
+    let scope = parse_hosted_manifest(&j).map_err(|e| format!("{path}/{e}"))?;
+    let run = dir.join("santa-run");
+    if !is_executable(&run) {
+        return Err(format!("{path}/santa-run: no executable file"));
+    }
+    Ok((scope, run))
+}
+
+/// presence-as-state: a runner dir is valid iff it has a runner.json conform accepts and either an executable santa-run
+/// or a `runner` key (its santa-run is in the implementation's checkout).
 fn discover(runners_dir: &Path) -> Vec<Runner> {
     let mut dirs: Vec<PathBuf> = fs::read_dir(runners_dir)
         .map(|rd| {
@@ -217,18 +295,30 @@ fn discover(runners_dir: &Path) -> Vec<Runner> {
     dirs.sort();
     let mut out = Vec::new();
     for d in dirs {
-        let run = d.join("santa-run");
-        let executable = run.is_file()
-            && fs::metadata(&run).map(|m| m.permissions().mode() & 0o111 != 0).unwrap_or(false);
-        if !executable {
-            eprintln!("  skip {}: no executable santa-run", d.file_name().unwrap().to_string_lossy());
-            continue;
+        match discover_dir(&d) {
+            Ok(Some(r)) => out.push(r),
+            Ok(None) => eprintln!("  skip {}: no executable santa-run", d.file_name().unwrap().to_string_lossy()),
+            Err(e) => die(format!("{}: {e}", d.display())),
         }
-        let j: Value = serde_json::from_str(&fs::read_to_string(d.join("runner.json")).unwrap())
-            .unwrap_or_else(|e| die(format!("bad runner.json in {}: {e}", d.display())));
-        out.push(parse_manifest(&j, run).unwrap_or_else(|e| die(format!("{}: {e}", d.display()))));
     }
     out
+}
+
+fn is_executable(p: &Path) -> bool {
+    p.is_file() && fs::metadata(p).map(|m| m.permissions().mode() & 0o111 != 0).unwrap_or(false)
+}
+
+/// One `runners/<name>/` dir: Ok(None) = skipped (a SANTA-hosted runner without an executable santa-run); Err = a
+/// manifest conform refuses, or a santa-run beside a `runner` (two runners would claim the entry).
+fn discover_dir(d: &Path) -> Result<Option<Runner>, String> {
+    let j: Value = serde_json::from_str(&fs::read_to_string(d.join("runner.json")).map_err(|e| e.to_string())?)
+        .map_err(|e| format!("bad runner.json: {e}"))?;
+    let r = parse_manifest(&j, d)?;
+    match (&r.host, is_executable(&d.join("santa-run"))) {
+        (Host::Santa { .. }, false) => Ok(None),
+        (Host::Impl(p), true) => Err(format!("a santa-run here and \"runner\": {p:?} both claim this runner")),
+        _ => Ok(Some(r)),
+    }
 }
 
 fn git(args: &[&str]) -> Result<(), i32> {
@@ -246,13 +336,20 @@ fn git_out(args: &[&str]) -> Option<String> {
         .filter(|s| !s.is_empty())
 }
 
+/// An impl, checked out: santa-run's `<impl-path>` argument (`-` for none), the checkout itself, its HEAD sha.
+struct Resolved {
+    arg: String,
+    checkout: Option<PathBuf>,
+    sha: Option<String>,
+}
+
 /// impl = "<url>#<ref>" (ref = branch/tag for latest, a <sha>, or "<branch>@<sha>"). Clone/fetch into
-/// cache_dir/<repo-name>, check out the ref; return (cache_dir, resolved HEAD sha) (passed to
-/// santa-run as <impl-path>, where the runner finds its dep as ./<repo-name>). impl null -> ("-", None).
-fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<(String, Option<String>), i32> {
+/// cache_dir/<repo-name> and check out the ref. `arg` is cache_dir (passed to santa-run as <impl-path>, where the
+/// runner finds its dep as ./<repo-name>); impl null -> ("-", no checkout, no sha).
+fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<Resolved, i32> {
     let spec = match impl_ {
         Some(s) if !s.is_empty() => s,
-        _ => return Ok(("-".to_string(), None)),
+        _ => return Ok(Resolved { arg: "-".to_string(), checkout: None, sha: None }),
     };
     let (url, refspec) = spec
         .split_once('#')
@@ -277,12 +374,9 @@ fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<(String, Opt
         let _ = git(&["-C", dest_s, "pull", "-q", "--ff-only"]);
     }
     let resolved_sha = git_out(&["-C", dest_s, "rev-parse", "HEAD"]);
-    Ok((cache_dir.to_string_lossy().into_owned(), resolved_sha))
+    Ok(Resolved { arg: cache_dir.to_string_lossy().into_owned(), checkout: Some(dest), sha: resolved_sha })
 }
 
-/// Filter by (version<=, tiers), stage selected vectors flat as symlinks, run, collect actuals keyed
-/// by source relpath. Everything per-runner lives under .santa/<name>/. Err(code) = the runner (or
-/// its impl checkout) failed to run — surfaced as ⚠️, not graded.
 /// Why a runner has no grades this run (a ⚠️ row, not a 🪨).
 enum RunFail {
     /// santa-run exited non-zero: build, impl checkout, or a crash over the ordinary files.
@@ -291,6 +385,8 @@ enum RunFail {
     Ceiling(String),
     /// santa-bound's records are missing: the runner's last line skipped it, or a bounded file has no record.
     Bound(String),
+    /// The implementation's checkout holds no runner where SANTA's `runner` points, or one conform refuses.
+    Hosted(String),
 }
 
 fn fail_message(f: &RunFail) -> String {
@@ -298,6 +394,7 @@ fn fail_message(f: &RunFail) -> String {
         RunFail::Exit(c) => format!("santa-run exited {c}: could not build/run"),
         RunFail::Ceiling(l) => format!("santa-run exceeded the safety ceiling ({l})"),
         RunFail::Bound(m) => m.clone(),
+        RunFail::Hosted(m) => format!("the implementation's runner: {m}"),
     }
 }
 
@@ -366,18 +463,53 @@ fn ceiling_hit(ordinary: &Value) -> Option<String> {
     }
 }
 
-/// Runs one runner over its selection. Ok: (actuals by relpath, impl sha, the bounded files that exceeded or crashed).
+/// A runner that ran: the scope it was graded at, its actuals by relpath, the impl sha, and the bounded files that
+/// exceeded or crashed.
+struct Ran {
+    scope: Scope,
+    actuals: BTreeMap<String, Value>,
+    sha: Option<String>,
+    failures: Vec<String>,
+}
+
+/// Runs one runner over its selection. A failure carries the scope when conform got far enough to know it (a hosted
+/// runner's is read from its checkout), so the grid can still say which tiers went ungraded.
 fn run_one(
     m: &Runner,
     root: &Path,
     vectors: &[Vec5],
     facts: &BTreeMap<String, WireFacts>,
-) -> Result<(BTreeMap<String, Value>, Option<String>, Vec<String>), RunFail> {
+) -> Result<Ran, (Option<Scope>, RunFail)> {
     let ws = root.join(".santa").join(&m.name);
-    let (impl_path, sha) = resolve_impl(&m.impl_, &ws).map_err(RunFail::Exit)?;
-    let selected: Vec<&Vec5> = select(vectors, &m.version, &m.tiers)
+    let imp = resolve_impl(&m.impl_, &ws).map_err(|c| (m.declared().cloned(), RunFail::Exit(c)))?;
+    let (scope, run) = match &m.host {
+        Host::Santa { scope, run } => (scope.clone(), run.clone()),
+        Host::Impl(path) => {
+            let checkout = imp.checkout.as_deref().expect("a runner entry has an impl (parse_manifest)");
+            hosted_runner(checkout, path).map_err(|e| (None, RunFail::Hosted(e)))?
+        }
+    };
+    match run_staged(&run, &imp.arg, &scope, &ws, root, vectors, facts) {
+        Ok((actuals, failures)) => Ok(Ran { scope, actuals, sha: imp.sha, failures }),
+        Err(f) => Err((Some(scope), f)),
+    }
+}
+
+/// Stages the scope's selection (version<=, tiers, kinds, activation) flat as symlinks under `ws` (= .santa/<name>/,
+/// where everything per-runner lives) and runs `run` over it: (actuals by relpath, the bounded files that exceeded or
+/// crashed).
+fn run_staged(
+    run: &Path,
+    impl_path: &str,
+    scope: &Scope,
+    ws: &Path,
+    root: &Path,
+    vectors: &[Vec5],
+    facts: &BTreeMap<String, WireFacts>,
+) -> Result<(BTreeMap<String, Value>, Vec<String>), RunFail> {
+    let selected: Vec<&Vec5> = select(vectors, &scope.version, &scope.tiers)
         .into_iter()
-        .filter(|v| in_scope(&v.0, facts, &m.kinds, m.activation))
+        .filter(|v| in_scope(&v.0, facts, &scope.kinds, scope.activation))
         .collect();
     let indir = ws.join("in");
     let _ = fs::remove_dir_all(&indir);
@@ -395,8 +527,8 @@ fn run_one(
         symlink(root.join("vectors").join(rel), indir.join(&name)).unwrap();
         staged.push((name, rel.clone()));
     }
-    match Command::new(&m.run)
-        .arg(&impl_path)
+    match Command::new(run)
+        .arg(impl_path)
         .arg(&indir)
         .arg(&odir)
         .env("SANTA_BOUND", santa_bound_path())
@@ -426,7 +558,7 @@ fn run_one(
         };
         res.insert(rel, act);
     }
-    Ok((res, sha, failures))
+    Ok((res, failures))
 }
 
 #[derive(Default)]
@@ -952,6 +1084,20 @@ fn write_results(root: &Path, results: &[Value]) {
     fs::write(out.join("results.json"), serde_json::to_string_pretty(&doc).unwrap()).unwrap();
 }
 
+/// A runner's row in results.json: who it is, the scope it was graded at (null where unknown), then `rest`.
+fn result_row(m: &Runner, scope: Option<&Scope>, rest: Value) -> Value {
+    let mut row = json!({
+        "name": m.name, "label": m.label,
+        "version": scope.map(|s| &s.version), "tiers": scope.map(|s| &s.tiers), "cost": scope.map(|s| s.cost),
+        "kinds": scope.and_then(|s| s.kinds.as_ref()), "activation": scope.map(|s| s.activation),
+        "impl": &m.impl_,
+    });
+    for (k, v) in rest.as_object().unwrap() {
+        row[k] = v.clone();
+    }
+    row
+}
+
 /// The control runners (`"control": true`) that did not run: no result, or one marked `errored` (santa-run could not
 /// build or run). A grid without its control says nothing about the oracle, so this fails the run; any other runner
 /// that could not run stays a warning in the grid.
@@ -989,7 +1135,7 @@ fn main() -> ExitCode {
     }
     let runners = discover(&root.join("runners"));
     if runners.is_empty() {
-        println!("no runners under runners/*/ (need runner.json + executable santa-run)");
+        println!("no runners under runners/*/ (need runner.json + an executable santa-run or a \"runner\" key)");
         return ExitCode::FAILURE;
     }
     println!("\n=== SANTA conformance · {} runner(s) ===", runners.len());
@@ -999,28 +1145,29 @@ fn main() -> ExitCode {
     for m in &runners {
         eprintln!("running {} …", m.name);
         match run_one(m, &root, &vectors, &facts) {
-            Err(f) => {
+            Err((scope, f)) => {
                 let msg = fail_message(&f);
-                println!("  ⚠️  {}  — {msg} (see error above)", m.label);
-                results.push(json!({
-                    "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
-                    "kinds": &m.kinds, "activation": m.activation,
-                    "impl": &m.impl_, "sha": Value::Null,
+                // only a santa-run that ran has printed anything above
+                let above = if matches!(f, RunFail::Exit(_) | RunFail::Ceiling(_)) { " (see error above)" } else { "" };
+                println!("  ⚠️  {}  — {msg}{above}", m.label);
+                results.push(result_row(m, scope.as_ref(), json!({
+                    "sha": Value::Null,
                     "mark": "errored", "red_total": Value::Null, "slices": {}, "bounded_failures": [],
                     "error": msg,
-                }));
+                })));
             }
-            Ok((actuals, sha, failures)) => {
-                let slices = tally(&actuals, m.cost, &root);
+            Ok(ran) => {
+                let sc = &ran.scope;
+                let slices = tally(&ran.actuals, sc.cost, &root);
                 let agg_red: u64 = slices.values().map(Counts::red_total).sum();
                 let mark = if agg_red == 0 { "🎁" } else { "🪨" };
                 println!(
                     "  {mark} {}  (version≤{}, tiers={}, cost={}{})",
                     m.label,
-                    m.version,
-                    m.tiers.join(","),
-                    if m.cost { "True" } else { "False" },
-                    scope_suffix(m)
+                    sc.version,
+                    sc.tiers.join(","),
+                    if sc.cost { "True" } else { "False" },
+                    scope_suffix(sc)
                 );
                 for ((tier, version, prov), c) in &slices {
                     println!("      {tier}/{version}/{prov}: {}", c.summary());
@@ -1029,13 +1176,11 @@ fn main() -> ExitCode {
                     .iter()
                     .map(|((t, v, p), c)| (format!("{t}/{v}/{p}"), c.to_json()))
                     .collect();
-                results.push(json!({
-                    "name": m.name, "label": m.label, "version": m.version, "tiers": m.tiers, "cost": m.cost,
-                    "kinds": &m.kinds, "activation": m.activation,
-                    "impl": &m.impl_, "sha": sha,
+                results.push(result_row(m, Some(sc), json!({
+                    "sha": ran.sha,
                     "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
-                    "bounded_failures": failures,
-                }));
+                    "bounded_failures": ran.failures,
+                })));
             }
         }
     }
@@ -1056,17 +1201,21 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
-    use super::{discover_vectors, in_scope, parse_manifest, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Runner, Vec5, WireFacts, WIRE_KINDS};
+    use super::{discover_dir, discover_vectors, hosted_runner, in_scope, parse_hosted_manifest, parse_manifest, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Host, Runner, Scope, Vec5, WireFacts, WIRE_KINDS};
     use std::collections::BTreeMap;
     use serde_json::json;
     use std::fs;
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
     use std::process::Command;
+
+    fn scope() -> Scope {
+        Scope { version: "v6".into(), tiers: vec!["eval".into()], cost: true, kinds: None, activation: true }
+    }
 
     fn runner(name: &str, control: bool) -> Runner {
         Runner {
-            name: name.into(), label: name.into(), version: "v6".into(), tiers: vec!["eval".into()],
-            cost: true, kinds: None, activation: true, impl_: None, control, run: PathBuf::from("/dev/null"),
+            name: name.into(), label: name.into(), impl_: None, control,
+            host: Host::Santa { scope: scope(), run: PathBuf::from("/dev/null") },
         }
     }
 
@@ -1148,34 +1297,35 @@ mod tests {
 
     #[test]
     fn manifest_rejects_unknown_kind() {
-        let e = parse_manifest(&manifest(json!({"kinds": ["box"]})), PathBuf::from("/dev/null")).err().unwrap();
+        let e = parse_manifest(&manifest(json!({"kinds": ["box"]})), Path::new("/dev")).err().unwrap();
         assert!(e.contains("box"), "{e}");
     }
 
     #[test]
     fn manifest_rejects_empty_kinds() {
-        assert!(parse_manifest(&manifest(json!({"kinds": []})), PathBuf::from("/dev/null")).is_err());
+        assert!(parse_manifest(&manifest(json!({"kinds": []})), Path::new("/dev")).is_err());
     }
 
     #[test]
     fn manifest_rejects_kinds_without_wire() {
         let m = manifest(json!({"kinds": ["Box"], "tiers": ["eval"]}));
-        assert!(parse_manifest(&m, PathBuf::from("/dev/null")).is_err());
+        assert!(parse_manifest(&m, Path::new("/dev")).is_err());
     }
 
     #[test]
     fn manifest_activation_without_wire_is_fine() {
         let m = manifest(json!({"activation": false, "tiers": ["eval"]}));
-        assert!(!parse_manifest(&m, PathBuf::from("/dev/null")).unwrap().activation);
+        assert!(!parse_manifest(&m, Path::new("/dev")).unwrap().declared().unwrap().activation);
     }
 
     #[test]
     fn manifest_defaults() {
-        let r = parse_manifest(&manifest(json!({})), PathBuf::from("/dev/null")).unwrap();
-        assert_eq!(r.kinds, None);
-        assert!(r.activation);
-        assert!(r.cost);
+        let r = parse_manifest(&manifest(json!({})), Path::new("/dev")).unwrap();
         assert!(!r.control);
+        let s = r.declared().unwrap();
+        assert_eq!(s.kinds, None);
+        assert!(s.activation);
+        assert!(s.cost);
     }
 
     #[test]
@@ -1283,20 +1433,128 @@ mod tests {
 
     #[test]
     fn scope_suffix_names_what_is_declared() {
-        let mut r = runner("comet", false);
-        assert_eq!(scope_suffix(&r), "");
-        r.kinds = Some(vec!["Constant".into(), "Box".into()]);
-        r.activation = false;
-        assert_eq!(scope_suffix(&r), ", kinds=Constant,Box, activation=False");
+        let mut s = scope();
+        assert_eq!(scope_suffix(&s), "");
+        s.kinds = Some(vec!["Constant".into(), "Box".into()]);
+        s.activation = false;
+        assert_eq!(scope_suffix(&s), ", kinds=Constant,Box, activation=False");
     }
 
     #[test]
     fn manifest_rejects_unknown_keys_and_non_bool_flags() {
         for extra in [json!({"kind": ["Box"]}), json!({"activations": false}), json!({"activation": "false"}),
                       json!({"cost": "false"}), json!({"control": 1})] {
-            let e = parse_manifest(&manifest(extra.clone()), PathBuf::from("/dev/null"));
+            let e = parse_manifest(&manifest(extra.clone()), Path::new("/dev"));
             assert!(e.is_err(), "{extra}");
         }
+    }
+
+    // ── a runner hosted in the implementation's repo: SANTA names it, the implementation declares its scope ──────
+
+    fn entry(extra: serde_json::Value) -> serde_json::Value {
+        let mut m = json!({"name": "dasher", "label": "dasher", "impl": "https://example.org/ergots.git#master",
+                           "runner": "santa/runner"});
+        for (k, v) in extra.as_object().unwrap() {
+            m[k] = v.clone();
+        }
+        m
+    }
+
+    #[test]
+    fn a_runner_entry_leaves_the_scope_to_the_implementation() {
+        let r = parse_manifest(&entry(json!({})), Path::new("/dev")).unwrap();
+        assert!(matches!(&r.host, Host::Impl(p) if p == "santa/runner"));
+        assert!(r.declared().is_none());
+    }
+
+    /// SANTA's copy of a scope key would grade the implementation at SANTA's claim instead of its own.
+    #[test]
+    fn a_runner_entry_refuses_the_scope_keys() {
+        assert!(parse_manifest(&entry(json!({})), Path::new("/dev")).is_ok(), "the bare entry parses");
+        for extra in [json!({"version": "v6"}), json!({"tiers": ["eval"]}), json!({"cost": true}),
+                      json!({"kinds": ["Box"]}), json!({"activation": true})] {
+            let key = extra.as_object().unwrap().keys().next().unwrap().clone();
+            let e = parse_manifest(&entry(extra.clone()), Path::new("/dev")).err().unwrap_or_else(|| panic!("{extra}"));
+            assert!(e.contains(&key), "{e}");
+        }
+    }
+
+    #[test]
+    fn a_runner_entry_needs_an_impl() {
+        assert!(parse_manifest(&entry(json!({})), Path::new("/dev")).is_ok(), "the bare entry parses");
+        let mut absent = entry(json!({}));
+        absent.as_object_mut().unwrap().remove("impl");
+        assert!(parse_manifest(&absent, Path::new("/dev")).is_err());
+        assert!(parse_manifest(&entry(json!({"impl": null})), Path::new("/dev")).is_err());
+    }
+
+    #[test]
+    fn a_runner_path_stays_inside_the_checkout() {
+        assert!(parse_manifest(&entry(json!({})), Path::new("/dev")).is_ok(), "the bare entry parses");
+        for bad in [json!(""), json!("/opt/runner"), json!("../runner"), json!("santa/../../runner"), json!(42)] {
+            assert!(parse_manifest(&entry(json!({"runner": bad})), Path::new("/dev")).is_err(), "{bad}");
+        }
+    }
+
+    /// The implementation's runner.json holds its scope and nothing SANTA sets: it cannot name itself, point
+    /// elsewhere, or make itself the control.
+    #[test]
+    fn an_implementation_manifest_holds_only_the_scope() {
+        let base = json!({"version": "v6", "tiers": ["eval", "wire"], "cost": false});
+        let s = parse_hosted_manifest(&base).unwrap();
+        assert_eq!((s.version.as_str(), s.tiers.len(), s.cost, s.activation), ("v6", 2, false, true));
+        for extra in [json!({"control": true}), json!({"name": "x"}), json!({"label": "x"}),
+                      json!({"impl": "x#main"}), json!({"runner": "x"}), json!({"kinds": ["Box"], "tiers": ["eval"]})] {
+            let mut m = base.clone();
+            for (k, v) in extra.as_object().unwrap() {
+                m[k] = v.clone();
+            }
+            assert!(parse_hosted_manifest(&m).is_err(), "{extra}");
+        }
+    }
+
+    fn scratch(tag: &str) -> PathBuf {
+        let d = std::env::temp_dir().join(format!("santa-{tag}-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&d);
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn write_exec(p: &Path) {
+        use std::os::unix::fs::PermissionsExt;
+        fs::write(p, "#!/bin/sh\n").unwrap();
+        fs::set_permissions(p, fs::Permissions::from_mode(0o755)).unwrap();
+    }
+
+    #[test]
+    fn discover_takes_a_runner_entry_without_a_santa_run_and_refuses_one_with() {
+        let d = scratch("discover-entry");
+        fs::write(d.join("runner.json"), entry(json!({})).to_string()).unwrap();
+        let r = discover_dir(&d).unwrap().expect("an entry with no santa-run of its own is a runner");
+        assert!(matches!(r.host, Host::Impl(_)));
+        write_exec(&d.join("santa-run"));
+        assert!(discover_dir(&d).is_err(), "two santa-runs claim the entry");
+        let _ = fs::remove_dir_all(&d);
+    }
+
+    #[test]
+    fn hosted_runner_reads_the_implementations_dir() {
+        let checkout = scratch("hosted-runner");
+        let dir = checkout.join("santa/runner");
+        fs::create_dir_all(&dir).unwrap();
+        assert!(hosted_runner(&checkout, "santa/runner").unwrap_err().contains("runner.json"));
+        fs::write(dir.join("runner.json"), json!({"version": "v5", "tiers": ["wire"]}).to_string()).unwrap();
+        assert!(hosted_runner(&checkout, "santa/runner").unwrap_err().contains("santa-run"));
+        fs::write(dir.join("santa-run"), "#!/bin/sh\n").unwrap(); // present, not executable
+        assert!(hosted_runner(&checkout, "santa/runner").unwrap_err().contains("santa-run"));
+        write_exec(&dir.join("santa-run"));
+        let (s, run) = hosted_runner(&checkout, "santa/runner").unwrap();
+        assert_eq!((s.version.as_str(), s.tiers.as_slice()), ("v5", ["wire".to_string()].as_slice()));
+        assert_eq!(run, dir.join("santa-run"));
+        fs::write(dir.join("runner.json"), json!({"version": "v5", "tiers": ["wire"], "control": true}).to_string())
+            .unwrap();
+        assert!(hosted_runner(&checkout, "santa/runner").is_err());
+        let _ = fs::remove_dir_all(&checkout);
     }
 
     /// Every runner.json in the tree parses (tools CI has no submodules: it reads the in-tree ones; a local run all).
@@ -1308,7 +1566,7 @@ mod tests {
             let m = d.path().join("runner.json");
             if m.is_file() {
                 let j: serde_json::Value = serde_json::from_str(&fs::read_to_string(&m).unwrap()).unwrap();
-                parse_manifest(&j, PathBuf::from("/dev/null")).unwrap_or_else(|e| panic!("{}: {e}", m.display()));
+                parse_manifest(&j, Path::new("/dev")).unwrap_or_else(|e| panic!("{}: {e}", m.display()));
                 n += 1;
             }
         }
@@ -1375,21 +1633,24 @@ mod tests {
 
         // 1) bare branch -> latest tip (v2); impl_path is the passed cache dir; checkout at <dir>/remote.
         let cache = tmp.join("cache");
-        let (impl_path, sha_out) = resolve_impl(&Some(format!("{rs}#main")), &cache).unwrap();
-        assert_eq!(impl_path, cache.to_string_lossy());
+        let got = resolve_impl(&Some(format!("{rs}#main")), &cache).unwrap();
+        assert_eq!(got.arg, cache.to_string_lossy());
         let checkout = cache.join("remote");
+        assert_eq!(got.checkout.as_deref(), Some(checkout.as_path()));
+        let sha_out = got.sha;
         assert!(checkout.join(".git").is_dir());
         assert_eq!(fs::read_to_string(checkout.join("VERSION")).unwrap().trim(), "v2");
         assert!(sha_out.as_ref().is_some_and(|s| s.len() == 40));
 
         // 2) @<sha> pin -> that commit (v1), not the tip.
         let cache2 = tmp.join("cache2");
-        let (_, sha_pin) = resolve_impl(&Some(format!("{rs}#main@{sha1}")), &cache2).unwrap();
+        let sha_pin = resolve_impl(&Some(format!("{rs}#main@{sha1}")), &cache2).unwrap().sha;
         assert_eq!(fs::read_to_string(cache2.join("remote").join("VERSION")).unwrap().trim(), "v1");
         assert_eq!(sha_pin, Some(sha1.clone()));
 
         // 3) null impl -> ("-", None).
-        assert_eq!(resolve_impl(&None, &cache).unwrap(), ("-".to_string(), None));
+        let none = resolve_impl(&None, &cache).unwrap();
+        assert_eq!((none.arg.as_str(), none.checkout, none.sha), ("-", None, None));
 
         let _ = fs::remove_dir_all(&tmp);
     }
