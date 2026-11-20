@@ -409,15 +409,22 @@ fn grader_notes(results: &Value) -> String {
             let files = |k: &str| -> Vec<String> {
                 g[k].as_array().into_iter().flatten().filter_map(|f| f.as_str()).map(html_escape).collect()
             };
-            let (missing, extra) = (files("missing_files"), files("extra_files"));
-            let mut summary = format!("\u{26a0}\u{fe0f} <b>{}</b>: its own grading disagrees with SANTA's on {count} entries",
-                html_escape(label));
+            let (missing, extra, no_actuals) = (files("missing_files"), files("extra_files"), files("missing_actuals"));
+            // each disagreement is one verdict: an entry's dimension (or its outcome)
+            let mut parts: Vec<String> = Vec::new();
+            if count > 0 {
+                parts.push(format!("its own grading disagrees with SANTA's on {count} verdicts"));
+            }
             if !missing.is_empty() {
-                summary.push_str(&format!(", and it did not grade {} file(s) of its scope", missing.len()));
+                parts.push(format!("it did not grade {} file(s) of its scope", missing.len()));
+            }
+            if !no_actuals.is_empty() {
+                parts.push(format!("it listed {} file(s) as graded but wrote no actuals", no_actuals.len()));
             }
             if !extra.is_empty() {
-                summary.push_str(&format!(", and it graded {} file(s) outside its scope", extra.len()));
+                parts.push(format!("it graded {} file(s) outside its scope", extra.len()));
             }
+            let summary = format!("\u{26a0}\u{fe0f} <b>{}</b>: {}", html_escape(label), parts.join("; "));
             let list = |what: &str, xs: &[String]| -> String {
                 if xs.is_empty() {
                     return String::new();
@@ -445,7 +452,7 @@ fn grader_notes(results: &Value) -> String {
             };
             format!("<details class=\"grader-note\"><summary>{summary}</summary>\n<p>The board shows SANTA's re-grade; the \
                 package maintainer needs to patch their grader or runner.</p>\n{}{}{table}{more}</details>\n",
-                list("Not graded", &missing), list("Outside its scope", &extra))
+                list("Not graded", &missing) + &list("Listed as graded, no actuals", &no_actuals), list("Outside its scope", &extra))
         })
         .collect();
     if notes.is_empty() {
@@ -1503,11 +1510,23 @@ mod tests {
             ]}))), "(test)");
         assert!(html.contains("class=\"grader-notes\""));
         assert!(html.contains("dasher (ergots)"));
-        assert!(html.contains("2 entries"));
+        assert!(html.contains("on 2 verdicts"));
         assert!(html.contains("eval/v6/authored/x.json"));
         assert!(html.contains("The board shows SANTA's re-grade; the package maintainer needs to patch their grader or runner."));
         assert!(html.contains("<td><code>eval/v6/authored/a.json</code></td><td><code>a#0</code></td><td>value</td><td>nice</td><td>red</td>"));
         assert!(html.contains("<td><code>b#1</code></td><td>cost</td><td>red</td><td>nice</td>"));
+    }
+
+    /// A note that is only about files says so, with no count of zero; files listed without actuals are named.
+    #[test]
+    fn a_note_about_files_only_has_no_zero_count() {
+        let html = dashboard(&with_grader(Some(json!({
+            "agrees": false, "disagreement_count": 0, "missing_files": [], "extra_files": [],
+            "missing_actuals": ["eval/v6/authored/y.json"], "disagreements": []}))), "(test)");
+        assert!(html.contains("class=\"grader-notes\""));
+        assert!(!html.contains("on 0"), "a zero count is not a disagreement");
+        assert!(html.contains("eval/v6/authored/y.json"));
+        assert!(html.contains("listed 1 file(s) as graded but wrote no actuals"));
     }
 
     /// An agreeing grader, or a row from before the canary (no `grader`), gets no note.

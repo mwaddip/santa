@@ -1,28 +1,17 @@
-//! A bounded vector file's resource budget (`limits`) and the ceilings over it. See runner-integration.md §3a and
-//! docs/specs/resource-bounds.md.
-use serde_json::{json, Value};
+//! A bounded vector file's resource budget (`limits`) and the ceilings over it. See runner-integration.md §3a.
+use serde_json::Value;
 
-/// The most memory a bounded file may declare, and the safety ceiling every ordinary run gets (MiB).
+/// The most memory a bounded file may declare (MiB). conform's whole-run data limit is twice this, so a runner's
+/// backstop for a bounded child fits beneath it.
 pub const MEMORY_CEILING_MB: u64 = 4096;
 /// The most wall-clock time a bounded file may declare (s).
 pub const WALL_CEILING_S: u64 = 60;
-/// The wall-clock safety timeout of an ordinary run: every file without `limits`, in one process (s).
-pub const ORDINARY_WALL_S: u64 = 600;
 
-/// A process's budget: memory in MiB (systemd's `M`) and wall-clock time in seconds.
+/// A bounded file's budget: memory in MiB and wall-clock time in seconds.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Limits {
     pub memory_mb: u64,
     pub wall_s: u64,
-}
-
-impl Limits {
-    /// The safety ceiling of the ordinary run: it protects the machine, it does not grade.
-    pub const ORDINARY: Limits = Limits { memory_mb: MEMORY_CEILING_MB, wall_s: ORDINARY_WALL_S };
-
-    pub fn to_json(&self) -> Value {
-        json!({"memory_mb": self.memory_mb, "wall_s": self.wall_s})
-    }
 }
 
 /// Ok(None): no top-level `limits` (an ordinary file). Ok(Some): a valid bounded file. Err: what is wrong with it.
@@ -99,11 +88,5 @@ mod tests {
         ] {
             assert!(check_bounded(&bounded(l.clone(), 1)).is_err(), "accepted {l}");
         }
-    }
-
-    #[test]
-    fn ordinary_and_to_json() {
-        assert_eq!(Limits::ORDINARY, Limits { memory_mb: 4096, wall_s: 600 });
-        assert_eq!(Limits { memory_mb: 1024, wall_s: 10 }.to_json(), json!({"memory_mb": 1024, "wall_s": 10}));
     }
 }

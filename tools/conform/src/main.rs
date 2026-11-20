@@ -15,7 +15,9 @@ use serde_json::{json, Value};
 use std::collections::{BTreeMap, BTreeSet};
 use std::os::unix::fs::{symlink, PermissionsExt};
 use std::path::{Component, Path, PathBuf};
+use std::os::unix::process::ExitStatusExt;
 use std::process::{Command, ExitCode, ExitStatus};
+use std::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 use std::time::{Duration, Instant};
 use std::{env, fs};
 
@@ -36,8 +38,11 @@ const ENTRY_KEYS: [&str; 5] = ["name", "label", "impl", "control", "runner"];
 /// for one the implementation hosts (`runner`), and then only there.
 const SCOPE_KEYS: [&str; 5] = ["version", "tiers", "cost", "kinds", "activation"];
 
+/// The repo root, by real path: it is the `<santa-dir>` every runner gets, and a runner compares it with git's own
+/// top-level path (runner-integration §4.3).
 fn repo_root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../..") // tools/conform -> repo root
+    let p = Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."); // tools/conform -> repo root
+    fs::canonicalize(&p).unwrap_or(p)
 }
 
 fn die(msg: String) -> ! {
@@ -127,7 +132,7 @@ fn wire_facts(vectors_dir: &Path, vectors: &[Vec5]) -> Result<BTreeMap<String, W
 }
 
 /// A runner's declared scope (runner-integration §2): a wire file of a kind it does not declare, or one decided by
-/// an activated-version rule when it declares none, is not staged for it. A file without facts (every file of
+/// an activated-version rule when it declares none, is not selected for it. A file without facts (every file of
 /// another tier) is in scope.
 fn in_scope(rel: &str, facts: &BTreeMap<String, WireFacts>, kinds: &Option<Vec<String>>, activation: bool) -> bool {
     match facts.get(rel) {
@@ -157,7 +162,7 @@ fn scope_suffix(sc: &Scope) -> String {
     s
 }
 
-/// What a runner declares it implements (runner-integration §2): it decides which vectors are staged for it.
+/// What a runner declares it implements (runner-integration §2): it decides which vectors are selected for it.
 #[derive(Clone, Debug)]
 struct Scope {
     version: String,
@@ -454,6 +459,12 @@ fn in_place(dir: &Path, name: &str, cache_dir: &Path) -> Resolved {
 enum RunFail {
     /// santa-run exited non-zero: build, impl checkout, or a crash over the ordinary files.
     Exit(i32),
+    /// santa-run could not be started (spawning it, or setting its ceiling, failed).
+    Start(String),
+    /// santa-run was killed by a signal.
+    Signal(i32),
+    /// conform was interrupted (SIGINT, SIGTERM, SIGHUP) while the runner ran; it killed the runner's session.
+    Interrupted(i32),
     /// The run hit conform's safety ceiling ("time 1800 s"): it protects the machine and never grades.
     Ceiling(String),
     /// santa-run ran, but its results.json cannot be used (absent, not JSON, failing its schema, another commit).
@@ -467,6 +478,9 @@ fn fail_message(f: &RunFail) -> String {
         RunFail::Exit(c) => format!("santa-run exited {c}: could not build/run"),
         RunFail::Ceiling(l) => format!("santa-run exceeded the safety ceiling ({l})"),
         RunFail::Results(m) => format!("santa-run's outputs: {m}"),
+        RunFail::Start(m) => format!("cannot start santa-run: {m}"),
+        RunFail::Signal(sig) => format!("santa-run was killed by signal {sig}"),
+        RunFail::Interrupted(sig) => format!("interrupted by signal {sig}"),
         RunFail::Hosted(m) => format!("the implementation's runner: {m}"),
     }
 }
@@ -477,13 +491,85 @@ struct Ceiling {
     wall_s: u64,
 }
 
-/// RLIMIT_DATA at twice the largest budget ./validate allows (4096 MiB), so a runner's backstop for a bounded child
-/// (`max(4096, 2 × memory_mb)`) fits beneath it; a wall timeout long enough for a cold build (plan 3 measured < 1 min).
-const CEILING: Ceiling = Ceiling { data_mb: 8192, wall_s: 1800 };
+/// RLIMIT_DATA at twice the largest budget ./validate allows, so a runner's backstop for a bounded child
+/// (`max(4096, 2 × memory_mb)`) fits beneath it; a wall timeout long enough for a cold build (measured under a minute,
+/// 2026-11-21).
+const CEILING: Ceiling = Ceiling { data_mb: 2 * santa_check::limits::MEMORY_CEILING_MB, wall_s: 1800 };
 
-/// Runs `cmd` in a process group of its own under the ceiling: RLIMIT_DATA per process (soft = hard), and the whole
-/// group killed at the wall timeout. A group member left behind by a run that exited is killed too.
-fn run_under_ceiling(cmd: &mut Command, c: &Ceiling) -> Result<ExitStatus, RunFail> {
+/// The signal conform's SIGINT / SIGTERM / SIGHUP handler saw while a runner ran (0: none).
+static INTERRUPTED: AtomicI32 = AtomicI32::new(0);
+/// Whether a runner is running: the handler then leaves the kill to run_under_ceiling's loop.
+static RUNNING: AtomicBool = AtomicBool::new(false);
+
+extern "C" fn on_signal(sig: libc::c_int) {
+    if RUNNING.load(Ordering::SeqCst) {
+        INTERRUPTED.store(sig, Ordering::SeqCst);
+    } else {
+        // SAFETY: signal and raise are async-signal-safe.
+        unsafe {
+            libc::signal(sig, libc::SIG_DFL);
+            libc::raise(sig);
+        }
+    }
+}
+
+/// Ctrl-C, a closed window or a `kill` must not leave a runner running unbounded in its own session: the handler
+/// flags it, run_under_ceiling kills the runner's session, and conform then dies of the same signal.
+fn install_signal_handlers() {
+    for sig in [libc::SIGINT, libc::SIGTERM, libc::SIGHUP] {
+        // SAFETY: the handler only touches atomics and async-signal-safe calls.
+        unsafe {
+            libc::signal(sig, on_signal as extern "C" fn(libc::c_int) as libc::sighandler_t);
+        }
+    }
+}
+
+/// Dies of `sig` (the default action), as an interrupted conform should.
+fn reraise(sig: i32) -> ! {
+    // SAFETY: restoring the default action and raising.
+    unsafe {
+        libc::signal(sig, libc::SIG_DFL);
+        libc::raise(sig);
+    }
+    std::process::exit(128 + sig)
+}
+
+/// Kills every process of the session `sid` — the runner's: santa-run leads it (setsid), and its bounded children
+/// keep it in process groups of their own (runner-integration §3a) — until none is left.
+fn kill_session(sid: libc::pid_t) {
+    for _ in 0..50 {
+        let mut found = false;
+        for e in fs::read_dir("/proc").into_iter().flatten().flatten() {
+            let Some(pid) = e.file_name().to_str().and_then(|n| n.parse::<libc::pid_t>().ok()) else { continue };
+            let Ok(stat) = fs::read_to_string(format!("/proc/{pid}/stat")) else { continue };
+            // after the command's ")": state, ppid, pgrp, session
+            let f: Vec<&str> = stat.rsplit_once(')').map(|(_, r)| r.split_whitespace().collect()).unwrap_or_default();
+            if f.len() > 3 && f[0] != "Z" && f[3].parse::<libc::pid_t>().ok() == Some(sid) {
+                // SAFETY: signalling a process of the runner's own session.
+                unsafe {
+                    libc::kill(pid, libc::SIGKILL);
+                }
+                found = true;
+            }
+        }
+        if !found {
+            return;
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+}
+
+/// How a santa-run that did not succeed ended: its exit code, or the signal that killed it.
+fn exit_failure(status: &ExitStatus) -> RunFail {
+    match status.signal() {
+        Some(sig) => RunFail::Signal(sig),
+        None => RunFail::Exit(status.code().unwrap_or(1)),
+    }
+}
+
+/// Runs `cmd` in a session of its own under the ceiling: RLIMIT_DATA per process (soft = hard), and the whole session
+/// killed at the wall timeout, when `interrupted` is set, or after the command exits (nothing it started lingers).
+fn run_under_ceiling(cmd: &mut Command, c: &Ceiling, interrupted: &AtomicI32) -> Result<ExitStatus, RunFail> {
     use std::os::unix::process::CommandExt;
     let bytes = (c.data_mb * 1024 * 1024) as libc::rlim_t;
     // SAFETY: setsid and setrlimit are async-signal-safe; the closure allocates nothing.
@@ -499,28 +585,30 @@ fn run_under_ceiling(cmd: &mut Command, c: &Ceiling) -> Result<ExitStatus, RunFa
             Ok(())
         });
     }
-    let mut child = cmd.spawn().map_err(|_| RunFail::Exit(1))?;
-    let group = child.id() as libc::pid_t;
-    // SAFETY: killpg on the group this function created.
-    let kill_group = || unsafe {
-        libc::killpg(group, libc::SIGKILL);
-    };
+    let mut child = cmd.spawn().map_err(|e| RunFail::Start(e.to_string()))?;
+    let session = child.id() as libc::pid_t;
     let deadline = Instant::now() + Duration::from_secs(c.wall_s);
     loop {
+        let sig = interrupted.load(Ordering::SeqCst);
+        if sig != 0 {
+            kill_session(session);
+            let _ = child.wait();
+            return Err(RunFail::Interrupted(sig));
+        }
         match child.try_wait() {
             Ok(Some(status)) => {
-                kill_group();
+                kill_session(session);
                 return Ok(status);
             }
             Ok(None) if Instant::now() >= deadline => {
-                kill_group();
+                kill_session(session);
                 let _ = child.wait();
                 return Err(RunFail::Ceiling(format!("time {} s", c.wall_s)));
             }
             Ok(None) => std::thread::sleep(Duration::from_millis(100)),
-            Err(_) => {
-                kill_group();
-                return Err(RunFail::Exit(1));
+            Err(e) => {
+                kill_session(session);
+                return Err(RunFail::Start(e.to_string()));
             }
         }
     }
@@ -598,7 +686,11 @@ fn actuals_for(ofile: &Path, vector: &Value, schemas: &ActualsSchemas, tier: &st
         return json!({});
     }
     let panicked = |note: String| json!({"error": "panicked", "note": note});
-    match serde_json::from_str::<Value>(&fs::read_to_string(ofile).unwrap()) {
+    let bytes = match fs::read(ofile) {
+        Ok(b) => b,
+        Err(e) => return each_entry(vector, panicked(format!("the actuals file cannot be read: {e}"))),
+    };
+    match serde_json::from_slice::<Value>(&bytes) {
         Err(e) => each_entry(vector, panicked(format!("the actuals file is not JSON: {e}"))),
         Ok(Value::Object(m)) => Value::Object(
             m.into_iter()
@@ -628,8 +720,11 @@ fn load_results_schema(root: &Path) -> Validator {
 /// A runner's `<out-dir>/results.json`, if conform can use it: present, JSON, valid against its schema, and graded
 /// against this checkout's commit. Otherwise why not.
 fn read_results(out: &Path, v: &Validator, head: &str) -> Result<Value, String> {
-    let text = fs::read_to_string(out.join("results.json")).map_err(|_| "no results.json".to_string())?;
-    let doc: Value = serde_json::from_str(&text).map_err(|e| format!("results.json is not JSON: {e}"))?;
+    let bytes = fs::read(out.join("results.json")).map_err(|e| match e.kind() {
+        std::io::ErrorKind::NotFound => "no results.json".to_string(),
+        _ => format!("results.json cannot be read: {e}"),
+    })?;
+    let doc: Value = serde_json::from_slice(&bytes).map_err(|e| format!("results.json is not JSON: {e}"))?;
     if let Err(e) = v.validate(&doc) {
         let at = e.instance_path().to_string();
         return Err(format!("results.json fails santa-runner-results.schema.json: {}{}",
@@ -642,16 +737,24 @@ fn read_results(out: &Path, v: &Validator, head: &str) -> Result<Value, String> 
 }
 
 /// The runner's actuals for every file of conform's selection, from `<out-dir>/actuals/<relpath>` (actuals_for: held
-/// to the tier's schema entry by entry; an absent file is {}).
-fn read_actuals(out: &Path, selected: &[&Vec5], root: &Path, schemas: &ActualsSchemas) -> BTreeMap<String, Value> {
-    selected
-        .iter()
-        .map(|v| {
-            let vector: Value =
-                serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&v.0)).unwrap()).unwrap();
-            (v.0.clone(), actuals_for(&out.join("actuals").join(&v.0), &vector, schemas, &v.1))
-        })
-        .collect()
+/// to the tier's schema entry by entry; an absent file is {}), and the files that had an actuals file at all.
+fn read_actuals(
+    out: &Path,
+    selected: &[&Vec5],
+    root: &Path,
+    schemas: &ActualsSchemas,
+) -> (BTreeMap<String, Value>, BTreeSet<String>) {
+    let mut actuals = BTreeMap::new();
+    let mut present = BTreeSet::new();
+    for v in selected {
+        let vector: Value = serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&v.0)).unwrap()).unwrap();
+        let ofile = out.join("actuals").join(&v.0);
+        if ofile.is_file() {
+            present.insert(v.0.clone());
+        }
+        actuals.insert(v.0.clone(), actuals_for(&ofile, &vector, schemas, &v.1));
+    }
+    (actuals, present)
 }
 
 /// What every runner is run against: the checkout (`<santa-dir>`), its vectors and their wire facts, the schemas a
@@ -665,18 +768,21 @@ struct Corpus<'a> {
     head: &'a str,
 }
 
-/// What a runner's run yields: its actuals over conform's selection by relpath, the bounded files that exceeded or
-/// crashed, and its own results.json.
-type RunOutputs = (BTreeMap<String, Value>, Vec<String>, Value);
+/// What a runner's run yields: its actuals over conform's selection by relpath, the files that had an actuals file,
+/// the bounded files it did not run within budget, and its own results.json.
+struct Outputs {
+    actuals: BTreeMap<String, Value>,
+    present: BTreeSet<String>,
+    failures: Vec<String>,
+    results: Value,
+}
 
 /// A runner that ran: the scope it was graded at, its actuals over conform's selection by relpath, the impl sha, the
 /// bounded files that exceeded or crashed, and its own results.json.
 struct Ran {
     scope: Scope,
-    actuals: BTreeMap<String, Value>,
     sha: Option<String>,
-    failures: Vec<String>,
-    results: Value,
+    out: Outputs,
 }
 
 /// Runs one runner. A failure carries the scope when conform got far enough to know it (a hosted runner's is read
@@ -693,7 +799,7 @@ fn run_one(m: &Runner, corpus: &Corpus) -> Result<Ran, (Option<Scope>, RunFail)>
         }
     };
     match run_runner(&run, &imp.arg, &scope, &ws, corpus) {
-        Ok((actuals, failures, results)) => Ok(Ran { scope, actuals, sha: imp.sha, failures, results }),
+        Ok(out) => Ok(Ran { scope, sha: imp.sha, out }),
         Err(f) => Err((Some(scope), f)),
     }
 }
@@ -707,34 +813,41 @@ fn run_runner(
     scope: &Scope,
     ws: &Path,
     corpus: &Corpus,
-) -> Result<RunOutputs, RunFail> {
+) -> Result<Outputs, RunFail> {
     let out = ws.join("out");
     let _ = fs::remove_dir_all(&out);
     fs::create_dir_all(&out).unwrap();
-    let status = run_under_ceiling(Command::new(run).arg(impl_path).arg(corpus.root).arg(&out), &CEILING)?;
+    RUNNING.store(true, Ordering::SeqCst);
+    let status = run_under_ceiling(Command::new(run).arg(impl_path).arg(corpus.root).arg(&out), &CEILING, &INTERRUPTED);
+    RUNNING.store(false, Ordering::SeqCst);
+    let status = status?;
     if !status.success() {
-        return Err(RunFail::Exit(status.code().unwrap_or(1)));
+        return Err(exit_failure(&status));
     }
     let results = read_results(&out, corpus.results_schema, corpus.head).map_err(RunFail::Results)?;
     let selected = selection(corpus.vectors, corpus.facts, scope);
-    let actuals = read_actuals(&out, &selected, corpus.root, corpus.schemas);
+    let (actuals, present) = read_actuals(&out, &selected, corpus.root, corpus.schemas);
     let failures = bounded_failures(&actuals, corpus.root);
-    Ok((actuals, failures, results))
+    Ok(Outputs { actuals, present, failures, results })
 }
 
-/// The bounded files (a vector with `limits`) on which the runner reported `exceeded` or `panicked`: for a control,
-/// a budget or a row is wrong (runner-integration §3a).
+/// The bounded files (a vector with `limits`) the runner did not run within budget: an entry it left unanswered, or
+/// answered `exceeded`, `panicked` or `not-implemented`. For a control, a budget or a row is wrong
+/// (runner-integration §3a: the control runs every bounded file within its budget).
 fn bounded_failures(actuals: &BTreeMap<String, Value>, root: &Path) -> Vec<String> {
     actuals
         .iter()
         .filter(|(rel, act)| {
-            let failed = act.as_object().is_some_and(|m| {
-                m.values().any(|a| matches!(a["error"].as_str(), Some("exceeded" | "panicked")))
-            });
-            failed && fs::read_to_string(root.join("vectors").join(rel))
+            let Some(vector) = fs::read_to_string(root.join("vectors").join(rel))
                 .ok()
                 .and_then(|t| serde_json::from_str::<Value>(&t).ok())
-                .is_some_and(|v| v.get("limits").is_some())
+                .filter(|v| v.get("limits").is_some())
+            else {
+                return false;
+            };
+            vector["entries"].as_array().into_iter().flatten().filter_map(|e| e["name"].as_str()).any(|n| {
+                act.get(n).is_none_or(|a| matches!(a["error"].as_str(), Some("exceeded" | "panicked" | "not-implemented")))
+            })
         })
         .map(|(rel, _)| rel.clone())
         .collect()
@@ -993,8 +1106,14 @@ fn with_file(mut r: Value, rel: &str) -> Value {
 const MAX_DISAGREEMENTS: usize = 200;
 
 /// The canary (runner-integration §4.4): where a runner's own verdicts — its red records and the files it says it
-/// graded — differ from SANTA's re-grade of its actuals over conform's own selection, keyed by (file, entry, dim).
-fn grader(runner: &Value, canary: &BTreeMap<(String, String, String), Counts>, selected: &BTreeSet<String>) -> Value {
+/// graded — differ from SANTA's re-grade of its actuals over conform's own selection, keyed by (file, entry, dim);
+/// `present` holds the files that had an actuals file.
+fn grader(
+    runner: &Value,
+    canary: &BTreeMap<(String, String, String), Counts>,
+    selected: &BTreeSet<String>,
+    present: &BTreeSet<String>,
+) -> Value {
     type Key = (String, String, String);
     let key = |r: &Value| -> Option<Key> {
         Some((r["file"].as_str()?.to_string(), r["entry"].as_str()?.to_string(), r["dim"].as_str()?.to_string()))
@@ -1019,9 +1138,11 @@ fn grader(runner: &Value, canary: &BTreeMap<(String, String, String), Counts>, s
     disagreements.truncate(MAX_DISAGREEMENTS);
     let missing: Vec<&String> = selected.difference(&runner_files).collect();
     let extra: Vec<&String> = runner_files.difference(selected).collect();
+    // listed as graded, but no actuals file: its entries grade red, and the cause is named
+    let missing_actuals: Vec<&String> = runner_files.intersection(selected).filter(|f| !present.contains(*f)).collect();
     json!({
-        "agrees": count == 0 && missing.is_empty() && extra.is_empty(),
-        "missing_files": missing, "extra_files": extra,
+        "agrees": count == 0 && missing.is_empty() && extra.is_empty() && missing_actuals.is_empty(),
+        "missing_files": missing, "extra_files": extra, "missing_actuals": missing_actuals,
         "disagreement_count": count, "disagreements": disagreements,
     })
 }
@@ -1394,6 +1515,7 @@ fn main() -> ExitCode {
     let schemas = ActualsSchemas::load(&root);
     let grading = load_grading(&root);
     check_grading(&grading, &vectors, &root).unwrap_or_else(|e| die(e));
+    install_signal_handlers();
     let results_schema = load_results_schema(&root);
     let head = head(&root).unwrap_or_else(|| die("conform's checkout has no git HEAD: a runner's results name it".into()));
     let corpus = Corpus { root: &root, vectors: &vectors, facts: &facts, schemas: &schemas, results_schema: &results_schema, head: &head };
@@ -1401,10 +1523,14 @@ fn main() -> ExitCode {
     for m in &runners {
         eprintln!("running {} …", m.name);
         match run_one(m, &corpus) {
+            Err((_, RunFail::Interrupted(sig))) => {
+                eprintln!("\ninterrupted (signal {sig}): {}'s session was killed; no results written", m.name);
+                reraise(sig);
+            }
             Err((scope, f)) => {
                 let msg = fail_message(&f);
                 // only a santa-run that ran has printed anything above
-                let above = if matches!(f, RunFail::Exit(_) | RunFail::Ceiling(_)) { " (see error above)" } else { "" };
+                let above = if matches!(f, RunFail::Exit(_) | RunFail::Signal(_) | RunFail::Ceiling(_)) { " (see error above)" } else { "" };
                 println!("  ⚠️  {}  — {msg}{above}", m.label);
                 results.push(result_row(m, scope.as_ref(), json!({
                     "sha": Value::Null,
@@ -1414,7 +1540,7 @@ fn main() -> ExitCode {
             }
             Ok(ran) => {
                 let sc = &ran.scope;
-                let slices = tally(&ran.actuals, sc.cost, &root, &grading);
+                let slices = tally(&ran.out.actuals, sc.cost, &root, &grading);
                 let agg_red: u64 = slices.values().map(Counts::red_total).sum();
                 let mark = if agg_red == 0 { "🎁" } else { "🪨" };
                 println!(
@@ -1428,15 +1554,16 @@ fn main() -> ExitCode {
                 for ((tier, version, prov), c) in &slices {
                     println!("      {tier}/{version}/{prov}: {}", c.summary());
                 }
-                let selected: BTreeSet<String> = ran.actuals.keys().cloned().collect();
-                let grader = grader(&ran.results, &slices, &selected);
+                let selected: BTreeSet<String> = ran.out.actuals.keys().cloned().collect();
+                let grader = grader(&ran.out.results, &slices, &selected, &ran.out.present);
                 if grader["agrees"] == true {
                     println!("      grader: agrees");
                 } else {
                     println!(
-                        "      grader: {} disagreements, {} missing files, {} extra files",
+                        "      grader: {} disagreements, {} missing files, {} without actuals, {} extra files",
                         grader["disagreement_count"],
                         grader["missing_files"].as_array().map_or(0, Vec::len),
+                        grader["missing_actuals"].as_array().map_or(0, Vec::len),
                         grader["extra_files"].as_array().map_or(0, Vec::len)
                     );
                 }
@@ -1447,7 +1574,7 @@ fn main() -> ExitCode {
                 results.push(result_row(m, Some(sc), json!({
                     "sha": ran.sha,
                     "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
-                    "bounded_failures": ran.failures, "grader": grader,
+                    "bounded_failures": ran.out.failures, "grader": grader,
                 })));
             }
         }
@@ -2780,8 +2907,8 @@ mod tests {
 
     #[test]
     fn fail_message_names_the_ceiling() {
-        assert_eq!(super::fail_message(&super::RunFail::Ceiling("memory 4096 MiB".into())),
-                   "santa-run exceeded the safety ceiling (memory 4096 MiB)");
+        assert_eq!(super::fail_message(&super::RunFail::Ceiling("time 1800 s".into())),
+                   "santa-run exceeded the safety ceiling (time 1800 s)");
         assert_eq!(super::fail_message(&super::RunFail::Exit(101)), "santa-run exited 101: could not build/run");
         assert_eq!(super::fail_message(&super::RunFail::Results("no results.json".into())), "santa-run's outputs: no results.json");
     }
@@ -3008,30 +3135,89 @@ mod tests {
     fn the_ceiling_kills_a_run_past_its_wall_time() {
         let s = ceiling_script("wall", "sleep 30");
         let t0 = std::time::Instant::now();
-        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 1 });
+        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 1 }, &no_interrupt());
         assert!(matches!(&r, Err(super::RunFail::Ceiling(l)) if l == "time 1 s"), "{:?}", r.as_ref().map(|s| s.code()));
         assert!(t0.elapsed() < std::time::Duration::from_secs(5));
     }
 
-    /// The whole process group dies at the ceiling, a grandchild included.
+    fn no_interrupt() -> std::sync::atomic::AtomicI32 {
+        std::sync::atomic::AtomicI32::new(0)
+    }
+
+    /// A process is alive: it exists and is not a zombie (a container's PID 1 may never reap it).
+    fn alive(pid: &str) -> bool {
+        fs::read_to_string(format!("/proc/{}/stat", pid.trim()))
+            .map(|st| !st.rsplit(')').next().unwrap_or("").trim_start().starts_with('Z'))
+            .unwrap_or(false)
+    }
+
+    /// A grandchild in a process group of its own (as the contract gives a bounded child) writes its pid, then sleeps.
+    const OWN_GROUP_CHILD: &str = "python3 -I -c 'import os, sys, time; os.setpgid(0, 0); open(sys.argv[1], \"w\").write(str(os.getpid())); time.sleep(30)' \"$(dirname \"$0\")/child.pid\" &\nsleep 0.3";
+
+    fn child_pid(s: &Path) -> String {
+        fs::read_to_string(s.parent().unwrap().join("child.pid")).unwrap()
+    }
+
+    /// The runner's whole session dies at the ceiling: a grandchild in a process group of its own included.
     #[test]
-    fn the_ceiling_kills_the_whole_group() {
-        let s = ceiling_script("group", "sleep 30 &\necho $! > \"$(dirname \"$0\")/child.pid\"\nsleep 30");
-        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 1 });
+    fn the_ceiling_kills_the_runner_session() {
+        let s = ceiling_script("session", &format!("{OWN_GROUP_CHILD}\nsleep 30"));
+        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 1 }, &no_interrupt());
         assert!(matches!(r, Err(super::RunFail::Ceiling(_))));
-        let pid = fs::read_to_string(s.parent().unwrap().join("child.pid")).unwrap();
         std::thread::sleep(std::time::Duration::from_millis(200));
-        let alive = Command::new("kill").args(["-0", pid.trim()]).status().unwrap().success();
-        assert!(!alive, "the grandchild {} outlived the ceiling", pid.trim());
+        assert!(!alive(&child_pid(&s)), "the own-group grandchild outlived the ceiling");
+    }
+
+    /// What a run that exited leaves behind in its session is killed too.
+    #[test]
+    fn a_finished_run_leaves_nothing_behind() {
+        let s = ceiling_script("leftover", OWN_GROUP_CHILD);
+        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 30 }, &no_interrupt());
+        assert!(matches!(&r, Ok(st) if st.success()));
+        std::thread::sleep(std::time::Duration::from_millis(200));
+        assert!(!alive(&child_pid(&s)), "a leftover of a finished run kept running");
+    }
+
+    /// An interrupt (conform's SIGINT/SIGTERM/SIGHUP handler sets the flag) kills the runner's session and says which.
+    #[test]
+    fn an_interrupt_kills_the_runner_and_names_the_signal() {
+        let s = ceiling_script("interrupt", &format!("{OWN_GROUP_CHILD}\nsleep 30"));
+        let flag = std::sync::Arc::new(no_interrupt());
+        let f = flag.clone();
+        std::thread::spawn(move || {
+            std::thread::sleep(std::time::Duration::from_millis(600));
+            f.store(libc::SIGINT, std::sync::atomic::Ordering::SeqCst);
+        });
+        let t0 = std::time::Instant::now();
+        let r = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 30 }, &flag);
+        assert!(matches!(r, Err(super::RunFail::Interrupted(sig)) if sig == libc::SIGINT));
+        assert!(t0.elapsed() < std::time::Duration::from_secs(5));
+        std::thread::sleep(std::time::Duration::from_millis(200));
+        assert!(!alive(&child_pid(&s)));
+    }
+
+    /// A runner that cannot start, or dies by a signal, says so, not "exited 1".
+    #[test]
+    fn a_runner_that_cannot_start_or_dies_by_a_signal_says_so() {
+        match super::run_under_ceiling(&mut Command::new("/nonexistent/santa-run"), &super::CEILING, &no_interrupt()) {
+            Err(super::RunFail::Start(m)) => assert!(m.contains("No such file"), "{m}"),
+            other => panic!("{:?}", other.map(|st| st.code())),
+        }
+        let killed = Command::new("bash").args(["-c", "kill -9 $$"]).status().unwrap();
+        assert!(matches!(super::exit_failure(&killed), super::RunFail::Signal(9)));
+        let three = Command::new("bash").args(["-c", "exit 3"]).status().unwrap();
+        assert!(matches!(super::exit_failure(&three), super::RunFail::Exit(3)));
+        assert_eq!(super::fail_message(&super::RunFail::Signal(9)), "santa-run was killed by signal 9");
+        assert_eq!(super::fail_message(&super::RunFail::Start("boom".into())), "cannot start santa-run: boom");
     }
 
     /// Each process runs under the data limit.
     #[test]
     fn the_ceiling_limits_each_process_data() {
         let s = ceiling_script("data", "exec python3 -I -c 'bytearray(64 << 20)'");
-        let small = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 32, wall_s: 30 });
+        let small = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 32, wall_s: 30 }, &no_interrupt());
         assert!(matches!(&small, Ok(st) if !st.success()));
-        let big = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 30 });
+        let big = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 30 }, &no_interrupt());
         assert!(matches!(&big, Ok(st) if st.success()));
     }
 
@@ -3092,7 +3278,8 @@ mod tests {
         fs::write(adir.join("a.json"), json!({"e#0": ok, "e#1": {"value": 1, "cost": "x", "error": null}}).to_string()).unwrap();
         let vs = super::discover_vectors(&root.join("vectors"));
         let selected: Vec<&super::Vec5> = vs.iter().collect();
-        let a = super::read_actuals(&out, &selected, &root, &schemas());
+        let (a, present) = super::read_actuals(&out, &selected, &root, &schemas());
+        assert_eq!(present.into_iter().collect::<Vec<_>>(), vec!["eval/v6/authored/a.json".to_string()]);
         assert_eq!(a["eval/v6/authored/a.json"]["e#0"], ok);
         assert_eq!(a["eval/v6/authored/a.json"]["e#1"]["error"], "panicked");
         assert!(a["eval/v6/authored/a.json"]["e#1"]["note"].as_str().unwrap().contains("santa-eval.actuals.schema.json"));
@@ -3121,7 +3308,7 @@ mod tests {
 
     #[test]
     fn grader_agrees_when_the_red_sets_match() {
-        let g = super::grader(&runner_with(&[F], &[(F, "e1", "value")]), &canary_with(&[(F, "e1", "value")]), &sel(&[F]));
+        let g = super::grader(&runner_with(&[F], &[(F, "e1", "value")]), &canary_with(&[(F, "e1", "value")]), &sel(&[F]), &sel(&[F]));
         assert_eq!(g["agrees"], true);
         assert_eq!(g["disagreement_count"], 0);
         assert_eq!(g["disagreements"], json!([]));
@@ -3129,7 +3316,7 @@ mod tests {
 
     #[test]
     fn grader_lists_each_side_of_a_disagreement() {
-        let g = super::grader(&runner_with(&[F], &[(F, "e1", "value")]), &canary_with(&[(F, "e2", "cost")]), &sel(&[F]));
+        let g = super::grader(&runner_with(&[F], &[(F, "e1", "value")]), &canary_with(&[(F, "e2", "cost")]), &sel(&[F]), &sel(&[F]));
         assert_eq!(g["agrees"], false);
         assert_eq!(g["disagreements"], json!([
             {"file": F, "entry": "e1", "dim": "value", "runner": "red", "santa": "nice"},
@@ -3140,17 +3327,26 @@ mod tests {
     #[test]
     fn grader_names_missing_and_extra_files() {
         let g = super::grader(&runner_with(&[F, "eval/v6/authored/extra.json"], &[]), &canary_with(&[]),
-            &sel(&[F, "eval/v6/authored/missing.json"]));
+            &sel(&[F, "eval/v6/authored/missing.json"]), &sel(&[F, "eval/v6/authored/extra.json"]));
         assert_eq!(g["agrees"], false);
         assert_eq!(g["missing_files"], json!(["eval/v6/authored/missing.json"]));
         assert_eq!(g["extra_files"], json!(["eval/v6/authored/extra.json"]));
+    }
+
+    /// A file the runner lists as graded but wrote no actuals for is named as such.
+    #[test]
+    fn grader_names_files_listed_without_actuals() {
+        let g = super::grader(&runner_with(&[F], &[]), &canary_with(&[]), &sel(&[F]), &sel(&[]));
+        assert_eq!(g["agrees"], false);
+        assert_eq!(g["missing_actuals"], json!([F]));
+        assert_eq!(g["missing_files"], json!([]));
     }
 
     #[test]
     fn grader_caps_the_list_and_keeps_the_count() {
         let names: Vec<String> = (0..250).map(|i| format!("e{i:03}")).collect();
         let reds: Vec<(&str, &str, &str)> = names.iter().map(|n| (F, n.as_str(), "value")).collect();
-        let g = super::grader(&runner_with(&[F], &reds), &canary_with(&[]), &sel(&[F]));
+        let g = super::grader(&runner_with(&[F], &reds), &canary_with(&[]), &sel(&[F]), &sel(&[F]));
         assert_eq!(g["disagreement_count"], 250);
         assert_eq!(g["disagreements"].as_array().unwrap().len(), super::MAX_DISAGREEMENTS);
     }
@@ -3171,7 +3367,7 @@ mod tests {
     const BOUNDED: &str = "eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_only_32768x4096.json";
 
     /// The fixture runner (tests/fixture-runner/santa-run) over two real eval files, one of them bounded.
-    fn run_fixture(mode: &str, tag: &str) -> Result<super::RunOutputs, super::RunFail> {
+    fn run_fixture(mode: &str, tag: &str) -> Result<super::Outputs, super::RunFail> {
         let root = super::repo_root();
         let all = super::discover_vectors(&root.join("vectors"));
         let vectors: Vec<Vec5> = all.into_iter().filter(|v| v.0 == PLAIN || v.0 == BOUNDED).collect();
@@ -3189,29 +3385,38 @@ mod tests {
         std::env::set_var("FIXTURE_MODE", mode);
         let r = super::run_runner(&run, "-", &scope(), &ws, &corpus);
         std::env::remove_var("FIXTURE_MODE");
+        std::env::remove_var("FIXTURE_FILES");
         r
     }
 
     /// conform runs a self-contained runner, reads its outputs and re-grades them: an honest runner agrees with the
-    /// canary, a lying one is caught, a silent one is refused.
+    /// canary, a lying one is caught, one that leaves a file's actuals out is named, a silent one is refused.
     #[test]
     fn a_fixture_runner_is_run_and_canaried() {
         let root = super::repo_root();
-        let (actuals, failures, results) = run_fixture("honest", "honest").unwrap_or_else(|e| panic!("{e:?}"));
-        assert_eq!(actuals.keys().cloned().collect::<Vec<_>>(), vec![BOUNDED.to_string(), PLAIN.to_string()]);
-        assert!(actuals.values().all(|a| a.as_object().is_some_and(|m| !m.is_empty())));
-        assert!(failures.is_empty());
-        let selected: std::collections::BTreeSet<String> = actuals.keys().cloned().collect();
-        let canary = super::tally(&actuals, true, &root, &grading());
-        assert_eq!(super::grader(&results, &canary, &selected)["agrees"], true);
+        let o = run_fixture("honest", "honest").unwrap_or_else(|e| panic!("{e:?}"));
+        assert_eq!(o.actuals.keys().cloned().collect::<Vec<_>>(), vec![BOUNDED.to_string(), PLAIN.to_string()]);
+        assert!(o.actuals.values().all(|a| a.as_object().is_some_and(|m| !m.is_empty())));
+        assert!(o.failures.is_empty());
+        let selected: std::collections::BTreeSet<String> = o.actuals.keys().cloned().collect();
+        let canary = super::tally(&o.actuals, true, &root, &grading());
+        assert_eq!(super::grader(&o.results, &canary, &selected, &o.present)["agrees"], true);
 
-        let (actuals, _, results) = run_fixture("lying", "lying").unwrap_or_else(|e| panic!("{e:?}"));
-        let canary = super::tally(&actuals, true, &root, &grading());
-        let g = super::grader(&results, &canary, &selected);
+        let o = run_fixture("lying", "lying").unwrap_or_else(|e| panic!("{e:?}"));
+        let canary = super::tally(&o.actuals, true, &root, &grading());
+        let g = super::grader(&o.results, &canary, &selected, &o.present);
         assert_eq!(g["agrees"], false);
         assert_eq!(g["disagreement_count"], 1);
         assert_eq!(g["disagreements"][0]["runner"], "red");
         assert_eq!(g["disagreements"][0]["santa"], "nice");
+
+        let o = run_fixture("partial", "partial").unwrap_or_else(|e| panic!("{e:?}"));
+        assert_eq!(o.actuals[BOUNDED], json!({}));
+        let canary = super::tally(&o.actuals, true, &root, &grading());
+        let g = super::grader(&o.results, &canary, &selected, &o.present);
+        assert_eq!(g["agrees"], false);
+        assert_eq!(g["missing_actuals"], json!([BOUNDED]));
+        assert_eq!(o.failures, vec![BOUNDED.to_string()], "a bounded file left unanswered is a bounded failure");
 
         match run_fixture("silent", "silent") {
             Err(super::RunFail::Results(m)) => assert_eq!(m, "no results.json"),
@@ -3228,6 +3433,25 @@ mod tests {
             (PLAIN.to_string(), json!({"x": {"error": "panicked", "note": "boom"}})),
         ]);
         assert_eq!(super::bounded_failures(&actuals, &super::repo_root()), vec![BOUNDED.to_string()]);
+        let e = "G-size-only-32768x4096-a3#0";
+        for unanswered in [json!({}), json!({e: {"error": "not-implemented"}})] {
+            let a = BTreeMap::from([(BOUNDED.to_string(), unanswered)]);
+            assert_eq!(super::bounded_failures(&a, &super::repo_root()), vec![BOUNDED.to_string()]);
+        }
+        let answered = BTreeMap::from([(BOUNDED.to_string(), json!({e: {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}}))]);
+        assert!(super::bounded_failures(&answered, &super::repo_root()).is_empty());
+    }
+
+    /// A malformed actuals or results file is a verdict, never a crash of conform.
+    #[test]
+    fn malformed_outputs_are_verdicts_not_crashes() {
+        let d = out_dir("malformed");
+        fs::write(d.join("x.json"), [0xffu8, 0xfe, 0x00]).unwrap();
+        let a = super::actuals_for(&d.join("x.json"), &one_entry_vector(), &schemas(), "eval");
+        assert_eq!(a["e#0"]["error"], "panicked");
+        fs::write(d.join("results.json"), [0xffu8, 0xfe]).unwrap();
+        let e = super::read_results(&d, &super::load_results_schema(&super::repo_root()), "x").unwrap_err();
+        assert!(e.starts_with("results.json is not JSON"), "{e}");
     }
 }
 

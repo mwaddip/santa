@@ -233,7 +233,7 @@ budget at its top level:
   `./validate` holds them to at most **4096 MiB** and **60 s** (`santa_check::limits`). The blessers' default is
   1024 MiB / 10 s.
 - **The runner bounds it, in its own language**, in a **child process it spawns for that one entry, in a process
-  group of its own**, carrying the budget:
+  group of its own** (`setpgid`; never a new session: conform ends a runner by its session), carrying the budget:
   - **Time:** the parent kills the child's group at `wall_s` seconds → `{"error": "exceeded", "limit": "time"}`.
   - **Memory:** the parent watches the group's resident memory — resident set plus swap (`VmRSS` + `VmSwap` in
     `/proc/<pid>/status`), summed over the group's processes — every 10 ms, and kills the group when it passes
@@ -261,10 +261,12 @@ budget at its top level:
   Measured with the watchdog (2026-11-20): every bounded file grades as under the previous cgroup bound, for every
   runner that mounts one; rudolph peaks at 169 MiB resident under its 1024 MiB budget.
 - **The whole run has a safety ceiling** that protects the machine and does not grade: `./conform` runs each
-  `santa-run` in a process group of its own, under the data limit at **8192 MiB** per process (twice the largest
-  budget `./validate` allows, so a runner's backstop for a bounded child fits beneath it) and a wall timeout of
-  **1800 s** (a cold build took under a minute when measured), after which it kills the group. A runner that hits it
-  loses its column, reported ⚠️ `santa-run exceeded the safety ceiling (time 1800 s)`.
+  `santa-run` in a session of its own, under the data limit at **8192 MiB** per process (twice the largest budget
+  `./validate` allows, so a runner's backstop for a bounded child fits beneath it) and a wall timeout of **1800 s** (a
+  cold build took under a minute when measured). It kills every process of that session at the timeout, when conform
+  itself is interrupted (Ctrl-C, SIGTERM, SIGHUP; conform then dies of the same signal), and after `santa-run` exits,
+  so nothing a runner started outlives it. A runner that hits the timeout loses its column, reported ⚠️ `santa-run
+  exceeded the safety ceiling (time 1800 s)`.
 
 ## 4. The runner grades; SANTA re-grades
 
@@ -313,8 +315,9 @@ In `<out-dir>`:
 - **`results.json`**, schema [`schema/santa-runner-results.schema.json`](../../schema/santa-runner-results.schema.json)
   (`santa-runner-results/v1`; every object closed):
   - `santa`: the SANTA commit graded against, `git -C <santa-dir> rev-parse HEAD`, when `<santa-dir>` is the top of a
-    git checkout (`git -C <santa-dir> rev-parse --show-toplevel` is `<santa-dir>` itself: inside another repository,
-    `rev-parse HEAD` names that repository's commit); else `null`. Uncommitted changes are not represented: conform
+    git checkout (`git -C <santa-dir> rev-parse --show-toplevel` is `<santa-dir>` itself, compared as real paths —
+    `realpath`, `pwd -P`; conform passes its root by real path: inside another repository, `rev-parse HEAD` names that
+    repository's commit); else `null`. Uncommitted changes are not represented: conform
     and the runner read the same tree;
   - `scope`: the scope it graded at, its `runner.json` keys (`version`, `tiers`, `cost`, and `kinds` / `activation`
     when declared);
@@ -341,14 +344,15 @@ In `<out-dir>`:
 2. **completeness:** the files the runner reports graded must equal conform's own selection for its scope, and every
    entry of them must be accounted for; a shortfall is a red finding on the runner;
 3. **the canary:** it re-grades every actual with [`santa-check`](../../tools/santa-check), SANTA's own interpreter of
-   the grading rules, proven against the same oracle, and compares its verdicts with the runner's per slice, entry and
-   dimension. **The board shows SANTA's re-grade.** Where the runner's own verdicts differ, a note below the board says
+   the grading rules, proven against the same oracle, and compares its verdicts with the runner's per vector file,
+   entry and dimension. **The board shows SANTA's re-grade.** Where the runner's own verdicts differ, a note below the board says
    that the runner and SANTA disagree, lists the entries, and says the package maintainer needs to patch their grader
    or runner;
 4. it consolidates every runner into `.santa/results.json` (`santa-results/v1`) for the scoreboard: each red record
    carries its vector file (`file`), and each runner that ran its `grader` — `agrees`, the `missing_files` and
-   `extra_files` against conform's selection, the `disagreement_count` and up to 200 `disagreements` (`file`, `entry`,
-   `dim`, and which side, `runner` or `santa`, called it red). The scoreboard renders a disagreeing grader as a note
+   `extra_files` against conform's selection, the `missing_actuals` (files it listed as graded but wrote no actuals
+   for), the `disagreement_count` and up to 200 `disagreements` (`file`, `entry`, `dim`, and which side, `runner` or
+   `santa`, called it red). The scoreboard renders a disagreeing grader as a note
    below the board.
 
 The orchestrator runs the full grid over `runners/*`: the N-way is whatever is checked in, never a hardcoded count.
