@@ -3,6 +3,7 @@
 //! it for its own self-test. Mirrors tools/compare.py; proven against oracle/*.json (tests/oracle.rs).
 use serde_json::{json, Number, Value};
 
+pub mod grading;
 pub mod limits;
 pub mod wire;
 

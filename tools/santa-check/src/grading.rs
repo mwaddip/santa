@@ -1,0 +1,400 @@
+//! The grading language (`santa-grading/v1`): every way SANTA grades an entry, as data in `vectors/grading.json`.
+//! A type is a list of branches (the first whose `when` holds applies); a branch lists its dimensions, each nice
+//! when its comparisons hold. The parser is strict: an unknown key, operand form, path root or schema version is
+//! refused, never guessed at.
+
+use serde_json::{Map, Value};
+use std::collections::BTreeMap;
+use std::fmt;
+
+/// The schema version this module reads.
+pub const SCHEMA: &str = "santa-grading/v1";
+
+/// A parsed `vectors/grading.json`: each tier's default label, and the grading types by label.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Grading {
+    pub tiers: BTreeMap<String, String>,
+    pub types: BTreeMap<String, GradingType>,
+}
+
+/// One grading type: its branches in order, and the dimensions graded red when no branch matches.
+#[derive(Debug, Clone, PartialEq)]
+pub struct GradingType {
+    pub branches: Vec<Branch>,
+    pub unmatched: Vec<String>,
+}
+
+/// A branch applies when every `when` pair holds (the value at the path equals the literal).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Branch {
+    pub when: Vec<(Path, Value)>,
+    pub dims: Vec<Dim>,
+}
+
+/// A dimension: nice when every comparison holds (and, if `clean`, the actual's error is null); `requires` names
+/// earlier dimensions that must be nice; `claimed` grades it only for a runner that claims cost.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Dim {
+    pub name: String,
+    pub compare: Vec<Comparison>,
+    pub requires: Vec<String>,
+    pub claimed: bool,
+    pub clean: bool,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Comparison {
+    pub a: Operand,
+    pub b: Operand,
+    pub case_insensitive: bool,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Operand {
+    Path(Path),
+    Lit(Value),
+    First(Vec<Path>),
+    Pluck { list: Path, field: String },
+}
+
+/// A path into the actual, the entry's expected (`expected.…` = `entry.expected.…`), the entry, or the vector file.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Path {
+    pub root: Root,
+    pub keys: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Root {
+    Actual,
+    Expected,
+    Entry,
+    File,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum GradingError {
+    UnknownSchema(String),
+    UnknownKey { at: String, key: String },
+    Malformed { at: String, why: String },
+    UnknownLabel(String),
+    NoTierDefault(String),
+    NoBranch { label: String },
+}
+
+impl fmt::Display for GradingError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            GradingError::UnknownSchema(s) => write!(f, "grading: unknown schema {s:?} (this reads {SCHEMA})"),
+            GradingError::UnknownKey { at, key } => write!(f, "grading: unknown key {key:?} at {at}"),
+            GradingError::Malformed { at, why } => write!(f, "grading: {at}: {why}"),
+            GradingError::UnknownLabel(l) => write!(f, "grading: no grading type {l:?}"),
+            GradingError::NoTierDefault(t) => write!(f, "grading: the tier {t:?} has no default label"),
+            GradingError::NoBranch { label } => write!(f, "grading: no branch of {label:?} matches the entry"),
+        }
+    }
+}
+
+impl std::error::Error for GradingError {}
+
+fn malformed(at: &str, why: impl Into<String>) -> GradingError {
+    GradingError::Malformed { at: at.to_string(), why: why.into() }
+}
+
+/// An object whose keys are all in `allowed`.
+fn object<'a>(v: &'a Value, at: &str, allowed: &[&str]) -> Result<&'a Map<String, Value>, GradingError> {
+    let m = v.as_object().ok_or_else(|| malformed(at, "not an object"))?;
+    if let Some(k) = m.keys().find(|k| !allowed.contains(&k.as_str())) {
+        return Err(GradingError::UnknownKey { at: at.to_string(), key: k.clone() });
+    }
+    Ok(m)
+}
+
+fn string_list(v: Option<&Value>, at: &str) -> Result<Vec<String>, GradingError> {
+    match v {
+        None => Ok(Vec::new()),
+        Some(Value::Array(a)) => a
+            .iter()
+            .map(|s| s.as_str().map(str::to_string).ok_or_else(|| malformed(at, "not a list of strings")))
+            .collect(),
+        Some(_) => Err(malformed(at, "not a list of strings")),
+    }
+}
+
+fn flag(m: &Map<String, Value>, key: &str, default: bool, at: &str) -> Result<bool, GradingError> {
+    match m.get(key) {
+        None => Ok(default),
+        Some(Value::Bool(b)) => Ok(*b),
+        Some(_) => Err(malformed(&format!("{at}.{key}"), "not a boolean")),
+    }
+}
+
+impl Path {
+    fn parse(s: &str, at: &str) -> Result<Path, GradingError> {
+        let mut parts = s.split('.');
+        let root = match parts.next() {
+            Some("actual") => Root::Actual,
+            Some("expected") => Root::Expected,
+            Some("entry") => Root::Entry,
+            Some("file") => Root::File,
+            _ => return Err(malformed(at, format!("path {s:?} does not start with actual, expected, entry or file"))),
+        };
+        let keys: Vec<String> = parts.map(str::to_string).collect();
+        if keys.iter().any(String::is_empty) {
+            return Err(malformed(at, format!("path {s:?} has an empty segment")));
+        }
+        Ok(Path { root, keys })
+    }
+}
+
+impl Operand {
+    fn parse(v: &Value, at: &str) -> Result<Operand, GradingError> {
+        let m = object(v, at, &["path", "lit", "first", "pluck", "field"])?;
+        let forms = ["path", "lit", "first", "pluck"].iter().filter(|k| m.contains_key(**k)).count();
+        if forms != 1 {
+            return Err(malformed(at, "an operand has exactly one of path, lit, first, pluck"));
+        }
+        if m.contains_key("field") != m.contains_key("pluck") {
+            return Err(malformed(at, "field goes with pluck, and only with it"));
+        }
+        let path = |v: &Value, at: &str| -> Result<Path, GradingError> {
+            Path::parse(v.as_str().ok_or_else(|| malformed(at, "a path is a string"))?, at)
+        };
+        if let Some(p) = m.get("path") {
+            Ok(Operand::Path(path(p, at)?))
+        } else if let Some(l) = m.get("lit") {
+            Ok(Operand::Lit(l.clone()))
+        } else if let Some(f) = m.get("first") {
+            let list = f.as_array().filter(|a| !a.is_empty()).ok_or_else(|| malformed(at, "first is a list of paths"))?;
+            Ok(Operand::First(list.iter().map(|p| path(p, at)).collect::<Result<_, _>>()?))
+        } else {
+            let field = m["field"].as_str().ok_or_else(|| malformed(at, "field is a string"))?.to_string();
+            Ok(Operand::Pluck { list: path(&m["pluck"], at)?, field })
+        }
+    }
+}
+
+impl Comparison {
+    fn parse(v: &Value, at: &str) -> Result<Comparison, GradingError> {
+        let m = object(v, at, &["a", "b", "case_insensitive"])?;
+        let operand = |k: &str| -> Result<Operand, GradingError> {
+            Operand::parse(m.get(k).ok_or_else(|| malformed(at, format!("missing {k}")))?, &format!("{at}.{k}"))
+        };
+        Ok(Comparison { a: operand("a")?, b: operand("b")?, case_insensitive: flag(m, "case_insensitive", false, at)? })
+    }
+}
+
+impl Dim {
+    fn parse(v: &Value, at: &str, earlier: &[Dim]) -> Result<Dim, GradingError> {
+        let m = object(v, at, &["name", "compare", "requires", "claimed", "clean"])?;
+        let name = m.get("name").and_then(Value::as_str).ok_or_else(|| malformed(at, "a dimension needs a name"))?;
+        if earlier.iter().any(|d| d.name == name) {
+            return Err(malformed(at, format!("the dimension {name:?} is listed twice")));
+        }
+        let compare = m
+            .get("compare")
+            .and_then(Value::as_array)
+            .filter(|a| !a.is_empty())
+            .ok_or_else(|| malformed(at, "compare is a non-empty list"))?
+            .iter()
+            .enumerate()
+            .map(|(i, c)| Comparison::parse(c, &format!("{at}.compare[{i}]")))
+            .collect::<Result<Vec<_>, _>>()?;
+        let requires = string_list(m.get("requires"), &format!("{at}.requires"))?;
+        if let Some(r) = requires.iter().find(|r| !earlier.iter().any(|d| &d.name == *r)) {
+            return Err(malformed(at, format!("requires {r:?}, which is not an earlier dimension of the branch")));
+        }
+        Ok(Dim {
+            name: name.to_string(),
+            compare,
+            requires,
+            claimed: flag(m, "claimed", false, at)?,
+            clean: flag(m, "clean", true, at)?,
+        })
+    }
+}
+
+impl Branch {
+    fn parse(v: &Value, at: &str) -> Result<Branch, GradingError> {
+        let m = object(v, at, &["when", "dims"])?;
+        let when = match m.get("when") {
+            None => Vec::new(),
+            Some(w) => {
+                let at = format!("{at}.when");
+                let pairs = w.as_object().ok_or_else(|| malformed(&at, "when is an object of path: literal"))?;
+                pairs.iter().map(|(k, lit)| Ok((Path::parse(k, &at)?, lit.clone()))).collect::<Result<_, _>>()?
+            }
+        };
+        let raw = m.get("dims").and_then(Value::as_array).filter(|a| !a.is_empty());
+        let raw = raw.ok_or_else(|| malformed(at, "dims is a non-empty list"))?;
+        let mut dims: Vec<Dim> = Vec::new();
+        for (i, d) in raw.iter().enumerate() {
+            let dim = Dim::parse(d, &format!("{at}.dims[{i}]"), &dims)?;
+            dims.push(dim);
+        }
+        Ok(Branch { when, dims })
+    }
+}
+
+impl GradingType {
+    fn parse(v: &Value, at: &str) -> Result<GradingType, GradingError> {
+        let m = object(v, at, &["branches", "unmatched"])?;
+        let branches = m
+            .get("branches")
+            .and_then(Value::as_array)
+            .filter(|a| !a.is_empty())
+            .ok_or_else(|| malformed(at, "branches is a non-empty list"))?
+            .iter()
+            .enumerate()
+            .map(|(i, b)| Branch::parse(b, &format!("{at}.branches[{i}]")))
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(GradingType { branches, unmatched: string_list(m.get("unmatched"), &format!("{at}.unmatched"))? })
+    }
+}
+
+impl Grading {
+    /// Parses a `vectors/grading.json` document, refusing anything this version does not know.
+    pub fn parse(doc: &Value) -> Result<Grading, GradingError> {
+        let m = object(doc, "grading", &["schema", "tiers", "types"])?;
+        match m.get("schema").and_then(Value::as_str) {
+            Some(SCHEMA) => {}
+            Some(other) => return Err(GradingError::UnknownSchema(other.to_string())),
+            None => return Err(malformed("grading", "missing schema")),
+        }
+        let types_obj = m.get("types").and_then(Value::as_object).ok_or_else(|| malformed("grading", "types is an object"))?;
+        let mut types = BTreeMap::new();
+        for (label, t) in types_obj {
+            types.insert(label.clone(), GradingType::parse(t, &format!("types.{label}"))?);
+        }
+        let tiers_obj = m.get("tiers").and_then(Value::as_object).ok_or_else(|| malformed("grading", "tiers is an object"))?;
+        let mut tiers = BTreeMap::new();
+        for (tier, label) in tiers_obj {
+            let label = label.as_str().ok_or_else(|| malformed(&format!("tiers.{tier}"), "a label is a string"))?;
+            if !types.contains_key(label) {
+                return Err(GradingError::UnknownLabel(label.to_string()));
+            }
+            tiers.insert(tier.clone(), label.to_string());
+        }
+        Ok(Grading { tiers, types })
+    }
+
+    /// The label an entry of `tier` in the vector file `file` is graded by: the file's own `grading`, else the tier's
+    /// default.
+    pub fn label_for(&self, tier: &str, file: &Value) -> Result<&str, GradingError> {
+        match file.get("grading") {
+            Some(Value::String(l)) => self
+                .types
+                .get_key_value(l.as_str())
+                .map(|(k, _)| k.as_str())
+                .ok_or_else(|| GradingError::UnknownLabel(l.clone())),
+            Some(_) => Err(malformed("grading", "a vector file's grading is a string")),
+            None => self.tiers.get(tier).map(String::as_str).ok_or_else(|| GradingError::NoTierDefault(tier.to_string())),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    /// One tier, one type: a reject branch (when) and a catch-all with a dependent dimension.
+    fn minimal() -> serde_json::Value {
+        json!({
+            "schema": "santa-grading/v1",
+            "tiers": { "eval": "eval" },
+            "types": { "eval": { "branches": [
+                { "when": { "expected.error": "errored" },
+                  "dims": [ { "name": "reject", "clean": false,
+                              "compare": [ { "a": { "path": "actual.error" }, "b": { "lit": "errored" } } ] } ] },
+                { "dims": [
+                    { "name": "value", "compare": [ { "a": { "path": "actual.value" }, "b": { "path": "expected.value" } } ] },
+                    { "name": "cost", "requires": ["value"], "claimed": true,
+                      "compare": [ { "a": { "path": "actual.cost" }, "b": { "path": "expected.cost" } } ] } ] }
+            ] } }
+        })
+    }
+
+    /// The minimal file with the value at `pointer` set (its parent must exist; the last key may be new).
+    fn with(mut doc: serde_json::Value, pointer: &str, v: serde_json::Value) -> serde_json::Value {
+        let (parent, key) = pointer.rsplit_once('/').expect("a JSON pointer");
+        let parent = doc.pointer_mut(parent).expect("pointer into the minimal file");
+        match parent {
+            serde_json::Value::Object(m) => {
+                m.insert(key.to_string(), v);
+            }
+            serde_json::Value::Array(a) => a[key.parse::<usize>().expect("an index")] = v,
+            _ => panic!("{pointer}: parent is neither an object nor an array"),
+        }
+        doc
+    }
+
+    #[test]
+    fn parses_a_minimal_file() {
+        let g = Grading::parse(&minimal()).expect("parses");
+        assert_eq!(g.tiers.get("eval").map(String::as_str), Some("eval"));
+        let t = &g.types["eval"];
+        assert_eq!(t.branches.len(), 2);
+        assert!(t.unmatched.is_empty());
+        assert_eq!(t.branches[0].when.len(), 1);
+        assert_eq!(t.branches[0].when[0].0, Path { root: Root::Expected, keys: vec!["error".into()] });
+        assert_eq!(t.branches[0].when[0].1, json!("errored"));
+        let reject = &t.branches[0].dims[0];
+        assert_eq!((reject.name.as_str(), reject.clean, reject.claimed), ("reject", false, false));
+        assert_eq!(reject.compare[0].b, Operand::Lit(json!("errored")));
+        assert!(t.branches[1].when.is_empty());
+        let names: Vec<&str> = t.branches[1].dims.iter().map(|d| d.name.as_str()).collect();
+        assert_eq!(names, ["value", "cost"]);
+        let cost = &t.branches[1].dims[1];
+        assert_eq!((cost.requires.clone(), cost.claimed, cost.clean), (vec!["value".to_string()], true, true));
+        assert!(!cost.compare[0].case_insensitive);
+    }
+
+    #[test]
+    fn refuses_an_unknown_schema() {
+        let e = Grading::parse(&with(minimal(), "/schema", json!("santa-grading/v2"))).unwrap_err();
+        assert_eq!(e, GradingError::UnknownSchema("santa-grading/v2".into()));
+    }
+
+    #[test]
+    fn refuses_an_unknown_key() {
+        let doc = with(minimal(), "/types/eval/branches/1/dims/1/requries", json!(["value"]));
+        match Grading::parse(&doc).unwrap_err() {
+            GradingError::UnknownKey { key, .. } => assert_eq!(key, "requries"),
+            e => panic!("{e}"),
+        }
+    }
+
+    #[test]
+    fn refuses_an_operand_with_two_forms() {
+        let doc = with(minimal(), "/types/eval/branches/1/dims/0/compare/0/a", json!({ "path": "actual.x", "lit": 1 }));
+        assert!(matches!(Grading::parse(&doc).unwrap_err(), GradingError::Malformed { .. }));
+    }
+
+    #[test]
+    fn refuses_an_unknown_path_root() {
+        let doc = with(minimal(), "/types/eval/branches/1/dims/0/compare/0/a", json!({ "path": "result.x" }));
+        assert!(matches!(Grading::parse(&doc).unwrap_err(), GradingError::Malformed { .. }));
+    }
+
+    #[test]
+    fn refuses_requires_of_a_later_dim() {
+        let doc = with(minimal(), "/types/eval/branches/1/dims/0/requires", json!(["cost"]));
+        assert!(matches!(Grading::parse(&doc).unwrap_err(), GradingError::Malformed { .. }));
+    }
+
+    #[test]
+    fn label_for_prefers_the_file_envelope() {
+        let mut doc = minimal();
+        doc["types"]["x"] = doc["types"]["eval"].clone();
+        let g = Grading::parse(&doc).unwrap();
+        assert_eq!(g.label_for("eval", &json!({ "grading": "x" })).unwrap(), "x");
+        assert_eq!(g.label_for("eval", &json!({})).unwrap(), "eval");
+    }
+
+    #[test]
+    fn label_for_refuses_an_unknown_label() {
+        let g = Grading::parse(&minimal()).unwrap();
+        assert_eq!(g.label_for("eval", &json!({ "grading": "nope" })).unwrap_err(), GradingError::UnknownLabel("nope".into()));
+    }
+}
