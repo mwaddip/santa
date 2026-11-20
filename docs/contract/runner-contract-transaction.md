@@ -8,7 +8,8 @@
 > Machine-checkable schemas:
 > [`schema/santa-transaction.vector.schema.json`](../../schema/santa-transaction.vector.schema.json),
 > [`schema/santa-transaction.actuals.schema.json`](../../schema/santa-transaction.actuals.schema.json).
-> Executable grading oracle: [`oracle/verdicts-transaction.json`](../../oracle/verdicts-transaction.json).
+> Grading rules: the type `transaction` in [`vectors/grading.json`](../../vectors/grading.json) ([`grading.md`](grading.md));
+> executable oracle: its cases in [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json).
 
 ## 1. Tier boundary
 
@@ -87,16 +88,16 @@ grader.
 (`cost: true`: rudolph, blitzen-mwaddip, dasher) — a claiming runner may not answer `null`
 (§4). A vector may carry `cost: null` in `expected` (value-only authoring) — legal; see §4.
 
-## 4. Grading (`grade_transaction`)
+## 4. Grading (the `transaction` grading type)
 
-Per entry the comparator (`santa-check::grade_transaction`) emits a verdict in the shared
+Per entry the comparator (`santa-check`, interpreting the grading type `transaction`) emits a verdict in the shared
 vocabulary. **Precedence:**
 
 1. **`panicked` → coal unconditionally** — before the accept/reject check. A crash is not a
    clean rejection, which is why `panicked` is a distinct tag and not a refinement of
    `errored`.
 
-2. **`not-implemented` → `{"kind": "coverage", "tag": "not-implemented"}`** — coverage
+2. **`not-implemented` → `{"outcome": "not-implemented"}`** — coverage
    verdict, not coal. The runner did not engage the tier; per the suite-wide growth-ledger
    stance, coverage verdicts count into the aggregate red figure. An all-not-impl transaction
    slice renders as a blue coverage cell on the scoreboard, not a red one.
@@ -125,14 +126,10 @@ vocabulary. **Precedence:**
      `errored` on a reject vector is therefore COAL. Do not "harmonize" these two arms — they
      are different contracts for different tiers.
 
-The verdict object is `{"kind": "transaction", "valid": "nice"|"value", "cost":
-"nice"|"cost"|"n/a"}` (or `{"kind": "panicked"}` / `{"kind": "coverage", "tag":
-"not-implemented"}`), uniform with the eval and wire shapes so `conform` can tally all tiers
-without tier-specific logic.
-
-`oracle/verdicts-transaction.json` (8 cases, schema `santa-oracle-transaction/v1`) is the
-executable form of this section; `santa-check`'s `tests/oracle.rs` proves the grader against
-all 37 oracle cases across all three tiers.
+These rules are the grading type `transaction` in `vectors/grading.json` ([`grading.md`](grading.md)):
+a verdict lists the graded dimensions (`valid`, `cost`), or is panicked / not-implemented /
+exceeded, as on every tier. The type's cases in `oracle/verdicts-grading.json` are the executable
+form of this section; `santa-check`'s `tests/oracle.rs` proves the interpreter against them.
 
 ## 5. The provided-context contract
 
@@ -425,7 +422,7 @@ This block is easy to update as the corpus grows or runners evolve.
 
 // blitzen-eni (cost-claiming accept; verdict nice, cost coal — cost diverges from oracle):
 { "bigint-downcast-2666": { "valid": true, "cost": 14826, "error": null } }
-// → grade: {"kind": "transaction", "valid": "nice", "cost": "cost"}
+// → grade: {"outcome": "graded", "dims": {"valid": "nice", "cost": "red"}}
 // (oracle expected cost: 14846; eni: 14826 — demonstrates the dimension split:
 //  valid matches, cost diverges; the only eni exact-cost match in the current corpus
 //  is atleast-degenerate-bound-184137 at 15487 == 15487)
@@ -433,11 +430,11 @@ This block is easy to update as the corpus grows or runners evolve.
 // blitzen-develop (pre-fix rejection, clean reject):
 { "bigint-downcast-2666": { "valid": false, "cost": null, "error": null,
     "reason": "…Downcast: cannot downcast BigInt(BigInt256(67500000000)) to Long…" } }
-// → grade: {"kind": "transaction", "valid": "value", "cost": "n/a"}  (coal)
+// → grade: {"outcome": "graded", "dims": {"valid": "red"}}  (coal)
 
 // dasher (not-implemented):
 { "bigint-downcast-2666": { "valid": null, "cost": null, "error": "not-implemented" } }
-// → grade: {"kind": "coverage", "tag": "not-implemented"}
+// → grade: {"outcome": "not-implemented"}
 
 // NOTE (post bytes-anchor migration): the eni/develop verdicts above illustrate the grading
 // dimensions but predate the JSON→bytes shape change — both currently grade `errored` until

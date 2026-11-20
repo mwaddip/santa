@@ -13,7 +13,7 @@ package santa
 // confirmed live (SoftForkUnparsedTreeSpike): deserialize THREW SerializerException.
 //
 // This is a santa-wire/v1 REJECT entry: `error: "errored"`, NO expected_bytes_hex (a reject has no
-// canonical output). grade_wire's reject arm grades an `errored` actual nice; an impl that PRODUCES
+// canonical output). The wire grading type's reject arm grades an `errored` actual nice; an impl that PRODUCES
 // bytes (degrades to Unparsed + round-trips) is the over-accept (coal).
 //
 // extract() RE-DERIVES the blessing (asserts LenientErgoTree.deserialize THROWS a SerializerException

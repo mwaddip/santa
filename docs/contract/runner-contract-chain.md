@@ -8,7 +8,8 @@
 > Machine-checkable schemas:
 > [`schema/santa-chain.vector.schema.json`](../../schema/santa-chain.vector.schema.json),
 > [`schema/santa-chain.actuals.schema.json`](../../schema/santa-chain.actuals.schema.json).
-> Executable grading oracle: `oracle/verdicts-chain.json` (lands with the grader).
+> Grading rules: the type `chain` in [`vectors/grading.json`](../../vectors/grading.json) ([`grading.md`](grading.md));
+> executable oracle: its cases in [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json).
 > The schemas derive from this contract — on any divergence, this document wins.
 >
 > JVM file:line references are into ergo-node-build @ `v6.0.2.1` (the publishLocal'd
@@ -354,15 +355,15 @@ input is red by design).
 hex, `"0000"` for the empty update, never `""` — a conformer that emits `""` for
 "no activation" is red by construction, and that is deliberate.
 
-## 4. Grading (`grade_chain`)
+## 4. Grading (the `chain` grading type)
 
 **Value-only tier — cost is not-applicable.** Chain kinds have no script-cost semantics:
 no chain actual carries a cost, the grader never reads one, and the runner manifest's
 `cost` flag is irrelevant to chain slices (a runner declares the tier by listing `chain`
 in `tiers`; the `cost` declaration keeps meaning only for the tiers that grade it).
 
-Per entry the comparator (`santa-check::grade_chain(actual, entry)` — entry-taking, like
-`grade_wire`, since it reads `kind` and `expected`) emits a verdict in the shared
+Per entry the comparator (`santa-check`, interpreting the grading type `chain` in `vectors/grading.json`; it
+reads the entry's `kind` and `expected`) emits a verdict in the shared
 vocabulary. **Precedence:** `panicked` → coal unconditionally; `not-implemented` → blue
 coverage verdict (the growth-ledger stance); then one graded dimension, **`value`**:
 
@@ -393,13 +394,12 @@ coverage verdict (the growth-ledger stance); then one graded dimension, **`value
   reject arm above is the one place `errored` grades nice).
 - An unknown `kind` in a graded run is coal — never a silent pass.
 
-`diagnostic` is never graded — the grader does not read it. The verdict object is
-`{"kind": "chain", "value": "nice" | "value"}` (coal carries the dimension tag, like every
-tier) or the panicked/coverage envelopes, uniform with the other tiers so `conform`
-tallies without tier-specific logic; chain slices appear on the board as
-`chain/<version>/<provenance>` rows like every tier. `oracle/verdicts-chain.json` is the
-executable form of this section; `santa-check`'s oracle test proves the grader against it
-(the file lands with the grader).
+`diagnostic` is never graded — the grader does not read it. These rules are the grading type
+`chain` in `vectors/grading.json` ([`grading.md`](grading.md)): one dimension, `value`, per kind, an
+unknown kind red (`unmatched`); chain slices appear on the board as
+`chain/<version>/<provenance>` rows like every tier. The type's cases in
+`oracle/verdicts-grading.json` are the executable form of this section; `santa-check`'s oracle
+test proves the interpreter against them.
 
 ## 5. Settings self-containment
 
@@ -503,7 +503,7 @@ under ergo-core 6.0.2.1 and re-derived byte-identically under 6.0.7 when the ora
 
 At this contract's commit the corpus is empty — the contract precedes the schemas,
 blesser, and vectors in the build order (contract → schemas/guards → `any` selection →
-`grade_chain` → engine → corpus → rudolph mount). The capture material is already in hand
+the chain grader → engine → corpus → rudolph mount). The capture material is already in hand
 and spike-verified against chain history (2026-06-11, testnet node at fullHeight 393702):
 
 - **retargeting (→ `vectors/chain/any/captured/`):** two real testnet recalculation
@@ -576,10 +576,10 @@ window: parked (§6).
 
 // actuals — verdicts:
 { "retargeting-testnet-393601": { "nbits": 84150434, "error": null } }
-// → {"kind": "chain", "value": "nice"}
+// → {"outcome": "graded", "dims": {"value": "nice"}}
 { "voting-testnet-epoch-2560": { "parameters": { "table": { "1": 1250000, …, "123": 4 } },
     "activated_update": "0000", "error": null } }
-// → {"kind": "chain", "value": "nice"}
+// → {"outcome": "graded", "dims": {"value": "nice"}}
 
 // the divergence surfaces this tier exists for: a conformer that tallies unseeded ids,
 // counts boundary header 2560's own votes into the closing epoch, walks [T-L+1, T] instead

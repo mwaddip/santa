@@ -67,8 +67,9 @@ implementation, evaluates every entry of every vector it is given, and writes on
 the implementation's own answer per entry. A runner never compares anything.
 
 `./conform` hands each runner the vectors its declared scope selects, runs it, and grades every runner's
-actuals with one shared comparator (`tools/santa-check`, proven against the verdict oracle in `oracle/`). It also
-holds every actual to its tier's actuals schema (`schema/`).
+actuals with one shared comparator. The grading rules are data: [`vectors/grading.json`](vectors/grading.json), in the
+small language [`grading.md`](docs/contract/grading.md) specifies, interpreted by `tools/santa-check` and proven
+against the verdict oracle in `oracle/`. It also holds every actual to its tier's actuals schema (`schema/`).
 
 Per entry and per dimension (value, cost, verdict, digest, bytes), an answer is 🎁 when it matches the blessed
 expectation and 🪨 when it does not. The outcomes besides an answer:
@@ -311,15 +312,16 @@ Pages.
 
 ```
 vectors/<tier>/<version>/<provenance>/   the corpus
+vectors/grading.json    the grading rules, as data (docs/contract/grading.md)
 schema/                 JSON Schemas: each tier's vectors and actuals
-docs/contract/          the runner contracts, one per tier, and runner-integration (how a runner is run)
+docs/contract/          the runner contracts, one per tier, runner-integration (how a runner is run), grading
 docs/corpus.md          what the corpus pins, family by family
 docs/coverage/          the eval corpus's coverage manifest (ops, methods, tree shapes)
 oracle/                 the verdict oracle the comparator is proven against
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
 ts-runner/              dasher, the ergots runner (moving into ergots)
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
-tools/                  Rust: conform, validate, santa-check (the comparator), santa-delta, santa-bound, scoreboard
+tools/                  Rust: conform, validate, santa-check (the grading interpreter), santa-delta, santa-bound, scoreboard
 .github/actions/santa-pr/   the pull request check
 conform  validate  scoreboard  santa-pr   the entry points
 ```

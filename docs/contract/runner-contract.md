@@ -490,57 +490,28 @@ positions; pinned in the schema.
 
 ## 5. The match (conformance comparison)
 
-For each entry, the comparator computes the runner's actual `{value, cost, error}` and the
-vector's blessed `expected` (same three-field shape), and decides **nice** iff they are
-**deeply structurally equal**:
+**The match is specified as data:** [`grading.md`](grading.md) defines the grading language, and the eval tier's
+rules are the type `eval` in [`vectors/grading.json`](../../vectors/grading.json). In short, for the eval tier:
 
-- **Objects:** key-order-INsensitive; identical key sets; values recursively equal.
-- **Arrays:** order-SENSITIVE (Coll items and Tuple items are positional).
-- **Numbers:** compared numerically; **strings:** exact (case-sensitive — and all
-  contract hex is lower-case, so this is well-defined).
-- `null` equals only `null`.
+- **Equality is structural**, never raw-string or byte: objects regardless of key order, arrays in order, numbers
+  numerically, strings exactly (all contract hex is lower-case), `null` only `null`.
+- **`value` is always graded; `cost` only after a nice value, and only for a runner that claims the cost dimension**
+  (`cost: true`). No tolerance on either. A claiming runner's `cost: null` on a value-success is red on cost.
+- **An `expected` of `errored` is the reject arm:** nice when the actual is `errored`, red otherwise. A committed
+  `expected` is always a success or `errored`; there is no error taxonomy at the eval tier (§7).
+- **`not-implemented`, `panicked` and `exceeded` are red whatever was expected** (a crash or a blown budget is not a
+  clean rejection); `not-implemented` is counted on its own, as the readiness map.
 
-Comparison is **structural, never raw-string/byte** — this removes JSON key-order and
-whitespace as drift sources, and is implementable identically in any language.
-
-**Per-field bar:**
-- **`value` and `cost` are graded as independent verdicts.** Value is always graded. Cost is graded
-  only when the runner claims the cost dimension (`cost: true`); for a `cost: false` runner, cost is
-  ignored (not nice, not coal — out of scope). Both remain consensus-critical when graded: no
-  tolerance. A `cost: true` runner that emits `cost: null` on a value-success is **cost-not-implemented**
-  (coal on the cost verdict), the value verdict unaffected.
-- **`error` is compared as an exact string.** A committed `expected`'s `error` is always
-  `null` (success) or `"errored"` (failure) — there is **no error taxonomy at the eval
-  tier** (§7). An *actual* may also be `not-implemented` or `panicked` (§3); by
-  construction those never appear in `expected`, so they match neither and score a lump of
-  coal (see below).
-- **On an errored entry, `cost` is `null`** (an aborted evaluation has no well-defined
-  cost) and `value` is `null`. So a matched failure is `{null, null, "errored"}` on both
-  sides; cost/value are not compared further once both errored.
-
-A `not-implemented` actual matches only an `expected` carrying the identical `error` string.
-Because the blessing oracle implements the full language and the bless-time
-wire-encodability gate drops un-ingestable inputs, a committed `expected` is always
-`success` or `errored` — so `not-implemented` never matches and always scores a lump of coal.
-That is intentional: it is always a real finding (a coverage gap), surfaced rather than hidden.
-`panicked` is coal **unconditionally** — unlike `errored`
-it never matches a reject-expected `expected` (a crash is not a clean rejection), which is
-why it is a distinct tag rather than a refinement of `errored`. So is `exceeded` (§3), on every tier: no answer
-within the budget is not a clean rejection either.
-
-A vector is **nice** for a runner iff every entry is nice; one lump of coal makes the runner
-**naughty** on that vector.
+A vector is **nice** for a runner iff every entry is nice; one lump of coal makes the runner **naughty** on that
+vector.
 
 ## 6. Comparator topology (no oracle dependency)
 
-The JVM blesses (produces `expected`); those values are committed in the vectors as the
-**source of truth**. **Conformance-time comparison requires no JVM.** Each runner compares
-its own actuals against the committed `expected` in its own language and CI. The Scala
-`Harness` shipped in `jvm-blesser/` is therefore *a reference comparator*, useful for
-cross-checking, but **not** a required dependency for any other implementation. Because §5
-pins "equal" precisely, a Scala comparator and a TypeScript comparator return the same
-verdict on the same bytes — which is the whole point of freezing the encoding and the match
-algorithm rather than trusting one implementation.
+The JVM blesses (produces `expected`); those values are committed in the vectors as the **source of truth**.
+**Conformance-time comparison requires no JVM.** The comparison rules are data ([`grading.md`](grading.md)), so every
+comparator is an interpreter of the same file, proven against the same verdict oracle
+([`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json)); `santa-check` is SANTA's. Two interpreters that
+reproduce the oracle return the same verdict on the same bytes.
 
 ## 7. Future arms (generalization — NOT specified here)
 

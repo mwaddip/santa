@@ -52,7 +52,7 @@
           "$ref": "#/$defs/hex"
         },
         "error": {
-          "description": "OPTIONAL. Marks a REJECT entry: the JVM rejects bytes_hex at deserialize, so a conformant runner must error (not produce a round-trip). Mutually exclusive with expected_bytes_hex (a reject has no canonical output). grade_wire: an `errored` actual is nice; producing bytes is the over-accept (coal). See docs/findings/wire-unparsed-soft-fork-boxid.md.",
+          "description": "OPTIONAL. Marks a REJECT entry: the JVM rejects bytes_hex at deserialize, so a conformant runner must error (not produce a round-trip). Mutually exclusive with expected_bytes_hex (a reject has no canonical output). The wire grading type: an `errored` actual is nice; producing bytes is the over-accept (coal). See docs/findings/wire-unparsed-soft-fork-boxid.md.",
           "enum": ["errored"]
         },
         "version": { "$ref": "#/$defs/version" }

@@ -8,7 +8,8 @@
 > Machine-checkable schemas:
 > [`schema/santa-block.vector.schema.json`](../../schema/santa-block.vector.schema.json),
 > [`schema/santa-block.actuals.schema.json`](../../schema/santa-block.actuals.schema.json).
-> Executable grading oracle: [`oracle/verdicts-block.json`](../../oracle/verdicts-block.json).
+> Grading rules: the type `block` in [`vectors/grading.json`](../../vectors/grading.json) ([`grading.md`](grading.md));
+> executable oracle: its cases in [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json).
 
 ## 1. Tier boundary
 
@@ -108,9 +109,9 @@ replaying the block's state changes through the proof — not an echo of the vec
 `header.stateRoot`. (The JVM oracle computes-and-checks: `ADProofs.verify` replays from
 `parent_digest` and fails unless the result equals `header.stateRoot`.)
 
-## 4. Grading (`grade_block`)
+## 4. Grading (the `block` grading type)
 
-Per entry the comparator (`santa-check::grade_block`) emits a verdict in the shared
+Per entry the comparator (`santa-check`, interpreting the grading type `block`) emits a verdict in the shared
 vocabulary. **Precedence:** `panicked` → coal unconditionally; `not-implemented` → blue
 coverage verdict (growth-ledger stance); then:
 
@@ -130,10 +131,10 @@ coverage verdict (growth-ledger stance); then:
    deliberately diverges from the eval reject arm). `post_digest` and `cost` are never
    graded on reject.
 
-The verdict object is `{"kind": "block", "valid": …, "post_digest": …, "cost": …}` (or
-panicked/coverage), uniform with the other tiers so `conform` tallies without tier-specific
-logic. `oracle/verdicts-block.json` is the executable form; `santa-check`'s oracle test
-proves the grader against it.
+These rules are the grading type `block` in `vectors/grading.json`, which `santa-check` interprets
+([`grading.md`](grading.md)): a verdict lists the graded dimensions (`valid`, `post_digest`, `cost`), or is
+panicked / not-implemented / exceeded, as on every tier. The type's cases in `oracle/verdicts-grading.json` are the
+executable form; `santa-check`'s oracle test proves the interpreter against them.
 
 ## 5. The validation-context contract
 
@@ -314,13 +315,13 @@ A green donner row is only as old as that fix — re-read it, don't assume conti
 
 // accept, full claim (control row):
 { "bigint-downcast-2666": { "valid": true, "post_digest": "40e3…0d", "cost": 39379, "error": null } }
-// → {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "nice"}
+// → {"outcome": "graded", "dims": {"valid": "nice", "post_digest": "nice", "cost": "nice"}}
 
 // reject arm (authored mutation), clean reject:
 { "params-shrink-maxBlockCost": { "valid": false, "post_digest": null, "cost": null,
     "error": null,
     "reason": "tx[0]: org.ergoplatform.validation.MalformedModifierError: Accumulated cost of block transactions should not exceed <maxBlockCost>. 23c73fb1…: initial cost" } }
-// → {"kind": "block", "valid": "nice", "post_digest": "n/a", "cost": "n/a"}
+// → {"outcome": "graded", "dims": {"valid": "nice"}}
 
 // a digest-state conformer that ignored parent_digest or skipped the adProofsRoot
 // linkage would go red here — that surface is the tier's reason to exist.

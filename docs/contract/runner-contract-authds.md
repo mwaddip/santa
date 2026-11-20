@@ -168,10 +168,10 @@ suite:
   via `results`, §2 above — that partiality lives *inside* a clean verdict, not in how
   failure is reported).
 
-## 4. Grading (`grade_authds`)
+## 4. Grading (the `authds` grading type)
 
-Per entry the comparator (`santa-check::grade_authds(actual, entry)` — entry-taking, like
-`grade_chain`, since it reads `kind` and `expected`) emits a verdict in the shared
+Per entry the comparator (`santa-check`, interpreting the grading type `authds` in `vectors/grading.json`; it
+reads the entry's `kind` and `expected`) emits a verdict in the shared
 vocabulary. **Precedence**, identical in spirit to chain (`runner-contract-chain.md` §4):
 `panicked` → coal unconditionally, on either kind; `not-implemented` → blue coverage verdict
 (the growth-ledger stance — "a conformer with no prover declares `not-implemented` on
@@ -219,18 +219,18 @@ downstream dimensions to `n/a` (skipped, not graded):
 
 **Unknown `kind`.** Both runners map a `kind` they don't recognise to
 `error: "not-implemented"` (`Runner.authdsEntry`'s `case _`, `runner.ts`'s `AUTHDS_NOT_IMPL`
-fallthrough) — and `grade_authds` checks `error == "not-implemented"` **before** it ever
+fallthrough) — and the grader checks `error == "not-implemented"` **before** it ever
 inspects `entry["kind"]` (§4 above), so in practice an unrecognised kind resolves to the blue
-coverage verdict, not coal. `grade_authds` does carry a coal fallback for a genuinely
-unmatched `kind` on an otherwise-clean actual (`{"kind": "authds_prove", "proof": "proof",
-"digest": "digest"}`), but no runner today produces that combination — it is reachable only
-from `oracle/verdicts-authds.json`'s synthetic entries. Worth stating precisely now: it is
+coverage verdict, not coal. The `authds` grading type does carry a coal fallback for a genuinely
+unmatched `kind` on an otherwise-clean actual (`unmatched`: `proof` and `digest` red,
+[`grading.md`](grading.md)), but no runner today produces that combination — it is reachable only
+from the grading oracle's synthetic cases. Worth stating precisely now: it is
 what decides how an unimplemented `merkle_*` kind will render once that family lands — a
 growth-ledger cell, not a red one.
 
-The verdict object is `{"kind": "authds_prove", "proof": "nice"|"proof", "digest":
-"nice"|"digest"}` or `{"kind": "authds_verify", "accepted": …, "results": …|"n/a",
-"digest": …|"n/a"}`. `conform`'s tally pools **all four dimension names into one
+A verdict lists the graded dimensions ([`grading.md`](grading.md) §4): `proof` and `digest` for
+`avl_prove`; `accepted`, then `results` and `digest` when the proof should be accepted, for
+`avl_verify`. `conform`'s tally pools **all four dimension names into one
 slice-level board** — an `authds/<version>/<provenance>` row carries four counters
 (`proof`, `digest`, `accepted`, `results`), and **`avl_prove`'s `digest` and `avl_verify`'s
 `digest` share that one column.** A slice's `digest N/M` therefore mixes contributions from
@@ -561,16 +561,16 @@ replaced the retired blitzen-eni of §6) — `avl_verify` only, per §6.
 // actuals — verdicts:
 { "insert-single": {
     "proofs": ["020000…0004"], "digests": ["12a83992…f3df8101"], "error": null } }
-// → {"kind": "authds_prove", "proof": "nice", "digest": "nice"}
+// → {"outcome": "graded", "dims": {"proof": "nice", "digest": "nice"}}
 
 { "empty-tree-lookup": {
     "proof_accepted": true, "results": [{"ok": true, "value": null}],
     "new_digest_hex": "4ec61f48…8e160900", "error": null } }
-// → {"kind": "authds_verify", "accepted": "nice", "results": "nice", "digest": "nice"}
+// → {"outcome": "graded", "dims": {"accepted": "nice", "results": "nice", "digest": "nice"}}
 
 { "adverse-truncated-proof": {
     "proof_accepted": false, "results": [], "new_digest_hex": null, "error": null } }
-// → {"kind": "authds_verify", "accepted": "nice", "results": "n/a", "digest": "n/a"}
+// → {"outcome": "graded", "dims": {"accepted": "nice"}}
 
 // the divergence this arm exists to surface: a conformer whose prover computes the
 // correct final digest but serializes a differently-shaped proof (extra nodes, a wrong

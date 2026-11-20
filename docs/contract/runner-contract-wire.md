@@ -9,7 +9,8 @@
 > Machine-checkable schemas:
 > [`schema/santa-wire.vector.schema.json`](../../schema/santa-wire.vector.schema.json),
 > [`schema/santa-wire.actuals.schema.json`](../../schema/santa-wire.actuals.schema.json).
-> Executable grading oracle: [`oracle/verdicts-wire.json`](../../oracle/verdicts-wire.json).
+> Grading rules: the type `wire` in [`vectors/grading.json`](../../vectors/grading.json) ([`grading.md`](grading.md));
+> executable oracle: its cases in [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json).
 
 ## 1. What a wire runner is
 
@@ -81,10 +82,10 @@ Per entry the comparator emits **one** verdict (no value/cost split, no amber):
   parse, or parses it and refuses to write it back, so there is no canonical output): **`reject` nice**
   iff the actual is `errored`. Producing bytes is the **over-accept** — coal, whatever the bytes.
 
-Precedence mirrors the eval grade: **panicked → not-implemented → roundtrip / reject**. The
-`not-implemented` and `panicked` verdicts are the *same shapes* the eval grade emits, so a
-consumer tallies coverage/panicked uniformly across tiers. `oracle/verdicts-wire.json` is
-the executable form of this section (reproduced by `santa-check`'s `tests/oracle.rs`).
+Precedence is every tier's ([`grading.md`](grading.md) §2): **exceeded → panicked → not-implemented →
+roundtrip / reject**. These rules are the grading type `wire` in `vectors/grading.json`; its cases in
+`oracle/verdicts-grading.json` are the executable form of this section (reproduced by `santa-check`'s
+`tests/oracle.rs`).
 
 ## 4. Totality, never-panic, faithful outcomes (inherited)
 

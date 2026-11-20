@@ -252,18 +252,16 @@ budget at its top level:
 ## 4. The runner does not compare — the orchestrator does
 
 Per eval contract §6, conformance comparison needs no oracle and must be **pinned identically
-across runners**. So the orchestrator grades with **one shared comparator** — the Rust
-[`santa-check`](../../tools/santa-check) lib (§5 equality + §6 grading), linked into `conform`
-in-process — over *every* runner's actuals. **A runner MUST NOT self-judge for orchestration**
-— it only emits actuals; the orchestrator decides nice/coal and categorizes RED
-(value / cost / not-implemented / reject / panicked). A standalone self-compare mode is fine
-as a *dev convenience*, but the `santa-run` path emits actuals and leaves the verdict to `conform`.
+across runners**. So the orchestrator grades with **one shared comparator**: the Rust
+[`santa-check`](../../tools/santa-check) lib, linked into `conform` in-process, interpreting the grading rules in
+[`vectors/grading.json`](../../vectors/grading.json) ([`grading.md`](grading.md)) over *every* runner's actuals. **A
+runner MUST NOT self-judge for orchestration**: it only emits actuals; the orchestrator decides nice/coal and
+categorizes RED (value / cost / not-implemented / reject / panicked). A standalone self-compare mode is fine as a *dev
+convenience*, but the `santa-run` path emits actuals and leaves the verdict to `conform`.
 
-(`santa-check` is the canonical engine, and the one proven against the [verdict-oracle](../../oracle)
-(`oracle/*.json`, by `tools/santa-check/tests/oracle.rs`; the nipopow verdicts by unit tests). The per-ecosystem
-references (the TypeScript `structuralEqual` + grading in Dasher's `ts-runner/test/`, and the Scala `Harness`)
-implement the same §5/§6 but do not read the oracle today, so their agreement is not machine-checked. The
-orchestrator runs the full grid over `runners/*` — the N-way is whatever is checked in, never a hardcoded count.)
+(`santa-check` is proven against the verdict oracle, [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json),
+by `tools/santa-check/tests/oracle.rs`, which also requires a case for every grading type. The orchestrator runs the
+full grid over `runners/*`: the N-way is whatever is checked in, never a hardcoded count.)
 
 **Prose travels with the vector and is never graded.** An entry may carry free prose saying why it exists and
 what it pins: `script` in the eval tier, an optional `description` in every other tier. A runner ignores it and
@@ -342,13 +340,13 @@ runner wires it into CI is the runner's business. **Optional and additive** — 
 **SANTA publishes a versioned conformance kit** — a GitHub Release tied to a SANTA tag
 (`santa-data-v…`) containing: the **blessed corpus** in its `vectors/<tier>/<version>/<provenance>/`
 layout (each entry carrying the JVM-blessed `{value, cost, error}`); the **actuals schema**; the
-**comparator spec** (the §5 equality + §6 grading of the eval contract, [`runner-contract.md`](runner-contract.md));
-a **verdict-oracle** — meta-test vectors `(actual, expected, claims_cost) → expected verdict` that let
-an implementation *prove* it grades identically; and a **version stamp** (the SANTA commit it was cut
+**grading rules** (`vectors/grading.json`, in the language of [`grading.md`](grading.md));
+the **verdict oracle** — `oracle/verdicts-grading.json`, cases `(label, entry, file, actual, claims_cost) → verdict`
+that let an implementation *prove* it grades identically; and a **version stamp** (the SANTA commit it was cut
 from, so a 🪨 traces to an exact corpus).
 
-The kit ships **no comparator binary**: the comparison *is* the §5/§6 spec, which a runner implements
-natively and proves against the oracle (§6 made executable). A runner's self-test: fetch a pinned kit →
+The kit ships **no comparator binary**: the comparison *is* the grading rules, which a runner interprets
+natively and proves against the oracle. A runner's self-test: fetch a pinned kit →
 run `santa-run` over the subset its `runner.json` selects (`version ≤`, `tiers ∈`, and its declared `kinds` /
 `activation`) → grade with its own
 oracle-checked comparator → gate. By construction the verdict equals `./conform`'s.

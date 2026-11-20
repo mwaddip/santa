@@ -133,13 +133,13 @@ computed interlinks vector for `chain[i]`. Its outer length need not equal `chai
 pass schema validation (the two schemas don't cross-reference each other) — a length
 mismatch is a **grading** fact (§4), not a schema failure.
 
-## 4. Grading (`grade_nipopow`)
+## 4. Grading (the `nipopow` grading type)
 
-Signature: `grade_nipopow(actual: &Value, entry: &Value, chain: &Value) -> Value`. **This is
-the one structural novelty in the runner contract**: every other tier's grader takes only
-`actual` plus the entry (or its `expected`); nipopow's grader also takes the **file-level
-`chain`** value, because `nipopow_interlinks`'s expected value lives there, not in the entry
-(§2). `conform` threads it through as `grade_nipopow(&actual, e, &vec["chain"])`.
+The grading type `nipopow` in `vectors/grading.json` ([`grading.md`](grading.md)). **This is the one structural
+novelty in the runner contract**: every other tier's grading reads only the actual and the entry (or its
+`expected`); nipopow's also reads the **file-level `chain`** (the operand `file.chain`), because
+`nipopow_interlinks`'s expected value lives there, not in the entry (§2). `conform` hands the interpreter the vector
+file's envelope with every entry.
 
 **Precedence**, identical in spirit to every other tier: `panicked` → coal unconditionally,
 checked first and unconditionally; `not-implemented` → the blue coverage verdict (the
@@ -162,7 +162,7 @@ check is folded into the same short-circuit `&&` — an outer-length mismatch ne
 the per-height comparison. `.all(...)` is Rust's standard early-exiting combinator: it stops
 comparing at the **first height whose interlinks diverge** — cheap, but this is a
 *mechanism*, not a reported dimension. The verdict is still a single coarse
-`"nice"`/`"interlinks"` per entry; **`grade_nipopow` never reports *which* height
+`"nice"`/`"interlinks"` per entry; **the grader never reports *which* height
 diverged** — that granularity is not surfaced anywhere in the actuals/verdict shape, only
 "at least one height disagreed." A conformer debugging a red interlinks entry must diff
 `actual.interlinks` against `chain[].interlinks` itself to find the divergent height.
@@ -182,8 +182,8 @@ encoding (§2), not a JSON value with multiple equally-valid representations. Th
 currently dead in practice against real vectors, but it means a runner cannot accidentally
 score "nice" by returning an empty string against a malformed or missing expectation.
 
-**Unknown `kind`.** A entry whose `kind` matches neither string falls to `_ =>
-json!({"kind": "nipopow_prove", "proof": "proof"})` — an unconditional coal, never a silent
+**Unknown `kind`.** An entry whose `kind` matches neither string is red on `proof` (the type's
+`unmatched`) — an unconditional coal, never a silent
 pass. Since the vector schema's `kind` enum only admits the two known values, this arm is
 unreachable against any schema-valid committed vector; it exists for the same reason
 authds's analogous fallback does (`runner-contract-authds.md` §4) — reachable only from a
@@ -228,7 +228,7 @@ as a `PoPowHeader`, **not** a value ever encoded in genesis's own extension.
 genesis's *real* `header.extensionRoot` would **not** validate — the real root is the
 empty-extension digest, a different value entirely. This is an accepted quirk of the
 KMZ17/Ergo interlink bootstrap, not a SANTA defect, and it is a non-issue for this tier's
-actual grading: `grade_nipopow` (§4) never reconstructs or checks a Merkle root against
+actual grading: the grader (§4) never reconstructs or checks a Merkle root against
 `header.extensionRoot` — it only compares computed interlinks arrays and proof bytes against
 the JVM-blessed values. It matters anyway, because it is the single most likely first-contact
 divergence for anyone implementing `updateInterlinks` from the paper/protocol description
@@ -310,7 +310,7 @@ not evidence of an *independent* second implementation (§7, §8).
 `authdsEntryFn`, one arg), `nipopowEntryFn` is typed `(Vector[Json], Json) => (String,
 Json)`: the file-level `chain` array has to be threaded in from the enclosing vector
 document, since nipopow entries are chain-relative, not standalone (mirrors
-`grade_nipopow`'s own three-argument shape, §4). `Runner.scala`'s `nipopowEntry(doc, e)`
+the grading type's own `file.chain` operand, §4). `Runner.scala`'s `nipopowEntry(doc, e)`
 extracts `doc.chain` and passes it alongside the entry on every call.
 
 **`chain-fakepow.conf`, not `chain-testnet.conf`** — required because `NipopowAlgos.maxLevelOf`
@@ -454,8 +454,8 @@ correctness against a second implementation.
   "prove-m2-k2-tip": { "proofHex": "0202098c039b02…", "error": null },
   "prove-m2-k2-anchored-h16": { "proofHex": "…", "error": null }
 }
-// -> {"kind": "nipopow_interlinks", "interlinks": "nice"}
-// -> {"kind": "nipopow_prove", "proof": "nice"}   (both prove entries)
+// -> {"outcome": "graded", "dims": {"interlinks": "nice"}}
+// -> {"outcome": "graded", "dims": {"proof": "nice"}}   (both prove entries)
 
 // the divergence this arm exists to surface: a runner whose updateInterlinks disagrees
 // with the JVM at even one height (e.g. a different max-level formula, or a genesis
