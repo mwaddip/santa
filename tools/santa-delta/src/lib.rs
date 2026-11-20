@@ -258,8 +258,12 @@ fn plural(n: usize, one: &str, many: &str) -> String {
     format!("{n} {}", if n == 1 { one } else { many })
 }
 
+/// A sha as the comment shows it; conform marks a tree graded in place with uncommitted edits `<sha>-dirty`.
 fn short(sha: &Option<String>) -> String {
-    sha.as_deref().map_or("—".to_string(), |s| format!("`{}`", &s[..s.len().min(7)]))
+    let Some(s) = sha.as_deref() else { return "—".to_string() };
+    let (sha, dirty) = s.strip_suffix("-dirty").map_or((s, false), |c| (c, true));
+    let mark = if dirty { " (uncommitted changes)" } else { "" };
+    format!("`{}`{mark}", &sha[..sha.len().min(7)])
 }
 
 fn section_of(c: &Compared, s: Section) -> &[Change] {
@@ -666,6 +670,15 @@ mod tests {
         assert_eq!(c["head"]["value"], json!({"expected": "E", "got": "2"}));
         assert_eq!(r["newly_red"][0]["entry"], "N");
         assert_eq!(r["now_green"][0]["entry"], "G");
+    }
+
+    /// A head graded in place with uncommitted edits is not that commit: the comment says so.
+    #[test]
+    fn a_dirty_head_shows_as_dirty() {
+        let base = results(vec![ran("r", "bbbbbbbbbb", "v6", &[(S, vec![])])]);
+        let head = results(vec![ran("r", "hhhhhhhhhh-dirty", "v6", &[(S, vec![])])]);
+        let md = comment(&delta(&base, &head));
+        assert!(md.contains("`hhhhhhh` (uncommitted changes)") && md.contains("`bbbbbbb`"), "{md}");
     }
 
     #[test]

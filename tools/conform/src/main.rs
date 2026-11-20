@@ -161,6 +161,9 @@ struct Runner {
     name: String,
     label: String,
     impl_: Option<String>,
+    /// The repo name the runner finds its impl under (`<impl-path>/<name>`): the CONFIGURED impl's, kept when an
+    /// override points at a dir called something else.
+    impl_name: Option<String>,
     /// The manifest's `control`: the oracle's own runner, whose not running leaves the grid unanchored.
     control: bool,
     host: Host,
@@ -207,7 +210,8 @@ fn parse_manifest(j: &Value, dir: &Path) -> Result<Runner, String> {
             Host::Impl(path)
         }
     };
-    Ok(Runner { name: s("name")?, label: s("label")?, impl_, control: flag(j, "control", false)?, host })
+    let impl_name = impl_.as_deref().map(repo_name);
+    Ok(Runner { name: s("name")?, label: s("label")?, impl_, impl_name, control: flag(j, "control", false)?, host })
 }
 
 /// `runner`: a path inside the implementation's checkout, of plain names only (no root, `..` or `.`).
@@ -343,38 +347,70 @@ struct Resolved {
     sha: Option<String>,
 }
 
-/// impl = "<url>#<ref>" (ref = branch/tag for latest, a <sha>, or "<branch>@<sha>"). Clone/fetch into
-/// cache_dir/<repo-name> and check out the ref. `arg` is cache_dir (passed to santa-run as <impl-path>, where the
-/// runner finds its dep as ./<repo-name>); impl null -> ("-", no checkout, no sha).
-fn resolve_impl(impl_: &Option<String>, cache_dir: &Path) -> Result<Resolved, i32> {
+/// impl = "<url>#<ref>" (ref = branch/tag for latest, a <sha>, or "<branch>@<sha>"): clone/fetch into
+/// cache_dir/<name> and check out the ref, detached. `arg` is cache_dir (passed to santa-run as <impl-path>, where the
+/// runner finds its dep as ./<name>). A plain path (no `#`) is graded in place (`in_place`). impl null -> ("-", no
+/// checkout, no sha). `name` is the configured impl's repo name, so an override pointing at a dir called something
+/// else is still found where the runner looks.
+fn resolve_impl(impl_: Option<&str>, name: &str, cache_dir: &Path) -> Result<Resolved, i32> {
     let spec = match impl_ {
         Some(s) if !s.is_empty() => s,
         _ => return Ok(Resolved { arg: "-".to_string(), checkout: None, sha: None }),
     };
-    let (url, refspec) = spec
-        .split_once('#')
-        .filter(|(u, r)| !u.is_empty() && !r.is_empty())
-        .unwrap_or_else(|| die(format!("bad impl '{spec}': expected <url>#<ref>")));
+    let Some((url, refspec)) = spec.split_once('#') else {
+        return Ok(in_place(Path::new(spec), name, cache_dir));
+    };
+    if url.is_empty() || refspec.is_empty() {
+        die(format!("bad impl '{spec}': expected <url>#<ref>, or a path to grade in place"));
+    }
     let (branch, sha) = match refspec.split_once('@') {
         Some((b, s)) => (b, Some(s)),
         None => (refspec, None),
     };
-    let target = sha.unwrap_or(branch); // @sha pins; otherwise the branch/tag/sha
-    let name = url.trim_end_matches('/').rsplit('/').next().unwrap().trim_end_matches(".git");
     fs::create_dir_all(cache_dir).ok();
     let dest = cache_dir.join(name);
     let dest_s = dest.to_str().unwrap();
     if !dest.join(".git").is_dir() {
         git(&["clone", "-q", url, dest_s])?;
     }
-    git(&["-C", dest_s, "fetch", "-q", "--all", "--tags"])?;
-    git(&["-C", dest_s, "checkout", "-q", target])?;
-    if sha.is_none() {
-        // bare branch -> move to its latest tip (best-effort, like conform.py's check=False)
-        let _ = git(&["-C", dest_s, "pull", "-q", "--ff-only"]);
+    // `<url>#<ref>` is THAT url's ref, whichever url the cached clone came from (an override may have pointed it at a
+    // local checkout): origin follows the spec, and a branch is checked out as origin's tip, detached, never as a
+    // local branch that an earlier origin (or a force-push upstream) left elsewhere; --force lets a tag the earlier
+    // origin held on another commit follow too.
+    git(&["-C", dest_s, "remote", "set-url", "origin", url])?;
+    git(&["-C", dest_s, "fetch", "-q", "--all", "--tags", "--prune", "--force"])?;
+    let resolves = |r: &str| git_out(&["-C", dest_s, "rev-parse", "-q", "--verify", r]).is_some();
+    let target = match sha {
+        Some(s) => s.to_string(), // @sha pins
+        None if resolves(&format!("refs/remotes/origin/{branch}")) => format!("origin/{branch}"),
+        None => branch.to_string(), // a tag or a sha
+    };
+    // A commit no branch holds (a PR's base under the checkout's origin/main only) is not fetched by --all: by sha.
+    if !resolves(&format!("{target}^{{commit}}")) {
+        let _ = git(&["-C", dest_s, "fetch", "-q", "origin", &target]);
     }
+    git(&["-C", dest_s, "checkout", "-q", "--detach", &target])?;
     let resolved_sha = git_out(&["-C", dest_s, "rev-parse", "HEAD"]);
     Ok(Resolved { arg: cache_dir.to_string_lossy().into_owned(), checkout: Some(dest), sha: resolved_sha })
+}
+
+/// A plain path, graded in place, uncommitted edits included: `<cache_dir>/local/<name>` links to it (the clone cache
+/// is left alone), and the sha carries `-dirty` when the tree has uncommitted changes.
+fn in_place(dir: &Path, name: &str, cache_dir: &Path) -> Resolved {
+    let dir = fs::canonicalize(dir).unwrap_or_else(|e| die(format!("impl {}: {e}", dir.display())));
+    let here = cache_dir.join("local");
+    fs::create_dir_all(&here).ok();
+    let link = here.join(name);
+    let _ = fs::remove_file(&link);
+    symlink(&dir, &link).unwrap_or_else(|e| die(format!("{}: {e}", link.display())));
+    let d = dir.to_str().unwrap();
+    let sha = git_out(&["-C", d, "rev-parse", "HEAD"]).map(|head| {
+        match git_out(&["-C", d, "status", "--porcelain"]) {
+            Some(_) => format!("{head}-dirty"), // git_out maps an empty (clean) status to None
+            None => head,
+        }
+    });
+    Resolved { arg: here.to_string_lossy().into_owned(), checkout: Some(link), sha }
 }
 
 /// Why a runner has no grades this run (a ⚠️ row, not a 🪨).
@@ -481,7 +517,8 @@ fn run_one(
     facts: &BTreeMap<String, WireFacts>,
 ) -> Result<Ran, (Option<Scope>, RunFail)> {
     let ws = root.join(".santa").join(&m.name);
-    let imp = resolve_impl(&m.impl_, &ws).map_err(|c| (m.declared().cloned(), RunFail::Exit(c)))?;
+    let imp = resolve_impl(m.impl_.as_deref(), m.impl_name.as_deref().unwrap_or(""), &ws)
+        .map_err(|c| (m.declared().cloned(), RunFail::Exit(c)))?;
     let (scope, run) = match &m.host {
         Host::Santa { scope, run } => (scope.clone(), run.clone()),
         Host::Impl(path) => {
@@ -1098,6 +1135,67 @@ fn result_row(m: &Runner, scope: Option<&Scope>, rest: Value) -> Value {
     row
 }
 
+/// The repo name an impl spec checks out under: the last component of its url / path (before `#`), less `.git`.
+fn repo_name(spec: &str) -> String {
+    let url = spec.split_once('#').map_or(spec, |(u, _)| u);
+    url.trim_end_matches('/').rsplit('/').next().unwrap_or("").trim_end_matches(".git").to_string()
+}
+
+const USAGE: &str = "usage: ./conform [--clean] [<runner>…] [--impl <url>#<ref> | --impl <path>]
+  no runner named: every runner under runners/; --impl (one runner named) replaces its impl for this run,
+  a path without #<ref> being graded in place, uncommitted edits included";
+
+/// conform's command line: `--clean`, the runners to run (none = all), and one runner's impl override.
+struct Args {
+    clean: bool,
+    impl_: Option<String>,
+    names: Vec<String>,
+}
+
+fn parse_args(args: &[String]) -> Result<Args, String> {
+    let mut a = Args { clean: false, impl_: None, names: vec![] };
+    let mut it = args.iter();
+    while let Some(x) = it.next() {
+        match x.as_str() {
+            "--clean" => a.clean = true,
+            "--impl" => a.impl_ = Some(it.next().ok_or("--impl needs a value")?.clone()),
+            o if o.starts_with('-') => return Err(format!("unknown option {o:?}")),
+            n => a.names.push(n.to_string()),
+        }
+    }
+    if a.impl_.is_some() && a.names.len() != 1 {
+        return Err("--impl replaces one runner's impl: name exactly one runner".into());
+    }
+    Ok(a)
+}
+
+/// The named runners, in discovery order (none named = all); a name with no runner is refused.
+fn select_runners(all: Vec<Runner>, names: &[String]) -> Result<Vec<Runner>, String> {
+    if let Some(n) = names.iter().find(|n| !all.iter().any(|r| &r.name == *n)) {
+        let present: Vec<&str> = all.iter().map(|r| r.name.as_str()).collect();
+        return Err(format!("no runner {n:?}; present: {present:?}"));
+    }
+    Ok(all.into_iter().filter(|r| names.is_empty() || names.contains(&r.name)).collect())
+}
+
+/// `--impl`: this run grades `spec` instead of the configured impl, under the configured repo name. A plain path
+/// must be an existing directory; it is made absolute (it is graded in place, through a link).
+fn override_impl(m: &mut Runner, spec: &str) -> Result<(), String> {
+    if m.impl_name.is_none() {
+        return Err(format!("{} has no impl to override", m.name));
+    }
+    m.impl_ = Some(if spec.contains('#') {
+        spec.to_string()
+    } else {
+        let dir = fs::canonicalize(spec).map_err(|e| format!("--impl {spec}: {e}"))?;
+        if !dir.is_dir() {
+            return Err(format!("--impl {spec}: not a directory"));
+        }
+        dir.to_string_lossy().into_owned()
+    });
+    Ok(())
+}
+
 /// The control runners (`"control": true`) that did not run: no result, or one marked `errored` (santa-run could not
 /// build or run). A grid without its control says nothing about the oracle, so this fails the run; any other runner
 /// that could not run stays a warning in the grid.
@@ -1130,10 +1228,14 @@ fn over_budget_controls<'a>(runners: &'a [Runner], results: &[Value]) -> Vec<&'a
 
 fn main() -> ExitCode {
     let root = repo_root();
-    if env::args().any(|a| a == "--clean") {
+    let args = parse_args(&env::args().skip(1).collect::<Vec<_>>()).unwrap_or_else(|e| die(format!("{e}\n{USAGE}")));
+    if args.clean {
         let _ = fs::remove_dir_all(root.join(".santa"));
     }
-    let runners = discover(&root.join("runners"));
+    let mut runners = select_runners(discover(&root.join("runners")), &args.names).unwrap_or_else(|e| die(e));
+    if let Some(spec) = &args.impl_ {
+        override_impl(&mut runners[0], spec).unwrap_or_else(|e| die(e));
+    }
     if runners.is_empty() {
         println!("no runners under runners/*/ (need runner.json + an executable santa-run or a \"runner\" key)");
         return ExitCode::FAILURE;
@@ -1201,7 +1303,7 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
-    use super::{discover_dir, discover_vectors, hosted_runner, in_scope, parse_hosted_manifest, parse_manifest, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Host, Runner, Scope, Vec5, WireFacts, WIRE_KINDS};
+    use super::{discover_dir, discover_vectors, hosted_runner, in_scope, override_impl, parse_args, parse_hosted_manifest, parse_manifest, repo_name, select_runners, Args, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Host, Runner, Scope, Vec5, WireFacts, WIRE_KINDS};
     use std::collections::BTreeMap;
     use serde_json::json;
     use std::fs;
@@ -1214,7 +1316,7 @@ mod tests {
 
     fn runner(name: &str, control: bool) -> Runner {
         Runner {
-            name: name.into(), label: name.into(), impl_: None, control,
+            name: name.into(), label: name.into(), impl_: None, impl_name: None, control,
             host: Host::Santa { scope: scope(), run: PathBuf::from("/dev/null") },
         }
     }
@@ -1633,7 +1735,7 @@ mod tests {
 
         // 1) bare branch -> latest tip (v2); impl_path is the passed cache dir; checkout at <dir>/remote.
         let cache = tmp.join("cache");
-        let got = resolve_impl(&Some(format!("{rs}#main")), &cache).unwrap();
+        let got = resolve_impl(Some(&format!("{rs}#main")), "remote", &cache).unwrap();
         assert_eq!(got.arg, cache.to_string_lossy());
         let checkout = cache.join("remote");
         assert_eq!(got.checkout.as_deref(), Some(checkout.as_path()));
@@ -1644,14 +1746,171 @@ mod tests {
 
         // 2) @<sha> pin -> that commit (v1), not the tip.
         let cache2 = tmp.join("cache2");
-        let sha_pin = resolve_impl(&Some(format!("{rs}#main@{sha1}")), &cache2).unwrap().sha;
+        let sha_pin = resolve_impl(Some(&format!("{rs}#main@{sha1}")), "remote", &cache2).unwrap().sha;
         assert_eq!(fs::read_to_string(cache2.join("remote").join("VERSION")).unwrap().trim(), "v1");
         assert_eq!(sha_pin, Some(sha1.clone()));
 
         // 3) null impl -> ("-", None).
-        let none = resolve_impl(&None, &cache).unwrap();
+        let none = resolve_impl(None, "remote", &cache).unwrap();
         assert_eq!((none.arg.as_str(), none.checkout, none.sha), ("-", None, None));
 
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    fn git_init(dir: &Path) {
+        fs::create_dir_all(dir).unwrap();
+        let d = dir.to_str().unwrap();
+        assert!(Command::new("git").args(["init", "-q", "-b", "main", d]).status().unwrap().success());
+        git_identity(dir);
+    }
+
+    fn git_identity(dir: &Path) {
+        let d = dir.to_str().unwrap();
+        for args in [["-C", d, "config", "user.email", "t@santa"], ["-C", d, "config", "user.name", "santa"]] {
+            assert!(Command::new("git").args(args).status().unwrap().success());
+        }
+    }
+
+    /// Writes VERSION in `dir` and commits it; returns the commit's sha.
+    fn git_commit(dir: &Path, version: &str) -> String {
+        let d = dir.to_str().unwrap();
+        fs::write(dir.join("VERSION"), format!("{version}\n")).unwrap();
+        for args in [vec!["-C", d, "add", "."], vec!["-C", d, "commit", "-qm", version]] {
+            assert!(Command::new("git").args(&args).status().unwrap().success());
+        }
+        let out = Command::new("git").args(["-C", d, "rev-parse", "HEAD"]).output().unwrap().stdout;
+        String::from_utf8(out).unwrap().trim().to_string()
+    }
+
+    fn version_at(dir: &Path) -> String {
+        fs::read_to_string(dir.join("VERSION")).unwrap().trim().to_string()
+    }
+
+    /// The runner finds its impl as <impl-path>/<repo-name>, the name of the CONFIGURED impl, whatever the dir an
+    /// override points at is called; and `<url>#<branch>` is that branch's tip at THAT url, whichever url the cached
+    /// clone came from before (a local checkout ahead of the upstream must not leak into the next board run).
+    #[test]
+    fn resolve_impl_clones_under_the_configured_name_and_follows_the_url() {
+        let tmp = scratch("resolve-follow");
+        let (up, fork) = (tmp.join("upstream"), tmp.join("my-fork"));
+        git_init(&up);
+        git_commit(&up, "u1");
+        assert!(Command::new("git").args(["clone", "-q", up.to_str().unwrap(), fork.to_str().unwrap()])
+            .status().unwrap().success());
+        git_identity(&fork);
+        git_commit(&fork, "f1"); // the fork's main is AHEAD of upstream's
+        let cache = tmp.join("cache");
+        let at = |url: &Path| {
+            let r = resolve_impl(Some(&format!("{}#main", url.display())), "ergots", &cache).unwrap();
+            assert_eq!(r.checkout.as_deref(), Some(cache.join("ergots").as_path()));
+            version_at(&cache.join("ergots"))
+        };
+        assert_eq!(at(&up), "u1");
+        assert_eq!(at(&fork), "f1");
+        assert_eq!(at(&up), "u1", "the fork's main must not stand in for upstream's");
+        // the same tag name on another commit in each (the cache mirrors whichever url the spec names)
+        let tag = |dir: &Path| {
+            let d = dir.to_str().unwrap();
+            assert!(Command::new("git").args(["-C", d, "tag", "-f", "v1"]).status().unwrap().success());
+        };
+        tag(&up);
+        tag(&fork);
+        assert_eq!(at(&fork), "f1");
+        assert_eq!(at(&up), "u1");
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    /// A PR's base is often a commit no branch of the checkout holds (only its `origin/main` does), and a cache
+    /// cloned earlier fetches only what the branches reach: a pinned commit missing after the fetch is fetched by sha.
+    #[test]
+    fn resolve_impl_fetches_a_pinned_commit_no_branch_holds() {
+        let tmp = scratch("resolve-sha");
+        let (up, dev) = (tmp.join("upstream"), tmp.join("dev"));
+        git_init(&up);
+        git_commit(&up, "u1");
+        assert!(Command::new("git").args(["clone", "-q", up.to_str().unwrap(), dev.to_str().unwrap()])
+            .status().unwrap().success());
+        let cache = tmp.join("cache");
+        resolve_impl(Some(&format!("{}#main", up.display())), "ergots", &cache).unwrap(); // the cache, at u1
+        let u2 = git_commit(&up, "u2");
+        assert!(Command::new("git").args(["-C", dev.to_str().unwrap(), "fetch", "-q"]).status().unwrap().success());
+        // u2 is under dev's refs/remotes/origin/main only; dev's main is still u1
+        let r = resolve_impl(Some(&format!("{}#{u2}", dev.display())), "ergots", &cache).unwrap();
+        assert_eq!((r.sha.as_deref(), version_at(&cache.join("ergots")).as_str()), (Some(u2.as_str()), "u2"));
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    /// A plain path (no `#ref`) is graded in place: the runner sees that directory, uncommitted edits included, under
+    /// the configured repo name; its sha says when the tree is dirty.
+    #[test]
+    fn resolve_impl_grades_a_plain_path_in_place() {
+        let tmp = scratch("resolve-in-place");
+        let wt = tmp.join("my-worktree");
+        git_init(&wt);
+        let sha = git_commit(&wt, "w1");
+        let cache = tmp.join("cache");
+        let r = resolve_impl(Some(wt.to_str().unwrap()), "ergots", &cache).unwrap();
+        let seen = PathBuf::from(&r.arg).join("ergots");
+        assert_eq!(r.checkout.as_deref(), Some(seen.as_path()));
+        assert_eq!(fs::canonicalize(&seen).unwrap(), fs::canonicalize(&wt).unwrap());
+        assert!(!cache.join("ergots").exists(), "in place must not touch the clone cache");
+        assert_eq!(r.sha.as_deref(), Some(sha.as_str()));
+        fs::write(wt.join("VERSION"), "w2-uncommitted\n").unwrap();
+        let r = resolve_impl(Some(wt.to_str().unwrap()), "ergots", &cache).unwrap();
+        assert_eq!(r.sha, Some(format!("{sha}-dirty")));
+        assert_eq!(version_at(&seen), "w2-uncommitted");
+        let _ = fs::remove_dir_all(&tmp);
+    }
+
+    #[test]
+    fn repo_name_is_the_last_component_of_the_url() {
+        assert_eq!(repo_name("https://github.com/mwaddip/ergots.git#master"), "ergots");
+        assert_eq!(repo_name("/home/u/sigma-rust/#develop@abc"), "sigma-rust");
+        assert_eq!(repo_name("/home/u/my-worktree"), "my-worktree");
+    }
+
+    fn args(xs: &[&str]) -> Result<Args, String> {
+        parse_args(&xs.iter().map(|s| s.to_string()).collect::<Vec<_>>())
+    }
+
+    #[test]
+    fn conform_takes_runner_names_clean_and_one_impl_override() {
+        let a = args(&[]).unwrap();
+        assert!(!a.clean && a.impl_.is_none() && a.names.is_empty());
+        let a = args(&["--clean", "dasher", "vixen"]).unwrap();
+        assert!(a.clean && a.names == ["dasher", "vixen"]);
+        let a = args(&["dasher", "--impl", "/w/ergots"]).unwrap();
+        assert_eq!((a.names.as_slice(), a.impl_.as_deref()), (["dasher".to_string()].as_slice(), Some("/w/ergots")));
+        // `./conform --help` used to start a full run: an unknown option is refused instead
+        for bad in [&["--help"][..], &["--impl"], &["--impl", "/w"], &["a", "b", "--impl", "/w"]] {
+            assert!(args(bad).is_err(), "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn select_runners_by_name_in_discovery_order() {
+        let all = || vec![runner("dasher", false), runner("rudolph", true), runner("vixen", false)];
+        let names = |rs: Vec<Runner>| rs.into_iter().map(|r| r.name).collect::<Vec<_>>();
+        assert_eq!(names(select_runners(all(), &[]).unwrap()), ["dasher", "rudolph", "vixen"]);
+        let picked = select_runners(all(), &["vixen".into(), "dasher".into()]).unwrap();
+        assert_eq!(names(picked), ["dasher", "vixen"]);
+        let e = select_runners(all(), &["blitzen".into()]).err().unwrap();
+        assert!(e.contains("blitzen") && e.contains("rudolph"), "{e}");
+    }
+
+    #[test]
+    fn an_impl_override_keeps_the_configured_name() {
+        let tmp = scratch("override");
+        let mut m = runner("dasher", false);
+        m.impl_ = Some("https://github.com/mwaddip/ergots.git#master".into());
+        m.impl_name = Some("ergots".into());
+        override_impl(&mut m, "/w/my-fork#main@abc").unwrap();
+        assert_eq!((m.impl_.as_deref(), m.impl_name.as_deref()), (Some("/w/my-fork#main@abc"), Some("ergots")));
+        override_impl(&mut m, tmp.to_str().unwrap()).unwrap(); // a plain path: an existing dir, made absolute
+        assert_eq!(m.impl_, Some(fs::canonicalize(&tmp).unwrap().to_string_lossy().into_owned()));
+        assert!(override_impl(&mut m, tmp.join("missing").to_str().unwrap()).is_err());
+        let mut control = runner("rudolph", true); // impl null: nothing to override
+        assert!(override_impl(&mut control, tmp.to_str().unwrap()).is_err());
         let _ = fs::remove_dir_all(&tmp);
     }
 

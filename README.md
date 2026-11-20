@@ -82,6 +82,10 @@ genuine cross-implementation divergences — which is exactly its job. What runs
   Each is graded against the JVM-blessed `expected`. The runner is SANTA's; the implementation under test is a
   dependency. A runner may instead live in the implementation's own repo, SANTA's entry naming its directory there
   ([runner-integration §1](docs/contract/runner-integration.md#1-a-runner-is-a-directory)).
+- ✅ **A pull request's delta — `./santa-pr`**: one runner graded at an implementation's base and head (or its
+  working tree), compared entry by entry into a PR comment (newly red, now green, red another way, one row per
+  vector file) and a per-entry summary
+  ([runner-integration §6a](docs/contract/runner-integration.md#6a-one-runner-a-working-tree-and-a-pull-requests-delta)).
 - ✅ **Live results — the loop is surfacing real divergences.** Dasher is **fully green
   across the entire eval tier** (every v5+v6 spec+authored slice, value, cost, and reject —
   2026-06-10); its remaining reds are roadmap not-impls (the growth ledger). Blitzen-eni

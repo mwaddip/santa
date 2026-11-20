@@ -260,6 +260,31 @@ and passes `<impl-path>` — see §2/§3.)*
 The JVM reference (Rudolph) is canonical (eval contract §6): where a runner
 diverges from the blessed `expected`, the runner is wrong — surfaced as RED, routed, never hidden.
 
+## 6a. One runner, a working tree, and a pull request's delta
+
+```
+./conform [--clean] [<runner>…] [--impl <url>#<ref> | --impl <path>]
+./santa-pr <runner> <impl> <base-ref> [<head-ref>]
+```
+
+- **Runner names** run only those runners, in discovery order; a control that is not named is not required. No name
+  runs every runner, as before. An unknown option is refused.
+- **`--impl`**, with exactly one runner named, replaces that runner's `impl` for this run (its `runner.json` is not
+  touched). `<url>#<ref>` is checked out as in §2; a **plain path** is graded **in place**, uncommitted edits
+  included, and `results.json` records its sha as `<sha>-dirty` when the tree has uncommitted changes. Either way
+  the runner finds the impl at `<impl-path>/<repo-name>` under the CONFIGURED impl's repo name, whatever the
+  directory is called. A runner that patches the impl it builds against (§3) must not be pointed at a working tree.
+- The cached clone (`.santa/<name>/<repo-name>`) follows the spec's url, and `<url>#<branch>` is that url's branch
+  tip, checked out detached; a pinned commit no branch holds is fetched by sha. So a run against a local checkout
+  never leaks into the next run against the upstream.
+- **`./santa-pr`** grades the runner at `<impl>`'s `<base-ref>`, then at `<head-ref>`, or without one at the working
+  tree of a local `<impl>`, on the same checkout's vectors, and writes `santa-delta`'s comparison to
+  `.santa/pr/<runner>/`: `comment.md` (per runner the counts of newly red, now green, red another way and still
+  red, then one row per vector file), `summary.md` (every entry's expected / got, cut at 1 MiB) and `delta.json`
+  (every entry, both sides). An implementer runs it before pushing; a CI workflow runs it with the PR's head and
+  posts `comment.md`. A commit sha is the unambiguous base. Like `./conform` it needs `santa-bound`'s systemd user
+  manager, so it runs on Linux.
+
 ## 7. Self-test kit (optional) — SANTA's published-data interface
 
 Everything above is how SANTA *runs* a runner (`./conform` over `runners/*/`). Optionally, a runner may

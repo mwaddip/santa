@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# santa-pr <runner> <impl> <base-ref> [<head-ref>] — SANTA's PR check: one runner, a base and a head, the delta.
+#
+# Grades <runner> at <impl>'s <base-ref>, then at <head-ref>, or without one at the working tree of <impl> in place
+# (uncommitted edits included), both on THIS SANTA checkout's vectors, and compares the two with santa-delta into
+# .santa/pr/<runner>/: base.json and head.json (conform's results), comment.md, summary.md, delta.json.
+#
+# <impl> is a local checkout, or with a <head-ref> any url git clones. A ref is a branch, tag or commit of it; a
+# commit sha is the unambiguous choice for a base (a PR's base is often a commit only `origin/main` holds). Only
+# <runner> runs: rudolph is not needed, the vectors carry its blessed expectations. Each run rewrites
+# .santa/results.json, as any conform run does. The same bootstrap as ./conform (mise, git, a systemd user manager
+# on cgroup v2, so Linux only); a CI workflow calls this with the PR's head ref and posts comment.md.
+set -euo pipefail
+d="$(cd "$(dirname "$0")" && pwd)"
+if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
+  mise trust "$d/tools/mise.toml" >/dev/null
+  mise --cd "$d/tools" install
+  # Re-exec under the tools' mise with an ABSOLUTE self-path (see ./conform).
+  exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$d/$(basename "$0")" "$@"
+fi
+if [ $# -lt 3 ] || [ $# -gt 4 ]; then
+  echo "usage: ./santa-pr <runner> <impl> <base-ref> [<head-ref>]" >&2
+  exit 2
+fi
+runner=$1 impl=$2 base=$3 head=${4:-}
+if [ -d "$impl" ]; then
+  impl="$(cd "$impl" && pwd)" # conform clones it from its own cache dir: name it absolutely
+elif [ -z "$head" ]; then
+  echo "santa-pr: without a <head-ref>, <impl> must be a local checkout (its working tree is the head)" >&2
+  exit 2
+fi
+out="$d/.santa/pr/$runner"
+rm -rf "$out"
+mkdir -p "$out"
+
+"$d/conform" "$runner" --impl "$impl#$base"
+cp "$d/.santa/results.json" "$out/base.json"
+if [ -n "$head" ]; then
+  "$d/conform" "$runner" --impl "$impl#$head"
+else
+  "$d/conform" "$runner" --impl "$impl"
+fi
+cp "$d/.santa/results.json" "$out/head.json"
+
+cargo run --manifest-path "$d/tools/Cargo.toml" -p santa-delta -q -- "$out/base.json" "$out/head.json" "$out"
+echo "santa-pr: $out/comment.md (summary.md and delta.json beside it)" >&2
