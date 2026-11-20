@@ -203,9 +203,8 @@ ergots' runner, for instance, comes with `santa/grade`, its own kit that runs SA
 
 ### 2. Grade locally against SANTA's latest vectors
 
-SANTA runs on **Linux** with a systemd user manager on cgroup v2 (the memory controller delegated to the user, swap
-accounted): its resource bound runs each runner under systemd, checks the bound is enforced, and refuses to run
-unbounded otherwise. Beyond that it needs `mise` and `git`. SANTA's own tools (Rust) and your runner's toolchain
+SANTA needs `mise` and `git`, and runs on **Linux**, where the kernel enforces the data limits it runs a runner
+under. SANTA's own tools (Rust) and your runner's toolchain
 provision themselves; the first run builds the tools.
 
 ```bash
@@ -321,7 +320,7 @@ oracle/                 the verdict oracle the comparator is proven against
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
 ts-runner/              dasher, the ergots runner (moving into ergots)
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
-tools/                  Rust: conform, validate, santa-check (the grading interpreter), santa-delta, santa-bound, scoreboard
+tools/                  Rust: conform, validate, santa-check (the grading interpreter), santa-delta, scoreboard
 .github/actions/santa-pr/   the pull request check
 conform  validate  scoreboard  santa-pr   the entry points
 ```

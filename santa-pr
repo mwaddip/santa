@@ -12,8 +12,8 @@
 # <impl> is a local checkout, or with a <head-ref> any url git clones. A ref is a branch, tag or commit of it; a
 # commit sha is the unambiguous choice for a base (a PR's base is often a commit only `origin/main` holds). Only the
 # implementation's runner runs: rudolph is not needed, the vectors carry its blessed expectations. Each run rewrites
-# .santa/results.json, as any conform run does. The same bootstrap as ./conform (mise, git, a systemd user manager on
-# cgroup v2, so Linux only); a CI workflow calls this with the PR's head ref and posts comment.md.
+# .santa/results.json, as any conform run does. The same bootstrap as ./conform (mise and git, on Linux); a CI
+# workflow calls this with the PR's head ref and posts comment.md.
 set -euo pipefail
 d="$(cd "$(dirname "$0")" && pwd)"
 if [ -z "${SANTA_TOOLS_MISE:-}" ]; then

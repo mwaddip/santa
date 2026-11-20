@@ -8,12 +8,6 @@
 > contract ([`runner-contract.md`](runner-contract.md)), the tier contracts and the grading rules
 > ([`grading.md`](grading.md)), which govern the vector and actual shapes and the verdicts.
 
-> **In transition (2026-11).** conform and the runners move to this contract together. Until they do, `./conform`
-> calls `santa-run <impl-path> <vectors-dir> <out-dir>` with the selected vectors staged flat into `<vectors-dir>`,
-> grades the runner's actuals itself, and bounds the bounded files with `santa-bound`, which needs a systemd user
-> manager (a bootstrap dependency until then); the whole-run ceiling of §3a and the checks of §4.4 are what conform
-> will do. The previous version of this document (git history) describes today's behaviour.
-
 ## 1. A runner is a directory
 
 A runner is a directory `runners/<name>/`. It may be **in-tree** (rudolph and dasher today) or a **git submodule** pulled by
@@ -267,8 +261,10 @@ budget at its top level:
   Measured with the watchdog (2026-11-20): every bounded file grades as under the previous cgroup bound, for every
   runner that mounts one; rudolph peaks at 169 MiB resident under its 1024 MiB budget.
 - **The whole run has a safety ceiling** that protects the machine and does not grade: `./conform` runs each
-  `santa-run` under the data limit at the 4096 MiB ceiling (each process) and a wall timeout long enough for a cold
-  build, set by conform itself. A runner that hits it loses its column, reported ⚠️.
+  `santa-run` in a process group of its own, under the data limit at **8192 MiB** per process (twice the largest
+  budget `./validate` allows, so a runner's backstop for a bounded child fits beneath it) and a wall timeout of
+  **1800 s** (a cold build took under a minute when measured), after which it kills the group. A runner that hits it
+  loses its column, reported ⚠️ `santa-run exceeded the safety ceiling (time 1800 s)`.
 
 ## 4. The runner grades; SANTA re-grades
 
@@ -349,8 +345,11 @@ In `<out-dir>`:
    dimension. **The board shows SANTA's re-grade.** Where the runner's own verdicts differ, a note below the board says
    that the runner and SANTA disagree, lists the entries, and says the package maintainer needs to patch their grader
    or runner;
-4. it consolidates every runner into `.santa/results.json` (`santa-results/v1`, unchanged) for the scoreboard, with
-   each runner's agreement with the canary.
+4. it consolidates every runner into `.santa/results.json` (`santa-results/v1`) for the scoreboard: each red record
+   carries its vector file (`file`), and each runner that ran its `grader` — `agrees`, the `missing_files` and
+   `extra_files` against conform's selection, the `disagreement_count` and up to 200 `disagreements` (`file`, `entry`,
+   `dim`, and which side, `runner` or `santa`, called it red). The scoreboard renders a disagreeing grader as a note
+   below the board.
 
 The orchestrator runs the full grid over `runners/*`: the N-way is whatever is checked in, never a hardcoded count.
 
@@ -409,7 +408,7 @@ runner is wrong — surfaced as RED, routed, never hidden.
   newly red, now green, red another way and still red, then one row per vector file), `summary.md` (every entry's
   expected / got, cut at 1 MiB) and `delta.json` (every entry, both sides). A base without the runner directory
   could not run, and the comment says so. An implementer runs it before pushing. A commit sha is the unambiguous
-  base. Like `./conform` it needs `santa-bound`'s systemd user manager, so it runs on Linux.
+  base.
 - **In CI**, the composite action [`.github/actions/santa-pr`](../../.github/actions/santa-pr/README.md) runs it in
   the implementation's own workflow (base: the PR's base; head: the PR merged into it; the runner's directory and
   label as inputs) and uploads the delta; a second workflow, on the default branch, posts it as the PR's comment.

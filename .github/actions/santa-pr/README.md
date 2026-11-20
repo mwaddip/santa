@@ -14,8 +14,8 @@ The repository hosts its own SANTA runner: a directory, `santa/` by default, hol
 `runner.json` with its scope
 ([runner-integration §2](../../../docs/contract/runner-integration.md#a-runner-the-implementation-hosts--runner)).
 SANTA needs no entry for it: SANTA provides the vectors, the comparator and the delta, and the base and the head
-are each graded with their own copy of the runner. Linux runners only (SANTA's resource bound needs a systemd user
-manager).
+are each graded with their own copy of the runner. Linux runners only (the data limits SANTA runs a runner under are
+the Linux kernel's).
 
 ## `.github/workflows/santa.yml`: the check
 

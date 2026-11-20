@@ -293,8 +293,7 @@ reconstruction rules, which every conforming implementation of this schema must 
   schema admits (closed: nothing else in the object) — a bounded file (one entry with a `limits` budget) whose
   process went over its memory or time budget. The runner bounds the file in a child process and writes it; a
   bounded file whose process crashed for any other reason is `panicked`, `note` its exit status. See
-  [runner-integration.md §3a](runner-integration.md#3a-bounded-files). (In transition, `./conform` still writes it
-  from santa-bound's record.)
+  [runner-integration.md §3a](runner-integration.md#3a-bounded-files).
 - **Value-success with cost not claimed:** `{ "value": <SValue>, "cost": null, "error": null }` — the
   runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
   This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
