@@ -39,6 +39,10 @@ import santa.{AvlProofGenerator, AvlVerifierBlesser, EvalCore, WalkerOracle, Wir
   *   - `santa-nipopow/v1` → NipopowEngine.nipopowEntry (interlink reconstruction /
   *     NipopowAlgos.prove over the file-level `chain` field) under the same
   *     SANTA_TX_BLESSER gate as tx/block/chain; otherwise a faithful `not-implemented`.
+  *   - any other schema (a newer version of one above, a tier this runner does not mount, or
+  *     none) → `{"error": "not-implemented"}` for every entry, never read as a known schema
+  *     (runner-integration §3). `santa-eval/v5` and `santa-eval/v6-fullctx` are listed in
+  *     `evalEntry`.
   *
   *   runner <vector.json> [<actuals-out.json>]
   *
@@ -303,18 +307,23 @@ object Runner {
   def runFile(vecPath: String, outPath: Option[String]): Unit = {
     val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath)(scala.io.Codec.UTF8).mkString)
       .fold(e => sys.error(s"bad json: $e"), identity)
-    val schema   = doc.hcursor.get[String]("schema").toOption.getOrElse("santa-eval/v1")
-    val entries  = doc.hcursor.downField("entries").values.getOrElse(Vector.empty)
-    val isWire   = schema.startsWith("santa-wire/")
-    val isTx     = schema.startsWith("santa-transaction/")
-    val isBlock  = schema.startsWith("santa-block/")
-    val isChain  = schema.startsWith("santa-chain/")
-    val isAuthds = schema.startsWith("santa-authds/")
-    val isNipopow = schema.startsWith("santa-nipopow/")
-    val pairs    = entries.toVector.map(e =>
-      if (isTx) txEntry(e) else if (isBlock) blockEntry(e) else if (isChain) chainEntry(e)
-      else if (isWire) wireEntry(e) else if (isAuthds) authdsEntry(e)
-      else if (isNipopow) nipopowEntry(doc, e) else evalEntry(schema, e))
+    val entries  = doc.hcursor.downField("entries").values.getOrElse(Vector.empty).toVector
+    // Only the schemas this runner was written for, by exact name and version. Any other (a newer version of one of
+    // them, a tier it does not mount, or none) is the tier-neutral not-implemented for every entry, never read as a
+    // known schema (runner-integration §3).
+    val pairs    = doc.hcursor.get[String]("schema").toOption match {
+      case Some("santa-transaction/v1") => entries.map(txEntry)
+      case Some("santa-block/v1")       => entries.map(blockEntry)
+      case Some("santa-chain/v1")       => entries.map(chainEntry)
+      case Some("santa-wire/v1")        => entries.map(wireEntry)
+      case Some("santa-authds/v1")      => entries.map(authdsEntry)
+      case Some("santa-nipopow/v1")     => entries.map(nipopowEntry(doc, _))
+      case Some(s @ ("santa-eval/v1" | "santa-eval/v2" | "santa-eval/v3" | "santa-eval/v4" | "santa-eval/v5" |
+                     "santa-eval/v6-fullctx")) => entries.map(evalEntry(s, _))
+      case _ => entries.map { e =>
+        e.hcursor.get[String]("name").toOption.getOrElse("?") -> Json.obj("error" -> Json.fromString("not-implemented"))
+      }
+    }
     val out     = Json.obj(pairs: _*).spaces2
     outPath match {
       case Some(p) =>

@@ -164,4 +164,24 @@ class RunnerTest extends munit.FunSuite {
       assertEquals(hc.downField("error").focus, Some(Json.Null), s"control round-trip: error null for $name")
     }
   }
+
+  // ── a schema the runner was not written for ─────────────────────────────────
+
+  test("Runner: a schema it was not written for answers the tier-neutral not-implemented for every entry") {
+    // runner-integration §3: a newer version of a schema it knows, a tier it does not mount, or no schema at all is
+    // never read as a known schema (here an entry the eval and wire arms would happily read): a new envelope read as
+    // an old one shows as false divergences.
+    val entry =
+      """{"name": "e#0", "tree_bytes_hex": "000402", "kind": "Constant", "bytes_hex": "0101",
+        | "version": {"ergoTree": 0, "activated": 2}, "expected": {"error": null}}""".stripMargin
+    for (schema <- Seq(Some("santa-eval/v99"), Some("santa-wire/v2"), Some("santa-ledger/v1"), None)) {
+      val head = schema.fold("")(s => s""""schema": "$s", """)
+      val vec  = Files.createTempFile("rudolph-unknown-schema", ".json")
+      val out  = Files.createTempFile("rudolph-unknown-schema-out", ".json")
+      Files.write(vec, s"""{$head"entries": [$entry]}""".getBytes("UTF-8"))
+      Runner.runFile(vec.toString, Some(out.toString))
+      val actuals = parseJson(new String(Files.readAllBytes(out), "UTF-8")).fold(e => fail(s"bad actuals: $e"), identity)
+      assertEquals(actuals, Json.obj("e#0" -> Json.obj("error" -> Json.fromString("not-implemented"))), s"$schema")
+    }
+  }
 }
