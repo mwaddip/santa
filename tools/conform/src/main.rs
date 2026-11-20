@@ -132,6 +132,15 @@ fn in_scope(rel: &str, facts: &BTreeMap<String, WireFacts>, kinds: &Option<Vec<S
     }
 }
 
+/// The files a scope selects (runner-integration §4.1): its tiers at or below its version (`any` always), then its
+/// declared wire kinds and activation. Proven against oracle/selection.json.
+fn selection<'a>(vectors: &'a [Vec5], facts: &BTreeMap<String, WireFacts>, scope: &Scope) -> Vec<&'a Vec5> {
+    select(vectors, &scope.version, &scope.tiers)
+        .into_iter()
+        .filter(|v| in_scope(&v.0, facts, &scope.kinds, scope.activation))
+        .collect()
+}
+
 /// The declared scope on a runner's header line: `, kinds=…` when declared, `, activation=False` when not claimed.
 fn scope_suffix(sc: &Scope) -> String {
     let mut s = String::new();
@@ -623,10 +632,7 @@ fn run_staged(
     facts: &BTreeMap<String, WireFacts>,
     schemas: &ActualsSchemas,
 ) -> Result<(BTreeMap<String, Value>, Vec<String>), RunFail> {
-    let selected: Vec<&Vec5> = select(vectors, &scope.version, &scope.tiers)
-        .into_iter()
-        .filter(|v| in_scope(&v.0, facts, &scope.kinds, scope.activation))
-        .collect();
+    let selected = selection(vectors, facts, scope);
     let indir = ws.join("in");
     let _ = fs::remove_dir_all(&indir);
     fs::create_dir_all(&indir).unwrap();
@@ -2804,6 +2810,47 @@ mod tests {
                 assert!(s.fault(tier, "e", &a).is_some(), "{tier} admits {a}");
             }
         }
+    }
+
+    /// conform's selection reproduces every case of oracle/selection.json (runner-integration §4.1), through the
+    /// real discovery and wire-fact reading over a temporary vectors/ tree built from the oracle's `files`.
+    #[test]
+    fn the_selection_oracle_is_reproduced() {
+        let doc: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(super::repo_root().join("oracle/selection.json")).unwrap()).unwrap();
+        assert_eq!(doc["schema"], "santa-oracle-selection/v1");
+        let root = std::env::temp_dir().join(format!("conform-selection-oracle-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        let vdir = root.join("vectors");
+        for f in doc["files"].as_array().unwrap() {
+            let path = vdir.join(f["path"].as_str().unwrap());
+            fs::create_dir_all(path.parent().unwrap()).unwrap();
+            let body = if let Some(kind) = f.get("kind") {
+                let mut w = json!({"entries": [{"kind": kind}]});
+                if let Some(a) = f.get("activation_rule") {
+                    w["activation_rule"] = a.clone();
+                }
+                w.to_string()
+            } else if path.extension().and_then(|x| x.to_str()) != Some("json") {
+                "not a vector".to_string()
+            } else if f["path"] == "grading.json" {
+                "{}".to_string()
+            } else {
+                json!({"entries": []}).to_string()
+            };
+            fs::write(&path, body).unwrap();
+        }
+        let vectors = super::discover_vectors(&vdir);
+        let facts = super::wire_facts(&vdir, &vectors).unwrap();
+        let cases = doc["cases"].as_array().unwrap();
+        assert!(!cases.is_empty());
+        for c in cases {
+            let scope = super::parse_scope(&c["scope"]).unwrap_or_else(|e| panic!("{}: {e}", c["name"]));
+            let got: Vec<String> = super::selection(&vectors, &facts, &scope).iter().map(|v| v.0.clone()).collect();
+            let want: Vec<String> = c["selects"].as_array().unwrap().iter().map(|p| p.as_str().unwrap().to_string()).collect();
+            assert_eq!(got, want, "case {}", c["name"]);
+        }
+        fs::remove_dir_all(&root).ok();
     }
 }
 

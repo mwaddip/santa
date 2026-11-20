@@ -35,12 +35,15 @@ fn reproduces_verdict_oracle() {
         }
         let doc: Value = serde_json::from_str(&fs::read_to_string(&p).unwrap()).unwrap();
         let schema = doc["schema"].as_str().unwrap_or("");
+        match schema {
+            "santa-oracle-grading/v1" => {}
+            // The selection oracle: conform's selection reproduces it (tools/conform, the_selection_oracle_is_reproduced).
+            "santa-oracle-selection/v1" => continue,
+            _ => panic!("unknown oracle schema: {schema:?} in {}", p.display()),
+        }
         for c in doc["cases"].as_array().expect("cases[]") {
             total += 1;
-            let got = match schema {
-                "santa-oracle-grading/v1" => interpret(&g, c),
-                _ => panic!("unknown oracle schema: {schema:?} in {}", p.display()),
-            };
+            let got = interpret(&g, c);
             if got != c["verdict"] {
                 fails.push(format!("{} [{}]: got {} want {}", c["name"], p.display(), got, c["verdict"]));
             }

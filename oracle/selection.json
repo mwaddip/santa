@@ -1,0 +1,267 @@
+{
+ "schema": "santa-oracle-selection/v1",
+ "description": "Selection cases for every runner (runner-integration §4.1): `files` is a synthetic vectors/ tree (paths relative to vectors/; a wire file carries its kind and, when set, its activation_rule); each case gives a runner.json scope and the sorted paths it selects. A runner reproduces every case before it grades.",
+ "files": [
+  {
+   "path": "authds/any/authored/k.json"
+  },
+  {
+   "path": "block/v5/captured/f.json"
+  },
+  {
+   "path": "chain/any/authored/j.json"
+  },
+  {
+   "path": "eval/any/authored/a.json"
+  },
+  {
+   "path": "eval/v4/spec/b.json"
+  },
+  {
+   "path": "eval/v5/authored/c.json"
+  },
+  {
+   "path": "eval/v6/authored/notes.md"
+  },
+  {
+   "path": "eval/v6/captured/d.json"
+  },
+  {
+   "path": "grading.json"
+  },
+  {
+   "path": "nipopow/any/authored/l.json"
+  },
+  {
+   "path": "transaction/v6/captured/e.json"
+  },
+  {
+   "path": "wire/any/vendored/g.json",
+   "kind": "Box"
+  },
+  {
+   "path": "wire/v5/authored/h.json",
+   "kind": "Constant",
+   "activation_rule": true
+  },
+  {
+   "path": "wire/v6/authored/i.json",
+   "kind": "ErgoTree",
+   "activation_rule": false
+  }
+ ],
+ "cases": [
+  {
+   "name": "eval-v6-takes-every-slot",
+   "description": "A v6 runner selects every version slot of its tier: any, v4, v5 and v6.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "eval"
+    ]
+   },
+   "selects": [
+    "eval/any/authored/a.json",
+    "eval/v4/spec/b.json",
+    "eval/v5/authored/c.json",
+    "eval/v6/captured/d.json"
+   ]
+  },
+  {
+   "name": "eval-v5-stops-at-v5",
+   "description": "Versions are cumulative up to the declared one: v5 takes any, v4 and v5, not v6.",
+   "scope": {
+    "version": "v5",
+    "tiers": [
+     "eval"
+    ]
+   },
+   "selects": [
+    "eval/any/authored/a.json",
+    "eval/v4/spec/b.json",
+    "eval/v5/authored/c.json"
+   ]
+  },
+  {
+   "name": "eval-v4-takes-v4-and-any",
+   "description": "The lowest slot takes itself and any.",
+   "scope": {
+    "version": "v4",
+    "tiers": [
+     "eval"
+    ]
+   },
+   "selects": [
+    "eval/any/authored/a.json",
+    "eval/v4/spec/b.json"
+   ]
+  },
+  {
+   "name": "tiers-are-not-cumulative",
+   "description": "Only the declared tiers are selected; declaring transaction and block pulls in no eval or wire file.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "transaction",
+     "block"
+    ]
+   },
+   "selects": [
+    "block/v5/captured/f.json",
+    "transaction/v6/captured/e.json"
+   ]
+  },
+  {
+   "name": "a-scope-may-select-nothing",
+   "description": "A version below every file of the declared tiers selects nothing: an empty selection, not an error.",
+   "scope": {
+    "version": "v4",
+    "tiers": [
+     "transaction",
+     "block"
+    ]
+   },
+   "selects": []
+  },
+  {
+   "name": "wire-every-kind",
+   "description": "Without kinds, every wire kind is selected; without activation, activation_rule files are too.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "wire"
+    ]
+   },
+   "selects": [
+    "wire/any/vendored/g.json",
+    "wire/v5/authored/h.json",
+    "wire/v6/authored/i.json"
+   ]
+  },
+  {
+   "name": "wire-declared-kinds",
+   "description": "A wire file is selected only when its one kind is declared.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "wire"
+    ],
+    "kinds": [
+     "Box",
+     "ErgoTree"
+    ]
+   },
+   "selects": [
+    "wire/any/vendored/g.json",
+    "wire/v6/authored/i.json"
+   ]
+  },
+  {
+   "name": "wire-no-activation-drops-activation-rule-files",
+   "description": "activation false drops a file whose envelope says activation_rule true; an absent activation_rule counts as false.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "wire"
+    ],
+    "activation": false
+   },
+   "selects": [
+    "wire/any/vendored/g.json",
+    "wire/v6/authored/i.json"
+   ]
+  },
+  {
+   "name": "wire-kinds-and-activation-together",
+   "description": "Both wire rules apply: the one Constant file is an activation_rule file, so nothing is selected.",
+   "scope": {
+    "version": "v5",
+    "tiers": [
+     "wire"
+    ],
+    "kinds": [
+     "Constant"
+    ],
+    "activation": false
+   },
+   "selects": []
+  },
+  {
+   "name": "wire-a-kind-at-its-version",
+   "description": "A declared kind is still held to the version rule.",
+   "scope": {
+    "version": "v5",
+    "tiers": [
+     "wire"
+    ],
+    "kinds": [
+     "Constant"
+    ]
+   },
+   "selects": [
+    "wire/v5/authored/h.json"
+   ]
+  },
+  {
+   "name": "wire-v4-takes-any",
+   "description": "The any slot is selected at every version, wire included.",
+   "scope": {
+    "version": "v4",
+    "tiers": [
+     "wire"
+    ]
+   },
+   "selects": [
+    "wire/any/vendored/g.json"
+   ]
+  },
+  {
+   "name": "every-tier-cost-plays-no-part",
+   "description": "Every tier at v6 selects every vector; the root grading.json and a non-JSON file are not vectors; cost does not affect selection.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "eval",
+     "wire",
+     "transaction",
+     "block",
+     "chain",
+     "authds",
+     "nipopow"
+    ],
+    "cost": false
+   },
+   "selects": [
+    "authds/any/authored/k.json",
+    "block/v5/captured/f.json",
+    "chain/any/authored/j.json",
+    "eval/any/authored/a.json",
+    "eval/v4/spec/b.json",
+    "eval/v5/authored/c.json",
+    "eval/v6/captured/d.json",
+    "nipopow/any/authored/l.json",
+    "transaction/v6/captured/e.json",
+    "wire/any/vendored/g.json",
+    "wire/v5/authored/h.json",
+    "wire/v6/authored/i.json"
+   ]
+  },
+  {
+   "name": "any-only-tiers-at-v4",
+   "description": "Files in the any slot are selected even at the lowest version.",
+   "scope": {
+    "version": "v4",
+    "tiers": [
+     "chain",
+     "authds",
+     "nipopow"
+    ]
+   },
+   "selects": [
+    "authds/any/authored/k.json",
+    "chain/any/authored/j.json",
+    "nipopow/any/authored/l.json"
+   ]
+  }
+ ]
+}
