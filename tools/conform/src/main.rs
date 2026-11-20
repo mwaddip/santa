@@ -622,33 +622,77 @@ impl ActualsSchemas {
 /// each entry (`exceeded` / `panicked`), whatever file its process left. Otherwise the runner's file, held to its
 /// tier's actuals schema (runner-integration §3): an entry whose actual fails it is `panicked`, the note saying why,
 /// and a file that is not a JSON object fails every entry so; an absent file is {}.
-fn actuals_for(ofile: &Path, record: Option<&Value>, vector: &Value, schemas: &ActualsSchemas, tier: &str) -> Value {
-    let each = |a: Value| -> Value {
-        let names = vector["entries"].as_array().into_iter().flatten().filter_map(|e| e["name"].as_str());
-        Value::Object(names.map(|n| (n.to_string(), a.clone())).collect())
-    };
-    let panicked = |note: String| json!({"error": "panicked", "note": note});
-    match record {
-        Some(r) if r["result"] == "exceeded" => {
-            each(json!({"error": "exceeded", "limit": r["limit"]}))
-        }
-        Some(r) if r["result"] == "crashed" => each(panicked(format!("process {}", r["detail"].as_str().unwrap_or("?")))),
-        // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the
-        // breach rather than silently dropping the vector.
-        _ if ofile.is_file() => match serde_json::from_str::<Value>(&fs::read_to_string(ofile).unwrap()) {
-            Err(e) => each(panicked(format!("the actuals file is not JSON: {e}"))),
-            Ok(Value::Object(m)) => Value::Object(
-                m.into_iter()
-                    .map(|(n, a)| match schemas.fault(tier, &n, &a) {
-                        Some(note) => (n, panicked(note)),
-                        None => (n, a),
-                    })
-                    .collect(),
-            ),
-            Ok(_) => each(panicked("the actuals file is not a JSON object".into())),
-        },
-        _ => json!({}),
+/// The same actual for every entry of `vector`.
+fn each_entry(vector: &Value, a: Value) -> Value {
+    let names = vector["entries"].as_array().into_iter().flatten().filter_map(|e| e["name"].as_str());
+    Value::Object(names.map(|n| (n.to_string(), a.clone())).collect())
+}
+
+fn actuals_for(ofile: &Path, vector: &Value, schemas: &ActualsSchemas, tier: &str) -> Value {
+    // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the breach rather than
+    // silently dropping the vector.
+    if !ofile.is_file() {
+        return json!({});
     }
+    let panicked = |note: String| json!({"error": "panicked", "note": note});
+    match serde_json::from_str::<Value>(&fs::read_to_string(ofile).unwrap()) {
+        Err(e) => each_entry(vector, panicked(format!("the actuals file is not JSON: {e}"))),
+        Ok(Value::Object(m)) => Value::Object(
+            m.into_iter()
+                .map(|(n, a)| match schemas.fault(tier, &n, &a) {
+                    Some(note) => (n, panicked(note)),
+                    None => (n, a),
+                })
+                .collect(),
+        ),
+        Ok(_) => each_entry(vector, panicked("the actuals file is not a JSON object".into())),
+    }
+}
+
+/// The commit of conform's own checkout, which a runner's results must name (runner-integration §4.4).
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+fn head(root: &Path) -> Option<String> {
+    git_out(&["-C", root.to_str()?, "rev-parse", "HEAD"])
+}
+
+/// The schema of a runner's results.json (santa-runner-results/v1).
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+fn load_results_schema(root: &Path) -> Validator {
+    let p = root.join("schema").join("santa-runner-results.schema.json");
+    let doc: Value = serde_json::from_str(&fs::read_to_string(&p).unwrap_or_else(|e| die(format!("{}: {e}", p.display()))))
+        .unwrap_or_else(|e| die(format!("{}: {e}", p.display())));
+    jsonschema::validator_for(&doc).unwrap_or_else(|e| die(format!("{}: {e}", p.display())))
+}
+
+/// A runner's `<out-dir>/results.json`, if conform can use it: present, JSON, valid against its schema, and graded
+/// against this checkout's commit. Otherwise why not.
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+fn read_results(out: &Path, v: &Validator, head: &str) -> Result<Value, String> {
+    let text = fs::read_to_string(out.join("results.json")).map_err(|_| "no results.json".to_string())?;
+    let doc: Value = serde_json::from_str(&text).map_err(|e| format!("results.json is not JSON: {e}"))?;
+    if let Err(e) = v.validate(&doc) {
+        let at = e.instance_path().to_string();
+        return Err(format!("results.json fails santa-runner-results.schema.json: {}{}",
+            brief(&Value::String(e.to_string()), 200), if at.is_empty() { String::new() } else { format!(" (at {at})") }));
+    }
+    match doc["santa"].as_str() {
+        Some(s) if s == head => Ok(doc),
+        s => Err(format!("results.json graded SANTA {}, not this checkout's {head}", s.unwrap_or("null"))),
+    }
+}
+
+/// The runner's actuals for every file of conform's selection, from `<out-dir>/actuals/<relpath>` (actuals_for: held
+/// to the tier's schema entry by entry; an absent file is {}).
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+fn read_actuals(out: &Path, selected: &[&Vec5], root: &Path, schemas: &ActualsSchemas) -> BTreeMap<String, Value> {
+    selected
+        .iter()
+        .map(|v| {
+            let vector: Value =
+                serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&v.0)).unwrap()).unwrap();
+            (v.0.clone(), actuals_for(&out.join("actuals").join(&v.0), &vector, schemas, &v.1))
+        })
+        .collect()
 }
 
 /// The ordinary run's ceiling hit, as "memory 4096 MiB" / "time 600 s".
@@ -752,7 +796,14 @@ fn run_staged(
         if record.is_some_and(|r| r["result"] != "success") {
             failures.push(rel.clone());
         }
-        let act = actuals_for(&ofile, record, &vector, schemas, &tier);
+        let act = match record {
+            Some(r) if r["result"] == "exceeded" => each_entry(&vector, json!({"error": "exceeded", "limit": r["limit"]})),
+            Some(r) if r["result"] == "crashed" => each_entry(
+                &vector,
+                json!({"error": "panicked", "note": format!("process {}", r["detail"].as_str().unwrap_or("?"))}),
+            ),
+            _ => actuals_for(&ofile, &vector, schemas, &tier),
+        };
         res.insert(rel, act);
     }
     Ok((res, failures))
@@ -2667,38 +2718,14 @@ mod tests {
     }
 
     #[test]
-    fn actuals_for_exceeded_ignores_a_partial_file() {
-        let d = bound_root("partial");
-        let ofile = d.join("x.json");
-        fs::write(&ofile, json!({"e#0": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}}).to_string()).unwrap();
-        let r = record("exceeded", json!({"limit": "memory"}));
-        assert_eq!(
-            super::actuals_for(&ofile, Some(&r), &one_entry_vector(), &schemas(), "eval"),
-            json!({"e#0": {"error": "exceeded", "limit": "memory"}})
-        );
-    }
-
-    #[test]
-    fn actuals_for_crashed_is_panicked() {
-        let d = bound_root("crashed");
-        let r = record("crashed", json!({"detail": "exit status 134"}));
-        assert_eq!(
-            super::actuals_for(&d.join("x.json"), Some(&r), &one_entry_vector(), &schemas(), "eval"),
-            json!({"e#0": {"error": "panicked", "note": "process exit status 134"}})
-        );
-    }
-
-    #[test]
     fn actuals_for_success_reads_the_file() {
         let d = bound_root("success");
         let ofile = d.join("x.json");
         let a = json!({"e#0": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}});
         fs::write(&ofile, a.to_string()).unwrap();
-        let r = record("success", json!({}));
         let s = schemas();
-        assert_eq!(super::actuals_for(&ofile, Some(&r), &one_entry_vector(), &s, "eval"), a);
-        assert_eq!(super::actuals_for(&ofile, None, &one_entry_vector(), &s, "eval"), a);
-        assert_eq!(super::actuals_for(&d.join("absent.json"), None, &one_entry_vector(), &s, "eval"), json!({}));
+        assert_eq!(super::actuals_for(&ofile, &one_entry_vector(), &s, "eval"), a);
+        assert_eq!(super::actuals_for(&d.join("absent.json"), &one_entry_vector(), &s, "eval"), json!({}));
     }
 
     fn schemas() -> super::ActualsSchemas {
@@ -2719,7 +2746,7 @@ mod tests {
             "e#1": {"value": {"kind": "Int", "value": 1}, "cost": "5", "error": null},
             "e#2": {"error": "not-implemented"}
         }).to_string()).unwrap();
-        let a = super::actuals_for(&ofile, None, &vector, &schemas(), "eval");
+        let a = super::actuals_for(&ofile, &vector, &schemas(), "eval");
         assert_eq!(a["e#0"], ok);
         assert_eq!(a["e#2"], json!({"error": "not-implemented"}));
         assert_eq!(a["e#1"]["error"], "panicked");
@@ -2738,7 +2765,7 @@ mod tests {
         let digest = format!("{}01", "ab".repeat(32));
         fs::write(&ofile, json!({"b#0": {"valid": true, "post_digest": digest, "cost": 7, "error": null, "reason": null}})
             .to_string()).unwrap();
-        let a = super::actuals_for(&ofile, None, &vector, &schemas(), "block");
+        let a = super::actuals_for(&ofile, &vector, &schemas(), "block");
         assert_eq!(a["b#0"]["error"], "panicked");
         let note = a["b#0"]["note"].as_str().unwrap();
         assert!(note.contains("reason: ") && !note.contains("anyOf"), "{note}");
@@ -2753,7 +2780,7 @@ mod tests {
         let vector = json!({"schema": "santa-eval/v2", "entries": [{"name": "e#0"}, {"name": "e#1"}]});
         for (body, says) in [("{\"e#0\": ", "not JSON"), ("[1]", "not a JSON object")] {
             fs::write(&ofile, body).unwrap();
-            let a = super::actuals_for(&ofile, None, &vector, &schemas(), "eval");
+            let a = super::actuals_for(&ofile, &vector, &schemas(), "eval");
             for n in ["e#0", "e#1"] {
                 assert_eq!(a[n]["error"], "panicked", "{body}");
                 assert!(a[n]["note"].as_str().unwrap().contains(says), "{body}: {}", a[n]);
@@ -3045,6 +3072,70 @@ mod tests {
         assert!(matches!(&small, Ok(st) if !st.success()));
         let big = super::run_under_ceiling(Command::new("bash").arg(&s), &super::Ceiling { data_mb: 8192, wall_s: 30 });
         assert!(matches!(&big, Ok(st) if st.success()));
+    }
+
+    fn out_dir(tag: &str) -> PathBuf {
+        let d = std::env::temp_dir().join(format!("conform-out-{}-{tag}", std::process::id()));
+        let _ = fs::remove_dir_all(&d);
+        fs::create_dir_all(&d).unwrap();
+        d
+    }
+
+    fn results_doc(santa: serde_json::Value) -> serde_json::Value {
+        json!({
+            "schema": "santa-runner-results/v1", "santa": santa,
+            "scope": {"version": "v6", "tiers": ["eval"], "cost": true},
+            "slices": {"eval/v6/authored": {"files": ["eval/v6/authored/x.json"], "dims": {"value": {"graded": 1, "nice": 1}},
+                       "not_implemented": 0, "panicked": 0, "exceeded": 0, "red": []}},
+            "totals": {"red": 0, "not_implemented": 0}
+        })
+    }
+
+    /// A results.json conform cannot use is refused, saying why: absent, not JSON, failing its schema, or graded
+    /// against another SANTA commit (null included).
+    #[test]
+    fn read_results_refuses_what_it_cannot_use() {
+        let v = super::load_results_schema(&super::repo_root());
+        let head = "4ce4855ef9b1b98ec14158ad12cc57ecb8a1265a";
+        let d = out_dir("results");
+        assert_eq!(super::read_results(&d, &v, head).unwrap_err(), "no results.json");
+        fs::write(d.join("results.json"), "{").unwrap();
+        assert!(super::read_results(&d, &v, head).unwrap_err().starts_with("results.json is not JSON"));
+        let mut no_totals = results_doc(json!(head));
+        no_totals.as_object_mut().unwrap().remove("totals");
+        fs::write(d.join("results.json"), no_totals.to_string()).unwrap();
+        assert!(super::read_results(&d, &v, head).unwrap_err().starts_with("results.json fails"));
+        fs::write(d.join("results.json"), results_doc(json!("015ec7a97a5fce9e5d16693c77566ec65803086d")).to_string()).unwrap();
+        assert!(super::read_results(&d, &v, head).unwrap_err().contains("not this checkout's"));
+        fs::write(d.join("results.json"), results_doc(json!(null)).to_string()).unwrap();
+        assert!(super::read_results(&d, &v, head).unwrap_err().contains("null"));
+        fs::write(d.join("results.json"), results_doc(json!(head)).to_string()).unwrap();
+        assert!(super::read_results(&d, &v, head).is_ok());
+        assert_eq!(super::head(&super::repo_root()).map(|h| h.len()), Some(40));
+    }
+
+    /// The actuals tree: each selected file at actuals/<relpath>, held to its tier's schema entry by entry; an absent
+    /// file is {} (every entry of it grades red).
+    #[test]
+    fn read_actuals_reads_the_tree_and_fills_gaps() {
+        let root = out_dir("actuals-root");
+        let dir = root.join("vectors").join("eval").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        let vector = json!({"schema": "santa-eval/v2", "entries": [{"name": "e#0"}, {"name": "e#1"}]});
+        fs::write(dir.join("a.json"), vector.to_string()).unwrap();
+        fs::write(dir.join("b.json"), vector.to_string()).unwrap();
+        let out = out_dir("actuals-out");
+        let adir = out.join("actuals").join("eval").join("v6").join("authored");
+        fs::create_dir_all(&adir).unwrap();
+        let ok = json!({"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null});
+        fs::write(adir.join("a.json"), json!({"e#0": ok, "e#1": {"value": 1, "cost": "x", "error": null}}).to_string()).unwrap();
+        let vs = super::discover_vectors(&root.join("vectors"));
+        let selected: Vec<&super::Vec5> = vs.iter().collect();
+        let a = super::read_actuals(&out, &selected, &root, &schemas());
+        assert_eq!(a["eval/v6/authored/a.json"]["e#0"], ok);
+        assert_eq!(a["eval/v6/authored/a.json"]["e#1"]["error"], "panicked");
+        assert!(a["eval/v6/authored/a.json"]["e#1"]["note"].as_str().unwrap().contains("santa-eval.actuals.schema.json"));
+        assert_eq!(a["eval/v6/authored/b.json"], json!({}));
     }
 }
 
