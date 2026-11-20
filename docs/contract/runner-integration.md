@@ -238,32 +238,34 @@ budget at its top level:
 - **A bounded file holds exactly one entry**, so a budget is a per-row bound. `memory_mb` is MiB, `wall_s` seconds;
   `./validate` holds them to at most **4096 MiB** and **60 s** (`santa_check::limits`). The blessers' default is
   1024 MiB / 10 s.
-- **The runner bounds it, in its own language**, in a **child process it spawns for that one entry**, carrying the
-  budget:
-  - **Time:** the parent kills the child at `wall_s` seconds → `{"error": "exceeded", "limit": "time"}`.
-  - **Memory:** the child runs under the kernel's data-segment limit at `memory_mb` MiB, set before it executes:
-    `setrlimit(RLIMIT_DATA)` in bytes (Rust's `pre_exec`), a shell's `ulimit -d $((memory_mb * 1024))` (KiB), or
-    `prlimit --data=$((memory_mb * 1048576))` (bytes). Linux enforces it on `brk`
-    and on private writable mappings (since 4.7). A child that dies of an allocation failure under it →
-    `{"error": "exceeded", "limit": "memory"}`. The runner tells that apart from a crash by its runtime's
-    out-of-memory signature: Rust aborts (SIGABRT) with `memory allocation of N bytes failed`; Node aborts with `heap
-    out of memory` / `Allocation failed`; a JVM must be told its budget, `-XX:MaxRAM=<memory_mb>m`, and then ends
-    either with `OutOfMemoryError` when its heap runs out (exit 3 under `-XX:+ExitOnOutOfMemoryError`) or natively when
-    it cannot commit memory under the limit (`os::commit_memory … failed; error='Not enough space'`, or `There is
-    insufficient memory for the Java Runtime Environment to continue`; exit 1) — both are the budget. Without
-    `-XX:MaxRAM` it sizes itself from the machine and fails natively at startup or early.
+- **The runner bounds it, in its own language**, in a **child process it spawns for that one entry, in a process
+  group of its own**, carrying the budget:
+  - **Time:** the parent kills the child's group at `wall_s` seconds → `{"error": "exceeded", "limit": "time"}`.
+  - **Memory:** the parent watches the group's resident memory — resident set plus swap (`VmRSS` + `VmSwap` in
+    `/proc/<pid>/status`), summed over the group's processes — every 10 ms, and kills the group when it passes
+    `memory_mb` MiB → `{"error": "exceeded", "limit": "memory"}`. The kill is the parent's own observation, so the
+    implementation cannot catch it and no runtime's error needs recognising, and it bounds memory actually used.
+    A JVM is told its budget, `-XX:MaxRAM=<memory_mb>m`, so that it sizes its heap to the budget, not to the machine.
+  - **The backstop:** the child also runs under the kernel's data-segment limit at `max(4096, 2 × memory_mb)` MiB, set
+    before it executes: `setrlimit(RLIMIT_DATA)` in bytes (Rust's `pre_exec`), a shell's `ulimit -d` in KiB, or
+    `prlimit --data` in bytes. It bounds a burst between two polls. A child that dies of an allocation the backstop
+    refused is `exceeded` memory too, recognised by its runtime's out-of-memory signature: Rust aborts (SIGABRT) with
+    `memory allocation of N bytes failed`; Node aborts with `heap out of memory` / `Allocation failed`; a JVM ends with
+    `OutOfMemoryError` (exit 3 under `-XX:+ExitOnOutOfMemoryError`) or natively (`os::commit_memory … failed`, or
+    `There is insufficient memory for the Java Runtime Environment to continue`; exit 1). An allocation the backstop
+    refuses can be caught by the implementation, as an overcommit refusal could be under a cgroup bound; it then
+    grades as the implementation's answer.
   - **Any other crash** of the child (a non-zero exit, a signal that is not the budget) is `panicked`, its `note` the
     exit status (`process exit status 101`, `process killed by signal 11`).
-  - **Elsewhere:** macOS ignores `RLIMIT_DATA`; there a runner enforces memory best-effort (polling the child's
-    resident size) and says so in its README. Windows is out of scope.
+  - **Elsewhere:** on macOS the watchdog is the same (the resident size from `proc_pidinfo`, or `ps -o rss=`), without
+    the backstop, which macOS ignores: a burst between two polls goes on until the next one. Windows is out of scope.
 - **The control proves every budget, on every run.** If rudolph exceeds or crashes on a bounded file, `./conform`
   fails: the budget or the row is wrong, not the ports.
 - **A budget is a threshold, not a benchmark.** An implementation that lands near it can grade differently run to
   run, so a bounded row is one whose blow-up clears the budget by orders of magnitude, where an honest
   implementation stays far below it; the mechanism's own overhead (a JVM's footprint) must not flip a verdict.
-  Measured under the data limit (2026-11-20): every bounded file graded as under the previous cgroup bound, for
-  every runner that mounts one; rudolph needs about 320–384 MiB of data for its worst file, about a third of its
-  1024 MiB budget, and the implementations that run away die on an allocation the limit refuses.
+  Measured with the watchdog (2026-11-20): every bounded file grades as under the previous cgroup bound, for every
+  runner that mounts one; rudolph peaks at 169 MiB resident under its 1024 MiB budget.
 - **The whole run has a safety ceiling** that protects the machine and does not grade: `./conform` runs each
   `santa-run` under the data limit at the 4096 MiB ceiling (each process) and a wall timeout long enough for a cold
   build, set by conform itself. A runner that hits it loses its column, reported ⚠️.
