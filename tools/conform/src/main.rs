@@ -12,7 +12,7 @@ use jsonschema::error::ValidationErrorKind;
 use jsonschema::{Registry, Resource, ValidationError, Validator};
 use santa_check::grading::{Grade, Grading, Input, Verdict};
 use serde_json::{json, Value};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::os::unix::fs::{symlink, PermissionsExt};
 use std::path::{Component, Path, PathBuf};
 use std::process::{Command, ExitCode, ExitStatus};
@@ -1052,6 +1052,50 @@ fn red_detail(op: &str, name: &str, dim: &str, expected: String, got: String,
     d
 }
 
+/// A red record with the vector file it belongs to (`file`, its relpath): the key the canary compares by.
+fn with_file(mut r: Value, rel: &str) -> Value {
+    r["file"] = json!(rel);
+    r
+}
+
+/// The most disagreements a runner's row lists (`grader.disagreement_count` keeps the true count).
+const MAX_DISAGREEMENTS: usize = 200;
+
+/// The canary (runner-integration §4.4): where a runner's own verdicts — its red records and the files it says it
+/// graded — differ from SANTA's re-grade of its actuals over conform's own selection, keyed by (file, entry, dim).
+#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
+fn grader(runner: &Value, canary: &BTreeMap<(String, String, String), Counts>, selected: &BTreeSet<String>) -> Value {
+    type Key = (String, String, String);
+    let key = |r: &Value| -> Option<Key> {
+        Some((r["file"].as_str()?.to_string(), r["entry"].as_str()?.to_string(), r["dim"].as_str()?.to_string()))
+    };
+    let slices: Vec<&Value> = runner["slices"].as_object().into_iter().flat_map(|m| m.values()).collect();
+    let runner_red: BTreeSet<Key> =
+        slices.iter().flat_map(|s| s["red"].as_array().into_iter().flatten()).filter_map(key).collect();
+    let runner_files: BTreeSet<String> = slices
+        .iter()
+        .flat_map(|s| s["files"].as_array().into_iter().flatten())
+        .filter_map(|f| f.as_str().map(String::from))
+        .collect();
+    let santa_red: BTreeSet<Key> = canary.values().flat_map(|c| c.red.iter()).filter_map(key).collect();
+    let mut disagreements: Vec<Value> = runner_red
+        .symmetric_difference(&santa_red)
+        .map(|k| {
+            let (runner, santa) = if runner_red.contains(k) { ("red", "nice") } else { ("nice", "red") };
+            json!({"file": k.0, "entry": k.1, "dim": k.2, "runner": runner, "santa": santa})
+        })
+        .collect();
+    let count = disagreements.len();
+    disagreements.truncate(MAX_DISAGREEMENTS);
+    let missing: Vec<&String> = selected.difference(&runner_files).collect();
+    let extra: Vec<&String> = runner_files.difference(selected).collect();
+    json!({
+        "agrees": count == 0 && missing.is_empty() && extra.is_empty(),
+        "missing_files": missing, "extra_files": extra,
+        "disagreement_count": count, "disagreements": disagreements,
+    })
+}
+
 /// The grading rules, `vectors/grading.json`, parsed once per run; a file santa-check cannot parse is a SANTA defect.
 fn load_grading(root: &Path) -> Grading {
     let p = root.join("vectors").join(GRADING_FILE);
@@ -1202,21 +1246,21 @@ fn tally(
                 Verdict::Exceeded { limit } => {
                     c.exceeded += 1;
                     let b = &vec["limits"]; // the file's budget: the tier-neutral form carries only the limit hit
-                    c.red.push(red_detail(&op, name, "exceeded",
+                    c.red.push(with_file(red_detail(&op, name, "exceeded",
                         expected_brief(e, is_wire, is_tx, is_chain),
                         format!("exceeded {} ({} MiB, {} s)", limit.as_str().unwrap_or("?"), b["memory_mb"], b["wall_s"]),
-                        None, script));
+                        None, script), rel));
                 }
                 Verdict::Panicked => {
                     c.panicked += 1;
-                    c.red.push(red_detail(&op, name, "panicked",
+                    c.red.push(with_file(red_detail(&op, name, "panicked",
                         expected_brief(e, is_wire, is_tx, is_chain), "panicked".to_string(),
-                        Some(actual.get("note").cloned().unwrap_or(Value::Null)), script));
+                        Some(actual.get("note").cloned().unwrap_or(Value::Null)), script), rel));
                 }
                 Verdict::NotImplemented => {
                     c.not_impl += 1;
-                    c.red.push(red_detail(&op, name, "not-implemented",
-                        expected_brief(e, is_wire, is_tx, is_chain), "not-implemented".to_string(), None, script));
+                    c.red.push(with_file(red_detail(&op, name, "not-implemented",
+                        expected_brief(e, is_wire, is_tx, is_chain), "not-implemented".to_string(), None, script), rel));
                 }
                 Verdict::Graded(dims) => {
                     for (dim, g) in dims {
@@ -1231,7 +1275,7 @@ fn tally(
                             *nice += 1;
                         } else {
                             *coal += 1;
-                            c.red.push(red_for(&tier, &dim, &op, name, e, &actual, script));
+                            c.red.push(with_file(red_for(&tier, &dim, &op, name, e, &actual, script), rel));
                         }
                     }
                 }
@@ -3136,6 +3180,74 @@ mod tests {
         assert_eq!(a["eval/v6/authored/a.json"]["e#1"]["error"], "panicked");
         assert!(a["eval/v6/authored/a.json"]["e#1"]["note"].as_str().unwrap().contains("santa-eval.actuals.schema.json"));
         assert_eq!(a["eval/v6/authored/b.json"], json!({}));
+    }
+
+    fn canary_with(reds: &[(&str, &str, &str)]) -> BTreeMap<(String, String, String), super::Counts> {
+        let mut c = super::Counts::default();
+        for (f, e, d) in reds {
+            c.red.push(json!({"file": f, "entry": e, "dim": d, "op": "x", "expected": "", "got": ""}));
+        }
+        BTreeMap::from([(("eval".to_string(), "v6".to_string(), "authored".to_string()), c)])
+    }
+
+    fn runner_with(files: &[&str], reds: &[(&str, &str, &str)]) -> serde_json::Value {
+        let red: Vec<serde_json::Value> = reds.iter()
+            .map(|(f, e, d)| json!({"file": f, "entry": e, "dim": d, "expected": "", "got": ""})).collect();
+        json!({"slices": {"eval/v6/authored": {"files": files, "red": red}}})
+    }
+
+    fn sel(files: &[&str]) -> std::collections::BTreeSet<String> {
+        files.iter().map(|f| f.to_string()).collect()
+    }
+
+    const F: &str = "eval/v6/authored/f.json";
+
+    #[test]
+    fn grader_agrees_when_the_red_sets_match() {
+        let g = super::grader(&runner_with(&[F], &[(F, "e1", "value")]), &canary_with(&[(F, "e1", "value")]), &sel(&[F]));
+        assert_eq!(g["agrees"], true);
+        assert_eq!(g["disagreement_count"], 0);
+        assert_eq!(g["disagreements"], json!([]));
+    }
+
+    #[test]
+    fn grader_lists_each_side_of_a_disagreement() {
+        let g = super::grader(&runner_with(&[F], &[(F, "e1", "value")]), &canary_with(&[(F, "e2", "cost")]), &sel(&[F]));
+        assert_eq!(g["agrees"], false);
+        assert_eq!(g["disagreements"], json!([
+            {"file": F, "entry": "e1", "dim": "value", "runner": "red", "santa": "nice"},
+            {"file": F, "entry": "e2", "dim": "cost", "runner": "nice", "santa": "red"},
+        ]));
+    }
+
+    #[test]
+    fn grader_names_missing_and_extra_files() {
+        let g = super::grader(&runner_with(&[F, "eval/v6/authored/extra.json"], &[]), &canary_with(&[]),
+            &sel(&[F, "eval/v6/authored/missing.json"]));
+        assert_eq!(g["agrees"], false);
+        assert_eq!(g["missing_files"], json!(["eval/v6/authored/missing.json"]));
+        assert_eq!(g["extra_files"], json!(["eval/v6/authored/extra.json"]));
+    }
+
+    #[test]
+    fn grader_caps_the_list_and_keeps_the_count() {
+        let names: Vec<String> = (0..250).map(|i| format!("e{i:03}")).collect();
+        let reds: Vec<(&str, &str, &str)> = names.iter().map(|n| (F, n.as_str(), "value")).collect();
+        let g = super::grader(&runner_with(&[F], &reds), &canary_with(&[]), &sel(&[F]));
+        assert_eq!(g["disagreement_count"], 250);
+        assert_eq!(g["disagreements"].as_array().unwrap().len(), super::MAX_DISAGREEMENTS);
+    }
+
+    #[test]
+    fn tally_red_records_carry_their_file() {
+        let root = bound_root("tally-file");
+        let dir = root.join("vectors").join("eval").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("x.json"), one_entry_vector().to_string()).unwrap();
+        let actuals = BTreeMap::from([("eval/v6/authored/x.json".to_string(), json!({"e#0": {"error": "panicked", "note": "boom"}}))]);
+        let slices = super::tally(&actuals, true, &root, &grading());
+        assert_eq!(slices.values().next().unwrap().red[0]["file"], "eval/v6/authored/x.json");
+        fs::remove_dir_all(&root).ok();
     }
 }
 
