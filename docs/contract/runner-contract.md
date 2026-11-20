@@ -34,7 +34,9 @@ run(vector) → actuals
   (§3) — `null` on success, else `errored` / `not-implemented` / `panicked` (or, for a bounded file, `exceeded`).
 
 Conformance is then a separate comparison step (§5): an entry is **nice** when the
-runner's actual equals the vector's blessed `expected`, **a lump of coal** otherwise.
+runner's actual equals the vector's blessed `expected`, **a lump of coal** otherwise. The runner makes that comparison
+itself, by the grading rules, and SANTA's `./conform` makes it again over the same actuals as a canary
+([runner-integration §4](runner-integration.md#4-the-runner-grades-santa-re-grades)).
 
 The JVM reference runner ("Rudolph") is *one* implementation of this function; it is not
 a dependency for anyone else (§6).
@@ -298,7 +300,8 @@ reconstruction rules, which every conforming implementation of this schema must 
   runner evaluated the value but does not claim the **cost dimension** (e.g. an eval-only library).
   This is *scope*, declared in the manifest (`cost: false`), not abstention: the value is still graded.
 - The runner **MUST NOT read the vector's `expected`** when producing actuals. Actuals are
-  produced blind; otherwise the comparison is meaningless.
+  produced blind; otherwise the comparison is meaningless. It reads `expected` only afterwards, to grade the actuals
+  it already has.
 
 ### Invariants (hold for any runner, any vector)
 - **Determinism.** Same vector → byte-stable actuals on every run. No clocks, no RNG, no

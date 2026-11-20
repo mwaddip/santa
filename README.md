@@ -62,14 +62,17 @@ The transaction and block tiers need no node and no UTXO database: everything an
 
 ### Runners and grading
 
-A runner is a thin adapter. Called as `santa-run <impl-path> <vectors-dir> <out-dir>`, it builds against the
-implementation, evaluates every entry of every vector it is given, and writes one **actuals** file per vector:
-the implementation's own answer per entry. A runner never compares anything.
+A runner runs an implementation over the vectors and grades its answers. Called as `santa-run <impl-path>
+<santa-dir> <out-dir>`, it selects the vector files its declared scope covers from a SANTA checkout, runs every entry
+through the implementation, grades each answer, and writes its results and the raw answers (**actuals**). The grading
+rules are data: [`vectors/grading.json`](vectors/grading.json), in the small language
+[`grading.md`](docs/contract/grading.md) specifies. Every runner interprets that file, in its own language, and proves
+its interpreter against the verdict oracle in `oracle/` before it grades anything.
 
-`./conform` hands each runner the vectors its declared scope selects, runs it, and grades every runner's
-actuals with one shared comparator. The grading rules are data: [`vectors/grading.json`](vectors/grading.json), in the
-small language [`grading.md`](docs/contract/grading.md) specifies, interpreted by `tools/santa-check` and proven
-against the verdict oracle in `oracle/`. It also holds every actual to its tier's actuals schema (`schema/`).
+`./conform` runs every runner on the board and re-grades its raw answers with SANTA's own interpreter
+(`tools/santa-check`) as a **canary**: the board shows SANTA's re-grade, and where a runner's own grading disagrees, a
+note below the board says so. conform also holds every answer to its tier's actuals schema (`schema/`) and grades
+every file the runner's scope selects, so a file the runner skipped shows red.
 
 Per entry and per dimension (value, cost, verdict, digest, bytes), an answer is 🎁 when it matches the blessed
 expectation and 🪨 when it does not. The outcomes besides an answer:
@@ -150,33 +153,44 @@ A scope is coarse (a whole tier, kind or class of rule) and needs a reason your 
 README. Something you mean to support but have not built yet stays in scope: its `not-implemented` entries are
 your readiness map. See [runner-integration §2](docs/contract/runner-integration.md#2-the-manifest--runnerjson).
 
-`santa-run <impl-path> <vectors-dir> <out-dir>` must:
+`santa-run <impl-path> <santa-dir> <out-dir>` reads `<santa-dir>`, a SANTA checkout, as data only, and in order:
 
-- build against the checkout it lives in (find it from its own location, by real path), and never modify that
-  checkout: it may be a developer's working tree;
-- evaluate every `*.json` in `<vectors-dir>` and write `<out-dir>/<same name>`, one answer per entry. A failure on
-  one entry is an outcome in the file, never a crash of the run;
-- run the conformer on its **last line**, under SANTA's resource bound when one is set, with the vectors dir and the
-  out dir as the last two arguments: `${SANTA_BOUND:+"$SANTA_BOUND"} <command> "$vectors" "$out"`;
-- dispatch on each vector's `schema` by exact name and version, and answer `{"error": "not-implemented"}` for every
-  entry of a schema it was not written for, so a schema SANTA adds reaches you as `not-implemented`, never as false
-  divergences;
-- exit 0 when it ran. A non-zero exit means the runner itself could not run.
+1. **checks itself**: its grading interpreter reproduces every case of the verdict oracle
+   (`oracle/verdicts-grading.json`) and its selection every case of the selection oracle (`oracle/selection.json`);
+   otherwise it exits non-zero, naming the case;
+2. **selects** the vector files its scope covers ([runner-integration §4.1](docs/contract/runner-integration.md#41-selection));
+3. **runs** every entry through the implementation, built from the checkout the runner lives in (found from its own
+   location, by real path, and never modified: it may be a developer's working tree). A failure on one entry is an
+   outcome, never a crash of the run. A vector schema it was not written for answers `{"error": "not-implemented"}` for
+   every entry, so a schema SANTA adds reaches you as `not-implemented`, never as false divergences;
+4. **bounds** each bounded file (one heavy entry with a `limits` budget) in a child process of its own, killed at its
+   wall time or when its resident memory passes the budget: `{"error": "exceeded", "limit": "time" | "memory"}`
+   ([runner-integration §3a](docs/contract/runner-integration.md#3a-bounded-files));
+5. **grades** every answer by `vectors/grading.json`;
+6. **writes** `<out-dir>/results.json` (the SANTA commit graded against, the scope, per slice the files graded, the
+   counts and every red; `schema/santa-runner-results.schema.json`) and `<out-dir>/actuals/<path>`, the raw answers
+   of each vector file in its tier's actuals shape.
 
-A skeleton:
+It exits 0 when it ran, whatever the reds; non-zero means the runner itself could not run. Given a `<santa-dir>`, it
+grades exactly that checkout.
+
+A skeleton, with the work in a program of your own language:
 
 ```bash
 #!/usr/bin/env bash
-# santa-run <impl-path> <vectors-dir> <out-dir>
+# santa-run <impl-path> <santa-dir> <out-dir>
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 repo="$(dirname "$here")"                       # the checkout this runner lives in
-vectors="$(realpath "$2")"; out="$(realpath -m "$3")"; mkdir -p "$out"
+santa="$(realpath "$2")"; out="$(realpath -m "$3")"; mkdir -p "$out"
 (cd "$repo" && cargo build --release -p my-santa-runner)
-${SANTA_BOUND:+"$SANTA_BOUND"} "$repo/target/release/my-santa-runner" "$vectors" "$out"
+exec "$repo/target/release/my-santa-runner" "$santa" "$out"   # checks, selects, runs, bounds, grades, writes
 ```
 
-An eval-tier actuals file, for instance, maps each entry's name to the implementation's answer:
+The interpreter, the selection and the bound are a few hundred lines, written once; a new grading type SANTA adds
+needs no change to them, only a new building block of the grading language would. SANTA's own interpreter,
+`tools/santa-check`, is one to read. An eval-tier actuals file, for instance, maps each entry's name to the
+implementation's answer:
 
 ```json
 {
@@ -193,37 +207,45 @@ commands and scripts, a local grading wrapper, debugging modes, its own tests. T
 interface SANTA runs it through, because that same interface runs your pull request check and your row on the board:
 
 - `runner.json` holds the scope keys and nothing else;
-- `santa-run <impl-path> <vectors-dir> <out-dir>` builds and runs, with the conformer on its last line under
-  `${SANTA_BOUND:+"$SANTA_BOUND"}`;
-- it writes one actuals file per vector, in its tier's actuals shape, and answers `{"error": "not-implemented"}` for a
-  schema it was not written for;
+- `santa-run <impl-path> <santa-dir> <out-dir>` grades the SANTA checkout it is given;
+- it writes `results.json` and `actuals/` as above, and answers `{"error": "not-implemented"}` for a schema it was not
+  written for;
 - it exits 0 when it ran.
-
-ergots' runner, for instance, comes with `santa/grade`, its own kit that runs SANTA's checks on the working tree.
 
 ### 2. Grade locally against SANTA's latest vectors
 
-SANTA needs `mise` and `git`, and runs on **Linux**, where the kernel enforces the data limits it runs a runner
-under. SANTA's own tools (Rust) and your runner's toolchain
-provision themselves; the first run builds the tools.
+Your runner needs nothing from SANTA but a checkout of it, as data:
 
 ```bash
-git clone https://github.com/mwaddip/santa.git && cd santa
+git clone --depth 1 https://github.com/mwaddip/santa.git ~/.cache/santa    # git -C ~/.cache/santa pull: the newest vectors
+santa/santa-run - ~/.cache/santa ./santa-out
+```
+
+`santa-out/results.json` lists every red with its expected and actual answer; `santa-out/actuals/` holds the raw
+answers.
+
+To see what the board makes of it, SANTA's canary included, run SANTA's `conform` on your working tree. SANTA needs
+`mise` and `git`, and runs on **Linux**, where the kernel enforces the data limits it runs a runner under; its own
+tools (Rust) and your runner's toolchain provision themselves, and the first run builds the tools.
+
+```bash
+cd ~/.cache/santa
 ./conform --hosted ~/src/my-impl          # your working tree, uncommitted edits included
 ```
 
-- `git pull` in the SANTA checkout brings the newest vectors.
 - `--runner-dir <dir>` if your runner is not in `santa/`; `--label <name>` names it in the table.
 - `--hosted <url>#<ref>` grades a commit of a remote instead (`#<branch>`, `#<tag>`, or `#<branch>@<sha>`).
 
-`conform` prints a line per slice (tier, version, provenance), e.g.
+`conform` prints a line per slice (tier, version, provenance), then whether your runner's own grading agrees with
+SANTA's, e.g.
 
 ```
 eval/v6/authored: value 15156/15156 · 8 not-impl · cost 15156/15156 · reject 19100/19100
+grader: agrees
 ```
 
 and writes `.santa/results.json`, every red entry with its file, name, dimension, expected and actual. Your runner's
-raw actuals are in `.santa/<repo-name>/out/`.
+outputs are in `.santa/<repo-name>/out/`.
 
 Before you push, see the comment your pull request would get:
 
@@ -312,11 +334,11 @@ Pages.
 ```
 vectors/<tier>/<version>/<provenance>/   the corpus
 vectors/grading.json    the grading rules, as data (docs/contract/grading.md)
-schema/                 JSON Schemas: each tier's vectors and actuals
+schema/                 JSON Schemas: each tier's vectors and actuals, a runner's results, the grading rules
 docs/contract/          the runner contracts, one per tier, runner-integration (how a runner is run), grading
 docs/corpus.md          what the corpus pins, family by family
 docs/coverage/          the eval corpus's coverage manifest (ops, methods, tree shapes)
-oracle/                 the verdict oracle the comparator is proven against
+oracle/                 the verdict and selection oracles every runner reproduces before it grades
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
 ts-runner/              dasher, the ergots runner (moving into ergots)
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
