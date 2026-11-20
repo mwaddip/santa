@@ -1,12 +1,16 @@
 name: SANTA PR check
 description: >-
-  Grades a pull request's base and head with the repository's SANTA runner on SANTA's current vectors (./santa-pr),
-  writes the per-entry summary to the job summary and uploads the delta as the artifact `santa-pr` for a commenter
-  workflow. It posts nothing and needs only a read-only token, so it is safe on a pull request from a fork.
+  Grades a pull request's base and head with the repository's own SANTA runner on SANTA's current vectors
+  (./santa-pr), writes the per-entry summary to the job summary and uploads the delta as the artifact `santa-pr` for
+  a commenter workflow. It posts nothing and needs only a read-only token, so it is safe on a pull request from a
+  fork. SANTA has no entry for the runner: it lives in this repository, and each side of the delta runs its own copy.
 inputs:
-  runner:
-    description: The SANTA runner that grades this repository (its runners/<name> entry in SANTA).
-    required: true
+  runner-path:
+    description: The directory of this repository's SANTA runner (its runner.json and santa-run), from the root.
+    default: santa
+  label:
+    description: The runner's name in the comment.
+    default: ${{ github.repository }}
   impl-path:
     description: This repository's checkout, with full history (actions/checkout with fetch-depth 0).
     default: ${{ github.workspace }}
@@ -27,8 +31,7 @@ runs:
       with:
         repository: mwaddip/santa
         ref: ${{ inputs.santa-ref }}
-        path: .santa-pr/santa
-        submodules: recursive # a runner SANTA hosts may be a submodule
+        path: .santa-pr/santa # the vectors and the tools; none of SANTA's own runners runs here
         persist-credentials: false
     - name: install mise (the binary; SANTA and the runner provision their own toolchains)
       uses: jdx/mise-action@v4
@@ -38,19 +41,21 @@ runs:
     - name: grade the base and the head
       shell: bash
       env:
-        RUNNER: ${{ inputs.runner }}
+        RUNNER_PATH: ${{ inputs.runner-path }}
+        LABEL: ${{ inputs.label }}
         IMPL: ${{ inputs.impl-path }}
         BASE: ${{ inputs.base }}
         HEAD: ${{ inputs.head }}
-      run: '"$GITHUB_WORKSPACE/.santa-pr/santa/santa-pr" "$RUNNER" "$IMPL" "$BASE" "$HEAD"'
+      run: >-
+        "$GITHUB_WORKSPACE/.santa-pr/santa/santa-pr" --runner-dir "$RUNNER_PATH" --label "$LABEL"
+        "$IMPL" "$BASE" "$HEAD"
     - name: collect the delta
       shell: bash
       env:
-        RUNNER: ${{ inputs.runner }}
         PR: ${{ github.event.pull_request.number }}
         PR_HEAD: ${{ github.event.pull_request.head.sha }}
       run: |
-        out="$GITHUB_WORKSPACE/.santa-pr/santa/.santa/pr/$RUNNER"
+        out="$GITHUB_WORKSPACE/.santa-pr/santa/.santa/pr"
         cat "$out/summary.md" >> "$GITHUB_STEP_SUMMARY"
         mkdir -p "$GITHUB_WORKSPACE/.santa-pr/artifact"
         cp "$out/comment.md" "$out/delta.json" "$GITHUB_WORKSPACE/.santa-pr/artifact/"

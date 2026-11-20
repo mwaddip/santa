@@ -1144,26 +1144,43 @@ fn repo_name(spec: &str) -> String {
 }
 
 const USAGE: &str = "usage: ./conform [--clean] [<runner>…] [--impl <url>#<ref> | --impl <path>]
+       ./conform [--clean] --hosted <url>#<ref> | <path> [--runner-dir <dir>] [--label <label>]
   no runner named: every runner under runners/; --impl (one runner named) replaces its impl for this run,
-  a path without #<ref> being graded in place, uncommitted edits included";
+  a path without #<ref> being graded in place, uncommitted edits included.
+  --hosted: no runner under runners/, but the implementation's own, in <dir> of its checkout (default santa),
+  the one a pull request check runs; named after the repo, labelled <label> (default the same)";
 
-/// conform's command line: `--clean`, the runners to run (none = all), and one runner's impl override.
+/// conform's command line: `--clean`, the runners to run (none = all) and one runner's impl override, or instead
+/// an implementation's own runner (`--hosted`), which SANTA has no entry for.
 struct Args {
     clean: bool,
     impl_: Option<String>,
     names: Vec<String>,
+    hosted: Option<String>,
+    runner_dir: Option<String>,
+    label: Option<String>,
 }
 
 fn parse_args(args: &[String]) -> Result<Args, String> {
-    let mut a = Args { clean: false, impl_: None, names: vec![] };
+    let mut a = Args { clean: false, impl_: None, names: vec![], hosted: None, runner_dir: None, label: None };
     let mut it = args.iter();
     while let Some(x) = it.next() {
+        let mut value = || it.next().cloned().ok_or(format!("{x} needs a value"));
         match x.as_str() {
             "--clean" => a.clean = true,
-            "--impl" => a.impl_ = Some(it.next().ok_or("--impl needs a value")?.clone()),
+            "--impl" => a.impl_ = Some(value()?),
+            "--hosted" => a.hosted = Some(value()?),
+            "--runner-dir" => a.runner_dir = Some(value()?),
+            "--label" => a.label = Some(value()?),
             o if o.starts_with('-') => return Err(format!("unknown option {o:?}")),
             n => a.names.push(n.to_string()),
         }
+    }
+    if a.hosted.is_some() && (!a.names.is_empty() || a.impl_.is_some()) {
+        return Err("--hosted runs the implementation's own runner, not one under runners/: no runner names, no --impl".into());
+    }
+    if a.hosted.is_none() && (a.runner_dir.is_some() || a.label.is_some()) {
+        return Err("--runner-dir and --label describe a --hosted runner".into());
     }
     if a.impl_.is_some() && a.names.len() != 1 {
         return Err("--impl replaces one runner's impl: name exactly one runner".into());
@@ -1180,22 +1197,46 @@ fn select_runners(all: Vec<Runner>, names: &[String]) -> Result<Vec<Runner>, Str
     Ok(all.into_iter().filter(|r| names.is_empty() || names.contains(&r.name)).collect())
 }
 
-/// `--impl`: this run grades `spec` instead of the configured impl, under the configured repo name. A plain path
-/// must be an existing directory; it is made absolute (it is graded in place, through a link).
+/// An impl given on the command line: `<url>#<ref>` as it is; a plain path must be an existing directory, made
+/// absolute (it is graded in place, through a link).
+fn impl_spec(option: &str, spec: &str) -> Result<String, String> {
+    if spec.contains('#') {
+        return Ok(spec.to_string());
+    }
+    let dir = fs::canonicalize(spec).map_err(|e| format!("{option} {spec}: {e}"))?;
+    if !dir.is_dir() {
+        return Err(format!("{option} {spec}: not a directory"));
+    }
+    Ok(dir.to_string_lossy().into_owned())
+}
+
+/// `--impl`: this run grades `spec` instead of the configured impl, under the configured repo name.
 fn override_impl(m: &mut Runner, spec: &str) -> Result<(), String> {
     if m.impl_name.is_none() {
         return Err(format!("{} has no impl to override", m.name));
     }
-    m.impl_ = Some(if spec.contains('#') {
-        spec.to_string()
-    } else {
-        let dir = fs::canonicalize(spec).map_err(|e| format!("--impl {spec}: {e}"))?;
-        if !dir.is_dir() {
-            return Err(format!("--impl {spec}: not a directory"));
-        }
-        dir.to_string_lossy().into_owned()
-    });
+    m.impl_ = Some(impl_spec("--impl", spec)?);
     Ok(())
+}
+
+/// `--hosted`: the implementation's own runner, in `dir` of its checkout (default `santa`), which SANTA has no entry
+/// for (runner-integration §6a: the pull request check). It is named after the repo, under which its runner finds the
+/// checkout, and labelled `label` (default the same); its scope is read from the checkout, like any hosted runner's.
+fn hosted_entry(spec: &str, dir: Option<&str>, label: Option<&str>) -> Result<Runner, String> {
+    let path = runner_path(&json!(dir.unwrap_or("santa"))).map_err(|_| format!("--runner-dir {dir:?}: not a relative path inside the checkout"))?;
+    let impl_ = impl_spec("--hosted", spec)?;
+    let name = repo_name(&impl_);
+    if name.is_empty() {
+        return Err(format!("--hosted {spec}: no repo name in it"));
+    }
+    Ok(Runner {
+        label: label.map_or_else(|| name.clone(), String::from),
+        impl_name: Some(name.clone()),
+        name,
+        impl_: Some(impl_),
+        control: false,
+        host: Host::Impl(path),
+    })
 }
 
 /// The control runners (`"control": true`) that did not run: no result, or one marked `errored` (santa-run could not
@@ -1234,10 +1275,16 @@ fn main() -> ExitCode {
     if args.clean {
         let _ = fs::remove_dir_all(root.join(".santa"));
     }
-    let mut runners = select_runners(discover(&root.join("runners")), &args.names).unwrap_or_else(|e| die(e));
-    if let Some(spec) = &args.impl_ {
-        override_impl(&mut runners[0], spec).unwrap_or_else(|e| die(e));
-    }
+    let runners = match &args.hosted {
+        Some(spec) => vec![hosted_entry(spec, args.runner_dir.as_deref(), args.label.as_deref()).unwrap_or_else(|e| die(e))],
+        None => {
+            let mut rs = select_runners(discover(&root.join("runners")), &args.names).unwrap_or_else(|e| die(e));
+            if let Some(spec) = &args.impl_ {
+                override_impl(&mut rs[0], spec).unwrap_or_else(|e| die(e));
+            }
+            rs
+        }
+    };
     if runners.is_empty() {
         println!("no runners under runners/*/ (need runner.json + an executable santa-run or a \"runner\" key)");
         return ExitCode::FAILURE;
@@ -1305,7 +1352,7 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
-    use super::{discover_dir, discover_vectors, hosted_runner, in_scope, override_impl, parse_args, parse_hosted_manifest, parse_manifest, repo_name, select_runners, Args, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Host, Runner, Scope, Vec5, WireFacts, WIRE_KINDS};
+    use super::{discover_dir, discover_vectors, hosted_entry, hosted_runner, in_scope, override_impl, parse_args, parse_hosted_manifest, parse_manifest, repo_name, select_runners, Args, parse_relpath, repo_root, resolve_impl, scope_suffix, select, unrun_controls, wire_facts, Host, Runner, Scope, Vec5, WireFacts, WIRE_KINDS};
     use std::collections::BTreeMap;
     use serde_json::json;
     use std::fs;
@@ -1890,6 +1937,44 @@ mod tests {
         for bad in [&["--help"][..], &["--impl"], &["--impl", "/w"], &["a", "b", "--impl", "/w"]] {
             assert!(args(bad).is_err(), "{bad:?}");
         }
+    }
+
+    #[test]
+    fn conform_takes_a_hosted_runner_alone() {
+        let a = args(&["--hosted", "/w/sigma-rust#main"]).unwrap();
+        assert_eq!(a.hosted.as_deref(), Some("/w/sigma-rust#main"));
+        assert!(a.names.is_empty() && a.impl_.is_none() && a.runner_dir.is_none() && a.label.is_none());
+        let a = args(&["--hosted", "/w/x", "--runner-dir", "ci/santa", "--label", "x (PR)"]).unwrap();
+        assert_eq!((a.runner_dir.as_deref(), a.label.as_deref()), (Some("ci/santa"), Some("x (PR)")));
+        // the implementation's own runner is not one under runners/: no names, no --impl beside it; and the options
+        // that describe it mean nothing without it
+        for bad in [&["--hosted"][..], &["--hosted", "/w", "dasher"], &["--hosted", "/w", "--impl", "/v"],
+                    &["--runner-dir", "santa"], &["--label", "x"], &["dasher", "--runner-dir", "santa"]] {
+            assert!(args(bad).is_err(), "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn a_hosted_runner_needs_no_entry_in_santa() {
+        let tmp = scratch("hosted-entry");
+        let checkout = tmp.join("sigma-rust");
+        fs::create_dir_all(&checkout).unwrap();
+        // a plain path: graded in place, named after its directory, the runner in `santa` by default
+        let m = hosted_entry(checkout.to_str().unwrap(), None, None).unwrap();
+        assert_eq!((m.name.as_str(), m.label.as_str(), m.impl_name.as_deref()), ("sigma-rust", "sigma-rust", Some("sigma-rust")));
+        assert_eq!(m.impl_, Some(fs::canonicalize(&checkout).unwrap().to_string_lossy().into_owned()));
+        assert!(matches!(&m.host, Host::Impl(p) if p == "santa") && !m.control);
+        // a ref of a url or a path, its runner elsewhere, a label for the comment
+        let m = hosted_entry("https://github.com/ergoplatform/sigma-rust.git#abc123", Some("ci/santa"), Some("ergoplatform/sigma-rust")).unwrap();
+        assert_eq!((m.name.as_str(), m.label.as_str()), ("sigma-rust", "ergoplatform/sigma-rust"));
+        assert_eq!(m.impl_.as_deref(), Some("https://github.com/ergoplatform/sigma-rust.git#abc123"));
+        assert!(matches!(&m.host, Host::Impl(p) if p == "ci/santa"));
+        // the runner stays inside the checkout; a path must exist
+        for dir in ["../santa", "/santa", "", "a/../b"] {
+            assert!(hosted_entry(checkout.to_str().unwrap(), Some(dir), None).is_err(), "{dir:?}");
+        }
+        assert!(hosted_entry(tmp.join("missing").to_str().unwrap(), None, None).is_err());
+        let _ = fs::remove_dir_all(&tmp);
     }
 
     #[test]

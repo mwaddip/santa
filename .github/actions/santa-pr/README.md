@@ -10,9 +10,12 @@ read-only token, and runs the pull request's own copy of its workflow files: the
 pull request's code with that token and posts nothing; the commenter runs the default branch's copy with a write
 token, and never checks out or runs anything from the pull request. It reads the check's artifact as text.
 
-The repository needs a SANTA runner, `runners/<name>` in SANTA (the runner itself may live in the implementation's
-repo, [runner-integration §2](../../../docs/contract/runner-integration.md#a-runner-the-implementation-hosts--runner)).
-Linux runners only (SANTA's resource bound needs a systemd user manager).
+The repository hosts its own SANTA runner: a directory, `santa/` by default, holding its `santa-run` and a
+`runner.json` with its scope
+([runner-integration §2](../../../docs/contract/runner-integration.md#a-runner-the-implementation-hosts--runner)).
+SANTA needs no entry for it: SANTA provides the vectors, the comparator and the delta, and the base and the head
+are each graded with their own copy of the runner. Linux runners only (SANTA's resource bound needs a systemd user
+manager).
 
 ## `.github/workflows/santa.yml`: the check
 
@@ -31,8 +34,9 @@ jobs:
         with:
           fetch-depth: 0 # the base and head are graded from this checkout
       - uses: mwaddip/santa/.github/actions/santa-pr@main
-        with:
-          runner: blitzen # the repository's runner in SANTA
+        # with:
+        #   runner-path: santa      # the runner's directory in this repository (default santa)
+        #   label: owner/repo       # its name in the comment (default the repository's)
 ```
 
 The head graded is the pull request merged into its base (`github.sha`), so a base that moved on since the branch

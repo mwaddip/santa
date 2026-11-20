@@ -14,12 +14,17 @@ treats them identically. **Presence-as-state:** a dir is run iff it contains a v
 *and* either an executable `santa-run` or a `runner` key (below); a dir whose `runner.json` has neither is skipped.
 There is no central registry — add a configured dir and it runs; remove it and it's gone.
 
-A runner may also live **in the implementation's own repo**. SANTA then keeps only its entry,
-`runners/<name>/runner.json`, whose `runner` key names the runner's directory inside the implementation's
-checkout (§2); that directory holds the `santa-run` and a `runner.json` with the runner's scope. The entry has no
-`santa-run` of its own (`conform` refuses a dir with both: two runners would claim it). Every checkout of the
-implementation brings its own runner, so an API change and the runner change it needs land in one commit, and a
-grade at any commit uses that commit's runner. The vectors, the comparator and the actuals schemas stay SANTA's.
+A runner may also live **in the implementation's own repo**: a directory there (`santa/` by convention) holding
+the `santa-run` and a `runner.json` with the runner's scope (§2). It is the implementation's: its pull request check
+runs it with no entry in SANTA at all (§6a), and SANTA provides only the vectors, the comparator and the actuals
+schemas. Every checkout of the implementation brings its own runner, so an API change and the runner change it
+needs land in one commit, and a grade at any commit uses that commit's runner.
+
+SANTA's board grades **implementations**, one entry per line it tracks (an implementation's branch), never a pull
+request's. An entry is either a runner SANTA maintains (a dir with its own `santa-run`, in-tree or a submodule) or,
+for an implementation that hosts its runner, only `runners/<name>/runner.json` whose `runner` key names that
+directory in the implementation's checkout (§2). Such an entry has no `santa-run` of its own (`conform` refuses a
+dir with both: two runners would claim it).
 
 Two dirs may wrap the same upstream runner at different checkouts — e.g. `runners/blitzen-develop/`
 and `runners/blitzen-eni/` — to compare an implementation's branches side by side.
@@ -97,6 +102,8 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   ("the implementation's runner: …") whose scope `results.json` records as `null`: nothing says which slices it
   would have graded, so the scoreboard marks every slice of it UNGRADED. A `santa-run` that fails after the scope
   was read keeps that scope, as any other runner's does.
+- **The implementation's file is all its pull request check needs.** SANTA's entry is the board's (a name, a label,
+  the line it tracks); the check runs the directory directly (§6a `--hosted`), naming it after the repo.
 
 ## 3. The entrypoint — `santa-run`
 
@@ -271,7 +278,8 @@ diverges from the blessed `expected`, the runner is wrong — surfaced as RED, r
 
 ```
 ./conform [--clean] [<runner>…] [--impl <url>#<ref> | --impl <path>]
-./santa-pr <runner> <impl> <base-ref> [<head-ref>]
+./conform [--clean] --hosted <url>#<ref> | <path> [--runner-dir <dir>] [--label <label>]
+./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base-ref> [<head-ref>]
 ```
 
 - **Runner names** run only those runners, in discovery order; a control that is not named is not required. No name
@@ -286,17 +294,23 @@ diverges from the blessed `expected`, the runner is wrong — surfaced as RED, r
 - The cached clone (`.santa/<name>/<repo-name>`) follows the spec's url, and `<url>#<branch>` is that url's branch
   tip, checked out detached; a pinned commit no branch holds is fetched by sha. So a run against a local checkout
   never leaks into the next run against the upstream.
-- **`./santa-pr`** grades the runner at `<impl>`'s `<base-ref>`, then at `<head-ref>`, or without one at the working
-  tree of a local `<impl>`, on the same checkout's vectors, and writes `santa-delta`'s comparison to
-  `.santa/pr/<runner>/`: `comment.md` (per runner the counts of newly red, now green, red another way and still
-  red, then one row per vector file), `summary.md` (every entry's expected / got, cut at 1 MiB) and `delta.json`
-  (every entry, both sides). An implementer runs it before pushing. A commit sha is the unambiguous base. Like
-  `./conform` it needs `santa-bound`'s systemd user manager, so it runs on Linux.
+- **`--hosted`** runs no runner under `runners/`: only the implementation's own, the directory `<dir>` (default
+  `santa`) of the checkout `--hosted` names (`<url>#<ref>` or a path in place, as `--impl`), read as §2's hosted
+  runner. It is named after the repo and labelled `<label>` (default the same); no control is required. Runner
+  names and `--impl` are refused beside it.
+- **`./santa-pr`** grades the implementation's own runner (`--hosted`) at `<impl>`'s `<base-ref>`, then at
+  `<head-ref>`, or without one at the working tree of a local `<impl>`, each with that ref's copy of the runner, on
+  the same checkout's vectors, and writes `santa-delta`'s comparison to `.santa/pr/`: `comment.md` (the counts of
+  newly red, now green, red another way and still red, then one row per vector file), `summary.md` (every entry's
+  expected / got, cut at 1 MiB) and `delta.json` (every entry, both sides). A base without the runner directory
+  could not run, and the comment says so. An implementer runs it before pushing. A commit sha is the unambiguous
+  base. Like `./conform` it needs `santa-bound`'s systemd user manager, so it runs on Linux.
 - **In CI**, the composite action [`.github/actions/santa-pr`](../../.github/actions/santa-pr/README.md) runs it in
-  the implementation's own workflow (base: the PR's base; head: the PR merged into it) and uploads the delta; a
-  second workflow, on the default branch, posts it as the PR's comment. The split keeps a fork's PR safe: its code
-  runs only with a read-only token, and the write token never meets it. The action's README holds both workflow
-  files.
+  the implementation's own workflow (base: the PR's base; head: the PR merged into it; the runner's directory and
+  label as inputs) and uploads the delta; a second workflow, on the default branch, posts it as the PR's comment.
+  SANTA needs no entry for the implementation, and a board entry it may have plays no part. The split keeps a fork's
+  PR safe: its code runs only with a read-only token, and the write token never meets it. The action's README holds
+  both workflow files.
 
 ## 7. Self-test kit (optional) — SANTA's published-data interface
 
