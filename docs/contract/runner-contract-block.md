@@ -119,9 +119,11 @@ coverage verdict (growth-ledger stance); then:
    - **`valid`**: nice iff `actual.error == null && actual.valid == true`.
    - **`post_digest`**: graded only when `valid` is nice; nice on equality of non-null
      digests, else coal.
-   - **`cost`**: graded only when `valid` AND `post_digest` are nice and **both** sides
-     declare a non-null cost (`runner.json: cost: false` runners emit `null` — ungraded,
-     not coal); nice/coal on equality.
+   - **`cost`**: graded only when `valid` AND `post_digest` are nice, the vector carries a
+     non-null cost, and the runner claims the cost dimension (`runner.json: cost: true`);
+     nice/coal on equality. A claiming runner that answers `cost: null` is
+     **cost-not-implemented: coal**, as on the eval tier (core contract §5). A `cost: false`
+     runner's cost is ungraded, whatever it answers.
 4. **Reject vector** (`expected.valid == false`) — one dimension: nice iff
    `actual.valid == false && actual.error == null`. `errored` on a reject vector is
    **coal** (the tx-tier stance, by design — see the tx contract §4 for why this

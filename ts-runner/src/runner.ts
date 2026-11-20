@@ -668,12 +668,12 @@ export async function runWireVector(doc: WireVector): Promise<Record<string, Wir
 // ---- Transaction tier ----
 // dasher dispatches to ergots' @ergots/transaction: parseTransaction(tx_bytes_hex) → build
 // StatefulDeps (input/data boxes + the provided block context) → validateStateful, which RETURNS
-// void on accept and THROWS on reject. Bytes are the consensus form — the context-extension wire
-// order survives parseTransaction with no special handling (the getVarFromInput / inputExtensions
-// substrate intact). The package lives on the ergots tx branch; if absent (ergots-impl on a pre-tx
-// master) it loads as null and every entry degrades to not-implemented, leaving eval/wire untouched.
-// Accept/reject only — validateStateful exposes no cost yet, so cost is null (graded n/a).
-// runner-contract-transaction.md §1-§5.
+// the transaction's block cost on accept and THROWS on reject. Bytes are the consensus form — the
+// context-extension wire order survives parseTransaction with no special handling (the
+// getVarFromInput / inputExtensions substrate intact). The package lives on the ergots tx branch;
+// if absent (ergots-impl on a pre-tx master) it loads as null and every entry degrades to
+// not-implemented, leaving eval/wire untouched. dasher claims cost (runner.json), so an accept
+// carries that block cost: runner-contract-transaction.md §1-§5.
 
 interface TxEntry {
   name: string
@@ -687,9 +687,9 @@ interface TxEntry {
 }
 interface TxVector { schema: string; entries: TxEntry[] }
 
-/** One transaction entry's faithful outcome (runner-contract §3): accepted (valid true) /
- *  rejected (valid false + reason) / errored (decode-setup failure + reason) / not-implemented /
- *  panicked (note). cost is null until a tx-tier cost axis lands. */
+/** One transaction entry's faithful outcome (runner-contract §3): accepted (valid true + the
+ *  block cost) / rejected (valid false + reason) / errored (decode-setup failure + reason) /
+ *  not-implemented / panicked (note). cost is null on everything but an accept. */
 type TxResult = {
   valid: boolean | null
   cost: number | null
@@ -719,7 +719,7 @@ function toPreHeader(p: TxEntry['preHeader']): PreHeader {
 async function loadTxModule(): Promise<{
   parseTransaction: (b: Uint8Array) => unknown
   serializeTransaction: (tx: unknown) => Uint8Array
-  validateStateful: (tx: unknown, deps: unknown) => void
+  validateStateful: (tx: unknown, deps: unknown) => number
   /** Present once ergots exports its context-extension reader from the package root. */
   parseContextExtension?: Exclude<ExtensionReader, null>
 } | null> {
@@ -732,12 +732,12 @@ async function loadTxModule(): Promise<{
 }
 
 /** One tx entry → its verdict. Setup/decode failures (parseTransaction, box/header parse) are
- *  `errored`; validateStateful returning void is `accept`, throwing is `reject` (record the code).
- *  Wrapped by the caller's panic-net for anything otherwise-uncaught. */
+ *  `errored`; validateStateful returning is `accept` at the block cost it returns, throwing is
+ *  `reject` (record the code). Wrapped by the caller's panic-net for anything otherwise-uncaught. */
 function runTxEntry(
   e: TxEntry,
   parseTransaction: (b: Uint8Array) => unknown,
-  validateStateful: (tx: unknown, deps: unknown) => void,
+  validateStateful: (tx: unknown, deps: unknown) => number,
 ): TxResult {
   let tx: unknown
   let deps: unknown
@@ -760,8 +760,8 @@ function runTxEntry(
     return { valid: null, cost: null, error: 'errored', reason }
   }
   try {
-    validateStateful(tx, deps)
-    return { valid: true, cost: null, error: null }
+    const cost = validateStateful(tx, deps)
+    return { valid: true, cost, error: null }
   } catch (err) {
     const code = (err as { code?: unknown } | null)?.code
     const reason = code != null ? String(code) : err instanceof Error ? err.name : String(err)

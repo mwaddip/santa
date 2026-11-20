@@ -83,9 +83,9 @@ grader.
 (schema-enforced).
 
 `cost` on an accept verdict is `null` when the runner does not claim the cost dimension
-(develop branch; `runner.json: cost: false`), non-null when it does (eni branch;
-`runner.json: cost: true`). A vector may carry `cost: null` in `expected` (value-only
-authoring) — legal; see §4 on cost grading.
+(`runner.json: cost: false`, e.g. blitzen-develop), and the spend's block cost when it does
+(`cost: true`: rudolph, blitzen-mwaddip, dasher) — a claiming runner may not answer `null`
+(§4). A vector may carry `cost: null` in `expected` (value-only authoring) — legal; see §4.
 
 ## 4. Grading (`grade_transaction`)
 
@@ -104,11 +104,15 @@ vocabulary. **Precedence:**
 3. **Accept vector** (`expected.valid == true`): two independent dimensions.
    - **`valid`**: `"nice"` iff `actual.error == null && actual.valid == true`; else `"value"`
      (coal).
-   - **`cost`**: graded only when **both** `expected.cost` is non-null **and**
-     `actual.cost` is non-null; `"nice"` or `"cost"` (coal) on equality. In all other
-     cases — `expected.cost` null (value-only vector), or `actual.cost` null (runner doesn't
-     claim cost), or `valid` not nice — `"cost": "n/a"` (ungraded, not coal). **Cost is an
-     accept-arm dimension: it is never graded on reject.**
+   - **`cost`**: graded when `valid` is nice, `expected.cost` is non-null, **and** the
+     runner claims the cost dimension (`runner.json: cost: true`); `"nice"` or `"cost"`
+     (coal) on equality. A claiming runner that answers `cost: null` is
+     **cost-not-implemented: coal**, as on the eval tier (core contract §5). In all other
+     cases — `expected.cost` null (value-only vector), a `cost: false` runner (whatever it
+     answers), or `valid` not nice — `"cost": "n/a"` (ungraded, not coal). **Cost is an
+     accept-arm dimension: it is never graded on reject.** (Until 2026-11-20 a null actual
+     cost was `n/a` for every runner, which left dasher's spend costs ungraded, 0 / 0, while
+     it claimed cost: ergots' tx cost-axis proposal.)
 
 4. **Reject vector** (`expected.valid == false`): one dimension (`valid`); cost always `n/a`.
    - `"nice"` iff `actual.valid == false && actual.error == null` — a clean rejection.
@@ -188,9 +192,10 @@ Outside a version context the JVM's threads run at the default (1, 1) (sigma-sta
 `validateStateful` itself runs outside any version context as well.
 
 **Version boundary for `santa-transaction/v1`.** The context is now carried, so context-reading
-scripts no longer force a bump. The next `santa-transaction/v2` trigger is a new *axis* — e.g. a
-tx-tier **cost** dimension once `validateStateful` exposes one — exactly the mechanism by which the
-eval tier grew `v1` → `v2` → `v3` when new dimensions entered scope.
+scripts no longer force a bump. The next `santa-transaction/v2` trigger is a new *axis* that v1's
+`expected` cannot carry — exactly the mechanism by which the eval tier grew `v1` → `v2` → `v3` when
+new dimensions entered scope. Cost is not one: v1 carries `expected.cost` on every accept, graded
+per §4.
 
 ## 6. Provenance
 
@@ -250,7 +255,7 @@ recorded as coal, not silently swallowed.
 | **comet** | out-of-scope (grey) | Does not declare `transaction` in `tiers` (`runner.json`). Fleet is a tx-building/serialization SDK with no verifier: it cannot script-verify a signed input (its only adjacent surface is prover-side reduce+sign of *unsigned* txs, delegated to sigmastate-js — sigma's artifact, not Fleet code) and has no stateful aggregate. Not a growth ledger — validation is outside Fleet's design scope, so grey, not not-impl. |
 | **blitzen-eni** | full (`cost: true`) | sigma-rust @ ergo-node-integration (`jit-cost` feature). Produces `valid` + `cost`. Costed accept divergences are expected — this is the deliverable. |
 | **blitzen-develop** | value-only (`cost: false`) | sigma-rust @ upstream develop. Produces `valid` only; `cost: null` unconditionally. Red on its upstream production-reject bugs (§8) and the cost-ceiling over-accept. |
-| **dasher** | full (`cost: true`) | ergots implements stateful tx validation (`@ergots/transaction`); produces `valid` + `cost`, live across the captured corpus. Reject-arm divergences (the cost-ceiling over-accept, §8) are the deliverable. |
+| **dasher** | full (`cost: true`) | ergots implements stateful tx validation (`@ergots/transaction`); produces `valid` + `cost` (the block cost `validateStateful` returns; until 2026-11-20 the arm answered `null` and its cost went ungraded, §4). Reject-arm divergences (the cost-ceiling over-accept, §8) are the deliverable. |
 
 ## 8. Status
 

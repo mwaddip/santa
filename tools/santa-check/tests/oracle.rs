@@ -20,8 +20,8 @@ fn reproduces_verdict_oracle() {
             total += 1;
             let got = match schema {
                 "santa-oracle-wire/v1" => grade_wire(&c["actual"], &c["expected"]),
-                "santa-oracle-transaction/v1" => grade_transaction(&c["actual"], &c["expected"]),
-                "santa-oracle-block/v1" => grade_block(&c["actual"], &c["expected"]),
+                "santa-oracle-transaction/v1" => grade_transaction(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap()),
+                "santa-oracle-block/v1" => grade_block(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap()),
                 "santa-oracle-chain/v1" => grade_chain(&c["actual"], &c["entry"]),
                 "santa-oracle-authds/v1" => grade_authds(&c["actual"], &c["entry"]),
                 "santa-oracle/v1" => grade(&c["actual"], &c["expected"], c["claims_cost"].as_bool().unwrap()),

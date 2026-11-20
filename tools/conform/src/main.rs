@@ -867,9 +867,9 @@ fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> B
             let g = if is_wire {
                 grade_wire(&actual, e)
             } else if is_tx {
-                grade_transaction(&actual, &e["expected"])
+                grade_transaction(&actual, &e["expected"], claims_cost)
             } else if is_block {
-                grade_block(&actual, &e["expected"])
+                grade_block(&actual, &e["expected"], claims_cost)
             } else if is_chain {
                 grade_chain(&actual, e)
             } else if is_authds {
@@ -2026,7 +2026,7 @@ mod tests {
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
             let actual = actuals_obj.get(name).cloned().unwrap_or(Value::Null);
-            let g = santa_check::grade_transaction(&actual, &e["expected"]);
+            let g = santa_check::grade_transaction(&actual, &e["expected"], true);
             match g["kind"].as_str() {
                 Some("panicked") => {
                     c.panicked += 1;

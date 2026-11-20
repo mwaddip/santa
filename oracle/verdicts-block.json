@@ -1,6 +1,6 @@
 {
   "schema": "santa-oracle-block/v1",
-  "description": "Block-tier verdict meta-vectors: (actual, expected) -> grade_block verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the block-tier grading from grade_block: independent valid + post_digest + cost dimensions; panicked and not-implemented reuse the shared vocabulary. Notable: reject + errored is coal (valid=value) — BY DESIGN mirrors the tx-tier reject arm: the block tier explicitly separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null). post_digest and cost graded only on the accept arm when valid is nice.",
+  "description": "Block-tier verdict meta-vectors: (actual, expected, claims_cost) -> grade_block verdict. A comparator implementation is conformant iff it reproduces every `verdict`. Encodes the block-tier grading from grade_block: independent valid + post_digest + cost dimensions; panicked and not-implemented reuse the shared vocabulary. Notable: reject + errored is coal (valid=value) — BY DESIGN mirrors the tx-tier reject arm: the block tier explicitly separates clean-reject (valid:false, error:null) from failed-verdict (error:errored, valid:null). post_digest and cost graded only on the accept arm when valid is nice; cost only when the vector carries one and the runner claims the cost dimension (a claimed null is coal, as on the eval tier).",
   "cases": [
     {"name": "accept-all-nice",
      "description": "Accept vector: valid:true, post_digest matches, cost matches -> all three dims nice.",
@@ -8,6 +8,7 @@
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": 12500, "error": null},
+     "claims_cost": true,
      "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "nice"}},
 
     {"name": "accept-valid-coal",
@@ -15,6 +16,7 @@
      "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": false, "post_digest": null, "cost": null, "error": null},
+     "claims_cost": true,
      "verdict":  {"kind": "block", "valid": "valid", "post_digest": "n/a", "cost": "n/a"}},
 
     {"name": "accept-digest-coal",
@@ -23,6 +25,7 @@
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": true,  "post_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                                   "cost": 12500, "error": null},
+     "claims_cost": true,
      "verdict":  {"kind": "block", "valid": "nice", "post_digest": "post_digest", "cost": "n/a"}},
 
     {"name": "accept-cost-coal",
@@ -31,26 +34,39 @@
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": 9999,  "error": null},
+     "claims_cost": true,
      "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "cost"}},
 
     {"name": "accept-cost-unclaimed",
-     "description": "Accept vector: valid nice, post_digest nice, but actual.cost is null -> cost n/a (not graded when either side null).",
+     "description": "Accept vector, a runner that does not claim the cost dimension (manifest cost:false): cost n/a, whatever it answers.",
+     "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+                                  "cost": 12500, "reason": null},
+     "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
+                                  "cost": 9999,  "error": null},
+     "claims_cost": false,
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "n/a"}},
+
+    {"name": "accept-cost-null-while-claimed-is-coal",
+     "description": "Accept vector, valid and post_digest nice, a runner that claims the cost dimension answers cost:null -> cost-not-implemented: cost coal, as on the eval tier.",
      "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": null,  "error": null},
-     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "n/a"}},
+     "claims_cost": true,
+     "verdict":  {"kind": "block", "valid": "nice", "post_digest": "nice", "cost": "cost"}},
 
     {"name": "reject-nice",
      "description": "Reject vector: expected valid:false, actual valid:false error:null -> valid nice, post_digest n/a, cost n/a.",
      "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
      "actual":   {"valid": false, "post_digest": null, "cost": null, "error": null, "reason": "script evaluation error"},
+     "claims_cost": true,
      "verdict":  {"kind": "block", "valid": "nice", "post_digest": "n/a", "cost": "n/a"}},
 
     {"name": "reject-errored-coal",
      "description": "BY DESIGN: errored on a reject vector is coal, not a clean rejection. Block tier mirrors tx tier: clean-reject = valid:false error:null; failed-verdict = error:errored valid:null.",
      "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
      "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "errored"},
+     "claims_cost": true,
      "verdict":  {"kind": "block", "valid": "valid", "post_digest": "n/a", "cost": "n/a"}},
 
     {"name": "not-implemented",
@@ -58,6 +74,7 @@
      "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "not-implemented"},
+     "claims_cost": true,
      "verdict":  {"kind": "coverage", "tag": "not-implemented"}},
 
     {"name": "panicked",
@@ -65,24 +82,28 @@
      "expected": {"valid": true,  "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50",
                                   "cost": 12500, "reason": null},
      "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "panicked", "note": "block validation panic"},
+     "claims_cost": true,
      "verdict":  {"kind": "panicked"}},
 
     {"name": "panicked-on-reject-still-coal",
      "description": "Panicked on a reject vector: coal unconditionally (a crash is not a clean rejection).",
      "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
      "actual":   {"valid": null,  "post_digest": null, "cost": null, "error": "panicked", "note": "panic in reject path"},
+     "claims_cost": true,
      "verdict":  {"kind": "panicked"}},
 
     {"name": "exceeded-on-accept-is-coal",
      "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
      "expected": {"valid": true, "post_digest": "0313e4eba9ccd5ab1f88a7cca89e9c4e50c5f5c4b5a4f1e7be2d2a3c1b0e9f7d50", "cost": 12500, "reason": null},
      "actual":   {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "claims_cost": true,
      "verdict":  {"kind": "exceeded", "limit": "memory"}},
 
     {"name": "exceeded-on-reject-is-coal-not-nice",
      "description": "A budget hit on a reject vector is not a clean rejection.",
      "expected": {"valid": false, "post_digest": null, "cost": null, "reason": "block script failed"},
      "actual":   {"error": "exceeded", "limit": "time", "budget": {"memory_mb": 1024, "wall_s": 10}},
+     "claims_cost": true,
      "verdict":  {"kind": "exceeded", "limit": "time"}}
   ]
 }
