@@ -26,6 +26,9 @@ const VERSIONS: [&str; 3] = ["v4", "v5", "v6"];
 /// manifest may declare the ones it implements (`kinds`); a wire file holds one kind (./validate).
 const WIRE_KINDS: [&str; 7] = ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree", "BlockTransactions"];
 
+/// SANTA's tiers, as a scope may name them (runner-integration §2).
+const TIERS: [&str; 7] = ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"];
+
 /// The keys SANTA's runner.json sets for every runner (runner-integration §2).
 const ENTRY_KEYS: [&str; 5] = ["name", "label", "impl", "control", "runner"];
 /// The scope keys, the runner's own claim: in SANTA's runner.json for a runner SANTA hosts, in the implementation's
@@ -249,6 +252,17 @@ fn parse_scope(j: &Value) -> Result<Scope, String> {
         .iter()
         .map(|t| t.as_str().map(String::from).ok_or("runner.json: a tier is not a string"))
         .collect::<Result<_, _>>()?;
+    if tiers.is_empty() {
+        return Err("runner.json: \"tiers\" is empty".into());
+    }
+    for (i, t) in tiers.iter().enumerate() {
+        if !TIERS.contains(&t.as_str()) {
+            return Err(format!("runner.json: unknown tier {t:?}; known: {TIERS:?}"));
+        }
+        if tiers[..i].contains(t) {
+            return Err(format!("runner.json: tier {t:?} listed twice"));
+        }
+    }
     let kinds = match j.get("kinds") {
         None | Some(Value::Null) => None,
         Some(v) => {
@@ -263,6 +277,9 @@ fn parse_scope(j: &Value) -> Result<Scope, String> {
             }
             if let Some(bad) = ks.iter().find(|k| !WIRE_KINDS.contains(&k.as_str())) {
                 return Err(format!("runner.json: unknown wire kind {bad:?}; known: {WIRE_KINDS:?}"));
+            }
+            if let Some((_, k)) = ks.iter().enumerate().find(|(i, k)| ks[..*i].contains(k)) {
+                return Err(format!("runner.json: wire kind {k:?} listed twice"));
             }
             if !tiers.iter().any(|t| t == "wire") {
                 return Err("runner.json: \"kinds\" declared without the wire tier".into());
@@ -554,7 +571,7 @@ fn actuals_for(ofile: &Path, record: Option<&Value>, vector: &Value, schemas: &A
     let panicked = |note: String| json!({"error": "panicked", "note": note});
     match record {
         Some(r) if r["result"] == "exceeded" => {
-            each(json!({"error": "exceeded", "limit": r["limit"], "budget": r["limits"]}))
+            each(json!({"error": "exceeded", "limit": r["limit"]}))
         }
         Some(r) if r["result"] == "crashed" => each(panicked(format!("process {}", r["detail"].as_str().unwrap_or("?")))),
         // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the
@@ -1074,7 +1091,7 @@ fn tally(
             match grading.grade(label, &input).unwrap_or_else(|err| die(format!("{rel} {name}: {err}"))) {
                 Verdict::Exceeded { limit } => {
                     c.exceeded += 1;
-                    let b = &actual["budget"];
+                    let b = &vec["limits"]; // the file's budget: the tier-neutral form carries only the limit hit
                     c.red.push(red_detail(&op, name, "exceeded",
                         expected_brief(e, is_wire, is_tx, is_chain),
                         format!("exceeded {} ({} MiB, {} s)", limit.as_str().unwrap_or("?"), b["memory_mb"], b["wall_s"]),
@@ -2598,7 +2615,7 @@ mod tests {
         let r = record("exceeded", json!({"limit": "memory"}));
         assert_eq!(
             super::actuals_for(&ofile, Some(&r), &one_entry_vector(), &schemas(), "eval"),
-            json!({"e#0": {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}}})
+            json!({"e#0": {"error": "exceeded", "limit": "memory"}})
         );
     }
 
@@ -2693,8 +2710,8 @@ mod tests {
         fs::create_dir_all(&dir).unwrap();
         fs::write(dir.join("x.json"), one_entry_vector().to_string()).unwrap();
         let mut actuals = BTreeMap::new();
-        actuals.insert("eval/v6/authored/x.json".to_string(),
-            json!({"e#0": {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}}}));
+        // the closed form a runner writes: the budget shown comes from the vector's `limits`
+        actuals.insert("eval/v6/authored/x.json".to_string(), json!({"e#0": {"error": "exceeded", "limit": "memory"}}));
         let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.exceeded, 1);
@@ -2884,7 +2901,8 @@ mod tests {
         null_santa["santa"] = json!(null);
         assert!(v.is_valid(&null_santa));
         let slice = "/slices/eval~1v6~1authored";
-        let faults: Vec<(&str, Box<dyn Fn(&mut serde_json::Value)>)> = vec![
+        type Fault = Box<dyn Fn(&mut serde_json::Value)>;
+        let faults: Vec<(&str, Fault)> = vec![
             ("no santa key", Box::new(|d| { d.as_object_mut().unwrap().remove("santa"); })),
             ("slice key eval/v7/authored", Box::new(|d| {
                 let s = d["slices"].as_object_mut().unwrap().remove("eval/v6/authored").unwrap();
@@ -2911,6 +2929,18 @@ mod tests {
             f(&mut d);
             assert!(!v.is_valid(&d), "the schema admits a results file with {what}");
         }
+    }
+
+    /// A scope names what it means, as the results schema requires: no empty, unknown or repeated tier, no repeated
+    /// kind (an unknown tier would select nothing, silently).
+    #[test]
+    fn a_scope_refuses_empty_unknown_or_repeated_tiers_and_repeated_kinds() {
+        let e = |j: serde_json::Value| super::parse_scope(&j).err().unwrap_or_default();
+        assert!(e(json!({"version": "v6", "tiers": []})).contains("tiers"), "empty tiers");
+        assert!(e(json!({"version": "v6", "tiers": ["evil"]})).contains("evil"), "unknown tier");
+        assert!(e(json!({"version": "v6", "tiers": ["eval", "eval"]})).contains("eval"), "repeated tier");
+        assert!(e(json!({"version": "v6", "tiers": ["wire"], "kinds": ["Box", "Box"]})).contains("Box"), "repeated kind");
+        assert!(super::parse_scope(&json!({"version": "v6", "tiers": ["eval", "wire"], "kinds": ["Box"]})).is_ok());
     }
 }
 

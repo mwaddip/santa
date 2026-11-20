@@ -1489,7 +1489,7 @@
   },
   {
    "name": "block/exceeded-on-accept-is-coal",
-   "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+   "description": "A bounded file over its budget (the tier-neutral exceeded actual): coal unconditionally before any expected check.",
    "label": "block",
    "entry": {
     "expected": {
@@ -1963,7 +1963,7 @@
   },
   {
    "name": "chain/exceeded-on-accept-is-coal",
-   "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+   "description": "A bounded file over its budget (the tier-neutral exceeded actual): coal unconditionally before any expected check.",
    "label": "chain",
    "entry": {
     "kind": "retargeting",
@@ -2434,7 +2434,7 @@
   },
   {
    "name": "authds/exceeded-on-accept-is-coal",
-   "description": "A budget hit (conform writes it, never a runner): coal unconditionally before any expected check.",
+   "description": "A bounded file over its budget (the tier-neutral exceeded actual): coal unconditionally before any expected check.",
    "label": "authds",
    "entry": {
     "kind": "avl_prove",

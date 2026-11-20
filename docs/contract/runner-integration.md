@@ -9,12 +9,14 @@
 > ([`grading.md`](grading.md)), which govern the vector and actual shapes and the verdicts.
 
 > **In transition (2026-11).** conform and the runners move to this contract together. Until they do, `./conform`
-> stages each runner's vectors flat into a directory, grades the runner's actuals itself and bounds the bounded files
-> with `santa-bound` (systemd), as the previous version of this document says (git history).
+> calls `santa-run <impl-path> <vectors-dir> <out-dir>` with the selected vectors staged flat into `<vectors-dir>`,
+> grades the runner's actuals itself, and bounds the bounded files with `santa-bound`, which needs a systemd user
+> manager (a bootstrap dependency until then); the whole-run ceiling of §3a and the checks of §4.4 are what conform
+> will do. The previous version of this document (git history) describes today's behaviour.
 
 ## 1. A runner is a directory
 
-A runner is a directory `runners/<name>/`. It may be **in-tree** (rudolph today) or a **git submodule** pulled by
+A runner is a directory `runners/<name>/`. It may be **in-tree** (rudolph and dasher today) or a **git submodule** pulled by
 recursive checkout (the SANTA-maintained runners of other implementations) — the orchestrator treats them
 identically. **Presence-as-state:** a dir is run iff it contains a valid `runner.json` *and* either an executable
 `santa-run` or a `runner` key (below); a dir whose `runner.json` has neither is skipped. There is no central registry
@@ -63,7 +65,7 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
 - **`tiers`** — the tiers the runner implements, of `eval`, `wire`, `transaction`, `block`, `chain`, `authds`,
   `nipopow`. Tiers are *not* cumulative; declaring `eval` never pulls in `wire`. Uneven maturity across tiers is
   surfaced as naughty (the grid is the readiness map), not hidden by under-declaring.
-- **`cost`** — whether the runner claims the **cost dimension**. `false` = value-only (a wallet/eval-only SDK); the
+- **`cost`** (default `true`) — whether the runner claims the **cost dimension**. `false` = value-only (a wallet/eval-only SDK); the
   cost dimension is not graded for it. Declared scope, not abstention.
 - **`kinds`** (optional) — the wire kinds the runner implements, from the wire schema's `kind` enum (`Constant`,
   `Box`, `Transaction`, `Header`, `SigmaBoolean`, `ErgoTree`, `BlockTransactions`). A wire file holds one kind
@@ -79,13 +81,13 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   stays coal: a gap there is a feature to build, not something to declare away. Likewise a kind or rule the
   implementation means to support but has not built yet is no reason: it stays declared, and its
   `not-implemented` is the readiness map (e.g. ergots' missing transaction serializer). Out-of-scope files are not
-  selected and not tallied, as a higher version or an undeclared tier; `conform`'s header line, `results.json` and
-  the scoreboard show the declared scope.
+  selected and not tallied, as a higher version or an undeclared tier; `conform`'s header line, `.santa/results.json`
+  and the scoreboard show the declared scope.
 - **`impl`** — unchanged (`<url>#<ref>` or `null`).
 - `conform` refuses a key outside these and `runner` (a misspelt `kind` / `activations` would silently fall back to
   a default and change the scope) and a `cost` / `activation` / `control` that is not a JSON boolean.
 - **`control`** (optional, default `false`) — the oracle's own runner (rudolph). A grid in which a control could not
-  build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `results.json`), and the CI
+  build or run is not anchored to the oracle, so `conform` exits non-zero (after writing `.santa/results.json`), and the CI
   run fails before it publishes a scoreboard. The same holds for a control that exceeds or crashes on a bounded
   file (§3a). Any other runner that cannot build or run stays a ⚠️ row in the grid.
 
@@ -112,7 +114,7 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   `runner.json`, so a commit that mounts a tier is graded on it. The rules for what a scope declaration may say
   (above) hold unchanged; the reasons go in the runner's README, beside it in the implementation.
 - **When it cannot run.** A missing or refused `runner.json`, or no executable `santa-run` beside it, is a ⚠️ row
-  ("the implementation's runner: …") whose scope `results.json` records as `null`: nothing says which slices it
+  ("the implementation's runner: …") whose scope `.santa/results.json` records as `null`: nothing says which slices it
   would have graded, so the scoreboard marks every slice of it UNGRADED. A `santa-run` that fails after the scope
   was read keeps that scope, as any other runner's does.
 - **The implementation's file is all its pull request check needs.** SANTA's entry is the board's (a name, a label,
@@ -135,8 +137,8 @@ santa-run <impl-path> <santa-dir> <out-dir>
 
 Resolve the paths to absolute ones if the entrypoint `cd`s before it uses them. In order, `santa-run` MUST:
 
-1. check its grading interpreter against `<santa-dir>/oracle/verdicts-grading.json` (§4.2) and its selection against
-   `<santa-dir>/oracle/selection.json` (§4.1), and refuse to grade — exit non-zero, naming the case — if either is not
+1. check its grading interpreter against the verdict oracle (§4.2) and its selection against the selection oracle
+   (§4.1), both in `<santa-dir>/oracle/`, and refuse to grade — exit non-zero, naming the case — if either is not
    reproduced;
 2. select from `<santa-dir>/vectors/` exactly the files its scope selects (§4.1);
 3. run every entry of every selected file through the implementation, each bounded file under its budget (§3a);
@@ -240,13 +242,16 @@ budget at its top level:
   budget:
   - **Time:** the parent kills the child at `wall_s` seconds → `{"error": "exceeded", "limit": "time"}`.
   - **Memory:** the child runs under the kernel's data-segment limit at `memory_mb` MiB, set before it executes:
-    `setrlimit(RLIMIT_DATA)` (Rust's `pre_exec`, a shell's `ulimit -d`, `prlimit --data`). Linux enforces it on `brk`
+    `setrlimit(RLIMIT_DATA)` in bytes (Rust's `pre_exec`), a shell's `ulimit -d $((memory_mb * 1024))` (KiB), or
+    `prlimit --data=$((memory_mb * 1048576))` (bytes). Linux enforces it on `brk`
     and on private writable mappings (since 4.7). A child that dies of an allocation failure under it →
     `{"error": "exceeded", "limit": "memory"}`. The runner tells that apart from a crash by its runtime's
     out-of-memory signature: Rust aborts (SIGABRT) with `memory allocation of N bytes failed`; Node aborts with `heap
     out of memory` / `Allocation failed`; a JVM must be told its budget, `-XX:MaxRAM=<memory_mb>m`, and then ends
-    with `OutOfMemoryError` (exit 3 under `-XX:+ExitOnOutOfMemoryError`; with default flags or `-Xmx` alone it fails
-    natively).
+    either with `OutOfMemoryError` when its heap runs out (exit 3 under `-XX:+ExitOnOutOfMemoryError`) or natively when
+    it cannot commit memory under the limit (`os::commit_memory … failed; error='Not enough space'`, or `There is
+    insufficient memory for the Java Runtime Environment to continue`; exit 1) — both are the budget. Without
+    `-XX:MaxRAM` it sizes itself from the machine and fails natively at startup or early.
   - **Any other crash** of the child (a non-zero exit, a signal that is not the budget) is `panicked`, its `note` the
     exit status (`process exit status 101`, `process killed by signal 11`).
   - **Elsewhere:** macOS ignores `RLIMIT_DATA`; there a runner enforces memory best-effort (polling the child's
@@ -257,8 +262,8 @@ budget at its top level:
   run, so a bounded row is one whose blow-up clears the budget by orders of magnitude, where an honest
   implementation stays far below it; the mechanism's own overhead (a JVM's footprint) must not flip a verdict.
   Measured under the data limit (2026-11-20): every bounded file graded as under the previous cgroup bound, for
-  every runner that mounts one; rudolph peaked at 172 MiB of its 1024 MiB budget, and the two implementations that
-  run away reached the limit and died on their next allocation.
+  every runner that mounts one; rudolph needs about 320–384 MiB of data for its worst file, about a third of its
+  1024 MiB budget, and the implementations that run away die on an allocation the limit refuses.
 - **The whole run has a safety ceiling** that protects the machine and does not grade: `./conform` runs each
   `santa-run` under the data limit at the 4096 MiB ceiling (each process) and a wall timeout long enough for a cold
   build, set by conform itself. A runner that hits it loses its column, reported ⚠️.
@@ -282,8 +287,11 @@ The runner selects from `<santa-dir>/vectors/`:
 **The selection oracle**, [`oracle/selection.json`](../../oracle/selection.json) (`santa-oracle-selection/v1`),
 proves it. `files` lists a synthetic `vectors/` tree, each `{"path"}` relative to `vectors/`, a wire file with its
 `kind` and, when set, its `activation_rule`; each case gives a `scope` (a `runner.json` scope) and the sorted paths it
-`selects`. Before it grades anything, the runner checks that its selection reproduces every case (by building the
-tree, or by feeding its selection the listed facts) and refuses otherwise. conform's own selection is proven against
+`selects`. Before it grades anything, the runner checks that its selection reproduces every case and refuses
+otherwise: by feeding its selection the listed facts, or by building the tree — a wire file `{"entries": [{"kind":
+<kind>}]}` with `"activation_rule"` when the file gives one, any other `.json` file `{"entries": []}`, `grading.json`
+`{}`, a non-JSON file any text. An oracle file of a schema the runner does not know (a `santa-oracle-selection/v2`)
+is refused, as an unknown grading schema is. conform's own selection is proven against
 it by `tools/conform`'s tests. It guards the paths where no canary runs (a pull request check, a maintainer's
 machine) against a selection bug that would grade a smaller corpus and report no change.
 
@@ -292,8 +300,10 @@ machine) against a selection bug that would grade a smaller corpus and report no
 For each entry: run it, take the actual, and grade it against the entry's `expected` by the grading type
 `vectors/grading.json` assigns to its file, through the runner's own interpreter of the grading language
 ([`grading.md`](grading.md)); `cost` (§2) is the verdict's `claims_cost`. Before it grades anything, the runner checks
-its interpreter against `<santa-dir>/oracle/verdicts-grading.json`: every case's verdict reproduced, or it refuses
-(exit non-zero, naming the case). A grading file of a schema version the interpreter does not know is refused the
+its interpreter against the verdict oracle — every `<santa-dir>/oracle/*.json` whose schema is
+`santa-oracle-grading/v1`, today [`verdicts-grading.json`](../../oracle/verdicts-grading.json), in the format of
+[grading.md §6](grading.md#6-conformance) — every case's verdict reproduced, or it refuses (exit non-zero, naming the
+case). A grading file of a schema version the interpreter does not know is refused the
 same way ([grading.md §5](grading.md#5-strictness)). So the oracle of the very checkout it grades with is the
 conformance test of every interpreter, on every run, and a grading type SANTA adds needs no runner change; only a new
 building block of the language does.
@@ -304,8 +314,10 @@ In `<out-dir>`:
 
 - **`results.json`**, schema [`schema/santa-runner-results.schema.json`](../../schema/santa-runner-results.schema.json)
   (`santa-runner-results/v1`; every object closed):
-  - `santa`: the SANTA commit graded against (`git -C <santa-dir> rev-parse HEAD`), or `null` when `<santa-dir>` is
-    not a git checkout;
+  - `santa`: the SANTA commit graded against, `git -C <santa-dir> rev-parse HEAD`, when `<santa-dir>` is the top of a
+    git checkout (`git -C <santa-dir> rev-parse --show-toplevel` is `<santa-dir>` itself: inside another repository,
+    `rev-parse HEAD` names that repository's commit); else `null`. Uncommitted changes are not represented: conform
+    and the runner read the same tree;
   - `scope`: the scope it graded at, its `runner.json` keys (`version`, `tiers`, `cost`, and `kinds` / `activation`
     when declared);
   - `slices`, keyed `"<tier>/<version>/<provenance>"`, one per slice with a selected file, each with:
@@ -327,7 +339,7 @@ In `<out-dir>`:
 
 1. checks `results.json` against its schema, and every actuals file against its tier's actuals schema (an actual that
    fails grades `panicked`, the note naming the schema and why); it refuses a `results.json` whose `santa` is not its
-   own checkout's commit (the runner graded other expectations);
+   own checkout's commit, `null` included (the runner graded other expectations, or cannot say which);
 2. **completeness:** the files the runner reports graded must equal conform's own selection for its scope, and every
    entry of them must be accounted for; a shortfall is a red finding on the runner;
 3. **the canary:** it re-grades every actual with [`santa-check`](../../tools/santa-check), SANTA's own interpreter of
@@ -376,7 +388,7 @@ runner is wrong — surfaced as RED, routed, never hidden.
   runs every runner, as before. An unknown option is refused.
 - **`--impl`**, with exactly one runner named, replaces that runner's `impl` for this run (its `runner.json` is not
   touched). `<url>#<ref>` is checked out as in §2; a **plain path** is graded **in place**, uncommitted edits
-  included, and `results.json` records its sha as `<sha>-dirty` when the tree has uncommitted changes. Either way
+  included, and `.santa/results.json` records its sha as `<sha>-dirty` when the tree has uncommitted changes. Either way
   the runner finds the impl at `<impl-path>/<repo-name>` under the CONFIGURED impl's repo name, whatever the
   directory is called; a runner the implementation hosts is invoked at the tree's real path, never through that
   link (through it, a build would record the same crates under two paths in one target dir), and finds the tree
@@ -417,8 +429,9 @@ santa/santa-run - ~/.cache/santa ./santa-out     # a runner the implementation h
 ```
 
 (or the package's own wrapper, which may fetch the checkout itself, §3). `santa-out/results.json` holds every red
-with its expected and actual answer, `santa-out/actuals/` the raw answers. The verdicts match what the board shows
-for the same two commits, since the board's canary re-grades with the same rules and oracle.
+with its expected and actual answer, `santa-out/actuals/` the raw answers. For the same implementation commit and
+SANTA commit, the verdicts match the board's whenever the runner's grader agrees with SANTA's canary, which re-grades
+with the same rules and oracle; where they disagree, the board says so (§4.4).
 
 **Badges are SANTA-minted, never self-reported.** SANTA's CI runs the canonical grid and publishes per-runner
 naughty/nice badges and a dashboard; a runner's README *references* the SANTA-hosted endpoint. A runner's own run is

@@ -262,6 +262,28 @@
     "chain/any/authored/j.json",
     "nipopow/any/authored/l.json"
    ]
+  },
+  {
+   "name": "wire-rules-leave-other-tiers-alone",
+   "description": "kinds and activation filter wire files only: a file of another tier has no kind and is never dropped by them.",
+   "scope": {
+    "version": "v6",
+    "tiers": [
+     "eval",
+     "wire"
+    ],
+    "kinds": [
+     "Box"
+    ],
+    "activation": false
+   },
+   "selects": [
+    "eval/any/authored/a.json",
+    "eval/v4/spec/b.json",
+    "eval/v5/authored/c.json",
+    "eval/v6/captured/d.json",
+    "wire/any/vendored/g.json"
+   ]
   }
  ]
 }
