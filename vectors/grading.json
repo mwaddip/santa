@@ -123,7 +123,7 @@
         { "when": { "entry.kind": "nipopow_interlinks" },
           "dims": [
             { "name": "interlinks",
-              "compare": [ { "a": { "pluck": "file.chain", "field": "interlinks" }, "b": { "path": "actual.interlinks" },
+              "compare": [ { "a": { "path": "actual.interlinks" }, "b": { "pluck": "file.chain", "field": "interlinks" },
                              "nonempty": true } ] } ] },
         { "when": { "entry.kind": "nipopow_prove" },
           "dims": [

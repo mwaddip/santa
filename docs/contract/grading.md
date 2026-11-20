@@ -41,8 +41,9 @@ always; `requires` = `[]`; `claimed` = `false`; `clean` = `true`; `case_insensit
 
 ## 3. Comparisons and operands
 
-A comparison is `{ "a": <operand>, "b": <operand>, "case_insensitive": <bool> }`. It holds when the two operands are
-**structurally equal**:
+A comparison is `{ "a": <operand>, "b": <operand>, "case_insensitive": <bool>, "nonempty": <bool> }`; by convention
+`a` is the actual's side and `b` the expected side (a `claimed` dimension reads its first comparison's `b`). It holds
+when the two operands are **structurally equal**:
 
 - objects regardless of key order, with identical key sets and equal values;
 - arrays in order;
@@ -82,11 +83,21 @@ branch lists. The dimension names are the board's: `value`, `cost`, `reject`, `r
 
 ## 5. Strictness
 
-An interpreter refuses to grade, never guesses, on: a schema version it does not know; an unknown key anywhere in the
-file; an operand with no form or two; a path with an unknown root or an empty key; a `requires` of a later dimension; a
-label that does not exist; a tier without a default; an entry no branch covers in a type without `unmatched`. A new
-grading type built from these blocks is just data. A new building block raises the schema version, and an interpreter
-that does not know it refuses, loudly, as a runner refuses a vector schema it was not written for
+An interpreter refuses to grade, never guesses, on:
+
+- a schema version it does not know, or an unknown key anywhere in the file;
+- an operand with no form or two, or `field` without `pluck`;
+- a path with an unknown root or an empty key;
+- an empty `branches`, `dims`, `compare` or `first`;
+- a dimension listed twice in a branch, or a `requires` naming a dimension not listed before it;
+- a flag that is not a boolean, or a label that is not a string;
+- a tier default or a vector file's label naming no grading type, or a tier without a default;
+- an entry no branch covers in a type without `unmatched`.
+
+`./validate` also refuses a `tiers` key that is not one of SANTA's tiers.
+
+A new grading type built from these blocks is just data. A new building block raises the schema version, and an
+interpreter that does not know it refuses, loudly, as a runner refuses a vector schema it was not written for
 ([runner-integration §3](runner-integration.md#3-the-entrypoint--santa-run)).
 
 ## 6. Conformance

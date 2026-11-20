@@ -280,7 +280,7 @@ impl Grading {
         for (tier, label) in tiers_obj {
             let label = label.as_str().ok_or_else(|| malformed(&format!("tiers.{tier}"), "a label is a string"))?;
             if !types.contains_key(label) {
-                return Err(GradingError::UnknownLabel(label.to_string()));
+                return Err(malformed(&format!("tiers.{tier}"), format!("names no grading type {label:?}")));
             }
             tiers.insert(tier.clone(), label.to_string());
         }
@@ -756,6 +756,17 @@ mod tests {
         let g = one(json!({ "branches": [ { "dims": [ { "name": "roundtrip", "compare": [c] } ] } ] }));
         let v = grade_with(&g, json!({ "bytes_hex": "01", "expected_bytes_hex": null }), Some(json!({ "bytes_hex": "01" })), json!({}), false).unwrap();
         assert_eq!(v, graded(&[("roundtrip", Grade::Red)]));
+    }
+
+    #[test]
+    fn refuses_a_tier_default_naming_no_type_and_says_which_tier() {
+        match Grading::parse(&with(minimal(), "/tiers/eval", json!("nope"))).unwrap_err() {
+            GradingError::Malformed { at, why } => {
+                assert_eq!(at, "tiers.eval");
+                assert!(why.contains("nope"), "{why}");
+            }
+            e => panic!("{e}"),
+        }
     }
 }
 

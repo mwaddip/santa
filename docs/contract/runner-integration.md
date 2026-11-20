@@ -260,8 +260,9 @@ categorizes RED (value / cost / not-implemented / reject / panicked). A standalo
 convenience*, but the `santa-run` path emits actuals and leaves the verdict to `conform`.
 
 (`santa-check` is proven against the verdict oracle, [`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json),
-by `tools/santa-check/tests/oracle.rs`, which also requires a case for every grading type. The orchestrator runs the
-full grid over `runners/*`: the N-way is whatever is checked in, never a hardcoded count.)
+by `tools/santa-check/tests/oracle.rs`, which also requires a case reaching every branch of every grading type. The
+Scala `Harness` and `ts-runner/test/_match.ts` predate the grading file and grade nothing on the board. The
+orchestrator runs the full grid over `runners/*`: the N-way is whatever is checked in, never a hardcoded count.)
 
 **Prose travels with the vector and is never graded.** An entry may carry free prose saying why it exists and
 what it pins: `script` in the eval tier, an optional `description` in every other tier. A runner ignores it and

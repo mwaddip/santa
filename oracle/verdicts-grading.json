@@ -2982,6 +2982,28 @@
      "reject": "red"
     }
    }
+  },
+  {
+   "name": "chain/retargeting-nbits-as-float-nice",
+   "description": "Numbers compare numerically: an nbits answered as 84150434.0 is the expected 84150434 (a deliberate difference from the hard-coded grade, which compared JSON values exactly).",
+   "label": "chain",
+   "entry": {
+    "kind": "retargeting",
+    "expected": {
+     "nbits": 84150434
+    }
+   },
+   "actual": {
+    "nbits": 84150434.0,
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "value": "nice"
+    }
+   }
   }
  ]
 }

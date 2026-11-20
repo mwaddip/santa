@@ -927,10 +927,10 @@ fn load_grading(root: &Path) -> Grading {
     Grading::parse(&doc).unwrap_or_else(|e| die(format!("{}: {e}", p.display())))
 }
 
-/// The counters a (tier, dimension) feeds: (total, nice, coal). A dimension `vectors/grading.json` names that the
-/// board has no counter for is a SANTA defect.
-fn counters<'c>(c: &'c mut Counts, tier: &str, dim: &str) -> (&'c mut u64, &'c mut u64, &'c mut u64) {
-    match (tier, dim) {
+/// The counters a (tier, dimension) feeds: (total, nice, coal), or None for a dimension the board has no counter for
+/// (`check_grading` refuses such a grading file before any runner runs).
+fn counters<'c>(c: &'c mut Counts, tier: &str, dim: &str) -> Option<(&'c mut u64, &'c mut u64, &'c mut u64)> {
+    Some(match (tier, dim) {
         (_, "reject") => (&mut c.reject_total, &mut c.reject_nice, &mut c.reject_coal),
         (_, "cost") => (&mut c.cost_graded, &mut c.cost_nice, &mut c.cost_coal),
         ("eval", "value") => (&mut c.value_total, &mut c.value_nice, &mut c.value_coal),
@@ -947,8 +947,33 @@ fn counters<'c>(c: &'c mut Counts, tier: &str, dim: &str) -> (&'c mut u64, &'c m
             (&mut c.nipopow_interlinks_total, &mut c.nipopow_interlinks_nice, &mut c.nipopow_interlinks_coal)
         }
         ("nipopow", "proof") => (&mut c.nipopow_proof_total, &mut c.nipopow_proof_nice, &mut c.nipopow_proof_coal),
-        _ => die(format!("vectors/grading.json: the board has no counter for the {tier} dimension {dim:?}")),
+        _ => return None,
+    })
+}
+
+/// Before any runner runs: every vector file's grading label resolves, and every dimension of every type a file is
+/// graded by (its branches' and its `unmatched`) has a board counter, so a grading mistake stops conform at once.
+fn check_grading(grading: &Grading, vectors: &[Vec5], root: &Path) -> Result<(), String> {
+    let mut reached: std::collections::BTreeSet<(String, String)> = std::collections::BTreeSet::new();
+    for (rel, tier, ..) in vectors {
+        let p = root.join("vectors").join(rel);
+        let file: Value = serde_json::from_str(&fs::read_to_string(&p).map_err(|e| format!("{rel}: {e}"))?)
+            .map_err(|e| format!("{rel}: {e}"))?;
+        let label = grading.label_for(tier, &file).map_err(|e| format!("{rel}: {e}"))?;
+        reached.insert((tier.clone(), label.to_string()));
     }
+    for (tier, label) in &reached {
+        let t = &grading.types[label];
+        let dims = t.branches.iter().flat_map(|b| b.dims.iter().map(|d| &d.name)).chain(t.unmatched.iter());
+        for dim in dims {
+            if counters(&mut Counts::default(), tier, dim).is_none() {
+                return Err(format!(
+                    "vectors/grading.json: the type {label:?} grades the {tier} dimension {dim:?}, which the board has no counter for"
+                ));
+            }
+        }
+    }
+    Ok(())
 }
 
 /// One red (tier, dimension)'s detail, rendered for the scoreboard: the expected and the actual side, and a note.
@@ -1065,7 +1090,9 @@ fn tally(
                         if g == Grade::NotApplicable {
                             continue;
                         }
-                        let (total, nice, coal) = counters(c, &tier, &dim);
+                        let (total, nice, coal) = counters(c, &tier, &dim).unwrap_or_else(|| {
+                            die(format!("vectors/grading.json: the board has no counter for the {tier} dimension {dim:?}"))
+                        });
                         *total += 1;
                         if g == Grade::Nice {
                             *nice += 1;
@@ -1259,6 +1286,7 @@ fn main() -> ExitCode {
     let facts = wire_facts(&root.join("vectors"), &vectors).unwrap_or_else(|e| die(e));
     let schemas = ActualsSchemas::load(&root);
     let grading = load_grading(&root);
+    check_grading(&grading, &vectors, &root).unwrap_or_else(|e| die(e));
     let mut results: Vec<Value> = Vec::new();
     for m in &runners {
         eprintln!("running {} …", m.name);
@@ -2730,6 +2758,30 @@ mod tests {
         assert_eq!(c.cost_graded, 0);
         assert_eq!(c.red.len(), 1);
         assert_eq!(c.red[0]["dim"], "post_digest");
+        fs::remove_dir_all(&root).ok();
+    }
+
+    /// Before any runner runs, every vector file's grading label resolves and every dimension of the reachable types
+    /// has a board counter: a grading mistake stops conform at once, not after a whole runner.
+    #[test]
+    fn grading_is_checked_before_any_runner_runs() {
+        let root = std::env::temp_dir().join(format!("conform-grading-check-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        let dir = root.join("vectors").join("eval").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("x.json"), json!({"schema": "santa-eval/v2", "entries": []}).to_string()).unwrap();
+        let vectors = super::discover_vectors(&root.join("vectors"));
+        assert_eq!(super::check_grading(&grading(), &vectors, &root), Ok(()));
+        // a dimension the board has no counter for, in the eval type
+        let mut doc: serde_json::Value = serde_json::from_str(&fs::read_to_string(super::repo_root().join("vectors/grading.json")).unwrap()).unwrap();
+        doc["types"]["eval"]["branches"][0]["dims"][0]["name"] = json!("rejekt");
+        let bad = santa_check::grading::Grading::parse(&doc).unwrap();
+        let e = super::check_grading(&bad, &vectors, &root).unwrap_err();
+        assert!(e.contains("rejekt"), "{e}");
+        // a file naming a label the grading file does not define
+        fs::write(dir.join("x.json"), json!({"schema": "santa-eval/v2", "grading": "nope", "entries": []}).to_string()).unwrap();
+        let e = super::check_grading(&grading(), &vectors, &root).unwrap_err();
+        assert!(e.contains("nope"), "{e}");
         fs::remove_dir_all(&root).ok();
     }
 }

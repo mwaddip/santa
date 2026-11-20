@@ -1303,6 +1303,10 @@ fn grading_guard(root: &Path) -> u32 {
             bad += 1;
         }
         Ok(g) => {
+            for t in unknown_tier_keys(&g) {
+                println!("  [WRONG] tiers: {t:?} is not one of SANTA's tiers");
+                bad += 1;
+            }
             for t in ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] {
                 match g.label_for(t, &json!({})) {
                     Ok(l) => println!("  [OK] {t}: {l}"),
@@ -1315,6 +1319,12 @@ fn grading_guard(root: &Path) -> u32 {
         }
     }
     bad
+}
+
+/// The grading file's `tiers` keys that are not one of SANTA's seven tiers (a typo would otherwise sit unused).
+fn unknown_tier_keys(g: &santa_check::grading::Grading) -> Vec<String> {
+    const TIERS: [&str; 7] = ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"];
+    g.tiers.keys().filter(|t| !TIERS.contains(&t.as_str())).cloned().collect()
 }
 
 /// Every vector file that names a grading label (`grading`) names one `vectors/grading.json` defines.
@@ -2753,4 +2763,14 @@ mod tests {
         ];
         assert_eq!(grading_label_guard(&docs, &grading), 1);
     }
+
+    /// A `tiers` key that is not one of SANTA's seven tiers (a typo like `evaI`) is listed.
+    #[test]
+    fn an_unknown_tier_key_in_the_grading_file_is_listed() {
+        let mut doc = load(&Path::new(env!("CARGO_MANIFEST_DIR")).join("../../vectors/grading.json"));
+        doc["tiers"]["evaI"] = json!("eval");
+        let g = santa_check::grading::Grading::parse(&doc).unwrap();
+        assert_eq!(unknown_tier_keys(&g), vec!["evaI".to_string()]);
+    }
 }
+

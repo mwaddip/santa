@@ -508,10 +508,11 @@ vector.
 ## 6. Comparator topology (no oracle dependency)
 
 The JVM blesses (produces `expected`); those values are committed in the vectors as the **source of truth**.
-**Conformance-time comparison requires no JVM.** The comparison rules are data ([`grading.md`](grading.md)), so every
-comparator is an interpreter of the same file, proven against the same verdict oracle
+**Conformance-time comparison requires no JVM.** The comparison rules are data ([`grading.md`](grading.md)): a
+comparator interprets that file and proves itself against the verdict oracle
 ([`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json)); `santa-check` is SANTA's. Two interpreters that
-reproduce the oracle return the same verdict on the same bytes.
+reproduce the oracle return the same verdict on the same bytes. (The Scala `Harness` and `ts-runner/test/_match.ts`
+predate the grading file, do not read it, and grade nothing on the board.)
 
 ## 7. Future arms (generalization — NOT specified here)
 
