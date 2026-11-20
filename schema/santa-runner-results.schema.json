@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mwaddip/santa/schema/santa-runner-results.schema.json",
+  "title": "SANTA runner results (santa-runner-results/v1)",
+  "description": "What a self-contained runner writes to <out-dir>/results.json after grading its implementation against a SANTA checkout (runner-integration §4.3): the commit graded against, the scope, per slice the files graded, the dimension counts, the outcome counts and one record per red. The raw actuals sit beside it in <out-dir>/actuals/<path>; SANTA's canary re-grades those, not this file's verdicts.",
+  "type": "object",
+  "required": ["schema", "santa", "scope", "slices", "totals"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "santa-runner-results/v1" },
+    "santa": {
+      "description": "The SANTA commit graded against (`git -C <santa-dir> rev-parse HEAD`); null when <santa-dir> is not a git checkout. conform refuses results graded against a commit other than its own.",
+      "anyOf": [{ "type": "string", "pattern": "^[0-9a-f]{40}$" }, { "type": "null" }]
+    },
+    "scope": {
+      "description": "The scope graded at: the runner.json scope keys (runner-integration §2).",
+      "type": "object",
+      "required": ["version", "tiers", "cost"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "enum": ["v4", "v5", "v6"] },
+        "tiers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/tier" } },
+        "cost": { "type": "boolean" },
+        "kinds": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["Constant", "Box", "Transaction", "Header", "SigmaBoolean", "ErgoTree", "BlockTransactions"] }
+        },
+        "activation": { "type": "boolean" }
+      }
+    },
+    "slices": {
+      "description": "One per slice with a graded file, keyed \"<tier>/<version>/<provenance>\".",
+      "type": "object",
+      "propertyNames": { "pattern": "^(eval|wire|transaction|block|chain|authds|nipopow)/(any|v4|v5|v6)/(spec|authored|vendored|captured)$" },
+      "additionalProperties": { "$ref": "#/$defs/slice" }
+    },
+    "totals": {
+      "type": "object",
+      "required": ["red", "not_implemented"],
+      "additionalProperties": false,
+      "properties": {
+        "red": { "description": "The red records over all slices.", "$ref": "#/$defs/count" },
+        "not_implemented": { "description": "The not-implemented entries over all slices.", "$ref": "#/$defs/count" }
+      }
+    }
+  },
+  "$defs": {
+    "tier": { "enum": ["eval", "wire", "transaction", "block", "chain", "authds", "nipopow"] },
+    "count": { "type": "integer", "minimum": 0 },
+    "dim": { "enum": ["value", "cost", "reject", "roundtrip", "valid", "post_digest", "proof", "digest", "accepted", "results", "interlinks"] },
+    "path": {
+      "description": "A vector file, by its path relative to vectors/.",
+      "type": "string",
+      "pattern": "^(eval|wire|transaction|block|chain|authds|nipopow)/(any|v4|v5|v6)/(spec|authored|vendored|captured)/[^/]+\\.json$"
+    },
+    "slice": {
+      "type": "object",
+      "required": ["files", "dims", "not_implemented", "panicked", "exceeded", "red"],
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "description": "The vector files graded in this slice (conform checks them against its own selection: the completeness check).",
+          "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/path" }
+        },
+        "dims": {
+          "description": "Per graded dimension (docs/contract/grading.md §4): how many entries it graded and how many were nice. A dimension an entry does not grade (n/a) is not counted.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/dim" },
+          "additionalProperties": {
+            "type": "object",
+            "required": ["graded", "nice"],
+            "additionalProperties": false,
+            "properties": { "graded": { "$ref": "#/$defs/count" }, "nice": { "$ref": "#/$defs/count" } }
+          }
+        },
+        "not_implemented": { "$ref": "#/$defs/count" },
+        "panicked": { "$ref": "#/$defs/count" },
+        "exceeded": { "$ref": "#/$defs/count" },
+        "red": {
+          "description": "One record per red: a red dimension of an entry, or an entry whose outcome is not-implemented, panicked or exceeded.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["file", "entry", "dim", "expected", "got"],
+            "additionalProperties": false,
+            "properties": {
+              "file": { "$ref": "#/$defs/path" },
+              "entry": { "type": "string" },
+              "dim": { "anyOf": [{ "$ref": "#/$defs/dim" }, { "enum": ["not-implemented", "panicked", "exceeded"] }] },
+              "expected": { "description": "A short rendering of the expected answer, for people; never compared.", "type": "string" },
+              "got": { "description": "A short rendering of the actual answer, for people; never compared.", "type": "string" },
+              "note": { "description": "A panic's message, or another diagnostic.", "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

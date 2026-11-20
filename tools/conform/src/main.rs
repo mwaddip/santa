@@ -2852,5 +2852,65 @@ mod tests {
         }
         fs::remove_dir_all(&root).ok();
     }
+
+    /// schema/santa-runner-results.schema.json (santa-runner-results/v1) admits a complete results file, with
+    /// `santa` a commit or null, and refuses each fault a runner could make.
+    #[test]
+    fn the_runner_results_schema_admits_a_results_file_and_refuses_faults() {
+        let path = super::repo_root().join("schema/santa-runner-results.schema.json");
+        let schema: serde_json::Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
+        let v = jsonschema::validator_for(&schema).unwrap();
+        let good = json!({
+            "schema": "santa-runner-results/v1",
+            "santa": "4ce4855ef9b1b98ec14158ad12cc57ecb8a1265a",
+            "scope": {"version": "v6", "tiers": ["eval", "wire"], "cost": true, "kinds": ["Box"], "activation": false},
+            "slices": {
+                "eval/v6/authored": {
+                    "files": ["eval/v6/authored/AND.json", "eval/v6/authored/OR.json"],
+                    "dims": {"value": {"graded": 9, "nice": 8}, "cost": {"graded": 8, "nice": 8}},
+                    "not_implemented": 1, "panicked": 0, "exceeded": 0,
+                    "red": [
+                        {"file": "eval/v6/authored/AND.json", "entry": "and-1", "dim": "value",
+                         "expected": "{\"kind\":\"Boolean\",\"value\":true} @ cost 20", "got": "{\"kind\":\"Boolean\",\"value\":false}"},
+                        {"file": "eval/v6/authored/OR.json", "entry": "or-3", "dim": "not-implemented",
+                         "expected": "errored", "got": "not-implemented"}
+                    ]
+                }
+            },
+            "totals": {"red": 2, "not_implemented": 1}
+        });
+        assert!(v.is_valid(&good), "{:?}", v.validate(&good).err().map(|e| e.to_string()));
+        let mut null_santa = good.clone();
+        null_santa["santa"] = json!(null);
+        assert!(v.is_valid(&null_santa));
+        let slice = "/slices/eval~1v6~1authored";
+        let faults: Vec<(&str, Box<dyn Fn(&mut serde_json::Value)>)> = vec![
+            ("no santa key", Box::new(|d| { d.as_object_mut().unwrap().remove("santa"); })),
+            ("slice key eval/v7/authored", Box::new(|d| {
+                let s = d["slices"].as_object_mut().unwrap().remove("eval/v6/authored").unwrap();
+                d["slices"]["eval/v7/authored"] = s;
+            })),
+            ("dim valud", Box::new(move |d| {
+                let x = d.pointer_mut(&format!("{slice}/dims")).unwrap().as_object_mut().unwrap();
+                let val = x.remove("value").unwrap();
+                x.insert("valud".into(), val);
+            })),
+            ("red without dim", Box::new(move |d| {
+                d.pointer_mut(&format!("{slice}/red/0")).unwrap().as_object_mut().unwrap().remove("dim");
+            })),
+            ("red dim errored", Box::new(move |d| { *d.pointer_mut(&format!("{slice}/red/0/dim")).unwrap() = json!("errored"); })),
+            ("panicked -1", Box::new(move |d| { *d.pointer_mut(&format!("{slice}/panicked")).unwrap() = json!(-1); })),
+            ("extra top-level key", Box::new(|d| { d["extra"] = json!(1); })),
+            ("dims.value without nice", Box::new(move |d| {
+                d.pointer_mut(&format!("{slice}/dims/value")).unwrap().as_object_mut().unwrap().remove("nice");
+            })),
+            ("scope version any", Box::new(|d| { d["scope"]["version"] = json!("any"); })),
+        ];
+        for (what, f) in faults {
+            let mut d = good.clone();
+            f(&mut d);
+            assert!(!v.is_valid(&d), "the schema admits a results file with {what}");
+        }
+    }
 }
 
