@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0 # the base and head are graded from this checkout
           persist-credentials: false # nothing after the checkout talks to GitHub with git
@@ -111,3 +111,17 @@ and every entry, both sides, in its `santa-pr` artifact (`delta.json`).
 
 Failing the check on new red is the implementation's choice: add a step after the action that reads
 `.santa-pr/artifact/delta.json`, e.g. `jq -e '[.runners[].newly_red // [] | length] | add == 0'`.
+
+## Reading the comment
+
+- **The comment is the pull request's own work.** The check runs the pull request's copy of `santa.yml`, and grades
+  its head with the runner at its head, so a pull request that changes either can make its comment say anything.
+  Review a change to the runner's directory or to the check workflow like any other code. The commenter runs the
+  default branch's copy and decides only where the comment goes, never what it says. The grade that counts is SANTA's
+  board, which grades the default branch with its own runner.
+- **The vectors and tools track SANTA's `main`** (`santa-pr@main` and the `santa-ref` input): every pull request is
+  graded on SANTA's current vectors, which is the point of the check. The job has a read-only token and no secrets, so
+  the worst an unexpected change on SANTA's side can do is a wrong comment. To hold both still, pin the action and
+  `santa-ref` to the same SANTA commit.
+- **The third-party actions are pinned to commits**, inside the action and in the workflows above, with the release
+  each one is in a comment beside it.
