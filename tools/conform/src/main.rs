@@ -10,7 +10,7 @@
 #![recursion_limit = "256"]
 use jsonschema::error::ValidationErrorKind;
 use jsonschema::{Registry, Resource, ValidationError, Validator};
-use santa_check::{grade, grade_authds, grade_block, grade_chain, grade_nipopow, grade_transaction, grade_wire};
+use santa_check::grading::{Grade, Grading, Input, Verdict};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::os::unix::fs::{symlink, PermissionsExt};
@@ -919,270 +919,159 @@ fn red_detail(op: &str, name: &str, dim: &str, expected: String, got: String,
     d
 }
 
-/// actuals: {relpath: actuals_obj}. Returns {(tier,version,provenance): counts + red}, slice keys
-/// ordered (BTreeMap), entries in vector order — matching conform.py's sorted iteration.
-fn tally(actuals: &BTreeMap<String, Value>, claims_cost: bool, root: &Path) -> BTreeMap<(String, String, String), Counts> {
+/// The grading rules, `vectors/grading.json`, parsed once per run; a file santa-check cannot parse is a SANTA defect.
+fn load_grading(root: &Path) -> Grading {
+    let p = root.join("vectors").join(GRADING_FILE);
+    let doc: Value = serde_json::from_str(&fs::read_to_string(&p).unwrap_or_else(|e| die(format!("{}: {e}", p.display()))))
+        .unwrap_or_else(|e| die(format!("{}: {e}", p.display())));
+    Grading::parse(&doc).unwrap_or_else(|e| die(format!("{}: {e}", p.display())))
+}
+
+/// The counters a (tier, dimension) feeds: (total, nice, coal). A dimension `vectors/grading.json` names that the
+/// board has no counter for is a SANTA defect.
+fn counters<'c>(c: &'c mut Counts, tier: &str, dim: &str) -> (&'c mut u64, &'c mut u64, &'c mut u64) {
+    match (tier, dim) {
+        (_, "reject") => (&mut c.reject_total, &mut c.reject_nice, &mut c.reject_coal),
+        (_, "cost") => (&mut c.cost_graded, &mut c.cost_nice, &mut c.cost_coal),
+        ("eval", "value") => (&mut c.value_total, &mut c.value_nice, &mut c.value_coal),
+        ("wire", "roundtrip") => (&mut c.roundtrip_total, &mut c.roundtrip_nice, &mut c.roundtrip_coal),
+        ("transaction", "valid") => (&mut c.tx_valid_total, &mut c.tx_valid_nice, &mut c.tx_valid_coal),
+        ("block", "valid") => (&mut c.block_valid_total, &mut c.block_valid_nice, &mut c.block_valid_coal),
+        ("block", "post_digest") => (&mut c.post_digest_total, &mut c.post_digest_nice, &mut c.post_digest_coal),
+        ("chain", "value") => (&mut c.chain_value_total, &mut c.chain_value_nice, &mut c.chain_value_coal),
+        ("authds", "proof") => (&mut c.authds_proof_total, &mut c.authds_proof_nice, &mut c.authds_proof_coal),
+        ("authds", "digest") => (&mut c.authds_digest_total, &mut c.authds_digest_nice, &mut c.authds_digest_coal),
+        ("authds", "accepted") => (&mut c.authds_accepted_total, &mut c.authds_accepted_nice, &mut c.authds_accepted_coal),
+        ("authds", "results") => (&mut c.authds_results_total, &mut c.authds_results_nice, &mut c.authds_results_coal),
+        ("nipopow", "interlinks") => {
+            (&mut c.nipopow_interlinks_total, &mut c.nipopow_interlinks_nice, &mut c.nipopow_interlinks_coal)
+        }
+        ("nipopow", "proof") => (&mut c.nipopow_proof_total, &mut c.nipopow_proof_nice, &mut c.nipopow_proof_coal),
+        _ => die(format!("vectors/grading.json: the board has no counter for the {tier} dimension {dim:?}")),
+    }
+}
+
+/// One red (tier, dimension)'s detail, rendered for the scoreboard: the expected and the actual side, and a note.
+fn red_for(tier: &str, dim: &str, op: &str, name: &str, e: &Value, actual: &Value, script: Option<&str>) -> Value {
+    let exp = &e["expected"];
+    let (expected, got, note) = match (tier, dim) {
+        (_, "reject") => ("errored".to_string(), got_brief(actual, tier == "wire", tier == "transaction"), None),
+        (_, "cost") => (format!("cost {}", exp["cost"]), format!("cost {}", actual["cost"]), None),
+        ("eval", "value") => (expected_brief(e, false, false, false), got_brief(actual, false, false), None),
+        ("wire", "roundtrip") => {
+            (expected_brief(e, true, false, false), got_brief(actual, true, false), actual.get("reason").cloned())
+        }
+        ("transaction", "valid") => (
+            format!("valid {}", exp["valid"]),
+            got_brief(actual, false, true),
+            actual.get("reason").filter(|v| !v.is_null()).cloned(),
+        ),
+        ("block", "valid") => {
+            // Block actuals carry {valid, cost} (like tx): that shape, not the eval `value @ cost`.
+            let got = match actual["error"].as_str() {
+                Some(err) => err.to_string(),
+                None => format!("valid {} @ cost {}", actual["valid"], actual["cost"]),
+            };
+            (format!("valid {}", exp["valid"]), got, actual.get("reason").filter(|v| !v.is_null()).cloned())
+        }
+        ("block", "post_digest") => (
+            format!("post_digest {}", brief(&exp["post_digest"], 64)),
+            format!("post_digest {}", brief(&actual["post_digest"], 64)),
+            None,
+        ),
+        ("chain", "value") => {
+            let got = match actual["error"].as_str() {
+                Some(err) => err.to_string(),
+                None => match e["kind"].as_str() {
+                    Some("retargeting") => format!("nbits {}", actual["nbits"]),
+                    Some("voting") => format!(
+                        "parameters {} @ update {}",
+                        brief(&actual["parameters"]["table"], 96),
+                        actual["activated_update"]
+                    ),
+                    _ => brief(actual, 96),
+                },
+            };
+            (expected_brief(e, false, false, true), got, actual.get("note").filter(|v| !v.is_null()).cloned())
+        }
+        ("authds", "proof") => (format!("proofs {}", exp["proofs"]), format!("proofs {}", actual["proofs"]), None),
+        ("authds", "digest") if e["kind"] == "avl_verify" => (
+            format!("new_digest_hex {}", exp["new_digest_hex"]),
+            format!("new_digest_hex {}", actual["new_digest_hex"]),
+            None,
+        ),
+        ("authds", "digest") => (format!("digests {}", exp["digests"]), format!("digests {}", actual["digests"]), None),
+        ("authds", "accepted") => (
+            format!("proof_accepted {}", exp["proof_accepted"]),
+            format!("proof_accepted {}", actual["proof_accepted"]),
+            None,
+        ),
+        ("authds", "results") => (format!("results {}", exp["results"]), format!("results {}", actual["results"]), None),
+        ("nipopow", "interlinks") => ("interlinks match".to_string(), "interlinks diverge".to_string(), None),
+        ("nipopow", "proof") => (
+            format!("proofHex {}", brief(&exp["proofHex"], 48)),
+            format!("proofHex {}", brief(actual.get("proofHex").unwrap_or(&Value::Null), 48)),
+            None,
+        ),
+        _ => die(format!("vectors/grading.json: the board renders no {tier} dimension {dim:?}")),
+    };
+    red_detail(op, name, dim, expected, got, note, script)
+}
+
+/// actuals: {relpath: actuals_obj}, graded through `vectors/grading.json`. Returns {(tier,version,provenance): counts
+/// + red}, slice keys ordered (BTreeMap), entries in vector order, an entry's dimensions in its branch's order.
+fn tally(
+    actuals: &BTreeMap<String, Value>,
+    claims_cost: bool,
+    root: &Path,
+    grading: &Grading,
+) -> BTreeMap<(String, String, String), Counts> {
     let mut slices: BTreeMap<(String, String, String), Counts> = BTreeMap::new();
     for (rel, act) in actuals {
         let (tier, version, prov, op) = parse_relpath(rel);
-        let c = slices.entry((tier, version, prov)).or_default();
         let vec: Value =
             serde_json::from_str(&fs::read_to_string(root.join("vectors").join(rel)).unwrap()).unwrap();
-        // Dispatch on the vector's schema discriminator.
-        let schema = vec["schema"].as_str().unwrap_or("");
-        let is_wire = schema.starts_with("santa-wire/");
-        let is_tx = schema.starts_with("santa-transaction/");
-        let is_block = schema.starts_with("santa-block/");
-        let is_chain = schema.starts_with("santa-chain/");
-        let is_authds = schema.starts_with("santa-authds/");
-        let is_nipopow = schema.starts_with("santa-nipopow/");
+        let label = grading.label_for(&tier, &vec).unwrap_or_else(|e| die(format!("{rel}: {e}")));
+        let (is_wire, is_tx, is_chain) = (tier == "wire", tier == "transaction", tier == "chain");
+        let c = slices.entry((tier.clone(), version, prov)).or_default();
         for e in vec["entries"].as_array().unwrap() {
             let name = e["name"].as_str().unwrap();
-            let actual = act.get(name).cloned().unwrap_or(Value::Null);
+            let present = act.get(name);
+            let actual = present.cloned().unwrap_or(Value::Null);
             let script = e["script"].as_str();
-            let g = if is_wire {
-                grade_wire(&actual, e)
-            } else if is_tx {
-                grade_transaction(&actual, &e["expected"], claims_cost)
-            } else if is_block {
-                grade_block(&actual, &e["expected"], claims_cost)
-            } else if is_chain {
-                grade_chain(&actual, e)
-            } else if is_authds {
-                grade_authds(&actual, e)
-            } else if is_nipopow {
-                grade_nipopow(&actual, e, &vec["chain"])
-            } else {
-                grade(&actual, &e["expected"], claims_cost)
-            };
-            match g["kind"].as_str() {
-                Some("exceeded") => {
+            let input = Input { entry: e, actual: present, file: &vec, claims_cost };
+            match grading.grade(label, &input).unwrap_or_else(|err| die(format!("{rel} {name}: {err}"))) {
+                Verdict::Exceeded { limit } => {
                     c.exceeded += 1;
                     let b = &actual["budget"];
                     c.red.push(red_detail(&op, name, "exceeded",
                         expected_brief(e, is_wire, is_tx, is_chain),
-                        format!("exceeded {} ({} MiB, {} s)", g["limit"].as_str().unwrap_or("?"), b["memory_mb"], b["wall_s"]),
+                        format!("exceeded {} ({} MiB, {} s)", limit.as_str().unwrap_or("?"), b["memory_mb"], b["wall_s"]),
                         None, script));
                 }
-                Some("panicked") => {
+                Verdict::Panicked => {
                     c.panicked += 1;
                     c.red.push(red_detail(&op, name, "panicked",
                         expected_brief(e, is_wire, is_tx, is_chain), "panicked".to_string(),
                         Some(actual.get("note").cloned().unwrap_or(Value::Null)), script));
                 }
-                Some("coverage") => {
-                    // not-implemented is the only coverage tag (unrepresentable was removed end-to-end).
-                    let tag = g["tag"].as_str().unwrap();
+                Verdict::NotImplemented => {
                     c.not_impl += 1;
-                    c.red.push(red_detail(&op, name, tag,
-                        expected_brief(e, is_wire, is_tx, is_chain), tag.to_string(), None, script));
+                    c.red.push(red_detail(&op, name, "not-implemented",
+                        expected_brief(e, is_wire, is_tx, is_chain), "not-implemented".to_string(), None, script));
                 }
-                Some("reject") => {
-                    c.reject_total += 1;
-                    if g["verdict"] == "nice" {
-                        c.reject_nice += 1;
-                    } else {
-                        c.reject_coal += 1;
-                        c.red.push(red_detail(&op, name, "reject",
-                            "errored".to_string(), got_brief(&actual, is_wire, is_tx), None, script));
-                    }
-                }
-                Some("roundtrip") => {
-                    c.roundtrip_total += 1;
-                    if g["verdict"] == "nice" {
-                        c.roundtrip_nice += 1;
-                    } else {
-                        c.roundtrip_coal += 1;
-                        c.red.push(red_detail(&op, name, "roundtrip",
-                            expected_brief(e, is_wire, is_tx, is_chain), got_brief(&actual, is_wire, is_tx),
-                            actual.get("reason").cloned(), script));
-                    }
-                }
-                Some("transaction") => {
-                    // valid dim: always graded; cost dim: only when verdict's cost != "n/a".
-                    c.tx_valid_total += 1;
-                    if g["valid"] == "nice" {
-                        c.tx_valid_nice += 1;
-                    } else {
-                        c.tx_valid_coal += 1;
-                        // Surface the actual's "reason" string as note when present (reject diagnostic).
-                        let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
-                        c.red.push(red_detail(&op, name, "valid",
-                            format!("valid {}", e["expected"]["valid"]),
-                            got_brief(&actual, false, true), note, script));
-                    }
-                    if g["cost"] != "n/a" {
-                        c.cost_graded += 1;
-                        if g["cost"] == "nice" {
-                            c.cost_nice += 1;
-                        } else {
-                            c.cost_coal += 1;
-                            c.red.push(red_detail(&op, name, "cost",
-                                format!("cost {}", e["expected"]["cost"]),
-                                format!("cost {}", actual["cost"]), None, script));
+                Verdict::Graded(dims) => {
+                    for (dim, g) in dims {
+                        if g == Grade::NotApplicable {
+                            continue;
                         }
-                    }
-                }
-                Some("block") => {
-                    // valid dim: always graded.
-                    c.block_valid_total += 1;
-                    if g["valid"] == "nice" {
-                        c.block_valid_nice += 1;
-                    } else {
-                        c.block_valid_coal += 1;
-                        let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
-                        // Block actuals carry {valid, cost} (like tx) — render that shape, not
-                        // the eval `value @ cost` fallback. error tag renders as itself.
-                        let got = match actual["error"].as_str() {
-                            Some(err) => err.to_string(),
-                            None => format!("valid {} @ cost {}", actual["valid"], actual["cost"]),
-                        };
-                        c.red.push(red_detail(&op, name, "valid",
-                            format!("valid {}", e["expected"]["valid"]), got, note, script));
-                    }
-                    // post_digest dim: skipped when "n/a" (reject vectors, or valid failed).
-                    if g["post_digest"] != "n/a" {
-                        c.post_digest_total += 1;
-                        if g["post_digest"] == "nice" {
-                            c.post_digest_nice += 1;
+                        let (total, nice, coal) = counters(c, &tier, &dim);
+                        *total += 1;
+                        if g == Grade::Nice {
+                            *nice += 1;
                         } else {
-                            c.post_digest_coal += 1;
-                            c.red.push(red_detail(&op, name, "post_digest",
-                                format!("post_digest {}", brief(&e["expected"]["post_digest"], 64)),
-                                format!("post_digest {}", brief(&actual["post_digest"], 64)),
-                                None, script));
-                        }
-                    }
-                    // cost dim: skipped when "n/a"; reuses shared cost counters (same concept as tx/eval).
-                    if g["cost"] != "n/a" {
-                        c.cost_graded += 1;
-                        if g["cost"] == "nice" {
-                            c.cost_nice += 1;
-                        } else {
-                            c.cost_coal += 1;
-                            c.red.push(red_detail(&op, name, "cost",
-                                format!("cost {}", e["expected"]["cost"]),
-                                format!("cost {}", actual["cost"]), None, script));
-                        }
-                    }
-                }
-                Some("chain") => {
-                    // Single value dimension; cost is not-applicable for chain.
-                    c.chain_value_total += 1;
-                    if g["value"] == "nice" {
-                        c.chain_value_nice += 1;
-                    } else {
-                        c.chain_value_coal += 1;
-                        let note = actual.get("note").filter(|v| !v.is_null()).cloned();
-                        let expected = expected_brief(e, false, false, true);
-                        let got = match actual["error"].as_str() {
-                            Some(err) => err.to_string(),
-                            None => match e["kind"].as_str() {
-                                Some("retargeting") => format!("nbits {}", actual["nbits"]),
-                                Some("voting") => format!("parameters {} @ update {}",
-                                    brief(&actual["parameters"]["table"], 96), actual["activated_update"]),
-                                _ => brief(&actual, 96),
-                            },
-                        };
-                        c.red.push(red_detail(&op, name, "value",
-                            expected, got, note, script));
-                    }
-                }
-                Some("authds_prove") => {
-                    c.authds_proof_total += 1;
-                    if g["proof"] == "nice" {
-                        c.authds_proof_nice += 1;
-                    } else {
-                        c.authds_proof_coal += 1;
-                        c.red.push(red_detail(&op, name, "proof",
-                            format!("proofs {}", e["expected"]["proofs"]),
-                            format!("proofs {}", actual["proofs"]), None, script));
-                    }
-                    c.authds_digest_total += 1;
-                    if g["digest"] == "nice" {
-                        c.authds_digest_nice += 1;
-                    } else {
-                        c.authds_digest_coal += 1;
-                        c.red.push(red_detail(&op, name, "digest",
-                            format!("digests {}", e["expected"]["digests"]),
-                            format!("digests {}", actual["digests"]), None, script));
-                    }
-                }
-                Some("authds_verify") => {
-                    c.authds_accepted_total += 1;
-                    if g["accepted"] == "nice" {
-                        c.authds_accepted_nice += 1;
-                    } else {
-                        c.authds_accepted_coal += 1;
-                        c.red.push(red_detail(&op, name, "accepted",
-                            format!("proof_accepted {}", e["expected"]["proof_accepted"]),
-                            format!("proof_accepted {}", actual["proof_accepted"]), None, script));
-                    }
-                    if g["results"] != "n/a" {
-                        c.authds_results_total += 1;
-                        if g["results"] == "nice" {
-                            c.authds_results_nice += 1;
-                        } else {
-                            c.authds_results_coal += 1;
-                            c.red.push(red_detail(&op, name, "results",
-                                format!("results {}", e["expected"]["results"]),
-                                format!("results {}", actual["results"]), None, script));
-                        }
-                    }
-                    if g["digest"] != "n/a" {
-                        c.authds_digest_total += 1;
-                        if g["digest"] == "nice" {
-                            c.authds_digest_nice += 1;
-                        } else {
-                            c.authds_digest_coal += 1;
-                            c.red.push(red_detail(&op, name, "digest",
-                                format!("new_digest_hex {}", e["expected"]["new_digest_hex"]),
-                                format!("new_digest_hex {}", actual["new_digest_hex"]), None, script));
-                        }
-                    }
-                }
-                Some("nipopow_interlinks") => {
-                    c.nipopow_interlinks_total += 1;
-                    if g["interlinks"] == "nice" {
-                        c.nipopow_interlinks_nice += 1;
-                    } else {
-                        c.nipopow_interlinks_coal += 1;
-                        c.red.push(red_detail(&op, name, "interlinks",
-                            "interlinks match".to_string(),
-                            "interlinks diverge".to_string(), None, script));
-                    }
-                }
-                Some("nipopow_prove") => {
-                    c.nipopow_proof_total += 1;
-                    if g["proof"] == "nice" {
-                        c.nipopow_proof_nice += 1;
-                    } else {
-                        c.nipopow_proof_coal += 1;
-                        c.red.push(red_detail(&op, name, "proof",
-                            format!("proofHex {}", brief(&e["expected"]["proofHex"], 48)),
-                            format!("proofHex {}", brief(actual.get("proofHex").unwrap_or(&Value::Null), 48)),
-                            None, script));
-                    }
-                }
-                _ => {
-                    c.value_total += 1;
-                    if g["value"] == "nice" {
-                        c.value_nice += 1;
-                    } else {
-                        c.value_coal += 1;
-                        c.red.push(red_detail(&op, name, "value",
-                            expected_brief(e, false, false, false), got_brief(&actual, false, false),
-                            None, script));
-                    }
-                    if g["cost"] != "n/a" {
-                        c.cost_graded += 1;
-                        if g["cost"] == "nice" {
-                            c.cost_nice += 1;
-                        } else {
-                            c.cost_coal += 1;
-                            c.red.push(red_detail(&op, name, "cost",
-                                format!("cost {}", e["expected"]["cost"]),
-                                format!("cost {}", actual["cost"]), None, script));
+                            *coal += 1;
+                            c.red.push(red_for(&tier, &dim, &op, name, e, &actual, script));
                         }
                     }
                 }
@@ -1369,6 +1258,7 @@ fn main() -> ExitCode {
     let vectors = discover_vectors(&root.join("vectors"));
     let facts = wire_facts(&root.join("vectors"), &vectors).unwrap_or_else(|e| die(e));
     let schemas = ActualsSchemas::load(&root);
+    let grading = load_grading(&root);
     let mut results: Vec<Value> = Vec::new();
     for m in &runners {
         eprintln!("running {} …", m.name);
@@ -1386,7 +1276,7 @@ fn main() -> ExitCode {
             }
             Ok(ran) => {
                 let sc = &ran.scope;
-                let slices = tally(&ran.actuals, sc.cost, &root);
+                let slices = tally(&ran.actuals, sc.cost, &root, &grading);
                 let agg_red: u64 = slices.values().map(Counts::red_total).sum();
                 let mark = if agg_red == 0 { "🎁" } else { "🪨" };
                 println!(
@@ -2174,58 +2064,24 @@ mod tests {
         })
     }
 
-    /// Run tally against a synthetic in-memory transaction vector (avoids disk I/O).
-    /// Returns the Counts for the single slice.
+    static TALLY_TX_SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+    /// Run the real tally over a synthetic transaction vector, written into a temporary vectors/ tree, graded through
+    /// the committed vectors/grading.json. Returns the Counts for the single slice.
     fn tally_tx_inline(
         vec_json: &serde_json::Value,
         actuals_obj: serde_json::Map<String, serde_json::Value>,
     ) -> super::Counts {
-        use serde_json::Value;
-        // Inline: reproduce the tx arm of the tally loop directly (tally() reads vectors from disk
-        // by relpath; avoiding a temp tree here keeps the test self-contained).
-        let vec = vec_json;
-        let mut c = super::Counts::default();
-        for e in vec["entries"].as_array().unwrap() {
-            let name = e["name"].as_str().unwrap();
-            let actual = actuals_obj.get(name).cloned().unwrap_or(Value::Null);
-            let g = santa_check::grade_transaction(&actual, &e["expected"], true);
-            match g["kind"].as_str() {
-                Some("panicked") => {
-                    c.panicked += 1;
-                    c.red.push(serde_json::json!({"op": "test", "entry": name, "dim": "panicked",
-                        "note": actual.get("note").cloned().unwrap_or(Value::Null)}));
-                }
-                Some("coverage") => {
-                    let tag = g["tag"].as_str().unwrap();
-                    c.not_impl += 1;
-                    c.red.push(serde_json::json!({"op": "test", "entry": name, "dim": tag}));
-                }
-                Some("transaction") => {
-                    c.tx_valid_total += 1;
-                    if g["valid"] == "nice" {
-                        c.tx_valid_nice += 1;
-                    } else {
-                        c.tx_valid_coal += 1;
-                        let note = actual.get("reason").filter(|v| !v.is_null()).cloned();
-                        let mut detail = serde_json::json!({"op": "test", "entry": name, "dim": "valid"});
-                        if let Some(n) = note {
-                            detail["note"] = n;
-                        }
-                        c.red.push(detail);
-                    }
-                    if g["cost"] != "n/a" {
-                        c.cost_graded += 1;
-                        if g["cost"] == "nice" {
-                            c.cost_nice += 1;
-                        } else {
-                            c.cost_coal += 1;
-                            c.red.push(serde_json::json!({"op": "test", "entry": name, "dim": "cost"}));
-                        }
-                    }
-                }
-                _ => unreachable!("unexpected verdict kind in tx tally test"),
-            }
-        }
+        let n = TALLY_TX_SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let root = std::env::temp_dir().join(format!("conform-tally-tx-{}-{n}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        let dir = root.join("vectors").join("transaction").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        fs::write(dir.join("t.json"), vec_json.to_string()).unwrap();
+        let mut actuals = std::collections::BTreeMap::new();
+        actuals.insert("transaction/v6/authored/t.json".to_string(), serde_json::Value::Object(actuals_obj));
+        let c = super::tally(&actuals, true, &root, &grading()).into_values().next().expect("one slice");
+        fs::remove_dir_all(&root).ok();
         c
     }
 
@@ -2342,7 +2198,7 @@ mod tests {
         }
         let mut actuals = BTreeMap::new();
         actuals.insert(rel.clone(), Value::Object(act.clone()));
-        let c = &super::tally(&actuals, true, &root)[&key];
+        let c = &super::tally(&actuals, true, &root, &grading())[&key];
         assert_eq!(c.roundtrip_total, entries.len() as u64);
         assert_eq!(c.roundtrip_nice, entries.len() as u64);
         assert_eq!(c.red_total(), 0);
@@ -2351,7 +2207,7 @@ mod tests {
         act.insert(entries[0]["name"].as_str().unwrap().to_string(), json!({"bytes_hex": "00", "error": null}));
         let mut actuals2 = BTreeMap::new();
         actuals2.insert(rel, Value::Object(act));
-        let c2 = &super::tally(&actuals2, true, &root)[&key];
+        let c2 = &super::tally(&actuals2, true, &root, &grading())[&key];
         assert_eq!(c2.roundtrip_coal, 1);
         assert_eq!(c2.red_total(), 1);
         assert_eq!(c2.red[0]["dim"], "roundtrip");
@@ -2394,7 +2250,7 @@ mod tests {
         let (tmp, rel, key) = chain_vector_temp(nbits, "green");
         let mut actuals = BTreeMap::new();
         actuals.insert(rel, json!({"retargeting-test": {"nbits": nbits, "error": null}}));
-        let slices = super::tally(&actuals, false, &tmp);
+        let slices = super::tally(&actuals, false, &tmp, &grading());
         let c = &slices[&key];
         assert_eq!(c.chain_value_total, 1);
         assert_eq!(c.chain_value_nice, 1);
@@ -2412,7 +2268,7 @@ mod tests {
         let mut actuals = BTreeMap::new();
         // off by one — mismatches the expected nbits
         actuals.insert(rel, json!({"retargeting-test": {"nbits": nbits + 1, "error": null}}));
-        let slices = super::tally(&actuals, false, &tmp);
+        let slices = super::tally(&actuals, false, &tmp, &grading());
         let c = &slices[&key];
         assert_eq!(c.chain_value_total, 1);
         assert_eq!(c.chain_value_coal, 1);
@@ -2448,7 +2304,7 @@ mod tests {
                 "error": "not-implemented"
             }
         }));
-        let slices = super::tally(&actuals, false, &tmp);
+        let slices = super::tally(&actuals, false, &tmp, &grading());
         let c = &slices[&key];
         assert_eq!(c.not_impl, 1);
         assert_eq!(c.chain_value_total, 0);
@@ -2510,7 +2366,7 @@ mod tests {
             "authds/any/vendored/AvlProve.probe.json".to_string(),
             json!({"probe#0": {"proofs": ["ff"], "digests": ["11"], "error": null}}),
         );
-        let slices = super::tally(&actuals, true, &root);
+        let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.authds_proof_coal, 1, "wrong proof bytes must be coal");
         assert_eq!(c.authds_digest_nice, 1, "matching digest must still be nice");
@@ -2530,7 +2386,7 @@ mod tests {
             "authds/any/vendored/AvlProve.probe.json".to_string(),
             json!({"probe#0": {"proofs": ["aa"], "digests": ["22"], "error": null}}),
         );
-        let slices = super::tally(&actuals, true, &root);
+        let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.authds_proof_nice, 1, "matching proof must still be nice");
         assert_eq!(c.authds_digest_coal, 1, "wrong digest must be coal");
@@ -2590,7 +2446,7 @@ mod tests {
                 "error": null
             }}),
         );
-        let slices = super::tally(&actuals, true, &root);
+        let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.authds_accepted_coal, 1, "over-accept must be coal");
         assert_eq!(c.authds_results_total, 0, "results stays n/a (untouched), not merely coal-free");
@@ -2618,7 +2474,7 @@ mod tests {
                 "error": null
             }}),
         );
-        let slices = super::tally(&actuals, true, &root);
+        let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.authds_accepted_nice, 1, "accepted must still be nice");
         assert_eq!(c.authds_results_coal, 1, "diverging operation outcome must be coal");
@@ -2646,7 +2502,7 @@ mod tests {
                 "error": null
             }}),
         );
-        let slices = super::tally(&actuals, true, &root);
+        let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.authds_accepted_nice, 1, "accepted must still be nice");
         assert_eq!(c.authds_results_nice, 1, "results must still be nice");
@@ -2805,7 +2661,7 @@ mod tests {
         let mut actuals = BTreeMap::new();
         actuals.insert("eval/v6/authored/x.json".to_string(),
             json!({"e#0": {"error": "exceeded", "limit": "memory", "budget": {"memory_mb": 1024, "wall_s": 10}}}));
-        let slices = super::tally(&actuals, true, &root);
+        let slices = super::tally(&actuals, true, &root, &grading());
         let c = slices.values().next().unwrap();
         assert_eq!(c.exceeded, 1);
         assert_eq!(c.red_total(), 1);
@@ -2846,4 +2702,35 @@ mod tests {
         assert_eq!(v[0].0, "eval/v6/authored/x.json");
         fs::remove_dir_all(&tmp).ok();
     }
+
+    /// The committed grading rules, as main loads them.
+    fn grading() -> santa_check::grading::Grading {
+        super::load_grading(&super::repo_root())
+    }
+
+    /// tally grades through vectors/grading.json: a block accept whose post-state digest is wrong is nice on
+    /// `valid`, red on `post_digest` (one red record, dim post_digest), and cost (after the digest) not graded.
+    #[test]
+    fn tally_grades_through_the_grading_file() {
+        use std::collections::BTreeMap;
+        let root = std::env::temp_dir().join(format!("conform-tally-grading-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        let dir = root.join("vectors").join("block").join("v6").join("authored");
+        fs::create_dir_all(&dir).unwrap();
+        let digest = format!("{}01", "ab".repeat(32));
+        fs::write(dir.join("b.json"), json!({"schema": "santa-block/v1", "op": "b", "blessed_by": "test", "entries": [
+            {"name": "b#0", "expected": {"valid": true, "post_digest": digest, "cost": 7}}]}).to_string()).unwrap();
+        let mut actuals = BTreeMap::new();
+        actuals.insert("block/v6/authored/b.json".to_string(),
+            json!({"b#0": {"valid": true, "post_digest": format!("{}01", "cd".repeat(32)), "cost": 7, "error": null}}));
+        let slices = super::tally(&actuals, true, &root, &grading());
+        let c = &slices[&("block".to_string(), "v6".to_string(), "authored".to_string())];
+        assert_eq!((c.block_valid_total, c.block_valid_nice), (1, 1));
+        assert_eq!((c.post_digest_total, c.post_digest_coal), (1, 1));
+        assert_eq!(c.cost_graded, 0);
+        assert_eq!(c.red.len(), 1);
+        assert_eq!(c.red[0]["dim"], "post_digest");
+        fs::remove_dir_all(&root).ok();
+    }
 }
+
