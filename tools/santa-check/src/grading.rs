@@ -43,11 +43,14 @@ pub struct Dim {
     pub clean: bool,
 }
 
+/// Two operands that must be equal; `case_insensitive` compares two strings ignoring ASCII case, `nonempty` makes a
+/// null or empty operand (`""`, `[]`, `{}`) fail.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Comparison {
     pub a: Operand,
     pub b: Operand,
     pub case_insensitive: bool,
+    pub nonempty: bool,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -177,11 +180,16 @@ impl Operand {
 
 impl Comparison {
     fn parse(v: &Value, at: &str) -> Result<Comparison, GradingError> {
-        let m = object(v, at, &["a", "b", "case_insensitive"])?;
+        let m = object(v, at, &["a", "b", "case_insensitive", "nonempty"])?;
         let operand = |k: &str| -> Result<Operand, GradingError> {
             Operand::parse(m.get(k).ok_or_else(|| malformed(at, format!("missing {k}")))?, &format!("{at}.{k}"))
         };
-        Ok(Comparison { a: operand("a")?, b: operand("b")?, case_insensitive: flag(m, "case_insensitive", false, at)? })
+        Ok(Comparison {
+            a: operand("a")?,
+            b: operand("b")?,
+            case_insensitive: flag(m, "case_insensitive", false, at)?,
+            nonempty: flag(m, "nonempty", false, at)?,
+        })
     }
 }
 
@@ -375,11 +383,7 @@ impl Operand {
         match self {
             Operand::Path(p) => p.resolve(ctx).cloned().unwrap_or(Value::Null),
             Operand::Lit(v) => v.clone(),
-            Operand::First(paths) => paths
-                .iter()
-                .find_map(|p| p.resolve(ctx).filter(|v| !v.is_null()))
-                .cloned()
-                .unwrap_or(Value::Null),
+            Operand::First(paths) => paths.iter().find_map(|p| p.resolve(ctx)).cloned().unwrap_or(Value::Null),
             Operand::Pluck { list, field } => match list.resolve(ctx) {
                 Some(Value::Array(items)) => {
                     Value::Array(items.iter().map(|i| i.get(field.as_str()).cloned().unwrap_or(Value::Null)).collect())
@@ -393,6 +397,16 @@ impl Operand {
 impl Comparison {
     fn holds(&self, ctx: &Ctx) -> bool {
         let (a, b) = (self.a.eval(ctx), self.b.eval(ctx));
+        let empty = |v: &Value| match v {
+            Value::Null => true,
+            Value::String(s) => s.is_empty(),
+            Value::Array(a) => a.is_empty(),
+            Value::Object(o) => o.is_empty(),
+            _ => false,
+        };
+        if self.nonempty && (empty(&a) || empty(&b)) {
+            return false;
+        }
         if self.case_insensitive {
             matches!((&a, &b), (Value::String(x), Value::String(y)) if x.eq_ignore_ascii_case(y))
         } else {
@@ -691,4 +705,28 @@ mod tests {
         let e = grade_with(&g, json!({ "kind": "b" }), Some(json!({})), json!({}), false).unwrap_err();
         assert_eq!(e, GradingError::NoBranch { label: "t".into() });
     }
+
+    #[test]
+    fn nonempty_fails_null_and_empty() {
+        let mut c = cmp(json!({ "path": "actual.d" }), json!({ "path": "expected.d" }));
+        c["nonempty"] = json!(true);
+        let g = one(json!({ "branches": [ { "dims": [ { "name": "d", "compare": [c] } ] } ] }));
+        for (e, a) in [(json!(null), json!(null)), (json!(""), json!("")), (json!([]), json!([])), (json!({}), json!({}))] {
+            let v = grade_with(&g, json!({ "expected": { "d": e } }), Some(json!({ "d": a })), json!({}), false).unwrap();
+            assert_eq!(v, graded(&[("d", Grade::Red)]));
+        }
+        let v = grade_with(&g, json!({ "expected": { "d": "ab" } }), Some(json!({ "d": "ab" })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("d", Grade::Nice)]));
+    }
+
+    #[test]
+    fn first_takes_the_first_present_path_even_when_null() {
+        let b = json!({ "first": ["entry.expected_bytes_hex", "entry.bytes_hex"] });
+        let mut c = cmp(json!({ "path": "actual.bytes_hex" }), b);
+        c["case_insensitive"] = json!(true);
+        let g = one(json!({ "branches": [ { "dims": [ { "name": "roundtrip", "compare": [c] } ] } ] }));
+        let v = grade_with(&g, json!({ "bytes_hex": "01", "expected_bytes_hex": null }), Some(json!({ "bytes_hex": "01" })), json!({}), false).unwrap();
+        assert_eq!(v, graded(&[("roundtrip", Grade::Red)]));
+    }
 }
+

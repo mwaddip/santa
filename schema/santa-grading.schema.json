@@ -44,7 +44,8 @@
       "properties": {
         "a": { "$ref": "#/$defs/operand" },
         "b": { "$ref": "#/$defs/operand" },
-        "case_insensitive": { "type": "boolean" }
+        "case_insensitive": { "type": "boolean" },
+        "nonempty": { "type": "boolean" }
       }
     },
     "dim": {

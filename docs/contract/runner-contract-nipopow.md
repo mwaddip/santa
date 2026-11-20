@@ -146,48 +146,30 @@ checked first and unconditionally; `not-implemented` → the blue coverage verdi
 growth-ledger stance, §7/§8 — a conformer with no nipopow arm declares
 `not-implemented`, not a gap); otherwise one kind-specific dimension.
 
-**`nipopow_interlinks` — one whole-chain verdict, early-exit compare.**
-
-```rust
-let ok = clean && chain_arr.is_some() && actual_arr.is_some() && {
-    let ca = chain_arr.unwrap();
-    let aa = actual_arr.unwrap();
-    ca.len() == aa.len()
-        && ca.iter().zip(aa).all(|(c, a)| structural_equal(&c["interlinks"], a))
-};
-```
-
-`clean` gates on `actual.error` being null/absent, same as every other tier. The length
-check is folded into the same short-circuit `&&` — an outer-length mismatch never reaches
-the per-height comparison. `.all(...)` is Rust's standard early-exiting combinator: it stops
-comparing at the **first height whose interlinks diverge** — cheap, but this is a
-*mechanism*, not a reported dimension. The verdict is still a single coarse
+**`nipopow_interlinks` — one whole-chain verdict.** The dimension `interlinks` compares the file chain's
+interlinks, header by header (`{"pluck": "file.chain", "field": "interlinks"}`), with `actual.interlinks`, as one
+structural equality (same length, every header's vector equal), `nonempty`: a missing chain or a missing answer is
+red, never nice by null equals null. `clean` gates on `actual.error` being null/absent, same as every other tier.
+Which height diverged is not a reported dimension. The verdict is still a single coarse
 `"nice"`/`"interlinks"` per entry; **the grader never reports *which* height
 diverged** — that granularity is not surfaced anywhere in the actuals/verdict shape, only
 "at least one height disagreed." A conformer debugging a red interlinks entry must diff
 `actual.interlinks` against `chain[].interlinks` itself to find the divergent height.
 
-**`nipopow_prove` — byte-exact, case-insensitive raw hex compare.**
-
-```rust
-let ok = clean && expected_hex.eq_ignore_ascii_case(actual_hex) && !expected_hex.is_empty();
-```
-
-Unlike most of SANTA's comparator, which is JSON-*structural* (`runner-contract.md` §5:
-key-order-insensitive, recursively equal), this is a **raw string compare** of the entire
-`proofHex` value — appropriate because proof bytes are an opaque, single deterministic wire
-encoding (§2), not a JSON value with multiple equally-valid representations. The
-`!expected_hex.is_empty()` guard is a vacuous-match defense: no committed vector's
-`proofHex` is ever empty (the vector schema's `hex` $def requires ≥1 byte), so this guard is
-currently dead in practice against real vectors, but it means a runner cannot accidentally
-score "nice" by returning an empty string against a malformed or missing expectation.
+**`nipopow_prove` — byte-exact, case-insensitive raw hex compare.** The dimension `proof` compares
+`actual.proofHex` with `expected.proofHex`, `case_insensitive` and `nonempty`. Unlike most of SANTA's grading, which
+is JSON-*structural*, this is a **string compare** of the entire `proofHex` value — appropriate because proof bytes
+are an opaque, single deterministic wire encoding (§2), not a JSON value with multiple equally-valid
+representations. `nonempty` is a vacuous-match defense: no committed vector's `proofHex` is ever empty (the vector
+schema's `hex` $def requires ≥1 byte), so it is dead in practice against real vectors, but a runner cannot score
+"nice" by returning an empty string against a malformed or missing expectation.
 
 **Unknown `kind`.** An entry whose `kind` matches neither string is red on `proof` (the type's
 `unmatched`) — an unconditional coal, never a silent
 pass. Since the vector schema's `kind` enum only admits the two known values, this arm is
 unreachable against any schema-valid committed vector; it exists for the same reason
 authds's analogous fallback does (`runner-contract-authds.md` §4) — reachable only from a
-hand-crafted actual against the grader directly (`nipopow_tests` exercises it in isolation).
+hand-crafted entry against the grader directly (the grading oracle has a case for it).
 
 **Tally — two independent counters, no chaining.** `nipopow_interlinks` and `nipopow_prove`
 land on **different entries** (distinguished by `kind`), never the same entry's two facets,

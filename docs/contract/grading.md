@@ -51,7 +51,9 @@ A comparison is `{ "a": <operand>, "b": <operand>, "case_insensitive": <bool> }`
 - `null` only `null`.
 
 With `"case_insensitive": true` it holds when both operands are strings equal ignoring ASCII case; any other operand
-fails it.
+fails it. With `"nonempty": true` it fails when either operand is `null` or empty (`""`, `[]`, `{}`): a guard against
+a match of two nothings, where an expectation must be a real value (a post-state digest, a chain's interlinks, a
+proof).
 
 An operand is an object with exactly one of:
 
@@ -59,7 +61,7 @@ An operand is an object with exactly one of:
 |---|---|
 | `{"path": "<root>.<key>…"}` | the value at the path, `null` if absent |
 | `{"lit": <JSON>}` | the literal |
-| `{"first": ["<path>", …]}` | the first path whose value is present and not `null`, else `null` |
+| `{"first": ["<path>", …]}` | the value at the first path that is present (even if `null`), else `null` |
 | `{"pluck": "<path>", "field": "<key>"}` | when the path's value is an array: an array of each element's `field` (`null` where absent); else `null` |
 
 A path starts at a **root**: `actual`, `expected` (shorthand for `entry.expected`), `entry`, or `file` (the vector

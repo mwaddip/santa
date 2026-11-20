@@ -2813,6 +2813,90 @@
      "proof": "red"
     }
    }
+  },
+  {
+   "name": "block/valid-accept-without-post-digest-is-post-digest-red",
+   "description": "A valid block whose expected and actual post_digest are both absent: the digest dimension needs two non-null digests, so it is red (and cost, after it, not graded). Schema-unreachable for a validated vector; the rule is the contract's.",
+   "label": "block",
+   "entry": {
+    "expected": {
+     "valid": true,
+     "cost": 5
+    }
+   },
+   "actual": {
+    "valid": true,
+    "cost": 5,
+    "error": null
+   },
+   "claims_cost": true,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "valid": "nice",
+     "post_digest": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/interlinks-without-chain-or-interlinks-is-red",
+   "description": "No file chain and no interlinks in the actual: nothing to compare is red, never nice by null equals null.",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_interlinks"
+   },
+   "actual": {
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "interlinks": "red"
+    }
+   }
+  },
+  {
+   "name": "nipopow/prove-empty-proof-is-red",
+   "description": "An empty expected proofHex never grades nice, even against an empty answer.",
+   "label": "nipopow",
+   "entry": {
+    "kind": "nipopow_prove",
+    "expected": {
+     "proofHex": ""
+    }
+   },
+   "actual": {
+    "proofHex": "",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "proof": "red"
+    }
+   }
+  },
+  {
+   "name": "wire/expected-bytes-present-but-null-is-red",
+   "description": "expected_bytes_hex present (even null) is the expected side: first takes the first present key, as the legacy grade did; a null expectation fails the case-insensitive comparison.",
+   "label": "wire",
+   "entry": {
+    "bytes_hex": "0101",
+    "expected_bytes_hex": null
+   },
+   "actual": {
+    "bytes_hex": "0101",
+    "error": null
+   },
+   "claims_cost": false,
+   "verdict": {
+    "outcome": "graded",
+    "dims": {
+     "roundtrip": "red"
+    }
+   }
   }
  ]
 }

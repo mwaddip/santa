@@ -56,7 +56,8 @@
             { "name": "valid",
               "compare": [ { "a": { "path": "actual.valid" }, "b": { "lit": true } } ] },
             { "name": "post_digest", "requires": ["valid"],
-              "compare": [ { "a": { "path": "actual.post_digest" }, "b": { "path": "expected.post_digest" } } ] },
+              "compare": [ { "a": { "path": "actual.post_digest" }, "b": { "path": "expected.post_digest" },
+                             "nonempty": true } ] },
             { "name": "cost", "requires": ["post_digest"], "claimed": true,
               "compare": [ { "a": { "path": "actual.cost" }, "b": { "path": "expected.cost" } } ] } ] },
         { "dims": [
@@ -122,12 +123,13 @@
         { "when": { "entry.kind": "nipopow_interlinks" },
           "dims": [
             { "name": "interlinks",
-              "compare": [ { "a": { "pluck": "file.chain", "field": "interlinks" }, "b": { "path": "actual.interlinks" } } ] } ] },
+              "compare": [ { "a": { "pluck": "file.chain", "field": "interlinks" }, "b": { "path": "actual.interlinks" },
+                             "nonempty": true } ] } ] },
         { "when": { "entry.kind": "nipopow_prove" },
           "dims": [
             { "name": "proof",
               "compare": [ { "a": { "path": "actual.proofHex" }, "b": { "path": "expected.proofHex" },
-                             "case_insensitive": true } ] } ] }
+                             "case_insensitive": true, "nonempty": true } ] } ] }
       ],
       "unmatched": ["proof"]
     }
