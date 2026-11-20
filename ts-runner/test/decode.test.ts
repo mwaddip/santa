@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+import { tupleColl } from '@ergots/ergoscript'
 import { decodeSValue } from '../src/decode'
 
 describe('decode — value + tpe', () => {
@@ -26,6 +27,23 @@ describe('decode — value + tpe', () => {
     const r = decodeSValue({ kind: 'Tuple', items: [{ kind: 'Int', value: 1 }, { kind: 'Boolean', value: true }] }, 3)
     expect(r.tpe).toEqual({ tag: 'STuple', items: [{ tag: 'SInt' }, { tag: 'SBoolean' }] })
     expect(r.value).toEqual({ kind: 'Tuple', items: [{ kind: 'Int', value: 1 }, { kind: 'Boolean', value: true }] })
+  })
+  it('a non-pair Tuple → tupleColl(items): a Coll[Any] whose elem the readers recognise by IDENTITY; tpe the STuple', () => {
+    const items = [{ kind: 'Int', value: 1 }, { kind: 'Int', value: 2 }, { kind: 'Boolean', value: true }]
+    const r = decodeSValue({ kind: 'Tuple', items }, 3)
+    expect(r.tpe).toEqual({ tag: 'STuple', items: [{ tag: 'SInt' }, { tag: 'SInt' }, { tag: 'SBoolean' }] })
+    const want = tupleColl([{ kind: 'Int', value: 1 }, { kind: 'Int', value: 2 }, { kind: 'Boolean', value: true }])
+    expect(r.value).toEqual(want)
+    // a literal { tag: 'SAny' } would be EQUAL but not the reader's object (ergots, 2026-11-20)
+    expect((r.value as { elem: unknown }).elem).toBe(want.elem)
+  })
+  it('a Coll of non-pair tuples → each item a tupleColl, elem the STuple', () => {
+    const t3 = { kind: 'Tuple', items: [{ kind: 'Int', value: 1 }, { kind: 'Int', value: 2 }, { kind: 'Int', value: 3 }] }
+    const tt = { tag: 'STuple', items: [{ tag: 'SInt' }, { tag: 'SInt' }, { tag: 'SInt' }] }
+    const r = decodeSValue({ kind: 'Coll', elem: tt, items: [t3] }, 3)
+    expect(r.tpe).toEqual({ tag: 'SColl', elem: tt })
+    const item = (r.value as { items: { elem: unknown }[] }).items[0]
+    expect(item.elem).toBe(tupleColl([]).elem)
   })
   it('Option Some → infers elem from inner', () => {
     const r = decodeSValue({ kind: 'Option', value: { kind: 'Long', value: '7' } }, 3)

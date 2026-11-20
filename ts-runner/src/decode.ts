@@ -1,5 +1,5 @@
 import type { SType, SValue } from '@ergots/ergoscript'
-import { parseSValue } from '@ergots/ergoscript'
+import { parseSValue, tupleColl } from '@ergots/ergoscript'
 import { ByteReader } from '@ergots/scorex'
 import { hexToBytes } from './hex'
 import { stypeFromSanta } from './stype'
@@ -48,9 +48,13 @@ export function decodeSValue(j: JsonObj, treeVersion: number): Decoded {
       }
     }
     case 'Tuple': {
+      // A pair is a pair; a tuple of any other arity is a Coll[Any] (runner contract §4), built with ergots'
+      // `tupleColl`: its readers tell such a collection by the IDENTITY of its elem object, so an equal literal
+      // `{ kind: 'Coll', elem: { tag: 'SAny' } }` would not be one. The binding type stays the STuple.
       const decoded = (j['items'] as JsonObj[]).map((i) => decodeSValue(i, treeVersion))
+      const items = decoded.map((d) => d.value)
       return {
-        value: { kind: 'Tuple', items: decoded.map((d) => d.value) },
+        value: items.length === 2 ? { kind: 'Tuple', items } : tupleColl(items),
         tpe: { tag: 'STuple', items: decoded.map((d) => d.tpe) },
       }
     }
