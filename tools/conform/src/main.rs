@@ -454,10 +454,10 @@ fn in_place(dir: &Path, name: &str, cache_dir: &Path) -> Resolved {
 enum RunFail {
     /// santa-run exited non-zero: build, impl checkout, or a crash over the ordinary files.
     Exit(i32),
-    /// The ordinary run hit santa-bound's safety ceiling ("memory 4096 MiB" | "time 600 s"): it protects the machine.
+    /// The run hit conform's safety ceiling ("time 1800 s"): it protects the machine and never grades.
     Ceiling(String),
-    /// santa-bound's records are missing: the runner's last line skipped it, or a bounded file has no record.
-    Bound(String),
+    /// santa-run ran, but its results.json cannot be used (absent, not JSON, failing its schema, another commit).
+    Results(String),
     /// The implementation's checkout holds no runner where SANTA's `runner` points, or one conform refuses.
     Hosted(String),
 }
@@ -466,7 +466,7 @@ fn fail_message(f: &RunFail) -> String {
     match f {
         RunFail::Exit(c) => format!("santa-run exited {c}: could not build/run"),
         RunFail::Ceiling(l) => format!("santa-run exceeded the safety ceiling ({l})"),
-        RunFail::Bound(m) => m.clone(),
+        RunFail::Results(m) => format!("santa-run's outputs: {m}"),
         RunFail::Hosted(m) => format!("the implementation's runner: {m}"),
     }
 }
@@ -479,12 +479,10 @@ struct Ceiling {
 
 /// RLIMIT_DATA at twice the largest budget ./validate allows (4096 MiB), so a runner's backstop for a bounded child
 /// (`max(4096, 2 × memory_mb)`) fits beneath it; a wall timeout long enough for a cold build (plan 3 measured < 1 min).
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 const CEILING: Ceiling = Ceiling { data_mb: 8192, wall_s: 1800 };
 
 /// Runs `cmd` in a process group of its own under the ceiling: RLIMIT_DATA per process (soft = hard), and the whole
 /// group killed at the wall timeout. A group member left behind by a run that exited is killed too.
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 fn run_under_ceiling(cmd: &mut Command, c: &Ceiling) -> Result<ExitStatus, RunFail> {
     use std::os::unix::process::CommandExt;
     let bytes = (c.data_mb * 1024 * 1024) as libc::rlim_t;
@@ -526,40 +524,6 @@ fn run_under_ceiling(cmd: &mut Command, c: &Ceiling) -> Result<ExitStatus, RunFa
             }
         }
     }
-}
-
-/// santa-bound is built beside conform (the ./conform wrapper builds both, same profile).
-fn santa_bound_path() -> PathBuf {
-    match env::current_exe().ok().and_then(|e| e.parent().map(|d| d.join("santa-bound"))) {
-        Some(p) if p.is_file() => p,
-        _ => die("santa-bound is not built next to conform: run ./conform, whose wrapper builds it".into()),
-    }
-}
-
-/// santa-bound's status records: one per bounded file (by staged name), and the ordinary run's.
-struct Bound {
-    bounded: BTreeMap<String, Value>,
-    ordinary: Option<Value>,
-}
-
-fn read_json(p: &Path) -> Option<Value> {
-    serde_json::from_str(&fs::read_to_string(p).ok()?).ok()
-}
-
-/// The status dir santa-bound wrote. Err when there is no plan (the runner's last line skipped santa-bound, so its
-/// bounded files ran unbounded) or a planned bounded file has no record.
-fn read_bound(status: &Path) -> Result<Bound, String> {
-    let plan = read_json(&status.join("plan.json")).ok_or_else(|| {
-        "santa-run did not run its last line through santa-bound (no plan.json), so its bounded files ran unbounded"
-            .to_string()
-    })?;
-    let mut bounded = BTreeMap::new();
-    for name in plan["bounded"].as_object().into_iter().flat_map(|m| m.keys()) {
-        let r = read_json(&status.join("bounded").join(name))
-            .ok_or_else(|| format!("santa-bound left no record for the bounded file {name}"))?;
-        bounded.insert(name.clone(), r);
-    }
-    Ok(Bound { bounded, ordinary: read_json(&status.join("ordinary.json")) })
 }
 
 /// The actuals schemas, one validator per tier (`schema/santa-<tier>.actuals.schema.json`), built once per run. The
@@ -618,16 +582,15 @@ impl ActualsSchemas {
     }
 }
 
-/// One staged file's actuals. A bounded file that exceeded its budget or crashed gets the actual conform writes for
-/// each entry (`exceeded` / `panicked`), whatever file its process left. Otherwise the runner's file, held to its
-/// tier's actuals schema (runner-integration §3): an entry whose actual fails it is `panicked`, the note saying why,
-/// and a file that is not a JSON object fails every entry so; an absent file is {}.
 /// The same actual for every entry of `vector`.
 fn each_entry(vector: &Value, a: Value) -> Value {
     let names = vector["entries"].as_array().into_iter().flatten().filter_map(|e| e["name"].as_str());
     Value::Object(names.map(|n| (n.to_string(), a.clone())).collect())
 }
 
+/// One file's actuals as the runner wrote them, held to its tier's actuals schema (runner-integration §3): an entry
+/// whose actual fails it is `panicked`, the note saying why, and a file that is not JSON or not a JSON object fails
+/// every entry so; an absent file is {}.
 fn actuals_for(ofile: &Path, vector: &Value, schemas: &ActualsSchemas, tier: &str) -> Value {
     // Totality: an absent file becomes {} so every entry grades (act None -> coal), surfacing the breach rather than
     // silently dropping the vector.
@@ -650,13 +613,11 @@ fn actuals_for(ofile: &Path, vector: &Value, schemas: &ActualsSchemas, tier: &st
 }
 
 /// The commit of conform's own checkout, which a runner's results must name (runner-integration §4.4).
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 fn head(root: &Path) -> Option<String> {
     git_out(&["-C", root.to_str()?, "rev-parse", "HEAD"])
 }
 
 /// The schema of a runner's results.json (santa-runner-results/v1).
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 fn load_results_schema(root: &Path) -> Validator {
     let p = root.join("schema").join("santa-runner-results.schema.json");
     let doc: Value = serde_json::from_str(&fs::read_to_string(&p).unwrap_or_else(|e| die(format!("{}: {e}", p.display()))))
@@ -666,7 +627,6 @@ fn load_results_schema(root: &Path) -> Validator {
 
 /// A runner's `<out-dir>/results.json`, if conform can use it: present, JSON, valid against its schema, and graded
 /// against this checkout's commit. Otherwise why not.
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 fn read_results(out: &Path, v: &Validator, head: &str) -> Result<Value, String> {
     let text = fs::read_to_string(out.join("results.json")).map_err(|_| "no results.json".to_string())?;
     let doc: Value = serde_json::from_str(&text).map_err(|e| format!("results.json is not JSON: {e}"))?;
@@ -683,7 +643,6 @@ fn read_results(out: &Path, v: &Validator, head: &str) -> Result<Value, String> 
 
 /// The runner's actuals for every file of conform's selection, from `<out-dir>/actuals/<relpath>` (actuals_for: held
 /// to the tier's schema entry by entry; an absent file is {}).
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 fn read_actuals(out: &Path, selected: &[&Vec5], root: &Path, schemas: &ActualsSchemas) -> BTreeMap<String, Value> {
     selected
         .iter()
@@ -695,35 +654,35 @@ fn read_actuals(out: &Path, selected: &[&Vec5], root: &Path, schemas: &ActualsSc
         .collect()
 }
 
-/// The ordinary run's ceiling hit, as "memory 4096 MiB" / "time 600 s".
-fn ceiling_hit(ordinary: &Value) -> Option<String> {
-    let l = &ordinary["limits"];
-    match (ordinary["result"].as_str(), ordinary["limit"].as_str()) {
-        (Some("exceeded"), Some("memory")) => Some(format!("memory {} MiB", l["memory_mb"])),
-        (Some("exceeded"), Some("time")) => Some(format!("time {} s", l["wall_s"])),
-        _ => None,
-    }
+/// What every runner is run against: the checkout (`<santa-dir>`), its vectors and their wire facts, the schemas a
+/// runner's outputs are held to, and the commit its results must name.
+struct Corpus<'a> {
+    root: &'a Path,
+    vectors: &'a [Vec5],
+    facts: &'a BTreeMap<String, WireFacts>,
+    schemas: &'a ActualsSchemas,
+    results_schema: &'a Validator,
+    head: &'a str,
 }
 
-/// A runner that ran: the scope it was graded at, its actuals by relpath, the impl sha, and the bounded files that
-/// exceeded or crashed.
+/// What a runner's run yields: its actuals over conform's selection by relpath, the bounded files that exceeded or
+/// crashed, and its own results.json.
+type RunOutputs = (BTreeMap<String, Value>, Vec<String>, Value);
+
+/// A runner that ran: the scope it was graded at, its actuals over conform's selection by relpath, the impl sha, the
+/// bounded files that exceeded or crashed, and its own results.json.
 struct Ran {
     scope: Scope,
     actuals: BTreeMap<String, Value>,
     sha: Option<String>,
     failures: Vec<String>,
+    results: Value,
 }
 
-/// Runs one runner over its selection. A failure carries the scope when conform got far enough to know it (a hosted
-/// runner's is read from its checkout), so the grid can still say which tiers went ungraded.
-fn run_one(
-    m: &Runner,
-    root: &Path,
-    vectors: &[Vec5],
-    facts: &BTreeMap<String, WireFacts>,
-    schemas: &ActualsSchemas,
-) -> Result<Ran, (Option<Scope>, RunFail)> {
-    let ws = root.join(".santa").join(&m.name);
+/// Runs one runner. A failure carries the scope when conform got far enough to know it (a hosted runner's is read
+/// from its checkout), so the grid can still say which tiers went ungraded.
+fn run_one(m: &Runner, corpus: &Corpus) -> Result<Ran, (Option<Scope>, RunFail)> {
+    let ws = corpus.root.join(".santa").join(&m.name);
     let imp = resolve_impl(m.impl_.as_deref(), m.impl_name.as_deref().unwrap_or(""), &ws)
         .map_err(|c| (m.declared().cloned(), RunFail::Exit(c)))?;
     let (scope, run) = match &m.host {
@@ -733,80 +692,52 @@ fn run_one(
             hosted_runner(checkout, path).map_err(|e| (None, RunFail::Hosted(e)))?
         }
     };
-    match run_staged(&run, &imp.arg, &scope, &ws, root, vectors, facts, schemas) {
-        Ok((actuals, failures)) => Ok(Ran { scope, actuals, sha: imp.sha, failures }),
+    match run_runner(&run, &imp.arg, &scope, &ws, corpus) {
+        Ok((actuals, failures, results)) => Ok(Ran { scope, actuals, sha: imp.sha, failures, results }),
         Err(f) => Err((Some(scope), f)),
     }
 }
 
-/// Stages the scope's selection (version<=, tiers, kinds, activation) flat as symlinks under `ws` (= .santa/<name>/,
-/// where everything per-runner lives) and runs `run` over it: (actuals by relpath, the bounded files that exceeded or
-/// crashed).
-fn run_staged(
+/// Runs a self-contained runner (runner-integration §3): `santa-run <impl-path> <santa-dir> <out-dir>` under the
+/// whole-run ceiling, `<out-dir>` = `<ws>/out`, emptied first. Then its results.json (schema, commit) and its actuals
+/// over conform's own selection: (actuals by relpath, bounded failures, results.json).
+fn run_runner(
     run: &Path,
     impl_path: &str,
     scope: &Scope,
     ws: &Path,
-    root: &Path,
-    vectors: &[Vec5],
-    facts: &BTreeMap<String, WireFacts>,
-    schemas: &ActualsSchemas,
-) -> Result<(BTreeMap<String, Value>, Vec<String>), RunFail> {
-    let selected = selection(vectors, facts, scope);
-    let indir = ws.join("in");
-    let _ = fs::remove_dir_all(&indir);
-    fs::create_dir_all(&indir).unwrap();
-    let odir = ws.join("out");
-    let _ = fs::remove_dir_all(&odir);
-    fs::create_dir_all(&odir).unwrap();
-    // santa-bound's status dir sits on the same filesystem as the staging, so its unit dirs list in the same order.
-    let status = ws.join("bound");
-    let _ = fs::remove_dir_all(&status);
-    let mut staged: Vec<(String, String)> = Vec::new(); // (staged filename, source relpath)
-    for v in &selected {
-        let rel = &v.0;
-        let name = rel.replace('/', "__"); // flatten; unique (no path component contains "__")
-        symlink(root.join("vectors").join(rel), indir.join(&name)).unwrap();
-        staged.push((name, rel.clone()));
+    corpus: &Corpus,
+) -> Result<RunOutputs, RunFail> {
+    let out = ws.join("out");
+    let _ = fs::remove_dir_all(&out);
+    fs::create_dir_all(&out).unwrap();
+    let status = run_under_ceiling(Command::new(run).arg(impl_path).arg(corpus.root).arg(&out), &CEILING)?;
+    if !status.success() {
+        return Err(RunFail::Exit(status.code().unwrap_or(1)));
     }
-    match Command::new(run)
-        .arg(impl_path)
-        .arg(&indir)
-        .arg(&odir)
-        .env("SANTA_BOUND", santa_bound_path())
-        .env("SANTA_BOUND_STATUS", &status)
-        .status()
-    {
-        Ok(s) if s.success() => {}
-        Ok(s) => {
-            let ceiling = read_bound(&status).ok().and_then(|b| b.ordinary).as_ref().and_then(ceiling_hit);
-            return Err(ceiling.map_or(RunFail::Exit(s.code().unwrap_or(1)), RunFail::Ceiling));
-        }
-        Err(_) => return Err(RunFail::Exit(1)),
-    }
-    let bound = read_bound(&status).map_err(RunFail::Bound)?;
-    let mut res = BTreeMap::new();
-    let mut failures = Vec::new();
-    for (name, rel) in staged {
-        let ofile = odir.join(&name);
-        let vector: Value =
-            serde_json::from_str(&fs::read_to_string(root.join("vectors").join(&rel)).unwrap()).unwrap();
-        let tier = parse_relpath(&rel).0;
-        let record = bound.bounded.get(&name);
-        if record.is_some_and(|r| r["result"] != "success") {
-            failures.push(rel.clone());
-        }
-        let act = match record {
-            Some(r) if r["result"] == "exceeded" => each_entry(&vector, json!({"error": "exceeded", "limit": r["limit"]})),
-            Some(r) if r["result"] == "crashed" => each_entry(
-                &vector,
-                json!({"error": "panicked", "note": format!("process {}", r["detail"].as_str().unwrap_or("?"))}),
-            ),
-            _ => actuals_for(&ofile, &vector, schemas, &tier),
-        };
-        res.insert(rel, act);
-    }
-    Ok((res, failures))
+    let results = read_results(&out, corpus.results_schema, corpus.head).map_err(RunFail::Results)?;
+    let selected = selection(corpus.vectors, corpus.facts, scope);
+    let actuals = read_actuals(&out, &selected, corpus.root, corpus.schemas);
+    let failures = bounded_failures(&actuals, corpus.root);
+    Ok((actuals, failures, results))
+}
+
+/// The bounded files (a vector with `limits`) on which the runner reported `exceeded` or `panicked`: for a control,
+/// a budget or a row is wrong (runner-integration §3a).
+fn bounded_failures(actuals: &BTreeMap<String, Value>, root: &Path) -> Vec<String> {
+    actuals
+        .iter()
+        .filter(|(rel, act)| {
+            let failed = act.as_object().is_some_and(|m| {
+                m.values().any(|a| matches!(a["error"].as_str(), Some("exceeded" | "panicked")))
+            });
+            failed && fs::read_to_string(root.join("vectors").join(rel))
+                .ok()
+                .and_then(|t| serde_json::from_str::<Value>(&t).ok())
+                .is_some_and(|v| v.get("limits").is_some())
+        })
+        .map(|(rel, _)| rel.clone())
+        .collect()
 }
 
 #[derive(Default)]
@@ -822,7 +753,7 @@ struct Counts {
     reject_nice: u64,
     reject_coal: u64,
     panicked: u64,
-    // a bounded file whose process hit its budget (santa-bound); conform writes the actual, never a runner
+    // a bounded file over its budget: the runner's tier-neutral `exceeded` (runner-integration §3a)
     exceeded: u64,
     roundtrip_total: u64,
     roundtrip_nice: u64,
@@ -1063,7 +994,6 @@ const MAX_DISAGREEMENTS: usize = 200;
 
 /// The canary (runner-integration §4.4): where a runner's own verdicts — its red records and the files it says it
 /// graded — differ from SANTA's re-grade of its actuals over conform's own selection, keyed by (file, entry, dim).
-#[allow(dead_code)] // wired in by plan 3 Task 5 (run_runner); the allow goes there
 fn grader(runner: &Value, canary: &BTreeMap<(String, String, String), Counts>, selected: &BTreeSet<String>) -> Value {
     type Key = (String, String, String);
     let key = |r: &Value| -> Option<Key> {
@@ -1464,10 +1394,13 @@ fn main() -> ExitCode {
     let schemas = ActualsSchemas::load(&root);
     let grading = load_grading(&root);
     check_grading(&grading, &vectors, &root).unwrap_or_else(|e| die(e));
+    let results_schema = load_results_schema(&root);
+    let head = head(&root).unwrap_or_else(|| die("conform's checkout has no git HEAD: a runner's results name it".into()));
+    let corpus = Corpus { root: &root, vectors: &vectors, facts: &facts, schemas: &schemas, results_schema: &results_schema, head: &head };
     let mut results: Vec<Value> = Vec::new();
     for m in &runners {
         eprintln!("running {} …", m.name);
-        match run_one(m, &root, &vectors, &facts, &schemas) {
+        match run_one(m, &corpus) {
             Err((scope, f)) => {
                 let msg = fail_message(&f);
                 // only a santa-run that ran has printed anything above
@@ -1495,6 +1428,18 @@ fn main() -> ExitCode {
                 for ((tier, version, prov), c) in &slices {
                     println!("      {tier}/{version}/{prov}: {}", c.summary());
                 }
+                let selected: BTreeSet<String> = ran.actuals.keys().cloned().collect();
+                let grader = grader(&ran.results, &slices, &selected);
+                if grader["agrees"] == true {
+                    println!("      grader: agrees");
+                } else {
+                    println!(
+                        "      grader: {} disagreements, {} missing files, {} extra files",
+                        grader["disagreement_count"],
+                        grader["missing_files"].as_array().map_or(0, Vec::len),
+                        grader["extra_files"].as_array().map_or(0, Vec::len)
+                    );
+                }
                 let slices_json: serde_json::Map<String, Value> = slices
                     .iter()
                     .map(|((t, v, p), c)| (format!("{t}/{v}/{p}"), c.to_json()))
@@ -1502,7 +1447,7 @@ fn main() -> ExitCode {
                 results.push(result_row(m, Some(sc), json!({
                     "sha": ran.sha,
                     "mark": if agg_red == 0 { "nice" } else { "coal" }, "red_total": agg_red, "slices": slices_json,
-                    "bounded_failures": ran.failures,
+                    "bounded_failures": ran.failures, "grader": grader,
                 })));
             }
         }
@@ -2716,13 +2661,13 @@ mod tests {
         fs::remove_dir_all(&root).ok();
     }
 
-    // ── resource bounds (santa-bound) ─────────────────────────────────────────
+    // ── actuals and bounded files ─────────────────────────────────────────────
 
     static BOUND_TEST_DIR_SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
     fn bound_root(tag: &str) -> std::path::PathBuf {
         let n = BOUND_TEST_DIR_SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-        let d = std::env::temp_dir().join(format!("santa-bound-conform-test-{}-{n}-{tag}", std::process::id()));
+        let d = std::env::temp_dir().join(format!("conform-test-{}-{n}-{tag}", std::process::id()));
         let _ = fs::remove_dir_all(&d);
         fs::create_dir_all(&d).unwrap();
         d
@@ -2731,34 +2676,6 @@ mod tests {
     fn one_entry_vector() -> serde_json::Value {
         json!({"schema": "santa-eval/v2", "op": "x", "limits": {"memory_mb": 1024, "wall_s": 10},
                "entries": [{"name": "e#0", "expected": {"value": {"kind": "Int", "value": 1}, "cost": 5, "error": null}}]})
-    }
-
-    fn record(result: &str, extra: serde_json::Value) -> serde_json::Value {
-        let mut r = json!({"file": "x.json", "limits": {"memory_mb": 1024, "wall_s": 10}, "result": result});
-        for (k, v) in extra.as_object().unwrap() {
-            r[k] = v.clone();
-        }
-        r
-    }
-
-    #[test]
-    fn read_bound_requires_a_plan() {
-        let d = bound_root("noplan");
-        let e = super::read_bound(&d).map(|_| ()).unwrap_err();
-        assert!(e.contains("santa-bound"), "{e}");
-    }
-
-    #[test]
-    fn read_bound_requires_a_record_per_bounded_file() {
-        let d = bound_root("norecord");
-        fs::create_dir_all(d.join("bounded")).unwrap();
-        fs::write(d.join("plan.json"), json!({"ordinary": [], "bounded": {"x.json": {"memory_mb": 1024, "wall_s": 10}}}).to_string()).unwrap();
-        let e = super::read_bound(&d).map(|_| ()).unwrap_err();
-        assert!(e.contains("x.json"), "{e}");
-        fs::write(d.join("bounded").join("x.json"), record("success", json!({})).to_string()).unwrap();
-        let b = super::read_bound(&d).unwrap();
-        assert_eq!(b.bounded["x.json"]["result"], "success");
-        assert!(b.ordinary.is_none());
     }
 
     #[test]
@@ -2866,7 +2783,7 @@ mod tests {
         assert_eq!(super::fail_message(&super::RunFail::Ceiling("memory 4096 MiB".into())),
                    "santa-run exceeded the safety ceiling (memory 4096 MiB)");
         assert_eq!(super::fail_message(&super::RunFail::Exit(101)), "santa-run exited 101: could not build/run");
-        assert_eq!(super::fail_message(&super::RunFail::Bound("boom".into())), "boom");
+        assert_eq!(super::fail_message(&super::RunFail::Results("no results.json".into())), "santa-run's outputs: no results.json");
     }
 
     /// `vectors/grading.json` is the grading rules, not a vector: discovery skips it.
@@ -3248,6 +3165,69 @@ mod tests {
         let slices = super::tally(&actuals, true, &root, &grading());
         assert_eq!(slices.values().next().unwrap().red[0]["file"], "eval/v6/authored/x.json");
         fs::remove_dir_all(&root).ok();
+    }
+
+    const PLAIN: &str = "eval/v6/authored/HOF_currying_Apply_of_Apply.json";
+    const BOUNDED: &str = "eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_only_32768x4096.json";
+
+    /// The fixture runner (tests/fixture-runner/santa-run) over two real eval files, one of them bounded.
+    fn run_fixture(mode: &str, tag: &str) -> Result<super::RunOutputs, super::RunFail> {
+        let root = super::repo_root();
+        let all = super::discover_vectors(&root.join("vectors"));
+        let vectors: Vec<Vec5> = all.into_iter().filter(|v| v.0 == PLAIN || v.0 == BOUNDED).collect();
+        assert_eq!(vectors.len(), 2);
+        let facts = super::wire_facts(&root.join("vectors"), &vectors).unwrap();
+        let schemas = schemas();
+        let results_schema = super::load_results_schema(&root);
+        let head = super::head(&root).unwrap();
+        let corpus = super::Corpus { root: &root, vectors: &vectors, facts: &facts, schemas: &schemas, results_schema: &results_schema, head: &head };
+        let ws = std::env::temp_dir().join(format!("conform-fixture-{}-{tag}", std::process::id()));
+        let _ = fs::remove_dir_all(&ws);
+        fs::create_dir_all(&ws).unwrap();
+        let run = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixture-runner/santa-run");
+        std::env::set_var("FIXTURE_FILES", format!("{PLAIN}\n{BOUNDED}"));
+        std::env::set_var("FIXTURE_MODE", mode);
+        let r = super::run_runner(&run, "-", &scope(), &ws, &corpus);
+        std::env::remove_var("FIXTURE_MODE");
+        r
+    }
+
+    /// conform runs a self-contained runner, reads its outputs and re-grades them: an honest runner agrees with the
+    /// canary, a lying one is caught, a silent one is refused.
+    #[test]
+    fn a_fixture_runner_is_run_and_canaried() {
+        let root = super::repo_root();
+        let (actuals, failures, results) = run_fixture("honest", "honest").unwrap_or_else(|e| panic!("{e:?}"));
+        assert_eq!(actuals.keys().cloned().collect::<Vec<_>>(), vec![BOUNDED.to_string(), PLAIN.to_string()]);
+        assert!(actuals.values().all(|a| a.as_object().is_some_and(|m| !m.is_empty())));
+        assert!(failures.is_empty());
+        let selected: std::collections::BTreeSet<String> = actuals.keys().cloned().collect();
+        let canary = super::tally(&actuals, true, &root, &grading());
+        assert_eq!(super::grader(&results, &canary, &selected)["agrees"], true);
+
+        let (actuals, _, results) = run_fixture("lying", "lying").unwrap_or_else(|e| panic!("{e:?}"));
+        let canary = super::tally(&actuals, true, &root, &grading());
+        let g = super::grader(&results, &canary, &selected);
+        assert_eq!(g["agrees"], false);
+        assert_eq!(g["disagreement_count"], 1);
+        assert_eq!(g["disagreements"][0]["runner"], "red");
+        assert_eq!(g["disagreements"][0]["santa"], "nice");
+
+        match run_fixture("silent", "silent") {
+            Err(super::RunFail::Results(m)) => assert_eq!(m, "no results.json"),
+            other => panic!("{:?}", other.map(|_| ())),
+        }
+    }
+
+    /// The control check reads the actuals: a bounded file whose entry exceeded or panicked is a bounded failure; a
+    /// plain file's panic is not.
+    #[test]
+    fn bounded_failures_come_from_the_actuals() {
+        let actuals = BTreeMap::from([
+            (BOUNDED.to_string(), json!({"G-size-only-32768x4096-a3#0": {"error": "exceeded", "limit": "memory"}})),
+            (PLAIN.to_string(), json!({"x": {"error": "panicked", "note": "boom"}})),
+        ]);
+        assert_eq!(super::bounded_failures(&actuals, &super::repo_root()), vec![BOUNDED.to_string()]);
     }
 }
 

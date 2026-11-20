@@ -9,5 +9,5 @@ serde_json = "1"
 # default-features off drops resolve-http/file + the reqwest/hyper/tokio/rustls stack — all $refs
 # are registered in-memory, nothing is fetched over the network.
 jsonschema = { version = "0.46", default-features = false }
-# The bounded-file rules (`limits`: one entry, the ceilings) are santa-check's, shared with conform and santa-bound.
+# The bounded-file rules (`limits`: one entry, the ceilings) are santa-check's.
 santa-check = { path = "../santa-check" }

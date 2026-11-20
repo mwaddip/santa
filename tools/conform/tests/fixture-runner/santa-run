@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# A test-only self-contained runner for conform's tests (runner-integration §3/§4.3): it selects nothing itself.
+#   santa-run <impl-path> <santa-dir> <out-dir>, with
+#   FIXTURE_FILES  the relpaths (under vectors/) it answers, one per line
+#   FIXTURE_MODE   honest  — answers every entry with its `expected`, reports no reds;
+#                  lying   — the same, but reports one red record SANTA's re-grade does not see;
+#                  silent  — writes nothing and exits 0.
+set -euo pipefail
+santa=$2 out=$3
+[ "${FIXTURE_MODE:-honest}" = silent ] && exit 0
+first=""
+slices='{}'
+while IFS= read -r rel; do
+  [ -z "$rel" ] && continue
+  mkdir -p "$out/actuals/$(dirname "$rel")"
+  jq '[.entries[] | {(.name): .expected}] | add' "$santa/vectors/$rel" > "$out/actuals/$rel"
+  key=$(cut -d/ -f1-3 <<<"$rel")
+  slices=$(jq --arg k "$key" --arg f "$rel" '.[$k] //= {files: [], dims: {}, not_implemented: 0, panicked: 0, exceeded: 0, red: []}
+                                             | .[$k].files += [$f]' <<<"$slices")
+  [ -z "$first" ] && first=$rel
+done <<<"$FIXTURE_FILES"
+reds=0
+if [ "${FIXTURE_MODE:-honest}" = lying ]; then
+  entry=$(jq -r '.entries[0].name' "$santa/vectors/$first")
+  key=$(cut -d/ -f1-3 <<<"$first")
+  slices=$(jq --arg k "$key" --arg f "$first" --arg e "$entry" \
+    '.[$k].red += [{file: $f, entry: $e, dim: "value", expected: "-", got: "-"}]' <<<"$slices")
+  reds=1
+fi
+jq -n --arg santa "$(git -C "$santa" rev-parse HEAD)" --argjson slices "$slices" --argjson reds "$reds" \
+  '{schema: "santa-runner-results/v1", santa: $santa, scope: {version: "v6", tiers: ["eval"], cost: true},
+    slices: $slices, totals: {red: $reds, not_implemented: 0}}' > "$out/results.json"

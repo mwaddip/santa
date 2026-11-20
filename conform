@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # SANTA conformance orchestrator. Self-provisions SANTA's own toolchain (rust, via tools/mise.toml)
-# the same way each runner self-provisions, then builds + runs the Rust `conform`. mise, git and a systemd user
-# manager on cgroup v2 (memory delegated; santa-bound checks it) are the bootstrap deps; runners self-provide their
-# languages. (Replaces the former python conform.py.)
+# the same way each runner self-provisions, then builds + runs the Rust `conform`. mise and git are the bootstrap
+# deps; runners self-provide their languages. (Replaces the former python conform.py.)
 # Distinct guard var from the runners' SANTA_MISE_ACTIVE, so conform's spawned santa-runs still
 # self-provision their own toolchains.
 set -euo pipefail
@@ -15,6 +14,4 @@ if [ -z "${SANTA_TOOLS_MISE:-}" ]; then
   # tools/conform and fail ("couldn't exec process: Permission denied").
   exec env SANTA_TOOLS_MISE=1 mise --cd "$d/tools" exec -- "$d/$(basename "$0")" "$@"
 fi
-# santa-bound runs each runner's last line under cgroup bounds; conform finds it beside itself (same profile).
-cargo build --manifest-path "$d/tools/Cargo.toml" -p santa-bound -q
 exec cargo run --manifest-path "$d/tools/Cargo.toml" -p conform -q -- "$@"
