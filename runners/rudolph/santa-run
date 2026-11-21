@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# santa-run <impl-path> <vectors-dir> <out-dir>  — Rudolph (JVM reference runner).
+# santa-run <impl-path> <santa-dir> <out-dir>  — Rudolph (the JVM reference runner, the control), self-contained
+# (runner-integration §3): `Runner run` checks its grader and selection against the SANTA checkout's oracles,
+# selects by runner.json, runs every file (a bounded one as a child JVM under its budget), grades with its own
+# interpreter (santa.runner.harness) and writes results.json and actuals/.
 # impl-path ($1) is ignored: Rudolph self-contains the reference sigma-state/ergo-core via sbt.
-# sbt builds and writes the JVM arguments (task rudolphJavaArgs); the Runner then runs as plain
-# `java` (dir-mode), so santa-bound bounds the Runner and not sbt or the build.
+# sbt builds and writes the JVM arguments (task rudolphJavaArgs); the Runner then runs as plain `java`, and a
+# bounded file's child JVM runs with the same arguments (-Drudolph.args) plus -XX:MaxRAM=<budget>m.
 #
 # Self-provision the toolchain (presence-as-state: runners/rudolph/mise.toml) — re-exec
 # once under `mise exec` so java + sbt are on PATH for the sbt build under jvm-blesser/.
@@ -13,13 +16,16 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -z "${SANTA_MISE_ACTIVE:-}" ]; then
   mise trust "$here/mise.toml" >/dev/null
   mise --cd "$here" install
-  exec env SANTA_MISE_ACTIVE=1 mise --cd "$here" exec -- "$0" "$@"
+  # `mise --cd` changes the working directory: resolve the three paths (and this script) first
+  abs() { if [ "$1" = "-" ]; then echo -; else realpath -m "$1"; fi; }
+  set -- "$(abs "$1")" "$(abs "$2")" "$(abs "$3")"
+  exec env SANTA_MISE_ACTIVE=1 mise --cd "$here" exec -- "$here/$(basename "$0")" "$@"
 fi
 # --- toolchain (java + sbt) now on PATH ---
-VECTORS="$(realpath "$2")"
+SANTA="$(realpath "$2")"
 OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
-ROOT="$(cd "$(dirname "$0")/../.." && pwd)"   # runners/rudolph -> repo root
+ROOT="$(cd "$here/../.." && pwd)"   # runners/rudolph -> repo root (rudolph's own source, jvm-blesser/)
 (cd "$ROOT/jvm-blesser" && sbt --batch rudolphJavaArgs)
 mapfile -t jargs < "$ROOT/jvm-blesser/target/rudolph-java-args"
 cd "$ROOT/jvm-blesser"
-${SANTA_BOUND:+"$SANTA_BOUND"} java "${jargs[@]}" santa.runner.Runner "$VECTORS" "$OUT"
+java "${jargs[@]}" -Drudolph.args="$ROOT/jvm-blesser/target/rudolph-java-args" santa.runner.Runner run "$here/runner.json" "$SANTA" "$OUT"

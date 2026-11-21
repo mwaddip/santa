@@ -303,10 +303,8 @@ object Runner {
       name -> Json.obj("error" -> Json.fromString("not-implemented"))
   }
 
-  /** Run one vector file, writing actuals to outPath (or stdout if None). */
-  def runFile(vecPath: String, outPath: Option[String]): Unit = {
-    val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath)(scala.io.Codec.UTF8).mkString)
-      .fold(e => sys.error(s"bad json: $e"), identity)
+  /** One vector document's actuals by entry name, in entry order: the harness's per-file function. */
+  def actuals(doc: Json): Seq[(String, Json)] = {
     val entries  = doc.hcursor.downField("entries").values.getOrElse(Vector.empty).toVector
     // Only the schemas this runner was written for, by exact name and version. Any other (a newer version of one of
     // them, a tier it does not mount, or none) is the tier-neutral not-implemented for every entry, never read as a
@@ -324,7 +322,14 @@ object Runner {
         e.hcursor.get[String]("name").toOption.getOrElse("?") -> Json.obj("error" -> Json.fromString("not-implemented"))
       }
     }
-    val out     = Json.obj(pairs: _*).spaces2
+    pairs
+  }
+
+  /** Run one vector file, writing actuals to outPath (or stdout if None). */
+  def runFile(vecPath: String, outPath: Option[String]): Unit = {
+    val doc      = io.circe.parser.parse(scala.io.Source.fromFile(vecPath)(scala.io.Codec.UTF8).mkString)
+      .fold(e => sys.error(s"bad json: $e"), identity)
+    val out     = Json.obj(actuals(doc): _*).spaces2
     outPath match {
       case Some(p) =>
         java.nio.file.Files.write(java.nio.file.Paths.get(p),
@@ -344,9 +349,34 @@ object Runner {
     }
   }
 
+  /** A bounded file's child JVM: the parent's own arguments (the lines of the file `-Drudolph.args` names, else its
+    * classpath) plus `-XX:MaxRAM=<budget>m`, so the child sizes its heap to its budget, not to the machine. */
+  def childCommand(santa: java.nio.file.Path)(b: harness.Bounds.Budget, rel: String, out: java.nio.file.Path): Seq[String] = {
+    import scala.collection.JavaConverters._
+    val javaBin = ProcessHandle.current().info().command().orElse("java")
+    val args = sys.props.get("rudolph.args")
+      .map(f => java.nio.file.Files.readAllLines(java.nio.file.Paths.get(f)).asScala.toSeq.filter(_.nonEmpty))
+      .getOrElse(Seq("-cp", System.getProperty("java.class.path")))
+    Seq(javaBin) ++ args ++ Seq(s"-XX:MaxRAM=${b.memoryMb}m", "santa.runner.Runner", "one", santa.toString, rel, out.toString)
+  }
+
   def main(args: Array[String]): Unit = {
+    val runFileFn: harness.Main.RunFile = (_, doc) => actuals(doc)
+    def done(r: Either[String, Unit]): Unit = r.left.foreach { e => System.err.println(s"rudolph: $e"); sys.exit(1) }
+    args match {
+      // the self-contained runner (runner-integration §3), through santa.runner.harness
+      case Array("run", runnerJson, santa, out) =>
+        val s = java.nio.file.Paths.get(santa)
+        done(harness.Main.run(java.nio.file.Paths.get(runnerJson), s, java.nio.file.Paths.get(out), runFileFn, childCommand(s)))
+        return
+      // a bounded file's child
+      case Array("one", santa, rel, out) =>
+        done(harness.Main.one(java.nio.file.Paths.get(santa), rel, java.nio.file.Paths.get(out), runFileFn))
+        return
+      case _ =>
+    }
     val path = args.headOption.getOrElse {
-      System.err.println("usage: runner <vector.json|vectors-dir> [<out.json|out-dir>]")
+      System.err.println("usage: runner run <runner.json> <santa-dir> <out-dir> | one <santa-dir> <relpath> <out-file> | <vector.json|vectors-dir> [<out.json|out-dir>]")
       sys.exit(2)
     }
     if (java.nio.file.Files.isDirectory(java.nio.file.Paths.get(path))) {
