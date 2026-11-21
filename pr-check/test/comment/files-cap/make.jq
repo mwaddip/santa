@@ -1,0 +1,1 @@
+{schema: "santa-pr-delta/v1", label: "owner/repo", base_sha: ("1" * 40), head_sha: ("2" * 40), santa: ("a" * 40), outcome: "compared", scope_changed: null, files: {only_base: [], only_head: [range(53) | {file: "eval/v6/authored/f\(if . < 10 then "0" else "" end)\(.).json", red_entries: 1}]}, newly_red: [], now_green: [], changed: [], still_red: 0}

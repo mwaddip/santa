@@ -6,8 +6,9 @@
 #                                                                                  # every entry with its answers
 #
 # The layout is SANTA's santa-delta's: the counts, newly red and now green one row per vector file (the largest
-# first), red another way folded, still red counted. Every cell is escaped, so a name cannot break the table or
-# open a tag. The comment is cut at 60,000 characters (GitHub's limit is 65,536), the job summary at 1,000,000.
+# first), red another way folded, still red counted, files graded on one side only with their red entries. Every
+# cell is escaped, so a name cannot break the table or open a tag. The comment is cut at 60,000 characters (GitHub's
+# limit is 65,536), the job summary at 1,000,000 bytes (its limit is 1 MiB).
 
 def esc: gsub("&"; "&amp;") | gsub("<"; "&lt;") | gsub(">"; "&gt;") | gsub("\""; "&quot;") | gsub("\\|"; "&#124;")
   | gsub("[\n\r]"; " ");
@@ -48,9 +49,19 @@ def table($s; $cap):
          | "\n_… \($rest | length) more \(if ($rest | length) == 1 then "file" else "files" end) (\([$rest[].entries] | add | plural("entry"; "entries"))): see the job summary._\n"
        else "" end);
 
-def files_table($title; $files):
+# the files graded on one side only, with their red entries there, at most $cap rows (null: all)
+def files_table($title; $files; $cap):
   if ($files | length) == 0 then ""
-  else "### \($title)\n\n| file |\n|---|\n" + ([$files[] | "| \(code) |\n"] | join("")) + "\n" end;
+  else
+    (if $cap == null then ($files | length) else $cap end) as $n
+    | "### \($title)\n\n| file | red entries |\n|---|---:|\n"
+      + ([$files[0:$n][] | "| \(.file | code) | \(.red_entries) |\n"] | join(""))
+      + (if ($files | length) > $n then
+           $files[$n:] as $rest
+           | "\n_… \($rest | length) more \(if ($rest | length) == 1 then "file" else "files" end) (\([$rest[].red_entries] | add | plural("red entry"; "red entries"))): see the job summary._\n"
+         else "" end)
+      + "\n"
+  end;
 
 def block($cap):
   . as $d
@@ -69,8 +80,8 @@ def block($cap):
              + "| \($d.newly_red | length) | \($d.now_green | length) | \($d.changed | length) | \($d.still_red) |\n\n"
              + ([("newly", "green") as $s | select(($d[field($s)] | length) > 0)
                  | "### \(heading($d; $s))\n\n\($d[field($s)] | table($s; $cap))\n"] | join(""))
-             + files_table("Graded at head only (not at base)"; $d.files.only_head)
-             + files_table("Graded at base only (not at head)"; $d.files.only_base)
+             + files_table("Graded at head only (not at base)"; $d.files.only_head; $cap)
+             + files_table("Graded at base only (not at head)"; $d.files.only_base; $cap)
              + (if ($d.changed | length) > 0 then
                   "<details><summary>\(heading($d; "changed"))</summary>\n\n\($d.changed | table("changed"; $cap))\n</details>\n\n"
                 else "" end)
@@ -84,28 +95,31 @@ def per_entry:
      | ($d[field($s)]) as $ch
      | select(($ch | length) > 0)
      | "### \(heading($d; $s)), per entry\n\n"
-       + (reduce $ch[] as $c ({file: null, out: []};
-            (if .file != [$c.slice, $c.file] then
-               .out += ["\n**\($c.slice | code) · \($c.file | code)**\n\n"] | .file = [$c.slice, $c.file]
-             else . end)
-            | .out += ["- \($c.entry | code): \(if $s == "newly" then ($c.head | side_text)
-                                               elif $s == "green" then "was \($c.base | side_text)"
-                                               else "base \($c.base | side_text) → head \($c.head | side_text)" end)\n"])
-          | .out | join(""))
+       # grouped by file (delta.json lists them sorted by slice, file, entry), joined once: linear in the entries
+       + ([$ch | group_by([.slice, .file])[]
+           | "\n**\(.[0].slice | code) · \(.[0].file | code)**\n\n"
+             + ([.[] as $c
+                 | "- \($c.entry | code): \(if $s == "newly" then ($c.head | side_text)
+                                             elif $s == "green" then "was \($c.base | side_text)"
+                                             else "base \($c.base | side_text) → head \($c.head | side_text)" end)\n"]
+                | join(""))]
+          | join(""))
        + "\n"]
   | join("");
 
-# the markdown cut at whole lines to $limit characters, the cut line last
-def cut($limit; $line):
-  if length <= $limit then .
+# the markdown cut at whole lines to $limit, the cut line last: in characters for a comment (GitHub counts those),
+# in UTF-8 bytes for the job summary (its limit is 1 MiB)
+def cut($limit; $line; $bytes):
+  def size: if $bytes then utf8bytelength else length end;
+  if size <= $limit then .
   else
     split("\n") as $lines
-    | [foreach $lines[] as $l (0; . + ($l | length) + 1)] as $ends
-    | ([$ends | to_entries[] | select(.value + ($line | length) + 2 > $limit) | .key] | first // ($lines | length)) as $n
+    | [foreach $lines[] as $l (0; . + ($l | size) + 1)] as $ends
+    | ([$ends | to_entries[] | select(.value + ($line | size) + 2 > $limit) | .key] | first // ($lines | length)) as $n
     | ($lines[0:$n] | join("\n")) + "\n\n" + $line
   end;
 
 (block($cap) + (if $cap == null and .outcome == "compared" then per_entry else "" end))
-| if $cap == null then cut(1000000; "_… cut at 1,000,000 characters: every entry is in delta.json._")
-  else cut(60000; "_… cut at 60,000 characters: see the job summary._") end
+| if $cap == null then cut(1000000; "_… cut at 1,000,000 bytes: every entry is in delta.json._"; true)
+  else cut(60000; "_… cut at 60,000 characters: see the job summary._"; false) end
 | sub("\n+$"; "")

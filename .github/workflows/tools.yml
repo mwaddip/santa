@@ -32,5 +32,8 @@ jobs:
           mise --cd tools install
           mise --cd tools exec -- cargo test --workspace --locked --no-fail-fast
       - name: pr-check templates (jq)
-        # the PR-check template's jq programs against their golden cases (jq ships with ubuntu-latest)
-        run: bash pr-check/test/run.sh
+        # the PR-check template's jq programs against their golden cases (jq ships with ubuntu-latest), and the
+        # workflow templates' structure, which needs PyYAML: required here, so the check cannot vanish silently
+        run: |
+          python3 -c 'import yaml' 2>/dev/null || { sudo apt-get update -q && sudo apt-get install -y -q python3-yaml; }
+          REQUIRE_YAML=1 bash pr-check/test/run.sh

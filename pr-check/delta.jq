@@ -7,14 +7,21 @@
 # Each side is a runner's results.json (santa-runner-results/v1, SANTA's runner-integration §4.3), or an empty file
 # for a side that did not run; its status is "" when it ran, else why it could not run. An entry is (slice, file,
 # entry); it is compared by its SET of red dimensions, never by the expected/got strings, which are for people:
-# newly red, now green, red another way (changed), or still red. A file graded on one side only is listed apart.
+# newly red, now green, red another way (changed), or still red. A file graded on one side only is listed apart,
+# with its red entries there.
 # Writes delta.json (santa-pr-delta/v1); comment.jq renders it.
+
+# a results.json this program can read: santa-runner-results/v1 with the fields it uses
+def readable:
+  type == "object" and .schema == "santa-runner-results/v1" and (.scope | type) == "object"
+  and (.scope.tiers | type) == "array" and (.slices | type) == "object"
+  and all(.slices[]; type == "object" and (.files | type) == "array" and (.red | type) == "array");
 
 # the side as given, or why it could not be compared
 def side($r; $status):
   if $status != "" then {why: $status}
   elif ($r | length) == 0 then {why: "no results.json"}
-  elif $r[0].schema != "santa-runner-results/v1" then {why: "results.json is not santa-runner-results/v1"}
+  elif ($r[0] | readable | not) then {why: "results.json is not santa-runner-results/v1"}
   else {r: $r[0]}
   end;
 
@@ -37,6 +44,12 @@ def reds:
 
 def short: .[0:7];
 
+# a set of strings as an object, for lookups
+def set: map({key: ., value: true}) | from_entries;
+
+# a side's red entries per file
+def red_counts: [.[] | .file] | group_by(.) | map({key: .[0], value: length}) | from_entries;
+
 side($base; $base_status) as $b
 | side($head; $head_status) as $h
 | {schema: "santa-pr-delta/v1", label: $label, base_sha: $base_sha, head_sha: $head_sha,
@@ -55,9 +68,9 @@ side($base; $base_status) as $b
     | ($b.r | files) as $bf | ($h.r | files) as $hf
     | ($bf - $hf) as $only_base | ($hf - $bf) as $only_head
     | ($b.r | reds) as $br | ($h.r | reds) as $hr
+    | ($only_base + $only_head | set) as $apart
     # entries of files graded on both sides only
-    | [($br + $hr) | to_entries[] | select(.value.file as $f | ($only_base + $only_head | index($f)) | not) | .key]
-      | unique as $keys
+    | [($br + $hr) | to_entries[] | select($apart[.value.file] | not) | .key] | unique as $keys
     | [$keys[] as $k
        | {slice: ($hr[$k].slice // $br[$k].slice), file: ($hr[$k].file // $br[$k].file),
           entry: ($hr[$k].entry // $br[$k].entry),
@@ -67,7 +80,9 @@ side($base; $base_status) as $b
     | $d + {outcome: "compared",
             scope_changed: (($b.r.scope | scope_text) as $sb | ($h.r.scope | scope_text) as $sh
                             | if $sb != $sh then {base: $sb, head: $sh} else null end),
-            files: {only_base: $only_base, only_head: $only_head},
+            files: (($br | red_counts) as $bc | ($hr | red_counts) as $hc
+                    | {only_base: [$only_base[] | {file: ., red_entries: ($bc[.] // 0)}],
+                       only_head: [$only_head[] | {file: ., red_entries: ($hc[.] // 0)}]}),
             newly_red: [$all[] | select((.base | length) == 0 and (.head | length) > 0)],
             now_green: [$all[] | select((.base | length) > 0 and (.head | length) == 0)],
             changed: [$all[] | select((.base | length) > 0 and (.head | length) > 0

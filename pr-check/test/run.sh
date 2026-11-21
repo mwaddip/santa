@@ -31,7 +31,9 @@ for c in "$here"/comment/*/; do
   c=${c%/}; name=comment/$(basename "$c")
   if [ -f "$c/delta.json" ]; then delta=$(cat "$c/delta.json"); else delta=$(jq -n -f "$c/make.jq"); fi
   cap=$(jq -c '.cap' "$c/args.json")
-  got=$(jq -r -f "$templates/comment.jq" --argjson cap "$cap" <<< "$delta") || fail "$name: comment.jq failed"
+  limit=$(jq -r '.timeout // 120' "$c/args.json")
+  got=$(timeout "$limit" jq -r -f "$templates/comment.jq" --argjson cap "$cap" <<< "$delta") \
+    || fail "$name: comment.jq failed or took longer than ${limit} s"
   if [ -f "$c/expected.md" ]; then
     diff -u "$c/expected.md" <(printf '%s\n' "$got") || fail "$name"
   else
@@ -49,6 +51,8 @@ echo "comment: $n case(s) pass"
 
 if python3 -c 'import yaml' 2>/dev/null; then
   python3 -I "$here/workflows.py" "$templates" || fail "the workflow templates"
+elif [ -n "${REQUIRE_YAML:-}" ]; then
+  fail "the workflow templates: PyYAML is missing and REQUIRE_YAML is set (CI)"
 else
   echo "workflows: skipped (no PyYAML)"
 fi

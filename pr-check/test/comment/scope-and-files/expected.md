@@ -10,6 +10,6 @@ base `1111111` → head `2222222`
 
 ### Graded at head only (not at base)
 
-| file |
-|---|
-| <code>eval/v6/authored/B.json</code> |
+| file | red entries |
+|---|---:|
+| <code>eval/v6/authored/B.json</code> | 2 |

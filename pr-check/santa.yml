@@ -14,6 +14,7 @@ jobs:
     env:
       RUNNER_DIR: santa                   # this repository's runner: the directory holding runner.json and santa-run
       LABEL: ${{ github.repository }}     # the runner's name in the comment
+      SANTA_REF: main                     # SANTA's vectors: main, or a commit to hold them still
       BASE_SHA: ${{ github.event.pull_request.base.sha }}
       HEAD_SHA: ${{ github.sha }}         # the pull request merged into its base: a base that moved on is not its doing
     steps:
@@ -31,16 +32,21 @@ jobs:
           # the vectors and the oracles, read as data; $RUNNER_TEMP is outside the checkout and empty at the start
           santa="$RUNNER_TEMP/santa"
           git -c init.defaultBranch=santa init -q "$santa"
-          git -C "$santa" fetch -q --depth 1 https://github.com/mwaddip/santa.git main
+          git -C "$santa" fetch -q --depth 1 https://github.com/mwaddip/santa.git "$SANTA_REF"
           git -C "$santa" checkout -q --detach FETCH_HEAD
       - name: grade the head
         run: |
           # never fails the job: a head that cannot run is the comment's to say
+          # a side's results.json is compared only when delta.jq can read it: santa-runner-results/v1 with its fields
+          readable() { jq -e 'type == "object" and .schema == "santa-runner-results/v1" and (.scope.tiers | type) == "array"
+                              and (.slices | type) == "object"
+                              and all(.slices[]; (.files | type) == "array" and (.red | type) == "array")' "$1" > /dev/null 2>&1; }
           runner="$RUNNER_DIR/santa-run"
           if [ -x "$runner" ]; then
             "$runner" - "$RUNNER_TEMP/santa" "$RUNNER_TEMP/head" && rc=0 || rc=$?
             if [ "$rc" != 0 ]; then status="exit $rc"
             elif [ ! -f "$RUNNER_TEMP/head/results.json" ]; then status="no results.json"
+            elif ! readable "$RUNNER_TEMP/head/results.json"; then status="results.json is not santa-runner-results/v1"
             else status=""; fi
           else
             status="no $RUNNER_DIR/santa-run at head"
@@ -48,12 +54,20 @@ jobs:
           echo "HEAD_STATUS=$status" >> "$GITHUB_ENV"
       - name: grade the base, with its own copy of the runner
         run: |
-          git worktree add -q --detach "$RUNNER_TEMP/base-tree" "$BASE_SHA"
+          # never fails the job: a base that cannot run (or be checked out) is the comment's to say
+          # a side's results.json is compared only when delta.jq can read it: santa-runner-results/v1 with its fields
+          readable() { jq -e 'type == "object" and .schema == "santa-runner-results/v1" and (.scope.tiers | type) == "array"
+                              and (.slices | type) == "object"
+                              and all(.slices[]; (.files | type) == "array" and (.red | type) == "array")' "$1" > /dev/null 2>&1; }
           runner="$RUNNER_TEMP/base-tree/$RUNNER_DIR/santa-run"
-          if [ -x "$runner" ]; then
+          git worktree add -q --detach "$RUNNER_TEMP/base-tree" "$BASE_SHA" && tree=1 || tree=0
+          if [ "$tree" != 1 ]; then
+            status="cannot check out the base"
+          elif [ -x "$runner" ]; then
             "$runner" - "$RUNNER_TEMP/santa" "$RUNNER_TEMP/base" && rc=0 || rc=$?
             if [ "$rc" != 0 ]; then status="exit $rc"
             elif [ ! -f "$RUNNER_TEMP/base/results.json" ]; then status="no results.json"
+            elif ! readable "$RUNNER_TEMP/base/results.json"; then status="results.json is not santa-runner-results/v1"
             else status=""; fi
           else
             status="no $RUNNER_DIR/santa-run at base"

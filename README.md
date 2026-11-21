@@ -300,7 +300,7 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 | `./conform <runner> --impl <url>#<ref>` or `--impl <path>` | one runner against another checkout of its implementation (a path in place) |
 | `./conform --hosted <url>#<ref>` or `<path>` `[--runner-dir <dir>] [--label <label>]` | an implementation's own runner, with no entry in SANTA |
 | `./conform --clean …` | wipes `.santa/` first |
-| `./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base> [<head>]` | the pull request delta, into `.santa/pr/` (retiring: the check is [`pr-check/`](pr-check/README.md)) |
+| `./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base> [<head>]` | the pull request delta (retiring: see [`pr-check/`](pr-check/README.md)) |
 | `./validate` | the schema gate: every vector against its schema, its path against its envelope, the bounded files' limits, unique entry names |
 | `./scoreboard [results.json] [out-dir]` | the dashboard and badges, into `site/` |
 
@@ -308,9 +308,9 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 local Ivy repository for its transaction, block, chain and nipopow engines (see
 [Maintaining the corpus](#maintaining-the-corpus)); without it those arms answer `not-implemented`.
 
-**CI:** the `tools` workflow runs the tooling's tests on every push, and the `pr-check` templates' `jq` tests. The `conform` workflow (run on demand) validates
-the corpus, grades every runner, publishes ergo-core for rudolph itself, and publishes the scoreboard to GitHub
-Pages.
+**CI:** the `tools` workflow runs the tooling's tests on every push, and the `pr-check` templates' `jq` tests. The
+`conform` workflow (run on demand) validates the corpus, grades every runner, publishes ergo-core for rudolph itself,
+and publishes the scoreboard to GitHub Pages.
 
 ## Maintaining the corpus
 

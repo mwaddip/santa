@@ -41,6 +41,12 @@ check(len(up) == 1 and up[0].get("with", {}).get("name") == "santa-pr", "the art
 check("$RUNNER_TEMP/santa" in check_text, "SANTA is cloned under $RUNNER_TEMP, outside the repository's tree")
 check(".github/santa-pr/delta.jq" in check_text and ".github/santa-pr/comment.jq" in check_text,
       "the check runs the copied delta.jq and comment.jq")
+grade = [s.get("run", "") for s in steps if str(s.get("name", "")).startswith("grade the")]
+check(len(grade) == 2 and all("santa-runner-results/v1" in g and "jq -e" in g for g in grade),
+      "both grade steps check results.json is santa-runner-results/v1 before it is compared")
+check(any(re.search(r"worktree add[^\n]*\|\|", g) for g in grade), "a base that cannot be checked out is a status, not a failed job")
+job_env = next(iter((check_doc.get("jobs") or {}).values()), {}).get("env") or {}
+check(job_env.get("SANTA_REF") == "main" and '"$SANTA_REF"' in check_text, "the SANTA ref is one env value (SANTA_REF, main)")
 
 comment_doc, comment_text = load("santa-comment.yml")
 check(comment_doc.get("permissions") == {"actions": "read", "pull-requests": "write"},
