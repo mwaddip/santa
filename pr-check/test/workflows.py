@@ -42,8 +42,13 @@ check("$RUNNER_TEMP/santa" in check_text, "SANTA is cloned under $RUNNER_TEMP, o
 check(".github/santa-pr/delta.jq" in check_text and ".github/santa-pr/comment.jq" in check_text,
       "the check runs the copied delta.jq and comment.jq")
 grade = [s.get("run", "") for s in steps if str(s.get("name", "")).startswith("grade the")]
-check(len(grade) == 2 and all("santa-runner-results/v1" in g and "jq -e" in g for g in grade),
-      "both grade steps check results.json is santa-runner-results/v1 before it is compared")
+check(len(grade) == 2 and all('"$JQ" empty' in g for g in grade),
+      "both grade steps check results.json is JSON (delta.jq decides the rest: one definition of readable)")
+check(re.search(r"jq@\d+\.\d+\.\d+", check_text) is not None and "JQ=" in check_text,
+      "jq is pinned (mise jq@X.Y.Z) and its path kept in JQ, not taken from the image")
+compare = next((s.get("run", "") for s in steps if s.get("name") == "compare"), "")
+check('"$JQ" -n -f .github/santa-pr/delta.jq' in compare and '"$JQ" -r -f .github/santa-pr/comment.jq' in compare,
+      "the compare step runs the pinned jq")
 check(any(re.search(r"worktree add[^\n]*\|\|", g) for g in grade), "a base that cannot be checked out is a status, not a failed job")
 job_env = next(iter((check_doc.get("jobs") or {}).values()), {}).get("env") or {}
 check(job_env.get("SANTA_REF") == "main" and '"$SANTA_REF"' in check_text, "the SANTA ref is one env value (SANTA_REF, main)")
@@ -56,6 +61,10 @@ check("conclusion == 'success'" in str(cjob.get("if", "")), "the commenter runs 
 check("unzip -p" in comment_text, "the commenter reads the artifact as data (unzip -p), never extracts it")
 check("<!-- santa-pr -->" in comment_text, "the commenter's marker is <!-- santa-pr -->")
 check("actions/checkout" not in comment_text, "the commenter checks out nothing")
+conc = comment_doc.get("concurrency") or {}
+check("head_branch" in str(conc.get("group", "")) and conc.get("cancel-in-progress") is False,
+      "the commenter runs one at a time per pull request branch (no two first comments)")
+check(".state" in comment_text and '"open"' in comment_text, "the commenter posts only to an open pull request")
 
 for name, doc in (("santa.yml", check_doc), ("santa-comment.yml", comment_doc)):
     for step in uses(doc):

@@ -22,8 +22,9 @@ In `santa.yml`, check three values in the job's `env`:
 - `LABEL`: the runner's name in the comment; the repository's name by default;
 - `SANTA_REF`: the SANTA ref whose vectors grade the pull request; `main` by default (see below).
 
-Nothing else needs editing, and SANTA needs no entry for the runner. The `jq` programs need jq 1.7 or later;
-SANTA tests them under 1.7 and 1.8. `ubuntu-latest` has 1.8; the 1.6 of `ubuntu-22.04` is too old.
+Nothing else needs editing, and SANTA needs no entry for the runner. The check runs the `jq` programs with a pinned
+jq (1.8.1, installed through mise), never the image's: a runner image changed it under them once (1.7 to 1.8). SANTA
+tests both programs under 1.7 and 1.8.
 
 **The commenter takes effect from the default branch.** GitHub runs a `workflow_run` workflow only from there, so
 merge `santa-comment.yml` first, or together with the check.
@@ -39,13 +40,15 @@ token and runs the pull request's own copy of its workflow files.
 3. Grades the head with `$RUNNER_DIR/santa-run - $RUNNER_TEMP/santa <out>`.
 4. Grades the base the same way, from a git worktree of the base commit with **its own copy** of the runner. A side
    that has no runner, exits non-zero, or leaves no readable `results.json` is reported as "could not run", and the
-   comment says so. The job still succeeds.
+   comment says so. Whether a `results.json` is readable is `delta.jq`'s to decide; the workflow only checks it is
+   JSON. The job still succeeds.
 5. Runs `delta.jq` and `comment.jq`, then uploads the artifact `santa-pr`: `comment.md`, `delta.json` and `pr.json`.
 
 **The commenter** (`santa-comment.yml`, `actions: read`, `pull-requests: write`) runs the default branch's copy. It
-never checks out or runs anything from the pull request. It reads the artifact's two text files out of its zip,
-posts only when the pull request's head is the commit the check ran on, and updates its one comment (marked
-`<!-- santa-pr -->`) on every push.
+never checks out or runs anything from the pull request. It reads the artifact's two text files out of its zip, and
+posts only to an **open** pull request whose head is the commit the check ran on. It updates its one comment (marked
+`<!-- santa-pr -->`) on every push, one run at a time per pull request branch, so two runs cannot both post a first
+comment.
 
 ## Reading the comment
 
@@ -62,7 +65,7 @@ posts only when the pull request's head is the commit the check ran on, and upda
   `activation`) is noted too.
 - **"No delta: …"** says why there is no comparison:
   - a side could not run: no runner at the base, a base that cannot be checked out, a build failure, an oracle not
-    reproduced, or a `results.json` that is not `santa-runner-results/v1`;
+    reproduced, or a `results.json` that is not JSON or not readable `santa-runner-results/v1`;
   - the two sides were graded against different SANTA commits. They never are in this workflow, which grades both
     against one clone.
 - **The comment is the pull request's own work.** The check runs the pull request's copy of `santa.yml` and of the
@@ -72,7 +75,13 @@ posts only when the pull request's head is the commit the check ran on, and upda
 - **The vectors track SANTA's `main`**, so every pull request is graded on SANTA's current vectors. Both sides use
   one clone, so a change on SANTA's side never shows up as the pull request's doing. To hold the vectors still, set
   `SANTA_REF` to a SANTA commit.
+- **The cells are inert.** Every name and answer is escaped: no tag, no table split, no markdown, and no
+  `@mention`. The text comes from the pull request's own artifact, so it must not notify anyone through the bot.
 - **The actions are pinned to commits**, each with its release in a comment beside it.
+- **The job's token is read-only, and the runner sees it.** `jdx/mise-action` exports the job's token as
+  `MISE_GITHUB_TOKEN` to the later steps, so mise can download toolchains without hitting GitHub's API limits. The
+  pull request's own runner, and anything it installs, can read that token. It is `contents: read`, the same access
+  the job's code already has.
 
 ## Optional steps
 
