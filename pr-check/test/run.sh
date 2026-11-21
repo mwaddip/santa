@@ -25,3 +25,24 @@ for c in "$here"/delta/*/; do
   n=$((n + 1))
 done
 echo "delta: $n case(s) pass"
+
+n=0
+for c in "$here"/comment/*/; do
+  c=${c%/}; name=comment/$(basename "$c")
+  if [ -f "$c/delta.json" ]; then delta=$(cat "$c/delta.json"); else delta=$(jq -n -f "$c/make.jq"); fi
+  cap=$(jq -c '.cap' "$c/args.json")
+  got=$(jq -r -f "$templates/comment.jq" --argjson cap "$cap" <<< "$delta") || fail "$name: comment.jq failed"
+  if [ -f "$c/expected.md" ]; then
+    diff -u "$c/expected.md" <(printf '%s\n' "$got") || fail "$name"
+  else
+    while IFS= read -r line; do
+      case "$line" in
+        "lines: "*) want=${line#lines: }; have=$(grep -c '^| <code>' <<< "$got" || true)
+                    [ "$have" = "$want" ] || fail "$name: $have table rows, want $want" ;;
+        *) grep -qF -- "$line" <<< "$got" || fail "$name: missing: $line" ;;
+      esac
+    done < "$c/expected.grep"
+  fi
+  n=$((n + 1))
+done
+echo "comment: $n case(s) pass"

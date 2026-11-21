@@ -1,0 +1,22 @@
+{
+  "schema": "santa-pr-delta/v1",
+  "label": "owner/repo",
+  "base_sha": "1111111111111111111111111111111111111111",
+  "head_sha": "2222222222222222222222222222222222222222",
+  "santa": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "outcome": "compared",
+  "scope_changed": {
+    "base": "version≤v6, tiers=eval, cost=true",
+    "head": "version≤v6, tiers=eval,wire, cost=true"
+  },
+  "files": {
+    "only_base": [],
+    "only_head": [
+      "eval/v6/authored/B.json"
+    ]
+  },
+  "newly_red": [],
+  "now_green": [],
+  "changed": [],
+  "still_red": 1
+}
