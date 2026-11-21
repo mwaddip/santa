@@ -238,8 +238,11 @@ budget at its top level:
   - **Memory:** the parent watches the group's resident memory — resident set plus swap (`VmRSS` + `VmSwap` in
     `/proc/<pid>/status`), summed over the group's processes, and each process's peak (`VmHWM`) — every 10 ms, and
     kills the group when either passes `memory_mb` MiB → `{"error": "exceeded", "limit": "memory"}`. A child that
-    finishes with a peak past the budget (its `ru_maxrss`, from `wait4`) is exceeded too: a spike between two polls
-    counts, as a cgroup bound would have killed it at that moment. The kill is the parent's own observation, so the
+    finishes reports its own peak resident size (its `VmHWM`, read at its end: after `exec` it counts only the
+    child's own memory), and a peak past the budget is exceeded too: a spike between two polls counts, as a cgroup
+    bound would have killed it at that moment. The parent never uses the child's `ru_maxrss` (from `wait4`): on Linux
+    a forked child's carries the parent's resident memory at the fork, and a `posix_spawn`ed child's the parent's
+    lifetime peak. The kill is the parent's own observation, so the
     implementation cannot catch it and no runtime's error needs recognising, and it bounds memory actually used.
     A JVM is told its budget, `-XX:MaxRAM=<memory_mb>m`, so that it sizes its heap to the budget, not to the machine.
   - **The backstop:** the child also runs under the kernel's data-segment limit at `max(4096, 2 × memory_mb)` MiB, set
@@ -253,8 +256,10 @@ budget at its top level:
     grades as the implementation's answer.
   - **Any other crash** of the child (a non-zero exit, a signal that is not the budget) is `panicked`, its `note` the
     exit status (`process exit status 101`, `process killed by signal 11`).
-  - **Elsewhere:** on macOS the watchdog is the same (the resident size from `proc_pidinfo`, or `ps -o rss=`), without
-    the backstop, which macOS ignores: a burst between two polls goes on until the next one. Windows is out of scope.
+  - **Elsewhere:** a runner that cannot watch a bounded file's memory refuses to run it (exits non-zero, naming the
+    file), as SANTA's own runners do off Linux (no `/proc`); a macOS runner may instead poll the child's resident size
+    (`proc_pidinfo`, `ps -o rss=`) best-effort and say so in its README (macOS ignores the backstop). Windows is out of
+    scope.
 - **The control proves every budget, on every run.** If rudolph exceeds or crashes on a bounded file, `./conform`
   fails: the budget or the row is wrong, not the ports.
 - **A budget is a threshold, not a benchmark.** An implementation that lands near it can grade differently run to
