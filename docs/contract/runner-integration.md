@@ -236,8 +236,9 @@ budget at its top level:
   group of its own** (`setpgid`; never a new session: conform ends a runner by its session), carrying the budget:
   - **Time:** the parent kills the child's group at `wall_s` seconds → `{"error": "exceeded", "limit": "time"}`.
   - **Memory:** the parent watches the group's resident memory — resident set plus swap (`VmRSS` + `VmSwap` in
-    `/proc/<pid>/status`), summed over the group's processes, and each process's peak (`VmHWM`) — every 10 ms, and
-    kills the group when either passes `memory_mb` MiB → `{"error": "exceeded", "limit": "memory"}`. A child that
+    `/proc/<pid>/status`), summed over the group's processes, and each process's peak (`VmHWM`) — with 10 ms between
+    polls (the next starts when the last ends, so a slow scan of `/proc` never piles polls up), and kills the group
+    when either passes `memory_mb` MiB → `{"error": "exceeded", "limit": "memory"}`. A child that
     finishes reports its own peak resident size (its `VmHWM`, read at its end: after `exec` it counts only the
     child's own memory), and a peak past the budget is exceeded too: a spike between two polls counts, as a cgroup
     bound would have killed it at that moment. The parent never uses the child's `ru_maxrss` (from `wait4`): on Linux
@@ -255,7 +256,14 @@ budget at its top level:
     refuses can be caught by the implementation, as an overcommit refusal could be under a cgroup bound; it then
     grades as the implementation's answer.
   - **Any other crash** of the child (a non-zero exit, a signal that is not the budget) is `panicked`, its `note` the
-    exit status (`process exit status 101`, `process killed by signal 11`).
+    exit status (`process exit status 101`, `process killed by signal 11`). A runner that starts the child through a
+    shell (a JVM or Node runner has no `setpgid`: `bash -c 'set -m; ulimit -d …; "$@" & …'` gives the child its own
+    group) sees exit status 128 + N and death by signal N alike, and its note names both (`process exit status 139
+    (killed by signal 11?)`); the note is for people, the outcome is `panicked` either way.
+  - **An interrupted runner** (SIGINT, SIGTERM, SIGHUP while a bounded child runs) kills the child's group, then dies
+    of the same signal (a JVM, from a shutdown hook, exits 128 + the signal). The child sits in a group of its own, so
+    a terminal's Ctrl-C never reaches it: left alone, it would run on with no time limit. conform's session kill
+    covers a run under conform; this covers a maintainer's own run (§7).
   - **Elsewhere:** a runner that cannot watch a bounded file's memory refuses to run it (exits non-zero, naming the
     file), as SANTA's own runners do off Linux (no `/proc`); a macOS runner may instead poll the child's resident size
     (`proc_pidinfo`, `ps -o rss=`) best-effort and say so in its README (macOS ignores the backstop). Windows is out of
@@ -317,7 +325,8 @@ building block of the language does.
 
 ### 4.3 Outputs
 
-In `<out-dir>`:
+In `<out-dir>`. `run` first removes `<out-dir>/results.json` and `<out-dir>/actuals/`, before anything else, so a run
+that fails leaves no earlier run's results behind:
 
 - **`results.json`**, schema [`schema/santa-runner-results.schema.json`](../../schema/santa-runner-results.schema.json)
   (`santa-runner-results/v1`; every object closed):
