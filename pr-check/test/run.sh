@@ -46,3 +46,9 @@ for c in "$here"/comment/*/; do
   n=$((n + 1))
 done
 echo "comment: $n case(s) pass"
+
+if python3 -c 'import yaml' 2>/dev/null; then
+  python3 -I "$here/workflows.py" "$templates" || fail "the workflow templates"
+else
+  echo "workflows: skipped (no PyYAML)"
+fi
