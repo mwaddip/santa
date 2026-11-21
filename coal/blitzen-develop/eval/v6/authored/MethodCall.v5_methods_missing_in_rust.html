@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/MethodCall.v5_methods_missing_in_rust: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/MethodCall.v5_methods_missing_in_rust</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="`groupGenerator.exp(BigInt 5)` — SGroupElement id 3, `Exponentiate.costKind` Fixed 900. EVALUATES to g^5 at cost 928. The dedicated `Exponentiate` node costs 915, so the MethodCall encoding adds 13.  // row 1 of the probe"><code>group_element_exp-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;022f8bde4d1a07209355b4a7250a5c5128e88b84bddc619ab7cba8d569b240efe4&quot;,&quot;kind&quot;:&quot;GroupE… @ cost 928</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="`groupGenerator.multiply(groupGenerator)` — SGroupElement id 4, `MultiplyGroup` Fixed 40. EVALUATES to g^2 at cost 82, against the dedicated `MultiplyGroup` node's 60.  // row 2 of the probe"><code>group_element_multiply-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5&quot;,&quot;kind&quot;:&quot;GroupE… @ cost 82</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="`Global.some[Int](5).isDefined` — SOption id 2, Fixed 10. EVALUATES to `true` at cost 33.  // row 5 of the probe"><code>option_is_defined_some-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 33</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="`Global.none[Int].isDefined`. EVALUATES to `false` at cost 28 — 5 less than the `some` row, since `none` costs less to build.  // row 6 of the probe"><code>option_is_defined_none-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 28</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="`Global.some[Int](5).get` — SOption id 3, Fixed 15. EVALUATES to `5` at cost 38.  // row 7 of the probe"><code>option_get_some-accept#6</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 38</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

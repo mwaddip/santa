@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/ByIndex.default_specialisation: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/ByIndex.default_specialisation</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[N3] The GENERIC twin in range returns the element `Byte 1` at cost 75: the eager default is evaluated and passed, but nothing casts it."><code>v0_byte_concrete_bool_default_in_range-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1} @ cost 75</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[N4] The generic twin OUT OF RANGE returns **the mistyped default itself — `true`, a `java.lang.Boolean` out of a collection declared `Coll[Byte]`** — at cost 75. The JVM hands a script a value of the wrong type rather than refusing. **The most consequential accept in the round:** an implementation that type-checks the default here OVER-REJECTS."><code>v0_byte_concrete_bool_default_oob-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 75</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[N7] **THE VERSION WITNESS.** The SAME body as N1 at **tree version 3**, where the default is LAZY (`transformers.scala:261-270` uses `apply` in range and never touches the default): it returns `Byte 1` at cost 40. One tree version apart, a specialised receiver with an ill-typed default goes from a hard throw to a clean value, and the cost gap 40-vs-45 is the eager evaluation that is no longer done."><code>v3_byte_constant_bool_default_in_range-accept#6</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1} @ cost 40</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[N9] The generic twin in range: `Byte 1` at cost 70 (five less than N3 — the lazy default)."><code>v3_byte_concrete_bool_default_in_range-accept#8</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1} @ cost 70</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[N10] The generic twin out of range still returns the mistyped `true`, at cost 75. The over-reject risk of N4 is not confined to old trees."><code>v3_byte_concrete_bool_default_oob-accept#9</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 75</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

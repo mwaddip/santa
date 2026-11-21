@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Numeric.methodcall_ids: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Numeric.methodcall_ids</code></h1>
+<p>3 red (not-implemented 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ (1: Int).toByte }  // JVM: PARSES at tree version 3 and throws at eval: `toByte` is in the 38-method parse-then-fail set — neither a FixedCost nor carrying a `toByte_eval` handler, so MethodCall.eval's non-FixedCost branch raises RuntimeException(&quot;Cannot find eval method&quot;). sigma-rust refuses method id 1 at PARSE instead, which the wire arm pins."><code>int-tobyte-id1-errored#0</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="{ (1: Int).toBigInt }  // JVM: PARSES at tree version 3 and throws at eval: `toBigInt` is in the 38-method parse-then-fail set — neither a FixedCost nor carrying a `toBigInt_eval` handler, so MethodCall.eval's non-FixedCost branch raises RuntimeException(&quot;Cannot find eval method&quot;). sigma-rust refuses method id 5 at PARSE instead, which the wire arm pins. This is the id sigma-rust leaves out of its numeric table ALTOGETHER, so it refuses this at parse at every version while the JVM parses it at v3 — a parse-side divergence, the opposite direction to the spend one the probe expected."><code>int-tobigint-id5-errored#1</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="{ SGlobal method 1 (groupGenerator) invoked on an Int receiver, db 6a 01 }  // JVM: PARSES — 0x6a is SGlobal, which has method 1 at every tree version, so rule 1016 passes — and then throws IllegalArgumentException &quot;object is not an instance of declaring class&quot; in reflection, the receiver being an Integer and not a SigmaDslBuilder. A DIFFERENT failure class from #0 and #1, and the tree the JVM's own below-v3 serializer emits for a numeric method call."><code>sglobal-id1-on-int-errored#2</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>

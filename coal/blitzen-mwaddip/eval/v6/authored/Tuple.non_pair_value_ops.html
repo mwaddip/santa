@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-mwaddip · eval/v6/authored/Tuple.non_pair_value_ops: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-mwaddip &middot; <code>eval/v6/authored/Tuple.non_pair_value_ops</code></h1>
+<p>3 red (not-implemented 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[Z1] `SizeOf(())` — the ZERO-item tuple type: **0 at cost 19**. It parses, it evaluates, and it can NEVER be written back: `TypeSerializer.serialize` refuses a tuple type with fewer than 2 items (`TypeSerializer.scala:95`), so no box can carry this script — its id is over the writer's form and cannot be computed. Eval-tier only, no spend arm, by construction. `Tuple.small_tuples` has the same type REFUSED at the `SelectField`/`EQ` type-check sites; `SizeOf` does not type-check its input, which is why it answers. **SEPARATING.**"><code>unit_tuple_size-accept#45</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 19</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Z2] `SizeOf((1))` — the ONE-item tuple type: **1 at cost 19**. Same story as Z1: readable and NEVER writable, since `TypeSerializer.serialize` refuses any tuple type with fewer than 2 items (`TypeSerializer.scala:95`), so there is no box and no spend arm for it either. The pair Z1/Z2 pins that the reader accepts a count the writer refuses, at both ends of the gap. **SEPARATING.**"><code>one_item_tuple_size-accept#46</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 19</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[U3] `updateMany` with the UPDATES collection given as a 1-item TUPLE — **also 3 at cost 55.** Hand-crafted, since the writer refuses a tuple TYPE of fewer than 2 items and so no round-trip could produce it. So the blindness holds on the ARGUMENT side as well as the receiver's, which is what makes the rule about the operation rather than about one position. **SEPARATING** on the same sigma-rust guard as T23."><code>update_many_one_item_tuple_updates-accept#49</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 55</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>

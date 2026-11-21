@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/STypeVar.name_utf8_leniency: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/STypeVar.name_utf8_leniency</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name = invalid-UTF-8 [ff] (single invalid byte): JVM TypeSerializer lossy-decodes (new String(_, UTF_8) never throws) -&gt; name accepted as U+FFFD -&gt; Int 5 (name erased at eval). sigma-rust/ergots strict-reject non-UTF-8 -&gt; errored. The CHARSET fork, distinct from ask-23's length bound; byte-exactness of the U+FFFD canonical form is the wire round-trip, not this accept vector."><code>name-utf8-ff-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name = invalid-UTF-8 [e282] (truncated 3-byte sequence): JVM TypeSerializer lossy-decodes (new String(_, UTF_8) never throws) -&gt; name accepted as U+FFFD -&gt; Int 5 (name erased at eval). sigma-rust/ergots strict-reject non-UTF-8 -&gt; errored. The CHARSET fork, distinct from ask-23's length bound; byte-exactness of the U+FFFD canonical form is the wire round-trip, not this accept vector."><code>name-utf8-e282-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name = invalid-UTF-8 [c080] (overlong NUL encoding): JVM TypeSerializer lossy-decodes (new String(_, UTF_8) never throws) -&gt; name accepted as U+FFFD -&gt; Int 5 (name erased at eval). sigma-rust/ergots strict-reject non-UTF-8 -&gt; errored. The CHARSET fork, distinct from ask-23's length bound; byte-exactness of the U+FFFD canonical form is the wire round-trip, not this accept vector."><code>name-utf8-c080-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name = invalid-UTF-8 [eda080] (UTF-16 surrogate (ill-formed in UTF-8)): JVM TypeSerializer lossy-decodes (new String(_, UTF_8) never throws) -&gt; name accepted as U+FFFD -&gt; Int 5 (name erased at eval). sigma-rust/ergots strict-reject non-UTF-8 -&gt; errored. The CHARSET fork, distinct from ask-23's length bound; byte-exactness of the U+FFFD canonical form is the wire round-trip, not this accept vector."><code>name-utf8-eda080-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name = invalid-UTF-8 [61ff62] (valid / invalid / valid): JVM TypeSerializer lossy-decodes (new String(_, UTF_8) never throws) -&gt; name accepted as U+FFFD -&gt; Int 5 (name erased at eval). sigma-rust/ergots strict-reject non-UTF-8 -&gt; errored. The CHARSET fork, distinct from ask-23's length bound; byte-exactness of the U+FFFD canonical form is the wire round-trip, not this accept vector."><code>name-utf8-61ff62-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

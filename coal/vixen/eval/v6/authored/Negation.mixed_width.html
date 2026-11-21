@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Negation.mixed_width: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Negation.mixed_width</code></h1>
+<p>4 red (reject 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[N1] `-If(false, 1L, 2)` at tree v3 — a Long-typed input with an Int VALUE. Negation takes ArithOp.impls(input.tpe.typeCode) (trees.scala:885-890) and casts the value to it, so the Integer is cast to Long: ClassCastException. The static type decides, not the value."><code>negate-narrow-value-v3-errored#2</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-2} @ cost 50</code></td><td class="note"></td></tr>
+<tr><td title="[N1] `-If(false, 1L, 2)` at tree v0 — throws at v0 TOO: a unary node has nothing to upcast, so no version gate exists here."><code>negate-narrow-value-v0-errored#3</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-2} @ cost 50</code></td><td class="note"></td></tr>
+<tr><td title="[N2] `-If(false, 1, 2L)` at tree v3 — THE MIRROR: an Int-typed input with a Long VALUE, i.e. a value WIDER than its static type. Negation takes ArithOp.impls(input.tpe.typeCode) (trees.scala:885-890) and casts the value to it, so the Long is cast DOWN to Integer: ClassCastException the other way. The static type decides in BOTH directions, so refusing only a narrow value is not the rule."><code>negate-wide-value-v3-errored#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;-2&quot;} @ cost 50</code></td><td class="note"></td></tr>
+<tr><td title="[N2] `-If(false, 1, 2L)` at tree v0 — throws at v0 TOO: a unary node has nothing to upcast, so no version gate exists here."><code>negate-wide-value-v0-errored#5</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;-2&quot;} @ cost 50</code></td><td class="note"></td></tr>
+</table>
+</body></html>

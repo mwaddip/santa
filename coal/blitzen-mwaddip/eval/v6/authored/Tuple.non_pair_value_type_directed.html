@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-mwaddip · eval/v6/authored/Tuple.non_pair_value_type_directed: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-mwaddip &middot; <code>eval/v6/authored/Tuple.non_pair_value_type_directed</code></h1>
+<p>1 red (not-implemented 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[S2] `SubstConstants(script, (0), Coll[Int](9))` — the POSITIONS argument given as a 1-item TUPLE instead of a `Coll[Int]`. **Throws `ClassCastException: [Ljava.lang.Object; cannot be cast to [I`.** The positions parameter is a primitive `Array[Int]`, and a 1-item tuple's value is a generic `Coll[Any]` over an Object array, so the cast fails before any substitution is attempted. This is the THIRD distinct way `SubstConstants` meets a non-pair tuple, after S1 (the new VALUES cannot be lifted to the old constant's type) and C2 (the machinery working over honest `Int` arguments) — and the only one that fails on the POSITIONS side. **C2 is its control too**, being the identical call with the positions as a real `Coll[Int]`: that returns the re-serialized script at 315, so the difference here is the argument's representation and nothing else. **REGRESSION GUARD by expectation, and the grading is what settles it:** the sigma-rust fork refuses positions-as-a-tuple too (its own PR 77 relay), so every eval-arm conformer is expected to match. If any accepts it, this row SEPARATING is the correction to make — a role is never derivable from the oracle alone."><code>subst_constants_positions_as_tuple-errored#7</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>

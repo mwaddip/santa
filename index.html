@@ -1,0 +1,969 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>SANTA conformance scoreboard</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ h1 { font-size: 1.4rem; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .35rem .6rem; }
+ thead th { background: #f4f4f4; vertical-align: top; text-align: left; }
+ th.slice { background: #f4f4f4; font-family: ui-monospace, monospace; text-align: left; }
+ td.nice { background: #e7f6e7; text-align: center; }
+ td.partial { background: #fdf0c4; text-align: center; }
+ td.coal { background: #fde6e6; text-align: center; white-space: nowrap; }
+ td.na { background: #f7f7f7; color: #aaa; text-align: center; }
+ td.norun { background: #4a4a4a; color: #fff; text-align: center; font-weight: bold; }
+ td.coverage { background: #e8eaf6; color: #444; text-align: center; }
+ .src { color: #666; font-size: .8rem; font-weight: normal; }
+ .meta { color: #666; font-size: .85rem; }
+ .legend { margin-top: 1rem; font-size: .9rem; }
+ .legend > div { margin: .2rem 0; }
+ .legend .sw { display: inline-block; width: .9em; height: .9em; border: 1px solid #ccc; vertical-align: -.1em; margin-right: .45em; }
+ .legend .sw.nice { background: #e7f6e7; }
+ .legend .sw.partial { background: #fdf0c4; }
+ .legend .sw.coal { background: #fde6e6; }
+ .legend .sw.na { background: #f7f7f7; }
+ .legend .sw.norun { background: #4a4a4a; }
+ .legend .sw.coverage { background: #e8eaf6; }
+ .legend .hint { color: #666; margin-top: .5rem; }
+ h2 { font-size: 1.15rem; margin-top: 2rem; }
+ details.coal-details { margin: .5rem 0; border: 1px solid #e5c9c9; border-radius: 4px; padding: .35rem .8rem; background: #fffafa; }
+ details.coal-details summary { cursor: pointer; }
+ details.coal-details h3.slice-h { font-family: ui-monospace, monospace; font-size: .85rem; margin: .6rem 0 .15rem; }
+ details.coal-details table.coal-table { border-collapse: collapse; margin: .25rem 0 .75rem; }
+ details.coal-details table.coal-table th, details.coal-details table.coal-table td { border: 1px solid #e0caca; padding: .2rem .5rem; font-size: .82rem; text-align: left; vertical-align: top; }
+ details.coal-details table.coal-table th { background: #f9eded; font-weight: 600; }
+ details.coal-details table.coal-table code { word-break: break-all; }
+ details.coal-details .dim { color: #a33; }
+ details.coal-details .note { color: #666; }
+ section.grader-notes details.grader-note { margin: .5rem 0; border: 1px solid #e0c060; border-radius: 4px; padding: .35rem .8rem; background: #fffbea; }
+ section.grader-notes summary { cursor: pointer; }
+ section.grader-notes table.coal-table th, section.grader-notes table.coal-table td { border: 1px solid #e6d9a8; padding: .2rem .5rem; font-size: .82rem; text-align: left; }
+</style></head><body>
+<h1>SANTA conformance scoreboard</h1>
+<p class="meta">Sigma-Anchored Node Test Apparatus — cross-implementation Ergo consensus conformance.</p>
+<table>
+<thead>
+<tr><th>slice</th><th>🪨 blitzen-develop<br><span class="src">ergoplatform/sigma-rust#develop @ e86893405</span></th><th>🪨 blitzen-mwaddip<br><span class="src">mwaddip/sigma-rust#master @ 36c5cf556</span></th><th>🪨 comet<br><span class="src">fleet-sdk/fleet#master @ 8fd834a94</span><br><span class="src" title="declared scope (runner-integration §2)">kinds Constant, Box, Transaction · no activation rules</span></th><th>🪨 dasher<br><span class="src">mwaddip/ergots#master @ 0ea5de1bb</span></th><th>🪨 donner<br><span class="src">mwaddip/ergo-node-rust#main @ 9c1541183</span></th><th>🎁 rudolph <em>(control)</em><br><span class="src">—</span></th><th>🪨 vixen<br><span class="src">arkadianet/ergo#main @ 97fafbd96</span></th></tr>
+</thead>
+<tbody>
+<tr><th class="slice">authds/any/vendored</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="prove 10/10 · verify 37/37 · results 33/33 · digest 43/43">🎁</td><td class="na">—</td><td class="nice" title="prove 10/10 · verify 37/37 · results 33/33 · digest 43/43">🎁</td><td class="coverage" title="prove 0/0 · verify 37/37 · results 33/33 · digest 33/33 · not-impl 10">not-impl 10 · verify 37/37 · results 33/33 · digest 33/33</td></tr>
+<tr><th class="slice">block/v6/authored</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="valid 11/11">🎁</td><td class="nice" title="valid 11/11">🎁</td><td class="nice" title="valid 11/11">🎁</td></tr>
+<tr><th class="slice">block/v6/captured</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="valid 4/4">🎁</td><td class="nice" title="valid 4/4">🎁</td><td class="nice" title="valid 4/4">🎁</td></tr>
+<tr><th class="slice">chain/any/authored</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="value 15/15">🎁</td><td class="nice" title="value 15/15">🎁</td><td class="nice" title="value 15/15">🎁</td></tr>
+<tr><th class="slice">chain/any/captured</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="value 2/2">🎁</td><td class="nice" title="value 2/2">🎁</td><td class="nice" title="value 2/2">🎁</td></tr>
+<tr><th class="slice">chain/v6/authored</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="value 55/55">🎁</td><td class="nice" title="value 55/55">🎁</td><td class="nice" title="value 55/55">🎁</td></tr>
+<tr><th class="slice">chain/v6/captured</th><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="na">—</td><td class="nice" title="value 1/1">🎁</td><td class="nice" title="value 1/1">🎁</td><td class="nice" title="value 1/1">🎁</td></tr>
+<tr><th class="slice">eval/v4/authored</th><td class="coal" title="value 3/12 · cost 0/0 · reject 6/6 · panicked 0">🪨 9</td><td class="nice" title="value 12/12 · cost 12/12 · reject 6/6 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 12/12 · cost 12/12 · reject 6/6 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 12/12 · cost 12/12 · reject 6/6 · panicked 0">🎁</td><td class="nice" title="value 12/12 · cost 12/12 · reject 6/6 · panicked 0">🎁</td></tr>
+<tr><th class="slice">eval/v5/authored</th><td class="coal" title="value 2143/3503 · cost 0/0 · reject 5814/6917 · panicked 14">🪨 5571</td><td class="coal" title="value 5185/5185 · cost 5185/5185 · reject 8342/8342 · panicked 0">🪨 1</td><td class="na">—</td><td class="coal" title="value 4268/5048 · cost 4254/4268 · reject 7030/7213 · panicked 0">🪨 2244</td><td class="na">—</td><td class="nice" title="value 5185/5185 · cost 5185/5185 · reject 8343/8343 · panicked 0">🎁</td><td class="coal" title="value 3797/5185 · cost 3797/3797 · reject 7118/8343 · panicked 0">🪨 2613</td></tr>
+<tr><th class="slice">eval/v5/spec</th><td class="coal" title="value 1606/1610 · cost 0/0 · reject 147/147 · panicked 0">🪨 4</td><td class="nice" title="value 1610/1610 · cost 1610/1610 · reject 147/147 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 1610/1610 · cost 1610/1610 · reject 147/147 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 1610/1610 · cost 1610/1610 · reject 147/147 · panicked 0">🎁</td><td class="nice" title="value 1610/1610 · cost 1610/1610 · reject 147/147 · panicked 0">🎁</td></tr>
+<tr><th class="slice">eval/v6/authored</th><td class="coal" title="value 7708/11524 · cost 0/0 · reject 13789/16418 · panicked 30 · exceeded 8">🪨 12767</td><td class="coal" title="value 15156/15156 · cost 15156/15156 · reject 19100/19100 · panicked 0">🪨 8</td><td class="na">—</td><td class="coal" title="value 12557/14569 · cost 12519/12557 · reject 15281/16271 · panicked 4">🪨 6464</td><td class="na">—</td><td class="nice" title="value 15160/15160 · cost 15160/15160 · reject 19104/19104 · panicked 0">🎁</td><td class="coal" title="value 11983/15155 · cost 11980/11983 · reject 15299/19094 · panicked 0 · exceeded 14">🪨 6985</td></tr>
+<tr><th class="slice">eval/v6/captured</th><td class="coal" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🪨 62</td><td class="nice" title="value 62/62 · cost 62/62 · reject 0/0 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 62/62 · cost 62/62 · reject 0/0 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 62/62 · cost 62/62 · reject 0/0 · panicked 0">🎁</td><td class="nice" title="value 62/62 · cost 62/62 · reject 0/0 · panicked 0">🎁</td></tr>
+<tr><th class="slice">eval/v6/spec</th><td class="coal" title="value 228/243 · cost 0/0 · reject 26/26 · panicked 0">🪨 15</td><td class="nice" title="value 243/243 · cost 243/243 · reject 26/26 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 243/243 · cost 243/243 · reject 26/26 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 243/243 · cost 243/243 · reject 26/26 · panicked 0">🎁</td><td class="nice" title="value 243/243 · cost 243/243 · reject 26/26 · panicked 0">🎁</td></tr>
+<tr><th class="slice">nipopow/any/authored</th><td class="coal" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🪨 9</td><td class="nice" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🎁</td><td class="na">—</td><td class="nice" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🎁</td><td class="coal" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🪨 8</td><td class="nice" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🎁</td><td class="nice" title="value 0/0 · cost 0/0 · reject 0/0 · panicked 0">🎁</td></tr>
+<tr><th class="slice">transaction/any/authored</th><td class="coal" title="valid 0/15 · [valid] activated-params4-header3-v3-accept: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] activated-params4-header5-v4-reject: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] activated-params4-header0-v0-accept: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] activated-params4-header200-v0-accept: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] activated-params5-header4-v4-unverified-accept: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · … and 10 more">🪨 15</td><td class="nice" title="valid 15/15 · cost 11/11">🎁</td><td class="na">—</td><td class="coal" title="valid 10/15 · cost 6/8 · [valid] activated-params5-header4-v4-unverified-accept: script-reduced-false · [valid] height-params4-header2-reject · [valid] height-params2-header4-accept: creation-height-below-max-input · [valid] bv2-tree-v2-reject#0 · [cost] bv5-tree-v4-unverified-accept#2 · … and 2 more">🪨 7</td><td class="na">—</td><td class="nice" title="valid 15/15 · cost 11/11">🎁</td><td class="na">—</td></tr>
+<tr><th class="slice">transaction/v5/authored</th><td class="coal" title="valid 0/1027 · [valid] and-or-item-by-item-context-OR-var-t_true_5_true_-v0-a2#0: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-AND-var-t_false_5_true_==false-v0-a2#1: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-OR-reg-R4-t_true_5_true_-v0-a2#2: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-AND-reg-R5-t_false_5_true_==false-v0-a2#3: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-OR-var-cb_true_false_true_-v0-a2#4: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · … and 1022 more">🪨 1027</td><td class="nice" title="valid 1027/1027 · cost 423/423">🎁</td><td class="na">—</td><td class="coal" title="valid 871/1027 · cost 334/334 · [valid] avltree-item-bind-spend-update-other-t2-nopair-Boolean-v0-a2#87: coll-class-cast · [valid] collection-length-limit-trees-append-over-inline-v0-a2#1 · [valid] collection-length-limit-trees-flatMap-over-inline-v0-a2#3 · [valid] collection-length-limit-trees-patch-over-inline-v0-a2#5 · [valid] collection-length-limit-trees-propBytes-over-inline-v0-a2#7 · … and 151 more">🪨 156</td><td class="na">—</td><td class="nice" title="valid 1027/1027 · cost 423/423">🎁</td><td class="na">—</td></tr>
+<tr><th class="slice">transaction/v5/captured</th><td class="coal" title="valid 0/37 · [valid] mainnet-rent-s1-h1627060-624a6e86: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] mainnet-rent-s2-h1348583-1b58caa4: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] mainnet-rent-s2-h1620223-6d5ba176: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] mainnet-rent-s3-h1336330-bcff7953: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] mainnet-rent-s3-h1564192-ecb866b3: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · … and 32 more">🪨 37</td><td class="nice" title="valid 37/37 · cost 37/37">🎁</td><td class="na">—</td><td class="nice" title="valid 37/37 · cost 37/37">🎁</td><td class="na">—</td><td class="nice" title="valid 37/37 · cost 37/37">🎁</td><td class="na">—</td></tr>
+<tr><th class="slice">transaction/v6/authored</th><td class="coal" title="valid 0/2275 · [valid] and-or-item-by-item-context-OR-var-t_true_5_true_-v0-a3#0: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-OR-var-t_true_5_true_-v3-a3#1: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-AND-var-t_false_5_true_==false-v0-a3#2: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-AND-var-t_false_5_true_==false-v3-a3#3: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] and-or-item-by-item-context-OR-reg-R4-t_true_5_true_-v0-a3#4: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · … and 2270 more">🪨 2275</td><td class="nice" title="valid 2275/2275 · cost 1059/1059">🎁</td><td class="na">—</td><td class="coal" title="valid 1791/2275 · cost 757/757 · [valid] argument-widening-spend-w1c#0: method-not-implemented · [valid] argument-widening-spend-w1#1: method-not-implemented · [valid] argument-widening-spend-w1s#2: method-not-implemented · [valid] argument-widening-spend-w7b#3: global-decode-nbits-failed · [valid] argument-widening-spend-w9#5: method-not-implemented · … and 479 more">🪨 484</td><td class="na">—</td><td class="nice" title="valid 2275/2275 · cost 1059/1059">🎁</td><td class="na">—</td></tr>
+<tr><th class="slice">transaction/v6/captured</th><td class="coal" title="valid 0/93 · [valid] atleast-degenerate-bound-184137: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] bigint-downcast-2666: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] deserialize-context-111927: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] getvarfrominput-92847: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · [valid] mainnet-rent-s1-h1645589-5536aae8: this sigma-rust's state context holds exactly 10 headers; the entry carries 9 · … and 88 more">🪨 93</td><td class="nice" title="valid 93/93 · cost 93/93">🎁</td><td class="na">—</td><td class="nice" title="valid 93/93 · cost 93/93">🎁</td><td class="na">—</td><td class="nice" title="valid 93/93 · cost 93/93">🎁</td><td class="na">—</td></tr>
+<tr><th class="slice">wire/v5/authored</th><td class="coal" title="roundtrip 29/80">🪨 75</td><td class="nice" title="roundtrip 80/80">🎁</td><td class="coal" title="roundtrip 1/14 · not-impl 16">🪨 29</td><td class="coal" title="roundtrip 74/76 · not-impl 5">🪨 21</td><td class="na">—</td><td class="nice" title="roundtrip 80/80">🎁</td><td class="coal" title="roundtrip 80/80">🪨 10</td></tr>
+<tr><th class="slice">wire/v5/vendored</th><td class="nice" title="roundtrip 213/213">🎁</td><td class="nice" title="roundtrip 213/213">🎁</td><td class="coal" title="roundtrip 185/203 · not-impl 3">🪨 21</td><td class="nice" title="roundtrip 213/213">🎁</td><td class="na">—</td><td class="nice" title="roundtrip 213/213">🎁</td><td class="nice" title="roundtrip 213/213">🎁</td></tr>
+<tr><th class="slice">wire/v6/authored</th><td class="coal" title="roundtrip 436/704">🪨 578</td><td class="nice" title="roundtrip 704/704">🎁</td><td class="na">—</td><td class="coal" title="roundtrip 641/700 · not-impl 7">🪨 113</td><td class="na">—</td><td class="nice" title="roundtrip 704/704">🎁</td><td class="coal" title="roundtrip 691/704">🪨 37</td></tr>
+</tbody>
+</table>
+<h2>Coal details</h2>
+<p class="meta">Every red instance behind the matrix counts, by library and vector file — collapsed by default, click a library to expand. Each file links to a page listing its entries (hover an entry for its script).</p>
+<details class="coal-details"><summary>🪨 <b>blitzen-develop</b> — 22537 coal</summary>
+<h3 class="slice-h">eval/v4/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v4/authored/BoolToSigmaProp.activated_version_gate_v4.html"><code>BoolToSigmaProp.activated_version_gate_v4</code></a></td><td>9</td><td>value 9</td></tr>
+</table>
+<h3 class="slice-h">eval/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/SubstConstants.lift_by_class.html"><code>SubstConstants.lift_by_class</code></a></td><td>969</td><td>not-implemented 969</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.generic_producers.html"><code>Coll.generic_producers</code></a></td><td>550</td><td>not-implemented 550</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.patch_array_class.html"><code>Coll.patch_array_class</code></a></td><td>510</td><td>reject 510</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.patch_array_class_context.html"><code>Coll.patch_array_class_context</code></a></td><td>349</td><td>not-implemented 349</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.generic_producers_census.html"><code>Coll.generic_producers_census</code></a></td><td>324</td><td>not-implemented 324</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/OR.item_by_item.html"><code>OR.item_by_item</code></a></td><td>275</td><td>value 275</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AND.item_by_item.html"><code>AND.item_by_item</code></a></td><td>273</td><td>value 273</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.item_bind_context.html"><code>AvlTree.item_bind_context</code></a></td><td>270</td><td>not-implemented 270</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Exponentiate.static_type.html"><code>Exponentiate.static_type</code></a></td><td>221</td><td>reject 150 · value 71</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/MultiplyGroup.static_type.html"><code>MultiplyGroup.static_type</code></a></td><td>221</td><td>reject 150 · value 71</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.item_bind.html"><code>AvlTree.item_bind</code></a></td><td>203</td><td>value 203</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.generic_producers_pairs.html"><code>Coll.generic_producers_pairs</code></a></td><td>196</td><td>not-implemented 196</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AND.item_by_item_context.html"><code>AND.item_by_item_context</code></a></td><td>177</td><td>not-implemented 177</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/OR.item_by_item_context.html"><code>OR.item_by_item_context</code></a></td><td>177</td><td>not-implemented 177</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.flatMap_length_limit.html"><code>Coll.flatMap_length_limit</code></a></td><td>109</td><td>reject 99 · value 10</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/XorOf.item_by_item.html"><code>XorOf.item_by_item</code></a></td><td>74</td><td>value 74</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Exists.item_by_item.html"><code>Exists.item_by_item</code></a></td><td>72</td><td>value 72</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/ForAll.item_by_item.html"><code>ForAll.item_by_item</code></a></td><td>72</td><td>value 72</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.digest_any_collection.html"><code>AvlTree.digest_any_collection</code></a></td><td>67</td><td>value 62 · reject 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Evaluation.stypeToRType_sites.html"><code>Evaluation.stypeToRType_sites</code></a></td><td>60</td><td>reject 60</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Append.length_limit.html"><code>Append.length_limit</code></a></td><td>52</td><td>reject 52</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/SubstConstants.template_tree_version.html"><code>SubstConstants.template_tree_version</code></a></td><td>42</td><td>not-implemented 42</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.patch_length_limit.html"><code>Coll.patch_length_limit</code></a></td><td>41</td><td>reject 40 · value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/XorOf.item_by_item_context.html"><code>XorOf.item_by_item_context</code></a></td><td>40</td><td>not-implemented 40</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/MethodCall.argument_widening.html"><code>MethodCall.argument_widening</code></a></td><td>30</td><td>value 30</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/ByIndex.tuple_item.html"><code>ByIndex.tuple_item</code></a></td><td>24</td><td>value 24</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/BigInt.out_of_range_below_v3.html"><code>BigInt.out_of_range_below_v3</code></a></td><td>22</td><td>value 22</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/ConstantPlaceholder.segregated_tuple.html"><code>ConstantPlaceholder.segregated_tuple</code></a></td><td>16</td><td>value 16</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.length_limit_whole_trees.html"><code>Coll.length_limit_whole_trees</code></a></td><td>10</td><td>reject 10</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Context.property_call_forms.html"><code>Context.property_call_forms</code></a></td><td>9</td><td>value 9</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Coll.method_type_variable_names.html"><code>Coll.method_type_variable_names</code></a></td><td>8</td><td>value 7 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Context.method_call_no_args.html"><code>Context.method_call_no_args</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/SigmaPropBytes.length_limit.html"><code>SigmaPropBytes.length_limit</code></a></td><td>8</td><td>reject 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/String.jdk_utf8_decode.html"><code>String.jdk_utf8_decode</code></a></td><td>7</td><td>value 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Box.signed_view_u64.html"><code>Box.signed_view_u64</code></a></td><td>6</td><td>value 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.bad_proof_bytes.html"><code>AvlTree.bad_proof_bytes</code></a></td><td>5</td><td>panicked 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.item_bind_edges.html"><code>AvlTree.item_bind_edges</code></a></td><td>5</td><td>value 3 · panicked 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.method_call_charge_order.html"><code>AvlTree.method_call_charge_order</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.per_op_failure.html"><code>AvlTree.per_op_failure</code></a></td><td>5</td><td>value 3 · panicked 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Box.accessor_method_form.html"><code>Box.accessor_method_form</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.negative_keylength_tree.html"><code>AvlTree.negative_keylength_tree</code></a></td><td>4</td><td>panicked 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.updateDigest_any_length.html"><code>AvlTree.updateDigest_any_length</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Filter.item_by_item.html"><code>Filter.item_by_item</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Option.method_type_variable_names.html"><code>Option.method_type_variable_names</code></a></td><td>4</td><td>value 3 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/atLeast_with_a_degenerate_bound.html"><code>atLeast_with_a_degenerate_bound</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.degenerate_edges.html"><code>AvlTree.degenerate_edges</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.wrong_tree_proof.html"><code>AvlTree.wrong_tree_proof</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/FuncValue.non_unary_arity.html"><code>FuncValue.non_unary_arity</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/SubstConstants.length_limit.html"><code>SubstConstants.length_limit</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Box.bytes_byte_basis.html"><code>Box.bytes_byte_basis</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/EQ_of_SigmaProp_conjecture_mismatch.html"><code>EQ_of_SigmaProp_conjecture_mismatch</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/EQ_of_nested_SigmaProp_conjecture_mismatch.html"><code>EQ_of_nested_SigmaProp_conjecture_mismatch</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Tuple.checkType_unsupported.html"><code>Tuple.checkType_unsupported</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/ArithOp.numeric_kind_mismatch.html"><code>ArithOp.numeric_kind_mismatch</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.unsupported_eval_nodes.html"><code>AvlTree.unsupported_eval_nodes</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/AvlTree.updateDigest_then_contains.html"><code>AvlTree.updateDigest_then_contains</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Box.eq_id_basis.html"><code>Box.eq_id_basis</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Box.sub_min_value.html"><code>Box.sub_min_value</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Context.extension_key_domain.html"><code>Context.extension_key_domain</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Context.op_forms.html"><code>Context.op_forms</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Context.properties.html"><code>Context.properties</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/EQ.non_pair_tuple_operand.html"><code>EQ.non_pair_tuple_operand</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/SubstConstants.coll_count_range.html"><code>SubstConstants.coll_count_range</code></a></td><td>1</td><td>panicked 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/SubstConstants.type_var_name_range.html"><code>SubstConstants.type_var_name_range</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/Tuple.non_pair_arity3.html"><code>Tuple.non_pair_arity3</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/ValDef.id_int_max_bound.html"><code>ValDef.id_int_max_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/authored/atLeast.children_cap.html"><code>atLeast.children_cap</code></a></td><td>1</td><td>value 1</td></tr>
+</table>
+<h3 class="slice-h">eval/v5/spec</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v5/spec/Numeric_Negation_equivalence.html"><code>Numeric_Negation_equivalence</code></a></td><td>4</td><td>value 4</td></tr>
+</table>
+<h3 class="slice-h">eval/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.generic_producers_v6.html"><code>Coll.generic_producers_v6</code></a></td><td>1406</td><td>not-implemented 1406</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SubstConstants.lift_by_class_v6.html"><code>SubstConstants.lift_by_class_v6</code></a></td><td>1292</td><td>not-implemented 1292</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.patch_array_class_v6.html"><code>Coll.patch_array_class_v6</code></a></td><td>1067</td><td>reject 1067</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.generic_producers_census_v6.html"><code>Coll.generic_producers_census_v6</code></a></td><td>907</td><td>not-implemented 907</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.patch_array_class_context_v6.html"><code>Coll.patch_array_class_context_v6</code></a></td><td>698</td><td>not-implemented 698</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.item_bind_context_v6.html"><code>AvlTree.item_bind_context_v6</code></a></td><td>637</td><td>not-implemented 637</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.item_bind_v6.html"><code>AvlTree.item_bind_v6</code></a></td><td>622</td><td>value 622</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/OR.item_by_item_v6.html"><code>OR.item_by_item_v6</code></a></td><td>600</td><td>value 600</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AND.item_by_item_v6.html"><code>AND.item_by_item_v6</code></a></td><td>596</td><td>value 596</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/MethodCall.unspecialised_call_names_v6.html"><code>MethodCall.unspecialised_call_names_v6</code></a></td><td>476</td><td>value 476</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.generic_producers_pairs_v6.html"><code>Coll.generic_producers_pairs_v6</code></a></td><td>448</td><td>not-implemented 448</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AND.item_by_item_context_v6.html"><code>AND.item_by_item_context_v6</code></a></td><td>380</td><td>not-implemented 380</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/OR.item_by_item_context_v6.html"><code>OR.item_by_item_context_v6</code></a></td><td>380</td><td>not-implemented 380</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Exponentiate.static_type_v6.html"><code>Exponentiate.static_type_v6</code></a></td><td>351</td><td>reject 213 · value 138</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/MultiplyGroup.static_type_v6.html"><code>MultiplyGroup.static_type_v6</code></a></td><td>351</td><td>reject 213 · value 138</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_runtime_class.html"><code>Global.serialize_runtime_class</code></a></td><td>343</td><td>reject 314 · value 29</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.flatMap_length_limit_v6.html"><code>Coll.flatMap_length_limit_v6</code></a></td><td>220</td><td>reject 200 · value 20</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/MethodCall.static_type_substitution_v6.html"><code>MethodCall.static_type_substitution_v6</code></a></td><td>182</td><td>value 96 · reject 86</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Evaluation.stypeToRType_sites_v6.html"><code>Evaluation.stypeToRType_sites_v6</code></a></td><td>168</td><td>reject 164 · value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Exists.item_by_item_v6.html"><code>Exists.item_by_item_v6</code></a></td><td>156</td><td>value 156</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/ForAll.item_by_item_v6.html"><code>ForAll.item_by_item_v6</code></a></td><td>156</td><td>value 156</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/XorOf.item_by_item_v6.html"><code>XorOf.item_by_item_v6</code></a></td><td>148</td><td>value 148</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.digest_any_collection_v6.html"><code>AvlTree.digest_any_collection_v6</code></a></td><td>134</td><td>value 128 · reject 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Append.length_limit_v6.html"><code>Append.length_limit_v6</code></a></td><td>109</td><td>reject 109</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.patch_length_limit_v6.html"><code>Coll.patch_length_limit_v6</code></a></td><td>86</td><td>reject 84 · value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/XorOf.item_by_item_context_v6.html"><code>XorOf.item_by_item_context_v6</code></a></td><td>80</td><td>not-implemented 80</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SubstConstants.template_tree_version_v6.html"><code>SubstConstants.template_tree_version_v6</code></a></td><td>56</td><td>not-implemented 56</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/ByIndex.tuple_item_v6.html"><code>ByIndex.tuple_item_v6</code></a></td><td>48</td><td>value 48</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.reference_store_ops.html"><code>Coll.reference_store_ops</code></a></td><td>41</td><td>value 24 · reject 17</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/MethodCall.argument_widening_v6.html"><code>MethodCall.argument_widening_v6</code></a></td><td>39</td><td>value 39</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.deserializeTo_Box_type_var_name_range.html"><code>Global.deserializeTo_Box_type_var_name_range</code></a></td><td>35</td><td>value 31 · reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.length_limit_whole_trees_v6.html"><code>Coll.length_limit_whole_trees_v6</code></a></td><td>22</td><td>reject 22</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/ConstantPlaceholder.segregated_tuple_v6.html"><code>ConstantPlaceholder.segregated_tuple_v6</code></a></td><td>21</td><td>value 21</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Context.property_call_forms_v6.html"><code>Context.property_call_forms_v6</code></a></td><td>20</td><td>value 20</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.non_pair_value_ops.html"><code>Tuple.non_pair_value_ops</code></a></td><td>20</td><td>value 20</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.method_type_variable_names_v6.html"><code>Coll.method_type_variable_names_v6</code></a></td><td>17</td><td>value 15 · reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.binding_provenance_register.html"><code>Tuple.binding_provenance_register</code></a></td><td>17</td><td>value 11 · reject 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/ArithOp.division_overflow.html"><code>ArithOp.division_overflow</code></a></td><td>16</td><td>value 16</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.item_bind_edges_v6.html"><code>AvlTree.item_bind_edges_v6</code></a></td><td>16</td><td>value 12 · panicked 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SigmaPropBytes.length_limit_v6.html"><code>SigmaPropBytes.length_limit_v6</code></a></td><td>16</td><td>reject 16</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/String.jdk_utf8_decode_v6.html"><code>String.jdk_utf8_decode_v6</code></a></td><td>16</td><td>value 16</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.method_call_charge_order_v6.html"><code>AvlTree.method_call_charge_order_v6</code></a></td><td>14</td><td>value 14</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/EQ.comparer_dispatch.html"><code>EQ.comparer_dispatch</code></a></td><td>14</td><td>value 8 · reject 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.pair_shape_map.html"><code>Coll.pair_shape_map</code></a></td><td>13</td><td>value 13</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Comparison.mixed_width.html"><code>Comparison.mixed_width</code></a></td><td>12</td><td>reject 12</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.non_pair_value_gates.html"><code>Tuple.non_pair_value_gates</code></a></td><td>12</td><td>value 7 · reject 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Value.checkType_sites.html"><code>Value.checkType_sites</code></a></td><td>12</td><td>reject 12</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.prefix_cross_type_equality.html"><code>Coll.prefix_cross_type_equality</code></a></td><td>11</td><td>value 11</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested.html"><code>Global.serialize_shared_nested</code></a></td><td>11</td><td>reject 11</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.object_arrays_by_class_v6.html"><code>Coll.object_arrays_by_class_v6</code></a></td><td>9</td><td>value 9</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_count_range_at_depth.html"><code>Global.serialize_count_range_at_depth</code></a></td><td>9</td><td>panicked 9</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_tuple_arm.html"><code>Global.serialize_tuple_arm</code></a></td><td>9</td><td>reject 8 · value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Option.method_type_variable_names_v6.html"><code>Option.method_type_variable_names_v6</code></a></td><td>9</td><td>value 9</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.hof_element_type_mismatch.html"><code>Coll.hof_element_type_mismatch</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.prefix_suffix_runtime_item_type.html"><code>Coll.prefix_suffix_runtime_item_type</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.unequal_pairs_readers_v6.html"><code>Coll.unequal_pairs_readers_v6</code></a></td><td>8</td><td>panicked 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Filter.item_by_item_v6.html"><code>Filter.item_by_item_v6</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.binding_provenance_var.html"><code>Tuple.binding_provenance_var</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.producer_specialisation_witness.html"><code>Coll.producer_specialisation_witness</code></a></td><td>7</td><td>value 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.runtime_shapes_methodcall.html"><code>Coll.runtime_shapes_methodcall</code></a></td><td>7</td><td>value 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.specialisation_getorelse.html"><code>Coll.specialisation_getorelse</code></a></td><td>6</td><td>value 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.specialisation_pair_prefix.html"><code>Coll.specialisation_pair_prefix</code></a></td><td>6</td><td>value 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SubstConstants.length_limit_v6.html"><code>SubstConstants.length_limit_v6</code></a></td><td>6</td><td>reject 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/ArithOp.mixed_width.html"><code>ArithOp.mixed_width</code></a></td><td>5</td><td>value 3 · reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/ByIndex.default_specialisation.html"><code>ByIndex.default_specialisation</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.methodcall_v5_ids.html"><code>Coll.methodcall_v5_ids</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.specialisation_prefix_suffix.html"><code>Coll.specialisation_prefix_suffix</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.zip_unequal_sides_v6.html"><code>Coll.zip_unequal_sides_v6</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/EQ.cross_width_numeric.html"><code>EQ.cross_width_numeric</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_no_writer_arm.html"><code>Global.serialize_no_writer_arm</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/MethodCall.v5_methods_missing_in_rust.html"><code>MethodCall.v5_methods_missing_in_rust</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/STypeVar.name_utf8_leniency.html"><code>STypeVar.name_utf8_leniency</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.non_pair_value_producers.html"><code>Tuple.non_pair_value_producers</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Context.method_call_no_args_v6.html"><code>Context.method_call_no_args_v6</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_length_limit_v6.html"><code>Global.serialize_length_limit_v6</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/GroupElement.exp_methodcall_wide_exponent.html"><code>GroupElement.exp_methodcall_wide_exponent</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Negation.mixed_width.html"><code>Negation.mixed_width</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Unevaluated.node_kinds.html"><code>Unevaluated.node_kinds</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Value.checkType_lazy_default.html"><code>Value.checkType_lazy_default</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Append.reference_array_store.html"><code>Append.reference_array_store</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/BigInt.shift_and_inverse_range_edges.html"><code>BigInt.shift_and_inverse_range_edges</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Box.getReg_dynamic_index.html"><code>Box.getReg_dynamic_index</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.pair_shape_restored.html"><code>Coll.pair_shape_restored</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.powHit_feeding_Coll_HOF.html"><code>Global.powHit_feeding_Coll_HOF</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_coll_count_range.html"><code>Global.serialize_coll_count_range</code></a></td><td>3</td><td>panicked 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/GroupElement.expUnsigned.html"><code>GroupElement.expUnsigned</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SubstConstants.type_var_name_range_v6.html"><code>SubstConstants.type_var_name_range_v6</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SubstConstants.wide_new_value.html"><code>SubstConstants.wide_new_value</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.non_pair_type_check.html"><code>Tuple.non_pair_type_check</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/UnsignedBigInt.shiftLeft_past_256_bits.html"><code>UnsignedBigInt.shiftLeft_past_256_bits</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/substConstants_template_forms.html"><code>substConstants_template_forms</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.per_op_failure_v6.html"><code>AvlTree.per_op_failure_v6</code></a></td><td>2</td><td>panicked 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/BigInt.range_check_tree_version.html"><code>BigInt.range_check_tree_version</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.append_runtime_item_type.html"><code>Coll.append_runtime_item_type</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.flatMap_element_type.html"><code>Coll.flatMap_element_type</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.indexOf_comparer_dispatch.html"><code>Coll.indexOf_comparer_dispatch</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.specialisation_blind_ops.html"><code>Coll.specialisation_blind_ops</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.store_runtime_array_class.html"><code>Coll.store_runtime_array_class</code></a></td><td>2</td><td>reject 1 · value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/DeserializeContext_over_absent_wrong_typed_var.html"><code>DeserializeContext_over_absent_wrong_typed_var</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Header.property_accessors.html"><code>Header.property_accessors</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/STypeVar.name_length_bound.html"><code>STypeVar.name_length_bound</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SubstConstants.coll_count_range_v6.html"><code>SubstConstants.coll_count_range_v6</code></a></td><td>2</td><td>panicked 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.binding_provenance_input_var.html"><code>Tuple.binding_provenance_input_var</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.small_tuples.html"><code>Tuple.small_tuples</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.bad_proof_bytes_v6.html"><code>AvlTree.bad_proof_bytes_v6</code></a></td><td>1</td><td>panicked 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.degenerate_edges_v6.html"><code>AvlTree.degenerate_edges_v6</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.insertOrUpdate.html"><code>AvlTree.insertOrUpdate</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.insert_wrong_tree.html"><code>AvlTree.insert_wrong_tree</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.negative_keylength_tree_v6.html"><code>AvlTree.negative_keylength_tree_v6</code></a></td><td>1</td><td>panicked 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/AvlTree.unsupported_eval_nodes_v6.html"><code>AvlTree.unsupported_eval_nodes_v6</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Box.getReg_adversarial.html"><code>Box.getReg_adversarial</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.append_node_array_class.html"><code>Coll.append_node_array_class</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.eq_item_type.html"><code>Coll.eq_item_type</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Coll.item_store_type_check.html"><code>Coll.item_store_type_check</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/FunDef.nTpeArgs_count_bound.html"><code>FunDef.nTpeArgs_count_bound</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.deserializeTo_Header_id_basis.html"><code>Global.deserializeTo_Header_id_basis</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.none_pre_v3_dead_branch.html"><code>Global.none_pre_v3_dead_branch</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.html"><code>Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768.html"><code>Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_E_serialize_long_is_nested_32768x32768.html"><code>Global.serialize_shared_nested_bounded_E_serialize_long_is_nested_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_serialize_32768x1024x1024.html"><code>Global.serialize_shared_nested_bounded_G3_size_serialize_32768x1024x1024</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_serialize_32768x256x256.html"><code>Global.serialize_shared_nested_bounded_G3_size_serialize_32768x256x256</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_serialize_32768x32768x32768.html"><code>Global.serialize_shared_nested_bounded_G3_size_serialize_32768x32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x16384.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x16384</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x32768.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x4096.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x4096</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x8192.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x8192</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Global.serialize_small_tuple.html"><code>Global.serialize_small_tuple</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/HOF_FunDef_polymorphic_identity.html"><code>HOF_FunDef_polymorphic_identity</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/HOF_FunDef_type_var_body.html"><code>HOF_FunDef_type_var_body</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/HOF_currying_Apply_of_Apply.html"><code>HOF_currying_Apply_of_Apply</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Header.version_unparsedbytes_gate.html"><code>Header.version_unparsedbytes_gate</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Rule1012_header_size_bit.html"><code>Rule1012_header_size_bit</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/SOption.nonzero_data_tag.html"><code>SOption.nonzero_data_tag</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/authored/Tuple.non_pair_value_type_directed.html"><code>Tuple.non_pair_value_type_directed</code></a></td><td>1</td><td>reject 1</td></tr>
+</table>
+<h3 class="slice-h">eval/v6/captured</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h111766-67eb9e994be2.html"><code>h111766-67eb9e994be2</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h111814-51ad38443b00.html"><code>h111814-51ad38443b00</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h111927-7b445b01f356.html"><code>h111927-7b445b01f356</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h112291-52c30165e5d5.html"><code>h112291-52c30165e5d5</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h112291-84ecb7431b61.html"><code>h112291-84ecb7431b61</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h112342-f439fa4182cf.html"><code>h112342-f439fa4182cf</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h112379-8c12d3f6ce28.html"><code>h112379-8c12d3f6ce28</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h113569-a967385bcebd.html"><code>h113569-a967385bcebd</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h1542-1b5c260a496a.html"><code>h1542-1b5c260a496a</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h1822-e3ed1933fb2a.html"><code>h1822-e3ed1933fb2a</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210070-982e47eda7eb.html"><code>h210070-982e47eda7eb</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210076-842bb218d145.html"><code>h210076-842bb218d145</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210080-a1969defacf8.html"><code>h210080-a1969defacf8</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210129-6c51f301c418.html"><code>h210129-6c51f301c418</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210178-82e5f2795d3e.html"><code>h210178-82e5f2795d3e</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210183-bfbf46194aa7.html"><code>h210183-bfbf46194aa7</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h210186-f28f304a17ba.html"><code>h210186-f28f304a17ba</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h231432-fb4744c753de.html"><code>h231432-fb4744c753de</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h231432-fddb21e1303e.html"><code>h231432-fddb21e1303e</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h231515-0b800cbc6640.html"><code>h231515-0b800cbc6640</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h23806-a0c70f1ac1f7.html"><code>h23806-a0c70f1ac1f7</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h250628-01251d809fae.html"><code>h250628-01251d809fae</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h2571-3d8b8635ca52.html"><code>h2571-3d8b8635ca52</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h257245-6b21a028a98c.html"><code>h257245-6b21a028a98c</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h257247-3781e589d6b6.html"><code>h257247-3781e589d6b6</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h257247-40a6377c54cc.html"><code>h257247-40a6377c54cc</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h261770-5dad90a5021b.html"><code>h261770-5dad90a5021b</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h264948-bf31b3635b88.html"><code>h264948-bf31b3635b88</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h265036-9946de43b803.html"><code>h265036-9946de43b803</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h265399-83f7c92a5d39.html"><code>h265399-83f7c92a5d39</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h265560-ef1ac1d85ed7.html"><code>h265560-ef1ac1d85ed7</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h2666-8437796cc182.html"><code>h2666-8437796cc182</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h267637-abc553e94abf.html"><code>h267637-abc553e94abf</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h269611-357328e4444a.html"><code>h269611-357328e4444a</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h273197-0de63e2f5b18.html"><code>h273197-0de63e2f5b18</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h28286-a707cac43cc6.html"><code>h28286-a707cac43cc6</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h28461-884a8e823e3e.html"><code>h28461-884a8e823e3e</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h28474-527dd0cad822.html"><code>h28474-527dd0cad822</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h28474-9b6449d14878.html"><code>h28474-9b6449d14878</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h28882-c024ed2704d4.html"><code>h28882-c024ed2704d4</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h28931-costdiverge-colleq.html"><code>h28931-costdiverge-colleq</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h29879-d92c96ca6ea5.html"><code>h29879-d92c96ca6ea5</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h30866-174f842b6284.html"><code>h30866-174f842b6284</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h318040-089df53dc16b.html"><code>h318040-089df53dc16b</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h321624-5cfe5a53ceda.html"><code>h321624-5cfe5a53ceda</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h322248-26e77c80bf42.html"><code>h322248-26e77c80bf42</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323069-296824ff6c8b.html"><code>h323069-296824ff6c8b</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323115-ff8c955a82e5.html"><code>h323115-ff8c955a82e5</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323125-5a2643e25a76.html"><code>h323125-5a2643e25a76</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323127-6e4a9fe411cb.html"><code>h323127-6e4a9fe411cb</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323147-7d54b8e98882.html"><code>h323147-7d54b8e98882</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323253-f3c78543d03c.html"><code>h323253-f3c78543d03c</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323581-6f3db2ce9792.html"><code>h323581-6f3db2ce9792</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323630-d110fb3dbaae.html"><code>h323630-d110fb3dbaae</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323705-4bc141532db1.html"><code>h323705-4bc141532db1</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323716-896f328b33d1.html"><code>h323716-896f328b33d1</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323718-96fa91ae47de.html"><code>h323718-96fa91ae47de</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h323735-19a5b21756be.html"><code>h323735-19a5b21756be</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h324677-f0868a4b1f5c.html"><code>h324677-f0868a4b1f5c</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h33615-7f2709218327.html"><code>h33615-7f2709218327</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h92839-ef080dcdc493.html"><code>h92839-ef080dcdc493</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/captured/h92847-678cb0ba7dc5.html"><code>h92847-678cb0ba7dc5</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+</table>
+<h3 class="slice-h">eval/v6/spec</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/spec/BigInt_6.0_features.html"><code>BigInt_6.0_features</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/spec/UnsignedBigInt_methods.html"><code>UnsignedBigInt_methods</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/eval/v6/spec/GroupElement.expUnsigned.html"><code>GroupElement.expUnsigned</code></a></td><td>3</td><td>value 3</td></tr>
+</table>
+<h3 class="slice-h">nipopow/any/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/nipopow/any/authored/NipopowProve.jvm-chain-64.html"><code>NipopowProve.jvm-chain-64</code></a></td><td>5</td><td>proof 4 · interlinks 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/nipopow/any/authored/NipopowProve.jvm-chain-32.html"><code>NipopowProve.jvm-chain-32</code></a></td><td>4</td><td>proof 3 · interlinks 1</td></tr>
+</table>
+<h3 class="slice-h">transaction/any/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/any/authored/block-version-source.html"><code>block-version-source</code></a></td><td>8</td><td>valid 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/any/authored/tree-version-block-version-edges.html"><code>tree-version-block-version-edges</code></a></td><td>7</td><td>valid 7</td></tr>
+</table>
+<h3 class="slice-h">transaction/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/and-or-item-by-item-producers.html"><code>and-or-item-by-item-producers</code></a></td><td>171</td><td>valid 171</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/and-or-item-by-item.html"><code>and-or-item-by-item</code></a></td><td>165</td><td>valid 165</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/patch-array-class.html"><code>patch-array-class</code></a></td><td>120</td><td>valid 120</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/avltree-item-bind-review.html"><code>avltree-item-bind-review</code></a></td><td>119</td><td>valid 119</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/avltree-item-bind.html"><code>avltree-item-bind</code></a></td><td>98</td><td>valid 98</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/segregated-tuple.html"><code>segregated-tuple</code></a></td><td>90</td><td>valid 90</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/generic-producers-census.html"><code>generic-producers-census</code></a></td><td>87</td><td>valid 87</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/substconstants-lift.html"><code>substconstants-lift</code></a></td><td>60</td><td>valid 60</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/generic-producers.html"><code>generic-producers</code></a></td><td>58</td><td>valid 58</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/and-or-item-by-item-context.html"><code>and-or-item-by-item-context</code></a></td><td>26</td><td>valid 26</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/collection-length-limit.html"><code>collection-length-limit</code></a></td><td>20</td><td>valid 20</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/generic-producers-pairs.html"><code>generic-producers-pairs</code></a></td><td>9</td><td>valid 9</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/authored/tree-version-above-activated.html"><code>tree-version-above-activated</code></a></td><td>4</td><td>valid 4</td></tr>
+</table>
+<h3 class="slice-h">transaction/v5/captured</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s8.html"><code>mainnet-rent-s8</code></a></td><td>22</td><td>valid 22</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s4.html"><code>mainnet-rent-s4</code></a></td><td>8</td><td>valid 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s2.html"><code>mainnet-rent-s2</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s3.html"><code>mainnet-rent-s3</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s1.html"><code>mainnet-rent-s1</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s6.html"><code>mainnet-rent-s6</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v5/captured/mainnet-rent-s7.html"><code>mainnet-rent-s7</code></a></td><td>1</td><td>valid 1</td></tr>
+</table>
+<h3 class="slice-h">transaction/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/and-or-item-by-item.html"><code>and-or-item-by-item</code></a></td><td>330</td><td>valid 330</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/patch-array-class.html"><code>patch-array-class</code></a></td><td>248</td><td>valid 248</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/and-or-item-by-item-producers.html"><code>and-or-item-by-item-producers</code></a></td><td>240</td><td>valid 240</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/generic-producers-census.html"><code>generic-producers-census</code></a></td><td>231</td><td>valid 231</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/avltree-item-bind-review.html"><code>avltree-item-bind-review</code></a></td><td>227</td><td>valid 227</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/avltree-item-bind.html"><code>avltree-item-bind</code></a></td><td>221</td><td>valid 221</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/generic-producers.html"><code>generic-producers</code></a></td><td>129</td><td>valid 129</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/segregated-tuple.html"><code>segregated-tuple</code></a></td><td>120</td><td>valid 120</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/substconstants-lift.html"><code>substconstants-lift</code></a></td><td>80</td><td>valid 80</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/evaluated-values-spend.html"><code>evaluated-values-spend</code></a></td><td>63</td><td>valid 63</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/and-or-item-by-item-context.html"><code>and-or-item-by-item-context</code></a></td><td>52</td><td>valid 52</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/group-node-static-type.html"><code>group-node-static-type</code></a></td><td>48</td><td>valid 48</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/collection-length-limit.html"><code>collection-length-limit</code></a></td><td>44</td><td>valid 44</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/context-property-calls.html"><code>context-property-calls</code></a></td><td>32</td><td>valid 32</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/small-tuples.html"><code>small-tuples</code></a></td><td>29</td><td>valid 29</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/generic-producers-pairs.html"><code>generic-producers-pairs</code></a></td><td>25</td><td>valid 25</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/deserialize-substitution-spend.html"><code>deserialize-substitution-spend</code></a></td><td>24</td><td>valid 24</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/sized-tree-spend.html"><code>sized-tree-spend</code></a></td><td>17</td><td>valid 17</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/argument-widening.html"><code>argument-widening</code></a></td><td>16</td><td>valid 16</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/kept-tree-bytes-input.html"><code>kept-tree-bytes-input</code></a></td><td>13</td><td>valid 13</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/numeric-receiver-width.html"><code>numeric-receiver-width</code></a></td><td>12</td><td>valid 12</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/storage-rent-recreation.html"><code>storage-rent-recreation</code></a></td><td>11</td><td>valid 11</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/tree-version-above-activated-eval.html"><code>tree-version-above-activated-eval</code></a></td><td>11</td><td>valid 11</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/tree-version-above-activated.html"><code>tree-version-above-activated</code></a></td><td>8</td><td>valid 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/non-pair-tuple-spend.html"><code>non-pair-tuple-spend</code></a></td><td>7</td><td>valid 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/receiver-kind.html"><code>receiver-kind</code></a></td><td>7</td><td>valid 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/sized-tree-output-bytes.html"><code>sized-tree-output-bytes</code></a></td><td>5</td><td>valid 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/storage-rent-fee-wrap.html"><code>storage-rent-fee-wrap</code></a></td><td>5</td><td>valid 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/method-call-arity.html"><code>method-call-arity</code></a></td><td>4</td><td>valid 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/storage-rent-fallback.html"><code>storage-rent-fallback</code></a></td><td>3</td><td>valid 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/cost-limit-boundary.html"><code>cost-limit-boundary</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/kept-tree-bytes-substitution-cost.html"><code>kept-tree-bytes-substitution-cost</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/min-value-dust-boundary.html"><code>min-value-dust-boundary</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/storage-rent-dust.html"><code>storage-rent-dust</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/storage-rent-gate.html"><code>storage-rent-gate</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/storage-rent-mixed-inputs.html"><code>storage-rent-mixed-inputs</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/authored/conjecture-child-count-wrap.html"><code>conjecture-child-count-wrap</code></a></td><td>1</td><td>valid 1</td></tr>
+</table>
+<h3 class="slice-h">transaction/v6/captured</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s5.html"><code>mainnet-rent-s5</code></a></td><td>45</td><td>valid 45</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s8.html"><code>mainnet-rent-s8</code></a></td><td>26</td><td>valid 26</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s1.html"><code>mainnet-rent-s1</code></a></td><td>3</td><td>valid 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s2.html"><code>mainnet-rent-s2</code></a></td><td>3</td><td>valid 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s3.html"><code>mainnet-rent-s3</code></a></td><td>3</td><td>valid 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s4.html"><code>mainnet-rent-s4</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s7.html"><code>mainnet-rent-s7</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/atleast-degenerate-bound-184137.html"><code>atleast-degenerate-bound-184137</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/bigint-downcast-2666.html"><code>bigint-downcast-2666</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/deserialize-context-111927.html"><code>deserialize-context-111927</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/getvarfrominput-92847.html"><code>getvarfrominput-92847</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/mainnet-rent-s6.html"><code>mainnet-rent-s6</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/multi-input-10-402900.html"><code>multi-input-10-402900</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/multi-input-3-402800.html"><code>multi-input-3-402800</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/order-ext-224312.html"><code>order-ext-224312</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/transaction/v6/captured/powhit-return-type-28474.html"><code>powhit-return-type-28474</code></a></td><td>1</td><td>valid 1</td></tr>
+</table>
+<h3 class="slice-h">wire/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/ErgoTree.type_var_name_write_range.html"><code>ErgoTree.type_var_name_write_range</code></a></td><td>27</td><td>roundtrip 27</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/ErgoTree.jdk_utf8_decode.html"><code>ErgoTree.jdk_utf8_decode</code></a></td><td>9</td><td>roundtrip 8 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/ErgoTree.stypeToRType_sites.html"><code>ErgoTree.stypeToRType_sites</code></a></td><td>8</td><td>reject 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Transaction.jdk_utf8_decode.html"><code>Transaction.jdk_utf8_decode</code></a></td><td>5</td><td>roundtrip 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Box.tree_version_above_activated.html"><code>Box.tree_version_above_activated</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/ErgoTree.method_call_no_args.html"><code>ErgoTree.method_call_no_args</code></a></td><td>4</td><td>roundtrip 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Transaction.tree_version_above_activated.html"><code>Transaction.tree_version_above_activated</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Box.stypeToRType_sites.html"><code>Box.stypeToRType_sites</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Box.method_type_variable_names.html"><code>Box.method_type_variable_names</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Constant.jdk_utf8_decode.html"><code>Constant.jdk_utf8_decode</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/ErgoTree.method_type_variable_names.html"><code>ErgoTree.method_type_variable_names</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Transaction.extension_evaluated_values.html"><code>Transaction.extension_evaluated_values</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/Transaction.method_type_variable_names.html"><code>Transaction.method_type_variable_names</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v5/authored/BlockTransactions.tree_version_above_activated.html"><code>BlockTransactions.tree_version_above_activated</code></a></td><td>1</td><td>reject 1</td></tr>
+</table>
+<h3 class="slice-h">wire/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.type_var_name_write_range.html"><code>ErgoTree.type_var_name_write_range</code></a></td><td>70</td><td>reject 42 · roundtrip 28</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_group_node_static_type.html"><code>Box.tree_group_node_static_type</code></a></td><td>36</td><td>reject 30 · roundtrip 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_parse_acceptance.html"><code>Box.tree_parse_acceptance</code></a></td><td>36</td><td>reject 24 · roundtrip 12</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_group_node_static_type.html"><code>Transaction.tree_group_node_static_type</code></a></td><td>36</td><td>reject 30 · roundtrip 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_parse_acceptance.html"><code>Transaction.tree_parse_acceptance</code></a></td><td>36</td><td>reject 24 · roundtrip 12</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.type_var_name_write_range.html"><code>Transaction.type_var_name_write_range</code></a></td><td>22</td><td>roundtrip 16 · reject 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.extension_evaluated_values.html"><code>Transaction.extension_evaluated_values</code></a></td><td>18</td><td>roundtrip 18</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.unevaluated_node_kinds.html"><code>Box.unevaluated_node_kinds</code></a></td><td>17</td><td>roundtrip 14 · reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.unevaluated_node_kinds.html"><code>Transaction.unevaluated_node_kinds</code></a></td><td>17</td><td>roundtrip 14 · reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.jdk_utf8_decode.html"><code>ErgoTree.jdk_utf8_decode</code></a></td><td>12</td><td>roundtrip 8 · reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_degrade_gate.html"><code>Box.tree_degrade_gate</code></a></td><td>11</td><td>reject 11</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_degrade_gate.html"><code>Transaction.tree_degrade_gate</code></a></td><td>11</td><td>reject 11</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.register_evaluated_values.html"><code>Box.register_evaluated_values</code></a></td><td>10</td><td>roundtrip 9 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.scollection_methodcall_v5_ids.html"><code>ErgoTree.scollection_methodcall_v5_ids</code></a></td><td>10</td><td>roundtrip 10</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.static_type_substitution.html"><code>ErgoTree.static_type_substitution</code></a></td><td>10</td><td>reject 10</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.register_evaluated_values.html"><code>Transaction.register_evaluated_values</code></a></td><td>10</td><td>roundtrip 9 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_version_above_activated.html"><code>Transaction.tree_version_above_activated</code></a></td><td>10</td><td>reject 10</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_version_above_activated.html"><code>Box.tree_version_above_activated</code></a></td><td>9</td><td>reject 9</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_sigmaboolean_bounds.html"><code>Box.tree_sigmaboolean_bounds</code></a></td><td>8</td><td>roundtrip 7 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.stypeToRType_sites.html"><code>ErgoTree.stypeToRType_sites</code></a></td><td>8</td><td>reject 8</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_sigmaboolean_bounds.html"><code>Transaction.tree_sigmaboolean_bounds</code></a></td><td>8</td><td>roundtrip 7 · reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.small_tuples.html"><code>Box.small_tuples</code></a></td><td>7</td><td>reject 4 · roundtrip 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_bool_pair_form.html"><code>Box.tree_bool_pair_form</code></a></td><td>7</td><td>roundtrip 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.v5_methods_missing_in_rust.html"><code>ErgoTree.v5_methods_missing_in_rust</code></a></td><td>7</td><td>roundtrip 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/SigmaBoolean.conjecture_bounds.html"><code>SigmaBoolean.conjecture_bounds</code></a></td><td>7</td><td>roundtrip 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.small_tuples.html"><code>Transaction.small_tuples</code></a></td><td>7</td><td>reject 4 · roundtrip 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_bool_pair_form.html"><code>Transaction.tree_bool_pair_form</code></a></td><td>7</td><td>roundtrip 7</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_count_wrap.html"><code>Box.tree_count_wrap</code></a></td><td>6</td><td>roundtrip 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.small_tuples.html"><code>ErgoTree.small_tuples</code></a></td><td>6</td><td>reject 4 · roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_count_wrap.html"><code>Transaction.tree_count_wrap</code></a></td><td>6</td><td>roundtrip 6</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_header_bits.html"><code>Box.tree_header_bits</code></a></td><td>5</td><td>roundtrip 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_nested_degrade.html"><code>Box.tree_nested_degrade</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/STypeVar.name_utf8_roundtrip.html"><code>STypeVar.name_utf8_roundtrip</code></a></td><td>5</td><td>roundtrip 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_header_bits.html"><code>Transaction.tree_header_bits</code></a></td><td>5</td><td>roundtrip 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_nested_degrade.html"><code>Transaction.tree_nested_degrade</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_count_bounds.html"><code>Box.tree_count_bounds</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.method_call_arity_degrade_witness.html"><code>ErgoTree.method_call_arity_degrade_witness</code></a></td><td>4</td><td>roundtrip 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.method_call_no_args.html"><code>ErgoTree.method_call_no_args</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.methodcall_type_id_order.html"><code>ErgoTree.methodcall_type_id_order</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.non_pair_tuple_operand.html"><code>ErgoTree.non_pair_tuple_operand</code></a></td><td>4</td><td>reject 3 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_count_bounds.html"><code>Transaction.tree_count_bounds</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.ushort_wrap.html"><code>Transaction.ushort_wrap</code></a></td><td>4</td><td>roundtrip 4</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.non_pair_tuple_operand.html"><code>Box.non_pair_tuple_operand</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.ushort_wrap.html"><code>Box.ushort_wrap</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Constant.ushort_wrap.html"><code>Constant.ushort_wrap</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.numeric_methodcall_version_gate.html"><code>ErgoTree.numeric_methodcall_version_gate</code></a></td><td>3</td><td>reject 2 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.context_extension_id_bound.html"><code>Transaction.context_extension_id_bound</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.creation_height_int_bound.html"><code>Transaction.creation_height_int_bound</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.non_pair_tuple_operand.html"><code>Transaction.non_pair_tuple_operand</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/BlockTransactions.tree_version_above_activated.html"><code>BlockTransactions.tree_version_above_activated</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.creation_height_int_bound.html"><code>Box.creation_height_int_bound</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.explicit_type_args.html"><code>Box.explicit_type_args</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.method_type_variable_names.html"><code>Box.method_type_variable_names</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.methodcall_type_id_order.html"><code>Box.methodcall_type_id_order</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.zero_width_collection.html"><code>Box.zero_width_collection</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.explicit_type_args.html"><code>ErgoTree.explicit_type_args</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.header_eof.html"><code>ErgoTree.header_eof</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.method_type_variable_names.html"><code>ErgoTree.method_type_variable_names</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.sigmaprop_methodcall_ids.html"><code>ErgoTree.sigmaprop_methodcall_ids</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.explicit_type_args.html"><code>Transaction.explicit_type_args</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.method_type_variable_names.html"><code>Transaction.method_type_variable_names</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.methodcall_type_id_order.html"><code>Transaction.methodcall_type_id_order</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.zero_width_collection.html"><code>Transaction.zero_width_collection</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.stypeToRType_sites.html"><code>Box.stypeToRType_sites</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_root_forms.html"><code>Box.tree_root_forms</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Box.tree_valuse_unbound.html"><code>Box.tree_valuse_unbound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/ErgoTree.property_call_receiver_type.html"><code>ErgoTree.property_call_receiver_type</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.context_extension_count_bound.html"><code>Transaction.context_extension_count_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.context_extension_depth_bound.html"><code>Transaction.context_extension_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.nested_box_depth_bound.html"><code>Transaction.nested_box_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.register_depth_bound.html"><code>Transaction.register_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.segregated_constant_depth_bound.html"><code>Transaction.segregated_constant_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_root_forms.html"><code>Transaction.tree_root_forms</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/blitzen-develop/wire/v6/authored/Transaction.tree_valuse_unbound.html"><code>Transaction.tree_valuse_unbound</code></a></td><td>1</td><td>reject 1</td></tr>
+</table>
+</details>
+<details class="coal-details"><summary>🪨 <b>blitzen-mwaddip</b> — 9 coal</summary>
+<h3 class="slice-h">eval/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-mwaddip/eval/v5/authored/SelectField.non_pair.html"><code>SelectField.non_pair</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+</table>
+<h3 class="slice-h">eval/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/blitzen-mwaddip/eval/v6/authored/Tuple.non_pair_value_ops.html"><code>Tuple.non_pair_value_ops</code></a></td><td>3</td><td>not-implemented 3</td></tr>
+<tr><td><a href="coal/blitzen-mwaddip/eval/v6/authored/Tuple.small_tuples.html"><code>Tuple.small_tuples</code></a></td><td>3</td><td>not-implemented 3</td></tr>
+<tr><td><a href="coal/blitzen-mwaddip/eval/v6/authored/Global.serialize_small_tuple.html"><code>Global.serialize_small_tuple</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+<tr><td><a href="coal/blitzen-mwaddip/eval/v6/authored/Tuple.non_pair_value_type_directed.html"><code>Tuple.non_pair_value_type_directed</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+</table>
+</details>
+<details class="coal-details"><summary>🪨 <b>comet</b> — 50 coal</summary>
+<h3 class="slice-h">wire/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/comet/wire/v5/authored/Transaction.jdk_utf8_decode.html"><code>Transaction.jdk_utf8_decode</code></a></td><td>9</td><td>roundtrip 7 · not-implemented 2</td></tr>
+<tr><td><a href="coal/comet/wire/v5/authored/Box.stypeToRType_sites.html"><code>Box.stypeToRType_sites</code></a></td><td>5</td><td>not-implemented 5</td></tr>
+<tr><td><a href="coal/comet/wire/v5/authored/Constant.jdk_utf8_decode.html"><code>Constant.jdk_utf8_decode</code></a></td><td>5</td><td>not-implemented 5</td></tr>
+<tr><td><a href="coal/comet/wire/v5/authored/Transaction.extension_evaluated_values.html"><code>Transaction.extension_evaluated_values</code></a></td><td>4</td><td>not-implemented 4</td></tr>
+<tr><td><a href="coal/comet/wire/v5/authored/Box.method_type_variable_names.html"><code>Box.method_type_variable_names</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/comet/wire/v5/authored/Transaction.method_type_variable_names.html"><code>Transaction.method_type_variable_names</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+</table>
+<h3 class="slice-h">wire/v5/vendored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/comet/wire/v5/vendored/Transaction.html"><code>Transaction</code></a></td><td>17</td><td>roundtrip 17</td></tr>
+<tr><td><a href="coal/comet/wire/v5/vendored/Constant.html"><code>Constant</code></a></td><td>3</td><td>not-implemented 3</td></tr>
+<tr><td><a href="coal/comet/wire/v5/vendored/Box.html"><code>Box</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+</table>
+</details>
+<details class="coal-details"><summary>🪨 <b>dasher</b> — 9489 coal</summary>
+<h3 class="slice-h">eval/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/AvlTree.item_bind.html"><code>AvlTree.item_bind</code></a></td><td>715</td><td>not-implemented 680 · value 35</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.generic_producers.html"><code>Coll.generic_producers</code></a></td><td>300</td><td>value 270 · not-implemented 30</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.generic_producers_census.html"><code>Coll.generic_producers_census</code></a></td><td>231</td><td>value 231</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/AvlTree.item_bind_context.html"><code>AvlTree.item_bind_context</code></a></td><td>168</td><td>not-implemented 168</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/AvlTree.item_bind_edges.html"><code>AvlTree.item_bind_edges</code></a></td><td>154</td><td>not-implemented 154</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.generic_producers_pairs.html"><code>Coll.generic_producers_pairs</code></a></td><td>153</td><td>value 153</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.append_length_limit.html"><code>Coll.append_length_limit</code></a></td><td>100</td><td>not-implemented 100</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/AvlTree.digest_any_collection.html"><code>AvlTree.digest_any_collection</code></a></td><td>60</td><td>value 60</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Append.length_limit.html"><code>Append.length_limit</code></a></td><td>52</td><td>reject 52</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/MethodCall.argument_widening.html"><code>MethodCall.argument_widening</code></a></td><td>47</td><td>not-implemented 42 · value 5</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.patch_length_limit.html"><code>Coll.patch_length_limit</code></a></td><td>40</td><td>reject 40</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.flatMap_length_limit.html"><code>Coll.flatMap_length_limit</code></a></td><td>35</td><td>reject 35</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/BigInt.out_of_range_below_v3.html"><code>BigInt.out_of_range_below_v3</code></a></td><td>22</td><td>value 22</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.patch_array_class.html"><code>Coll.patch_array_class</code></a></td><td>19</td><td>not-implemented 19</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Evaluation.stypeToRType_sites.html"><code>Evaluation.stypeToRType_sites</code></a></td><td>15</td><td>reject 15</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/String.jdk_utf8_decode.html"><code>String.jdk_utf8_decode</code></a></td><td>14</td><td>cost 14</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.patch_array_class_context.html"><code>Coll.patch_array_class_context</code></a></td><td>13</td><td>not-implemented 13</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/SigmaProp.propBytes_length_limit.html"><code>SigmaProp.propBytes_length_limit</code></a></td><td>12</td><td>not-implemented 12</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/AND.item_by_item_context.html"><code>AND.item_by_item_context</code></a></td><td>10</td><td>not-implemented 10</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.length_limit_whole_trees.html"><code>Coll.length_limit_whole_trees</code></a></td><td>10</td><td>reject 10</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/OR.item_by_item_context.html"><code>OR.item_by_item_context</code></a></td><td>10</td><td>not-implemented 10</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Context.property_call_forms.html"><code>Context.property_call_forms</code></a></td><td>9</td><td>not-implemented 9</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/SubstConstants.lift_by_class.html"><code>SubstConstants.lift_by_class</code></a></td><td>9</td><td>reject 9</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/AvlTree.method_call_charge_order.html"><code>AvlTree.method_call_charge_order</code></a></td><td>8</td><td>not-implemented 4 · value 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Context.method_call_no_args.html"><code>Context.method_call_no_args</code></a></td><td>8</td><td>not-implemented 8</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/SigmaPropBytes.length_limit.html"><code>SigmaPropBytes.length_limit</code></a></td><td>8</td><td>reject 8</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.method_type_variable_names.html"><code>Coll.method_type_variable_names</code></a></td><td>7</td><td>reject 7</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Option.method_type_variable_names.html"><code>Option.method_type_variable_names</code></a></td><td>7</td><td>reject 4 · not-implemented 3</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Xor.unequal_sides.html"><code>Xor.unequal_sides</code></a></td><td>4</td><td>not-implemented 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/SubstConstants.length_limit.html"><code>SubstConstants.length_limit</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/dasher/eval/v5/authored/Coll.length_kept_at_limit.html"><code>Coll.length_kept_at_limit</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+</table>
+<h3 class="slice-h">eval/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/AvlTree.item_bind_v6.html"><code>AvlTree.item_bind_v6</code></a></td><td>1885</td><td>not-implemented 1738 · value 147</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.generic_producers_v6.html"><code>Coll.generic_producers_v6</code></a></td><td>722</td><td>value 662 · not-implemented 60</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.generic_producers_census_v6.html"><code>Coll.generic_producers_census_v6</code></a></td><td>647</td><td>value 647</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/MethodCall.static_type_substitution_v6.html"><code>MethodCall.static_type_substitution_v6</code></a></td><td>452</td><td>reject 450 · value 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/AvlTree.item_bind_context_v6.html"><code>AvlTree.item_bind_context_v6</code></a></td><td>392</td><td>not-implemented 392</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/MethodCall.unspecialised_call_names_v6.html"><code>MethodCall.unspecialised_call_names_v6</code></a></td><td>384</td><td>not-implemented 334 · reject 50</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/AvlTree.item_bind_edges_v6.html"><code>AvlTree.item_bind_edges_v6</code></a></td><td>372</td><td>not-implemented 372</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.generic_producers_pairs_v6.html"><code>Coll.generic_producers_pairs_v6</code></a></td><td>362</td><td>value 362</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.append_length_limit_v6.html"><code>Coll.append_length_limit_v6</code></a></td><td>210</td><td>not-implemented 210</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Append.length_limit_v6.html"><code>Append.length_limit_v6</code></a></td><td>109</td><td>reject 109</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/AvlTree.digest_any_collection_v6.html"><code>AvlTree.digest_any_collection_v6</code></a></td><td>104</td><td>value 104</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.patch_length_limit_v6.html"><code>Coll.patch_length_limit_v6</code></a></td><td>84</td><td>reject 84</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Evaluation.stypeToRType_sites_v6.html"><code>Evaluation.stypeToRType_sites_v6</code></a></td><td>83</td><td>reject 83</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.flatMap_length_limit_v6.html"><code>Coll.flatMap_length_limit_v6</code></a></td><td>72</td><td>reject 72</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/MethodCall.argument_widening_v6.html"><code>MethodCall.argument_widening_v6</code></a></td><td>56</td><td>not-implemented 47 · value 9</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.patch_array_class_v6.html"><code>Coll.patch_array_class_v6</code></a></td><td>38</td><td>not-implemented 38</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.patch_array_class_context_v6.html"><code>Coll.patch_array_class_context_v6</code></a></td><td>26</td><td>not-implemented 26</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/SigmaProp.propBytes_length_limit_v6.html"><code>SigmaProp.propBytes_length_limit_v6</code></a></td><td>24</td><td>not-implemented 24</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.length_limit_whole_trees_v6.html"><code>Coll.length_limit_whole_trees_v6</code></a></td><td>22</td><td>reject 22</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/AND.item_by_item_context_v6.html"><code>AND.item_by_item_context_v6</code></a></td><td>20</td><td>not-implemented 20</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Context.property_call_forms_v6.html"><code>Context.property_call_forms_v6</code></a></td><td>20</td><td>not-implemented 20</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/EQ.comparer_dispatch.html"><code>EQ.comparer_dispatch</code></a></td><td>20</td><td>cost 10 · reject 5 · value 5</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/OR.item_by_item_context_v6.html"><code>OR.item_by_item_context_v6</code></a></td><td>20</td><td>not-implemented 20</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/String.jdk_utf8_decode_v6.html"><code>String.jdk_utf8_decode_v6</code></a></td><td>20</td><td>cost 20</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/AvlTree.method_call_charge_order_v6.html"><code>AvlTree.method_call_charge_order_v6</code></a></td><td>16</td><td>value 11 · not-implemented 5</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/SigmaPropBytes.length_limit_v6.html"><code>SigmaPropBytes.length_limit_v6</code></a></td><td>16</td><td>reject 16</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.pair_shape_map.html"><code>Coll.pair_shape_map</code></a></td><td>15</td><td>not-implemented 15</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.method_type_variable_names_v6.html"><code>Coll.method_type_variable_names_v6</code></a></td><td>14</td><td>reject 14</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Comparison.mixed_width.html"><code>Comparison.mixed_width</code></a></td><td>14</td><td>reject 14</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.producer_specialisation_witness.html"><code>Coll.producer_specialisation_witness</code></a></td><td>13</td><td>not-implemented 13</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Global.serialize_runtime_class.html"><code>Global.serialize_runtime_class</code></a></td><td>12</td><td>value 12</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/SubstConstants.lift_by_class_v6.html"><code>SubstConstants.lift_by_class_v6</code></a></td><td>12</td><td>reject 12</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.methodcall_v5_ids.html"><code>Coll.methodcall_v5_ids</code></a></td><td>11</td><td>not-implemented 11</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.reference_store_ops.html"><code>Coll.reference_store_ops</code></a></td><td>11</td><td>reject 8 · cost 2 · not-implemented 1</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.runtime_shapes_methodcall.html"><code>Coll.runtime_shapes_methodcall</code></a></td><td>11</td><td>not-implemented 11</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Value.checkType_sites.html"><code>Value.checkType_sites</code></a></td><td>11</td><td>reject 11</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.specialisation_getorelse.html"><code>Coll.specialisation_getorelse</code></a></td><td>10</td><td>not-implemented 10</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/MethodCall.v5_methods_missing_in_rust.html"><code>MethodCall.v5_methods_missing_in_rust</code></a></td><td>10</td><td>not-implemented 10</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Option.method_type_variable_names_v6.html"><code>Option.method_type_variable_names_v6</code></a></td><td>10</td><td>not-implemented 6 · reject 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/ArithOp.division_overflow.html"><code>ArithOp.division_overflow</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Tuple.binding_provenance_var.html"><code>Tuple.binding_provenance_var</code></a></td><td>7</td><td>value 7</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.eq_item_type.html"><code>Coll.eq_item_type</code></a></td><td>6</td><td>value 6</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.indexOf_comparer_dispatch.html"><code>Coll.indexOf_comparer_dispatch</code></a></td><td>6</td><td>cost 4 · value 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/EQ.cross_width_numeric.html"><code>EQ.cross_width_numeric</code></a></td><td>6</td><td>reject 5 · cost 1</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/SubstConstants.length_limit_v6.html"><code>SubstConstants.length_limit_v6</code></a></td><td>6</td><td>reject 6</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Tuple.non_pair_value_gates.html"><code>Tuple.non_pair_value_gates</code></a></td><td>6</td><td>not-implemented 6</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.pair_shape_restored.html"><code>Coll.pair_shape_restored</code></a></td><td>5</td><td>not-implemented 4 · value 1</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Global.serialize_no_writer_arm.html"><code>Global.serialize_no_writer_arm</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Xor.per_item_cost_base.html"><code>Xor.per_item_cost_base</code></a></td><td>5</td><td>not-implemented 5</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/ArithOp.mixed_width.html"><code>ArithOp.mixed_width</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.hof_element_type_mismatch.html"><code>Coll.hof_element_type_mismatch</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Context.method_call_no_args_v6.html"><code>Context.method_call_no_args_v6</code></a></td><td>4</td><td>not-implemented 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Global.deserializeTo_Box_type_var_name_range.html"><code>Global.deserializeTo_Box_type_var_name_range</code></a></td><td>4</td><td>panicked 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Global.serialize_length_limit_v6.html"><code>Global.serialize_length_limit_v6</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Global.serialize_shared_nested.html"><code>Global.serialize_shared_nested</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/GroupElement.exp_methodcall_wide_exponent.html"><code>GroupElement.exp_methodcall_wide_exponent</code></a></td><td>4</td><td>not-implemented 2 · value 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Negation.mixed_width.html"><code>Negation.mixed_width</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Tuple.binding_provenance_register.html"><code>Tuple.binding_provenance_register</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Value.checkType_lazy_default.html"><code>Value.checkType_lazy_default</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Xor.unequal_sides_v6.html"><code>Xor.unequal_sides_v6</code></a></td><td>4</td><td>not-implemented 4</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.prefix_cross_type_equality.html"><code>Coll.prefix_cross_type_equality</code></a></td><td>3</td><td>value 2 · cost 1</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.prefix_suffix_runtime_item_type.html"><code>Coll.prefix_suffix_runtime_item_type</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Numeric.methodcall_ids.html"><code>Numeric.methodcall_ids</code></a></td><td>3</td><td>not-implemented 3</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/SubstConstants.wide_new_value.html"><code>SubstConstants.wide_new_value</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/BigInt.range_check_tree_version.html"><code>BigInt.range_check_tree_version</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.flatMap_element_type.html"><code>Coll.flatMap_element_type</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.length_kept_at_limit_v6.html"><code>Coll.length_kept_at_limit_v6</code></a></td><td>2</td><td>not-implemented 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.specialisation_blind_ops.html"><code>Coll.specialisation_blind_ops</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.specialisation_pair_prefix.html"><code>Coll.specialisation_pair_prefix</code></a></td><td>2</td><td>not-implemented 1 · value 1</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.zip_unequal_sides_v6.html"><code>Coll.zip_unequal_sides_v6</code></a></td><td>2</td><td>not-implemented 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/MethodCall.receiver_kind.html"><code>MethodCall.receiver_kind</code></a></td><td>2</td><td>not-implemented 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/SigmaProp.methodcall_ids.html"><code>SigmaProp.methodcall_ids</code></a></td><td>2</td><td>not-implemented 2</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Coll.specialisation_prefix_suffix.html"><code>Coll.specialisation_prefix_suffix</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/dasher/eval/v6/authored/Tuple.binding_provenance_input_var.html"><code>Tuple.binding_provenance_input_var</code></a></td><td>1</td><td>value 1</td></tr>
+</table>
+<h3 class="slice-h">transaction/any/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/transaction/any/authored/tree-version-block-version-edges.html"><code>tree-version-block-version-edges</code></a></td><td>4</td><td>cost 2 · valid 2</td></tr>
+<tr><td><a href="coal/dasher/transaction/any/authored/block-version-source.html"><code>block-version-source</code></a></td><td>3</td><td>valid 3</td></tr>
+</table>
+<h3 class="slice-h">transaction/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/generic-producers-census.html"><code>generic-producers-census</code></a></td><td>87</td><td>valid 87</td></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/generic-producers.html"><code>generic-producers</code></a></td><td>46</td><td>valid 46</td></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/collection-length-limit.html"><code>collection-length-limit</code></a></td><td>10</td><td>valid 10</td></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/generic-producers-pairs.html"><code>generic-producers-pairs</code></a></td><td>9</td><td>valid 9</td></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/patch-array-class.html"><code>patch-array-class</code></a></td><td>2</td><td>valid 2</td></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/avltree-item-bind.html"><code>avltree-item-bind</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/dasher/transaction/v5/authored/tree-version-above-activated.html"><code>tree-version-above-activated</code></a></td><td>1</td><td>valid 1</td></tr>
+</table>
+<h3 class="slice-h">transaction/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/generic-producers-census.html"><code>generic-producers-census</code></a></td><td>231</td><td>valid 231</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/generic-producers.html"><code>generic-producers</code></a></td><td>105</td><td>valid 105</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/evaluated-values-spend.html"><code>evaluated-values-spend</code></a></td><td>46</td><td>valid 46</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/generic-producers-pairs.html"><code>generic-producers-pairs</code></a></td><td>25</td><td>valid 25</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/collection-length-limit.html"><code>collection-length-limit</code></a></td><td>22</td><td>valid 22</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/context-property-calls.html"><code>context-property-calls</code></a></td><td>16</td><td>valid 16</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/argument-widening.html"><code>argument-widening</code></a></td><td>9</td><td>valid 9</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/sized-tree-spend.html"><code>sized-tree-spend</code></a></td><td>9</td><td>valid 9</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/tree-version-above-activated.html"><code>tree-version-above-activated</code></a></td><td>5</td><td>valid 5</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/tree-version-above-activated-eval.html"><code>tree-version-above-activated-eval</code></a></td><td>5</td><td>valid 5</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/avltree-item-bind.html"><code>avltree-item-bind</code></a></td><td>4</td><td>valid 4</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/patch-array-class.html"><code>patch-array-class</code></a></td><td>4</td><td>valid 4</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/conjecture-child-count-wrap.html"><code>conjecture-child-count-wrap</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/deserialize-substitution-spend.html"><code>deserialize-substitution-spend</code></a></td><td>1</td><td>valid 1</td></tr>
+<tr><td><a href="coal/dasher/transaction/v6/authored/substconstants-lift.html"><code>substconstants-lift</code></a></td><td>1</td><td>valid 1</td></tr>
+</table>
+<h3 class="slice-h">wire/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/BlockTransactions.tree_version_above_activated.html"><code>BlockTransactions.tree_version_above_activated</code></a></td><td>5</td><td>not-implemented 5</td></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/Box.tree_version_above_activated.html"><code>Box.tree_version_above_activated</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/Transaction.tree_version_above_activated.html"><code>Transaction.tree_version_above_activated</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/Box.method_type_variable_names.html"><code>Box.method_type_variable_names</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/ErgoTree.method_type_variable_names.html"><code>ErgoTree.method_type_variable_names</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/Transaction.extension_evaluated_values.html"><code>Transaction.extension_evaluated_values</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/dasher/wire/v5/authored/Transaction.method_type_variable_names.html"><code>Transaction.method_type_variable_names</code></a></td><td>2</td><td>reject 2</td></tr>
+</table>
+<h3 class="slice-h">wire/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.extension_evaluated_values.html"><code>Transaction.extension_evaluated_values</code></a></td><td>18</td><td>roundtrip 18</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/ErgoTree.static_type_substitution.html"><code>ErgoTree.static_type_substitution</code></a></td><td>11</td><td>reject 11</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.tree_version_above_activated.html"><code>Transaction.tree_version_above_activated</code></a></td><td>9</td><td>reject 9</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.register_evaluated_values.html"><code>Box.register_evaluated_values</code></a></td><td>8</td><td>roundtrip 8</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.tree_version_above_activated.html"><code>Box.tree_version_above_activated</code></a></td><td>8</td><td>reject 8</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.register_evaluated_values.html"><code>Transaction.register_evaluated_values</code></a></td><td>8</td><td>roundtrip 8</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/SigmaBoolean.conjecture_bounds.html"><code>SigmaBoolean.conjecture_bounds</code></a></td><td>6</td><td>roundtrip 6</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/BlockTransactions.reader_scope.html"><code>BlockTransactions.reader_scope</code></a></td><td>4</td><td>not-implemented 4</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.ushort_wrap.html"><code>Transaction.ushort_wrap</code></a></td><td>4</td><td>roundtrip 4</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/BlockTransactions.tree_version_above_activated.html"><code>BlockTransactions.tree_version_above_activated</code></a></td><td>3</td><td>not-implemented 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.method_type_variable_names.html"><code>Box.method_type_variable_names</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.tree_count_wrap.html"><code>Box.tree_count_wrap</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.ushort_wrap.html"><code>Box.ushort_wrap</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Constant.ushort_wrap.html"><code>Constant.ushort_wrap</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/ErgoTree.method_type_variable_names.html"><code>ErgoTree.method_type_variable_names</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.method_type_variable_names.html"><code>Transaction.method_type_variable_names</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.tree_count_wrap.html"><code>Transaction.tree_count_wrap</code></a></td><td>3</td><td>roundtrip 3</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.zero_width_collection.html"><code>Box.zero_width_collection</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.zero_width_collection.html"><code>Transaction.zero_width_collection</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.tree_root_forms.html"><code>Box.tree_root_forms</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Box.tree_sigmaboolean_bounds.html"><code>Box.tree_sigmaboolean_bounds</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.context_extension_depth_bound.html"><code>Transaction.context_extension_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.nested_box_depth_bound.html"><code>Transaction.nested_box_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.register_depth_bound.html"><code>Transaction.register_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.segregated_constant_depth_bound.html"><code>Transaction.segregated_constant_depth_bound</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.tree_root_forms.html"><code>Transaction.tree_root_forms</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.tree_sigmaboolean_bounds.html"><code>Transaction.tree_sigmaboolean_bounds</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/dasher/wire/v6/authored/Transaction.valdef_scope.html"><code>Transaction.valdef_scope</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+</table>
+</details>
+<details class="coal-details"><summary>🪨 <b>donner</b> — 8 coal</summary>
+<h3 class="slice-h">nipopow/any/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/donner/nipopow/any/authored/NipopowProve.jvm-chain-32.html"><code>NipopowProve.jvm-chain-32</code></a></td><td>4</td><td>proof 4</td></tr>
+<tr><td><a href="coal/donner/nipopow/any/authored/NipopowProve.jvm-chain-64.html"><code>NipopowProve.jvm-chain-64</code></a></td><td>4</td><td>proof 4</td></tr>
+</table>
+</details>
+<details class="coal-details"><summary>🪨 <b>vixen</b> — 9655 coal</summary>
+<h3 class="slice-h">authds/any/vendored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/vixen/authds/any/vendored/AvlProve.ergots_corpus.html"><code>AvlProve.ergots_corpus</code></a></td><td>10</td><td>not-implemented 10</td></tr>
+</table>
+<h3 class="slice-h">eval/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.patch_array_class.html"><code>Coll.patch_array_class</code></a></td><td>686</td><td>reject 686</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/OR.item_by_item.html"><code>OR.item_by_item</code></a></td><td>274</td><td>value 274</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AND.item_by_item.html"><code>AND.item_by_item</code></a></td><td>272</td><td>value 272</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.patch_array_class_context.html"><code>Coll.patch_array_class_context</code></a></td><td>200</td><td>reject 200</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AvlTree.item_bind.html"><code>AvlTree.item_bind</code></a></td><td>197</td><td>value 197</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.generic_producers.html"><code>Coll.generic_producers</code></a></td><td>136</td><td>reject 132 · value 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/SubstConstants.lift_by_class.html"><code>SubstConstants.lift_by_class</code></a></td><td>93</td><td>value 93</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/XorOf.item_by_item.html"><code>XorOf.item_by_item</code></a></td><td>73</td><td>value 73</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Exists.item_by_item.html"><code>Exists.item_by_item</code></a></td><td>72</td><td>value 72</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/ForAll.item_by_item.html"><code>ForAll.item_by_item</code></a></td><td>72</td><td>value 72</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.generic_producers_census.html"><code>Coll.generic_producers_census</code></a></td><td>65</td><td>reject 65</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AvlTree.digest_any_collection.html"><code>AvlTree.digest_any_collection</code></a></td><td>60</td><td>value 60</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Evaluation.stypeToRType_sites.html"><code>Evaluation.stypeToRType_sites</code></a></td><td>60</td><td>reject 60</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AND.item_by_item_context.html"><code>AND.item_by_item_context</code></a></td><td>46</td><td>value 46</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/OR.item_by_item_context.html"><code>OR.item_by_item_context</code></a></td><td>45</td><td>value 45</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.flatMap_length_limit.html"><code>Coll.flatMap_length_limit</code></a></td><td>40</td><td>reject 38 · value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Exponentiate.static_type.html"><code>Exponentiate.static_type</code></a></td><td>40</td><td>value 40</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/MultiplyGroup.static_type.html"><code>MultiplyGroup.static_type</code></a></td><td>40</td><td>value 40</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.generic_producers_pairs.html"><code>Coll.generic_producers_pairs</code></a></td><td>38</td><td>value 20 · reject 18</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/ByIndex.tuple_item.html"><code>ByIndex.tuple_item</code></a></td><td>24</td><td>value 24</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AvlTree.item_bind_context.html"><code>AvlTree.item_bind_context</code></a></td><td>20</td><td>value 20</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/ConstantPlaceholder.segregated_tuple.html"><code>ConstantPlaceholder.segregated_tuple</code></a></td><td>16</td><td>value 16</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/MethodCall.argument_widening.html"><code>MethodCall.argument_widening</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/SigmaPropBytes.length_limit.html"><code>SigmaPropBytes.length_limit</code></a></td><td>8</td><td>reject 8</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.method_type_variable_names.html"><code>Coll.method_type_variable_names</code></a></td><td>7</td><td>reject 7</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/SubstConstants.template_tree_version.html"><code>SubstConstants.template_tree_version</code></a></td><td>6</td><td>reject 6</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AvlTree.method_call_charge_order.html"><code>AvlTree.method_call_charge_order</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Filter.item_by_item.html"><code>Filter.item_by_item</code></a></td><td>4</td><td>value 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Option.method_type_variable_names.html"><code>Option.method_type_variable_names</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/AvlTree.item_bind_edges.html"><code>AvlTree.item_bind_edges</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v5/authored/Coll.length_limit_whole_trees.html"><code>Coll.length_limit_whole_trees</code></a></td><td>2</td><td>reject 2</td></tr>
+</table>
+<h3 class="slice-h">eval/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.patch_array_class_v6.html"><code>Coll.patch_array_class_v6</code></a></td><td>1419</td><td>reject 1419</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AvlTree.item_bind_v6.html"><code>AvlTree.item_bind_v6</code></a></td><td>608</td><td>value 608</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/OR.item_by_item_v6.html"><code>OR.item_by_item_v6</code></a></td><td>584</td><td>value 584</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AND.item_by_item_v6.html"><code>AND.item_by_item_v6</code></a></td><td>580</td><td>value 580</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/MethodCall.static_type_substitution_v6.html"><code>MethodCall.static_type_substitution_v6</code></a></td><td>453</td><td>reject 448 · value 5</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.patch_array_class_context_v6.html"><code>Coll.patch_array_class_context_v6</code></a></td><td>400</td><td>reject 400</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_runtime_class.html"><code>Global.serialize_runtime_class</code></a></td><td>322</td><td>reject 310 · value 12</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.generic_producers_v6.html"><code>Coll.generic_producers_v6</code></a></td><td>294</td><td>reject 264 · value 30</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.append_concat_v6.html"><code>Coll.append_concat_v6</code></a></td><td>254</td><td>reject 254</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Evaluation.stypeToRType_sites_v6.html"><code>Evaluation.stypeToRType_sites_v6</code></a></td><td>192</td><td>reject 192</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.generic_producers_census_v6.html"><code>Coll.generic_producers_census_v6</code></a></td><td>172</td><td>reject 172</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Exists.item_by_item_v6.html"><code>Exists.item_by_item_v6</code></a></td><td>156</td><td>value 156</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/ForAll.item_by_item_v6.html"><code>ForAll.item_by_item_v6</code></a></td><td>156</td><td>value 156</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/XorOf.item_by_item_v6.html"><code>XorOf.item_by_item_v6</code></a></td><td>146</td><td>value 146</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/SubstConstants.lift_by_class_v6.html"><code>SubstConstants.lift_by_class_v6</code></a></td><td>123</td><td>value 123</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AND.item_by_item_context_v6.html"><code>AND.item_by_item_context_v6</code></a></td><td>108</td><td>value 108</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/OR.item_by_item_context_v6.html"><code>OR.item_by_item_context_v6</code></a></td><td>107</td><td>value 107</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AvlTree.digest_any_collection_v6.html"><code>AvlTree.digest_any_collection_v6</code></a></td><td>104</td><td>value 104</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.generic_producers_pairs_v6.html"><code>Coll.generic_producers_pairs_v6</code></a></td><td>84</td><td>value 48 · reject 36</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.flatMap_length_limit_v6.html"><code>Coll.flatMap_length_limit_v6</code></a></td><td>80</td><td>reject 76 · value 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Exponentiate.static_type_v6.html"><code>Exponentiate.static_type_v6</code></a></td><td>78</td><td>value 78</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/MultiplyGroup.static_type_v6.html"><code>MultiplyGroup.static_type_v6</code></a></td><td>78</td><td>value 78</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.object_arrays_by_class_v6.html"><code>Coll.object_arrays_by_class_v6</code></a></td><td>62</td><td>reject 62</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AvlTree.item_bind_context_v6.html"><code>AvlTree.item_bind_context_v6</code></a></td><td>50</td><td>value 50</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/ByIndex.tuple_item_v6.html"><code>ByIndex.tuple_item_v6</code></a></td><td>48</td><td>value 48</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/MethodCall.unspecialised_call_names_v6.html"><code>MethodCall.unspecialised_call_names_v6</code></a></td><td>30</td><td>reject 30</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.reference_store_ops.html"><code>Coll.reference_store_ops</code></a></td><td>24</td><td>reject 12 · value 12</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/ConstantPlaceholder.segregated_tuple_v6.html"><code>ConstantPlaceholder.segregated_tuple_v6</code></a></td><td>21</td><td>value 21</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Tuple.non_pair_value_ops.html"><code>Tuple.non_pair_value_ops</code></a></td><td>20</td><td>value 20</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/SigmaPropBytes.length_limit_v6.html"><code>SigmaPropBytes.length_limit_v6</code></a></td><td>16</td><td>reject 16</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.method_type_variable_names_v6.html"><code>Coll.method_type_variable_names_v6</code></a></td><td>15</td><td>reject 13 · value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Comparison.mixed_width.html"><code>Comparison.mixed_width</code></a></td><td>12</td><td>reject 12</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AvlTree.method_call_charge_order_v6.html"><code>AvlTree.method_call_charge_order_v6</code></a></td><td>11</td><td>value 11</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/AvlTree.item_bind_edges_v6.html"><code>AvlTree.item_bind_edges_v6</code></a></td><td>10</td><td>value 10</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/MethodCall.argument_widening_v6.html"><code>MethodCall.argument_widening_v6</code></a></td><td>10</td><td>value 10</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_tuple_arm.html"><code>Global.serialize_tuple_arm</code></a></td><td>9</td><td>reject 8 · value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Tuple.non_pair_value_producers.html"><code>Tuple.non_pair_value_producers</code></a></td><td>9</td><td>value 9</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Filter.item_by_item_v6.html"><code>Filter.item_by_item_v6</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Tuple.binding_provenance_register.html"><code>Tuple.binding_provenance_register</code></a></td><td>8</td><td>value 8</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.runtime_shapes_methodcall.html"><code>Coll.runtime_shapes_methodcall</code></a></td><td>7</td><td>reject 4 · value 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.specialisation_pair_prefix.html"><code>Coll.specialisation_pair_prefix</code></a></td><td>7</td><td>reject 6 · value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/EQ.comparer_dispatch.html"><code>EQ.comparer_dispatch</code></a></td><td>7</td><td>value 5 · reject 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.producer_specialisation_witness.html"><code>Coll.producer_specialisation_witness</code></a></td><td>6</td><td>reject 6</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.specialisation_prefix_suffix.html"><code>Coll.specialisation_prefix_suffix</code></a></td><td>6</td><td>reject 5 · value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/SubstConstants.template_tree_version_v6.html"><code>SubstConstants.template_tree_version_v6</code></a></td><td>6</td><td>reject 6</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_no_writer_arm.html"><code>Global.serialize_no_writer_arm</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Option.method_type_variable_names_v6.html"><code>Option.method_type_variable_names_v6</code></a></td><td>5</td><td>reject 5</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Tuple.non_pair_value_gates.html"><code>Tuple.non_pair_value_gates</code></a></td><td>5</td><td>value 5</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.append_runtime_item_type.html"><code>Coll.append_runtime_item_type</code></a></td><td>4</td><td>reject 3 · value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.length_limit_whole_trees_v6.html"><code>Coll.length_limit_whole_trees_v6</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.pair_shape_restored.html"><code>Coll.pair_shape_restored</code></a></td><td>4</td><td>reject 3 · value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.specialisation_getorelse.html"><code>Coll.specialisation_getorelse</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Negation.mixed_width.html"><code>Negation.mixed_width</code></a></td><td>4</td><td>reject 4</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Append.reference_array_store.html"><code>Append.reference_array_store</code></a></td><td>3</td><td>reject 2 · value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/ArithOp.mixed_width.html"><code>ArithOp.mixed_width</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/ByIndex.default_specialisation.html"><code>ByIndex.default_specialisation</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.pair_shape_map.html"><code>Coll.pair_shape_map</code></a></td><td>3</td><td>reject 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.prefix_suffix_runtime_item_type.html"><code>Coll.prefix_suffix_runtime_item_type</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.zip_unequal_sides_v6.html"><code>Coll.zip_unequal_sides_v6</code></a></td><td>3</td><td>value 3</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.append_node_array_class.html"><code>Coll.append_node_array_class</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.eq_item_type.html"><code>Coll.eq_item_type</code></a></td><td>2</td><td>cost 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.indexOf_comparer_dispatch.html"><code>Coll.indexOf_comparer_dispatch</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.prefix_cross_type_equality.html"><code>Coll.prefix_cross_type_equality</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.specialisation_blind_ops.html"><code>Coll.specialisation_blind_ops</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Tuple.binding_provenance_var.html"><code>Tuple.binding_provenance_var</code></a></td><td>2</td><td>value 2</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.flatMap_element_type.html"><code>Coll.flatMap_element_type</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.item_store_type_check.html"><code>Coll.item_store_type_check</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Coll.store_runtime_array_class.html"><code>Coll.store_runtime_array_class</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/EQ.cross_width_numeric.html"><code>EQ.cross_width_numeric</code></a></td><td>1</td><td>cost 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024.html"><code>Global.serialize_shared_nested_bounded_E3_serialize_long_is_nested_32768x1024x1024</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768.html"><code>Global.serialize_shared_nested_bounded_E_serialize_bytes_is_nested_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_E_serialize_long_is_nested_32768x32768.html"><code>Global.serialize_shared_nested_bounded_E_serialize_long_is_nested_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_only_32768x1024x1024.html"><code>Global.serialize_shared_nested_bounded_G3_size_only_32768x1024x1024</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_only_32768x256x256.html"><code>Global.serialize_shared_nested_bounded_G3_size_only_32768x256x256</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_only_32768x32768x32768.html"><code>Global.serialize_shared_nested_bounded_G3_size_only_32768x32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_serialize_32768x1024x1024.html"><code>Global.serialize_shared_nested_bounded_G3_size_serialize_32768x1024x1024</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_serialize_32768x256x256.html"><code>Global.serialize_shared_nested_bounded_G3_size_serialize_32768x256x256</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G3_size_serialize_32768x32768x32768.html"><code>Global.serialize_shared_nested_bounded_G3_size_serialize_32768x32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_only_32768x16384.html"><code>Global.serialize_shared_nested_bounded_G_size_only_32768x16384</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_only_32768x32768.html"><code>Global.serialize_shared_nested_bounded_G_size_only_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x16384.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x16384</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x32768.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x32768</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Global.serialize_shared_nested_bounded_G_size_serialize_32768x8192.html"><code>Global.serialize_shared_nested_bounded_G_size_serialize_32768x8192</code></a></td><td>1</td><td>exceeded 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Tuple.binding_provenance_input_var.html"><code>Tuple.binding_provenance_input_var</code></a></td><td>1</td><td>value 1</td></tr>
+<tr><td><a href="coal/vixen/eval/v6/authored/Unevaluated.node_kinds.html"><code>Unevaluated.node_kinds</code></a></td><td>1</td><td>not-implemented 1</td></tr>
+</table>
+<h3 class="slice-h">wire/v5/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/vixen/wire/v5/authored/ErgoTree.stypeToRType_sites.html"><code>ErgoTree.stypeToRType_sites</code></a></td><td>7</td><td>reject 7</td></tr>
+<tr><td><a href="coal/vixen/wire/v5/authored/Box.stypeToRType_sites.html"><code>Box.stypeToRType_sites</code></a></td><td>3</td><td>reject 3</td></tr>
+</table>
+<h3 class="slice-h">wire/v6/authored</h3>
+<table class="coal-table">
+<tr><th>vector file</th><th>red</th><th>dimensions</th></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.static_type_substitution.html"><code>ErgoTree.static_type_substitution</code></a></td><td>11</td><td>reject 11</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.stypeToRType_sites.html"><code>ErgoTree.stypeToRType_sites</code></a></td><td>6</td><td>reject 6</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/Box.method_type_variable_names.html"><code>Box.method_type_variable_names</code></a></td><td>3</td><td>roundtrip 2 · reject 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.method_type_variable_names.html"><code>ErgoTree.method_type_variable_names</code></a></td><td>3</td><td>roundtrip 2 · reject 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/Transaction.method_type_variable_names.html"><code>Transaction.method_type_variable_names</code></a></td><td>3</td><td>roundtrip 2 · reject 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.methodcall_type_id_order.html"><code>ErgoTree.methodcall_type_id_order</code></a></td><td>2</td><td>reject 1 · roundtrip 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.numeric_methodcall_version_gate.html"><code>ErgoTree.numeric_methodcall_version_gate</code></a></td><td>2</td><td>reject 2</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.unparsed_soft_fork_roundtrip.html"><code>ErgoTree.unparsed_soft_fork_roundtrip</code></a></td><td>2</td><td>roundtrip 2</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/Box.property_call_receiver_type.html"><code>Box.property_call_receiver_type</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/Box.stypeToRType_sites.html"><code>Box.stypeToRType_sites</code></a></td><td>1</td><td>reject 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.property_call_receiver_type.html"><code>ErgoTree.property_call_receiver_type</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/ErgoTree.unparsed_soft_fork_option_constant.html"><code>ErgoTree.unparsed_soft_fork_option_constant</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+<tr><td><a href="coal/vixen/wire/v6/authored/Transaction.property_call_receiver_type.html"><code>Transaction.property_call_receiver_type</code></a></td><td>1</td><td>roundtrip 1</td></tr>
+</table>
+</details>
+
+<div class="legend">
+<div><span class="sw nice"></span><b>green</b> — value + cost pass (wire: round-trip-ok)</div>
+<div><span class="sw partial"></span><b>amber</b> — value-only pass (cost not graded)</div>
+<div><span class="sw coal"></span><b>red</b> 🪨 N — N divergences (the deliverable)</div>
+<div><span class="sw na"></span><b>grey</b> — not in scope</div>
+<div><span class="sw norun"></span><b>dark</b> ⚠ — <b>UNGRADED</b>: runner declared this tier but failed to build/run. Not a pass — no verdict was produced at all.</div>
+<div><span class="sw coverage"></span><b>blue</b> — not-impl (roadmap; no verdict yet)</div>
+<div class="hint">Hover a cell for the per-dimension breakdown — eval value / cost / reject, wire round-trip, tx valid / cost, block valid, chain value, or authds prove / verify / results / digest.</div>
+</div>
+<p class="meta">Generated from <code>aa4a1a473a0a4c4e72e077264ef4985113572119</code>.</p>
+</body></html>

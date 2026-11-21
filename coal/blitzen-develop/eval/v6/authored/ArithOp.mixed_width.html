@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/ArithOp.mixed_width: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/ArithOp.mixed_width</code></h1>
+<p>5 red (value 3 · reject 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[A4] `1L + 2` at tree v0 — the builder inserts an Upcast over the Int (SigmaBuilder.scala:757-763): 3L at cost 35. Against A2's 25, the v0 twin returns, so the inserted Upcast's cost is the difference — Int -&gt; Long is 10."><code>long-plus-int-v0-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;3&quot;} @ cost 35</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[B2] `2 + 1L` at tree v0 — 3L at cost 35, the same as A4: the Upcast goes on whichever side is narrower, so the cost does not depend on the order."><code>int-plus-long-v0-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;3&quot;} @ cost 35</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[B4] `BigInt(1) + 2L` at tree v0 — BigInt 3 at cost 60. Against C1's 30 the Upcast to BigInt costs 30, THREE TIMES the Int -&gt; Long one: the inserted node's cost scales with the target width, so a flat-cost model is 20 short here."><code>bigint-plus-long-v0-accept#9</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;BigInt&quot;,&quot;value&quot;:&quot;3&quot;} @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[B9] `If(false, 1L, 2) + 2` at tree v3 — the narrow value on the LEFT: the Long implementation is chosen from the static type and gets an Integer. Throws."><code>narrow-value-plus-int-v3-errored#16</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:4} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[B10] `If(false, 1L, 2) + 2` at tree v0 — throws at v0 too, the mirror of B8 with the narrow value on the other side."><code>narrow-value-plus-int-v0-errored#17</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:4} @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

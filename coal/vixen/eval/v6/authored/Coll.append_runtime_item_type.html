@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.append_runtime_item_type: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.append_runtime_item_type</code></h1>
+<p>4 red (reject 3 · value 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ E.append(Coll(3)) }  // JVM: ACCEPTS: Coll[Int](3). An EMPTY left side short-circuits — CollOverArray.append returns the right side as it is, with its own item type, and never allocates (CollsOverArrays.scala:48-57). The one row of this family that survives a mismatch"><code>append-empty-left-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SInt&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3}],&quot;kind&quot;:&quot;Coll&quot;} @ cost 82</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(3).append(E) }  // JVM: REJECTS, ArrayStoreException &quot;can not copy long[] into int[]&quot; — an empty RIGHT side does NOT short-circuit. System.arraycopy checks element types before length, so a ZERO-LENGTH long[] still refuses to copy into an int[]. This is the asymmetry worth knowing: empty on the left saves the call, empty on the right does not"><code>append-empty-right-errored#3</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SInt&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3}],&quot;kind&quot;:&quot;Coll&quot;} @ cost 82</code></td><td class="note"></td></tr>
+<tr><td title="{ If(false, Coll(SELF), Coll(groupGenerator)).append(Coll(SELF)) }  // JVM: REJECTS, ArrayStoreException &quot;can not copy sigma.Box[] into sigma.GroupElement[]&quot;. Reference items accept only while the classes are compatible; UNRELATED classes throw, so #4's acceptance is about Coll[]-into-Coll[] and not about references in general"><code>append-unrelated-classes-errored#5</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SGroupElement&quot;},&quot;items&quot;:[{&quot;bytes_hex&quot;:&quot;0279be667ef9dcbbac55a06295ce870b07029bfcd… @ cost 97</code></td><td class="note"></td></tr>
+<tr><td title="{ If(false, Coll((1, 1)), Coll((1L, 1L))).append(Coll((2, 2))) }  // JVM: REJECTS, ArrayStoreException &quot;can not copy int[] into long[]&quot;: a pair collection is a PairOfCols, so append unzips it (CollsOverArrays.scala:379-382) and the clash happens on the underlying PRIMITIVE arrays"><code>append-pair-items-errored#6</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;items&quot;:[{&quot;tag&quot;:&quot;SLong&quot;},{&quot;tag&quot;:&quot;SLong&quot;}],&quot;tag&quot;:&quot;STuple&quot;},&quot;items&quot;:[{&quot;items&quot;:[{&quot;kind&quot;:&quot;L… @ cost 127</code></td><td class="note"></td></tr>
+</table>
+</body></html>

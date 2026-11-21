@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.specialisation_pair_prefix: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.specialisation_pair_prefix</code></h1>
+<p>7 red (reject 6 · value 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[P1] `Coll[Byte] CONSTANT .zip(Coll(0,1,2))` — a `PairOfCols` whose **ls is specialised** (`zip` keeps both sides as they are, `CollsOverArrays.scala:42`) — `.startsWith(ys)` where `ys` is a pair collection whose own ls is declared `Coll[Byte]` and evaluates to `Coll[Long]`. `PairOfCols.startsWith` (`:398-406`) DELEGATES to `ls.startsWith(yp.ls)`, so the specialised side's array cast fires: `ClassCastException`. **SEPARATING, and the row that distinguishes pair collections from the A-family:** `getOrElse`/`updated` on a pair cast the whole default to `Tuple2` first and are blind to the sides' classes, but startsWith/endsWith are not."><code>pair_spec_side_startswith_lie_ls-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 160</code></td><td class="note"></td></tr>
+<tr><td title="[P2] The same with a GENERIC ls (a ConcreteCollection of the same bytes): returns **`true`** at cost 190 — the delegated `startsWith` compares boxed elements and `1L == 1`, exactly as in the flat S2 row. The pair's rs is identical on both sides, so the only difference is the ls's runtime class."><code>pair_gen_side_startswith_lie_ls-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 190</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 190</code></td><td class="note"></td></tr>
+<tr><td title="[P5] `endsWith` on the same pair receiver: the same delegation, the same cast. **SEPARATING.**"><code>pair_spec_side_endswith_lie_ls-errored#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 160</code></td><td class="note"></td></tr>
+<tr><td title="[P7] `Coll[(Int,Int)]` CONSTANT — a `PairOfCols` — `.startsWith(ys)` where `ys` is declared `Coll[(Int,Int)]` and evaluates to an EMPTY `Coll[Int]`. With a NON-pair argument the side-by-side delegation is unavailable and the fallback casts the argument's array, so this throws `ClassCastException` BEFORE any length test. **An empty argument is not a free pass:** the array is cast, not read. **SEPARATING:** an implementation that holds a pair collection as two columns, or that tests the argument's LENGTH before its class, answers `true` here — an over-accept of a comparison the JVM refuses."><code>startswith_pair_empty_primitive_arg-errored#6</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 55</code></td><td class="note"></td></tr>
+<tr><td title="[P8] The same with ONE Int in the argument: the same `ClassCastException`. It is what says P7 is about the array's class and not about an empty-prefix shortcut. **SEPARATING**, and the row an implementation that compares element-wise answers `false` on."><code>startswith_pair_nonempty_primitive_arg-errored#7</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[P9] The same with a `Coll[Byte]` CONSTANT argument — the deserializer's specialised `$mcB$sp` over `[B` (`CoreDataSerializer.scala:174`): also `ClassCastException`. Any primitive backing does it, and the argument's own specialisation adds nothing. **SEPARATING.**"><code>startswith_pair_specialised_byte_arg-errored#8</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 40</code></td><td class="note"></td></tr>
+<tr><td title="[P12] `endsWith` takes the identical path (`:405`) and throws on the empty primitive argument too. **SEPARATING**, and it doubles P7 on the other end of the collection."><code>endswith_pair_empty_primitive_arg-errored#11</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 55</code></td><td class="note"></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Coll.indexOf_comparer_dispatch: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Coll.indexOf_comparer_dispatch</code></h1>
+<p>2 red (value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[A3] `Coll(1L).indexOf(lie(1L, 1), 0)` — 0 at cost 87: `indexOf` compares each ITEM, the comparer's LEFT value, with the argument (methods.scala:1091) and never type-checks the argument. A Long item takes the primitive case (`EQ_Prim` 3, Scala's boxed `l == r`), where two integers compare by VALUE across widths, so Long 1 equals Int 1. SEPARATING: a width-aware comparison answers -1."><code>long-item-int-arg-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 87</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-1} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[A4] `Coll[Byte] constant (1).indexOf(lie(1.toByte, 1L), 0)` — 0 at cost 67: a Byte item against a Long argument, equal by value as in A3, on a specialised Coll[Byte] receiver. SEPARATING, as A3."><code>byte-item-long-arg-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 67</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-1} @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

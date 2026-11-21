@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Global.serialize_shared_nested: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Global.serialize_shared_nested</code></h1>
+<p>4 red (reject 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[G|size-serialize|32768x4] `Global.serialize(v).size`, v = Coll(b) doubled by `++` to 4 items, every one the same b (b: 32,768 bytes) — REFUSED (IllegalArgumentException: requirement failed: Cannot create collection with size 131085 greater than 100000). RESULT TOO LONG: written within the cost limit, but the result is past the 100,000 items of a collection built at evaluation; refused for its length.  // tree v3, activated 3"><code>G-size-serialize-32768x4-a3#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:131085} @ cost 132700</code></td><td class="note"></td></tr>
+<tr><td title="[G|size-serialize|32768x16] `Global.serialize(v).size`, v = Coll(b) doubled by `++` to 16 items, every one the same b (b: 32,768 bytes) — REFUSED (IllegalArgumentException: requirement failed: Cannot create collection with size 524337 greater than 100000). RESULT TOO LONG: written within the cost limit, but the result is past the 100,000 items of a collection built at evaluation; refused for its length.  // tree v3, activated 3"><code>G-size-serialize-32768x16-a3#6</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:524337} @ cost 526063</code></td><td class="note"></td></tr>
+<tr><td title="[G|size-serialize|32768x64] `Global.serialize(v).size`, v = Coll(b) doubled by `++` to 64 items, every one the same b (b: 32,768 bytes) — REFUSED (IllegalArgumentException: requirement failed: Cannot create collection with size 2097345 greater than 100000). RESULT TOO LONG: written within the cost limit, but the result is past the 100,000 items of a collection built at evaluation; refused for its length.  // tree v3, activated 3"><code>G-size-serialize-32768x64-a3#8</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2097345} @ cost 2099289</code></td><td class="note"></td></tr>
+<tr><td title="[G|size-serialize|32768x256] `Global.serialize(v).size`, v = Coll(b) doubled by `++` to 256 items, every one the same b (b: 32,768 bytes) — REFUSED (IllegalArgumentException: requirement failed: Cannot create collection with size 8389378 greater than 100000). RESULT TOO LONG: written within the cost limit, but the result is past the 100,000 items of a collection built at evaluation; refused for its length.  // tree v3, activated 3"><code>G-size-serialize-32768x256-a3#10</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:8389378} @ cost 8391977</code></td><td class="note"></td></tr>
+</table>
+</body></html>

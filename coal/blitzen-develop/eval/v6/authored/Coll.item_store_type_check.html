@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Coll.item_store_type_check: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Coll.item_store_type_check</code></h1>
+<p>1 red (value 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[U11] `Coll[Coll[Int]](Coll(1)).updated(0, Coll[Long](1L))` — a REFERENCE-backed array (`[Lsigma.Coll;`), so the store only checks the item's CLASS, and a `Coll` is a `Coll`: it **RETURNS** at cost 100, and the result holds an item of the wrong item type. The complement of U1-U10: an ill-typed item is rejected by a primitive array and WAVED THROUGH by an Object array. An implementation that type-checks items uniformly over-rejects here."><code>updated_coll_of_coll_compatible_reference_item-accept#10</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;elem&quot;:{&quot;tag&quot;:&quot;SInt&quot;},&quot;tag&quot;:&quot;SColl&quot;},&quot;items&quot;:[{&quot;elem&quot;:{&quot;tag&quot;:&quot;SLong&quot;},&quot;items&quot;:[{&quot;kind&quot;:… @ cost 100</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

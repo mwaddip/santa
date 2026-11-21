@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/EQ.cross_width_numeric: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/EQ.cross_width_numeric</code></h1>
+<p>6 red (reject 5 · cost 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[W1] `EQ(x, 1L)` where `x` is declared `Long` and evaluates to an `Int` (the `If` lie). It never reaches `DataValueComparer`: `Value.checkType` refuses first — `InterpreterException: Invalid type returned by evaluator`. **SEPARATING, and a REFUTATION of the natural reading:** a cross-width comparison cannot be built at the SCALAR level at all, because `EQ`'s operand is a checkType site. The widening that boxed `==` would do is unreachable here."><code>eq_int_as_long_vs_long-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 28</code></td><td class="note"></td></tr>
+<tr><td title="[W2] `NEQ` of the same operands: the same refusal, same site. **SEPARATING.**"><code>neq_int_as_long_vs_long-errored#1</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 28</code></td><td class="note"></td></tr>
+<tr><td title="[W3] The lie the other way round (declared `Int`, runs as `Long`). **SEPARATING.**"><code>eq_long_as_int_vs_int-errored#2</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 28</code></td><td class="note"></td></tr>
+<tr><td title="[W4] The same with operands that are NOT numerically equal (2 vs 1L) — it still throws, so the refusal is about the TYPE and not about the comparison's outcome. **SEPARATING.**"><code>eq_int_as_long_vs_long_unequal-errored#3</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 28</code></td><td class="note"></td></tr>
+<tr><td title="[W5] Inside a PAIR: `(x, 2) == (1, 2)` with `x` declared `Int` and running as `Long`. The pair's component is a checkType site too, so this throws rather than comparing. **SEPARATING.**"><code>eq_pair_with_cross_width_component-errored#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 72</code></td><td class="note"></td></tr>
+<tr><td title="[W6] Inside a COLLECTION the lie survives — a collection's ITEM type is not a checkType site (the element-type gate round) — so the comparer does run, and it answers **`false`** at cost 66: `DataValueComparer` bails on a runtime item-type difference before comparing any item. So the JVM's answer for a cross-width collection comparison is FALSE, not the numeric TRUE that `indexOf`/`startsWith` give for the same values. **The sharpest statement of the round's asymmetry:** `==` widens where the item is passed as an ARGUMENT (X1, S2) and does not where two collections are COMPARED."><code>eq_coll_with_cross_width_items-accept#5</code> <span class="dim">[cost]</span></td><td><code>cost 66</code></td><td><code>cost 83</code></td><td class="note"></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/Context.property_call_forms: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/Context.property_call_forms</code></h1>
+<p>9 red (value 9)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[I] `CONTEXT.INPUTS.size`, INPUTS as a PropertyCall (SContext 4, `db6504fe`) — Int 1 at cost 29: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Ic's 24 + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>inputs-propertycall-size-accept-t0#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 29</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[O] `CONTEXT.OUTPUTS.size`, OUTPUTS as a PropertyCall (SContext 5, `db6505fe`) — Int 0 at cost 29: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Oc's 24 + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>outputs-propertycall-size-accept-t0#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 29</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[H] `CONTEXT.HEIGHT`, HEIGHT as a PropertyCall (SContext 6, `db6506fe`) — Int 0 at cost 31: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Hc's 26 + 5 (Height's own cost kind is Fixed 26). SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>height-propertycall-accept-t0#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 31</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S] `CONTEXT.SELF.value`, SELF as a PropertyCall (SContext 7, `db6507fe`) — Long 1000000 at cost 23: the method carries the node's own cost kind, and MethodCall.eval adds its 4 and Context's 1: Sc's 18 + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>self-propertycall-value-accept-t0#6</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;1000000&quot;} @ cost 23</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Ob] `CONTEXT.OUTPUTS`, bare — `Coll[Box]()` at cost 15, the `Outputs` node's 10 (Obc) + 5. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>outputs-propertycall-bare-accept-t0#8</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SBox&quot;},&quot;items&quot;:[],&quot;kind&quot;:&quot;Coll&quot;} @ cost 15</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[I=] `CONTEXT.INPUTS == INPUTS` — true at cost 46: the call's value IS the node's. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>inputs-propertycall-eq-node-accept-t0#10</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 46</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[O=] `CONTEXT.OUTPUTS == OUTPUTS` — true at cost 41. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>outputs-propertycall-eq-node-accept-t0#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 41</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[H=] `CONTEXT.HEIGHT == HEIGHT` — true at cost 60. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>height-propertycall-eq-node-accept-t0#12</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S=] `CONTEXT.SELF == SELF` — true at cost 31. SEPARATING: an implementation with no evaluator for the method id refuses.  // tree v0, activated 2"><code>self-propertycall-eq-node-accept-t0#13</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 31</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

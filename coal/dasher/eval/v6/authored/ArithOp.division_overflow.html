@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/ArithOp.division_overflow: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/ArithOp.division_overflow</code></h1>
+<p>8 red (value 8)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[Q1] `Int.MinValue / -1` — Int.MinValue at cost 25, NO exception. ExactIntegral.quot is Scala's n.quot, overridden for no width (ExactIntegral.scala:22), so this is plain JVM integer division, which wraps at tree v3."><code>int-min-div-minus-one-v3-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-2147483648} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q1] `Int.MinValue / -1` — Int.MinValue at cost 25, NO exception. ExactIntegral.quot is Scala's n.quot, overridden for no width (ExactIntegral.scala:22), so this is plain JVM integer division, which wraps at tree v0 — the same: no version gate exists here."><code>int-min-div-minus-one-v0-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-2147483648} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q3] `Long.MinValue / -1L` — Long.MinValue at cost 25, no exception. ExactIntegral.quot is Scala's n.quot, overridden for no width (ExactIntegral.scala:22) at tree v3."><code>long-min-div-minus-one-v3-accept#6</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;-9223372036854775808&quot;} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q3] `Long.MinValue / -1L` — Long.MinValue at cost 25, no exception. ExactIntegral.quot is Scala's n.quot, overridden for no width (ExactIntegral.scala:22) at tree v0 — the same: no version gate exists here."><code>long-min-div-minus-one-v0-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Long&quot;,&quot;value&quot;:&quot;-9223372036854775808&quot;} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q4] `(-128: Byte) / (-1: Byte)` — Byte -128 at cost 25: Scala's ByteIsIntegral.quot is `(x / y).toByte`, so 128 truncates back to -128 at tree v3."><code>byte-min-div-minus-one-v3-accept#10</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:-128} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q4] `(-128: Byte) / (-1: Byte)` — Byte -128 at cost 25: Scala's ByteIsIntegral.quot is `(x / y).toByte`, so 128 truncates back to -128 at tree v0 — the same: no version gate exists here."><code>byte-min-div-minus-one-v0-accept#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:-128} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q7] `Short.MinValue / (-1: Short)` — Short -32768 at cost 25, truncated like the Byte row at tree v3."><code>short-min-div-minus-one-v3-accept#14</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Short&quot;,&quot;value&quot;:-32768} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[Q7] `Short.MinValue / (-1: Short)` — Short -32768 at cost 25, truncated like the Byte row at tree v0 — the same: no version gate exists here."><code>short-min-div-minus-one-v0-accept#15</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Short&quot;,&quot;value&quot;:-32768} @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

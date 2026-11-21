@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Tuple.binding_provenance_register: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Tuple.binding_provenance_register</code></h1>
+<p>8 red (value 8)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[C3] `SELF.R4[(Int, Int, Int)].get.size`, R4 = the tuple CONSTANT — `3` at cost 89. CONTROL for X3. (TupleValuesProbe G2.)"><code>register-tuple-constant-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 89</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[C4] `SELF.R4[Coll[(Int, Int, Int)]].get(0).size`, R4 = the DATA constant Coll((1, 2, 3)) — `3` at cost 124. The data decoder gives a collection of non-pair tuples the item type Coll[Any] (CoreDataSerializer.deserializeColl); the SAME collection built in-script throws `Unsupported tuple type` (Tuple.non_pair_value_gates G10). CONTROL for X4."><code>register-coll-data-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 124</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[X4] the same, R4 = a ConcreteCollection EXPRESSION of the tuple (opcode 0x83) — `3` at 124. Read as a binding, the expression's `.value` is built without the in-script `checkType` (values.scala:879-884), so it does not throw like G10, though its item type is the TUPLE type (stypeToRType), not Coll[Any]. SEPARATING by provenance."><code>register-coll-expression-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 124</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[C5] `SELF.R4[Coll[(Int, Int, Int)]].get == Coll((1, 2, 3))` (a constant in the tree), R4 = the DATA constant — `true` at cost 119: both sides carry item type Coll[Any], so the comparison reaches the items. CONTROL for X5. (TupleValuesProbe V3.)"><code>register-coll-data-eq-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 119</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[X5] the same comparison, R4 = the ConcreteCollection EXPRESSION — `false` at 81. Same declared type, so the builder's SameType check passes, but item type TupleType against Coll[Any], and the comparer bails on that before any item (38 cheaper than C5). SEPARATING: an implementation that does not keep a collection's producer answers `true`. (V2.)"><code>register-coll-expression-eq-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 81</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[C6] `SELF.R4[Coll[(Int, Int, Int)]].get.zip(Coll(4)) == Coll(((1, 2, 3), 4))`, R4 = the DATA constant — `false` at cost 101. THE ORDER INVERTS: the tree's pair constant gets its nested tuple's item type from stypeToRType — Pair(TupleType, Int) — because the decoder's Coll[Any] case covers only a non-pair tuple ELEMENT, so the data-built register (Pair(Coll[Any], Int) once zipped) is the one that differs. CONTROL for X6."><code>register-coll-data-zip-eq-accept#6</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 101</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[X6] the same, R4 = the ConcreteCollection EXPRESSION — `true` at 146: zipped, its item type is Pair(TupleType, Int), the tree constant's, so the comparison reaches the items. SEPARATING: the producer decides the verdict in the opposite direction to X5. (V4.)"><code>register-coll-expression-zip-eq-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 146</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P13x] `Global.serialize(SELF.R4[(Int, Int)].get)`, R4 = the pair Tuple EXPRESSION — `0204`, the same bytes at its twin's cost: the static type is the pair, and the writer takes a Tuple2 or a Coll[Any] alike (`Evaluation.fromDslTuple`, Evaluation.scala:91). SEPARATING: refusing at the read, refusing to write a Coll[Any] under a pair type, or writing it as a collection (a length first) is red."><code>register-pair-expression-serialize-accept#33</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:4}],&quot;kind&quot;:&quot;Co… @ cost 100</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

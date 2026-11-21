@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/String.jdk_utf8_decode: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/String.jdk_utf8_decode</code></h1>
+<p>7 red (value 7)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[sur-vs-1repl] `Coll(⟨ED A0 80⟩) == Coll(⟨EF BF BD⟩)` → true at cost 41. SEPARATING: the JDK takes ANY continuation byte after `ED`, so an encoded surrogate is ONE U+FFFD; a decoder that replaces it per maximal subpart (three U+FFFD), or that keeps the bytes, answers the other way."><code>sur-vs-1repl#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 41</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[sur-vs-3repl] `Coll(⟨ED A0 80⟩) == Coll(⟨EF BF BD × 3⟩)` → false at cost 24. The lengths differ (1 against 3 UTF-16 units), so no character comparison is charged. SEPARATING: the JDK takes ANY continuation byte after `ED`, so an encoded surrogate is ONE U+FFFD; a decoder that replaces it per maximal subpart (three U+FFFD), or that keeps the bytes, answers the other way."><code>sur-vs-3repl#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 24</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[neq-sur-vs-1repl] `Coll(⟨ED A0 80⟩) != Coll(⟨EF BF BD⟩)` → false at cost 41. `NEQ` calls the same comparer. SEPARATING, as sur-vs-1repl."><code>neq-sur-vs-1repl#10</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 41</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[pair-sur-vs-1repl] `(⟨ED A0 80⟩, 1) == (⟨EF BF BD⟩, 1)`, two `(String, Int)` constants → true at cost 35. The same decoding inside a pair. SEPARATING, as sur-vs-1repl."><code>pair-sur-vs-1repl#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 35</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[pair-sur-vs-3repl] `(⟨ED A0 80⟩, 1) == (⟨EF BF BD × 3⟩, 1)` → false at cost 15. The lengths differ; the String case bails before charging the comparison. SEPARATING, as sur-vs-3repl."><code>pair-sur-vs-3repl#12</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 15</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[subst-sur-vs-1repl] `substConstants(tree with String constant ⟨ED A0 80⟩, Coll[Int](), Coll[Int]()) == the same tree with `EF BF BD`` → true at cost 238. `substConstants` re-writes the tree, and the constant goes out as decoded text. SEPARATING: a port that keeps the bytes returns the input."><code>subst-sur-vs-1repl#14</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 238</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[subst-sur-vs-3repl] `substConstants(tree with String constant ⟨ED A0 80⟩, …) == the tree with `EF BF BD × 3`` → false at cost 221. SEPARATING, as sur-vs-3repl."><code>subst-sur-vs-3repl#15</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 221</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

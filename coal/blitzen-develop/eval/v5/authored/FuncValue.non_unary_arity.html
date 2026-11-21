@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/FuncValue.non_unary_arity: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/FuncValue.non_unary_arity</code></h1>
+<p>3 red (reject 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ val add = (x:Int,y:Int) =&gt; x+y; add(3,4) }  // JVM: Function must have 1 argument — FuncValue.eval rejects non-unary arity at closure creation"><code>funcvalue-2arg-applied-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:7} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="{ val add = (x:Int,y:Int) =&gt; x+y; 5 }  // JVM: same error though NEVER APPLIED — BlockValue evals ValDefs eagerly (reject at closure creation, unlike the FunDef type-var family)"><code>funcvalue-2arg-bound-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="{ val f = () =&gt; 5; f() }  // JVM: Function must have 1 argument — the tDom.length=0 side of the non-unary gate"><code>funcvalue-0arg-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

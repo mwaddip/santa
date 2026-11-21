@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Global.serialize_no_writer_arm: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Global.serialize_no_writer_arm</code></h1>
+<p>5 red (reject 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[B|top|Unit-coll] `Global.serialize` of `Coll[Byte](1, 1).map(x =&gt; ())`, a Coll[Unit] — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3"><code>B-top-Unit-coll-a3#15</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2}],&quot;kind&quot;:&quot;Coll&quot;} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[B|pair-second|Unit-coll] `Global.serialize` of the Tuple node (1, `Coll[Byte](1, 1).map(x =&gt; ())`, a Coll[Unit]) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3"><code>B-pair-second-Unit-coll-a3#16</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2}],&quot;kind&quot;:&quot;Co… @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[B|pair-first|Unit-coll] `Global.serialize` of the Tuple node (`Coll[Byte](1, 1).map(x =&gt; ())`, a Coll[Unit], 1) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3"><code>B-pair-first-Unit-coll-a3#17</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2}],&quot;kind&quot;:&quot;Co… @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[B|after-bytes50|Unit-coll] `Global.serialize` of the Tuple node (Coll[Byte] of 50, `Coll[Byte](1, 1).map(x =&gt; ())`, a Coll[Unit]) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3"><code>B-after-bytes50-Unit-coll-a3#18</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:50},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;B… @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[B|pair-in-pair|Unit-coll] `Global.serialize` of the Tuple node (1, (1L, `Coll[Byte](1, 1).map(x =&gt; ())`, a Coll[Unit])) — REFUSED (SerializerException: Collection with zero-width element type SUnit cannot be serialized). ZERO-WIDTH ITEMS: a Coll[Unit] has no data writer; refused before its length.  // tree v3, activated 3"><code>B-pair-in-pair-Unit-coll-a3#19</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;By… @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

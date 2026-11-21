@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Global.serialize_shared_nested_bounded_E_serialize_long_is_nested_32768x32768: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Global.serialize_shared_nested_bounded_E_serialize_long_is_nested_32768x32768</code></h1>
+<p>1 red (exceeded 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[E|serialize-long-is-nested|32768x32768] `Global.serialize(if (false) 1L else v)`, v = Coll(b) doubled by `++` to 32768 items, every one the same b (b: 32,768 bytes): typed Long (as `.size`: the JVM refuses inside `Global.serialize`, and a port that writes it anyway answers an Int, not the bytes) — REFUSED (ClassCastException: class sigma.data.CollOverArray cannot be cast to class java.lang.Long (sigma.data.CollOverArray is in unnamed module of loader 'app';…). ANOTHER CLASS, NESTED: refused at once; a port whose refusal prints the value, or that converts it first, does the nested collection's work before it refuses.  // tree v3, activated 3"><code>E-serialize-long-is-nested-32768x32768-a3#0</code> <span class="dim">[exceeded]</span></td><td><code>errored</code></td><td><code>exceeded memory (1024 MiB, 10 s)</code></td><td class="note"></td></tr>
+</table>
+</body></html>

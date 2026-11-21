@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · wire/v6/authored/ErgoTree.jdk_utf8_decode: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>wire/v6/authored/ErgoTree.jdk_utf8_decode</code></h1>
+<p>12 red (roundtrip 8 · reject 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td><code>jdk-utf8-decode-size0-sur-v3#0</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b0cd193b183006703efbfbd0400</code></td><td><code>0b0cd193b183006703eda0800400</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-size0-overlong3-v3#1</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b12d193b183006709efbfbdefbfbdefbfbd0400</code></td><td><code>0b0cd193b183006703e080800400</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-size0-overlong4-v3#2</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b15d193b18300670cefbfbdefbfbdefbfbdefbfbd0400</code></td><td><code>0b0dd193b183006704f08080800400</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-size0-above-v3#3</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b15d193b18300670cefbfbdefbfbdefbfbdefbfbd0400</code></td><td><code>0b0dd193b183006704f49080800400</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-size0-ff-v3#4</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b0cd193b183006703efbfbd0400</code></td><td><code>0b0ad193b183006701ff0400</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-ctl-differ-v3#7</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0b0cd19383006701548300670155</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-overlong-vs-3ff-v3#8</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b1cd19383006709efbfbdefbfbdefbfbd83006709efbfbd…</code></td><td><code>0b10d19383006703e0808083006703ffffff</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-overlong-vs-1ff-v3#9</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0b0ed19383006703e0808083006701ff</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-above-vs-4ff-v3#10</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b22d1938300670cefbfbdefbfbdefbfbdefbfbd8300670c…</code></td><td><code>0b12d19383006704f490808083006704ffffffff</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-above-vs-1ff-v3#11</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0b0fd19383006704f490808083006701ff</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-sur-vs-1ff-v3#12</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0b10d19383006703efbfbd83006703efbfbd</code></td><td><code>0b0ed19383006703eda08083006701ff</code></td><td class="note"></td></tr>
+<tr><td><code>jdk-utf8-decode-eq-sur-vs-3ff-v3#13</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0b10d19383006703eda08083006703ffffff</code></td><td class="note"></td></tr>
+</table>
+</body></html>

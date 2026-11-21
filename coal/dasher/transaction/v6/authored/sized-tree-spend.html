@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · transaction/v6/authored/sized-tree-spend: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>transaction/v6/authored/sized-tree-spend</code></h1>
+<p>9 red (valid 9)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td><code>cand-empty-fiat-shamir-proof-accept#3</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: SigmaConjecture must have at least 1 item, got 0</td></tr>
+<tr><td><code>cand-empty-no-proof-reject#4</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: SigmaConjecture must have at least 1 item, got 0</td></tr>
+<tr><td><code>cthreshold-k0-empty-fiat-shamir-proof-accept#5</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: Cthreshold must have at least 1 item, got 0</td></tr>
+<tr><td><code>cthreshold-k0-empty-no-proof-reject#6</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: Cthreshold must have at least 1 item, got 0</td></tr>
+<tr><td><code>cor-empty-no-proof-reject#7</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: SigmaConjecture must have at least 1 item, got 0</td></tr>
+<tr><td><code>cthreshold-k0-trueprop-child-no-proof-reject#9</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: Cthreshold k=0 below 1</td></tr>
+<tr><td><code>cthreshold-k0-cand-truncated-proof-no-coefficient-accept#14</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: SigmaConjecture must have at least 1 item, got 0</td></tr>
+<tr><td><code>cthreshold-k0-cand-truncated-proof-half-coefficient-accept#15</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: SigmaConjecture must have at least 1 item, got 0</td></tr>
+<tr><td><code>cor-empty-fiat-shamir-proof-reject#16</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">SigmaBooleanParseError: SigmaConjecture must have at least 1 item, got 0</td></tr>
+</table>
+</body></html>

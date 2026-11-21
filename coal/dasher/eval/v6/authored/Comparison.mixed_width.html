@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Comparison.mixed_width: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Comparison.mixed_width</code></h1>
+<p>14 red (reject 14)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[R1] `If(false,1L,3) &gt; If(false,1L,2)` at tree v3 — BOTH operands Long-typed with Int VALUES. THE ROW THAT WOULD HAVE REFUTED THE READING: the ordering comes from ArithOp.impls(left.tpe.typeCode) (trees.scala:1075-1078) and both values are cast to it, so a value narrower than its static type fails with a ClassCastException. It throws, so the ordering IS reached through the static type."><code>narrow-both-gt-v3-errored#2</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R1] `If(false,1L,3) &gt; If(false,1L,2)` at tree v0 — throws at v0 TOO: both static types already agree, so the builder has no Upcast to insert and the version gate never engages."><code>narrow-both-gt-v0-errored#3</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R2] `If(false,1L,2) &gt; 1L` at tree v0 — the same at v0."><code>narrow-left-gt-long-v0-errored#5</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 55</code></td><td class="note"></td></tr>
+<tr><td title="[R3] `3L &gt; If(false,1L,2)` at tree v0 — the same at v0."><code>long-gt-narrow-right-v0-errored#7</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 55</code></td><td class="note"></td></tr>
+<tr><td title="[R4] `If(false,1L,2) &lt; If(false,1L,3)` at tree v3 — LT takes the same table as GT."><code>narrow-both-lt-v3-errored#8</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R4] `If(false,1L,2) &lt; If(false,1L,3)` at tree v0 — the same at v0."><code>narrow-both-lt-v0-errored#9</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R5] `If(false,1L,2) &gt;= If(false,1L,2)` at tree v3 — GE likewise. Note it would be trivially TRUE if it were reached: the refusal is the table's, not the comparison's."><code>narrow-both-ge-v3-errored#10</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R5] `If(false,1L,2) &gt;= If(false,1L,2)` at tree v0 — the same at v0."><code>narrow-both-ge-v0-errored#11</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R6] `If(false,1L,2) &lt;= If(false,1L,2)` at tree v3 — LE, completing the four orderings. Also trivially true if reached."><code>narrow-both-le-v3-errored#12</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R6] `If(false,1L,2) &lt;= If(false,1L,2)` at tree v0 — the same at v0."><code>narrow-both-le-v0-errored#13</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+<tr><td title="[R7] `If(false,1L,2) == If(false,1L,2)` at tree v3 — **THE CONTROL THAT FAILS DIFFERENTLY, and the point of its being here.** EQ never reaches the ordering table: its own Value.checkType site catches the narrow value first and raises `InterpreterException: Invalid type returned by evaluator`, where every row above raises `ClassCastException`. The eval tier grades refusals COARSELY, so this vector CANNOT state that difference — an implementation that fixed only EQ would go green here and stay wrong on the other eight. Read this row's role, not just its verdict."><code>narrow-both-eq-checktype-v3-errored#14</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 43</code></td><td class="note"></td></tr>
+<tr><td title="[R7] `If(false,1L,2) == If(false,1L,2)` at tree v0 — the same different mechanism at v0."><code>narrow-both-eq-checktype-v0-errored#15</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 43</code></td><td class="note"></td></tr>
+<tr><td title="[R8] `min(If(false,1L,2), If(false,1L,3))` at tree v3 — Min/Max go through the SAME `o` as the orderings (impl.o.min), so this is the table again under a different node, and an ArithOp rather than a relation."><code>narrow-both-min-v3-errored#16</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 45</code></td><td class="note"></td></tr>
+<tr><td title="[R8] `min(If(false,1L,2), If(false,1L,3))` at tree v0 — the same at v0."><code>narrow-both-min-v0-errored#17</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 45</code></td><td class="note"></td></tr>
+</table>
+</body></html>

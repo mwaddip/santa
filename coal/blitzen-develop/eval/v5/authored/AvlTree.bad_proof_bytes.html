@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/AvlTree.bad_proof_bytes: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/AvlTree.bad_proof_bytes</code></h1>
+<p>5 red (panicked 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ tree.contains(key2, 0x00) }  // construction fails → false (no throw)"><code>contains-0x00-false#0</code> <span class="dim">[panicked]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 217</code></td><td><code>panicked</code></td><td class="note">panic: called `Option::unwrap()` on a `None` value</td></tr>
+<tr><td title="{ tree.contains(key2, truncatedProof) }  // → false"><code>contains-truncated-false#1</code> <span class="dim">[panicked]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 237</code></td><td><code>panicked</code></td><td class="note">panic: range end index 98 out of range for slice of length 88</td></tr>
+<tr><td title="{ tree.contains(key2, emptyProof) }  // → false"><code>contains-empty-false#2</code> <span class="dim">[panicked]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 217</code></td><td><code>panicked</code></td><td class="note">panic: index out of bounds: the len is 0 but the index is 0</td></tr>
+<tr><td title="{ tree.get(key2, 0x00) }  // construction fails → raise"><code>get-0x00-errored#3</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">panic: called `Option::unwrap()` on a `None` value</td></tr>
+<tr><td title="{ tree.insert([(key50,val50)], 0x00) }  // pre-v3: construction fails → raise (#908)"><code>insert-0x00-errored#4</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">panic: called `Option::unwrap()` on a `None` value</td></tr>
+</table>
+</body></html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Coll.indexOf_comparer_dispatch: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Coll.indexOf_comparer_dispatch</code></h1>
+<p>6 red (cost 4 · value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[A3] `Coll(1L).indexOf(lie(1L, 1), 0)` — 0 at cost 87: `indexOf` compares each ITEM, the comparer's LEFT value, with the argument (methods.scala:1091) and never type-checks the argument. A Long item takes the primitive case (`EQ_Prim` 3, Scala's boxed `l == r`), where two integers compare by VALUE across widths, so Long 1 equals Int 1. SEPARATING: a width-aware comparison answers -1."><code>long-item-int-arg-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 87</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-1} @ cost 87</code></td><td class="note"></td></tr>
+<tr><td title="[A4] `Coll[Byte] constant (1).indexOf(lie(1.toByte, 1L), 0)` — 0 at cost 67: a Byte item against a Long argument, equal by value as in A3, on a specialised Coll[Byte] receiver. SEPARATING, as A3."><code>byte-item-long-arg-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 67</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-1} @ cost 67</code></td><td class="note"></td></tr>
+<tr><td title="[D1] `Coll[Box](SELF).indexOf(lie(SELF, 1L), 0)` — -1 at cost 95: a Box item takes the Box case (`EQ_Box` 6), and a Long right is unequal. SEPARATING on cost: a comparison dispatched on the Long instead costs 92."><code>box-item-long-arg-accept#3</code> <span class="dim">[cost]</span></td><td><code>cost 95</code></td><td><code>cost 92</code></td><td class="note"></td></tr>
+<tr><td title="[D2] `Coll[BigInt](1).indexOf(lie(BigInt(1), 1L), 0)` — -1 at cost 89: a BigInt item takes the BigInt case (`EQ_BigInt` 5), and `CBigInt(1) == 1L` is false: a BigInt is not a `java.lang.Number`, so the primitive case's cross-width equality never reaches it. SEPARATING on cost: a comparison dispatched on the Long instead costs 87; a comparer that equates BigInt 1 with Long 1 answers 0."><code>bigint-item-long-arg-accept#5</code> <span class="dim">[cost]</span></td><td><code>cost 89</code></td><td><code>cost 87</code></td><td class="note"></td></tr>
+<tr><td title="[D5] `Coll[GroupElement](g).indexOf(lie(g, 1L), 0)` — -1 at cost 261: a GroupElement item charges `EQ_GroupElement` 172 whatever the right value is. SEPARATING on cost: a comparison dispatched on the Long instead costs 92."><code>groupelement-item-long-arg-accept#11</code> <span class="dim">[cost]</span></td><td><code>cost 261</code></td><td><code>cost 92</code></td><td class="note"></td></tr>
+<tr><td title="[O3] `Coll(getVar[Int](1)).indexOf(lie(getVar[Int](1), 1L), 0)`, var 1 = Int 0 — -1 at cost 93: the item is `Some(0)`, an Option left (`EQ_Option` 4), and a Long is not an Option. The receiver is a `ConcreteCollection` of `GetVar` nodes, item type `Option[Int]`. SEPARATING on cost: a comparison dispatched on the Long instead costs 92."><code>option-item-long-arg-accept#16</code> <span class="dim">[cost]</span></td><td><code>cost 93</code></td><td><code>cost 92</code></td><td class="note"></td></tr>
+</table>
+</body></html>

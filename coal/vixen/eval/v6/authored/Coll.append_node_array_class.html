@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.append_node_array_class: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.append_node_array_class</code></h1>
+<p>2 red (reject 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[P1] `Coll[Int] constant (1,2,3) ++ ConcreteCollection[Long]()` — THROWS `ArrayStoreException: arraycopy: type mismatch: can not copy long[] into int[]`, though the operand is EMPTY: the node `System.arraycopy`s each operand into an array of the receiver's class (CollectionUtil.scala:34-42), which refuses mismatched primitive arrays before it looks at the length. `patch` RETURNS on the same shape (Coll.reference_store_ops B8). SEPARATING: an implementation that checks items, or skips an empty operand, returns 3."><code>int-coll-append-empty-long-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 61</code></td><td class="note"></td></tr>
+<tr><td title="[P3] `Coll[Box](SELF) ++ Coll[GroupElement](g)` — THROWS `ArrayStoreException: arraycopy: type mismatch` (GroupElement[] into Box[]). SEPARATING."><code>box-coll-append-groupelement-errored#2</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 96</code></td><td class="note"></td></tr>
+</table>
+</body></html>

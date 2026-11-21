@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Value.checkType_lazy_default: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Value.checkType_lazy_default</code></h1>
+<p>4 red (reject 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ Coll[Int]().getOrElse(0, if (false) 1 else 2L) == 2 }  // JVM: ByIndex at ErgoTree v3 evaluates its default only when the index is OUT of range, and then checks it (transformers.scala:268) — Value.checkType -&gt; SType.isValueOfType compares the value against the node's STATIC type; the Long that `if (false) 1 else 2L` returns is not an Int"><code>byindex-v3-out-of-range-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 83</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(5).getOrElse(0, if (false) 1 else 2L) == 5 }  // JVM: the SAME tree at ErgoTree v2, where ByIndex's default is EAGER: it is evaluated and checked before the index is even consulted (transformers.scala:273) — Value.checkType -&gt; SType.isValueOfType compares the value against the node's STATIC type; the Long that `if (false) 1 else 2L` returns is not an Int"><code>byindex-v2-in-range-errored#2</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 88</code></td><td class="note"></td></tr>
+<tr><td title="{ SELF.R4[Int].getOrElse(if (false) 1 else 2L) == 2 }  // JVM: OptionGetOrElse at ErgoTree v3 evaluates its default only when the Option is None, and then checks it (transformers.scala:634) — Value.checkType -&gt; SType.isValueOfType compares the value against the node's STATIC type; the Long that `if (false) 1 else 2L` returns is not an Int. R4 is absent on the canonical eval context's SELF box, so the Option is None"><code>optiongetorelse-v3-none-errored#3</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 108</code></td><td class="note"></td></tr>
+<tr><td title="{ SELF.R0[Long].getOrElse(if (false) 1L else 2) == SELF.value }  // JVM: the SAME tree at ErgoTree v2, where OptionGetOrElse's default is EAGER: it is evaluated and checked even though the Option is Some (transformers.scala:640). Here the lie runs the other way — the node is declared SLong and returns an Int"><code>optiongetorelse-v2-some-errored#5</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 121</code></td><td class="note"></td></tr>
+</table>
+</body></html>

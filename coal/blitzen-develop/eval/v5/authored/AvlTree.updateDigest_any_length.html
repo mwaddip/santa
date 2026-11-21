@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/AvlTree.updateDigest_any_length: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/AvlTree.updateDigest_any_length</code></h1>
+<p>4 red (value 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ tree.updateDigest(Coll[Byte](1,2,3)) }  // 3-byte digest accepted"><code>updateDigest-3byte#0</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;01020307200108&quot;,&quot;kind&quot;:&quot;AvlTree&quot;} @ cost 46</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ tree.updateDigest(Coll[Byte](1,2,3)).digest }  // reads the 3 bytes back"><code>updateDigest-3byte-readback#1</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;By… @ cost 65</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ tree.updateDigest(Coll[Byte]()) }  // empty digest accepted"><code>updateDigest-empty#2</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;07200108&quot;,&quot;kind&quot;:&quot;AvlTree&quot;} @ cost 46</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ tree.updateDigest(40-byte) }  // over-length digest accepted"><code>updateDigest-40byte#3</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20212223242526272807… @ cost 46</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

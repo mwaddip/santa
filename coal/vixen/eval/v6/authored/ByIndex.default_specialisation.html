@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/ByIndex.default_specialisation: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/ByIndex.default_specialisation</code></h1>
+<p>3 red (reject 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[N1] `ByIndex(Coll[Byte] CONSTANT, 0, default = true)` at **tree version 0**. Below v3 the default is ALWAYS evaluated and handed to `getOrElse` (`transformers.scala:271-276`), so a specialised receiver throws EVEN FOR AN IN-RANGE INDEX. **SEPARATING, and the v0 half of the version witness** — compare N7, the same body at tree v3, which evaluates."><code>v0_byte_constant_bool_default_in_range-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1} @ cost 45</code></td><td class="note"></td></tr>
+<tr><td title="[N2] The same at index 9, out of range: throws at v0 too. **SEPARATING.**"><code>v0_byte_constant_bool_default_oob-errored#1</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 45</code></td><td class="note"></td></tr>
+<tr><td title="[N8] At v3 the lazy default IS reached once the index is out of range, so the specialised receiver throws again. **SEPARATING** — and with N7 it shows the v3 behaviour is laziness, not a dropped check."><code>v3_byte_constant_bool_default_oob-errored#7</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 45</code></td><td class="note"></td></tr>
+</table>
+</body></html>

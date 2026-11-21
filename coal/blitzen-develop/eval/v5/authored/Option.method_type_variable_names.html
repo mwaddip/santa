@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/Option.method_type_variable_names: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/Option.method_type_variable_names</code></h1>
+<p>4 red (value 3 · reject 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[A2] `as[Option[T]](getVar[Int](1)).map((x: Int) =&gt; 7).get + 1` → 8 at cost 99. `T` stands where `map: (Option[T], T =&gt; R) =&gt; Option[R]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`."><code>map-plus-t-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:8} @ cost 99</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[F2] `as[Option[T]](getVar[Int](1)).filter((x: Int) =&gt; true).get + 1` → 1 at cost 99. `T` stands where `filter: (Option[T], T =&gt; Boolean) =&gt; Option[T]` declares `T` itself: equal names unify with no substitution, and the `Int` positions bind the rest, so the call is typed by its arguments. SEPARATING: a table that names this position otherwise cannot unify it with `T`, leaves the call unspecialised, and throws. Tree v0 under activated 2 (the same at activated 3); var 1 = Int 0, so the receiver is `Some(0)`."><code>filter-plus-t-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 99</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[N1] `if (true) true else Coll[Option[T]]()(0).map((x: T) =&gt; 1).get == 1` → true at cost 20: `T` stands where `map` declares `T`, so they unify, `R := Int`, the call is `Option[Int]`: BUILT. SEPARATING: a table that names `Option.map`'s item otherwise leaves the call unspecialised and refuses the tree at parse. Tree v0 under activated 2 (the same at activated 3)."><code>parse-option-t-map-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 20</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[N2] `if (true) true else Coll[Option[IV]]()(0).map((x: IV) =&gt; 1).get == 1` — REFUSED AT PARSE (`ConstraintFailed`, `SameType2`): `IV` is not `map`'s `T`; two type variables unify only when their names are equal (`unifyTypes`, sigma/ast/package.scala:39-42), so the call stays `Option[R]` and `.get == 1` compares an `R` with an `Int`. SEPARATING: a table that names `Option.map`'s item `IV` builds it. Tree v0 under activated 2 (the same at activated 3)."><code>parse-option-iv-map-errored#8</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

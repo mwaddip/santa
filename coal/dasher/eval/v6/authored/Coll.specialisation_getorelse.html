@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Coll.specialisation_getorelse: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Coll.specialisation_getorelse</code></h1>
+<p>10 red (not-implemented 10)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[Z1] `Coll[Boolean](true,false,true)` as a CONSTANT — the deserializer's OTHER specialised item type (`CoreDataSerializer.scala:172`, `fromArray(r.getBits(len))`) — with `.getOrElse(5, 1)`, an Int default. The specialised bridge unboxes the default to Boolean and throws `ClassCastException: class java.lang.Integer cannot be cast to class java.lang.Boolean`. **SEPARATING:** it proves B1/B2 are about SPECIALISATION and not about Byte — the same mechanism on the only other item type the wire specialises."><code>bool_constant_int_default_oob-errored#0</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Z2] The same at index 0, IN range: still throws, because the unboxing precedes the index. **SEPARATING.**"><code>bool_constant_int_default_in_range-errored#1</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Z3] The GENERIC twin — a `ConcreteCollection` of the same three booleans (`values.scala:897` calls `fromArray` at an abstract type) — `.getOrElse(5, 1)` RETURNS the mistyped default, `Int 1` at cost 79, out of a collection declared `Coll[Boolean]`. The other half of the pair: same declared type, same call, opposite outcome."><code>bool_concrete_int_default_oob-accept#2</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 79</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Z4] The same at index 0: returns the element `true` at cost 79, where Z2 throws."><code>bool_concrete_int_default_in_range-accept#3</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 79</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Z5] **CONTROL for Z1/Z2:** the specialised receiver with a WELL-TYPED default returns `false` at cost 49. It is what shows Z1/Z2 fail on the default's type and not on the receiver."><code>bool_constant_bool_default_oob-accept#4</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 49</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[I1] `Coll[Byte](1,2,3).indices.getOrElse(5, true)`. `indices` is the ONLY in-script route to a specialised `Coll[Int]` (`CollsOverArrays.scala:68` builds it from a concrete `Array[Int]`; no deserializer ever specialises Int), so this is a `$mcI$sp` receiver with a Boolean default: `ClassCastException` to `java.lang.Integer`. **SEPARATING, and the third specialised kind** — the separation is the specialisation itself, on every kind that exists."><code>indices_bool_default_oob-errored#5</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[I2] The same at index 0, IN range. **SEPARATING.**"><code>indices_bool_default_in_range-errored#6</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[I3] The GENERIC twin, a `ConcreteCollection` of the SAME three ints `(0,1,2)` that `indices` produces: `.getOrElse(5, true)` RETURNS `true` at cost 79. Same declared `Coll[Int]`, same items, same call — and the opposite verdict from I1."><code>int_concrete_bool_default_oob-accept#7</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 79</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[I4] The same at index 0: returns the element `Int 0` at cost 79, where I2 throws."><code>int_concrete_bool_default_in_range-accept#8</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0} @ cost 79</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[I5] **CONTROL for I1/I2:** the specialised `indices` receiver with a well-typed Int default returns `9` at cost 75."><code>indices_int_default_oob-accept#9</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:9} @ cost 75</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>
