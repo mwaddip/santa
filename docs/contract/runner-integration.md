@@ -236,8 +236,10 @@ budget at its top level:
   group of its own** (`setpgid`; never a new session: conform ends a runner by its session), carrying the budget:
   - **Time:** the parent kills the child's group at `wall_s` seconds → `{"error": "exceeded", "limit": "time"}`.
   - **Memory:** the parent watches the group's resident memory — resident set plus swap (`VmRSS` + `VmSwap` in
-    `/proc/<pid>/status`), summed over the group's processes — every 10 ms, and kills the group when it passes
-    `memory_mb` MiB → `{"error": "exceeded", "limit": "memory"}`. The kill is the parent's own observation, so the
+    `/proc/<pid>/status`), summed over the group's processes, and each process's peak (`VmHWM`) — every 10 ms, and
+    kills the group when either passes `memory_mb` MiB → `{"error": "exceeded", "limit": "memory"}`. A child that
+    finishes with a peak past the budget (its `ru_maxrss`, from `wait4`) is exceeded too: a spike between two polls
+    counts, as a cgroup bound would have killed it at that moment. The kill is the parent's own observation, so the
     implementation cannot catch it and no runtime's error needs recognising, and it bounds memory actually used.
     A JVM is told its budget, `-XX:MaxRAM=<memory_mb>m`, so that it sizes its heap to the budget, not to the machine.
   - **The backstop:** the child also runs under the kernel's data-segment limit at `max(4096, 2 × memory_mb)` MiB, set
