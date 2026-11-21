@@ -349,11 +349,11 @@ authds's convention, `runner-contract-authds.md` §6):
 | Conformer | `updateInterlinks` + `prove` | Notes |
 |---|---|---|
 | rudolph (JVM) | yes | control; `NipopowAlgos` is the oracle (§6) |
-| dasher (ergots) | pending | `runners/dasher/runner.json`'s `tiers` list does not include `"nipopow"` (confirmed directly — the file is materialized in this worktree) |
-| blitzen-eni (sigma-rust fork) | pending | not yet mounted |
-| donner (ergo-node-rust) | pending | not yet mounted |
-| vixen (arkadianet/ergo) | pending | not yet mounted |
-| blitzen-develop, comet | not applicable | comet is wire-only (no AVL/nipopow surface, same as authds §6); blitzen-develop tracks upstream `sigma-rust`, which has no nipopow surface either |
+| dasher (ergots) | yes | mounted in ergots' own runner (`santa/runner.json`) |
+| blitzen-develop, blitzen-mwaddip (sigma-rust) | yes | mounted |
+| donner (ergo-node-rust) | yes | mounted |
+| vixen (arkadianet/ergo) | yes | mounted |
+| comet (Fleet) | not applicable | wire-only (no AVL/nipopow surface, same as authds §6) |
 
 The last four rows' `runners/<name>/` directories are **git submodules not initialized in
 this worktree** (empty on disk here) — their pending status is stated on the task brief's

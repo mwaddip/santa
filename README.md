@@ -92,7 +92,7 @@ pinned green.
 | Runner | Implementation | Tiers | The runner lives in |
 |---|---|---|---|
 | **rudolph** | the JVM reference, the control | all seven | SANTA, `jvm-blesser/` |
-| **dasher** | [ergots](https://github.com/mwaddip/ergots), pure TypeScript | eval, wire, transaction, authds | SANTA, `ts-runner/` (moving into ergots as `santa/`) |
+| **dasher** | [ergots](https://github.com/mwaddip/ergots), pure TypeScript | eval, wire, transaction, authds, nipopow | ergots, [`santa/`](https://github.com/mwaddip/ergots/tree/master/santa) |
 | **blitzen-develop** | [sigma-rust](https://github.com/ergoplatform/sigma-rust), upstream `develop` | eval, wire, transaction, nipopow | SANTA, a submodule (moving into sigma-rust as `santa/`, [#1022](https://github.com/ergoplatform/sigma-rust/pull/1022)) |
 | **blitzen-mwaddip** | [sigma-rust, the mwaddip fork](https://github.com/mwaddip/sigma-rust)'s `master` | eval, wire, transaction, nipopow | the fork, [`santa/`](https://github.com/mwaddip/sigma-rust/tree/master/santa) |
 | **comet** | [Fleet SDK](https://github.com/fleet-sdk/fleet), pure TypeScript | wire (constants, boxes, transactions) | SANTA, a submodule |
@@ -340,7 +340,6 @@ docs/corpus.md          what the corpus pins, family by family
 docs/coverage/          the eval corpus's coverage manifest (ops, methods, tree shapes)
 oracle/                 the verdict and selection oracles every runner reproduces before it grades
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
-ts-runner/              dasher, the ergots runner (moving into ergots)
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
 tools/                  Rust: conform, validate, santa-check (the grading interpreter), santa-delta, scoreboard
 .github/actions/santa-pr/   the pull request check

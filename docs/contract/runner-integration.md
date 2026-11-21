@@ -93,10 +93,10 @@ A wire runner may also declare (both optional; comet, the Fleet SDK runner, does
   "name":   "dasher",
   "label":  "dasher (ergots · pure-TS)",
   "impl":   "https://github.com/mwaddip/ergots.git#master",
-  "runner": "santa/runner"   // a directory in the impl's checkout: plain names only (no root, `..` or `.`)
+  "runner": "santa"   // a directory in the impl's checkout: plain names only (no root, `..` or `.`)
 }
-// the implementation, santa/runner/runner.json: what it implements
-{ "version": "v6", "tiers": ["eval", "wire", "transaction", "authds"], "cost": true }
+// the implementation, santa/runner.json: what it implements
+{ "version": "v6", "tiers": ["eval", "wire", "transaction", "authds", "nipopow"], "cost": true }
 ```
 
 - **Each side sets only its own keys.** SANTA's entry holds `name`, `label`, `impl`, `control` and `runner`; the

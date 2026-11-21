@@ -383,8 +383,8 @@ Two further limits, surfaced building the runner arms:
   prove operation therefore surfaces as `panicked` on **rudolph's control arm**, which drives
   this same `AvlProofGenerator` at grading time (§7) — a real limit of that implementation,
   discovered in Task 9, not a defect to route or fix, and **not** a format-level constraint:
-  `ts-runner`'s independent adapter catches the identical domain rejection explicitly and
-  reports `errored` instead (`ts-runner/src/runner.ts:869`), by design. Both are faithful to
+  dasher's independent adapter (written in SANTA's former `ts-runner/`, now ergots' `santa/`)
+  catches the identical domain rejection explicitly and reports `errored` instead, by design. Both are faithful to
   their own implementation and both grade coal, so the board is unaffected either way. (It is
   also why no vendored `avl_prove` fixture can ever carry `UnknownModification` — §5/§9's
   finding: the blessing step itself would throw before such a vector could be committed.)

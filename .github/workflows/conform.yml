@@ -1,8 +1,8 @@
 name: conform
 
 # Manual only — the project is in active, high-churn development and the full grid is a
-# cold-heavy build (sbt builds the Scala node, cargo builds sigma-rust x2, npm builds
-# ergots + ts-runner). Run it from the Actions tab ("Run workflow") when you want a
+# cold-heavy build (sbt builds the Scala node, cargo builds the Rust runners and their
+# implementations, npm/pnpm build ergots and Fleet). Run it from the Actions tab ("Run workflow") when you want a
 # canonical clean-environment grid run. Auto-on-push can be added later.
 #
 # Naming note: runner count is discovered at run time (whatever lives under runners/),
