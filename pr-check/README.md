@@ -22,8 +22,8 @@ In `santa.yml`, check three values in the job's `env`:
 - `LABEL`: the runner's name in the comment; the repository's name by default;
 - `SANTA_REF`: the SANTA ref whose vectors grade the pull request; `main` by default (see below).
 
-Nothing else needs editing, and SANTA needs no entry for the runner. The `jq` programs need jq 1.7, which
-`ubuntu-latest` has (`ubuntu-22.04` ships 1.6).
+Nothing else needs editing, and SANTA needs no entry for the runner. The `jq` programs need jq 1.7 or later;
+SANTA tests them under 1.7 and 1.8. `ubuntu-latest` has 1.8; the 1.6 of `ubuntu-22.04` is too old.
 
 **The commenter takes effect from the default branch.** GitHub runs a `workflow_run` workflow only from there, so
 merge `santa-comment.yml` first, or together with the check.

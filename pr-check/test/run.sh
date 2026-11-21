@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # The pr-check templates' tests: every case under delta/ (two runner results.json in, delta.json out) and comment/
 # (delta.json in, markdown out) against its golden output, and the workflow templates' structure (workflows.py, when
-# PyYAML is there). Needs jq 1.7. Exits non-zero at the first difference, naming the case.
+# PyYAML is there). Needs jq 1.7 or later; CI runs it under 1.7.1 and 1.8.1. Exits non-zero at the first difference, naming the case.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 templates="$(cd "$here/.." && pwd)"
