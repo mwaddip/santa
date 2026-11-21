@@ -127,15 +127,22 @@ santa-run <impl-path> <santa-dir> <out-dir>
 
 - **`<impl-path>`**: the directory holding the implementation's checkout (below); `-` when `impl` is null.
 - **`<santa-dir>`**: a SANTA checkout, read as data only (`vectors/`, `oracle/`, `schema/`); a runner never writes to it.
-- **`<out-dir>`**: where it writes its outputs (§4.3).
+- **`<out-dir>`**: where it writes its outputs (§4.3). It may be neither `<santa-dir>` itself nor inside its `vectors/`
+  or `oracle/` (compared by real path), and a runner refuses such an out-dir before it writes anything. conform's own
+  out-dirs live under the checkout's ignored `.santa/`, which is fine.
 
-Resolve the paths to absolute ones if the entrypoint `cd`s before it uses them. In order, `santa-run` MUST:
+Resolve the paths to absolute ones if the entrypoint `cd`s before it uses them. `santa-run` ends by `exec`ing its
+runner (a script that must put something back, such as a patched checkout, does so before the `exec`), so a signal
+sent to `santa-run`'s pid reaches the runner, which then takes a bounded child with it (§3a); a runner left as the
+script's child would run on after the script died. In order, `santa-run` MUST:
 
 1. check its grading interpreter against the verdict oracle (§4.2) and its selection against the selection oracle
    (§4.1), both in `<santa-dir>/oracle/`, and refuse to grade — exit non-zero, naming the case — if either is not
    reproduced;
 2. select from `<santa-dir>/vectors/` exactly the files its scope selects (§4.1);
-3. run every entry of every selected file through the implementation, each bounded file under its budget (§3a);
+3. run every entry of every selected file through the implementation, each bounded file under its budget (§3a). A
+   file whose entries repeat a name is refused (actuals are keyed by name, so one entry would be graded against
+   another's answer); `./validate` keeps such files out of the corpus;
 4. grade every answer (§4.2);
 5. write `results.json` and the raw actuals (§4.3).
 

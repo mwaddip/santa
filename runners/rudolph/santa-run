@@ -28,4 +28,6 @@ ROOT="$(cd "$here/../.." && pwd)"   # runners/rudolph -> repo root (rudolph's ow
 (cd "$ROOT/jvm-blesser" && sbt --batch rudolphJavaArgs)
 mapfile -t jargs < "$ROOT/jvm-blesser/target/rudolph-java-args"
 cd "$ROOT/jvm-blesser"
-java "${jargs[@]}" -Drudolph.args="$ROOT/jvm-blesser/target/rudolph-java-args" santa.runner.Runner run "$here/runner.json" "$SANTA" "$OUT"
+# exec: the runner takes this script's pid, so a signal sent to santa-run reaches it (and it takes a bounded child's
+# group with it, runner-integration §3a); a runner left as bash's child would run on under pid 1 after bash died.
+exec java "${jargs[@]}" -Drudolph.args="$ROOT/jvm-blesser/target/rudolph-java-args" santa.runner.Runner run "$here/runner.json" "$SANTA" "$OUT"

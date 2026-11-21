@@ -298,7 +298,7 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 | `./conform --hosted <url>#<ref>` or `<path>` `[--runner-dir <dir>] [--label <label>]` | an implementation's own runner, with no entry in SANTA |
 | `./conform --clean …` | wipes `.santa/` first |
 | `./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base> [<head>]` | the pull request delta, into `.santa/pr/` |
-| `./validate` | the schema gate: every vector against its schema, its path against its envelope, the bounded files' limits |
+| `./validate` | the schema gate: every vector against its schema, its path against its envelope, the bounded files' limits, unique entry names |
 | `./scoreboard [results.json] [out-dir]` | the dashboard and badges, into `site/` |
 
 **Rudolph's full grid** (`SANTA_TX_BLESSER=1 ./conform`, the canonical invocation) needs `ergo-core` 6.0.7 in the
@@ -323,8 +323,8 @@ Pages.
 - **Vectors are appended, never renumbered.** Other projects copy vector files verbatim; new entries go at the end
   of a file.
 - **Every vector passes `./validate`.** A file may declare `limits` (one entry, a memory and time budget: a bounded
-  file, [runner-integration §3a](docs/contract/runner-integration.md#3a-bounded-files)). An entry's prose (`script`,
-  `description`) travels with it and is never graded.
+  file, [runner-integration §3a](docs/contract/runner-integration.md#3a-bounded-files)). Entry names are unique within
+  a file: actuals are keyed by name. An entry's prose (`script`, `description`) travels with it and is never graded.
 - **Only reachable behaviour.** Behaviour no consensus path can reach is deleted, once its unreachability is proven.
 - `jvm-blesser/src/test/resources/chain-testnet.conf` is pinned by the
   [transaction contract](docs/contract/runner-contract-transaction.md) and changes only with a re-bless.
