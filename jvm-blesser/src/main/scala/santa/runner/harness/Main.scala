@@ -64,7 +64,9 @@ object Main {
               case Some(b)           => Right(runBounded(f, doc, b, children, n, child))
               case None              => Right(runFile(path, doc).toMap)
             }
-            ordered = Json.fromFields(names(doc).flatMap(k => actuals.get(k).map(k -> _)) ++ actuals.filterKeys(k => !names(doc).contains(k)).toSeq)
+            ns = names(doc)
+            known = ns.toSet
+            ordered = Json.fromFields(ns.flatMap(k => actuals.get(k).map(k -> _)) ++ actuals.filterKeys(k => !known(k)).toSeq)
             _ <- writeJson(out.resolve("actuals").resolve(f.rel), ordered)
             label <- grading.labelFor(f.tier, doc)
             _ = tally.addFile(f)

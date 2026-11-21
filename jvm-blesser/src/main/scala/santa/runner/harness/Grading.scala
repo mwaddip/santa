@@ -6,10 +6,18 @@ import io.circe.{Json, JsonNumber, JsonObject}
   * order, numbers numerically (5 == 5.0), strings exactly, null only null, a bool only a bool. rudolph's own reading,
   * independent of SANTA's santa-check: the canary compares the two. */
 object Equal {
-  private def numEq(x: JsonNumber, y: JsonNumber): Boolean = (x.toLong, y.toLong) match {
+  /** An integer literal (no fraction, no exponent): what serde_json, under santa-check, stores as an integer. */
+  private[harness] def integralLiteral(x: JsonNumber): Boolean = !x.toString.exists(c => c == '.' || c == 'e' || c == 'E')
+  private val U64 = BigInt(1) << 64
+  private def i64(x: JsonNumber): Option[Long] = if (integralLiteral(x)) x.toLong else None
+  private def u64(x: JsonNumber): Option[BigInt] = if (integralLiteral(x)) x.toBigInt.filter(b => b >= 0 && b < U64) else None
+
+  /** As santa-check compares numbers: two 64-bit signed integers exactly, else two unsigned exactly, else as doubles (an
+    * integer literal beyond both ranges is a double there too). */
+  private def numEq(x: JsonNumber, y: JsonNumber): Boolean = (i64(x), i64(y)) match {
     case (Some(a), Some(b)) => a == b
     case _ =>
-      (x.toBigInt, y.toBigInt) match {
+      (u64(x), u64(y)) match {
         case (Some(a), Some(b)) => a == b
         case _                  => x.toDouble == y.toDouble
       }

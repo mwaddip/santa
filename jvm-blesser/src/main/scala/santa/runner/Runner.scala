@@ -360,9 +360,17 @@ object Runner {
     Seq(javaBin) ++ args ++ Seq(s"-XX:MaxRAM=${b.memoryMb}m", "santa.runner.Runner", "one", santa.toString, rel, out.toString)
   }
 
+  val Usage: String =
+    "usage: runner run <runner.json> <santa-dir> <out-dir> | one <santa-dir> <relpath> <out-file> | <vector.json|vectors-dir> [<out.json|out-dir>]"
+
+  /** A verb (`run`, `one`) with the wrong number of arguments is a usage error, never a vector file named `run`. */
+  def verbError(args: Array[String]): Option[String] =
+    args.headOption.filter(v => (v == "run" || v == "one") && args.length != 4).map(_ => Usage)
+
   def main(args: Array[String]): Unit = {
     val runFileFn: harness.Main.RunFile = (_, doc) => actuals(doc)
     def done(r: Either[String, Unit]): Unit = r.left.foreach { e => System.err.println(s"rudolph: $e"); sys.exit(1) }
+    verbError(args).foreach { u => System.err.println(u); sys.exit(2) }
     args match {
       // the self-contained runner (runner-integration §3), through santa.runner.harness
       case Array("run", runnerJson, santa, out) =>
@@ -376,7 +384,7 @@ object Runner {
       case _ =>
     }
     val path = args.headOption.getOrElse {
-      System.err.println("usage: runner run <runner.json> <santa-dir> <out-dir> | one <santa-dir> <relpath> <out-file> | <vector.json|vectors-dir> [<out.json|out-dir>]")
+      System.err.println(Usage)
       sys.exit(2)
     }
     if (java.nio.file.Files.isDirectory(java.nio.file.Paths.get(path))) {

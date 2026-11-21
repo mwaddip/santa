@@ -35,11 +35,13 @@ object Oracle {
     }
   }
 
-  private def cases(doc: Json): Vector[Json] = doc.hcursor.downField("cases").focus.flatMap(_.asArray).getOrElse(Vector.empty)
+  /** The file's list under `key`, refused when absent: an oracle without cases would pass vacuously. */
+  private def list(doc: Json, key: String): Either[String, Vector[Json]] =
+    doc.hcursor.downField(key).focus.flatMap(_.asArray).toRight(s"no $key")
 
   /** One verdict case: its label, entry, file (default {}), actual (null = missing) and cost claim (default false). */
   private def verdicts(doc: Json, g: Grading): Either[String, Unit] =
-    cases(doc).foldLeft[Either[String, Unit]](Right(())) { (acc, c) =>
+    list(doc, "cases").flatMap(_.foldLeft[Either[String, Unit]](Right(())) { (acc, c) =>
       acc.flatMap { _ =>
         val o = c.asObject.get
         val actual = o("actual").filterNot(_.isNull)
@@ -51,14 +53,16 @@ object Oracle {
         if (Equal.structural(got, want)) Right(())
         else Left(s"case ${o("name").map(_.noSpaces).getOrElse("?")}: got ${got.noSpaces}, want ${want.noSpaces}")
       }
-    }
+    })
 
   /** The selection cases over a fresh temporary tree built from `files` (runner-integration §4.1). */
   private def selections(doc: Json): Either[String, Unit] = {
+    val files = list(doc, "files") match { case Right(f) => f; case Left(e) => return Left(e) }
+    val cases = list(doc, "cases") match { case Right(c) => c; case Left(e) => return Left(e) }
     val root = Files.createTempDirectory(s"rudolph-selection-${seq.incrementAndGet()}-")
     try {
       val vectors = root.resolve("vectors")
-      doc.hcursor.downField("files").focus.flatMap(_.asArray).getOrElse(Vector.empty).foreach { f =>
+      files.foreach { f =>
         val rel = f.hcursor.downField("path").as[String].getOrElse("")
         val path = vectors.resolve(rel)
         Files.createDirectories(path.getParent)
@@ -73,7 +77,7 @@ object Oracle {
         Files.write(path, body.getBytes("UTF-8"))
       }
       Selection.discover(vectors).flatMap { all =>
-        cases(doc).foldLeft[Either[String, Unit]](Right(())) { (acc, c) =>
+        cases.foldLeft[Either[String, Unit]](Right(())) { (acc, c) =>
           acc.flatMap { _ =>
             val name = c.hcursor.downField("name").as[String].getOrElse("?")
             Scope.parse(c.hcursor.downField("scope").focus.getOrElse(Json.Null)).left.map(e => s"case $name: $e").flatMap { scope =>

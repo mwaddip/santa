@@ -43,6 +43,16 @@ class GradingTest extends munit.FunSuite {
     refused(minimal("""{"branches": []}"""), "no branches")
     refused(minimal("""{"branches": [{"dims": [{"name": "value", "compare": []}]}]}"""), "no comparisons")
   }
+  test("a nested unknown key is refused") {
+    refused(minimal("""{"branches": [{"dims": [{"name": "value", "requries": [], "compare": [{"a": {"lit": 1}, "b": {"lit": 1}}]}]}]}"""), "requries")
+  }
+  test("a vector file's own grading label wins over the tier's; an unknown one is refused") {
+    val doc = minimal().mapObject(o => o.add("types", o("types").get.mapObject(t => t.add("x", t("eval").get))))
+    val g = Grading.parse(doc).toOption.get
+    assertEquals(g.labelFor("eval", j("""{"grading": "x"}""")), Right("x"))
+    assertEquals(g.labelFor("eval", j("{}")), Right("eval"))
+    assert(Grading.parse(minimal()).toOption.get.labelFor("eval", j("""{"grading": "nope"}""")).left.exists(_.contains("nope")))
+  }
   test("a tier default naming no type is refused") {
     refused(j("""{"schema": "santa-grading/v1", "tiers": {"eval": "nope"}, "types": {}}"""), "tier default")
   }
@@ -54,6 +64,15 @@ class GradingTest extends munit.FunSuite {
     assert(Equal.structural(j("""{"a": 1, "b": [1, 2]}"""), j("""{"b": [1, 2], "a": 1}""")))
     assert(!Equal.structural(j("[1, 2]"), j("[2, 1]")))
     assert(!Equal.structural(j("""{"a": 1}"""), j("""{"a": 1, "b": null}""")))
+  }
+
+  test("numbers compare as santa-check's do: exact as 64-bit integers, else as doubles") {
+    assert(!Equal.structural(j("9007199254740993"), j("9007199254740992")), "two i64")
+    assert(!Equal.structural(j("18446744073709551615"), j("18446744073709551614")), "two u64")
+    assert(Equal.structural(j("9007199254740993"), j("9007199254740992.0")), "an i64 and a float: as doubles")
+    assert(Equal.structural(j("18446744073709551617"), j("18446744073709551616")), "beyond u64: as doubles")
+    assert(Equal.structural(j("-0"), j("0")))
+    assert(Equal.structural(j("1e2"), j("100")))
   }
 
   test("the cost dimension is n/a when not claimed, and depends on value") {

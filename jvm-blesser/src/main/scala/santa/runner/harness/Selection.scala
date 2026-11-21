@@ -3,6 +3,7 @@ package santa.runner.harness
 import io.circe.parser.parse
 import java.nio.file.{Files, Path}
 import scala.collection.JavaConverters._
+import scala.util.Try
 
 /** A vector file, by its path relative to `vectors/` and the slice it sits in. */
 final case class VectorFile(rel: String, tier: String, version: String, provenance: String)
@@ -10,15 +11,20 @@ final case class VectorFile(rel: String, tier: String, version: String, provenan
 /** Selection (runner-integration §4.1): which vector files of a SANTA checkout a scope covers. */
 object Selection {
 
-  /** Every `*.json` under `vectors/` but the root `grading.json`, sorted; a file at another depth is refused. */
+  /** Every `*.json` under `vectors/` but the root `grading.json`, sorted; a file at another depth is refused. As the Rust
+    * harness walks: a directory it cannot read is skipped, a symlinked directory is followed, and any other `*.json`
+    * entry is listed (a dangling link among them fails loudly when it is read). */
   def discover(vectors: Path): Either[String, Seq[VectorFile]] = {
-    val all = if (!Files.isDirectory(vectors)) Seq.empty[String] else {
-      val s = Files.walk(vectors)
-      try s.iterator().asScala.filter(p => Files.isRegularFile(p) && p.toString.endsWith(".json"))
-        .map(p => vectors.relativize(p).toString.replace('\\', '/')).toVector
-      finally s.close()
+    def walk(d: Path, prefix: String): Vector[String] = {
+      val names = Try { val s = Files.list(d); try s.iterator().asScala.map(_.getFileName.toString).toVector finally s.close() }
+      names.getOrElse(Vector.empty).flatMap { n =>
+        val rel = if (prefix.isEmpty) n else s"$prefix/$n"
+        if (Files.isDirectory(d.resolve(n))) walk(d.resolve(n), rel)
+        else if (n.endsWith(".json")) Vector(rel)
+        else Vector.empty
+      }
     }
-    val rels = all.filter(_ != "grading.json").sorted
+    val rels = walk(vectors, "").filter(_ != "grading.json").sorted
     rels.foldLeft[Either[String, Vector[VectorFile]]](Right(Vector.empty)) { (acc, rel) =>
       acc.flatMap { done =>
         rel.split('/') match {

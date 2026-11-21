@@ -32,6 +32,36 @@ class OracleTest extends munit.FunSuite {
     assert(e.contains(first.hcursor.downField("name").as[String].toOption.get), e)
   }
 
+  test("an oracle file without its cases or files is refused") {
+    Seq("""{"schema": "santa-oracle-grading/v1"}""" -> "no cases",
+        """{"schema": "santa-oracle-selection/v1", "cases": []}""" -> "no files",
+        """{"schema": "santa-oracle-selection/v1", "files": []}""" -> "no cases").foreach { case (body, why) =>
+      val fake = temp("empty")
+      Files.createDirectories(fake.resolve("oracle"))
+      Files.write(fake.resolve("oracle/x.json"), body.getBytes("UTF-8"))
+      val e = Oracle.check(fake, grading).left.getOrElse(fail(s"$body passed"))
+      assert(e.contains(why), e)
+    }
+  }
+
+  test("discover walks as the Rust harness: symlinked directories followed, a dangling *.json listed, an unreadable directory skipped") {
+    val root = temp("discover")
+    val v = root.resolve("vectors")
+    Files.createDirectories(v.resolve("eval/v6/authored"))
+    Files.write(v.resolve("eval/v6/authored/A.json"), "{}".getBytes("UTF-8"))
+    Files.createSymbolicLink(v.resolve("eval/v6/authored/B.json"), root.resolve("nowhere.json"))
+    Files.createDirectories(root.resolve("elsewhere/spec"))
+    Files.write(root.resolve("elsewhere/spec/C.json"), "{}".getBytes("UTF-8"))
+    Files.createDirectories(v.resolve("wire"))
+    Files.createSymbolicLink(v.resolve("wire/v6"), root.resolve("elsewhere"))
+    val shut = v.resolve("chain/v6/spec")
+    Files.createDirectories(shut)
+    Files.write(shut.resolve("D.json"), "{}".getBytes("UTF-8"))
+    shut.toFile.setReadable(false, false); shut.toFile.setExecutable(false, false)
+    try assertEquals(Selection.discover(v).map(_.map(_.rel)), Right(Seq("eval/v6/authored/A.json", "eval/v6/authored/B.json", "wire/v6/spec/C.json")))
+    finally { shut.toFile.setReadable(true, false); shut.toFile.setExecutable(true, false) }
+  }
+
   test("an unknown oracle schema is refused") {
     val fake = temp("unknown")
     Files.createDirectories(fake.resolve("oracle"))

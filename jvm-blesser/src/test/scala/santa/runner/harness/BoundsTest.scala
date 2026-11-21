@@ -47,6 +47,13 @@ class BoundsTest extends munit.FunSuite {
     assert(!alive(read(s.resolveSibling("child.pid"))), "the grandchild outlived its group")
   }
 
+  test("a child that exits at once takes what it left in its group with it") {
+    val s = script("prompt", "sleep 30 &\necho $! > \"$(dirname \"$0\")/child.pid\"")
+    assertEquals(run(s, 1024, 30), Bounds.Finished)
+    Thread.sleep(200)
+    assert(!alive(read(s.resolveSibling("child.pid"))), "the grandchild outlived its group")
+  }
+
   test("a crash is its exit status or its signal") {
     assertEquals(run(script("exit", "exit 101"), 1024, 30), Bounds.Crashed("process exit status 101"))
     assertEquals(run(script("segv", "kill -SEGV $$"), 1024, 30), Bounds.Crashed("process killed by signal 11"))
@@ -73,5 +80,8 @@ class BoundsTest extends munit.FunSuite {
     assertEquals(Bounds.budget(parse("""{"limits": {"memory_mb": 1280, "wall_s": 10}}""").toOption.get), Right(Some(Bounds.Budget(1280, 10))))
     assertEquals(Bounds.budget(parse("""{"entries": []}""").toOption.get), Right(None))
     assert(Bounds.budget(parse("""{"limits": {"memory_mb": "lots", "wall_s": 10}}""").toOption.get).isLeft)
+    // whole numbers only, as SANTA's validate and the Rust harness read them (as_u64)
+    assert(Bounds.budget(parse("""{"limits": {"memory_mb": "1280", "wall_s": 10}}""").toOption.get).isLeft, "a numeric string")
+    assert(Bounds.budget(parse("""{"limits": {"memory_mb": 1280.0, "wall_s": 10}}""").toOption.get).isLeft, "a float")
   }
 }

@@ -26,6 +26,7 @@ class HarnessRunTest extends munit.FunSuite {
     val out = d.resolve("out")
     assertEquals(Main.run(rj, santa, out, honest, (_, _, _) => Seq("false")), Right(()))
     val r = read(out.resolve("results.json"))
+    ResultsShape.check(r)
     val c = r.hcursor
     assertEquals(c.downField("schema").as[String], Right("santa-runner-results/v1"))
     assertEquals(c.downField("santa").as[String], Right(Seq("git", "-C", santa.toString, "rev-parse", "HEAD").!!.trim))
@@ -40,5 +41,13 @@ class HarnessRunTest extends munit.FunSuite {
       assertEquals(s.hcursor.downField("red").as[Vector[Json]].map(_.size), Right(0))
     }
     assert(!Files.exists(out.resolve(".children")))
+  }
+
+  test("a verb with the wrong arguments is a usage error, not a file to read") {
+    Seq(Array("run", "runner.json"), Array("one", "santa"), Array("run", "a", "b")).foreach { a =>
+      assert(_root_.santa.runner.Runner.verbError(a).exists(_.contains("usage: runner run <runner.json> <santa-dir> <out-dir>")), a.mkString(" "))
+    }
+    assertEquals(_root_.santa.runner.Runner.verbError(Array("run", "a", "b", "c")), None)
+    assertEquals(_root_.santa.runner.Runner.verbError(Array("some/vector.json")), None)
   }
 }

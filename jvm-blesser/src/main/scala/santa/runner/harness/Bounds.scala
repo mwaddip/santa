@@ -20,14 +20,16 @@ object Bounds {
   final case class Exceeded(limit: String) extends Outcome
   final case class Crashed(note: String) extends Outcome
 
-  /** The envelope's `limits`: None for an ordinary file, Left for a `limits` that is not a positive memory_mb and wall_s
-    * (never run such a file unbounded). */
+  /** The envelope's `limits`: None for an ordinary file, Left for a `limits` that is not a positive whole memory_mb and
+    * wall_s (never run such a file unbounded). Whole numbers as SANTA's validate reads them: an integer literal, never a
+    * numeric string or a float. */
   def budget(doc: Json): Either[String, Option[Budget]] =
     doc.asObject.flatMap(_("limits")) match {
       case None => Right(None)
       case Some(l) =>
-        val c = l.hcursor
-        (c.downField("memory_mb").as[Long].toOption, c.downField("wall_s").as[Long].toOption) match {
+        def whole(k: String): Option[Long] =
+          l.asObject.flatMap(_(k)).flatMap(_.asNumber).filter(Equal.integralLiteral).flatMap(_.toLong)
+        (whole("memory_mb"), whole("wall_s")) match {
           case (Some(m), Some(w)) if m > 0 && w > 0 => Right(Some(Budget(m, w)))
           case _                                    => Left(s"a malformed `limits`: ${l.noSpaces}")
         }
@@ -81,7 +83,9 @@ object Bounds {
   /** Runs `cmd` as a bounded child under `b`, stderr to `stderr`, its own peak (KiB) read from `peakReport` after a
     * clean exit. */
   def runChild(cmd: Seq[String], b: Budget, stderr: Path, peakReport: Option[Path]): Outcome = {
-    val wrapper = Seq("bash", "-c", "set -m; ulimit -d \"$1\"; shift; \"$@\" & wait $!", "bash", (backstopMb(b) * 1024).toString) ++ cmd
+    // after the child, bash kills what it left in its group (the group outlives its reaped leader while it has members)
+    val script = "set -m; ulimit -d \"$1\"; shift; \"$@\" & c=$!; wait $c; s=$?; kill -KILL -- -$c 2>/dev/null; exit $s"
+    val wrapper = Seq("bash", "-c", script, "bash", (backstopMb(b) * 1024).toString) ++ cmd
     val bash = Try(new ProcessBuilder(wrapper: _*)
       .redirectInput(ProcessBuilder.Redirect.from(new File("/dev/null")))
       .redirectOutput(ProcessBuilder.Redirect.DISCARD)
@@ -101,7 +105,6 @@ object Bounds {
     while (true) {
       if (child.isEmpty) child = p.toHandle.children().iterator().asScala.toSeq.headOption.map(_.pid())
       if (!p.isAlive) {
-        child.foreach(killGroup) // anything the child left in its group
         val code = p.exitValue()
         if (code == 0) {
           val reported = peakReport.flatMap(f => Try(new String(Files.readAllBytes(f), "UTF-8").trim.toLong).toOption)
