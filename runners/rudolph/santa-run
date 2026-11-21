@@ -23,7 +23,7 @@ if [ -z "${SANTA_MISE_ACTIVE:-}" ]; then
 fi
 # --- toolchain (java + sbt) now on PATH ---
 SANTA="$(realpath "$2")"
-OUT="$(realpath -m "$3")"; mkdir -p "$OUT"
+OUT="$(realpath -m "$3")"   # the runner makes it, after it has checked the out-dir is allowed (§3)
 ROOT="$(cd "$here/../.." && pwd)"   # runners/rudolph -> repo root (rudolph's own source, jvm-blesser/)
 (cd "$ROOT/jvm-blesser" && sbt --batch rudolphJavaArgs)
 mapfile -t jargs < "$ROOT/jvm-blesser/target/rudolph-java-args"

@@ -128,8 +128,9 @@ santa-run <impl-path> <santa-dir> <out-dir>
 - **`<impl-path>`**: the directory holding the implementation's checkout (below); `-` when `impl` is null.
 - **`<santa-dir>`**: a SANTA checkout, read as data only (`vectors/`, `oracle/`, `schema/`); a runner never writes to it.
 - **`<out-dir>`**: where it writes its outputs (§4.3). It may be neither `<santa-dir>` itself nor inside its `vectors/`
-  or `oracle/` (compared by real path), and a runner refuses such an out-dir before it writes anything. conform's own
-  out-dirs live under the checkout's ignored `.santa/`, which is fine.
+  or `oracle/`, nor contain `<santa-dir>` (compared by real path: a run clears `<out-dir>/actuals` first). A runner
+  refuses such an out-dir before it writes or clears anything, and `santa-run` leaves creating it to the runner.
+  conform's own out-dirs live under the checkout's ignored `.santa/`, which is fine.
 
 Resolve the paths to absolute ones if the entrypoint `cd`s before it uses them. `santa-run` ends by `exec`ing its
 runner (a script that must put something back, such as a patched checkout, does so before the `exec`), so a signal
