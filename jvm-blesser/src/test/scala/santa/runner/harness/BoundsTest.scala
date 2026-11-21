@@ -72,6 +72,26 @@ class BoundsTest extends munit.FunSuite with Scratch {
     assert(!alive(read(pidFile)), "the grandchild outlived its runner")
   }
 
+  test("an interrupted runner removes its scratch directory (the run's .children/) before it exits") {
+    val s = script("interrupted-scratch", "sleep 30 &\necho $! > \"$(dirname \"$0\")/child.pid\"\nsleep 30")
+    val scratch = s.resolveSibling("children")
+    Files.createDirectories(scratch)
+    Files.write(scratch.resolve("0.stderr"), Array.emptyByteArray)
+    val pidFile = s.resolveSibling("child.pid")
+    val java = ProcessHandle.current().info().command().get
+    val fixture = new ProcessBuilder(java, "-cp", System.getProperty("java.class.path"), "santa.runner.harness.BoundsHoldFixture",
+      s.toString, scratch.toString).redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.DISCARD).start()
+    val t0 = System.nanoTime()
+    while (!Files.exists(pidFile)) {
+      assert(System.nanoTime() - t0 < 30e9.toLong, "the child never started")
+      Thread.sleep(20)
+    }
+    Thread.sleep(50)
+    assertEquals(new ProcessBuilder("kill", "-INT", fixture.pid().toString).start().waitFor(), 0)
+    assertEquals(fixture.waitFor(), 130)
+    assert(!Files.exists(scratch), "the scratch directory outlived the interrupted runner")
+  }
+
   test("a crash is its exit status or its signal") {
     assertEquals(run(script("exit", "exit 101"), 1024, 30), Bounds.Crashed("process exit status 101"))
     // through bash, exit status 128 + N and signal N read the same: the note names both

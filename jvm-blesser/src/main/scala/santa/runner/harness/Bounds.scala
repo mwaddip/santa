@@ -85,7 +85,7 @@ object Bounds {
 
   /** Runs `cmd` as a bounded child under `b`, stderr to `stderr`, its own peak (KiB) read from `peakReport` after a
     * clean exit. */
-  def runChild(cmd: Seq[String], b: Budget, stderr: Path, peakReport: Option[Path]): Outcome = {
+  def runChild(cmd: Seq[String], b: Budget, stderr: Path, peakReport: Option[Path], scratch: Option[Path] = None): Outcome = {
     // bash prints the child's pid, its group id; after the child, it kills what the child left in its group (the group
     // outlives its reaped leader while it has members)
     val script = "set -m; ulimit -d \"$1\"; shift; \"$@\" >/dev/null & c=$!; echo $c; wait $c; s=$?; kill -KILL -- -$c 2>/dev/null; exit $s"
@@ -96,8 +96,15 @@ object Bounds {
     if (bash.isFailure) return Crashed(s"cannot start the bounded child: ${bash.failed.get.getMessage}")
     val p = bash.get
     @volatile var child: Option[Long] = None
-    // interrupted meanwhile, the JVM runs its shutdown hooks: this one takes the child's group with it
-    val hook = new Thread(() => { child.foreach(killGroup); p.destroyForcibly(); () })
+    // interrupted meanwhile, the JVM runs its shutdown hooks: this one takes the child's group with it, and removes
+    // the scratch directory (the run's .children/), which the run's own cleanup can no longer reach
+    val hook = new Thread(() => {
+      child.foreach(killGroup); p.destroyForcibly()
+      scratch.foreach { d =>
+        Try { val s = Files.walk(d); try s.iterator().asScala.toVector.reverse.foreach(x => Files.deleteIfExists(x)) finally s.close() }
+      }
+      ()
+    })
     Runtime.getRuntime.addShutdownHook(hook)
     try {
       child = Try(new BufferedReader(new InputStreamReader(p.getInputStream, "UTF-8")).readLine()).toOption

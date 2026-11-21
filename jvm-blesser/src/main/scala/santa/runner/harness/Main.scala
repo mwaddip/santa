@@ -32,7 +32,7 @@ object Main {
   private def runBounded(f: VectorFile, doc: Json, b: Bounds.Budget, dir: Path, n: Int, child: ChildCommand): Map[String, Json] = {
     val outFile = dir.resolve(s"$n.json")
     val peak = Paths.get(outFile.toString + ".peak")
-    Bounds.runChild(child(b, f.rel, outFile), b, dir.resolve(s"$n.stderr"), Some(peak)) match {
+    Bounds.runChild(child(b, f.rel, outFile), b, dir.resolve(s"$n.stderr"), Some(peak), Some(dir)) match {
       case Bounds.Finished =>
         readJson(outFile).toOption.flatMap(_.asObject).map(_.toMap)
           .getOrElse(eachEntry(doc, Json.obj("error" -> Json.fromString("panicked"), "note" -> Json.fromString("the bounded child wrote no actuals"))))
@@ -72,6 +72,8 @@ object Main {
     val (s, o) = (real(santa), real(out))
     if (o == s || o.startsWith(s.resolve("vectors")) || o.startsWith(s.resolve("oracle")))
       Left(s"$out: the out-dir is inside the SANTA checkout's own tree (its root, vectors/ or oracle/); a runner never writes there")
+    // the run's first step clears <out-dir>/actuals and .children: a checkout under the out-dir could be among them
+    else if (s.startsWith(o)) Left(s"$out: the out-dir contains the SANTA checkout ($s)")
     else Right(())
   }
 
@@ -82,6 +84,7 @@ object Main {
       // before anything else: a run that fails leaves no earlier run's results behind (runner-integration §4.3)
       _ <- clear(out.resolve("results.json"))
       _ <- clear(out.resolve("actuals"))
+      _ <- clear(out.resolve(".children"))
       scope <- Scope.read(runnerJson)
       gdoc <- readJson(santa.resolve("vectors").resolve("grading.json"))
       grading <- Grading.parse(gdoc).left.map(e => s"vectors/grading.json: $e")

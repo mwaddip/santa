@@ -112,6 +112,19 @@ class HarnessRunTest extends munit.FunSuite with Scratch {
     assertEquals(Main.run(chainRunner(d), t, t.resolve(".santa/r/out"), honest, (_, _, _) => Seq("false")), Right(()))
   }
 
+  test("an out-dir containing the SANTA checkout is refused, and the checkout survives") {
+    val d = scratch("out-contains")
+    val out = d.resolve("out")
+    val inner = out.resolve("actuals")
+    Files.createDirectories(inner.resolve("vectors"))
+    Files.createDirectories(inner.resolve("oracle"))
+    Files.copy(santa.resolve("vectors/grading.json"), inner.resolve("vectors/grading.json"))
+    Seq("verdicts-grading.json", "selection.json").foreach(o => Files.copy(santa.resolve("oracle").resolve(o), inner.resolve("oracle").resolve(o)))
+    val e = Main.run(chainRunner(d), inner, out, honest, (_, _, _) => Seq("false")).left.getOrElse(fail("ran"))
+    assert(e.contains("contains the SANTA checkout"), e)
+    assert(Files.exists(inner.resolve("vectors/grading.json")), "the run deleted the SANTA checkout")
+  }
+
   test("a verb with the wrong arguments is a usage error, not a file to read") {
     Seq(Array("run", "runner.json"), Array("one", "santa"), Array("run", "a", "b")).foreach { a =>
       assert(_root_.santa.runner.Runner.verbError(a).exists(_.contains("usage: runner run <runner.json> <santa-dir> <out-dir>")), a.mkString(" "))
