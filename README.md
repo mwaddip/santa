@@ -259,20 +259,23 @@ It grades the base and the head, each with its own copy of your runner, on the s
 
 ### 3. The pull request check
 
-Two workflow files in your repository give every pull request, a fork's included, a SANTA comment: entries newly
-red, now green, red another way and still red, one row per vector file, from grading the PR's base and the PR
-merged into it. The full per-entry list goes to the check's job summary, and every entry, both sides, to its
-`santa-pr` artifact.
+Every pull request, a fork's included, gets a SANTA comment: entries newly red, now green, red another way and still
+red, one row per vector file. It comes from grading the PR's base and the PR merged into it, each with its own copy of
+your runner. The full per-entry list goes to the check's job summary, and every entry, both sides, to its `santa-pr`
+artifact. It runs in your repository's own workflows, and no SANTA code runs there. Copy four files from
+[`pr-check/`](pr-check/README.md):
 
-- **`santa.yml`**, the check, runs on `pull_request` with a read-only token and posts nothing. It calls
-  `mwaddip/santa/.github/actions/santa-pr@main`.
+- **`santa.yml`**, the check, runs on `pull_request` with a read-only token and posts nothing. It clones SANTA's
+  vectors, grades the base and the head, and compares them with two short `jq` programs, `delta.jq` and
+  `comment.jq`, copied beside it.
 - **`santa-comment.yml`**, the commenter, runs on `workflow_run` from your default branch with a write token. It never
   runs anything from the pull request: it reads the check's artifact as data and posts it to the one pull request
   whose head the check graded.
 
-Copy both from the [action's README](.github/actions/santa-pr/README.md), which also covers failing the check on new
-red and **reading the comment**: the check runs the pull request's own copy of the workflow and its own runner, so
-review a change to either like any other code. The board's grade of your default branch is the one that counts.
+[The guide](pr-check/README.md) covers the two values to set and failing the check on new red. It also covers
+**reading the comment**: the check runs the pull request's own copy of the workflow, the `jq` and the runner, so
+review a change to any of them like any other code. The board's grade of your default branch is the one that
+counts.
 
 ### 4. On the board
 
@@ -297,7 +300,7 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 | `./conform <runner> --impl <url>#<ref>` or `--impl <path>` | one runner against another checkout of its implementation (a path in place) |
 | `./conform --hosted <url>#<ref>` or `<path>` `[--runner-dir <dir>] [--label <label>]` | an implementation's own runner, with no entry in SANTA |
 | `./conform --clean …` | wipes `.santa/` first |
-| `./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base> [<head>]` | the pull request delta, into `.santa/pr/` |
+| `./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base> [<head>]` | the pull request delta, into `.santa/pr/` (retiring: the check is [`pr-check/`](pr-check/README.md)) |
 | `./validate` | the schema gate: every vector against its schema, its path against its envelope, the bounded files' limits, unique entry names |
 | `./scoreboard [results.json] [out-dir]` | the dashboard and badges, into `site/` |
 
@@ -305,7 +308,7 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 local Ivy repository for its transaction, block, chain and nipopow engines (see
 [Maintaining the corpus](#maintaining-the-corpus)); without it those arms answer `not-implemented`.
 
-**CI:** the `tools` workflow runs the tooling's tests on every push. The `conform` workflow (run on demand) validates
+**CI:** the `tools` workflow runs the tooling's tests on every push, and the `pr-check` templates' `jq` tests. The `conform` workflow (run on demand) validates
 the corpus, grades every runner, publishes ergo-core for rudolph itself, and publishes the scoreboard to GitHub
 Pages.
 
@@ -342,7 +345,8 @@ oracle/                 the verdict and selection oracles every runner reproduce
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
 tools/                  Rust: conform, validate, santa-check (the grading interpreter), santa-delta, scoreboard
-.github/actions/santa-pr/   the pull request check
+pr-check/               the pull request check: the workflow templates and their jq, copied into an implementation
+.github/actions/santa-pr/   the former pull request check (retiring)
 conform  validate  scoreboard  santa-pr   the entry points
 ```
 

@@ -439,15 +439,14 @@ runner is wrong — surfaced as RED, routed, never hidden.
   expected / got, cut at 1 MiB) and `delta.json` (every entry, both sides). A base without the runner directory
   could not run, and the comment says so. An implementer runs it before pushing. A commit sha is the unambiguous
   base.
-- **In CI**, the composite action [`.github/actions/santa-pr`](../../.github/actions/santa-pr/README.md) runs it in
-  the implementation's own workflow (base: the PR's base; head: the PR merged into it; the runner's directory and
-  label as inputs) and uploads the delta; a second workflow, on the default branch, posts it as the PR's comment.
-  SANTA needs no entry for the implementation, and a board entry it may have plays no part. The split keeps a fork's
-  PR safe: its code runs only with a read-only token, and the write token never meets it. The action's README holds
-  both workflow files.
-- **`./santa-pr`, `santa-delta` and the action retire** once implementations run the pull request check of their
-  own: the workflow runs the implementation's runner on the base and on the head against one SANTA checkout, and
-  compares the two `results.json` files in the workflow itself, with no SANTA code.
+- **In CI**, the template in [`pr-check/`](../../pr-check/README.md) runs in the implementation's own workflows. The
+  check grades the PR's base and the PR merged into it, each with its own copy of the runner, against one SANTA
+  clone. It compares the two `results.json` files with two `jq` programs it copies, so no SANTA code runs there. A
+  second workflow, on the default branch, posts the comment. SANTA needs no entry for the implementation, and a
+  board entry it may have plays no part. The split keeps a fork's PR safe: its code runs only with a read-only token,
+  and the write token never meets it.
+- **`./santa-pr`, `santa-delta` and the composite action `.github/actions/santa-pr`** do the same with SANTA's own
+  tools. They retire once no implementation uses them.
 
 ## 7. Grading on your own machine
 
