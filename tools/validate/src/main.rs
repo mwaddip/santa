@@ -285,6 +285,9 @@ fn main() -> ExitCode {
         .map(|f| { let d = load(&f); (f, d) })
         .collect();
     errs += limits_guard(&all);
+    // Entry names, every tier: unique within a file — a runner answers by name, so a repeated name grades one entry
+    // against another's answer.
+    errs += entry_names_guard(&all);
     if let Ok(grading) = santa_check::grading::Grading::parse(&load(&grading_file)) {
         errs += grading_label_guard(&all, &grading);
     }
@@ -1361,6 +1364,29 @@ fn limits_guard(docs: &[(PathBuf, Value)]) -> u32 {
     bad
 }
 
+/// Every vector file's entry names are unique: actuals are keyed by name (runner-integration §3), so a repeated name
+/// would grade one entry against another's answer.
+fn entry_names_guard(docs: &[(PathBuf, Value)]) -> u32 {
+    println!("\n[names] entry-name guard:");
+    let mut bad = 0;
+    for (f, doc) in docs {
+        let mut seen = std::collections::BTreeSet::new();
+        let repeated: std::collections::BTreeSet<&str> = doc["entries"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|e| e["name"].as_str())
+            .filter(|n| !seen.insert(*n))
+            .collect();
+        if !repeated.is_empty() {
+            bad += 1;
+            println!("  [WRONG] {}: entry names used twice: {}", f.display(), repeated.into_iter().collect::<Vec<_>>().join(", "));
+        }
+    }
+    println!("[names] {} file(s), {bad} with a repeated entry name", docs.len());
+    bad
+}
+
 fn nipopow_actuals_guards(v: &Validator) -> u32 {
     let checks: &[(&str, Value, bool)] = &[
         ("interlinks-ok", json!({"i#0": {"interlinks": [["abababababababababababababababababababababababababababababababab"]], "error": null}}), true),
@@ -1434,6 +1460,18 @@ mod tests {
                 .unwrap_or_else(|e| panic!("{t} actuals schema invalid: {e}"));
             assert!(!v.is_valid(&json!({"x#0": {"error": "errored"}})), "{t}: a bare errored");
         }
+    }
+
+    #[test]
+    fn entry_names_guard_counts_each_file_with_a_repeated_name() {
+        let doc = |names: &[&str]| json!({ "entries": names.iter().map(|n| json!({ "name": n })).collect::<Vec<_>>() });
+        let docs = vec![
+            (PathBuf::from("ok.json"), doc(&["a", "b", "c"])),
+            (PathBuf::from("twice.json"), doc(&["a", "b", "a"])),
+            (PathBuf::from("thrice.json"), doc(&["x", "x", "x"])),
+            (PathBuf::from("empty.json"), doc(&[])),
+        ];
+        assert_eq!(entry_names_guard(&docs), 2);
     }
 
     #[test]
