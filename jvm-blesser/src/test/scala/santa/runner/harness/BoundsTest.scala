@@ -5,9 +5,9 @@ import java.nio.file.{Files, Path}
 
 /** rudolph's bounded-file watchdog (runner-integration §3a): the child in its own process group (through bash job
   * control), killed at its memory or wall budget, its crash described. Children run as `bash <script>`. */
-class BoundsTest extends munit.FunSuite {
+class BoundsTest extends munit.FunSuite with Scratch {
   def script(tag: String, body: String): Path = {
-    val d = Files.createTempDirectory(s"rudolph-bounds-$tag")
+    val d = scratch(s"bounds-$tag")
     val s = d.resolve("run.sh")
     Files.write(s, s"#!/usr/bin/env bash\n$body\n".getBytes("UTF-8"))
     s
@@ -54,9 +54,28 @@ class BoundsTest extends munit.FunSuite {
     assert(!alive(read(s.resolveSibling("child.pid"))), "the grandchild outlived its group")
   }
 
+  test("an interrupted runner kills its child's group (a JVM: its shutdown hook) and exits as the signal says") {
+    val s = script("interrupted", "sleep 30 &\necho $! > \"$(dirname \"$0\")/child.pid\"\nsleep 30")
+    val pidFile = s.resolveSibling("child.pid")
+    val java = ProcessHandle.current().info().command().get
+    val fixture = new ProcessBuilder(java, "-cp", System.getProperty("java.class.path"), "santa.runner.harness.BoundsHoldFixture", s.toString)
+      .redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.DISCARD).start()
+    val t0 = System.nanoTime()
+    while (!Files.exists(pidFile)) {
+      assert(System.nanoTime() - t0 < 30e9.toLong, "the child never started")
+      Thread.sleep(20)
+    }
+    Thread.sleep(50)
+    assertEquals(new ProcessBuilder("kill", "-INT", fixture.pid().toString).start().waitFor(), 0)
+    assertEquals(fixture.waitFor(), 130, "a JVM interrupted by SIGINT exits 128 + 2")
+    Thread.sleep(200)
+    assert(!alive(read(pidFile)), "the grandchild outlived its runner")
+  }
+
   test("a crash is its exit status or its signal") {
     assertEquals(run(script("exit", "exit 101"), 1024, 30), Bounds.Crashed("process exit status 101"))
-    assertEquals(run(script("segv", "kill -SEGV $$"), 1024, 30), Bounds.Crashed("process killed by signal 11"))
+    // through bash, exit status 128 + N and signal N read the same: the note names both
+    assertEquals(run(script("segv", "kill -SEGV $$"), 1024, 30), Bounds.Crashed("process exit status 139 (killed by signal 11?)"))
   }
 
   test("a reported peak past the budget is exceeded memory") {

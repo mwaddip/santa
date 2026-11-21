@@ -1,17 +1,20 @@
 package santa.runner.harness
 
 import io.circe.Json
-import java.io.File
+import java.io.{BufferedReader, File, InputStreamReader}
 import java.nio.file.{Files, Path, Paths}
 import scala.collection.JavaConverters._
 import scala.util.Try
 
 /** rudolph's bounded-file watchdog (runner-integration §3a). A bounded file's entry runs in a child process in a process
   * group of its own — through `bash -c 'set -m; ulimit -d …'`, since the JVM cannot call setpgid: bash's job control
-  * puts the background child in its own group, and `ulimit -d` sets the RLIMIT_DATA backstop. The parent polls the
-  * group's resident memory (VmRSS + VmSwap) and each process's peak (VmHWM) every 10 ms and kills the group past
-  * `memory_mb` or `wall_s`; a child that finishes reports its own peak (never the parent's rusage, which on Linux
-  * carries the parent's memory at the fork). */
+  * puts the background child in its own group, and `ulimit -d` sets the RLIMIT_DATA backstop; bash prints the child's
+  * pid (its group id) first and, once the child ends, kills what it left in its group. The parent polls the group's
+  * resident memory (VmRSS + VmSwap) and each process's peak (VmHWM), with 10 ms between polls, and kills the group
+  * past `memory_mb` or `wall_s`; a child that finishes reports its own peak (never the parent's rusage, which on Linux
+  * carries the parent's memory at the fork). A JVM interrupted (SIGINT, SIGTERM, SIGHUP) while a child runs kills the
+  * child's group in a shutdown hook: the group outlives its runner otherwise (a terminal's Ctrl-C never reaches it).
+  * Through bash, a child's exit status 128 + N and its death by signal N read the same, so the note names both. */
 object Bounds {
   final case class Budget(memoryMb: Long, wallS: Long)
 
@@ -83,44 +86,52 @@ object Bounds {
   /** Runs `cmd` as a bounded child under `b`, stderr to `stderr`, its own peak (KiB) read from `peakReport` after a
     * clean exit. */
   def runChild(cmd: Seq[String], b: Budget, stderr: Path, peakReport: Option[Path]): Outcome = {
-    // after the child, bash kills what it left in its group (the group outlives its reaped leader while it has members)
-    val script = "set -m; ulimit -d \"$1\"; shift; \"$@\" & c=$!; wait $c; s=$?; kill -KILL -- -$c 2>/dev/null; exit $s"
+    // bash prints the child's pid, its group id; after the child, it kills what the child left in its group (the group
+    // outlives its reaped leader while it has members)
+    val script = "set -m; ulimit -d \"$1\"; shift; \"$@\" >/dev/null & c=$!; echo $c; wait $c; s=$?; kill -KILL -- -$c 2>/dev/null; exit $s"
     val wrapper = Seq("bash", "-c", script, "bash", (backstopMb(b) * 1024).toString) ++ cmd
     val bash = Try(new ProcessBuilder(wrapper: _*)
       .redirectInput(ProcessBuilder.Redirect.from(new File("/dev/null")))
-      .redirectOutput(ProcessBuilder.Redirect.DISCARD)
       .redirectError(stderr.toFile).start())
     if (bash.isFailure) return Crashed(s"cannot start the bounded child: ${bash.failed.get.getMessage}")
     val p = bash.get
-    val deadline = System.nanoTime() + b.wallS * 1000000000L
-    val over = (kib: Long) => kib > b.memoryMb * 1024
-    // the child: bash's own child, the leader of its process group
-    var child: Option[Long] = None
-    def stop(o: Outcome): Outcome = {
-      child.foreach(killGroup)
-      p.destroyForcibly()
-      p.waitFor()
-      o
-    }
-    while (true) {
-      if (child.isEmpty) child = p.toHandle.children().iterator().asScala.toSeq.headOption.map(_.pid())
-      if (!p.isAlive) {
-        val code = p.exitValue()
-        if (code == 0) {
-          val reported = peakReport.flatMap(f => Try(new String(Files.readAllBytes(f), "UTF-8").trim.toLong).toOption)
-          return if (reported.exists(over)) Exceeded("memory") else Finished
+    @volatile var child: Option[Long] = None
+    // interrupted meanwhile, the JVM runs its shutdown hooks: this one takes the child's group with it
+    val hook = new Thread(() => { child.foreach(killGroup); p.destroyForcibly(); () })
+    Runtime.getRuntime.addShutdownHook(hook)
+    try {
+      child = Try(new BufferedReader(new InputStreamReader(p.getInputStream, "UTF-8")).readLine()).toOption
+        .flatMap(Option(_)).flatMap(l => Try(l.trim.toLong).toOption)
+      val deadline = System.nanoTime() + b.wallS * 1000000000L
+      val over = (kib: Long) => kib > b.memoryMb * 1024
+      def stop(o: Outcome): Outcome = {
+        child.foreach(killGroup)
+        p.destroyForcibly()
+        p.waitFor()
+        o
+      }
+      while (true) {
+        if (!p.isAlive) {
+          val code = p.exitValue()
+          if (code == 0) {
+            val reported = peakReport.flatMap(f => Try(new String(Files.readAllBytes(f), "UTF-8").trim.toLong).toOption)
+            return if (reported.exists(over)) Exceeded("memory") else Finished
+          }
+          val said = Try(new String(Files.readAllBytes(stderr), "UTF-8")).getOrElse("")
+          if (outOfMemory(code, said)) return Exceeded("memory")
+          return Crashed(if (code > 128) s"process exit status $code (killed by signal ${code - 128}?)" else s"process exit status $code")
         }
-        val said = Try(new String(Files.readAllBytes(stderr), "UTF-8")).getOrElse("")
-        if (outOfMemory(code, said)) return Exceeded("memory")
-        return Crashed(if (code > 128) s"process killed by signal ${code - 128}" else s"process exit status $code")
+        child.foreach { pgid =>
+          val (now, peak) = groupMemory(pgid)
+          if (over(now) || over(peak)) return stop(Exceeded("memory"))
+        }
+        if (System.nanoTime() >= deadline) return stop(Exceeded("time"))
+        Thread.sleep(10)
       }
-      child.foreach { pgid =>
-        val (now, peak) = groupMemory(pgid)
-        if (over(now) || over(peak)) return stop(Exceeded("memory"))
-      }
-      if (System.nanoTime() >= deadline) return stop(Exceeded("time"))
-      Thread.sleep(10)
+      Crashed("unreachable")
+    } finally {
+      // during shutdown the hook is running and cannot be removed
+      Try(Runtime.getRuntime.removeShutdownHook(hook))
     }
-    Crashed("unreachable")
   }
 }

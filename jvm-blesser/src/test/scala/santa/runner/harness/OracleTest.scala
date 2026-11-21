@@ -6,12 +6,12 @@ import java.nio.file.{Files, Path, Paths}
 import scala.sys.process._
 
 /** rudolph's harness against SANTA's oracles (`..` from jvm-blesser/): every verdict and selection case reproduced. */
-class OracleTest extends munit.FunSuite {
+class OracleTest extends munit.FunSuite with Scratch {
   val santa: Path = Paths.get("..").toRealPath()
 
   def json(p: Path): Json = parse(new String(Files.readAllBytes(p), "UTF-8")).fold(e => fail(e.toString), identity)
   def grading: Grading = Grading.parse(json(santa.resolve("vectors/grading.json"))).fold(e => fail(e), identity)
-  def temp(tag: String): Path = Files.createTempDirectory(s"rudolph-harness-$tag")
+  def temp(tag: String): Path = scratch(s"harness-$tag")
 
   test("every verdict and selection case of the oracle is reproduced") {
     assertEquals(Oracle.check(santa, grading), Right(()))
@@ -60,6 +60,24 @@ class OracleTest extends munit.FunSuite {
     shut.toFile.setReadable(false, false); shut.toFile.setExecutable(false, false)
     try assertEquals(Selection.discover(v).map(_.map(_.rel)), Right(Seq("eval/v6/authored/A.json", "eval/v6/authored/B.json", "wire/v6/spec/C.json")))
     finally { shut.toFile.setReadable(true, false); shut.toFile.setExecutable(true, false) }
+  }
+
+  test("a selection path that leaves the tree is refused before anything is written") {
+    val name = s"rudolph-escape-${ProcessHandle.current().pid()}.json"
+    val escape = Paths.get(System.getProperty("java.io.tmpdir")).resolve(name)
+    val abs = temp("abs").resolve("abs.json")
+    Seq(s"../../$name", abs.toString).foreach { rel =>
+      val fake = temp("leaves")
+      Files.createDirectories(fake.resolve("oracle"))
+      val doc = Json.obj("schema" -> Json.fromString("santa-oracle-selection/v1"),
+        "files" -> Json.arr(Json.obj("path" -> Json.fromString(rel))), "cases" -> Json.arr())
+      Files.write(fake.resolve("oracle/x.json"), doc.noSpaces.getBytes("UTF-8"))
+      val e = Oracle.check(fake, grading).left.getOrElse(fail(s"$rel passed"))
+      assert(e.contains("leaves the tree"), e)
+    }
+    val wrote = Files.exists(escape) || Files.exists(abs)
+    Files.deleteIfExists(escape)
+    assert(!wrote, "a path outside the tree was written")
   }
 
   test("an unknown oracle schema is refused") {

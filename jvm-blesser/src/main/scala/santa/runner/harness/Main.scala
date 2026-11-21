@@ -41,9 +41,22 @@ object Main {
     }
   }
 
+  /** Removes a file or a directory tree (a link itself, never its target); absent is fine. */
+  private def clear(p: Path): Either[String, Unit] =
+    Try {
+      if (Files.isDirectory(p, java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
+        val s = Files.walk(p)
+        try s.iterator().asScala.toVector.reverse.foreach(x => Files.deleteIfExists(x)) finally s.close()
+      } else Files.deleteIfExists(p)
+      ()
+    }.toEither.left.map(e => s"$p: $e")
+
   def run(runnerJson: Path, santa: Path, out: Path, runFile: RunFile, child: ChildCommand): Either[String, Unit] = {
     val linux = sys.props.get("os.name").contains("Linux")
     for {
+      // before anything else: a run that fails leaves no earlier run's results behind (runner-integration §4.3)
+      _ <- clear(out.resolve("results.json"))
+      _ <- clear(out.resolve("actuals"))
       scope <- Scope.read(runnerJson)
       gdoc <- readJson(santa.resolve("vectors").resolve("grading.json"))
       grading <- Grading.parse(gdoc).left.map(e => s"vectors/grading.json: $e")

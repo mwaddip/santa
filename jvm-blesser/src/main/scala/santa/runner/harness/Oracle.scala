@@ -59,6 +59,10 @@ object Oracle {
   private def selections(doc: Json): Either[String, Unit] = {
     val files = list(doc, "files") match { case Right(f) => f; case Left(e) => return Left(e) }
     val cases = list(doc, "cases") match { case Right(c) => c; case Left(e) => return Left(e) }
+    // a path the tree cannot hold (absolute, or climbing out with `..`) is refused before anything is written
+    val leaves = (rel: String) => rel.isEmpty || rel.startsWith("/") || rel.split("/", -1).exists(p => p.isEmpty || p == "." || p == "..")
+    files.map(_.hcursor.downField("path").as[String].getOrElse("")).find(leaves)
+      .foreach(rel => return Left(s"a file path that leaves the tree: ${q(rel)}"))
     val root = Files.createTempDirectory(s"rudolph-selection-${seq.incrementAndGet()}-")
     try {
       val vectors = root.resolve("vectors")
