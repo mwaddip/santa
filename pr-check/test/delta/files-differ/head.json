@@ -1,0 +1,36 @@
+{
+  "schema": "santa-runner-results/v1",
+  "santa": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "scope": {
+    "version": "v6",
+    "tiers": [
+      "eval"
+    ],
+    "cost": true
+  },
+  "slices": {
+    "eval/v6/authored": {
+      "files": [
+        "eval/v6/authored/A.json",
+        "eval/v6/authored/B.json"
+      ],
+      "dims": {},
+      "not_implemented": 0,
+      "panicked": 0,
+      "exceeded": 0,
+      "red": [
+        {
+          "file": "eval/v6/authored/B.json",
+          "entry": "x",
+          "dim": "value",
+          "expected": "1",
+          "got": "2"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "red": 1,
+    "not_implemented": 0
+  }
+}

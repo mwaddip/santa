@@ -31,3 +31,6 @@ jobs:
           mise trust tools/mise.toml
           mise --cd tools install
           mise --cd tools exec -- cargo test --workspace --locked --no-fail-fast
+      - name: pr-check templates (jq)
+        # the PR-check template's jq programs against their golden cases (jq ships with ubuntu-latest)
+        run: bash pr-check/test/run.sh
