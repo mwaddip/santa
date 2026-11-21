@@ -757,6 +757,60 @@ fn read_actuals(
     (actuals, present)
 }
 
+/// What the SANTA checkout's working tree holds beyond HEAD, to compare before and after each runner: every
+/// `git status --porcelain` entry (untracked files included; ignored ones such as `.santa/` are not in it), with a hash
+/// of its content, since a file already modified that is modified again keeps its status line. A directory entry (a
+/// submodule) is hashed by its own status.
+fn tree_state(root: &Path) -> BTreeMap<String, String> {
+    use std::hash::{Hash, Hasher};
+    let status = |dir: &Path| {
+        Command::new("git").arg("-C").arg(dir).args(["status", "--porcelain=v1", "-z", "--untracked-files=all"]).output().ok()
+    };
+    let Some(out) = status(root) else { return BTreeMap::new() };
+    let mut state = BTreeMap::new();
+    let mut records = out.stdout.split(|b| *b == 0).filter(|r| !r.is_empty());
+    while let Some(r) = records.next() {
+        if r.len() < 4 {
+            continue;
+        }
+        let xy = String::from_utf8_lossy(&r[..2]).into_owned();
+        let path = String::from_utf8_lossy(&r[3..]).into_owned();
+        if xy.starts_with('R') || xy.starts_with('C') {
+            records.next(); // a rename's or copy's original path
+        }
+        let full = root.join(&path);
+        let content = if full.is_file() {
+            fs::read(&full).ok()
+        } else if full.is_dir() {
+            status(&full).map(|o| o.stdout)
+        } else {
+            None
+        };
+        let mut h = std::collections::hash_map::DefaultHasher::new();
+        content.hash(&mut h);
+        state.insert(path, format!("{xy} {:016x}", h.finish()));
+    }
+    state
+}
+
+/// The paths whose state differs between two `tree_state`s, outside `own` (the runner's own directory, which its run
+/// may change: a derived manifest, a lockfile).
+fn tree_changes(before: &BTreeMap<String, String>, after: &BTreeMap<String, String>, own: &str) -> Vec<String> {
+    let mine = |p: &str| !own.is_empty() && (p == own || p.starts_with(&format!("{own}/")));
+    let paths: BTreeSet<&String> = before.keys().chain(after.keys()).collect();
+    paths.into_iter().filter(|p| !mine(p) && before.get(*p) != after.get(*p)).cloned().collect()
+}
+
+/// The runner's own directory in the SANTA checkout (`runners/<name>`); none for a runner the implementation hosts.
+fn own_dir(m: &Runner, root: &Path) -> String {
+    match &m.host {
+        Host::Santa { run, .. } => {
+            run.parent().and_then(|d| d.strip_prefix(root).ok()).map(|d| d.to_string_lossy().into_owned()).unwrap_or_default()
+        }
+        Host::Impl(_) => String::new(),
+    }
+}
+
 /// What every runner is run against: the checkout (`<santa-dir>`), its vectors and their wire facts, the schemas a
 /// runner's outputs are held to, and the commit its results must name.
 struct Corpus<'a> {
@@ -1522,11 +1576,29 @@ fn main() -> ExitCode {
     let mut results: Vec<Value> = Vec::new();
     for m in &runners {
         eprintln!("running {} …", m.name);
-        match run_one(m, &corpus) {
-            Err((_, RunFail::Interrupted(sig))) => {
-                eprintln!("\ninterrupted (signal {sig}): {}'s session was killed; no results written", m.name);
-                reraise(sig);
-            }
+        let before = tree_state(&root);
+        let ran = run_one(m, &corpus);
+        if let Err((_, RunFail::Interrupted(sig))) = ran {
+            eprintln!("\ninterrupted (signal {sig}): {}'s session was killed; no results written", m.name);
+            reraise(sig);
+        }
+        // a runner reads the checkout as data: a change to it (by the runner, or anyone, during its run) would grade
+        // the runners after it against altered expectations
+        let changed = tree_changes(&before, &tree_state(&root), &own_dir(m, &root));
+        if !changed.is_empty() {
+            let shown: Vec<&str> = changed.iter().take(10).map(String::as_str).collect();
+            let more = if changed.len() > 10 { format!(" and {} more", changed.len() - 10) } else { String::new() };
+            let msg = format!("the SANTA checkout changed during its run: {}{more}", shown.join(", "));
+            println!("  ⚠️  {}  — {msg}", m.label);
+            results.push(result_row(m, m.declared(), json!({
+                "sha": Value::Null, "mark": "errored", "red_total": Value::Null, "slices": {}, "bounded_failures": [],
+                "error": msg,
+            })));
+            write_results(&root, &results);
+            eprintln!("\nFAILED: the SANTA checkout changed during {}'s run; the runners after it would grade against altered expectations", m.name);
+            return ExitCode::FAILURE;
+        }
+        match ran {
             Err((scope, f)) => {
                 let msg = fail_message(&f);
                 // only a santa-run that ran has printed anything above
@@ -3452,6 +3524,37 @@ mod tests {
         fs::write(d.join("results.json"), [0xffu8, 0xfe]).unwrap();
         let e = super::read_results(&d, &super::load_results_schema(&super::repo_root()), "x").unwrap_err();
         assert!(e.starts_with("results.json is not JSON"), "{e}");
+    }
+
+    /// A temporary git checkout with one committed file.
+    fn temp_repo(tag: &str) -> PathBuf {
+        let d = out_dir(&format!("repo-{tag}"));
+        let git = |args: &[&str]| assert!(Command::new("git").arg("-C").arg(&d).args(args).status().unwrap().success());
+        git(&["init", "-q"]);
+        fs::write(d.join("a.json"), "1").unwrap();
+        fs::create_dir_all(d.join("runners").join("x")).unwrap();
+        fs::write(d.join("runners").join("x").join("runner.json"), "{}").unwrap();
+        git(&["add", "-A"]);
+        git(&["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "t"]);
+        d
+    }
+
+    /// The working tree is compared before and after a runner: a change to a file already modified counts (its status
+    /// line stays the same), a new file counts, and the runner's own directory does not.
+    #[test]
+    fn tree_changes_see_content_new_files_and_spare_the_runners_own_dir() {
+        let d = temp_repo("tree");
+        fs::write(d.join("a.json"), "2").unwrap(); // dirty before the run
+        let before = super::tree_state(&d);
+        assert!(super::tree_changes(&before, &super::tree_state(&d), "runners/x").is_empty());
+        fs::write(d.join("a.json"), "3").unwrap(); // modified again: same status line
+        fs::write(d.join("new.json"), "x").unwrap(); // untracked
+        fs::write(d.join("runners").join("x").join("runner.json"), "{\"own\": 1}").unwrap(); // the runner's own dir
+        let changes = super::tree_changes(&before, &super::tree_state(&d), "runners/x");
+        assert_eq!(changes, vec!["a.json".to_string(), "new.json".to_string()]);
+        fs::write(d.join("a.json"), "1").unwrap(); // back to HEAD: no longer in the status at all
+        let changes = super::tree_changes(&before, &super::tree_state(&d), "runners/x");
+        assert!(changes.contains(&"a.json".to_string()), "{changes:?}");
     }
 }
 

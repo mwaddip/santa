@@ -126,7 +126,7 @@ santa-run <impl-path> <santa-dir> <out-dir>
 ```
 
 - **`<impl-path>`**: the directory holding the implementation's checkout (below); `-` when `impl` is null.
-- **`<santa-dir>`**: a SANTA checkout, read as data only: `vectors/`, `oracle/`, `schema/`.
+- **`<santa-dir>`**: a SANTA checkout, read as data only (`vectors/`, `oracle/`, `schema/`); a runner never writes to it.
 - **`<out-dir>`**: where it writes its outputs (§4.3).
 
 Resolve the paths to absolute ones if the entrypoint `cd`s before it uses them. In order, `santa-run` MUST:
@@ -338,6 +338,9 @@ In `<out-dir>`:
 `./conform` is a batcher. For each board entry (§1) it resolves the implementation and the runner's directory, runs
 `santa-run <impl-path> <santa-root> <out-dir>` under the safety ceiling (§3a), and then:
 
+0. compares its checkout's working tree before and after the run (`git status`, with a hash of each listed file's
+   content, outside the runner's own `runners/<name>/`): a change, by the runner or anyone else during its run, stops
+   the board run, naming the paths, since the runners after it would grade against altered expectations;
 1. checks `results.json` against its schema, and every actuals file against its tier's actuals schema (an actual that
    fails grades `panicked`, the note naming the schema and why); it refuses a `results.json` whose `santa` is not its
    own checkout's commit, `null` included (the runner graded other expectations, or cannot say which);
