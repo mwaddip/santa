@@ -65,6 +65,53 @@ class HarnessRunTest extends munit.FunSuite with Scratch {
     assert(!Files.exists(out.resolve("actuals")), "earlier actuals survived a failed run")
   }
 
+  /** A small SANTA checkout: SANTA's oracle/ and grading.json, and the given vector files (relative path, body). */
+  def smallSanta(tag: String, files: (String, String)*): Path = {
+    val t = scratch(tag)
+    Files.createDirectories(t.resolve("vectors"))
+    Files.createDirectories(t.resolve("oracle"))
+    Files.copy(santa.resolve("vectors/grading.json"), t.resolve("vectors/grading.json"))
+    Seq("verdicts-grading.json", "selection.json").foreach(o => Files.copy(santa.resolve("oracle").resolve(o), t.resolve("oracle").resolve(o)))
+    files.foreach { case (rel, body) =>
+      val f = t.resolve("vectors").resolve(rel)
+      Files.createDirectories(f.getParent)
+      Files.write(f, body.getBytes("UTF-8"))
+    }
+    t
+  }
+  def chainRunner(d: Path): Path = {
+    val rj = d.resolve("runner.json")
+    Files.write(rj, """{"name": "t", "version": "v4", "tiers": ["chain"]}""".getBytes("UTF-8"))
+    rj
+  }
+
+  test("a vector file whose entries repeat a name stops the run, naming it") {
+    val doc = """{"schema": "santa-chain/v1", "entries": [{"name": "a", "expected": {}}, {"name": "a", "expected": {}}]}"""
+    val t = smallSanta("repeated", "chain/v4/spec/Twice.json" -> doc)
+    val d = scratch("repeated-out")
+    val e = Main.run(chainRunner(d), t, d.resolve("out"), honest, (_, _, _) => Seq("false")).left.getOrElse(fail("a repeated name ran"))
+    assert(e.contains("Twice.json") && e.contains("used twice") && e.contains("a"), e)
+  }
+
+  test("a run that fails part-way leaves no .children/") {
+    val t = smallSanta("broken", "chain/v4/spec/Broken.json" -> "not json")
+    val d = scratch("broken-out")
+    val out = d.resolve("out")
+    assert(Main.run(chainRunner(d), t, out, honest, (_, _, _) => Seq("false")).isLeft)
+    assert(!Files.exists(out.resolve(".children")), "a failed run left .children/")
+  }
+
+  test("an out-dir in the SANTA checkout's tree is refused; conform's .santa/<r>/out passes") {
+    val t = smallSanta("out-in-tree")
+    val d = scratch("out-in-tree-rj")
+    Seq(t, t.resolve("vectors/out"), t.resolve("oracle"), t.resolve("vectors").resolve(".").resolve("x")).foreach { out =>
+      val e = Main.run(chainRunner(d), t, out, honest, (_, _, _) => Seq("false")).left.getOrElse(fail(s"$out ran"))
+      assert(e.contains("inside the SANTA checkout"), s"$out: $e")
+    }
+    assert(!Files.exists(t.resolve("results.json")) && !Files.exists(t.resolve("actuals")), "the run wrote into the checkout")
+    assertEquals(Main.run(chainRunner(d), t, t.resolve(".santa/r/out"), honest, (_, _, _) => Seq("false")), Right(()))
+  }
+
   test("a verb with the wrong arguments is a usage error, not a file to read") {
     Seq(Array("run", "runner.json"), Array("one", "santa"), Array("run", "a", "b")).foreach { a =>
       assert(_root_.santa.runner.Runner.verbError(a).exists(_.contains("usage: runner run <runner.json> <santa-dir> <out-dir>")), a.mkString(" "))

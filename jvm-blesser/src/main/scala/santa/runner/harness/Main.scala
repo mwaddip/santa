@@ -51,9 +51,34 @@ object Main {
       ()
     }.toEither.left.map(e => s"$p: $e")
 
+  /** The entry names a vector file uses more than once, in order of first repeat. */
+  private def repeatedNames(doc: Json): Seq[String] = {
+    val seen = scala.collection.mutable.Set.empty[String]
+    names(doc).filterNot(seen.add).distinct
+  }
+
+  /** `<out-dir>` may be neither the SANTA checkout itself nor inside the data the runner reads (`vectors/`,
+    * `oracle/`): a runner never writes into the checkout's tree (runner-integration §3). conform's own out-dirs,
+    * under the checkout's ignored `.santa/`, are fine. Compared by real path; the out-dir need not exist yet. */
+  private def checkOutDir(santa: Path, out: Path): Either[String, Unit] = {
+    def real(p: Path): Path = {
+      val abs = p.toAbsolutePath.normalize
+      // the nearest existing ancestor by its real path, the rest appended
+      var base = abs
+      var rest = List.empty[Path]
+      while (base != null && !Files.exists(base)) { rest = base.getFileName :: rest; base = base.getParent }
+      if (base == null) abs else rest.foldLeft(base.toRealPath())((acc, n) => acc.resolve(n))
+    }
+    val (s, o) = (real(santa), real(out))
+    if (o == s || o.startsWith(s.resolve("vectors")) || o.startsWith(s.resolve("oracle")))
+      Left(s"$out: the out-dir is inside the SANTA checkout's own tree (its root, vectors/ or oracle/); a runner never writes there")
+    else Right(())
+  }
+
   def run(runnerJson: Path, santa: Path, out: Path, runFile: RunFile, child: ChildCommand): Either[String, Unit] = {
     val linux = sys.props.get("os.name").contains("Linux")
     for {
+      _ <- checkOutDir(santa, out)
       // before anything else: a run that fails leaves no earlier run's results behind (runner-integration §4.3)
       _ <- clear(out.resolve("results.json"))
       _ <- clear(out.resolve("actuals"))
@@ -66,11 +91,16 @@ object Main {
       children = out.resolve(".children")
       _ <- Try(Files.createDirectories(children)).toEither.left.map(e => s"$children: $e")
       tally = new Tally
-      _ <- files.zipWithIndex.foldLeft[Either[String, Unit]](Right(())) { case (acc, (f, n)) =>
+      // the files run as a value, so `.children/` goes whether the run ends or fails
+      ran = files.zipWithIndex.foldLeft[Either[String, Unit]](Right(())) { case (acc, (f, n)) =>
         acc.flatMap { _ =>
           val path = vectors.resolve(f.rel)
           for {
             doc <- readJson(path)
+            _ <- repeatedNames(doc) match {
+              case Seq() => Right(())
+              case twice => Left(s"vectors/${f.rel}: entry names used twice: ${twice.mkString(", ")} (actuals are keyed by name)")
+            }
             budget <- Bounds.budget(doc).left.map(e => s"vectors/${f.rel}: $e")
             actuals <- budget match {
               case Some(_) if !linux => Left(s"vectors/${f.rel}: a bounded file needs Linux (the watchdog reads /proc); this platform cannot bound it")
@@ -93,6 +123,7 @@ object Main {
         }
       }
       _ = Try { val s = Files.walk(children); try s.iterator().asScala.toVector.reverse.foreach(p => Files.deleteIfExists(p)) finally s.close() }
+      _ <- ran
       _ <- writeJson(out.resolve("results.json"), tally.resultsJson(Scope.santaCommit(santa), scope))
     } yield tally.summary.foreach(println)
   }
