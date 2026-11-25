@@ -247,16 +247,6 @@ grader: agrees
 and writes `.santa/results.json`, every red entry with its file, name, dimension, expected and actual. Your runner's
 outputs are in `.santa/<repo-name>/out/`.
 
-Before you push, see the comment your pull request would get:
-
-```bash
-./santa-pr ~/src/my-impl origin/main               # that base against your working tree
-./santa-pr ~/src/my-impl <base-sha> <head-ref>     # two commits
-```
-
-It grades the base and the head, each with its own copy of your runner, on the same SANTA vectors, and writes
-`.santa/pr/comment.md` (what the comment says), `summary.md` (every entry, both sides) and `delta.json`.
-
 ### 3. The pull request check
 
 Every pull request, a fork's included, gets a SANTA comment: entries newly red, now green, red another way and still
@@ -300,7 +290,6 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 | `./conform <runner> --impl <url>#<ref>` or `--impl <path>` | one runner against another checkout of its implementation (a path in place) |
 | `./conform --hosted <url>#<ref>` or `<path>` `[--runner-dir <dir>] [--label <label>]` | an implementation's own runner, with no entry in SANTA |
 | `./conform --clean …` | wipes `.santa/` first |
-| `./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base> [<head>]` | the pull request delta (retiring: see [`pr-check/`](pr-check/README.md)) |
 | `./validate` | the schema gate: every vector against its schema, its path against its envelope, the bounded files' limits, unique entry names |
 | `./scoreboard [results.json] [out-dir]` | the dashboard and badges, into `site/` |
 
@@ -344,10 +333,9 @@ docs/coverage/          the eval corpus's coverage manifest (ops, methods, tree 
 oracle/                 the verdict and selection oracles every runner reproduces before it grades
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
-tools/                  Rust: conform, validate, santa-check (the grading interpreter), santa-delta, scoreboard
+tools/                  Rust: conform, validate, santa-check (the grading interpreter), scoreboard
 pr-check/               the pull request check: the workflow templates and their jq, copied into an implementation
-.github/actions/santa-pr/   the former pull request check (retiring)
-conform  validate  scoreboard  santa-pr   the entry points
+conform  validate  scoreboard   the entry points
 ```
 
 ## Contributing

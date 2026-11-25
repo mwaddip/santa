@@ -413,7 +413,6 @@ runner is wrong — surfaced as RED, routed, never hidden.
 ```
 ./conform [--clean] [<runner>…] [--impl <url>#<ref> | --impl <path>]
 ./conform [--clean] --hosted <url>#<ref> | <path> [--runner-dir <dir>] [--label <label>]
-./santa-pr [--runner-dir <dir>] [--label <label>] <impl> <base-ref> [<head-ref>]
 ```
 
 - **Runner names** run only those runners, in discovery order; a control that is not named is not required. No name
@@ -433,21 +432,12 @@ runner is wrong — surfaced as RED, routed, never hidden.
   `santa`) of the checkout `--hosted` names (`<url>#<ref>` or a path in place, as `--impl`), read as §2's hosted
   runner. It is named after the repo and labelled `<label>` (default the same); no control is required. Runner
   names and `--impl` are refused beside it.
-- **`./santa-pr`** grades the implementation's own runner (`--hosted`) at `<impl>`'s `<base-ref>`, then at
-  `<head-ref>`, or without one at the working tree of a local `<impl>`, each with that ref's copy of the runner, on
-  the same checkout's vectors, and writes `santa-delta`'s comparison to `.santa/pr/`: `comment.md` (the counts of
-  newly red, now green, red another way and still red, then one row per vector file), `summary.md` (every entry's
-  expected / got, cut at 1 MiB) and `delta.json` (every entry, both sides). A base without the runner directory
-  could not run, and the comment says so. An implementer runs it before pushing. A commit sha is the unambiguous
-  base.
-- **In CI**, the template in [`pr-check/`](../../pr-check/README.md) runs in the implementation's own workflows. The
-  check grades the PR's base and the PR merged into it, each with its own copy of the runner, against one SANTA
-  clone. It compares the two `results.json` files with two `jq` programs it copies, so no SANTA code runs there. A
-  second workflow, on the default branch, posts the comment. SANTA needs no entry for the implementation, and a
-  board entry it may have plays no part. The split keeps a fork's PR safe: its code runs only with a read-only token,
-  and the write token never meets it.
-- **`./santa-pr`, `santa-delta` and the composite action `.github/actions/santa-pr`** do the same with SANTA's own
-  tools. They retire once no implementation uses them.
+- **A pull request's delta:** the template in [`pr-check/`](../../pr-check/README.md) runs in the implementation's
+  own workflows. The check grades the PR's base and the PR merged into it, each with its own copy of the runner,
+  against one SANTA clone. It compares the two `results.json` files with two `jq` programs it copies, so no SANTA
+  code runs there. A second workflow, on the default branch, posts the comment. SANTA needs no entry for the
+  implementation, and a board entry it may have plays no part. The split keeps a fork's PR safe: its code runs only
+  with a read-only token, and the write token never meets it.
 
 ## 7. Grading on your own machine
 
