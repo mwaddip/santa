@@ -35,7 +35,9 @@ It takes two workflows so that a pull request from a fork works too. GitHub give
 token and runs the pull request's own copy of its workflow files.
 
 **The check** (`santa.yml`, `contents: read`) posts nothing. Its steps:
-1. Checks out the pull request merged into its base (`github.sha`), with full history.
+1. Checks out the pull request merged into its base (`github.sha`), with full history. The base it grades is that
+   merge commit's first parent: the base branch as it is now. GitHub leaves `pull_request.base.sha` where the base
+   was when the pull request was opened, so whatever the base gained since would count as the pull request's.
 2. Clones SANTA at `SANTA_REF` into `$RUNNER_TEMP/santa`, outside the repository's tree, read as data.
 3. Grades the head with `$RUNNER_DIR/santa-run - $RUNNER_TEMP/santa <out>`.
 4. Grades the base the same way, from a git worktree of the base commit with **its own copy** of the runner. A side

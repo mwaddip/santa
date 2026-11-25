@@ -89,6 +89,51 @@ check(any(re.search(r"worktree add[^\n]*\|\|", g) for g in grade), "a base that 
 job_env = next(iter((check_doc.get("jobs") or {}).values()), {}).get("env") or {}
 check(job_env.get("SANTA_REF") == "main" and '"$SANTA_REF"' in check_text, "the SANTA ref is one env value (SANTA_REF, main)")
 
+
+def base_of(head):
+    """Run the base step as GitHub runs a step with no shell (bash -e), in a repository whose base branch moved on after
+    the pull request branched off: A (the base when it was opened), then B on main; P on the pull request's branch; M,
+    P merged into B as GitHub's merge ref has it (parents B, P). HEAD_SHA is the commit named by head. Returns (exit
+    code, GITHUB_ENV, {name: sha})."""
+    step = next((s for s in steps if str(s.get("name", "")).startswith("the base")), {})
+    with tempfile.TemporaryDirectory() as d:
+        repo = Path(d) / "repo"
+        repo.mkdir()
+        env = {**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1", "GIT_AUTHOR_NAME": "t",
+               "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
+
+        def git(*a):
+            return subprocess.run(["git", *a], cwd=repo, env=env, check=True, capture_output=True, text=True).stdout.strip()
+
+        git("init", "-q", "-b", "main")
+        git("commit", "-q", "--allow-empty", "-m", "A")
+        git("switch", "-q", "-c", "pr")
+        git("commit", "-q", "--allow-empty", "-m", "P")
+        git("switch", "-q", "main")
+        git("commit", "-q", "--allow-empty", "-m", "B")
+        git("merge", "-q", "--no-ff", "-m", "M", "pr")
+        shas = {n: git("rev-parse", r) for n, r in (("M", "main"), ("B", "main^1"), ("P", "main^2"), ("A", "main^1^1"))}
+        env_file = Path(d) / "github_env"
+        env_file.write_text("")
+        script = Path(d) / "step.sh"
+        script.write_text(step.get("run", "exit 99"))
+        rc = subprocess.run(["bash", "-e", str(script)], cwd=repo, capture_output=True,
+                            env={**env, "GITHUB_ENV": str(env_file), "HEAD_SHA": shas[head]}).returncode
+        return rc, env_file.read_text(), shas
+
+
+rc, genv, shas = base_of("M")
+check(rc == 0 and genv == f"BASE_SHA={shas['B']}\n",
+      "the base is the merge commit's first parent: the base branch the pull request was merged into, not where it was "
+      "when the pull request was opened")
+for what, head in (("a commit with one parent", "B"), ("the root commit", "A")):
+    rc, genv, _ = base_of(head)
+    check(rc != 0 and "BASE_SHA=" not in genv, f"the base step fails, and sets no BASE_SHA, when HEAD_SHA is {what}")
+check("BASE_SHA" not in job_env, "BASE_SHA is not a job value (pull_request.base.sha does not move with the base branch)")
+names = [str(s.get("name", s.get("uses", ""))) for s in steps]
+at = lambda p: next((i for i, n in enumerate(names) if n.startswith(p)), -1)
+check(at("actions/checkout@") < at("the base") < at("grade the base"), "the base step runs after the checkout, before the base is graded")
+
 comment_doc, comment_text = load("santa-comment.yml")
 check(comment_doc.get("permissions") == {"actions": "read", "pull-requests": "write"},
       "santa-comment.yml's token is actions: read, pull-requests: write")
