@@ -64,10 +64,22 @@ class AuthoredEvalSelfNodeFormTest extends munit.FunSuite {
 
   test("span: SELF holds the bytes the size field spans; a size field a node cannot read leaves SELF the parse") {
     val op = B.SpanOp
-    Seq("size-lies-long", "size-lies-long-by-37").foreach { r =>
-      assertEquals(expected(row(op, r)).hcursor.downField("value").focus.map(_.noSpaces),
-        Some("""{"kind":"Int","value":1}"""), s"$r: the entry answers (one rule: no node form, the parse)")
+    // a size field claiming more bytes than there are, over a WRITABLE body: a node cannot read the tree, SELF holds the
+    // parse, and the parse can be written, so a runner with a real box can answer
+    Seq("size-lies-long-writable", "size-lies-long-by-37-writable").foreach { r =>
+      val e = row(op, r); val t = scorex.util.encode.Base16.decode(str(e, "tree_bytes_hex")).get
+      assertEquals(expected(e).hcursor.downField("value").focus.map(_.noSpaces),
+        Some("""{"kind":"Int","value":2}"""), s"$r: the entry answers (one rule: no node form, the parse)")
+      assert(scala.util.Try(sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(t)).isFailure,
+        s"$r: a node cannot read it")
+      assert(scala.util.Try(sigma.santa.LenientErgoTree.deserialize(t).bytes).isSuccess, s"$r: its parse can be written")
     }
+    // the two over `SizeOf((1))` are retired: their SELF is a parse no box can carry (sigma-rust's grade, 2026-11-26);
+    // dropped after naming, so every other entry keeps its committed name
+    val names = entries(op).map(str(_, "name")).toSet
+    assert(!names("size-lies-long-accept#1") && !names("size-lies-long-by-37-accept#3"), "the unwritable two are gone")
+    Seq("size-true-accept#0", "size-lies-short-accept#2", "trailing-00-accept#4", "size-lies-short-bytes-accept#10",
+        "size-lies-long-writable-accept#11", "size-lies-long-by-37-writable-accept#12").foreach(n => assert(names(n), n))
     Seq("trailing-05-propbytes", "trailing-w-propbytes").foreach { r =>
       val e = row(op, r); val t = str(e, "tree_bytes_hex")
       val span = 2 + Integer.parseInt(t.substring(2, 4), 16)

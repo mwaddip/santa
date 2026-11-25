@@ -47,7 +47,26 @@ object AuthoredEvalSelfNodeForm {
     "trailing-w-propbytes" -> "`SELF.propositionBytes` on the writable `w` tree with a byte (05) after it: the span.",
     "trailing-w-creation" -> "`SELF.creationInfo` on the writable `w` tree with a byte (05) after it.",
     "trailing-05-r4def" -> ("`SELF.R4[Int].isDefined` on the `u` tree with a byte (05) after it, SELF's R4 given: the " +
-      "register is SELF's own, whatever form its tree takes."))
+      "register is SELF's own, whatever form its tree takes."),
+    "size-lies-long-writable" -> ("`1 + 1`, a writable body, with the size field one byte LONGER than the tree: a node " +
+      "cannot read the box, so there is no node form and SELF holds the parse (one rule, the user 2026-11-26), which can " +
+      "be written; the entry answers 2."),
+    "size-lies-long-by-37-writable" -> "As `size-lies-long-writable`, the size field 37 bytes long: the parse, and 2.")
+
+  /** Appended 2026-11-26 (sigma-rust's grade at `843fe48`): the lying size field over a body the writer accepts, so a
+    * runner with a real box can answer. `9a04020402` is `1 + 1`, 5 bytes; `06` is one byte long, `2a` 37 long. */
+  private val writableLying: Seq[Json] = Seq("size-lies-long-writable" -> "06", "size-lies-long-by-37-writable" -> "2a").map {
+    case (name, size) => Json.obj(
+      "name"           -> Json.fromString(name),
+      "tree_bytes_hex" -> Json.fromString(s"0b${size}9a04020402"),
+      "version"        -> Json.obj("activated" -> Json.fromInt(3), "ergoTree" -> Json.fromInt(3)),
+      "input"          -> Json.obj("kind" -> Json.fromString("Int"), "value" -> Json.fromInt(0)))
+  }
+
+  /** Retired 2026-11-26 (sigma-rust's grade at `843fe48`): their body is `SizeOf((1))`, so their SELF is a parse (a node
+    * cannot read a lying size field) that cannot be written — a tree no box can carry, the class left out above. The
+    * writable rows above keep their fact. Dropped AFTER naming, so every other entry keeps its committed name. */
+  val SpanRetired: Set[String] = Set("size-lies-long-accept#1", "size-lies-long-by-37-accept#3")
 
   private def resource(f: String): Json = {
     val in = getClass.getResourceAsStream(s"/self-node-form-rows/$f.json")
@@ -72,7 +91,7 @@ object AuthoredEvalSelfNodeForm {
   }
 
   /** Bless `kept` under `schema` through rudolph's dispatch, and give each row its name and prose. */
-  private def bless(op: String, schema: String, kept: Seq[Json]): Json = {
+  private def bless(op: String, schema: String, kept: Seq[Json], retired: Set[String] = Set.empty): Json = {
     val doc = Json.obj("schema" -> Json.fromString(schema), "entries" -> Json.arr(kept.map(clean): _*))
     val actual = santa.runner.Runner.actuals(doc).toMap
     val entries = kept.zipWithIndex.map { case (e, i) =>
@@ -82,7 +101,7 @@ object AuthoredEvalSelfNodeForm {
       val verdict = if (exp.hcursor.get[String]("error").toOption.contains("errored")) "errored" else "accept"
       clean(e).mapObject(o => o.add("name", Json.fromString(s"$b-$verdict#$i")).add("script", Json.fromString(prose(b)))
         .add("expected", exp))
-    }
+    }.filterNot(e => e.hcursor.get[String]("name").toOption.exists(retired))
     Json.obj(
       "schema"     -> Json.fromString(schema),
       "op"         -> Json.fromString(op),
@@ -101,7 +120,7 @@ object AuthoredEvalSelfNodeForm {
     }
     val span = tb.filter(e => (base(e).startsWith("size-") || base(e).startsWith("trailing-")) &&
       base(e) != "trailing-05-v4-r4def")
-    (envelopes :+ (SpanOp -> bless(SpanOp, "santa-eval/v2", span))).toMap
+    (envelopes :+ (SpanOp -> bless(SpanOp, "santa-eval/v2", span ++ writableLying, SpanRetired))).toMap
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

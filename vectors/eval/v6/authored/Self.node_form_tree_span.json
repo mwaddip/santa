@@ -26,27 +26,6 @@
       }
     },
     {
-      "name" : "size-lies-long-accept#1",
-      "tree_bytes_hex" : "0b06b160010402",
-      "version" : {
-        "activated" : 3,
-        "ergoTree" : 3
-      },
-      "input" : {
-        "kind" : "Int",
-        "value" : 0
-      },
-      "script" : "[size-lies-long] `SizeOf((1))` with the size field one byte LONGER than the tree: a node cannot read the box, so there is no node form and SELF holds the parse (one rule, the user 2026-11-26); the entry answers 1.",
-      "expected" : {
-        "value" : {
-          "kind" : "Int",
-          "value" : 1
-        },
-        "cost" : 19,
-        "error" : null
-      }
-    },
-    {
       "name" : "size-lies-short-accept#2",
       "tree_bytes_hex" : "0b04b160010402",
       "version" : {
@@ -58,27 +37,6 @@
         "value" : 0
       },
       "script" : "[size-lies-short] `SizeOf((1))` with the size field one byte SHORTER than the tree: the tree evaluated is the parse, 1; SELF holds the bytes the size field spans.",
-      "expected" : {
-        "value" : {
-          "kind" : "Int",
-          "value" : 1
-        },
-        "cost" : 19,
-        "error" : null
-      }
-    },
-    {
-      "name" : "size-lies-long-by-37-accept#3",
-      "tree_bytes_hex" : "0b2ab160010402",
-      "version" : {
-        "activated" : 3,
-        "ergoTree" : 3
-      },
-      "input" : {
-        "kind" : "Int",
-        "value" : 0
-      },
-      "script" : "[size-lies-long-by-37] As `size-lies-long`, the size field 37 bytes long: the parse, and 1.",
       "expected" : {
         "value" : {
           "kind" : "Int",
@@ -1082,6 +1040,48 @@
           ]
         },
         "cost" : 59,
+        "error" : null
+      }
+    },
+    {
+      "name" : "size-lies-long-writable-accept#11",
+      "tree_bytes_hex" : "0b069a04020402",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "script" : "[size-lies-long-writable] `1 + 1`, a writable body, with the size field one byte LONGER than the tree: a node cannot read the box, so there is no node form and SELF holds the parse (one rule, the user 2026-11-26), which can be written; the entry answers 2.",
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 25,
+        "error" : null
+      }
+    },
+    {
+      "name" : "size-lies-long-by-37-writable-accept#12",
+      "tree_bytes_hex" : "0b2a9a04020402",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "script" : "[size-lies-long-by-37-writable] As `size-lies-long-writable`, the size field 37 bytes long: the parse, and 2.",
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 2
+        },
+        "cost" : 25,
         "error" : null
       }
     }
