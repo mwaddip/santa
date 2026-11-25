@@ -81,7 +81,7 @@ contract — every runner constructs the SAME one (it mirrors the blesser's
 
 | surface | pinned value |
 |---|---|
-| `SELF` box | `value = 1000000`, `ergoTree` = the entry's own tree, `transactionId` = 32 zero bytes, `index = 0`, `creationHeight = 0`, no tokens; **R4–R9 ABSENT** — a read of one must return `None`, never an arbitrary value — except on `santa-eval/v4`, whose `selfRegisters` replaces them (see the SELF-registers note) |
+| `SELF` box | `value = 1000000`, `ergoTree` = the entry's own tree, held as a node holds it (see the SELF-tree note), `transactionId` = 32 zero bytes, `index = 0`, `creationHeight = 0`, no tokens; **R4–R9 ABSENT** — a read of one must return `None`, never an arbitrary value — except on `santa-eval/v4`, whose `selfRegisters` replaces them (see the SELF-registers note) |
 | `INPUTS` / `boxesToSpend` | exactly `[SELF]` (so `selfBoxIndex = 0`) — and the SAME box VALUE as `SELF`, not merely one of equal shape (see the note) |
 | `OUTPUTS` / spending tx | empty (no outputs, no other inputs) |
 | `dataInputs` | empty |
@@ -116,6 +116,14 @@ because a runner satisfied neither and the corpus could not see it:
   `selfBoxIndex` is a full-value search of `INPUTS` for SELF, and so is sigma-rust's. Whatever a
   runner does to SELF it must do to `INPUTS[0]`. This is the half a `Context.properties` red caught
   during the fix, not reasoning.
+- **SELF holds its tree as a node holds it** (the user, 2026-11-25). A size-flagged tree whose root is not a
+  SigmaProp is not a script: a node's deserializer keeps it as its BYTES, an unparsed tree, and SELF holds it so,
+  with an id and bytes even when the parse cannot be written back (a constant of a 0- or 1-item tuple type). An
+  unsized tree with such a root has no node form, since a node refuses the box ("ErgoTree serialized without size
+  bit"), and SELF holds the parse, as before; so does a SigmaProp root. The tree EVALUATED is the parse in every case.
+  On the corpus as it stood the change moved no answer (rudolph green on every slice); it is what lets a runner build
+  SELF as a real box for the five trees in `SelectField.non_pair` and `Tuple.non_pair_value_{ops,type_directed}` that
+  hold such a constant.
 
 *Cost-limit note (added 2026-11-16, after two runners lacked it).* The oracle has always evaluated
 every entry under `DefaultEvalSettings.scriptCostLimitInEvaluator` (EvalCore), but the table did not

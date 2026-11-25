@@ -77,10 +77,23 @@ object EvalCore {
   private def productionReplaceConstants(tree: ErgoTree): Boolean =
     tree.isConstantSegregation && tree.hasDeserialize
 
-  private def dummyContext(tree: ErgoTree, activatedVersion: Byte): ErgoLikeContext = {
+  /** The tree the canonical SELF holds: as a node holds it (the user's ruling, 2026-11-25). A size-flagged tree whose
+    * root is not a SigmaProp is not a script, and a node's deserializer keeps it as its BYTES (an unparsed tree), so its
+    * box has an id even when the parse cannot be written back (a 0- or 1-item tuple type). An unsized tree with such a
+    * root has no node form at all (a node refuses the box: "ErgoTree serialized without size bit") and keeps the lenient
+    * parse, the user's option 1 (2026-11-25); so does a SigmaProp root. Only SELF's tree changes: the root evaluated is
+    * the lenient parse's either way. Pinned by `SelfTreeFormTest`. */
+  private[santa] def selfTreeOf(bytes: Array[Byte], parsed: ErgoTree): ErgoTree =
+    if ((bytes(0) & ErgoTree.SizeFlag) != 0 &&
+        parsed.root.exists(r => r.asInstanceOf[sigma.ast.Value[SType]].tpe != SSigmaProp))
+      sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(bytes)
+    else parsed
+
+  private def dummyContext(tree: ErgoTree, activatedVersion: Byte,
+                           selfTree: Option[ErgoTree] = None): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
-      ergoTree = tree,
+      ergoTree = selfTree.getOrElse(tree),
       transactionId = bytesToId(Array.fill(32)(0: Byte)),
       index = 0.toShort,
       creationHeight = 0
@@ -194,7 +207,7 @@ object EvalCore {
       val treeVer = tree.version
       try {
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
-          val ctx = dummyContext(tree, activated)
+          val ctx = dummyContext(tree, activated, Some(selfTreeOf(bytes, tree)))
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
@@ -617,10 +630,11 @@ object EvalCore {
   /** Dummy context identical to dummyContext but with var 1 bound to `varBinding`.
     * Used by evalApplied to supply the function input via ContextExtension. */
   private[santa] def contextWithVar1(tree: ErgoTree, activatedVersion: Byte,
-                              varBinding: EvaluatedValue[_ <: SType]): ErgoLikeContext = {
+                              varBinding: EvaluatedValue[_ <: SType],
+                              selfTree: Option[ErgoTree] = None): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
-      ergoTree = tree,
+      ergoTree = selfTree.getOrElse(tree),
       transactionId = bytesToId(Array.fill(32)(0: Byte)),
       index = 0.toShort,
       creationHeight = 0
@@ -666,7 +680,7 @@ object EvalCore {
       try {
         val input   = decodeBinding(inputJson)
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
-          val ctx = contextWithVar1(tree, activated, input)
+          val ctx = contextWithVar1(tree, activated, input, Some(selfTreeOf(bytes, tree)))
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
@@ -686,10 +700,10 @@ object EvalCore {
     * registers) and a dynamic index from context var 1. */
   private[santa] def contextWithSelfRegistersAndVar1(tree: ErgoTree, activatedVersion: Byte,
       additionalRegisters: Map[ErgoBox.NonMandatoryRegisterId, sigma.ast.EvaluatedValue[_ <: SType]],
-      varBinding: EvaluatedValue[_ <: SType]): ErgoLikeContext = {
+      varBinding: EvaluatedValue[_ <: SType], selfTree: Option[ErgoTree] = None): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
-      ergoTree = tree,
+      ergoTree = selfTree.getOrElse(tree),
       additionalTokens = sigma.Colls.emptyColl,
       additionalRegisters = additionalRegisters.map { case (id, v) => id -> offTheWire(v, activatedVersion) },
       transactionId = bytesToId(Array.fill(32)(0: Byte)),
@@ -740,7 +754,7 @@ object EvalCore {
             regId -> decodeBinding(j)
           }
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
-          val ctx = contextWithSelfRegistersAndVar1(tree, activated, additionalRegisters, var1)
+          val ctx = contextWithSelfRegistersAndVar1(tree, activated, additionalRegisters, var1, Some(selfTreeOf(bytes, tree)))
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
@@ -759,9 +773,10 @@ object EvalCore {
     * getVarFromInput). Mirrors contextWithVar1, but the extensions go on the inputs,
     * not the top-level (var 1). */
   private[santa] def contextWithInputExtensions(tree: ErgoTree, activatedVersion: Byte,
-      inputExtensions: Seq[Map[Byte, EvaluatedValue[_ <: SType]]]): ErgoLikeContext = {
+      inputExtensions: Seq[Map[Byte, EvaluatedValue[_ <: SType]]],
+      selfTree: Option[ErgoTree] = None): ErgoLikeContext = {
     val selfBox = new ErgoBox(
-      value = 1000000L, ergoTree = tree,
+      value = 1000000L, ergoTree = selfTree.getOrElse(tree),
       transactionId = bytesToId(Array.fill(32)(0: Byte)), index = 0.toShort, creationHeight = 0)
     val inputs = inputExtensions.map(ext =>
       Input(selfBox.id, new ProverResult(Array.emptyByteArray, ContextExtension(extensionOffTheWire(ext, activatedVersion))))).toIndexedSeq
@@ -806,7 +821,7 @@ object EvalCore {
       try {
         val exts = inputExtensions
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
-          val ctx = contextWithInputExtensions(tree, activated, exts)
+          val ctx = contextWithInputExtensions(tree, activated, exts, Some(selfTreeOf(bytes, tree)))
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
@@ -828,10 +843,11 @@ object EvalCore {
     * (max key) or `ArrayIndexOutOfBoundsException` (id == -1) — BEFORE any bytecode. Parallel to
     * `contextWithVar1`, but the key is the variable (not hardcoded 1). */
   private[santa] def contextWithTopExtension(tree: ErgoTree, activatedVersion: Byte,
-      extension: Map[Byte, EvaluatedValue[_ <: SType]]): ErgoLikeContext = {
+      extension: Map[Byte, EvaluatedValue[_ <: SType]],
+      selfTree: Option[ErgoTree] = None): ErgoLikeContext = {
     val selfBox = new ErgoBox(
       value = 1000000L,
-      ergoTree = tree,
+      ergoTree = selfTree.getOrElse(tree),
       transactionId = bytesToId(Array.fill(32)(0: Byte)),
       index = 0.toShort,
       creationHeight = 0
@@ -868,7 +884,7 @@ object EvalCore {
         val extension: Map[Byte, EvaluatedValue[_ <: SType]] =
           extensionJson.map { case (k, j) => k.toByte -> decodeBinding(j) }
         val (rawValue, jitCost) = VersionContext.withVersions(activated, treeVer) {
-          val ctx = contextWithTopExtension(tree, activated, extension)
+          val ctx = contextWithTopExtension(tree, activated, extension, Some(selfTreeOf(bytes, tree)))
           val acc = new CostAccumulator(
             initialCost = JitCost.fromBlockCost(Math.toIntExact(ctx.initCost)),
             costLimit   = Some(JitCost.fromBlockCost(Math.toIntExact(ctx.costLimit))))
