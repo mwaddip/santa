@@ -362,8 +362,8 @@ no chain actual carries a cost, the grader never reads one, and the runner manif
 `cost` flag is irrelevant to chain slices (a runner declares the tier by listing `chain`
 in `tiers`; the `cost` declaration keeps meaning only for the tiers that grade it).
 
-Per entry the comparator (`santa-check`, interpreting the grading type `chain` in `vectors/grading.json`; it
-reads the entry's `kind` and `expected`) emits a verdict in the shared
+Per entry the comparator (a runner's interpreter of the grading type `chain` in `vectors/grading.json`, which
+reads the entry's `kind` and `expected`; `santa-check` is SANTA's) emits a verdict in the shared
 vocabulary. **Precedence:** `panicked` → coal unconditionally; `not-implemented` → blue
 coverage verdict (the growth-ledger stance); then one graded dimension, **`value`**:
 
@@ -398,8 +398,8 @@ coverage verdict (the growth-ledger stance); then one graded dimension, **`value
 `chain` in `vectors/grading.json` ([`grading.md`](grading.md)): one dimension, `value`, per kind, an
 unknown kind red (`unmatched`); chain slices appear on the board as
 `chain/<version>/<provenance>` rows like every tier. The type's cases in
-`oracle/verdicts-grading.json` are the executable form of this section; `santa-check`'s oracle
-test proves the interpreter against them.
+`oracle/verdicts-grading.json` are the executable form of this section; every interpreter is proven
+against them (SANTA's in `santa-check`'s oracle test).
 
 ## 5. Settings self-containment
 

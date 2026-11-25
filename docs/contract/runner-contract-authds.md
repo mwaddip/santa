@@ -170,8 +170,8 @@ suite:
 
 ## 4. Grading (the `authds` grading type)
 
-Per entry the comparator (`santa-check`, interpreting the grading type `authds` in `vectors/grading.json`; it
-reads the entry's `kind` and `expected`) emits a verdict in the shared
+Per entry the comparator (a runner's interpreter of the grading type `authds` in `vectors/grading.json`, which
+reads the entry's `kind` and `expected`; `santa-check` is SANTA's) emits a verdict in the shared
 vocabulary. **Precedence**, identical in spirit to chain (`runner-contract-chain.md` §4):
 `panicked` → coal unconditionally, on either kind; `not-implemented` → blue coverage verdict
 (the growth-ledger stance — "a conformer with no prover declares `not-implemented` on

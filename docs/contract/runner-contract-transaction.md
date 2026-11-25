@@ -90,8 +90,8 @@ grader.
 
 ## 4. Grading (the `transaction` grading type)
 
-Per entry the comparator (`santa-check`, interpreting the grading type `transaction`) emits a verdict in the shared
-vocabulary. **Precedence:**
+Per entry the comparator (a runner's interpreter of the grading type `transaction`; `santa-check` is SANTA's) emits a
+verdict in the shared vocabulary. **Precedence:**
 
 1. **`panicked` → coal unconditionally** — before the accept/reject check. A crash is not a
    clean rejection, which is why `panicked` is a distinct tag and not a refinement of
@@ -129,7 +129,7 @@ vocabulary. **Precedence:**
 These rules are the grading type `transaction` in `vectors/grading.json` ([`grading.md`](grading.md)):
 a verdict lists the graded dimensions (`valid`, `cost`), or is panicked / not-implemented /
 exceeded, as on every tier. The type's cases in `oracle/verdicts-grading.json` are the executable
-form of this section; `santa-check`'s `tests/oracle.rs` proves the interpreter against them.
+form of this section; every interpreter is proven against them (SANTA's in `santa-check`'s `tests/oracle.rs`).
 
 ## 5. The provided-context contract
 

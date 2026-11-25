@@ -514,8 +514,7 @@ The JVM blesses (produces `expected`); those values are committed in the vectors
 **Conformance-time comparison requires no JVM.** The comparison rules are data ([`grading.md`](grading.md)): a
 comparator interprets that file and proves itself against the verdict oracle
 ([`oracle/verdicts-grading.json`](../../oracle/verdicts-grading.json)); `santa-check` is SANTA's. Two interpreters that
-reproduce the oracle return the same verdict on the same bytes. (The Scala `Harness` predates the grading file, does
-not read it, and grades nothing on the board.)
+reproduce the oracle return the same verdict on the same bytes.
 
 ## 7. Future arms (generalization — NOT specified here)
 

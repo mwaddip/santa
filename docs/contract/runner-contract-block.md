@@ -111,8 +111,8 @@ replaying the block's state changes through the proof — not an echo of the vec
 
 ## 4. Grading (the `block` grading type)
 
-Per entry the comparator (`santa-check`, interpreting the grading type `block`) emits a verdict in the shared
-vocabulary. **Precedence:** `panicked` → coal unconditionally; `not-implemented` → blue
+Per entry the comparator (a runner's interpreter of the grading type `block`; `santa-check` is SANTA's) emits a
+verdict in the shared vocabulary. **Precedence:** `panicked` → coal unconditionally; `not-implemented` → blue
 coverage verdict (growth-ledger stance); then:
 
 3. **Accept vector** (`expected.valid == true`) — three dimensions, **chained
@@ -131,10 +131,10 @@ coverage verdict (growth-ledger stance); then:
    deliberately diverges from the eval reject arm). `post_digest` and `cost` are never
    graded on reject.
 
-These rules are the grading type `block` in `vectors/grading.json`, which `santa-check` interprets
+These rules are the grading type `block` in `vectors/grading.json`, which every runner interprets
 ([`grading.md`](grading.md)): a verdict lists the graded dimensions (`valid`, `post_digest`, `cost`), or is
 panicked / not-implemented / exceeded, as on every tier. The type's cases in `oracle/verdicts-grading.json` are the
-executable form; `santa-check`'s oracle test proves the interpreter against them.
+executable form; every interpreter is proven against them (SANTA's in `santa-check`'s oracle test).
 
 ## 5. The validation-context contract
 

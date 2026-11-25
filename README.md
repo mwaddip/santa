@@ -182,7 +182,7 @@ A skeleton, with the work in a program of your own language:
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 repo="$(dirname "$here")"                       # the checkout this runner lives in
-santa="$(realpath "$2")"; out="$(realpath -m "$3")"; mkdir -p "$out"
+santa="$(realpath "$2")"; out="$(realpath -m "$3")"   # the runner makes the out-dir, after checking it
 (cd "$repo" && cargo build --release -p my-santa-runner)
 exec "$repo/target/release/my-santa-runner" "$santa" "$out"   # checks, selects, runs, bounds, grades, writes
 ```
@@ -262,10 +262,10 @@ artifact. It runs in your repository's own workflows, and no SANTA code runs the
   runs anything from the pull request: it reads the check's artifact as data and posts it to the one pull request
   whose head the check graded.
 
-[The guide](pr-check/README.md) covers the two values to set and failing the check on new red. It also covers
-**reading the comment**: the check runs the pull request's own copy of the workflow, the `jq` and the runner, so
-review a change to any of them like any other code. The board's grade of your default branch is the one that
-counts.
+[The guide](pr-check/README.md) covers the three values to set (`RUNNER_DIR`, `LABEL`, `SANTA_REF`) and failing the
+check on new red. It also covers **reading the comment**: the check runs the pull request's own copy of the workflow,
+the `jq` and the runner, so review a change to any of them like any other code. The board's grade of your default
+branch is the one that counts.
 
 ### 4. On the board
 

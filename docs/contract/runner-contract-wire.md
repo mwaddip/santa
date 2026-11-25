@@ -84,8 +84,8 @@ Per entry the comparator emits **one** verdict (no value/cost split, no amber):
 
 Precedence is every tier's ([`grading.md`](grading.md) §2): **exceeded → panicked → not-implemented →
 roundtrip / reject**. These rules are the grading type `wire` in `vectors/grading.json`; its cases in
-`oracle/verdicts-grading.json` are the executable form of this section (reproduced by `santa-check`'s
-`tests/oracle.rs`).
+`oracle/verdicts-grading.json` are the executable form of this section (reproduced by every interpreter, SANTA's
+in `santa-check`'s `tests/oracle.rs`).
 
 ## 4. Totality, never-panic, faithful outcomes (inherited)
 
