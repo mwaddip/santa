@@ -24,17 +24,27 @@ class AuthoredEvalSmallTuplesTest extends munit.FunSuite {
     assertEquals(B.evalCases.size, 9)
     assert(!B.evalCases.exists(_.slug == "const_triple_type"),
       "valdef-triple-errored#2 of Tuple.non_pair_type_check is the SelectField-on-a-triple site")
-    // 9 cases + the (1)==(1) twin
-    assertEquals(entries(B.Op).size, 10)
-    assertEquals(entries(B.OpSerialize).size, 2)
+    // 9 cases + the (1)==(1) twin, less the three retired below; the serialize pair, less its one-item row
+    assertEquals(entries(B.Op).size, 7)
+    assertEquals(entries(B.OpSerialize).size, 1)
+  }
+
+  test("the four rows no box can carry are retired, and the rows that stay keep their names") {
+    val names = (entries(B.Op) ++ entries(B.OpSerialize)).map(str(_, "name")).toSet
+    assertEquals(B.Retired, Set("const_one_item_type-errored#0", "const_zero_item_type-errored#1",
+      "const_one_item_type_eq_self-errored#9", "serialize-one-item-tuple-accept#0"))
+    assert(B.Retired.forall(n => !names(n)), s"retired rows must be gone: ${B.Retired.intersect(names)}")
+    // names are taken BEFORE the retired rows are dropped: what stays is named as committed
+    Seq("tuple_expr_one_item-errored#2", "const_pair_type_control-accept#",
+        "serialize-pair-control-accept#1").foreach(n => assert(names.exists(_.startsWith(n)), s"$n must stay"))
   }
 
   test("three refusals, and the arms that produce them") {
     import SmallTupleTrees._
-    // the TypeWrite and CountBound cases error, and so do the three expression cases
-    Seq("const_one_item_type-", "const_zero_item_type-", "tuple_expr_one_item-",
-        "tuple_expr_zero_item-", "tuple_expr_127_items-", "tuple_expr_128_items-",
-        "const_one_item_type_eq_self-").foreach { frag =>
+    // the CountBound cases error, and so do the three expression cases (the TypeWrite rows are spends now:
+    // AuthoredTxUnwritableTree)
+    Seq("tuple_expr_one_item-", "tuple_expr_zero_item-", "tuple_expr_127_items-",
+        "tuple_expr_128_items-").foreach { frag =>
       val e = one(B.Op, frag)
       assert(errored(e), s"${str(e, "name")}: must error at eval")
       assertEquals(cost(e), None, s"${str(e, "name")}: an errored eval carries no cost")
@@ -47,27 +57,10 @@ class AuthoredEvalSmallTuplesTest extends munit.FunSuite {
       .foreach(f => assert(!errored(one(B.Op, f)), f))
   }
 
-  test("the one-item EQ twin proves the refusal is about arity, not emptiness") {
-    // `()` == `()` and `(1)` == `(1)` both error, and they are DIFFERENT trees — if a later
-    // change collapsed them, the family would claim a distinction it no longer draws.
-    val zero = one(B.Op, "const_zero_item_type-")
-    val oneI = one(B.Op, "const_one_item_type_eq_self-")
-    assert(errored(zero) && errored(oneI))
-    assertNotEquals(str(zero, "tree_bytes_hex"), str(oneI, "tree_bytes_hex"))
-    assert(str(oneI, "tree_bytes_hex").contains(SmallTupleTrees.OneItemConst))
-    assert(str(zero, "tree_bytes_hex").contains(SmallTupleTrees.ZeroItemConst))
-  }
-
-  test("Global.serialize on a one-item tuple WORKS, and costs more than the pair twin") {
-    val oneI = one(B.OpSerialize, "serialize-one-item-tuple-accept")
+  test("Global.serialize on the pair twin keeps its cost (the one-item row is a spend now)") {
     val pair = one(B.OpSerialize, "serialize-pair-control-accept")
-    assert(!errored(oneI), "a one-item tuple serializes: DataSerializer writes items, not the type")
     assert(!errored(pair))
-    assertEquals(cost(oneI), Some(65L))
     assertEquals(cost(pair), Some(51L))
-    // the two trees differ in exactly the constant
-    assertEquals(str(oneI, "tree_bytes_hex").length - str(pair, "tree_bytes_hex").length,
-      SmallTupleTrees.OneItemConst.length - SmallTupleTrees.PairConst.length)
   }
 
   test("every tree is the v3 size-flagged form, at activated 3") {

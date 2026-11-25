@@ -92,6 +92,15 @@ object AuthoredEvalSmallTuples {
   def serializeOneItemTree: String = v3(serializeOneItemBody)
   def serializePairTree: String    = v3(serializePairBody)
 
+  /** Deleted 2026-11-25 (sigma-rust's re-authoring request): each tree has a SigmaProp root and a CONSTANT of a 0- or
+    * 1-item tuple type, so no box can carry it — a transaction creating one has no id (measured on 6.0.7,
+    * `santa.spike.UnwritableTreeSpendProbe`; the fork measured the same refusal). Their facts are spends now
+    * (`AuthoredTxUnwritableTree`). Dropped AFTER naming, so every entry that stays keeps its committed name. */
+  val Retired: Set[String] = Set("const_one_item_type-errored#0", "const_zero_item_type-errored#1",
+    "const_one_item_type_eq_self-errored#9", "serialize-one-item-tuple-accept#0")
+  private def kept(es: Seq[Json]): Seq[Json] =
+    es.filterNot(e => e.hcursor.get[String]("name").toOption.exists(Retired))
+
   def extract(): Map[String, Json] = {
     // NOTE the difference from the carrier halves: `Case.rejects` is about the CARRIER (a 0/1-item
     // tuple type cannot be written, a 128-item count cannot be parsed), and at EVAL the expression
@@ -129,8 +138,8 @@ object AuthoredEvalSmallTuples {
       SpecExtract.authoredEnvelope(op, entries, Source)
         .mapObject(_.add("blessed_by", Json.fromString("jvm:sigma-state-6.0.7")))
     Map(
-      Op          -> envelope(Op, tupleEntries :+ eqOneItem),
-      OpSerialize -> envelope(OpSerialize, serializeEntries))
+      Op          -> envelope(Op, kept(tupleEntries :+ eqOneItem)),
+      OpSerialize -> envelope(OpSerialize, kept(serializeEntries)))
   }
 
   def writeVectors(outDir: java.nio.file.Path): Unit =

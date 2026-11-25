@@ -5,42 +5,6 @@
   "source" : "santa:authored-small-tuples",
   "entries" : [
     {
-      "name" : "const_one_item_type-errored#0",
-      "script" : "sigmaProp(c._1 == 1) where c is a CONSTANT of type `(Int)` — a one-item tuple TYPE, which the JVM parses and can never write back  // parses; eval fails — toDslTuple returns a raw Coll[Any] for a non-pair",
-      "tree_bytes_hex" : "0b0ad1938c60010402010402",
-      "input" : {
-        "kind" : "Int",
-        "value" : 0
-      },
-      "version" : {
-        "activated" : 3,
-        "ergoTree" : 3
-      },
-      "expected" : {
-        "value" : null,
-        "cost" : null,
-        "error" : "errored"
-      }
-    },
-    {
-      "name" : "const_zero_item_type-errored#1",
-      "script" : "sigmaProp(c == c) where c is a CONSTANT of type `()` — a zero-item tuple TYPE, whose data occupies no bytes at all  // parses; eval fails — toDslTuple returns a raw Coll[Any] for a non-pair",
-      "tree_bytes_hex" : "0b06d19360006000",
-      "input" : {
-        "kind" : "Int",
-        "value" : 0
-      },
-      "version" : {
-        "activated" : 3,
-        "ergoTree" : 3
-      },
-      "expected" : {
-        "value" : null,
-        "cost" : null,
-        "error" : "errored"
-      }
-    },
-    {
       "name" : "tuple_expr_one_item-errored#2",
       "script" : "sigmaProp(Tuple(1)._1 == 1) — a one-item tuple EXPRESSION. `TupleSerializer` writes a count and no type, so this round-trips verbatim; `Tuple.eval` then refuses it  // parses and round-trips; Tuple.eval refuses any count but two",
       "tree_bytes_hex" : "0b0ad1938c86010402010402",
@@ -173,24 +137,6 @@
         },
         "cost" : 58,
         "error" : null
-      }
-    },
-    {
-      "name" : "const_one_item_type_eq_self-errored#9",
-      "script" : "sigmaProp(c == c) where c is a CONSTANT of type `(Int)`  // `Unsupported tuple type (SInt$)`, where the `()` twin says `Unsupported tuple type ()` — the arity of the type is what equality refuses, not its emptiness",
-      "tree_bytes_hex" : "0b0ad1936001040260010402",
-      "input" : {
-        "kind" : "Int",
-        "value" : 0
-      },
-      "version" : {
-        "activated" : 3,
-        "ergoTree" : 3
-      },
-      "expected" : {
-        "value" : null,
-        "cost" : null,
-        "error" : "errored"
       }
     }
   ]

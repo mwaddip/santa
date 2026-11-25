@@ -1152,6 +1152,48 @@
         "cost" : 55,
         "error" : null
       }
+    },
+    {
+      "name" : "update_many_triple_tuple_updates-accept#50",
+      "script" : "[U4] `SizeOf(Coll(1,2,3).updateMany(Coll(0,1,2), (7,8,9)))` — the UPDATES given as a 3-item TUPLE: U3's argument-side claim with a tuple type the writer accepts, so a box can carry the tree and any runner can build it. Its value and cost equal CU4's: the argument side is representation-blind at three items too. **SEPARATING** on the same sigma-rust guard as T23 and U3.",
+      "tree_bytes_hex" : "0b16b1dc0c151003020406021003000204480404040e1012",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 55,
+        "error" : null
+      }
+    },
+    {
+      "name" : "update_many_triple_coll_updates_control-accept#51",
+      "script" : "[CU4] **CONTROL for U4** — the same `updateMany` with the updates an ordinary `Coll[Int](7,8,9)`: the same value at the same cost.",
+      "tree_bytes_hex" : "0b14b1dc0c15100302040602100300020410030e1012",
+      "input" : {
+        "kind" : "Int",
+        "value" : 0
+      },
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      },
+      "expected" : {
+        "value" : {
+          "kind" : "Int",
+          "value" : 3
+        },
+        "cost" : 55,
+        "error" : null
+      }
     }
   ]
 }

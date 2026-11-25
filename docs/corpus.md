@@ -146,7 +146,7 @@ Two more non-identity round-trips are pinned:
 
 ## Transaction
 
-About 3,400 entries in 75 files, each a signed transaction as bytes, with its input and data-input boxes, the nine
+About 3,450 entries in 77 files, each a signed transaction as bytes, with its input and data-input boxes, the nine
 headers a script sees, the pre-header and the parameters → `valid`, and the cost of an accepted spend.
 
 - **Captured** (`transaction/*/captured/`): real spends from testnet and mainnet. They include:
@@ -219,6 +219,11 @@ headers a script sees, the pre-header and the parameters → `valid`, and the co
     - above the highest script version the reference supports (3), a script is accepted unverified, at the
       initial cost alone;
     - the activated version is a signed byte, so block versions 0 and 129 to 255 reject every script spend.
+  - **A tree no box can carry** (`unwritable-tree-spend`): a tree with a SigmaProp root and a constant of a 0- or
+    1-item tuple type has no transaction id, so such a script reaches a node only through a context variable. There,
+    `Global.serialize` of a one-item tuple works, and `_1` on it, `() == ()` and `(1) == (1)` throw.
+  - **A tree that is not a script** (`non-sigmaprop-root-output`): a tree whose root is not a SigmaProp is kept as
+    its bytes, so an output may carry one that holds a 0- or 1-item tuple type, and the transaction is valid.
   - **Which block version activates scripts** (`block-version-source`): the voted parameters' block version, not the
     header's. The header's version only feeds PoW, serialization and `CONTEXT.preHeader`.
 

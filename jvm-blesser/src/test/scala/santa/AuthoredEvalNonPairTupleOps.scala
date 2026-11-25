@@ -238,7 +238,18 @@ object AuthoredEvalNonPairTupleOps {
       "Hand-crafted, since the writer refuses a tuple TYPE of fewer than 2 items and so no " +
       "round-trip could produce it. So the blindness holds on the ARGUMENT side as well as the " +
       "receiver's, which is what makes the rule about the operation rather than about one " +
-      "position. **SEPARATING** on the same sigma-rust guard as T23."))
+      "position. **SEPARATING** on the same sigma-rust guard as T23."),
+    // Appended 2026-11-25 (sigma-rust's re-authoring request for the unwritable-tree entries): U3's box CAN exist
+    // on the JVM (a non-SigmaProp root is kept as its bytes), but a runner that rebuilds the tree cannot hold it.
+    // U4 asks U3's question with a tuple type the writer accepts.
+    ("U4", "update_many_triple_tuple_updates", "0b16b1dc0c151003020406021003000204480404040e1012", true,
+      "`SizeOf(Coll(1,2,3).updateMany(Coll(0,1,2), (7,8,9)))` — the UPDATES given as a 3-item TUPLE: U3's " +
+      "argument-side claim with a tuple type the writer accepts, so a box can carry the tree and any runner can " +
+      "build it. Its value and cost equal CU4's: the argument side is representation-blind at three items too. " +
+      "**SEPARATING** on the same sigma-rust guard as T23 and U3."),
+    ("CU4", "update_many_triple_coll_updates_control", "0b14b1dc0c15100302040602100300020410030e1012", true,
+      "**CONTROL for U4** — the same `updateMany` with the updates an ordinary `Coll[Int](7,8,9)`: the same value " +
+      "at the same cost."))
 
   def extract(): Map[String, Json] = {
     val entries = rows.zipWithIndex.map { case ((id, slug, tree, accepts, what), i) =>

@@ -34,14 +34,29 @@ class AuthoredEvalNonPairTupleOpsTest extends munit.FunSuite {
     Seq("T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11",
         "T14", "T15", "T16", "T19", "T20", "T23")
 
-  test("50 rows: 23 tuple rows each with a control, plus P1, Z1, Z2, U3") {
-    assertEquals(entries.size, 50)
+  test("52 rows: 23 tuple rows each with a control, plus P1, Z1, Z2, U3, and U3's writable twin U4 with its control") {
+    assertEquals(entries.size, 52)
     (1 to 23).foreach { n =>
       val t = row(s"T$n"); val c = row(s"C$n")
       assertNotEquals(str(t, "tree_bytes_hex"), str(c, "tree_bytes_hex"), s"T$n/C$n must differ")
       assert(str(c, "script").contains("CONTROL"), s"C$n must say it is a control")
     }
     assertEquals(entries.count(errored), 7) // the 6 array-needing rows + P1, and nothing else
+  }
+
+  test("U4, U3's writable twin: a 3-item tuple of updates returns what its Coll control does, at its cost") {
+    val u4 = row("U4"); val c = row("CU4")
+    assert(!errored(u4) && !errored(c), "U4 and CU4 must both return")
+    assertEquals(value(u4), value(c))
+    assertEquals(cost(u4), cost(c), "the argument side is representation-blind, as U3 says for one item")
+    assertNotEquals(str(u4, "tree_bytes_hex"), str(c, "tree_bytes_hex"))
+    // writable, which is the point of the twin: the serializer gives back the same bytes
+    val hex = str(u4, "tree_bytes_hex")
+    val back = sigma.VersionContext.withVersions(3, 3) {
+      val t = sigma.santa.LenientErgoTree.deserialize(scorex.util.encode.Base16.decode(hex).get)
+      scorex.util.encode.Base16.encode(sigma.serialization.ErgoTreeSerializer.DefaultSerializer.serializeErgoTree(t))
+    }
+    assertEquals(back, hex, "U4's tree must round-trip through the writer")
   }
 
   test("THE HEADLINE: cost is representation-blind — equal on every pair that returns") {

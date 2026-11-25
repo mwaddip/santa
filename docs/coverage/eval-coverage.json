@@ -2885,7 +2885,7 @@
           "accepts" : 0,
           "constant_segregation" : false,
           "has_deserialize" : false,
-          "has_size" : false,
+          "has_size" : true,
           "rejects" : 1,
           "tree_version" : 0
         }
@@ -10813,8 +10813,8 @@
       "version" : "v6"
     },
     "v6/authored/Global.serialize_small_tuple.json" : {
-      "accepts" : 2,
-      "entries" : 2,
+      "accepts" : 1,
+      "entries" : 1,
       "methods" : [
         "106:3 SigmaDslBuilder.serialize"
       ],
@@ -10830,7 +10830,7 @@
       "rejects" : 0,
       "tree_shapes" : [
         {
-          "accepts" : 2,
+          "accepts" : 1,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -12522,8 +12522,8 @@
       "version" : "v6"
     },
     "v6/authored/Tuple.non_pair_value_ops.json" : {
-      "accepts" : 43,
-      "entries" : 50,
+      "accepts" : 45,
+      "entries" : 52,
       "methods" : [
         "12:21 SCollection.updateMany"
       ],
@@ -12560,7 +12560,7 @@
       "rejects" : 7,
       "tree_shapes" : [
         {
-          "accepts" : 43,
+          "accepts" : 45,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
@@ -12638,7 +12638,7 @@
     },
     "v6/authored/Tuple.small_tuples.json" : {
       "accepts" : 3,
-      "entries" : 10,
+      "entries" : 7,
       "methods" : [
       ],
       "op" : "Tuple.small_tuples",
@@ -12650,14 +12650,14 @@
         "Tuple"
       ],
       "provenance" : "authored",
-      "rejects" : 7,
+      "rejects" : 4,
       "tree_shapes" : [
         {
           "accepts" : 3,
           "constant_segregation" : false,
           "has_deserialize" : false,
           "has_size" : true,
-          "rejects" : 6,
+          "rejects" : 3,
           "tree_version" : 3
         }
       ],
@@ -25715,12 +25715,12 @@
   "schema" : "santa-coverage/v1",
   "tier" : "eval",
   "totals" : {
-    "accepts" : 22272,
+    "accepts" : 22273,
     "distinct_methods" : 162,
     "distinct_ops" : 90,
-    "entries" : 49898,
+    "entries" : 49896,
     "files" : 480,
-    "rejects" : 27626,
+    "rejects" : 27623,
     "unwalked" : 2557
   }
 }
