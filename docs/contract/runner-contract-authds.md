@@ -188,9 +188,9 @@ one `clean` gate (`actual.error` is null or absent) and are then compared indepe
 - `digest` is nice iff `clean` and `actual.digests` structurally equals `expected.digests`,
   by the same whole-array rule — **evaluated independently of the `proof` verdict.**
 
-Rationale, stated in the grader source itself: *"A correct digest alongside non-canonical
-proof bytes is the ADPROOF-FINDING class and is the single most important signal this arm
-exists to surface; chaining would hide it behind a green digest."* A conformer whose
+Rationale: a correct digest alongside non-canonical proof bytes is the ADPROOF-FINDING class,
+the single most important signal this arm exists to surface; chaining would hide it behind a
+green digest. A conformer whose
 prover computes the right tree (right digest) but serializes a non-canonical proof (extra
 or reordered nodes, a different flag byte) must show **exactly that** on the board:
 `digest: nice`, `proof: coal`. Suppressing either behind the other would erase the one

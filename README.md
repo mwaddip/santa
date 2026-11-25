@@ -333,7 +333,7 @@ docs/coverage/          the eval corpus's coverage manifest (ops, methods, tree 
 oracle/                 the verdict and selection oracles every runner reproduces before it grades
 jvm-blesser/            Scala: the blessers and rudolph, the JVM reference runner
 runners/                one directory per board row (its runner.json; santa-run, or a marker for a hosted runner)
-tools/                  Rust: conform, validate, santa-check (the grading interpreter), scoreboard
+tools/                  Rust: conform, validate, santa-check (SANTA's grading interpreter), scoreboard
 pr-check/               the pull request check: the workflow templates and their jq, copied into an implementation
 conform  validate  scoreboard   the entry points
 ```
