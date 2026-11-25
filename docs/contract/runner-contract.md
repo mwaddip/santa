@@ -118,9 +118,11 @@ because a runner satisfied neither and the corpus could not see it:
   during the fix, not reasoning.
 - **SELF holds its tree as a node holds it** (the user, 2026-11-25). A size-flagged tree whose root is not a
   SigmaProp is not a script: a node's deserializer keeps it as its BYTES, an unparsed tree, and SELF holds it so,
-  with an id and bytes even when the parse cannot be written back (a constant of a 0- or 1-item tuple type). An
-  unsized tree with such a root has no node form, since a node refuses the box ("ErgoTree serialized without size
-  bit"), and SELF holds the parse, as before; so does a SigmaProp root. The tree EVALUATED is the parse in every case.
+  with an id and bytes even when the parse cannot be written back (a constant of a 0- or 1-item tuple type), and
+  holding exactly the bytes the size field spans. A tree a node cannot read has no node form, and SELF holds the
+  parse, as before: an unsized tree with such a root (a node refuses the box: "ErgoTree serialized without size
+  bit"), or a size-flagged one whose size field claims more bytes than there are (the user, 2026-11-26: one rule).
+  So does a SigmaProp root. The tree EVALUATED is the parse in every case.
   On the corpus as it stood the change moved no answer (rudolph green on every slice); it is what lets a runner build
   SELF as a real box for the five trees in `SelectField.non_pair` and `Tuple.non_pair_value_{ops,type_directed}` that
   hold such a constant.

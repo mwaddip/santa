@@ -36,6 +36,17 @@ class SelfTreeFormTest extends munit.FunSuite {
       "a node refuses it outright")
   }
 
+  test("a size-flagged tree a node cannot read (its size field claims more bytes than there are) keeps the parse") {
+    Seq("0b06b160010402", "0b2ab160010402").foreach { h => // SizeOf((1)), the size field one / 37 bytes long
+      assert(scala.util.Try(sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(b(h))).isFailure,
+        s"$h: a node refuses it")
+      assert(selfOf(h).root.isRight, s"$h: SELF holds the parse, as for any tree with no node form")
+      val (_, out) = EvalCore.evalApplied(h, io.circe.Json.obj("kind" -> io.circe.Json.fromString("Int"),
+        "value" -> io.circe.Json.fromInt(0)), 3)
+      assertEquals(out.map(_._1.noSpaces), Right("""{"kind":"Int","value":1}"""), s"$h: the entry answers, not errored")
+    }
+  }
+
   test("a SigmaProp root is the parse") {
     val h = "0b0cd193b1480404040204060406" // sigmaProp(SizeOf((1,2,3)) == 3)
     val t = selfOf(h)

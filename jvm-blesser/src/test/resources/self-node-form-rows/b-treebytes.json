@@ -1,0 +1,206 @@
+{
+ "schema": "santa-eval/v2",
+ "entries": [
+  {
+   "name": "size-true",
+   "tree_bytes_hex": "0b05b160010402",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "size-lies-long",
+   "tree_bytes_hex": "0b06b160010402",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "size-lies-short",
+   "tree_bytes_hex": "0b04b160010402",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "size-lies-long-by-37",
+   "tree_bytes_hex": "0b2ab160010402",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-00",
+   "tree_bytes_hex": "0b05b16001040200",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-05-bytes",
+   "tree_bytes_hex": "0b0d9593b1600104020402c3a7c3a705",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-05-creation",
+   "tree_bytes_hex": "0b0d9593b1600104020402c7a7c7a705",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-05-propbytes",
+   "tree_bytes_hex": "0b0d9593b1600104020402c2a7c2a705",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-w-propbytes",
+   "tree_bytes_hex": "0b0a959304020402c2a7c2a705",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-w-creation",
+   "tree_bytes_hex": "0b0a959304020402c7a7c7a705",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "size-lies-short-bytes",
+   "tree_bytes_hex": "0b0c9593b1600104020402c3a7c3a7",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "trailing-05-v4-r4def",
+   "tree_bytes_hex": "0b139593b1600104020402e6c6a70404e6c6a7040405",
+   "version": {
+    "activated": 3,
+    "ergoTree": 3
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   },
+   "selfRegisters": {
+    "4": {
+     "kind": "Int",
+     "value": 1
+    }
+   }
+  },
+  {
+   "name": "unsized-sigmaprop-v0",
+   "tree_bytes_hex": "00d193b1600104020402",
+   "version": {
+    "activated": 2,
+    "ergoTree": 0
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "unsized-sigmaprop-v0-bytes-eq",
+   "tree_bytes_hex": "00d1939593b1600104020402c3a7c3a7c3a7",
+   "version": {
+    "activated": 2,
+    "ergoTree": 0
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  },
+  {
+   "name": "unsized-int-root-v0",
+   "tree_bytes_hex": "00b160010402",
+   "version": {
+    "activated": 2,
+    "ergoTree": 0
+   },
+   "expected": null,
+   "input": {
+    "kind": "Int",
+    "value": 0
+   }
+  }
+ ]
+}

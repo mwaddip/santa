@@ -15,11 +15,11 @@ given, it is the size when this page was written; `./validate` prints the curren
 
 ## Eval
 
-About 50,000 entries in 480 files, each `ErgoTree bytes (+ its inputs) → typed value + raw JIT cost`, committed with
+About 50,000 entries in 486 files, each `ErgoTree bytes (+ its inputs) → typed value + raw JIT cost`, committed with
 the `(activated, ergoTree)` version it was blessed under.
 
 - **By provenance:** 2,026 produced by the reference interpreter (`sigma-state`) from its own language
-  specification; 47,810 authored (blessed by the reference, never copied from a specification); 62 captured from
+  specification; 47,930 authored (blessed by the reference, never copied from a specification); 62 captured from
   testnet spends.
 - **By version:**
   - **v4**, 18 entries, below the JIT activation (activated 0 or 1). These pin the one 4.x behaviour mainnet history
@@ -40,6 +40,11 @@ the `(activated, ergoTree)` version it was blessed under.
   implementation can do unbounded work the reference never does (`Global.serialize` of a value shared 2^12 times and
   more). Each runner runs each bounded file in its own process under that budget; going over grades `exceeded` on
   that entry alone.
+- **SELF's form** (`Self.node_form_tree_v1` to `_v5`, `_span`): SELF holds a size-flagged tree whose root is not a
+  SigmaProp as its bytes, as a node does, and a tree a node cannot read as its parse. The same reads of SELF (its
+  value, id, bytes, script, registers, creation info, `INPUTS(0) == SELF`, `selfBoxIndex`) run in every envelope, on
+  a tree the writer refuses and on its writable twin, and SELF's bytes follow the size field when it lies or bytes
+  follow the tree.
 - **Coverage:** [`docs/coverage/`](coverage/README.md) maps every op, `MethodCall` and tree shape the eval corpus
   exercises, read off each entry's deserialized tree.
 

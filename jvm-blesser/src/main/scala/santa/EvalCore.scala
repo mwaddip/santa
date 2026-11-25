@@ -81,12 +81,13 @@ object EvalCore {
     * root is not a SigmaProp is not a script, and a node's deserializer keeps it as its BYTES (an unparsed tree), so its
     * box has an id even when the parse cannot be written back (a 0- or 1-item tuple type). An unsized tree with such a
     * root has no node form at all (a node refuses the box: "ErgoTree serialized without size bit") and keeps the lenient
-    * parse, the user's option 1 (2026-11-25); so does a SigmaProp root. Only SELF's tree changes: the root evaluated is
-    * the lenient parse's either way. Pinned by `SelfTreeFormTest`. */
+    * parse, the user's option 1 (2026-11-25); so does a size-flagged tree a node cannot read (a size field claiming more
+    * bytes than there are; the user, 2026-11-26: one rule, the node's form where a node can read it), and a SigmaProp
+    * root. Only SELF's tree changes: the root evaluated is the lenient parse's either way. Pinned by `SelfTreeFormTest`. */
   private[santa] def selfTreeOf(bytes: Array[Byte], parsed: ErgoTree): ErgoTree =
     if ((bytes(0) & ErgoTree.SizeFlag) != 0 &&
         parsed.root.exists(r => r.asInstanceOf[sigma.ast.Value[SType]].tpe != SSigmaProp))
-      sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(bytes)
+      scala.util.Try(sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(bytes)).getOrElse(parsed)
     else parsed
 
   private def dummyContext(tree: ErgoTree, activatedVersion: Byte,
