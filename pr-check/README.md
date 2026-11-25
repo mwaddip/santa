@@ -48,7 +48,9 @@ token and runs the pull request's own copy of its workflow files.
 never checks out or runs anything from the pull request. It reads the artifact's two text files out of its zip, and
 posts only to an **open** pull request whose head is the commit the check ran on. It updates its one comment (marked
 `<!-- santa-pr -->`) on every push, one run at a time per pull request branch, so two runs cannot both post a first
-comment.
+comment. It finds that comment by the marker and by `POSTS_AS`, the login its token posts as: `github-actions[bot]`
+for the workflow's own token. A repository that posts with another token changes `POSTS_AS` with it, or every push
+adds a new comment.
 
 ## Reading the comment
 

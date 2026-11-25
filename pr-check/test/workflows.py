@@ -1,7 +1,10 @@
 """The PR-check workflow templates' structure: what keeps the check safe on a fork's pull request and the commenter
 working (pr-check/README.md). Run by run.sh when PyYAML is there: python3 workflows.py <pr-check dir>."""
+import os
 import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -46,6 +49,39 @@ check(len(grade) == 2 and all('"$JQ" empty' in g for g in grade),
       "both grade steps check results.json is JSON (delta.jq decides the rest: one definition of readable)")
 check(re.search(r"jq@\d+\.\d+\.\d+", check_text) is not None and "JQ=" in check_text,
       "jq is pinned (mise jq@X.Y.Z) and its path kept in JQ, not taken from the image")
+
+
+def install_jq(mise_prints):
+    """Run the jq install step as GitHub runs a step with no shell (bash -e), with a stub mise that prints
+    mise_prints (@JQ@: an executable file, @DIR@: a directory; None: mise fails). Returns (exit code, GITHUB_ENV, the
+    executable's path)."""
+    step = next((s for s in steps if str(s.get("name", "")).startswith("install jq")), {})
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / "bin").mkdir()
+        jq = d / "jq"
+        jq.write_text("#!/bin/sh\n")
+        jq.chmod(0o755)
+        body = "exit 1\n" if mise_prints is None else \
+            f"printf '%s\\n' '{mise_prints.replace('@JQ@', str(jq)).replace('@DIR@', str(d))}'\n"
+        mise = d / "bin" / "mise"
+        mise.write_text("#!/bin/sh\n" + body)
+        mise.chmod(0o755)
+        env_file = d / "github_env"
+        env_file.write_text("")
+        script = d / "step.sh"
+        script.write_text(step.get("run", "exit 99"))
+        env = {**os.environ, "PATH": f"{d / 'bin'}:{os.environ['PATH']}", "GITHUB_ENV": str(env_file)}
+        rc = subprocess.run(["bash", "-e", str(script)], env=env, capture_output=True).returncode
+        return rc, env_file.read_text(), str(jq)
+
+
+rc, genv, jq = install_jq("@JQ@")
+check(rc == 0 and genv == f"JQ={jq}\n", "the jq install step keeps mise's path to jq in JQ")
+for what, prints in (("mise fails", None), ("mise prints more than the path", "mise WARN a newer version\n@JQ@"),
+                     ("mise prints a directory", "@DIR@")):
+    rc, genv, _ = install_jq(prints)
+    check(rc != 0 and "JQ=" not in genv, f"the jq install step fails, and sets no JQ, when {what}")
 compare = next((s.get("run", "") for s in steps if s.get("name") == "compare"), "")
 check('"$JQ" -n -f .github/santa-pr/delta.jq' in compare and '"$JQ" -r -f .github/santa-pr/comment.jq' in compare,
       "the compare step runs the pinned jq")
@@ -65,6 +101,13 @@ conc = comment_doc.get("concurrency") or {}
 check("head_branch" in str(conc.get("group", "")) and conc.get("cancel-in-progress") is False,
       "the commenter runs one at a time per pull request branch (no two first comments)")
 check(".state" in comment_text and '"open"' in comment_text, "the commenter posts only to an open pull request")
+post = next((s for j in (comment_doc.get("jobs") or {}).values() for s in j.get("steps") or []
+             if s.get("name") == "post or update the comment"), {})
+post_env = post.get("env") or {}
+check(post_env.get("GH_TOKEN") == "${{ github.token }}" and post_env.get("POSTS_AS") == "github-actions[bot]"
+      and comment_text.count("github-actions[bot]") == 1,
+      "the login the commenter posts as is one value (POSTS_AS), beside the token it posts with")
+check('.user.login == \\"$POSTS_AS\\"' in post.get("run", ""), "the commenter finds its own comment by POSTS_AS")
 
 for name, doc in (("santa.yml", check_doc), ("santa-comment.yml", comment_doc)):
     for step in uses(doc):
