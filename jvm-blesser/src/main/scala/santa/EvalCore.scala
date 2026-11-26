@@ -77,18 +77,18 @@ object EvalCore {
   private def productionReplaceConstants(tree: ErgoTree): Boolean =
     tree.isConstantSegregation && tree.hasDeserialize
 
-  /** The tree the canonical SELF holds: as a node holds it (the user's ruling, 2026-11-25). A size-flagged tree whose
-    * root is not a SigmaProp is not a script, and a node's deserializer keeps it as its BYTES (an unparsed tree), so its
-    * box has an id even when the parse cannot be written back (a 0- or 1-item tuple type). An unsized tree with such a
-    * root has no node form at all (a node refuses the box: "ErgoTree serialized without size bit") and keeps the lenient
-    * parse, the user's option 1 (2026-11-25); so does a size-flagged tree a node cannot read (a size field claiming more
-    * bytes than there are; the user, 2026-11-26: one rule, the node's form where a node can read it), and a SigmaProp
-    * root. Only SELF's tree changes: the root evaluated is the lenient parse's either way. Pinned by `SelfTreeFormTest`. */
+  /** The tree the canonical SELF holds: as a node holds it (the user's ruling, 2026-11-25). The node's own read decides:
+    * where it keeps the tree as its BYTES (an unparsed tree: a size-flagged tree whose root is not a SigmaProp is not a
+    * script), SELF holds those bytes, and its box has an id even when the parse cannot be written back (a 0- or 1-item
+    * tuple type). Everywhere else SELF holds the parse: where the node parses the tree (a SigmaProp root), and where the
+    * node cannot read it at all — an unsized tree with a non-SigmaProp root ("ErgoTree serialized without size bit", the
+    * user's option 1, 2026-11-25), a size field claiming more bytes than there are, a root whose type cannot be computed
+    * (the user, 2026-11-26: one rule). No type read of this method's own decides it: one that threw made an entry
+    * errored before anything was evaluated (sigma-rust's review, 2026-11-26). The tree evaluated is the parse in every
+    * case. Pinned by `SelfTreeFormTest`. */
   private[santa] def selfTreeOf(bytes: Array[Byte], parsed: ErgoTree): ErgoTree =
-    if ((bytes(0) & ErgoTree.SizeFlag) != 0 &&
-        parsed.root.exists(r => r.asInstanceOf[sigma.ast.Value[SType]].tpe != SSigmaProp))
-      scala.util.Try(sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(bytes)).getOrElse(parsed)
-    else parsed
+    scala.util.Try(sigma.serialization.ErgoTreeSerializer.DefaultSerializer.deserializeErgoTree(bytes)).toOption
+      .filter(_.root.isLeft).getOrElse(parsed)
 
   private def dummyContext(tree: ErgoTree, activatedVersion: Byte,
                            selfTree: Option[ErgoTree] = None): ErgoLikeContext = {

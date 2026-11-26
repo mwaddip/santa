@@ -47,6 +47,18 @@ class SelfTreeFormTest extends munit.FunSuite {
     }
   }
 
+  test("a size-flagged tree whose root's type read throws: a node cannot read it either, so SELF holds the parse") {
+    // sigma-rust's rows (2026-11-26): a function whose body is a Filter over an Int, and that Filter as the root
+    val input = io.circe.Json.obj("kind" -> io.circe.Json.fromString("Int"), "value" -> io.circe.Json.fromInt(0))
+    val fn = "0b0cd9010104b5040ad90102047f"
+    assert(scala.util.Try(selfOf(fn)).isSuccess, "classifying the tree must not throw")
+    val (_, f) = EvalCore.evalAppliedOutcome(fn, input, 3)
+    assertEquals(f.map(_._2), Right(5L), s"the function row evaluates, as before the SELF-tree rule: $f")
+    val (_, r) = EvalCore.evalAppliedOutcome("0b08b5040ad90102047f", input, 3)
+    assert(r.left.exists(t => String.valueOf(t.getMessage).contains("java.lang.Integer")),
+      s"the Filter root errors at EVALUATION (Integer -> Coll), not at a type read: $r")
+  }
+
   test("a SigmaProp root is the parse") {
     val h = "0b0cd193b1480404040204060406" // sigmaProp(SizeOf((1,2,3)) == 3)
     val t = selfOf(h)
