@@ -6,13 +6,13 @@
 //
 // Run:  sbt --batch "run <path-to-eval-vector.json>"
 
-// 2.12.20 == the reference node's own scala212 (ergoplatform/ergo@v6.0.7 build.sbt), so the
+// 2.12.20 == the reference node's own scala212 (ergoplatform/ergo@v6.0.8 build.sbt), so the
 // scala-library on the oracle's classpath is the node's — not the 2.12.21 sigma-state 6.0.7
 // was compiled with (its POM asks for 2.12.21; sbt pins scala-library to scalaVersion).
 ThisBuild / scalaVersion := "2.12.20"
 ThisBuild / organization := "io.santa"
 
-// Tx-tier engine: ergo-core is NOT on Maven; publishLocal'd from ergoplatform/ergo@v6.0.7
+// Tx-tier engine: ergo-core is NOT on Maven; publishLocal'd from ergoplatform/ergo@v6.0.8
 // (locally from a clone of that tag; in CI by the conform workflow's publish step).
 // SANTA_TX_BLESSER=1 compiles the tx engine (rudolph's transaction arm + the blesser).
 // Unset: the dep and both gated source dirs are excluded — eval/wire build untouched, and
@@ -74,13 +74,13 @@ lazy val jvmBlesser = (project in file("."))
       "com.lihaoyi"       %% "pprint"                  % "0.6.3"   % Test
     ),
     // Tx-tier engine: ergo-core (+ ergo-wallet for ErgoInterpreter; avldb transitively)
-    // publishLocal'd at 6.0.7 — NOT on Maven. Drives ErgoTransaction.validateStateful:
+    // publishLocal'd at 6.0.8 — NOT on Maven. Drives ErgoTransaction.validateStateful:
     // main scope (the Runner's transaction arm, santa.runner.TxEngine) with the blesser
     // riding the same gate in test scope. Excluded when SANTA_TX_BLESSER is unset so an
     // ergo-core-less build still compiles everything else.
     libraryDependencies ++= (if (txBlesserEnabled) Seq(
-      "org.ergoplatform"  %% "ergo-core"               % "6.0.7",
-      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.7"
+      "org.ergoplatform"  %% "ergo-core"               % "6.0.8",
+      "org.ergoplatform"  %% "ergo-wallet"             % "6.0.8"
     ) else Seq.empty),
     // The gated sources (which import ergo-core) only compile when enabled:
     // main scala-tx = the runner engine; test scala-txbless = the captured-tx blesser.

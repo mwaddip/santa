@@ -28,10 +28,10 @@ agree with each other.
 transaction or a block section, plus the context the operation needs. Every implementation already parses the
 wire format, so no language-specific encoding stands between the vector and the code under test.
 
-**One oracle.** Every expected output comes from the JVM reference implementation, `sigma-state` and `ergo-core`
-6.0.7 (the reference node's v6.0.7 release), run by SANTA's blesser in `jvm-blesser/`. Where an implementation
-differs from the reference, the implementation is wrong. Each entry records the version it was blessed under: the
-activated script version and the tree's own version.
+**One oracle.** Every expected output comes from the JVM reference implementation, `sigma-state` 6.0.7 and
+`ergo-core` 6.0.8 (the reference node's v6.0.8 release), run by SANTA's blesser in `jvm-blesser/`. Where an
+implementation differs from the reference, the implementation is wrong. Each entry records the version it was blessed
+under: the activated script version and the tree's own version.
 
 Vectors live at `vectors/<tier>/<version>/<provenance>/<op>.json`:
 
@@ -293,7 +293,7 @@ Prerequisites as [above](#2-grade-locally-against-santas-latest-vectors). The co
 | `./validate` | the schema gate: every vector against its schema, its path against its envelope, the bounded files' limits, unique entry names |
 | `./scoreboard [results.json] [out-dir]` | the dashboard and badges, into `site/` |
 
-**Rudolph's full grid** (`SANTA_TX_BLESSER=1 ./conform`, the canonical invocation) needs `ergo-core` 6.0.7 in the
+**Rudolph's full grid** (`SANTA_TX_BLESSER=1 ./conform`, the canonical invocation) needs `ergo-core` 6.0.8 in the
 local Ivy repository for its transaction, block, chain and nipopow engines (see
 [Maintaining the corpus](#maintaining-the-corpus)); without it those arms answer `not-implemented`.
 
@@ -305,11 +305,13 @@ and publishes the scoreboard to GitHub Pages.
 
 - **Blessing.** The blessers are Scala, in `jvm-blesser/` (sbt). The transaction, block, chain and nipopow engines
   are compiled only with `SANTA_TX_BLESSER=1`, and need `ergo-core` published locally: clone
-  [`ergoplatform/ergo`](https://github.com/ergoplatform/ergo) at `v6.0.7` and run
+  [`ergoplatform/ergo`](https://github.com/ergoplatform/ergo) at `v6.0.8` and run
   `sbt "avldb/publishLocal" "ergoWallet/publishLocal" "ergoCore/publishLocal"`.
-- **The oracle pin** is `sigma-state` and `ergo-core` 6.0.7. It moved from 6.0.6 on 2026-11-06, after the whole
-  corpus re-derived identically under the new pins: every rudolph actual on all seven tiers, and every blesser that
-  regenerates committed files. An entry's `blessed_by` names the oracle that first blessed it.
+- **The oracle pin** is the latest stable reference release: `ergo-core` 6.0.8 on `sigma-state` 6.0.7, since
+  2026-11-27. The oracle moves to each stable release as it ships, and each move re-derives the whole corpus under the
+  new pins: every rudolph actual on all seven tiers, and every blesser that regenerates committed files. The moves to
+  6.0.7 (2026-11-06) and to 6.0.8 (2026-11-27) both re-derived it identically. An entry's `blessed_by` names the
+  oracle that first blessed it.
 - **Captured seeds.** The raw capture data of a captured seed is kept outside the repository; the committed vectors
   are the reproducible artifact.
 - **Vectors are appended, never renumbered.** Other projects copy vector files verbatim; new entries go at the end

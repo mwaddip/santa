@@ -214,9 +214,10 @@ Two provenances, distinguished by the `source` prefix (validate-guarded):
 
 **Re-blessing.** Producing actuals needs no oracle dependency; re-producing committed
 vectors needs the gated blesser: `SANTA_TX_BLESSER=1 sbt test` in `jvm-blesser/` with
-ergo-core 6.0.7 available (the gate name is historical — it admits ergo-core to the
+ergo-core 6.0.8 available (the gate name is historical — it admits ergo-core to the
 build and gates the tx **and** block engines alike). The vectors were first blessed under
-ergo-core 6.0.2.1 and re-derived identically under 6.0.7 when the oracle moved (2026-11-06).
+ergo-core 6.0.2.1 and re-derived identically under 6.0.7 when the oracle moved (2026-11-06),
+and again under 6.0.8 (2026-11-27).
 All twelve were re-blessed under 6.0.7 on 2026-11-11, when the transactions moved to bytes (§2),
 with `blessed_by` brought up to date. Every verdict, cost, post-digest and reason came out
 identical to the JSON-form bless, except `proofless`, whose hand-typed reason became the oracle's
