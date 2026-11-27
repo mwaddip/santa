@@ -88,7 +88,10 @@ class AuthoredTxTreeVersionTest extends munit.FunSuite {
 
   test("block-version edges: the spend check at block versions 2 and 5") {
     val es = entries(EdgesPath)
-    assertEquals(es.map(valid), List(false, true, true, true, true, true, false))
+    assertEquals(es.map(valid), List(false, true, true, true, true, true, false, false))
+    // #7: a v4 header over a root that degrades at ingest is not accepted unverified: the degraded tree is version 0
+    assert(inputBox(es(7)).startsWith(V + "0c04db6501fe"), "the degraded v4 tree")
+    assert(reason(es(7)).contains("cannot be accepted as soft-fork"), reason(es(7)))
     // the unverified accepts (a v>3 tree, activated above the max supported 3) cost the initial cost alone, 12100
     List(2, 3, 5).foreach(i => assertEquals(cost(es(i)), Some(12100L), s"#$i unverified at 12100"))
     // the verified accepts (a tree at most the activated version) cost 12105

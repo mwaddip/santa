@@ -263,7 +263,16 @@ object AuthoredTxTreeVersion {
       edge(blockCtx(5), 6, "bv5-tree-v3-false-reject",
         s"A v3 SigmaProp(false) tree (0b 02 08 d2) at block version 5: verified, reduces to false, invalid. The " +
         s"contrast with #5 pins that a v>3 tree is accepted without reduction. $note", "0b0208d2",
-        Left("Scripts of all transaction inputs")))
+        Left("Scripts of all transaction inputs")),
+      // 3. ergots' version-context requests (2026-11-27): a v4 header over a root that degrades at ingest.
+      edge(blockCtx(5), 7, "bv5-tree-v4-degraded-reject",
+        "Block version 5, activated 4. The spent box's tree claims v4 and is size-flagged (0c 04 db 65 01 fe), but its " +
+        "root is CONTEXT.dataInputs, a Coll[Box], not a SigmaProp. Rule 1001 degrades the tree when the box is read, " +
+        "and the degraded tree carries the default header, version 0 (sigma-state ErgoTreeSerializer.scala:197-203 at " +
+        "v6.0.7). So checkSoftForkCondition sees version 0, at most the max supported 3, and does not accept it " +
+        "unverified. The spend interprets the UnparsedErgoTree, whose error is not a soft fork, and throws: invalid. An " +
+        s"impl that keeps the header's version 4 accepts it unverified at 12100. $note", "0c04db6501fe",
+        Left("Script has not been recognized due to ValidationException, and it cannot be accepted as soft-fork.")))
   }
 
   private def envelope(op: String, es: Seq[Json]): Json = Json.obj(

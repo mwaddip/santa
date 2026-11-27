@@ -226,7 +226,8 @@ headers a script sees, the pre-header and the parameters → `valid`, and the co
     - no floor at activated 2;
     - above the highest script version the reference supports (3), a script is accepted unverified, at the
       initial cost alone;
-    - the activated version is a signed byte, so block versions 0 and 129 to 255 reject every script spend.
+    - but a v4 header over a root that degrades when the box is read is not: the degraded tree carries version 0,
+      and its spend throws.
   - **A tree no box can carry** (`unwritable-tree-spend`): a tree with a SigmaProp root and a constant of a 0- or
     1-item tuple type has no transaction id, so such a script reaches a node only through a context variable. There,
     `Global.serialize` of a one-item tuple works, and `_1` on it, `() == ()` and `(1) == (1)` throw.
