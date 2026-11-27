@@ -82,7 +82,7 @@ class AuthoredSerializeTest extends munit.FunSuite {
     "Global.serialize[Box]"                -> Seq("minimal#0" -> 139L, "withR4#1" -> 143L,
       "R4=Coll[Byte]#2" -> 178L, "R4=Coll[Int]#3" -> 152L, "R4=Coll[Coll[Byte]]#4" -> 151L,
       "R4=(Int,Int)#5" -> 146L, "R4=(Int,Long)#6" -> 147L, "R4=(Coll[Byte],Int)#7" -> 154L),
-    "Global.serialize[Header]"             -> Seq("specFixture#0" -> 333L),
+    "Global.serialize[Header]"             -> Seq("specFixture#0" -> 333L, "version-0x80#1" -> 329L),
     "Global.serialize[Coll[GroupElement]]" -> Seq("empty#0" -> 92L, "one#1" -> 128L, "two#2" -> 164L),
     "Global.serialize[Option[BigInt]]"     -> Seq("Some(0)#0" -> 97L, "Some(2^200)#1" -> 122L),
     "Global.serialize[(Box, Int)]"         -> Seq("(minimal,0)#0" -> 142L, "(withR4,42)#1" -> 146L),

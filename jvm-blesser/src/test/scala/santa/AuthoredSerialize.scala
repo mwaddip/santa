@@ -26,7 +26,7 @@ import scorex.util.encode.Base16
 
 import io.circe.Json
 
-import org.ergoplatform.ErgoBox
+import org.ergoplatform.{ErgoBox, ErgoHeader}
 
 import sigma.{AnyType, AvlTreeRType, BigIntRType, BoxRType, Colls, GroupElementRType, HeaderRType,
   IntType, SigmaPropRType, UnsignedBigIntRType, VersionContext, collRType}
@@ -205,6 +205,15 @@ object AuthoredSerialize {
     "b3441480887f80007f4b01cf7f013ff1ffff564a0000b9a54f00770e807f41ff88c00240000080c0250000000003" +
     "bedaee069ff4829500b3c07c4d5fe6b3ea3d3bf76c5c28c1d4dcdb1bed0ade0c0000000000003105"
 
+  /** ergots' item 8 (2026-11-27): the fixture with its version byte at 0x80, as the JVM's own writer lays it out.
+    * HeaderWithoutPow's writer and reader compare the version as a SIGNED byte (`HeaderWithoutPow.scala:61`, `:81` at
+    * v6.0.7), so 0x80 (-128) is "at most 1": no unparsed-bytes length byte. Any version but 1 takes the v2 PoW layout
+    * (`ErgoHeader.scala:160`). */
+  private lazy val Header80Hex: String = {
+    val h = ErgoHeader.sigmaSerializer.fromBytes(Base16.decode(HeaderHex).get)
+    Base16.encode(ErgoHeader.sigmaSerializer.toBytes(h.copy(version = 0x80.toByte)))
+  }
+
   private val twoPow255 = java.math.BigInteger.valueOf(2).pow(255).toString  // 256-bit unsigned
   private val twoPow200 = java.math.BigInteger.valueOf(2).pow(200).toString  // large signed BigInt
 
@@ -251,7 +260,7 @@ object AuthoredSerialize {
             "R4=(Coll[Byte],Int)"   -> r4Box(tupleJson(collJsonE(stype("SByte"),
                                          Seq(byteJson(1), byteJson(2), byteJson(3), byteJson(4))), intJson(42))))),
       target(tap, "Global.serialize[Header]", HeaderRType,
-        Seq("specFixture" -> headerJson(HeaderHex))),
+        Seq("specFixture" -> headerJson(HeaderHex), "version-0x80" -> headerJson(Header80Hex))),
       target(tap, "Global.serialize[Coll[GroupElement]]", collRType(GroupElementRType),
         Seq("empty" -> collJson("SGroupElement", Seq.empty),
             "one"   -> collJson("SGroupElement", Seq(geJson(gen))),
