@@ -180,7 +180,40 @@ object AuthoredTxEvaluatedValues {
         s"the registers, so the box spends. Valid. $note",
         spent("santa:ev:v10-noread", True, regs = Map(ErgoBox.R4 -> tup1H, ErgoBox.R5 -> IntConstant(1))), "00",
         want = true)) ++ followUpEntries(note, True, v10, tup12, pair12) ++ outputEntries(True) ++ boundaryEntries ++
-      bytesWithoutRefEntries
+      bytesWithoutRefEntries ++ outputWriteEntries(True)
+  }
+
+  /** ergots' item 4 (2026-11-27): #46's constant-form twins. Each output parses with the transaction at (3, 3) and is
+    * written at the default (1, 1). */
+  private def outputWriteEntries(True: ErgoTree): Seq[Json] = {
+    val func = "0c700104040000" // the constant: an empty Coll[Int => Int]
+    val parses = "which parses with the transaction at (3, 3) (a v4 block's transactions, BlockTransactions.scala:184-202); " +
+      "the spent box is sigmaProp(true)."
+    val write = "verifyOutput then writes output 0 at the default (1, 1) (ErgoTransaction.scala:163-176), where " +
+      "TypeSerializer writes a function type from tree version 3 only (TypeSerializer.scala:111-112 at v6.0.7): a " +
+      "MatchError, which fails the block (UtxoState.scala:138-139) and invalidates the transaction in the mempool " +
+      "(UtxoStateReader.scala:54-60). Invalid."
+    def e(i: Int, slug: String, description: String, r4: String, want: Boolean, because: String): Json = {
+      val bx = VersionContext.withVersions(V3, V3) { box(s"santa:ev:write:$i", V1M, 1, tree = True) }
+      entryTx(i, slug, description, hex(outputR4Tx(bx, r4, Array.emptyByteArray)), bx, want, because)
+    }
+    Seq(
+      e(63, "c2-twin-output-register-constant-reject",
+        s"#46's constant form: output 0's R4 is the constant empty Coll[Int => Int] (0c 70 01 04 04 00 00), $parses $write",
+        func, want = false, because = "MatchError"),
+      e(64, "output-register-box-holding-func-reject",
+        "Output 0's R4 is a Box constant (type 63) whose own R4 is that constant (63 c0 84 3d 00 08 d3 01 00 01 0c 70 01 " +
+        s"04 04 00 00, then a zero tx id and index 0). The nested box's registers are read with it, $parses Writing output " +
+        s"0 writes the nested box, so it fails the same way. $write",
+        "63" + "c0843d" + "0008d3" + "01" + "00" + "01" + func + "00" * 32 + "00", want = false, because = "MatchError"),
+      e(65, "output-register-coll-of-coll-of-func-reject",
+        "Output 0's R4 is a Coll[Coll[Int => Int]] holding one empty collection (0c 0c 70 01 04 04 00 01 00): the function " +
+        s"type sits one level deeper, $parses $write",
+        "0c0c7001040400" + "01" + "00", want = false, because = "MatchError"),
+      e(66, "output-register-tuple-node-accept",
+        "The control: output 0's R4 is the Tuple node (Int 1, Int 2) (86 02 04 02 04 04), which the default (1, 1) writes " +
+        "as it reads it. Valid.",
+        "860204020404", want = true, because = ""))
   }
 
   /** sigma-rust's PR #52 request: verifyOutput's dust and size checks measure ErgoBox.bytes, written at the default
@@ -325,8 +358,17 @@ object AuthoredTxEvaluatedValues {
 
   /** sigma-rust's third round: an output is written at the block path's (1, 1), while the transaction is read, and its
     * id computed, at a v4 block's (3, 3). */
+  private val V1M = 1000000L
+  /** `bx` (value 1000000) spent into one output of 1000000 (SigmaProp(true), height 1) whose R4 is the raw bytes `r4`. */
+  private def outputR4Tx(bx: ErgoBox, r4: String, proof: Array[Byte]): Array[Byte] = VersionContext.withVersions(V3, V3) {
+    val plain = txBytes(tx(Seq(input(bx, ext(), proof)), Seq(candidate(V1M, 1, regs = Map(ErgoBox.R4 -> IntConstant(0))))))
+    val (from, to) = (b("0008d3" + "010001" + "0400"), b("0008d3" + "010001" + r4))
+    val at = plain.indexOfSlice(from)
+    require(at >= 0 && plain.indexOfSlice(from, at + 1) < 0, "output 0's R4 must occur once")
+    plain.take(at) ++ to ++ plain.drop(at + from.length)
+  }
+
   private def outputEntries(True: ErgoTree): Seq[Json] = {
-    val V1M = 1000000L
     val x15 = "860204027e040205"
     val kept = "0008d3" + "010001" + x15                // output 0 after its value, R4 as received
     val stripped = "0008d3" + "010001" + "860204020402" // the same written below tree v3
@@ -337,14 +379,7 @@ object AuthoredTxEvaluatedValues {
         BoolToSigmaProp(EQ(Slice(ExtractBytes(out0), IntConstant(3), IntConstant(to)), ByteArrayConstant(b(want)))),
         SigmaPropConstant(AuthoredTxSizedTreeRequests.pk)))
     }
-    /** `bx` (value 1000000) spent into one output of 1000000 whose R4 is the raw bytes `r4`. */
-    def build(bx: ErgoBox, r4: String, proof: Array[Byte]): Array[Byte] = VersionContext.withVersions(V3, V3) {
-      val plain = txBytes(tx(Seq(input(bx, ext(), proof)), Seq(candidate(V1M, 1, regs = Map(ErgoBox.R4 -> IntConstant(0))))))
-      val (from, to) = (b("0008d3" + "010001" + "0400"), b("0008d3" + "010001" + r4))
-      val at = plain.indexOfSlice(from)
-      require(at >= 0 && plain.indexOfSlice(from, at + 1) < 0, "output 0's R4 must occur once")
-      plain.take(at) ++ to ++ plain.drop(at + from.length)
-    }
+    def build(bx: ErgoBox, r4: String, proof: Array[Byte]): Array[Byte] = outputR4Tx(bx, r4, proof)
     /** Signed as the node's message: the transaction read under a v4 block's context (3, 3). */
     def signed(i: Int, bx: ErgoBox, r4: String): String = {
       val msg = VersionContext.withVersions(3, 3) {

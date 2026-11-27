@@ -121,8 +121,8 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
   }
 
   test("bytesWithoutRef: the first script to read it writes it, under that script's tree version") {
-    assertEquals(entries.size, 63)
-    val es = entries.drop(51)
+    assertEquals(entries.size, 67)
+    val es = entries.slice(51, 63)
     def zz(n: Int): String = RentFixtures.hex(RentFixtures.vlqU32(2L * n)) // a positive Int, zigzag
     // sigmaProp(OUTPUTS(0).<op>.size == n): c4 = bytesWithoutRef, c3 = bytes; in a v0 tree or a size-flagged v3 tree
     def body(op: String, n: Int): String = "d1" + "93" + "b1" + op + "b2" + "a5" + "0400" + "00" + "04" + zz(n)
@@ -144,6 +144,22 @@ class AuthoredTxEvaluatedValuesTest extends munit.FunSuite {
       boxes.zip(trees).foreach { case (bx, t) => assert(bx.startsWith(Value + t + "01" + "00" + "00"), s"box $bx") }
       // output 0: all the value, SigmaProp(true), height 1, no tokens, R4 = X15
       assert(str(e, "tx_bytes_hex").contains("0008d3" + "010001" + "860204027e040205"), "output 0's R4 = X15")
+    }
+  }
+
+  test("output writes: a function type parsed at (3, 3) fails the (1, 1) write, wherever it sits; a Tuple node does not") {
+    val es = entries.drop(63)
+    val func = "0c700104040000" // the constant: an empty Coll[Int => Int]
+    val want: List[(String, Boolean)] = List(
+      func -> false,                                                                       // #46's constant form
+      ("63" + "c0843d" + "0008d3" + "01" + "00" + "01" + func + "00" * 32 + "00") -> false, // a Box holding it in R4
+      ("0c0c7001040400" + "01" + "00") -> false,                                           // Coll[Coll[Int => Int]]
+      "860204020404" -> true)                                                              // the Tuple node control
+    assertEquals(es.map(valid), want.map(_._2))
+    es.zip(want).foreach { case (e, (r4, ok)) =>
+      // output 0: 1000000, SigmaProp(true), height 1, no tokens, one register: R4
+      assert(str(e, "tx_bytes_hex").contains("c0843d" + "0008d3" + "010001" + r4), s"output 0's R4 = $r4")
+      if (!ok) assert(reason(e).contains("MatchError"), reason(e))
     }
   }
 
