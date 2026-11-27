@@ -55,7 +55,9 @@ jobs:
         if: steps.ergo-core.outputs.cache-hit != 'true'
         run: |
           git clone --depth 1 --branch v6.0.8 https://github.com/ergoplatform/ergo.git /tmp/ergo
-          git -C /tmp/ergo tag v6.0.8
+          # sbt takes the version from a tag at HEAD. A shallow clone of a tag may or may not carry it
+          # (v6.0.7's did not, v6.0.8's does), so the tag is set, not created.
+          git -C /tmp/ergo tag -f v6.0.8
           mise trust runners/rudolph/mise.toml
           mise --cd runners/rudolph install
           # Activate rudolph's toolchain into THIS shell (mise --cd exec would also
