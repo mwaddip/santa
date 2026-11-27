@@ -196,7 +196,11 @@ arms are named non-goals, to be specified when built (do not implement against t
   …`): the parse reads the whole body, so it reaches the nested tree, while a nested header without the size bit
   degrades the outer tree; under (2, 2) a v3
   tree rejects, in `wire/v5/authored/`; a block section of version 4 rejects such an output and one of
-  version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); the
+  version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); where a function
+  type is read (the TREE half of the pair reads the type code 0x70, from 3; below that the ACTIVATED half picks the
+  rule, 1018 from 3 and 1008 below — `Transaction.function_type_version_pairs` in `v4`, `v5` and `v6`, by the
+  entry's activated version; a block section of version 3 refuses one at the parse, while a section of version 4
+  reads it at (3, 3) and writes it back at (4, 4) — `BlockTransactions.function_type_versions`); the
   creation-height parse bound
   (a box, output, or Box constant created above `Int.MaxValue` — `*.creation_height_int_bound`); the
   writer's range, where the JVM parses the bytes and refuses to write them back (a type variable name of at most

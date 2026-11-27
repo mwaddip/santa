@@ -1,0 +1,30 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.function_type_versions",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "activation_rule" : true,
+  "entries" : [
+    {
+      "name" : "block-v4-extension-func-accept#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "The section holds one transaction whose input carries {0: the same value}. A block section of version 4 is read under (3, 3), where the function type parses, and written back under (4, 4) (BlockTransactions.scala:142-159). Round-trip identity. The entry's version pair is nominal: the section's own block version decides the context.",
+      "bytes_hex" : "6810028537e9a4d4d522bff80cf08fafb47b9b59ab80a43ac2ffd99901f38d3384ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001000c700104040000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "block-v4-output-register-func-accept#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "The section holds one transaction whose output's R4 is that value. A block section of version 4 is read under (3, 3), where the function type parses, and written back under (4, 4) (BlockTransactions.scala:142-159). Round-trip identity. Validating the transaction fails, though: verifyOutput writes the output at (1, 1) (transaction vectors evaluated-values-spend #63). The entry's version pair is nominal: the section's own block version decides the context.",
+      "bytes_hex" : "6810028537e9a4d4d522bff80cf08fafb47b9b59ab80a43ac2ffd99901f38d3384ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d30100010c700104040000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

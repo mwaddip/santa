@@ -1,0 +1,32 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.function_type_versions",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "activation_rule" : true,
+  "entries" : [
+    {
+      "name" : "block-v3-output-register-func-reject#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "The section holds one transaction whose output's R4 is the constant empty Coll[Int => Int] (0c 70 01 04 04 00 00). A block section of version 3 is read outside any version context (BlockTransactions.scala:184-202), at the default (1, 1), where the function type code is unknown: rule 1008. The section does not parse. The entry's version pair is nominal: the section's own block version decides the context.",
+      "bytes_hex" : "6810028537e9a4d4d522bff80cf08fafb47b9b59ab80a43ac2ffd99901f38d3383ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d30100010c700104040000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    },
+    {
+      "name" : "block-v3-extension-func-reject#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "The section holds one transaction whose input carries {0: the same value}. A block section of version 3 is read outside any version context (BlockTransactions.scala:184-202), at the default (1, 1), where the function type code is unknown: rule 1008. The section does not parse. The entry's version pair is nominal: the section's own block version decides the context.",
+      "bytes_hex" : "6810028537e9a4d4d522bff80cf08fafb47b9b59ab80a43ac2ffd99901f38d3383ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001000c700104040000000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 2,
+        "ergoTree" : 2
+      }
+    }
+  ]
+}

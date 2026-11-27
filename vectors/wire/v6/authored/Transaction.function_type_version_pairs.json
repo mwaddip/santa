@@ -1,0 +1,43 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.function_type_version_pairs",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "activation_rule" : true,
+  "entries" : [
+    {
+      "name" : "tx-ext-func-3-3-accept#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "Input 0's extension is {0: the constant empty Coll[Int => Int]} (0c 70 01 04 04 00 00). Under (3, 3), a v4 block's pair: TypeSerializer reads the function type code 0x70 only when the context's tree version is at least 3 (TypeSerializer.scala:215 at v6.0.7). It parses, and the writer writes it back under the same pair. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001000c700104040000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "tx-ext-func-3-0-reject#1",
+      "kind" : "Transaction",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "Input 0's extension is {0: the constant empty Coll[Int => Int]} (0c 70 01 04 04 00 00). Under (3, 0): TypeSerializer reads the function type code 0x70 only when the context's tree version is at least 3 (TypeSerializer.scala:215 at v6.0.7). Tree version 0 is not, so the code reaches the unknown-type branch, and activated 3 picks rule 1018. The JVM rejects. A node reads a transaction under an equal pair; this unequal one is the pair a tree's own constants meet, and the entry pins which half decides.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001000c700104040000000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 0
+      }
+    },
+    {
+      "name" : "tx-ext-func-3-2-reject#2",
+      "kind" : "Transaction",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "Input 0's extension is {0: the constant empty Coll[Int => Int]} (0c 70 01 04 04 00 00). Under (3, 2): tree version 2 is below 3, so rule 1018 again. The JVM rejects. A node reads a transaction under an equal pair; this unequal one is the pair a tree's own constants meet, and the entry pins which half decides.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001000c700104040000000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 2
+      }
+    }
+  ]
+}
