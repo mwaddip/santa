@@ -192,7 +192,9 @@ arms are named non-goals, to be specified when built (do not implement against t
   `BlockTransactions.reader_scope`, `Transaction.valdef_scope`); a tree whose header version is above the
   activated script version (a hard failure, so a size-flagged tree does not degrade: it rejects before its
   constants are read and after the size-bit rule, also when the tree is nested in a Box constant, a register
-  or an extension, while a nested header without the size bit degrades the outer tree; under (2, 2) a v3
+  or an extension, and when that constant sits inline behind an operand that decides evaluation (`TrueLeaf ||
+  …`): the parse reads the whole body, so it reaches the nested tree, while a nested header without the size bit
+  degrades the outer tree; under (2, 2) a v3
   tree rejects, in `wire/v5/authored/`; a block section of version 4 rejects such an output and one of
   version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); the
   creation-height parse bound

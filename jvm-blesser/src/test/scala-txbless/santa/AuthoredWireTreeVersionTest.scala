@@ -56,8 +56,21 @@ class AuthoredWireTreeVersionTest extends munit.FunSuite {
     test(s"$kind under (3, 3): a tree above v3 rejects, before its constants and after the size-bit rule") {
       val es = entries(v6, op)
       pin(es.take(V6Candidates.size), V6Candidates)
-      if (kind == "Box") assertEquals(es.size, V6Candidates.size)
+      if (kind == "Box") assertEquals(es.size, V6Candidates.size + 2)
     }
+  }
+
+  test("Box under (3, 3): a nested tree behind a TrueLeaf is parsed, and checked") {
+    val es = entries(v6, OpBox).drop(V6Candidates.size)
+    // a size-flagged v3 tree, not segregated: sigmaProp(TrueLeaf || Box.value > 0L), the Box inline (type 63)
+    def trueLeaf(tree: String): String = {
+      val body = "d1" + "ec" + "7f" + "91" + "c1" + "63" + nested(tree) + "0500"
+      Value + "0b" + f"${body.length / 2}%02x" + body + Fields
+    }
+    pin(es, List(trueLeaf("0c0208d3") -> true, trueLeaf("0b0208d3") -> false))
+    // the twin re-encodes: TrueLeaf (7f) is written back as the Boolean constant 01 01, so the tree is one byte longer
+    val expected = es(1).hcursor.get[String]("expected_bytes_hex").toOption.getOrElse(fail("expected_bytes_hex"))
+    assert(expected.startsWith(Value + "0b34" + "d1ec0101" + "91c163"), expected.take(40))
   }
 
   test("Transaction under (3, 3): a Box constant in an input's extension is checked too") {

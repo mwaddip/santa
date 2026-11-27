@@ -166,6 +166,30 @@
         "activated" : 3,
         "ergoTree" : 3
       }
+    },
+    {
+      "name" : "box-true-leaf-nested-tree-v4-reject#14",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "A bare box whose size-flagged v3 tree is not segregated: its body is sigmaProp(TrueLeaf || box.value > 0L), with the box an inline Box constant (d1 ec 7f 91 c1 63 … 05 00) whose own tree is v4 (0c 02 08 d3). Evaluation would never reach the Box: the OR is decided by TrueLeaf. The parse reads the whole body, though, and so it reaches the Box's tree, whose version is compared under the same activated version: 'Tree version (4) is above activated script version (3)', a SerializerException that does not degrade the outer tree. The JVM rejects. An impl that stops reading at a decided operand, or that checks only the outermost tree, round-trips the box: the over-accept.",
+      "bytes_hex" : "c0843d0b33d1ec7f91c163c0843d0c0208d301000000000000000000000000000000000000000000000000000000000000000000000005000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "box-true-leaf-nested-tree-v3-accept#15",
+      "kind" : "Box",
+      "source" : "santa:authored-tree-version",
+      "description" : "The twin: the same box, whose inline Box constant's tree is v3 (0b 02 08 d3). Everything parses. The round trip is NOT the identity: the JVM writes TrueLeaf back as the Boolean constant 01 01, through the constant path (ValueSerializer.scala:362-370), so the outer tree's body is one byte longer and its size 34, not 33. expected_bytes_hex holds the JVM's bytes.",
+      "bytes_hex" : "c0843d0b33d1ec7f91c163c0843d0b0208d301000000000000000000000000000000000000000000000000000000000000000000000005000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "expected_bytes_hex" : "c0843d0b34d1ec010191c163c0843d0b0208d301000000000000000000000000000000000000000000000000000000000000000000000005000100001d823ee9ea823cc80232a19181efad41d66849c33ed5d0d6c5750b8d60f1d66400",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
     }
   ]
 }

@@ -241,8 +241,37 @@ object AuthoredWireTreeVersion extends BoxTreeWireFixtures {
     case kv                     => Seq(kv)
   }))
 
+  /** ergots' item 3 (2026-11-27): a nested tree behind a TrueLeaf. A size-flagged v3 tree, NOT segregated, whose body
+    * is sigmaProp(TrueLeaf || Box.value > 0L) with the Box an inline constant: d1 ec 7f 91 c1 63 <box> 05 00. */
+  private def trueLeafTree(nested: String): Array[Byte] = sizedTree(0x0b, b("d1" + "ec" + "7f" + "91" + "c1" + "63" + nested + "0500"))
+  private def v6TrueLeafEntries: Seq[Json] = Seq(
+    rejectAt("box-true-leaf-nested-tree-v4-reject#14", "Box",
+      "A bare box whose size-flagged v3 tree is not segregated: its body is sigmaProp(TrueLeaf || box.value > 0L), with " +
+      "the box an inline Box constant (d1 ec 7f 91 c1 63 … 05 00) whose own tree is v4 (0c 02 08 d3). Evaluation would " +
+      "never reach the Box: the OR is decided by TrueLeaf. The parse reads the whole body, though, and so it reaches " +
+      "the Box's tree, whose version is compared under the same activated version: 'Tree version (4) is above " +
+      "activated script version (3)', a SerializerException that does not degrade the outer tree. The JVM rejects. An " +
+      "impl that stops reading at a decided operand, or that checks only the outermost tree, round-trips the box: the " +
+      "over-accept.", boxWith(Value ++ trueLeafTree(nestedBox("0c0208d3")) ++ Fields), Seq(above(4, 3)), V3),
+    canonicalAt("box-true-leaf-nested-tree-v3-accept#15", "Box",
+      "The twin: the same box, whose inline Box constant's tree is v3 (0b 02 08 d3). Everything parses. The round trip " +
+      "is NOT the identity: the JVM writes TrueLeaf back as the Boolean constant 01 01, through the constant path " +
+      "(ValueSerializer.scala:362-370), so the outer tree's body is one byte longer and its size 34, not 33. " +
+      "expected_bytes_hex holds the JVM's bytes.", boxWith(Value ++ trueLeafTree(nestedBox("0b0208d3")) ++ Fields), V3))
+
+  /** An accept under (`v`, `v`) whose round trip is NOT the identity: the JVM's canonical bytes go into
+    * `expected_bytes_hex`. They must differ from the input, be a fixed point themselves, and their tree must parse. */
+  private def canonicalAt(name: String, kind: String, description: String, bytes: Array[Byte], v: Byte): Json = {
+    val in = hex(bytes)
+    val out = WireCanonicalize.canonicalize(kind, in, v, v)
+    require(out != in, s"$name: expected a non-identity round trip under ($v, $v)")
+    require(WireCanonicalize.canonicalize(kind, out, v, v) == out, s"$name: the JVM's bytes must be a fixed point")
+    require(degradedBy(treeAt(kind, b(out), v)).isEmpty, s"$name: the tree must parse")
+    at(entry(name, kind, description, in, "expected_bytes_hex" -> Json.fromString(out)), v)
+  }
+
   def extract(): Map[String, Json] = Map(
-    OpBox   -> envelope(OpBox, v6Entries("Box", boxWith)),
+    OpBox   -> envelope(OpBox, v6Entries("Box", boxWith) ++ v6TrueLeafEntries),
     OpTx    -> envelope(OpTx, v6Entries("Transaction", cand => txWith(cand)) ++ v6ExtensionEntries),
     OpBlock -> blockEnvelope(v6BlockEntries)).map { case (op, env) => op -> activationRule(env) }
 
