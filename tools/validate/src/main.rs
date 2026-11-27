@@ -435,7 +435,8 @@ fn actuals_guards(v: &Validator) -> u32 {
 }
 
 /// Wire taxonomy path <-> in-data envelope guard (parallel to path_envelope_guard, wire
-/// rules). tier "wire" => schema "santa-wire/"; version per `slot_activated` (v4->0|1, v5->2, v6->3); provenance
+/// rules). tier "wire" => schema "santa-wire/"; version per `slot_activated` (v4->0|1, v5->2, v6->3), "any" =>
+/// version-agnostic; provenance
 /// follows each entry's `source`: framework => vendored, testnet:/santa: => authored, spec => spec.
 fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
     println!("\n[wire catalogue] path <-> envelope guard:");
@@ -488,12 +489,17 @@ fn wire_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
             g += 1;
             println!("  [WRONG] {}: provenance {prov:?} but entry source(s) disagree: {head:?}", rel.display());
         }
-        let want = slot_activated(version);
-        let off = off_slot(&doc, want);
-        if want.is_none() || !off.is_empty() {
-            let head = &off[..off.len().min(3)];
-            g += 1;
-            println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+        // version -> activated: v4/v5/v6 pin every entry to their slot's activated versions. "any" is
+        // version-agnostic (per-entry activated unconstrained, e.g. activated 4, a v5 block's read context, which
+        // has no slot), as in tx_path_guard. Any other version fires [WRONG] unconditionally.
+        if version != "any" {
+            let want = slot_activated(version);
+            let off = off_slot(&doc, want);
+            if want.is_none() || !off.is_empty() {
+                let head = &off[..off.len().min(3)];
+                g += 1;
+                println!("  [WRONG] {}: version {version:?} wants activated={want:?}, off: {head:?}", rel.display());
+            }
         }
     }
     if g == 0 {
@@ -1183,7 +1189,7 @@ fn tx_path_guard(root: &Path, files: &[PathBuf]) -> u32 {
         // version -> activated: v4/v5/v6 pin every entry to their slot's activated versions. "any" is
         // version-agnostic (per-entry activated varies, e.g. the block-version edges span -57..127),
         // so it skips the pin (mirrors chain_path_guard). Any other version fires [WRONG]
-        // unconditionally (mirrors wire).
+        // unconditionally (as wire does).
         if version != "any" {
             let want = slot_activated(version);
             let off = off_slot(&doc, want);
@@ -1663,6 +1669,44 @@ mod tests {
         let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."); // tools/validate -> repo root
         let bad = tx_path_guard(&root, &[]);
         assert_eq!(bad, 0, "empty tx tree must not produce path-guard failures");
+    }
+
+    /// A wire vector file under `wire/<version>/authored/`, one entry at `activated`, written to a temp tree.
+    fn wire_tree(tag: &str, version: &str, activated: i64) -> (std::path::PathBuf, std::path::PathBuf) {
+        let tmp = std::env::temp_dir().join(format!("santa-wire-{tag}-{}", std::process::id()));
+        let vdir = tmp.join("vectors").join("wire").join(version).join("authored");
+        fs::create_dir_all(&vdir).expect("create temp dir");
+        let doc = json!({
+            "schema": "santa-wire/v1",
+            "op": "Transaction.test",
+            "blessed_by": "test",
+            "entries": [{
+                "name": "test-entry#0", "kind": "Transaction", "source": "santa:test", "bytes_hex": "00",
+                "version": { "activated": activated, "ergoTree": activated }
+            }]
+        });
+        let fpath = vdir.join("Transaction.test.json");
+        fs::write(&fpath, serde_json::to_string(&doc).unwrap()).expect("write temp vector");
+        (tmp, fpath)
+    }
+
+    /// wire/any/ is version-agnostic, as transaction/any/ is: an entry at activated 4 (a v5 block's read context, which
+    /// has no slot) is accepted there.
+    #[test]
+    fn wire_path_guard_any_is_version_agnostic() {
+        let (tmp, f) = wire_tree("any", "any", 4);
+        let bad = wire_path_guard(&tmp, &[f]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert_eq!(bad, 0, "wire/any/ must accept an entry at any activated version");
+    }
+
+    /// An unknown wire version directory still fires [WRONG].
+    #[test]
+    fn wire_path_guard_unknown_version_fires_wrong() {
+        let (tmp, f) = wire_tree("v7", "v7", 3);
+        let bad = wire_path_guard(&tmp, &[f]);
+        let _ = fs::remove_dir_all(&tmp);
+        assert!(bad > 0, "unknown version directory v7 must fire at least one [WRONG]");
     }
 
     /// tx_path_guard fires [WRONG] for an unrecognized version directory (e.g. v7), mirroring

@@ -199,7 +199,8 @@ arms are named non-goals, to be specified when built (do not implement against t
   version 3 takes it, §5 — `{Box,Transaction,BlockTransactions}.tree_version_above_activated`); where a function
   type is read (the TREE half of the pair reads the type code 0x70, from 3; below that the ACTIVATED half picks the
   rule, 1018 from 3 and 1008 below — `Transaction.function_type_version_pairs` in `v4`, `v5` and `v6`, by the
-  entry's activated version; a block section of version 3 refuses one at the parse, while a section of version 4
+  entry's activated version, and in `any` for (4, 4), a v5 block's pair: `wire/any/` is version-agnostic, as
+  `transaction/any/` is; a block section of version 3 refuses one at the parse, while a section of version 4
   reads it at (3, 3) and writes it back at (4, 4) — `BlockTransactions.function_type_versions`); the section's own
   framing (a first value of at most 10,000,000 is a count at block version 1 and above it a marker, written back only
   above version 1; a count of 0 rejects; bytes after the last transaction are ignored —

@@ -1,0 +1,19 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "Transaction.function_type_version_pairs",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "activation_rule" : true,
+  "entries" : [
+    {
+      "name" : "tx-ext-func-4-4-accept#0",
+      "kind" : "Transaction",
+      "source" : "santa:authored-function-type-versions",
+      "description" : "Input 0's extension is {0: the constant empty Coll[Int => Int]} (0c 70 01 04 04 00 00). Under (4, 4), a v5 block's pair: the tree version is at least 3, so it parses. Round-trip identity.",
+      "bytes_hex" : "0100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710001000c700104040000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 4,
+        "ergoTree" : 4
+      }
+    }
+  ]
+}

@@ -22,7 +22,8 @@ class AuthoredWireFunctionTypeVersionsTest extends munit.FunSuite {
     val want = Map(
       "v6" -> List((3, 3) -> false, (3, 0) -> true, (3, 2) -> true),
       "v5" -> List((2, 2) -> true),
-      "v4" -> List((1, 1) -> true, (0, 0) -> true, (1, 3) -> false))
+      "v4" -> List((1, 1) -> true, (0, 0) -> true, (1, 3) -> false),
+      "any" -> List((4, 4) -> false))
     want.foreach { case (slot, w) =>
       val es = entries(slot, OpTx)
       assertEquals(es.map(pairOf), w.map(_._1), slot)

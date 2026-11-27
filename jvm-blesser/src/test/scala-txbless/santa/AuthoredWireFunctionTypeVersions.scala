@@ -7,8 +7,8 @@ package santa
 // least 3 (`TypeSerializer.scala:215`). Otherwise the code falls to the unknown-type branch, whose rule is chosen by
 // the ACTIVATED version (`:228-236`): 1018 (CheckTypeCodeV6) from activated 3, 1008 (CheckTypeCode) below.
 //
-// 1. Transaction.function_type_version_pairs (v6, v5, v4: one file per wire slot): a transaction whose input carries
-//    {0: that value}, under seven pairs ((4, 4) has no wire slot and waits on the wire tier's any/ decision). A
+// 1. Transaction.function_type_version_pairs (v6, v5, v4, and any/ for activated 4: one file per wire slot): a
+//    transaction whose input carries {0: that value}, under eight pairs. A
 //    node reads a transaction under an equal pair: a block's under (blockVersion - 1, blockVersion - 1) from block
 //    version 4 and under the default (1, 1) below it (ergo `BlockTransactions.scala:184-202`); a peer's under the
 //    current block's pair. The unequal pairs (3, 0), (3, 2) and (1, 3) are not pairs a transaction is read under. They
@@ -71,8 +71,12 @@ object AuthoredWireFunctionTypeVersions extends BoxTreeWireFixtures {
   private val unequal = "A node reads a transaction under an equal pair; this unequal one is the pair a tree's own " +
     "constants meet, and the entry pins which half decides."
 
-  /** The transaction entries by wire slot: v6 (activated 3), v5 (2), v4 (0 or 1). (4, 4), a v5 block's pair, has no
-    * wire slot; it waits on the wire tier's `any/` decision. */
+  /** The transaction entries by wire slot: v6 (activated 3), v5 (2), v4 (0 or 1), and any/ for (4, 4), a v5 block's
+    * pair, which has no slot of its own. */
+  private def txAny: Seq[Json] = Seq(
+    acceptAt("tx-ext-func-4-4-accept#0", "Transaction",
+      s"$value Under (4, 4), a v5 block's pair: the tree version is at least 3, so it parses. Round-trip identity.",
+      extTx, 4, 4))
   private def txV6: Seq[Json] = Seq(
     acceptAt("tx-ext-func-3-3-accept#0", "Transaction",
       s"$value Under (3, 3), a v4 block's pair: $reads It parses, and the writer writes it back under the same pair. " +
@@ -137,7 +141,8 @@ object AuthoredWireFunctionTypeVersions extends BoxTreeWireFixtures {
     Map(
       "v6" -> Map(OpTx -> env(OpTx, txV6), OpBlock -> env(OpBlock, blockV4)),
       "v5" -> Map(OpTx -> env(OpTx, txV5), OpBlock -> env(OpBlock, blockV3)),
-      "v4" -> Map(OpTx -> env(OpTx, txV4)))
+      "v4" -> Map(OpTx -> env(OpTx, txV4)),
+      "any" -> Map(OpTx -> env(OpTx, txAny)))
   }
 
   /** Staging: `<outDir>/<slot>/<op>.json`. */
