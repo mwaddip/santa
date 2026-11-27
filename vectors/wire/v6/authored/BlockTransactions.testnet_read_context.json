@@ -1,0 +1,31 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.testnet_read_context",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "activation_rule" : true,
+  "entries" : [
+    {
+      "name" : "testnet-header-v4-output-tree-v7-accept#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "The header id is 3f5a4acbdfd76a97f2fdf387559c2a67b4ea5f9e9bcf66ef079cde766c6e9398, the one testnet block ergo reads under (1, 1) (BlockTransactions.scala:187-193): a section of version 4 holding one transaction whose output's tree is v7 (0f 02 08 d3). At (1, 1) a tree's version is compared with nothing (sigma-state VersionContext.scala:20), so the section parses, and the writer writes it back. Round-trip identity.",
+      "bytes_hex" : "3f5a4acbdfd76a97f2fdf387559c2a67b4ea5f9e9bcf66ef079cde766c6e939884ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0f0208d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "other-header-v4-output-tree-v7-reject#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "The control: a section of version 4 holding one transaction whose output's tree is v7 (0f 02 08 d3), under any other header id. Its transaction is read under (3, 3), and the tree is above activated 3: the JVM rejects ('Tree version (7) is above activated script version (3)').",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e84ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0f0208d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}

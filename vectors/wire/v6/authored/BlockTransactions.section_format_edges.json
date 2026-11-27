@@ -1,0 +1,88 @@
+{
+  "schema" : "santa-wire/v1",
+  "op" : "BlockTransactions.section_format_edges",
+  "blessed_by" : "jvm:sigma-state-6.0.6",
+  "entries" : [
+    {
+      "name" : "section-count-zero-reject#0",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "A section of version 4 whose transaction count is 0: the header id, the marker 10,000,004, the count 0, nothing after. The parse reads no transaction, and BlockTransactions asserts at least one (BlockTransactions.scala:42): the JVM rejects.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e84ade20400",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "section-first-value-10000000-count-reject#1",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "The first value after the header id is exactly 10,000,000. It is not above 10,000,000, so it is no marker: it is the transaction count, at block version 1 (BlockTransactions.scala:176-182). One transaction follows. The transaction has one input and one output of 1000000 whose tree is SigmaProp(true). The parse wants 10,000,000 and runs out of input at the second: the JVM rejects.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e80ade2040100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "error" : "errored",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "section-marker-10000001-version-1-rewrite#2",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "The first value is 10,000,001: a marker, block version 1, then the count 1 and one transaction. The transaction has one input and one output of 1000000 whose tree is SigmaProp(true). The section parses at block version 1, and the writer puts a marker only above version 1 (BlockTransactions.scala:142-147), so it writes the section back without it: the header id, the count, the transaction. Non-identity round trip.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e81ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "expected_bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "section-trailing-bytes-ignored-rewrite#3",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "A section of version 4 with one transaction, then two bytes more (01 02). The transaction has one input and one output of 1000000 whose tree is SigmaProp(true). parseBytes reads what the section needs and leaves the rest (avldb ErgoSerializer.scala:27-30), so the trailing bytes are ignored, and the section is written back without them.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e84ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d30100000102",
+      "expected_bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e84ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "section-version-1-no-marker-accept#4",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "A section of version 1: the header id, the count 1 (no marker) and one transaction. The transaction has one input and one output of 1000000 whose tree is SigmaProp(true). Round-trip identity.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "section-version-2-accept#5",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "A section of version 2: the marker 10,000,002, the count 1, one transaction, read and written outside any version context. The transaction has one input and one output of 1000000 whose tree is SigmaProp(true). Round-trip identity.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e82ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    },
+    {
+      "name" : "section-version-5-accept#6",
+      "kind" : "BlockTransactions",
+      "source" : "santa:authored-section-edges",
+      "description" : "A section of version 5: the marker 10,000,005, the count 1, one transaction, read under (4, 4) and written under (5, 5) (BlockTransactions.scala:148-159, 184-197). The transaction has one input and one output of 1000000 whose tree is SigmaProp(true). Round-trip identity.",
+      "bytes_hex" : "5a7a4a59864135ff959ff02f4c87193e7102e6c2eb0537705872526581e0334e85ade204010100a19de1b5fa998df5a48630a611180690abad5270c33f23a79baba2f8840d710000000001c0843d0008d3010000",
+      "version" : {
+        "activated" : 3,
+        "ergoTree" : 3
+      }
+    }
+  ]
+}
