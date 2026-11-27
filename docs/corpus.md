@@ -50,16 +50,16 @@ the `(activated, ergoTree)` version it was blessed under.
 
 ## Wire
 
-1,508 entries, each `bytes → the reference's re-serialization`, or a refusal. By kind:
+1,530 entries, each `bytes → the reference's re-serialization`, or a refusal. By kind:
 
 | Kind | Entries |
 |---|---|
-| Transaction | 525 |
-| Box | 417 |
+| Transaction | 532 |
+| Box | 419 |
 | ErgoTree | 347 |
 | Constant | 187 |
 | SigmaBoolean | 20 |
-| BlockTransactions (a block's transactions section) | 12 |
+| BlockTransactions (a block's transactions section) | 25 |
 
 - **The vendored round-trips** (`wire/v5/vendored/`) come from ergots' `fixture-gen` and Fleet's serializer test
   vectors, re-anchored through the reference. Each entry is tagged with its source project.
@@ -151,7 +151,7 @@ Two more non-identity round-trips are pinned:
 
 ## Transaction
 
-About 3,460 entries in 79 files, each a signed transaction as bytes, with its input and data-input boxes, the nine
+About 3,520 entries in 81 files, each a signed transaction as bytes, with its input and data-input boxes, the nine
 headers a script sees, the pre-header and the parameters → `valid`, and the cost of an accepted spend.
 
 - **Captured** (`transaction/*/captured/`): real spends from testnet and mainnet. They include:
@@ -190,6 +190,12 @@ headers a script sees, the pre-header and the parameters → `valid`, and the co
       constructors. So an `If`, `Negation`, `Plus` or `OptionGet` that reads the default's type rejects, even in a
       branch never evaluated.
     - A decode is charged twice its length once it completes.
+  - **Its cost** (`deserialize-substitution-cost`, at block versions 4 and 3): from V6 the tree's bytes are charged
+    twice (as written, so an over-long VLQ counts at its length), before V6 checked against the limit and dropped;
+    the `maxBlockCost` boundary of each charge, including the evaluator's JitCost comparison; a Deserialize node
+    inside a default, decoded even when the register is present; a nested box's register that makes the whole tree
+    take the Deserialize path; and a register that decodes to a ProveDlog, whose signature check adds 398 to the
+    spend before it runs.
   - **The group nodes' static type** (`group-node-static-type`): `Exponentiate` and `MultiplyGroup` are typed
     `GroupElement` whatever their operands, and the substitution checks each deserialized script's type against the
     declared one before the script runs.
