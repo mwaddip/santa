@@ -151,14 +151,17 @@ Two more non-identity round-trips are pinned:
 
 ## Transaction
 
-About 3,450 entries in 77 files, each a signed transaction as bytes, with its input and data-input boxes, the nine
+About 3,460 entries in 79 files, each a signed transaction as bytes, with its input and data-input boxes, the nine
 headers a script sees, the pre-header and the parameters → `valid`, and the cost of an accepted spend.
 
 - **Captured** (`transaction/*/captured/`): real spends from testnet and mainnet. They include:
   - `bigint-downcast-2666`: a spend whose tree version only a transaction can carry, out of the eval tier's reach;
   - `order-ext-224312`: a non-ascending extension order the reference preserves;
   - multi-input spends;
-  - a stratified mainnet sample of storage-rent spends (`mainnet-rent-s1` to `s8`, v5 and v6 eras).
+  - a stratified mainnet sample of storage-rent spends (`mainnet-rent-s1` to `s8`, v5 and v6 eras);
+  - `selfboxindex-342964` (`transaction/v4/`, mainnet block version 1): the one spend below the JIT activation whose
+    verdict depends on `CONTEXT.selfBoxIndex` answering −1 there (the v4.x behaviour). Its input carries an empty
+    proof and an output's R4 is −1. Its authored twin at block version 3 (`transaction/v5/authored/`) is invalid.
 - **Authored**, by family:
   - **Storage rent** (`storage-rent-*`), over a synthetic context at the `StoragePeriod` height. Every arm of the
     reference's rent spend:

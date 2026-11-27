@@ -329,6 +329,17 @@ A stratified sample of real rent spends, the real-history gate for rent ports.
 - blitzen-eni `b438d520`: valid, and each rent input 50 short
 - blitzen-develop and dasher (ergots `f2a9c4b`): 122/122 valid
 
+**Mainnet `selfBoxIndex` spend (captured, 1 entry in `transaction/v4/captured/selfboxindex-342964`; its twin, 1
+entry in `transaction/v5/authored/selfboxindex-342964-activated2`; `CapturedTxMainnetSelfBoxIndex`).** Below
+activated 2, `CONTEXT.selfBoxIndex` answers −1 (sigma-state `CContext.selfBoxIndex`, the v4.x bug #603).
+- **The captured spend.** The only pre-activation tree that reads `selfBoxIndex` is spent at mainnet height 342,964
+  (block version 1) as `INPUTS(2)`. Its proof is empty, and an output's R4 is −1. The spend is valid, at cost 17,567,
+  only because of the −1.
+- **The twin.** The same bytes and context at block version 3 (parameters and pre-header). `selfBoxIndex` answers 2,
+  the proposition reduces to the key, and the empty proof fails: invalid.
+- **Its context.** It is the tier's first entry at block version 1. Its context is the real chain's: version-1 headers,
+  which the synthetic donor below cannot give.
+
 **Authored tree-version spends (3 files / 23 entries; `AuthoredTxTreeVersion`).** A box whose tree is above
 the activated script version: the storage-rent synthetic context at block version 4, and the same headers
 re-linked at block version 3 (the whole ten-header window re-linked, then the newest nine). Every tree is a `SigmaProp(true)` constant, so an impl that runs the script of
@@ -351,7 +362,8 @@ are §5's.
   spends, the v3 one reduces to false). Block versions start at 1 and rise by one per soft fork, so the
   signed-byte ends (block version 0, and 128 and above) are unreachable and not vectored (deleted 2026-11-16).
   Block version 1 is not representable from the v2+ header donor (its re-linked headers fail the chain check), so
-  §1's v1/v0-at-block-version-1 rows stay unvectored.
+  §1's v1/v0-at-block-version-1 rows stay unvectored. A captured block-version-1 context is representable (the
+  `selfBoxIndex` spend above).
 - **`transaction/any/authored/block-version-source`** (8): which block version activates scripts — the voted
   **parameters'** block version, not the header's. The JVM judges both the activated script version
   (`ErgoContext`: activated = `(stateContext.blockVersion − 1).toByte`, `stateContext.blockVersion` =
