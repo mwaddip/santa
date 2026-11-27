@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Xor.per_item_cost_base: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Xor.per_item_cost_base</code></h1>
+<p>5 red (not-implemented 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[M1] `Global.xor(Coll[Byte](1), Coll[Byte](2))` as the METHOD — **cost 31. THE CORPUS'S FIRST `Global.xor` METHOD ROW**; everything before this was the `Xor` node. The 9 over N1 is the MethodCall's own cost. **SEPARATING:** sigma-rust charges 29, a flat base that is 2 low."><code>method_1_1-accept#5</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3}],&quot;kind&quot;:&quot;Coll&quot;} @ cost 31</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[M2] 128 against 128 through the method — **31**, the same chunk width as the node."><code>method_128_128-accept#6</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3},{&quot;kind&quot;:&quot;By… @ cost 31</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[M3] 129 against 129 — **33.** The method charges the SAME per-chunk 2 as the node, so a fixed method cost is right only while the shorter operand stays inside one chunk. **THE SEPARATING ROW of the method half:** sigma-rust's fixed 10 cannot reach 33."><code>method_129_129-accept#7</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3},{&quot;kind&quot;:&quot;By… @ cost 33</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[M4] 129 on the left, 1 on the right, through the method — **31.** The method charges on the shorter operand too, so the node's rule is not the node's alone. **SEPARATING** (29)."><code>method_129_left_1_right-accept#8</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3}],&quot;kind&quot;:&quot;Coll&quot;} @ cost 31</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[M5] The mirror — **31**. With M4 it pins the method's symmetry the way N4/N5 pin the node's. **SEPARATING** (29)."><code>method_1_left_129_right-accept#9</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3}],&quot;kind&quot;:&quot;Coll&quot;} @ cost 31</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>

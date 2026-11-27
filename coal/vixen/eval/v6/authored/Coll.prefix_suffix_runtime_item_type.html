@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.prefix_suffix_runtime_item_type: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.prefix_suffix_runtime_item_type</code></h1>
+<p>3 red (value 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ X.startsWith(Coll(1)) }  // JVM: TRUE — and this is the answer the probe could not read off the source. The comparison reaches Scala's `==` on boxed numerics, where 1L == 1, so a Coll[LONG] does start with a Coll[INT] of equal values. No throw, no false: an implementation that refuses a mismatched item type here OVER-REJECTS"><code>startswith-left-lies-true#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 85</code></td><td class="note"></td></tr>
+<tr><td title="{ X.endsWith(Coll(2)) }  // JVM: TRUE, the endsWith twin of #0 — same numeric-equality comparison"><code>endswith-left-lies-true#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 85</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(1, 2).startsWith(If(false, Coll(1), Coll(1L))) }  // JVM: TRUE with the lie on the ARGUMENT instead of the receiver — the comparison is symmetric"><code>startswith-arg-lies-true#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 85</code></td><td class="note"></td></tr>
+</table>
+</body></html>

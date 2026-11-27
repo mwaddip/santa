@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Tuple.binding_provenance_var: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Tuple.binding_provenance_var</code></h1>
+<p>2 red (value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[C1] `getVar[(Int, Int, Int)](1).get.size`, var 1 = the tuple CONSTANT (1, 2, 3) — `3` at cost 39. CONTROL for X1: a constant reads the same in every reader. (TupleValuesProbe G1.)"><code>getvar-tuple-constant-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 39</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P13x] `Global.serialize(getVar[(Int, Int)](1).get)`, var 1 = the pair Tuple EXPRESSION — `0204`, the same bytes at its twin's cost: the static type is the pair, and the writer takes a Tuple2 or a Coll[Any] alike (`Evaluation.fromDslTuple`, Evaluation.scala:91). SEPARATING: refusing at the read, refusing to write a Coll[Any] under a pair type, or writing it as a collection (a length first) is red."><code>getvar-pair-expression-serialize-accept#27</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:4}],&quot;kind&quot;:&quot;Co… @ cost 50</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

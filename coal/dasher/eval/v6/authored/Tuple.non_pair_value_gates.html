@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Tuple.non_pair_value_gates: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Tuple.non_pair_value_gates</code></h1>
+<p>6 red (not-implemented 6)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[G4] The same arithmetic with the item fetched by the `apply` METHOD instead of the `ByIndex` node — `(1,2,3).apply(0) + 1`. Same `key 97`. The pair G3/G4 matters because the two routes to the item differ elsewhere (`map` works as a node and not as a method), and here they do NOT: the gate is the arithmetic, not the fetch. This is the sigma-rust addendum's K1, reachable on its fork master today. **SEPARATING.**"><code>plus_method_left_any-errored#5</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[G5] `min((1,2,3).apply(0), 1)` — the addendum's K5. `min` is a different `ArithOpCompanion` with its own opcode and it fails identically, `KeyNotFoundException: key 97`, which is what shows the fault is the shared table lookup rather than `Plus`. **SEPARATING.**"><code>min_method_left_any-errored#6</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[G7] `1 + (1,2,3).apply(0)` — the addendum's K2, **2 at cost 64**, which is the number it asked for. Identical to C4, its plain-collection control: the `Any`-typed right operand is FREE. **SEPARATING the other way.**"><code>plus_method_right_any-accept#8</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 64</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[G8] `min(1, (1,2,3).apply(0))` — **1 at cost 54**, identical to C5. The asymmetry holds for `min` too, so an implementation cannot fix G5 by refusing the type in both positions. **SEPARATING the other way.**"><code>min_method_right_any-accept#9</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 54</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[C4] **CONTROL for G4/G7** — the `apply`-method form over an ordinary collection: 2 at cost **64**, equal to G7 and 4 dearer than the node form, which is the method call's own cost."><code>plus_method_control-accept#11</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 64</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[C5] **CONTROL for G5/G8** — 1 at cost **54**, equal to G8."><code>min_method_control-accept#12</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 54</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>

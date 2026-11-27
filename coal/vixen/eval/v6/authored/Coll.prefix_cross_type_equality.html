@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.prefix_cross_type_equality: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.prefix_cross_type_equality</code></h1>
+<p>2 red (value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[J1] `Coll[Short](1,2).startsWith(ys)` where `ys` is declared `Coll[Short]` and evaluates to `Coll[Int](1)`: **`true`** at cost 85. `BoxesRunTime.equalsNumNum` widens every integral box, so Short-vs-Int compares equal by VALUE — the receiver's declared item type does not enter into it. Pairs with the S2 row's Byte-vs-Long: the widening is general."><code>startswith_short_recv_int_arg-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 85</code></td><td class="note"></td></tr>
+<tr><td title="[J8] `Coll[Option[Long]](Global.some[Long](1))` — a generic collection over `[Lscala.Option;` — `.startsWith(ys)` where `ys` is declared `Coll[Option[Long]]` and evaluates to `Coll[Option[Int]](Global.some[Int](1))`: **`true`** at cost 108. The elements are `Option`s, so the boxed comparison is `Some.equals`, which compares its CONTENTS through `BoxesRunTime.equals` — and `1L == 1` there exactly as at the top level. The widening is not special to collection items; it follows Scala's `==` wherever the comparison lands."><code>startswith_option_long_recv_option_int_arg-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 108</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 108</code></td><td class="note"></td></tr>
+</table>
+</body></html>

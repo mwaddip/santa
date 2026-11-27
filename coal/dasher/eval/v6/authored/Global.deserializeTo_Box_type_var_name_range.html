@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Global.deserializeTo_Box_type_var_name_range: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Global.deserializeTo_Box_type_var_name_range</code></h1>
+<p>4 red (panicked 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[dto|unsized|bytesWithoutRef|mix256] `Global.deserializeTo[Box]` of a box whose tree (unsized, v0) names a type variable with 253 `a` and one FF: a text of 256 bytes, then `.bytesWithoutRef`, which WRITES the box (its tree from its structure) — REFUSED (IllegalArgumentException: requirement failed: 256 is out of unsigned byte range). WRITER REFUSES: 256 is past 255 (`putUByte`); a port that narrows the count, or writes it modulo its width, answers here.  // tree v3, activated 3"><code>dto-unsized-bytesWithoutRef-mix256-a3#26</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">STypeSerializeError: STypeVar name UTF-8 byte length 256 exceeds 255 (u8 length field)</td></tr>
+<tr><td title="[dto|sized|bytesWithoutRef|mix256] `Global.deserializeTo[Box]` of a box whose tree (sized, v3) names a type variable with 253 `a` and one FF: a text of 256 bytes, then `.bytesWithoutRef`, which WRITES the box (its tree from its structure) — REFUSED (IllegalArgumentException: requirement failed: 256 is out of unsigned byte range). WRITER REFUSES: 256 is past 255 (`putUByte`); a port that narrows the count, or writes it modulo its width, answers here.  // tree v3, activated 3"><code>dto-sized-bytesWithoutRef-mix256-a3#37</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">STypeSerializeError: STypeVar name UTF-8 byte length 256 exceeds 255 (u8 length field)</td></tr>
+<tr><td title="[dto|unsized|bytesWithoutRef|ff86] `Global.deserializeTo[Box]` of a box whose tree (unsized, v0) names a type variable with 86 bytes of FF: a text of 258 bytes, then `.bytesWithoutRef`, which WRITES the box (its tree from its structure) — REFUSED (IllegalArgumentException: requirement failed: 258 is out of unsigned byte range). WRITER REFUSES: 258 is past 255 (`putUByte`); a port that narrows the count, or writes it modulo its width, answers here.  // tree v3, activated 3"><code>dto-unsized-bytesWithoutRef-ff86-a3#48</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">STypeSerializeError: STypeVar name UTF-8 byte length 258 exceeds 255 (u8 length field)</td></tr>
+<tr><td title="[dto|sized|bytesWithoutRef|ff86] `Global.deserializeTo[Box]` of a box whose tree (sized, v3) names a type variable with 86 bytes of FF: a text of 258 bytes, then `.bytesWithoutRef`, which WRITES the box (its tree from its structure) — REFUSED (IllegalArgumentException: requirement failed: 258 is out of unsigned byte range). WRITER REFUSES: 258 is past 255 (`putUByte`); a port that narrows the count, or writes it modulo its width, answers here.  // tree v3, activated 3"><code>dto-sized-bytesWithoutRef-ff86-a3#59</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">STypeSerializeError: STypeVar name UTF-8 byte length 258 exceeds 255 (u8 length field)</td></tr>
+</table>
+</body></html>

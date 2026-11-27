@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/UnsignedBigInt.shiftLeft_past_256_bits: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/UnsignedBigInt.shiftLeft_past_256_bits</code></h1>
+<p>3 red (reject 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[U1] `UnsignedBigInt(2^255).shiftLeft(1)` — THROWS `ArithmeticException: Too big unsigned big int value 2^256`: the result has 257 bits and the CONSTRUCTOR refuses it (CUnsignedBigInt.scala:20-22); the unsigned shiftLeft makes no …ValueExact call of its own (:86). SEPARATING: a 256-bit shift that drops the high bits returns 0."><code>2pow255-shiftleft-1-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;UnsignedBigInt&quot;,&quot;value&quot;:&quot;0&quot;} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[U2] `UnsignedBigInt(2^256 - 1).shiftLeft(1)` — THROWS, as U1 (2^257 - 2). SEPARATING: a dropping shift returns 2^256 - 2."><code>max-shiftleft-1-errored#1</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;UnsignedBigInt&quot;,&quot;value&quot;:&quot;11579208923731619542357098500868790785326998466564056403945758… @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="[U3] `UnsignedBigInt(3).shiftLeft(255)` — THROWS, as U1 (3·2^255). SEPARATING: a dropping shift returns 2^255."><code>3-shiftleft-255-errored#2</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;UnsignedBigInt&quot;,&quot;value&quot;:&quot;57896044618658097711785492504343953926634992332820282019728792… @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Coll.methodcall_v5_ids: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Coll.methodcall_v5_ids</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ Coll(1, 2).size }  // JVM: id 1, written as a PropertyCall because it takes no arguments: Int 2. Evaluates although `size` has no _eval handler — the dispatch route for this one is not pinned by this batch"><code>size-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 48</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(1, 2).getOrElse(5, 9) }  // JVM: id 2, index OUT of range: the default, Int 9. getOrElse_eval exists (methods.scala:839)"><code>getorelse-out-of-range-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:9} @ cost 74</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(1, 2).getOrElse(0, 9) }  // JVM: id 2, index IN range: the element, Int 1 — the default is not reached"><code>getorelse-in-range-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 74</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(1, 2).map({ (x: Int) =&gt; x + 1 }) }  // JVM: id 3: Coll(2, 3). map_eval exists (methods.scala:862)"><code>map-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SInt&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3}],&quot;kind&quot;:&quot;Coll&quot;… @ cost 120</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(1, 2).apply(1) }  // JVM: id 10: Int 2. Evaluates although `apply` has no _eval handler, like `size`"><code>apply-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 69</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

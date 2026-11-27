@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.flatMap_element_type: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.flatMap_element_type</code></h1>
+<p>1 red (value 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ If(false, Coll(Coll(1)), Coll[Coll[Long]]()).flatMap({ (x: Coll[Int]) =&gt; x.indices }) }  // JVM: an empty Coll — no element, so the lambda never runs and no check of any kind fires"><code>flatmap-empty-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SInt&quot;},&quot;items&quot;:[],&quot;kind&quot;:&quot;Coll&quot;} @ cost 114</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[],&quot;kind&quot;:&quot;Coll&quot;} @ cost 114</code></td><td class="note"></td></tr>
+</table>
+</body></html>

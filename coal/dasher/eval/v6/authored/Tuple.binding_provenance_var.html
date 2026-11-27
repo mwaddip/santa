@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Tuple.binding_provenance_var: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Tuple.binding_provenance_var</code></h1>
+<p>7 red (value 7)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[X1] the same tree, var 1 = the Tuple EXPRESSION (opcode 0x86) — `3` at 39, identical to its constant twin: `Tuple.value` is the same Coll[Any] the data decoder builds (values.scala:818-822). SEPARATING: a node's extension reader is `getValue` (ContextExtension.scala:61), which takes an evaluated expression; a reader that reads only a constant there refuses it."><code>getvar-tuple-expression-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:3} @ cost 39</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P1x] `getVar[(Int, Int)](1).isDefined`, var 1 = the pair Tuple EXPRESSION — `true`, as its constant twin: `CContext.getVar` (CContext.scala:60) checks only the type the value was stored with, so the read hands back the expression's Coll[Any], and `OptionIsDefined` never looks at it. SEPARATING: an implementation that refuses a pair-typed Tuple expression AT THE READ refuses this."><code>getvar-pair-expression-isdefined-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 20</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P2x] `getVar[(Int, Int)](1).get`, var 1 = the pair Tuple EXPRESSION — `Coll[Any](1, 2)`, encoded `{&quot;kind&quot;:&quot;Coll&quot;,&quot;elem&quot;:{&quot;tag&quot;:&quot;SAny&quot;},…}`, at its twin's cost: `OptionGet` is `opt.get` (transformers.scala:598) and checks nothing, so the root's value is the expression's `Tuple.value` (values.scala:818-822) under a pair type. SEPARATING: refusing at the read, or answering a pair, is red."><code>getvar-pair-expression-get-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SAny&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2}],&quot;kind&quot;:&quot;Coll&quot;… @ cost 25</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P7x] `getVar[(Int, Int)](1).get.size`, var 1 = the pair Tuple EXPRESSION — `2`: the static type is a pair, but `STuple` extends `SCollection[SAny]`, so the tree parses, and `SizeOf` takes the value as the collection it is. SEPARATING: refusing at the read, or refusing a pair-typed `SizeOf`, is red."><code>getvar-pair-expression-size-accept#15</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 39</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P8x] `getVar[(Int, Int)](1).get(0)`, var 1 = the pair Tuple EXPRESSION — `1`, the first item of the Coll[Any]; the node's type is the pair's item type, `Any`. SEPARATING: refusing at the read or at the node is red."><code>getvar-pair-expression-byindex0-accept#17</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P9x] `getVar[(Int, Int)](1).get(1)`, var 1 = the pair Tuple EXPRESSION — `2`, the second item. SEPARATING: refusing at the read or at the node is red."><code>getvar-pair-expression-byindex1-accept#19</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[P13x] `Global.serialize(getVar[(Int, Int)](1).get)`, var 1 = the pair Tuple EXPRESSION — `0204`, the same bytes at its twin's cost: the static type is the pair, and the writer takes a Tuple2 or a Coll[Any] alike (`Evaluation.fromDslTuple`, Evaluation.scala:91). SEPARATING: refusing at the read, refusing to write a Coll[Any] under a pair type, or writing it as a collection (a length first) is red."><code>getvar-pair-expression-serialize-accept#27</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:2},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:4}],&quot;kind&quot;:&quot;Co… @ cost 50</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

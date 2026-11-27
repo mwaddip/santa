@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/EQ.comparer_dispatch: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/EQ.comparer_dispatch</code></h1>
+<p>7 red (value 5 · reject 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[B3] `lie((1,2), (1L,2)) == (1,2)` — true at cost 75: `EQ` checks each operand's ROOT class only (`Value.checkType`; a pair passes), so the lie reaches the comparer, which descends the pair (`EQ_Tuple` 4) and compares Long 1 with Int 1 by VALUE (`EQ_Prim` 3). SEPARATING: a width-aware comparison answers false at 72."><code>pair-long-item-left-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 75</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 72</code></td><td class="note"></td></tr>
+<tr><td title="[B4] `(1,2) == lie((1,2), (1L,2))` — true at cost 75: the lie on the RIGHT; an Int 1 left equals Long 1 the same way. SEPARATING, as B3."><code>pair-long-item-right-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 75</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 72</code></td><td class="note"></td></tr>
+<tr><td title="[B5] `lie((1,2), (1L,2)) != (1,2)` — false at cost 75: `NEQ` calls the same comparer (trees.scala:1229). SEPARATING, as B3."><code>neq-pair-long-item-left-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 75</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 72</code></td><td class="note"></td></tr>
+<tr><td title="[B7] `lie((1.toByte,2), (1L,2)) == (1.toByte,2)` — true at cost 75: Long 1 equals Byte 1 by value. SEPARATING, as B3."><code>pair-long-vs-byte-item-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 75</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 72</code></td><td class="note"></td></tr>
+<tr><td title="[B9] `lie(Coll(1).get(0), Coll(1L).get(0)) == Coll(1).get(0)` — true at cost 150: an Option passes the operand check by its root class; an Option left (`EQ_Option` 4) descends to its contents, `Some(1L)` against `Some(1)`, and compares them by value. SEPARATING, as B3."><code>option-long-content-left-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 150</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 150</code></td><td class="note"></td></tr>
+<tr><td title="[K2] `Global == Global` — THROWS the same, the comparer's default case on a `SigmaDslBuilder`. SEPARATING, as K1."><code>global-operands-errored#33</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 13</code></td><td class="note"></td></tr>
+<tr><td title="[K4] `(Global, 1) == (Global, 1)` — THROWS the same, through the pair case. SEPARATING, as K1."><code>global-pair-item-errored#35</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 60</code></td><td class="note"></td></tr>
+</table>
+</body></html>

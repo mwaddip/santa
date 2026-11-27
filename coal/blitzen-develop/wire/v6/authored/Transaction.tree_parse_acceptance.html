@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · wire/v6/authored/Transaction.tree_parse_acceptance: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>wire/v6/authored/Transaction.tree_parse_acceptance</code></h1>
+<p>36 red (reject 24 · roundtrip 12)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td><code>transaction-c1-exists-on-int-accept#0</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c2-logicalnot-on-int-accept#1</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c3-trueleaf-opcode-accept#2</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c3-falseleaf-opcode-accept#3</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c4-property-call-on-wrong-type-accept#4</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c5-apply-non-function-accept#5</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-e1-append-on-int-sized-reject#7</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-e2-slice-on-int-sized-reject#9</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-e3-option-isdefined-on-int-accept#10</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-l1-eq-int-long-v3-reject#11</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-l2-gt-boolean-reject#14</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-l2-gt-boolean-sized-reject#15</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-l3-bitor-boolean-reject#17</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-l3-bitor-boolean-sized-reject#18</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-coll-item-wrong-type-reject#20</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-coll-item-wrong-type-sized-reject#21</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-upcast-true-long-sized-root-reject#25</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-upcast-coll-int-long-sized-root-reject#26</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-downcast-true-byte-sized-root-reject#27</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-downcast-coll-int-byte-sized-root-reject#28</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-upcast-boolean-target-sized-root-reject#30</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-v3-coll-long-plus-int-long-reject#32</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-blockvalue-int-item-reject#35</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-blockvalue-int-item-sized-reject#36</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-extract-register-as-id-10-reject#38</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-extract-register-as-id-0x80-reject#39</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-v3-methodcall-no-args-reject#43</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-v0-methodcall-no-args-propertycall-accept#44</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-order-upcast-true-then-window-reject#46</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-v3-tobytes-gt-int-reject#49</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-v3-ubi-gt-boolean-reject#51</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-v3-type-9-method-gt-boolean-reject#53</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c3-trueleaf-opcode-sized-3-accept#54</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c3-falseleaf-opcode-sized-3-accept#55</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c3-trueleaf-opcode-sized-0-accept#56</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+<tr><td><code>transaction-c3-falseleaf-opcode-sized-0-accept#57</code> <span class="dim">[roundtrip]</span></td><td><code>roundtrip 0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td><code>0100a19de1b5fa998df5a48630a611180690abad5270c33f…</code></td><td class="note"></td></tr>
+</table>
+</body></html>

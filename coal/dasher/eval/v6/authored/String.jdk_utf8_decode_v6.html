@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/String.jdk_utf8_decode_v6: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/String.jdk_utf8_decode_v6</code></h1>
+<p>20 red (cost 20)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[ctl-true] `Coll(⟨EF BF BD⟩) == Coll(⟨EF BF BD⟩)`, both written `EF BF BD` → true at cost 41. CONTROL: well-formed text on both sides."><code>ctl-true#0</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[ctl-false] `Coll(&quot;A&quot;) == Coll(&quot;B&quot;)` → false at cost 41. CONTROL: equal lengths, unequal text: the comparison is charged and answers false."><code>ctl-false#1</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[sur-vs-1repl] `Coll(⟨ED A0 80⟩) == Coll(⟨EF BF BD⟩)` → true at cost 41. SEPARATING: the JDK takes ANY continuation byte after `ED`, so an encoded surrogate is ONE U+FFFD; a decoder that replaces it per maximal subpart (three U+FFFD), or that keeps the bytes, answers the other way."><code>sur-vs-1repl#2</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[sur-vs-3repl] `Coll(⟨ED A0 80⟩) == Coll(⟨EF BF BD × 3⟩)` → false at cost 24. The lengths differ (1 against 3 UTF-16 units), so no character comparison is charged. SEPARATING: the JDK takes ANY continuation byte after `ED`, so an encoded surrogate is ONE U+FFFD; a decoder that replaces it per maximal subpart (three U+FFFD), or that keeps the bytes, answers the other way."><code>sur-vs-3repl#3</code> <span class="dim">[cost]</span></td><td><code>cost 24</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[sur-same] `Coll(⟨ED A0 80⟩) == Coll(⟨ED A0 80⟩)` → true at cost 41. CONTROL: the same bytes on both sides are equal under any decoder."><code>sur-same#4</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[sur40-same] `Coll(40 × ⟨ED A0 80⟩) == Coll(40 × ⟨ED A0 80⟩)`, 120 bytes a side → true at cost 41. Decoded, each side is 40 UTF-16 units: one 96-unit chunk of the String comparison, the cost of a one-character string. SEPARATING on cost: a port that counts the 120 bytes, or 120 replacement characters, charges two chunks (43, as ctl-repl120-same)."><code>sur40-same#5</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[ctl-repl40-same] `Coll(40 × ⟨EF BF BD⟩) == Coll(40 × ⟨EF BF BD⟩)`, 120 bytes of `EF BF BD` a side → true at cost 41. CONTROL for sur40-same: well-formed, 40 UTF-16 units, the same cost."><code>ctl-repl40-same#6</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[ctl-repl120-same] `Coll(120 × ⟨EF BF BD⟩) == Coll(120 × ⟨EF BF BD⟩)` → true at cost 43. CONTROL: what 120 UTF-16 units cost, two chunks."><code>ctl-repl120-same#7</code> <span class="dim">[cost]</span></td><td><code>cost 43</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[overlong3-vs-3repl] `Coll(⟨E0 80 80⟩) == Coll(⟨EF BF BD × 3⟩)` → true at cost 41. An overlong form (`E0 80..9F`) becomes one U+FFFD PER BYTE. SEPARATING: a decoder that replaces the overlong sequence once answers false."><code>overlong3-vs-3repl#8</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[overlong3-vs-1repl] `Coll(⟨E0 80 80⟩) == Coll(⟨EF BF BD⟩)` → false at cost 24. The lengths differ (3 against 1). SEPARATING: a decoder that replaces the overlong sequence once answers true."><code>overlong3-vs-1repl#9</code> <span class="dim">[cost]</span></td><td><code>cost 24</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[neq-sur-vs-1repl] `Coll(⟨ED A0 80⟩) != Coll(⟨EF BF BD⟩)` → false at cost 41. `NEQ` calls the same comparer. SEPARATING, as sur-vs-1repl."><code>neq-sur-vs-1repl#10</code> <span class="dim">[cost]</span></td><td><code>cost 41</code></td><td><code>cost 26</code></td><td class="note"></td></tr>
+<tr><td title="[pair-sur-vs-1repl] `(⟨ED A0 80⟩, 1) == (⟨EF BF BD⟩, 1)`, two `(String, Int)` constants → true at cost 35. The same decoding inside a pair. SEPARATING, as sur-vs-1repl."><code>pair-sur-vs-1repl#11</code> <span class="dim">[cost]</span></td><td><code>cost 35</code></td><td><code>cost 20</code></td><td class="note"></td></tr>
+<tr><td title="[pair-sur-vs-3repl] `(⟨ED A0 80⟩, 1) == (⟨EF BF BD × 3⟩, 1)` → false at cost 15. The lengths differ; the String case bails before charging the comparison. SEPARATING, as sur-vs-3repl."><code>pair-sur-vs-3repl#12</code> <span class="dim">[cost]</span></td><td><code>cost 15</code></td><td><code>cost 17</code></td><td class="note"></td></tr>
+<tr><td title="[pair-ctl] `(⟨EF BF BD⟩, 1) == (⟨EF BF BD⟩, 1)` → true at cost 35. CONTROL for the pair rows."><code>pair-ctl#13</code> <span class="dim">[cost]</span></td><td><code>cost 35</code></td><td><code>cost 20</code></td><td class="note"></td></tr>
+<tr><td title="[dto-sur-vs-1repl] `deserializeTo[Coll[String]](Coll[Byte](01 03 ED A0 80)) == Coll(⟨EF BF BD⟩)` → true at cost 182. The data reader decodes a deserialized value the same way. SEPARATING, as sur-vs-1repl."><code>dto-sur-vs-1repl#14</code> <span class="dim">[cost]</span></td><td><code>cost 182</code></td><td><code>cost 167</code></td><td class="note"></td></tr>
+<tr><td title="[dto-sur-vs-3repl] `deserializeTo[Coll[String]](Coll[Byte](01 03 ED A0 80)) == Coll(⟨EF BF BD × 3⟩)` → false at cost 165. SEPARATING, as sur-vs-3repl."><code>dto-sur-vs-3repl#15</code> <span class="dim">[cost]</span></td><td><code>cost 165</code></td><td><code>cost 167</code></td><td class="note"></td></tr>
+<tr><td title="[dto-ctl-repl] `deserializeTo[Coll[String]](Coll[Byte](01 03 EF BF BD)) == Coll(⟨EF BF BD⟩)` → true at cost 182. CONTROL for the deserializeTo rows."><code>dto-ctl-repl#16</code> <span class="dim">[cost]</span></td><td><code>cost 182</code></td><td><code>cost 167</code></td><td class="note"></td></tr>
+<tr><td title="[opt-sur-vs-1repl] `Some(⟨ED A0 80⟩) == Some(⟨EF BF BD⟩)`, two `Option[String]` constants → true at cost 32. The same decoding inside an option (a v6 constant). SEPARATING, as sur-vs-1repl."><code>opt-sur-vs-1repl#31</code> <span class="dim">[cost]</span></td><td><code>cost 32</code></td><td><code>cost 17</code></td><td class="note"></td></tr>
+<tr><td title="[opt-sur-vs-3repl] `Some(⟨ED A0 80⟩) == Some(⟨EF BF BD × 3⟩)` → false at cost 15. SEPARATING, as sur-vs-3repl."><code>opt-sur-vs-3repl#32</code> <span class="dim">[cost]</span></td><td><code>cost 15</code></td><td><code>cost 17</code></td><td class="note"></td></tr>
+<tr><td title="[opt-ctl] `Some(⟨EF BF BD⟩) == Some(⟨EF BF BD⟩)` → true at cost 32. CONTROL for the option rows."><code>opt-ctl#33</code> <span class="dim">[cost]</span></td><td><code>cost 32</code></td><td><code>cost 17</code></td><td class="note"></td></tr>
+</table>
+</body></html>

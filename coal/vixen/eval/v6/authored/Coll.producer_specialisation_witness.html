@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.producer_specialisation_witness: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.producer_specialisation_witness</code></h1>
+<p>6 red (reject 6)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[H1] `SELF.bytes.getOrElse(99, true)`. `ExtractBytes` builds its result with `Colls.fromArray(Array[Byte])` at a concrete static type, so it is **specialised** and the Boolean default is unboxed: throws. **SEPARATING, and half of the producer pair** — compare H2, the same declared `Coll[Byte]`, off the SAME BOX, which returns."><code>self_bytes_bool_default-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 66</code></td><td class="note"></td></tr>
+<tr><td title="[H4] `bigInt(5).toBytes.getOrElse(99, true)` THROWS — **the same method id 6, one container over, and the opposite verdict**, because `SBigIntMethods.toBytes` yields a specialised collection where the fixed-width numerics do not. **SEPARATING**, and the row that shows the producer map has to be learned per method, not per method NAME."><code>bigint_tobytes_bool_default-errored#3</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 58</code></td><td class="note"></td></tr>
+<tr><td title="[H5] `5.toBits.getOrElse(99, 1)` THROWS: every `toBits` returns the specialised Boolean class (`$mcZ$sp`), so an Int default is unboxed to Boolean. **SEPARATING**, and the third specialised kind reached through yet another producer."><code>int_tobits_int_default-errored#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 58</code></td><td class="note"></td></tr>
+<tr><td title="[H8] `SELF.propositionBytes.getOrElse(99, true)` throws — another specialised producer off the same box. **SEPARATING.**"><code>self_proposition_bytes_bool_default-errored#7</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 64</code></td><td class="note"></td></tr>
+<tr><td title="[H12] `unsignedBigInt(5).toBytes.getOrElse(99, true)` THROWS: `SUnsignedBigIntMethods.toBytes` is specialised like `SBigIntMethods.toBytes` (H4) and unlike the fixed-width numerics (H3). **SEPARATING**, and it completes the toBytes row: the two arbitrary-precision containers specialise and the four fixed-width ones do not."><code>unsigned_bigint_tobytes_bool_default-errored#10</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 58</code></td><td class="note"></td></tr>
+<tr><td title="[H9] `blake2b256(SELF.bytes).getOrElse(99, true)` throws: every hash, `Xor`, `LongToByteArray`, `minerPubKey`, `AvlTree.digest` and `GroupElement.getEncoded` is specialised. **SEPARATING**, and the cheapest row to reproduce from a fresh implementation."><code>blake2b256_bool_default-errored#12</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 93</code></td><td class="note"></td></tr>
+</table>
+</body></html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/AvlTree.method_call_charge_order: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/AvlTree.method_call_charge_order</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[O3] `tree.update((first, (Coll[Int](2) → Coll(5.toByte)), 0), proof)` (other-tree) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; the proof is valid for the fixture tree T, applied here to ANOTHER tree, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second entry, a pair whose KEY is a `Coll[Int]`, is never read. SEPARATING: an evaluator that reads or type-checks every entry first errors. CONTROL: O3c. Tree v0 under activated 2: the same outcome and cost as at tree v3."><code>other-tree-update-second-key-coll-int-accept#8</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 324</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[O3c] `tree.update(Coll(first), proof)` (other-tree) — the same call with only the first entry, in a well-typed `Coll[(Coll[Byte], Coll[Byte])]` → None at the SAME cost as O3 and O4: the later entry is not charged either. CONTROL for O3/O4. Tree v0 under activated 2: the same outcome and cost as at tree v3."><code>other-tree-update-first-entry-only-control-accept#9</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 324</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[O4] `tree.update((first, 5, 0), proof)` (other-tree) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; the proof is valid for the fixture tree T, applied here to ANOTHER tree, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second item, a bare `Int` where a pair is declared, is never read. SEPARATING, as O3. CONTROL: O3c. Tree v0 under activated 2: the same outcome and cost as at tree v3."><code>other-tree-update-second-no-pair-accept#10</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 324</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[B3] `tree.update((first, (Coll[Int](2) → Coll(5.toByte)), 0), proof)` (built) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; on the fixture tree, the first entry updates key 3, which is absent, against the proof for key 1, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second entry, a pair whose KEY is a `Coll[Int]`, is never read. SEPARATING: an evaluator that reads or type-checks every entry first errors. CONTROL: B3c. Tree v0 under activated 2: the same outcome and cost as at tree v3."><code>built-update-second-key-coll-int-accept#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 344</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[B4] `tree.update((first, 5, 0), proof)` (built) — the entries argument is a TRIPLE constant, held as a `Coll[Any]`, so the reflective call accepts it; on the fixture tree, the first entry updates key 3, which is absent, against the proof for key 1, so the first entry's operation fails and `forall` (CErgoTreeEvaluator.scala:178) stops there → None. The second item, a bare `Int` where a pair is declared, is never read. SEPARATING, as B3. CONTROL: B3c. Tree v0 under activated 2: the same outcome and cost as at tree v3."><code>built-update-second-no-pair-accept#13</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 344</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

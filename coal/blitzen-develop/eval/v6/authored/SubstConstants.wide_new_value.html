@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/SubstConstants.wide_new_value: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/SubstConstants.wide_new_value</code></h1>
+<p>3 red (value 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[S2] `substConstants(t, Coll(5), Coll(X))` at tree v0 — `t` UNCHANGED at cost 265: position 5 names no constant of `t`, so X is never written and the writer's range check never runs. SEPARATING: an implementation that range-checks the lifted values throws."><code>x-at-position-past-the-constants-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:16},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;B… @ cost 265</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S3] `substConstants(t, Coll(-1), Coll(X))` at tree v0 — `t` UNCHANGED at cost 265: a negative position names no constant either. SEPARATING, as S2."><code>x-at-negative-position-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:16},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;B… @ cost 265</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S4] `substConstants(t, Coll(0, 0), Coll(Y, X))` at tree v0 — `t` with -6, `10010601fad1939f82730082`, at cost 300: the FIRST value to name a position is the one written, so Y is written and X is not. SEPARATING: an implementation that writes the last value, or range-checks every value, throws."><code>y-then-x-at-position-0-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:16},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;B… @ cost 300</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

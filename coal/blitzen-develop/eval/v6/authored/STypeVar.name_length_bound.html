@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/STypeVar.name_length_bound: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/STypeVar.name_length_bound</code></h1>
+<p>2 red (value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name length 0 (T = empty): JVM TypeSerializer reads nameLength via UNSIGNED getUByte (unbounded) -&gt; STypeVar(&quot;&quot;) accepts -&gt; Int 5. ergots/sigma-rust enforced BoundedVec[1,254] and OVER-REJECTED length 0 (ask 23)."><code>name-length-0-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ val f[T] = {(x: T) =&gt; x}; 5 }  // STypeVar name length 255 (T = 255 chars): getUByte accepts the u8 max -&gt; Int 5. ergots/sigma-rust OVER-REJECTED 255 (BoundedVec upper bound 254). Length 256 is serialize-side unrepresentable (no deserializable input) -&gt; not vectored."><code>name-length-255-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:5} @ cost 13</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

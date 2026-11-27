@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Coll.prefix_suffix_runtime_item_type: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Coll.prefix_suffix_runtime_item_type</code></h1>
+<p>8 red (value 8)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ X.startsWith(Coll(1)) }  // JVM: TRUE — and this is the answer the probe could not read off the source. The comparison reaches Scala's `==` on boxed numerics, where 1L == 1, so a Coll[LONG] does start with a Coll[INT] of equal values. No throw, no false: an implementation that refuses a mismatched item type here OVER-REJECTS"><code>startswith-left-lies-true#0</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ X.endsWith(Coll(2)) }  // JVM: TRUE, the endsWith twin of #0 — same numeric-equality comparison"><code>endswith-left-lies-true#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ Coll(1, 2).startsWith(If(false, Coll(1), Coll(1L))) }  // JVM: TRUE with the lie on the ARGUMENT instead of the receiver — the comparison is symmetric"><code>startswith-arg-lies-true#2</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ E.startsWith(Coll(1)) }  // JVM: FALSE — an empty receiver cannot start with a one-element prefix. False for the LENGTH, not for the item type: the type mismatch is still invisible here"><code>startswith-empty-receiver-false#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 75</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ E.endsWith(Coll(1)) }  // JVM: FALSE, the endsWith twin of #3"><code>endswith-empty-receiver-false#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 75</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ X.startsWith(Coll[Int]()) }  // JVM: TRUE — every collection starts with the empty one, mismatched items or not"><code>startswith-empty-arg-true#5</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 80</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ X.endsWith(Coll[Int]()) }  // JVM: TRUE, the endsWith twin of #5"><code>endswith-empty-arg-true#6</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 80</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ E.startsWith(Coll[Int]()) }  // JVM: TRUE — empty starts with empty. The cheapest row of the family, and the one an element-type gate would still reject"><code>startswith-both-empty-true#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 70</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

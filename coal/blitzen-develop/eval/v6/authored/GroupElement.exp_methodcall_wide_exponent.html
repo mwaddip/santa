@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/GroupElement.exp_methodcall_wide_exponent: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/GroupElement.exp_methodcall_wide_exponent</code></h1>
+<p>4 red (value 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[M1] `MethodCall(groupGenerator, GroupElement.exp, X)` at tree v0 — g^(2^255) at cost 949: `ExponentiateMethod` (id 3) is in the table below v3 and `invokeFixed` applies no range check, so the call returns the point the node returns (E1). SEPARATING: an implementation that refuses a BigInt outside the range as an exponent throws."><code>x-exponent-v0-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;02b23790a42be63e1b251ad6c94fdef07271ec0aada31db6c3e8bd32043f8be384&quot;,&quot;kind&quot;:&quot;GroupE… @ cost 949</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[M2] `MethodCall(groupGenerator, GroupElement.exp, Y)` at tree v0 — the in-range twin: g^(-6) at cost 949, M1's cost."><code>y-exponent-v0-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;02fff97bd5755eeea420453a14355235d382f6472f8568a18b2f057a1460297556&quot;,&quot;kind&quot;:&quot;GroupE… @ cost 949</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[M2] `MethodCall(groupGenerator, GroupElement.exp, Y)` at tree v3 — the same point at 949."><code>y-exponent-v3-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;02fff97bd5755eeea420453a14355235d382f6472f8568a18b2f057a1460297556&quot;,&quot;kind&quot;:&quot;GroupE… @ cost 949</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[E1] `groupGenerator.exp(X)`, the `Exponentiate` NODE, at tree v0 — the same g^(2^255) as M1, at cost 945: the method-call form costs 4 more, and the exponent's range moves neither."><code>x-exponent-node-v0-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;bytes_hex&quot;:&quot;02b23790a42be63e1b251ad6c94fdef07271ec0aada31db6c3e8bd32043f8be384&quot;,&quot;kind&quot;:&quot;GroupE… @ cost 945</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

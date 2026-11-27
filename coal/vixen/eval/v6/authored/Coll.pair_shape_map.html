@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.pair_shape_map: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.pair_shape_map</code></h1>
+<p>3 red (reject 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[M1] `Coll[(Int,Int)]((1,2),(3,4))` as a CONSTANT — a `PairOfCols` — `.getOrElse(5, true)` throws: `PairOfCols.getOrElse` (`:309`) overrides the interface method with an `(L,R)` parameter, so the bridge casts the default to `Tuple2` before the index matters. **SEPARATING, and the anchor for this family.**"><code>paircols_const_bool_default_oob-errored#0</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 49</code></td><td class="note"></td></tr>
+<tr><td title="[M2] The same at index 0. **SEPARATING.**"><code>paircols_const_bool_default_in_range-errored#1</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1},{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2}],&quot;kind&quot;:&quot;Tuple&quot;} @ cost 49</code></td><td class="note"></td></tr>
+<tr><td title="[M5] `ByIndex(PairOfCols, 5, default = true)` throws for the same reason. **SEPARATING.**"><code>byindex_paircols_bool_default-errored#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 45</code></td><td class="note"></td></tr>
+</table>
+</body></html>

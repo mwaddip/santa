@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Coll.eq_item_type: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Coll.eq_item_type</code></h1>
+<p>1 red (value 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ If(false, Coll[Int](1), Coll[Long](2L)).filter({ (x: Long) =&gt; false }) == Coll[Int]() }  // JVM: false. Coll.filter keeps the INPUT's item type, so filtering a Coll[Long] down to nothing yields an empty Coll[LONG], which is unequal to an empty Coll[Int]. equalDataValues charges MatchType and then returns false on an item-type difference, before comparing any item (DataValueComparer.scala:323). This is the row that needs the element-type gate gone first — see Coll.hof_element_type_mismatch — so an implementation still gating Filter rejects here instead of answering false"><code>filter-keeps-input-item-type-false#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 97</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

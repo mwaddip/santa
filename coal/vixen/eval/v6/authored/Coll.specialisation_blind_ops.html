@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Coll.specialisation_blind_ops: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Coll.specialisation_blind_ops</code></h1>
+<p>2 red (value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[X1] `indices.indexOf(x, 0)` where `x` is declared Int and evaluates to `1L`: **finds it at index 1**, cost 96 — the same answer as the well-typed control. `indexOf` is NOT defined on `CollOverArray`: `Colls.scala:199` is a trait default, `indexWhere(x =&gt; elem == x)`, so the item is compared with boxed `==` (numerically, across widths) and never cast. **CONTROL for the whole round:** a specialised receiver does NOT make every ill-typed argument fatal, and the rule is which methods the specialised class overrides."><code>indexof_indices_cross_width-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 96</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-1} @ cost 109</code></td><td class="note"></td></tr>
+<tr><td title="[X2] The generic twin answers identically, `1` at cost 100. No separation, by design of the trait default."><code>indexof_int_concrete_cross_width-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 100</code></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:-1} @ cost 113</code></td><td class="note"></td></tr>
+</table>
+</body></html>

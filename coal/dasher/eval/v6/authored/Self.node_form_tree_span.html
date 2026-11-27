@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Self.node_form_tree_span: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Self.node_form_tree_span</code></h1>
+<p>7 red (value 6 · panicked 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[trailing-00] `SizeOf((1))` with a zero byte after the tree: 1; SELF holds the size field's span, not the byte."><code>trailing-00-accept#4</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 19</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[trailing-05-bytes] `SELF.bytes` on the `u` tree with a byte (05) after it: SELF's box holds the span."><code>trailing-05-bytes-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:-64},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:-124},{&quot;kind… @ cost 59</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[trailing-05-creation] `SELF.creationInfo` on the `u` tree with a byte (05) after it."><code>trailing-05-creation-accept#6</code> <span class="dim">[value]</span></td><td><code>{&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0},{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:0},{&quot;… @ cost 63</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[trailing-05-propbytes] `SELF.propositionBytes` on the `u` tree with a byte (05) after it: the span, without the 05."><code>trailing-05-propbytes-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:11},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:13},{&quot;kind&quot;:&quot;… @ cost 57</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[trailing-w-propbytes] `SELF.propositionBytes` on the writable `w` tree with a byte (05) after it: the span."><code>trailing-w-propbytes-accept#8</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:11},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:10},{&quot;kind&quot;:&quot;… @ cost 43</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[trailing-w-creation] `SELF.creationInfo` on the writable `w` tree with a byte (05) after it."><code>trailing-w-creation-accept#9</code> <span class="dim">[value]</span></td><td><code>{&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:0},{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:0},{&quot;… @ cost 49</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[size-lies-short-bytes] `SELF.bytes` on the `u` tree with its size field one byte short: SELF's tree is the span."><code>size-lies-short-bytes-accept#10</code> <span class="dim">[panicked]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:-64},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:-124},{&quot;kind… @ cost 59</code></td><td><code>panicked</code></td><td class="note">ErgoTreeParseError: 1 trailing bytes after the box tree</td></tr>
+</table>
+</body></html>

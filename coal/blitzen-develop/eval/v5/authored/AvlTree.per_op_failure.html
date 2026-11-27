@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v5/authored/AvlTree.per_op_failure: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v5/authored/AvlTree.per_op_failure</code></h1>
+<p>5 red (value 3 · panicked 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ tree.insert(wrong-val-len, validProof) }  // pre-v3: op Failure → raise (#908)"><code>insert-wrong-val-len-errored</code> <span class="dim">[panicked]</span></td><td><code>errored</code></td><td><code>panicked</code></td><td class="note">panic: assertion failed: self.tree().value_length.filter(|len| v.len() != *len).is_none()</td></tr>
+<tr><td title="{ tree.update(wrong-val-len, validProof) }  // op Failure discarded → None"><code>update-wrong-val-len-none</code> <span class="dim">[panicked]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 428</code></td><td><code>panicked</code></td><td class="note">panic: assertion failed: self.tree().value_length.filter(|len| v.len() != *len).is_none()</td></tr>
+<tr><td title="{ tree.remove([wrong-len], validProof) }  // op results ignored → None"><code>remove-wrong-len-none</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 407</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ tree.remove([-inf], validProof) }  // op results ignored → None"><code>remove--inf-none</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 407</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ tree.remove([+inf], validProof) }  // op results ignored → None"><code>remove-+inf-none</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Option&quot;,&quot;value&quot;:null} @ cost 407</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

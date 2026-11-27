@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Append.reference_array_store: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Append.reference_array_store</code></h1>
+<p>3 red (value 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[K1] `Append(Coll[GroupElement](g), ys)` where `ys` is declared `Coll[GroupElement]` and evaluates to an EMPTY `Coll[Box]`: **ACCEPTED**, cost 87, and the result is a `Coll[GroupElement]`. `safeConcatArrays_v5` allocates by the receiver's ClassTag and `System.arraycopy` between two REFERENCE arrays checks each element — and there is none. **The contrast that makes it worth having:** the same shape on a PRIMITIVE-backed receiver throws even for an empty ill-typed operand (the array itself is cast), so emptiness saves a reference append and not a primitive one."><code>append_ge_empty_box_arg-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SGroupElement&quot;},&quot;items&quot;:[{&quot;bytes_hex&quot;:&quot;0279be667ef9dcbbac55a06295ce870b07029bfcd… @ cost 87</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[K3] The EMPTY ill-typed collection on the LEFT: accepted at cost 87, because `CollOverArray.append` returns `other` unchanged when the receiver is empty (`CollsOverArrays.scala:49`) — a different reason from K1's, and the same answer."><code>append_empty_box_recv_ge_arg-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SGroupElement&quot;},&quot;items&quot;:[{&quot;bytes_hex&quot;:&quot;0279be667ef9dcbbac55a06295ce870b07029bfcd… @ cost 87</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[K12] The EMPTY ill-typed operand is ACCEPTED, **1** at cost 92 — K1's asymmetry reproduced on a second pair of reference item types. So &quot;emptiness saves a reference append&quot; is the rule, not a `GroupElement`/`Box` accident."><code>append_context_empty_global_item-accept#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 92</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

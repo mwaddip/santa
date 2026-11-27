@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>vixen · eval/v6/authored/Tuple.non_pair_value_gates: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>vixen &middot; <code>eval/v6/authored/Tuple.non_pair_value_gates</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[G6] `1 + ByIndex(t,0)` — **2 at cost 60. THE ASYMMETRY:** the same two values, the operands swapped, and it ANSWERS, because the implementation is chosen by the LEFT operand's type (`SInt`) and the right one is never consulted for it. **SEPARATING the other way:** an implementation that refuses an `Any`-typed operand wherever it appears OVER-REJECTS a tree the JVM evaluates."><code>plus_node_right_any-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[G7] `1 + (1,2,3).apply(0)` — the addendum's K2, **2 at cost 64**, which is the number it asked for. Identical to C4, its plain-collection control: the `Any`-typed right operand is FREE. **SEPARATING the other way.**"><code>plus_method_right_any-accept#8</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:2} @ cost 64</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[G8] `min(1, (1,2,3).apply(0))` — **1 at cost 54**, identical to C5. The asymmetry holds for `min` too, so an implementation cannot fix G5 by refusing the type in both positions. **SEPARATING the other way.**"><code>min_method_right_any-accept#9</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:1} @ cost 54</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[G14] `1u + t(0)` — **`2` at cost 60: THE ASYMMETRY with UnsignedBigInt items.** The left operand is an `UnsignedBigInt` constant, so its implementation is found, and the `Any`-typed right operand holds an UnsignedBigInt it can add; identical to C9. **SEPARATING:** an implementation that refuses an `Any` operand on either side is red."><code>plus_right_any_ubi-accept#21</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;UnsignedBigInt&quot;,&quot;value&quot;:&quot;2&quot;} @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[G21] `Filter(c, (x: (Int, Int, Int)) =&gt; true)` as the root over the EMPTY data collection — **an empty collection at cost 31 whose `elem` is `Coll[Any]`**: `Filter` keeps the input's own item type, which for a data collection of non-pair tuples is `Coll[Any]` (`Tuple.non_pair_value_producers` P5). G19 and G21 differ in nothing but the item type of their empty results. **SEPARATING.**"><code>filter_empty_data_tuples-accept#35</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;elem&quot;:{&quot;tag&quot;:&quot;SAny&quot;},&quot;tag&quot;:&quot;SColl&quot;},&quot;items&quot;:[],&quot;kind&quot;:&quot;Coll&quot;} @ cost 31</code></td><td><code>{&quot;elem&quot;:{&quot;items&quot;:[{&quot;tag&quot;:&quot;SInt&quot;},{&quot;tag&quot;:&quot;SInt&quot;},{&quot;tag&quot;:&quot;SInt&quot;}],&quot;tag&quot;:&quot;STuple&quot;},&quot;items&quot;:[],&quot;kind… @ cost 31</code></td><td class="note"></td></tr>
+</table>
+</body></html>

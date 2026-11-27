@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/BigInt.range_check_tree_version: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/BigInt.range_check_tree_version</code></h1>
+<p>2 red (value 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[G0] `(BigInt.MIN / -1) - 1` at tree v0 — 2^255 - 1 at cost 60. Below v3 the constructor does not check and `divide` adds nothing (CBigInt.scala:45), so the quotient is 2^255, out of range; `subtract`'s unconditional toSignedBigIntValueExact (:41) then passes 2^255 - 1. THE SAME BODY as the v3 row, one header byte apart."><code>min-div-minus-one-minus-one-v0-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;BigInt&quot;,&quot;value&quot;:&quot;5789604461865809771178549250434395392663499233282028201972879200395656… @ cost 60</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[G1] `BigInt.MIN / -1` alone at tree v0 — RETURNS 2^255 at cost 35, a BigInt OUTSIDE the 256-bit signed range, as the script's value. The JVM's real answer below v3: an implementation whose BigInt type is 256 bits cannot represent it, and that red is the divergence. G0 is the in-range form of the same fact."><code>min-div-minus-one-v0-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;BigInt&quot;,&quot;value&quot;:&quot;5789604461865809771178549250434395392663499233282028201972879200395656… @ cost 35</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

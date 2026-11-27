@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/substConstants_template_forms: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/substConstants_template_forms</code></h1>
+<p>3 red (value 3)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ (x: (Coll[Byte], Int)) =&gt; substConstants[Any](x._1, Coll[Int](x._2), Coll[Any](sigmaProp(false))) } on the template 38050108d37300: header 38, the size and segregation bits plus bit 5  // JVM: the header byte is written back as read (ErgoTreeSerializer.scala:367): 38 05 01 08 d2 73 00"><code>subst-template-header-bit5-accept#0</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:56},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:5},{&quot;kind&quot;:&quot;B… @ cost 351</code></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:24},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:5},{&quot;kind&quot;:&quot;B… @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="{ (x: (Coll[Byte], Int)) =&gt; substConstants[Any](x._1, Coll[Int](x._2), Coll[Any](sigmaProp(false))) } on the template 1807ffffffff0f08d3, whose constants count 2^32 - 1 wraps negative  // JVM: getUInt().toInt &lt; 0 means no constants (ErgoTreeSerializer.scala:248-261), so position 0 is out of range and nothing is replaced; the result has count 0 and the recomputed size: 18 03 00 08 d3"><code>subst-template-count-wraps-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:24},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:3},{&quot;kind&quot;:&quot;B… @ cost 251</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ (x: (Coll[Byte], Int)) =&gt; substConstants[Any](x._1, Coll[Int](x._2), Coll[Any](sigmaProp(false))) } on the unsized template 10ffffffff0f08d3  // JVM: the same, with no size: 10 00 08 d3"><code>subst-template-count-wraps-unsized-accept#2</code> <span class="dim">[value]</span></td><td><code>{&quot;elem&quot;:{&quot;tag&quot;:&quot;SByte&quot;},&quot;items&quot;:[{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:16},{&quot;kind&quot;:&quot;Byte&quot;,&quot;value&quot;:0},{&quot;kind&quot;:&quot;B… @ cost 251</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

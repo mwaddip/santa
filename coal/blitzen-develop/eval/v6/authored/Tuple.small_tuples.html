@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Tuple.small_tuples: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Tuple.small_tuples</code></h1>
+<p>2 red (reject 2)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="sigmaProp(Tuple(1 x 127)._1 == 1) — the LARGEST script tuple a signed count can express. The byte is 0x7f; one more wraps negative  // parses and round-trips; Tuple.eval refuses any count but two"><code>tuple_expr_127_items-errored#4</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;SigmaProp&quot;,&quot;raw_hex&quot;:&quot;d3&quot;} @ cost 0</code></td><td class="note"></td></tr>
+<tr><td title="sigmaProp(Tuple(1 x 128)._1 == 1) — one past the boundary. The count byte 0x80 reads as -128 and `safeNewArray` bounds only the upper end, so the parse throws NegativeArraySizeException and takes the whole carrier with it  // the PARSE throws: the count byte 0x80 reads as -128"><code>tuple_expr_128_items-errored#5</code> <span class="dim">[reject]</span></td><td><code>errored</code></td><td><code>{&quot;kind&quot;:&quot;SigmaProp&quot;,&quot;raw_hex&quot;:&quot;d3&quot;} @ cost 0</code></td><td class="note"></td></tr>
+</table>
+</body></html>

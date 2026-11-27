@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v5/authored/Coll.length_kept_at_limit: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v5/authored/Coll.length_kept_at_limit</code></h1>
+<p>1 red (not-implemented 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[keep: xorMethod|bytes|v0] `SizeOf(BlockValue(WrappedArray(ValDef(1,WrappedArray(),ConstantNode(Coll(1),Coll[SByte$])), ValDef(2,WrappedArray(),Append(ValUse(1,Coll[SByte$]),ValUse(1,Coll[SByte$]))), ValDef(3,WrappedArray(),Append(ValUse(2,Coll[SBy…` — 100000 at cost 10290. KEPT: `Global.xor` keeps or shortens a length, and 100,000 items pass through it. AUTHORED UNDER `SizeOf` (`b1` before the row's root): the row's root returns the collection itself, too long to state as a value; the collection is built first, so a refusal is the row's own (its class, message and counter), and a value is its length at 14 more.  // tree v0, activated 2"><code>keep-xorMethod-bytes-v0-a2#91</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:100000} @ cost 10290</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+</table>
+</body></html>

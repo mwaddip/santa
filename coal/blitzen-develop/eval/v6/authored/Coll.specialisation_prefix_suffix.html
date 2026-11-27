@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · eval/v6/authored/Coll.specialisation_prefix_suffix: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>eval/v6/authored/Coll.specialisation_prefix_suffix</code></h1>
+<p>5 red (value 5)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[S2] The GENERIC twin with the SAME argument RETURNS **`true`** at cost 90 — because Scala's `Array.startsWith` compares boxed elements and `java.lang.Long(1) == java.lang.Byte(1)` numerically. **THE WORST ROW IN THE FAMILY and the one to lead with:** the JVM does not merely accept the ill-typed argument, it answers TRUE. An implementation holding one representation cannot produce both this and S1."><code>startswith_byte_concrete_long_arg-accept#1</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 90</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S4] Its generic twin returns **`false`** at cost 90 — the boxed comparison runs and simply fails (a Boolean is not numerically equal to 1L). Together with S2 this says the generic answer is the ITEMS' answer, not a refusal."><code>startswith_bool_concrete_long_arg-accept#3</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 90</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S6] Its generic twin returns `false` at cost 90 (`0` is not `1L`)."><code>startswith_int_concrete_long_arg-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 90</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[S8] Its generic twin returns `true` at cost 85 — vacuously, every collection starts with an empty one."><code>startswith_byte_concrete_empty_long_arg-accept#7</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 85</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="[E2] Its generic twin returns **`false`** at cost 90 — with the SAME argument that made S2 `true`. The asymmetry is the data, not the types: `(1,2,3)` starts with `1L` and does not end with it. A row that pins the comparison as numeric rather than refused."><code>endswith_byte_concrete_long_arg-accept#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 90</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

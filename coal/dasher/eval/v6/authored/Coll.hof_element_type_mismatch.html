@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Coll.hof_element_type_mismatch: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Coll.hof_element_type_mismatch</code></h1>
+<p>4 red (value 4)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="{ CE.exists({ (x: Int) =&gt; true }) == false }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: there is no element, so the lambda never runs and no check of any kind fires. exists over an empty collection is false, so the comparison is true. An implementation that gates on the element type instead rejects this with nothing to inspect"><code>exists-empty-accept#8</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 52</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ CE.forall({ (x: Int) =&gt; true }) }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: no element, no lambda call, no check — and forall over an empty collection is true"><code>forall-empty-accept#9</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 44</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ CE.map({ (x: Int) =&gt; x }).size == 0 }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: no element, no lambda call, no check, and an empty result. This is the row that ISOLATES Map's gate — with no element the mapper cannot be the thing that objects"><code>map-empty-accept#10</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 83</code></td><td><code>errored</code></td><td class="note"></td></tr>
+<tr><td title="{ CE.filter({ (x: Int) =&gt; true }).size == 0 }  // JVM: the input is an EMPTY Coll[Long] under a node declared Coll[Int]: no element, no lambda call, no check, and an empty result"><code>filter-empty-accept#11</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 83</code></td><td><code>errored</code></td><td class="note"></td></tr>
+</table>
+</body></html>

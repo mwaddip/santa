@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>dasher · eval/v6/authored/Coll.pair_shape_restored: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>dasher &middot; <code>eval/v6/authored/Coll.pair_shape_restored</code></h1>
+<p>5 red (not-implemented 4 · value 1)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td title="[Y1] `Coll[Int](0,1,2).map(x =&gt; (x, x)).getOrElse(5, true)` THROWS. Mapping INTO pairs builds a `PairOfCols` (`CollOverArray.map` -&gt; `builder.fromArray` at a PAIR RType -&gt; `fromBoxedPairs`), so the Tuple2 bridge is back. **SEPARATING, and the exact INVERSE of M3:** `map` over a pair collection removes the bridge and `map` into one installs it."><code>map_into_pairs_bool_default-errored#0</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Y2] **CONTROL for Y1:** a pair default returns `(9,9)` at cost 219."><code>map_into_pairs_pair_default-accept#1</code> <span class="dim">[not-implemented]</span></td><td><code>{&quot;items&quot;:[{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:9},{&quot;kind&quot;:&quot;Int&quot;,&quot;value&quot;:9}],&quot;kind&quot;:&quot;Tuple&quot;} @ cost 219</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Y3] `flatMap` into pairs does the same: a `PairOfCols` and a throw. **SEPARATING**, and it shows the rule is about the BUILDER call's static type and not about `map` specifically."><code>flatmap_into_pairs_bool_default-errored#2</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Y4] `pairCC.map(x =&gt; x).reverse.getOrElse(5, true)` THROWS, where the same collection WITHOUT the `reverse` returns (Y5). `CollOverArray.reverse` goes through `builder.fromArray` with the pair RType, so the `PairOfCols` is RESTORED. **SEPARATING, and the sharpest statement of the round:** two ordinary operations in sequence flip the verdict twice — its control is M7 in `Coll.pair_shape_map`, the SAME collection one operation earlier, which returns `true` at cost 164."><code>reverse_of_mapped_pair_bool_default-errored#3</code> <span class="dim">[not-implemented]</span></td><td><code>errored</code></td><td><code>not-implemented</code></td><td class="note"></td></tr>
+<tr><td title="[Y11] The same through the `Filter` NODE: `true` at cost 216 where P1 throws. (`filter` as a MethodCall has no `_eval` handler at all — the node is its only reachable form, which is why this row is a node and P1 is a method call.)"><code>filter_node_loses_specialised_side-accept#5</code> <span class="dim">[value]</span></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:true} @ cost 216</code></td><td><code>{&quot;kind&quot;:&quot;Boolean&quot;,&quot;value&quot;:false} @ cost 216</code></td><td class="note"></td></tr>
+</table>
+</body></html>

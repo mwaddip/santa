@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>blitzen-develop · transaction/v6/authored/deserialize-substitution-spend: coal</title>
+<style>
+ body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem; color: #222; }
+ table { border-collapse: collapse; margin-top: 1rem; }
+ th, td { border: 1px solid #ccc; padding: .3rem .5rem; vertical-align: top; text-align: left; }
+ th { background: #f4f4f4; }
+ code { font-family: ui-monospace, monospace; font-size: .9em; word-break: break-all; }
+ .dim { color: #666; font-size: .85em; }
+ td.note { color: #555; font-size: .9em; }
+</style></head><body>
+<p><a href="../../../../../index.html">&larr; the scoreboard</a></p>
+<h1>blitzen-develop &middot; <code>transaction/v6/authored/deserialize-substitution-spend</code></h1>
+<p>24 red (valid 24)</p>
+<table>
+<tr><th>entry</th><th>expected</th><th>result</th><th>message</th></tr>
+<tr><td><code>s3j-decode-cast-swallowed-dead-accept#0</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>l1-decode-cast-swallowed-live-reject#1</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>l1-twin-decodes-live-accept#2</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s3-type-read-cast-swallowed-dead-accept#3</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">input_boxes_hex[0] decode: InvalidArgument(InvalidArgumentError(&quot;Expected ByIndex input to be SColl, got STuple([SInt, SInt])&quot;))</td></tr>
+<tr><td><code>s15-int-register-dead-accept#4</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s15-int-register-live-reject#5</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s2-default-under-eq-accept#6</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">input_boxes_hex[0] decode: InvalidArgument(InvalidArgumentError(&quot;Expected ByIndex input to be SColl, got STuple([SInt, SInt])&quot;))</td></tr>
+<tr><td><code>s1-default-under-sizeof-gt-accept#7</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">input_boxes_hex[0] decode: InvalidArgument(InvalidArgumentError(&quot;Expected ByIndex input to be SColl, got STuple([SInt, SInt])&quot;))</td></tr>
+<tr><td><code>s8-default-if-rebuilt-reject#8</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">input_boxes_hex[0] decode: InvalidArgument(InvalidArgumentError(&quot;Expected ByIndex input to be SColl, got STuple([SInt, SInt])&quot;))</td></tr>
+<tr><td><code>s5-default-negation-rebuilt-reject#9</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s6-default-optionget-rebuilt-reject#10</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s9-default-plus-rebuilt-reject#11</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">input_boxes_hex[0] decode: InvalidArgument(InvalidArgumentError(&quot;Expected ByIndex input to be SColl, got STuple([SInt, SInt])&quot;))</td></tr>
+<tr><td><code>s10-decoded-notype-vs-sany-reject#12</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s16-context-type-read-cast-swallowed-dead-accept#13</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s16b-context-decode-cast-swallowed-dead-accept#14</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>s16c-context-decoded-notype-vs-sany-reject#15</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>r1-self-proposition-decoded-accept#16</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>r1-self-proposition-value-reject#17</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>r1-self-proposition-type-mismatch-reject#18</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>r1-unsized-tree-decode-fails-reject#19</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>root-boolean-default-true-accept#20</code> <span class="dim">[valid]</span></td><td><code>valid true</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>root-boolean-default-false-reject#21</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>root-int-default-reject#22</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+<tr><td><code>root-no-default-reject#23</code> <span class="dim">[valid]</span></td><td><code>valid false</code></td><td><code>errored</code></td><td class="note">this sigma-rust's state context holds exactly 10 headers; the entry carries 9</td></tr>
+</table>
+</body></html>
