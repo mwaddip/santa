@@ -272,7 +272,16 @@ object AuthoredTxTreeVersion {
         "v6.0.7). So checkSoftForkCondition sees version 0, at most the max supported 3, and does not accept it " +
         "unverified. The spend interprets the UnparsedErgoTree, whose error is not a soft fork, and throws: invalid. An " +
         s"impl that keeps the header's version 4 accepts it unverified at 12100. $note", "0c04db6501fe",
-        Left("Script has not been recognized due to ValidationException, and it cannot be accepted as soft-fork.")))
+        Left("Script has not been recognized due to ValidationException, and it cannot be accepted as soft-fork.")),
+      // ergots' item 2: v4 trees whose SigmaProp root is an expression, not a constant (#2 and #5 hold constants).
+      edge(blockCtx(5), 8, "bv5-tree-v4-sigmaprop-true-unverified-accept",
+        "Block version 5, activated 4. The spent box's tree is v4 with an expression root, sigmaProp(TrueLeaf) (0c 02 " +
+        "d1 7f), where #2 holds a SigmaProp constant. A v4 tree parses whatever its root's form, and above the max " +
+        s"supported version 3 it is accepted unverified at 12100: the proposition is not reduced. $note", "0c02d17f",
+        Right(UnverifiedCost)),
+      edge(blockCtx(5), 9, "bv5-tree-v4-sigmaprop-false-unverified-accept",
+        "The twin: sigmaProp(FalseLeaf) (0c 02 d1 80), which reduced would be false, is accepted unverified at 12100 " +
+        s"too (#5 is its constant counterpart). $note", "0c02d180", Right(UnverifiedCost)))
   }
 
   private def envelope(op: String, es: Seq[Json]): Json = Json.obj(
