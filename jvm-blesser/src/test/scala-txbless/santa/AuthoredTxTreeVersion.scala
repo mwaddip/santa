@@ -97,6 +97,11 @@ object AuthoredTxTreeVersion {
     txBytes(new ErgoLikeTransaction(IndexedSeq(inputOf(raw, extension)), data.map(d => DataInput(idOf(d))).toIndexedSeq,
       IndexedSeq(candidate(outValue, outHeight))))
 
+  /** `raws` spent in that order with no proof into one plain output of their summed value. */
+  private def spendTxN(raws: Seq[Array[Byte]]): Array[Byte] =
+    txBytes(new ErgoLikeTransaction(raws.map(inputOf(_, ext())).toIndexedSeq, IndexedSeq(),
+      IndexedSeq(candidate(V * raws.size, 1))))
+
   /** `bytes` with its one occurrence of `from` replaced by `to`. */
   private def replaceOnce(bytes: Array[Byte], from: Array[Byte], to: Array[Byte]): Array[Byte] = {
     val at = bytes.indexOfSlice(from)
@@ -106,9 +111,9 @@ object AuthoredTxTreeVersion {
 
   /** Bless one entry: the JVM must find it valid at the cost `want.right`, or invalid for the reason `want.left`. */
   private def entry(c: Ctx, name: String, arm: String, description: String, txRaw: Array[Byte],
-                    inputs: Seq[Array[Byte]], data: Seq[Array[Byte]], want: Either[String, Long]): Json = {
-    val v = TxEngine.validateBytes(hex(txRaw), inputs.map(hex), data.map(hex), c.headersHex, c.preHeader,
-      AuthoredTxStorageRent.params)
+                    inputs: Seq[Array[Byte]], data: Seq[Array[Byte]], want: Either[String, Long],
+                    params: Json = AuthoredTxStorageRent.params): Json = {
+    val v = TxEngine.validateBytes(hex(txRaw), inputs.map(hex), data.map(hex), c.headersHex, c.preHeader, params)
     want match {
       case Right(cost) => require(v.valid && v.cost.contains(cost),
         s"$name: want valid at cost $cost, got valid=${v.valid} cost=${v.cost} ${v.reason.getOrElse("")}")
@@ -124,7 +129,7 @@ object AuthoredTxTreeVersion {
       "data_input_boxes_hex" -> Json.arr(data.map(x => Json.fromString(hex(x))): _*),
       "headers_hex"          -> Json.arr(c.headersHex.map(Json.fromString): _*),
       "preHeader"            -> c.preHeader,
-      "parameters"           -> AuthoredTxStorageRent.params,
+      "parameters"           -> params,
       "context"              -> Json.obj("height" -> Json.fromInt(H)),
       // The activated script version the JVM uses is (blockVersion - 1).toByte — a SIGNED byte, so block version 0
       // gives -1 and block versions 129..255 give -128..-2 (block version 200 -> -57), not 128..254.
@@ -281,7 +286,75 @@ object AuthoredTxTreeVersion {
         Right(UnverifiedCost)),
       edge(blockCtx(5), 9, "bv5-tree-v4-sigmaprop-false-unverified-accept",
         "The twin: sigmaProp(FalseLeaf) (0c 02 d1 80), which reduced would be false, is accepted unverified at 12100 " +
-        s"too (#5 is its constant counterpart). $note", "0c02d180", Right(UnverifiedCost)))
+        s"too (#5 is its constant counterpart). $note", "0c02d180", Right(UnverifiedCost))) ++ moreEdgeEntries
+  }
+
+  /** ergots' version-context items 6, 7 and 10 (2026-11-27), all at block version 5 (activated 4). */
+  private def moreEdgeEntries: Seq[Json] = {
+    val c = blockCtx(5)
+    val bv5 = "Block version 5, activated 4 (above the max supported script version 3)."
+    // item 6: two inputs, one v4 (accepted unverified, adding nothing) and one v3 (verified), in both orders
+    def two(i: Int, slug: String, description: String, trees: Seq[String], want: Either[String, Long]): Json = {
+      val raws = trees.zipWithIndex.map { case (t, k) => boxBytes(s"santa:ttv:edge:$i:$k", t, 1) }
+      entry(c, s"$slug#$i", "block-version", description, spendTxN(raws), raws, Nil, want)
+    }
+    val twoNote = "The two inputs (1000000000 each, no proof) go into one plain output of 2000000000. The initial cost " +
+      "is 10000 + 2 × 2000 + 100 = 14100. An unverified input returns the cost it was given (Interpreter.scala:316-319): " +
+      "it adds nothing."
+    val (v4True, v3False, v3True) = ("0c0208d3", "0b0208d2", "0b0208d3")
+    // item 10: a v4 P2PK tree (size-flagged, ProveDlog of the generator) spent with no proof
+    val pk = "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"
+    val limit = AuthoredTxStorageRent.params.mapObject(_.add("maxBlockCost", Json.fromLong(UnverifiedCost)))
+    Seq(
+      two(10, "bv5-two-inputs-v4-then-v3-false-reject",
+        s"$bv5 Input 0's tree is v4 SigmaProp(true) (0c 02 08 d3), accepted unverified; input 1's is v3 SigmaProp(false) " +
+        s"(0b 02 08 d2), verified, which reduces to false. Invalid. $twoNote", Seq(v4True, v3False),
+        Left("Scripts of all transaction inputs")),
+      two(11, "bv5-two-inputs-v3-false-then-v4-reject",
+        s"The same inputs in the other order: the v3 SigmaProp(false) input first. Invalid. $twoNote", Seq(v3False, v4True),
+        Left("Scripts of all transaction inputs")),
+      two(12, "bv5-two-inputs-v4-then-v3-true-accept",
+        s"$bv5 Input 0's tree is v4 SigmaProp(true), accepted unverified; input 1's is v3 SigmaProp(true) (0b 02 08 d3), " +
+        s"verified at 5. Valid at 14105: the initial cost and the v3 script's 5, nothing for the v4 input. $twoNote",
+        Seq(v4True, v3True), Right(14105L)),
+      two(13, "bv5-two-inputs-v3-true-then-v4-accept",
+        s"The same inputs in the other order: valid at 14105 too. $twoNote", Seq(v3True, v4True), Right(14105L)),
+      // item 7
+      edge(c, 14, "bv5-tree-v4-soft-constant-degraded-reject",
+        s"$bv5 The spent box's tree is size-flagged, segregated and claims v4 (1c 02 08 d3): 8 constants declared, the " +
+        "first of type code 211, which is no type. A node reads the box from the UTXO set outside any version context " +
+        "(UtxoStateReader.scala:122-124), where the tree's version is not compared, so its constants are read: the type " +
+        "code fails rule 1008, and the size-flagged tree degrades, to the default header, version 0 " +
+        "(ErgoTreeSerializer.scala:197-203). The spend check sees version 0 and does not accept it unverified; the " +
+        "spend interprets the UnparsedErgoTree, whose error is not a soft fork, and throws: invalid. (#7 degrades by " +
+        "its root's type instead; the wire vectors' tree_version_above_activated #5 rejects this tree inside a (3, 3) " +
+        "context, before its constants.) The input spends a box of value 1000000000 into one plain output of the same " +
+        "value, with no proof.", "1c0208d3",
+        Left("Script has not been recognized due to ValidationException, and it cannot be accepted as soft-fork.")),
+      // item 10
+      edge(c, 15, "bv5-p2pk-v4-empty-proof-unverified-accept",
+        s"$bv5 The spent box's tree is a v4 P2PK: size-flagged, ProveDlog of the generator (0c 23 08 cd 02 79 be …). " +
+        "The input has an EMPTY proof. Above the max supported version a v4 tree is accepted unverified: no reduction, " +
+        "no proof check, at the initial cost alone, 12100. The input spends a box of value 1000000000 into one plain " +
+        "output of the same value.", "0c2308cd" + pk, Right(UnverifiedCost)),
+      edge(c, 16, "bv5-p2pk-v3-empty-proof-reject",
+        "The control: the same P2PK at v3 (0b 23 08 cd 02 79 be …), with the same empty proof, is verified, and the " +
+        "empty proof does not prove the key: invalid.", "0b2308cd" + pk, Left("Scripts of all transaction inputs")),
+      {
+        val raw = boxBytes("santa:ttv:edge:17", v4True, 1)
+        entry(c, "bv5-cost-limit-unverified-at-limit-accept#17", "block-version",
+          s"$bv5 The parameters' maxBlockCost is 12100, exactly the initial cost. A v4 SigmaProp(true) tree is accepted " +
+          "unverified and adds nothing, so the transaction costs exactly the limit: valid, at 12100. The input spends a " +
+          "box of value 1000000000 into one plain output of the same value, with no proof.",
+          spendTx(raw), Seq(raw), Nil, Right(UnverifiedCost), limit)
+      },
+      {
+        val raw = boxBytes("santa:ttv:edge:18", v3True, 1)
+        entry(c, "bv5-cost-limit-v3-over-limit-reject#18", "block-version",
+          "The same budget, 12100, with a v3 SigmaProp(true) tree: verified. The script's own limit is what the initial " +
+          "cost leaves, 0, and its cost, 5, exceeds it ('Estimated execution cost 5 exceeds the limit 0'): invalid.",
+          spendTx(raw), Seq(raw), Nil, Left("CostLimitException: Estimated execution cost 5 exceeds the limit 0"), limit)
+      })
   }
 
   private def envelope(op: String, es: Seq[Json]): Json = Json.obj(

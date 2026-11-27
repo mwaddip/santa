@@ -340,7 +340,7 @@ activated 2, `CONTEXT.selfBoxIndex` answers −1 (sigma-state `CContext.selfBoxI
 - **Its context.** It is the tier's first entry at block version 1. Its context is the real chain's: version-1 headers,
   which the synthetic donor below cannot give.
 
-**Authored tree-version spends (3 files / 26 entries; `AuthoredTxTreeVersion`).** A box whose tree is above
+**Authored tree-version spends (3 files / 35 entries; `AuthoredTxTreeVersion`).** A box whose tree is above
 the activated script version: the storage-rent synthetic context at block version 4, and the same headers
 re-linked at block version 3 (the whole ten-header window re-linked, then the newest nine). Every tree is a `SigmaProp(true)` constant, so an impl that runs the script of
 such a tree accepts. JVM source: `Interpreter.checkSoftForkCondition`, sigma-state v6.0.7; the parse contexts
@@ -355,14 +355,19 @@ are §5's.
   - a v3 tree does not spend ("ErgoTree version 3 is higher than activated 2"), and v2 does
   - an output with a v3 or a v4 tree is valid: a block below version 4 parses its transactions outside any
     version context, so such a box could be created, though not spent
-- **`transaction/any/authored/tree-version-block-version-edges`** (10, block versions 2 and 5): the spend check at
+- **`transaction/any/authored/tree-version-block-version-edges`** (19, block versions 2 and 5): the spend check at
   the block-version edges — version-agnostic, so it lives at `any/` (its entries span activated 1 to 4). The check
   has no floor at activated 2 (a v2 tree at block version 2 is invalid); above the max supported version 3 a tree is
   accepted *unverified* at the initial cost alone, 12100, its proposition not reduced (the v4 `SigmaProp(false)`
   spends, the v3 one reduces to false), whether its root is a constant or an expression (#8, #9: `sigmaProp(TrueLeaf)`,
   `sigmaProp(FalseLeaf)`). A v4 header over a root that degrades when the box is read (#7, `0c 04 db
   65 01 fe`, root `CONTEXT.dataInputs`) is NOT accepted unverified: rule 1001 degrades the tree, and the degraded tree
-  carries the default header, version 0, so the spend interprets it and throws. Block versions start at 1 and rise by one per soft fork, so the
+  carries the default header, version 0, so the spend interprets it and throws, and so does a v4 header whose
+  constants fail a soft rule when the box is read outside any version context (#14, `1c 02 08 d3`). An unverified
+  input adds nothing, beside a verified one in either order (#10-#13, 14105 with a v3 `SigmaProp(true)`); a v4 P2PK
+  with an empty proof is accepted unverified (#15; its v3 control rejects, #16); and at `maxBlockCost` equal to the
+  initial cost an unverified spend is valid at exactly that cost, while a v3 one exceeds its script's limit of 0
+  (#17, #18). Block versions start at 1 and rise by one per soft fork, so the
   signed-byte ends (block version 0, and 128 and above) are unreachable and not vectored (deleted 2026-11-16).
   Block version 1 is not representable from the v2+ header donor (its re-linked headers fail the chain check), so
   §1's v1/v0-at-block-version-1 rows stay unvectored. A captured block-version-1 context is representable (the

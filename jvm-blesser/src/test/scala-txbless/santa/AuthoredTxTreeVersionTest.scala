@@ -88,7 +88,16 @@ class AuthoredTxTreeVersionTest extends munit.FunSuite {
 
   test("block-version edges: the spend check at block versions 2 and 5") {
     val es = entries(EdgesPath)
-    assertEquals(es.map(valid), List(false, true, true, true, true, true, false, false, true, true))
+    assertEquals(es.map(valid), List(false, true, true, true, true, true, false, false, true, true,
+      false, false, true, true, false, true, false, true, false))
+    // #12, #13: a v4 input (unverified) and a v3 SigmaProp(true) input cost 14100 + 5, in either order
+    List(12, 13).foreach(i => assertEquals(cost(es(i)), Some(14105L), s"#$i"))
+    // #15: a v4 P2PK with an empty proof is accepted unverified at 12100; #17 at a 12100 budget
+    List(15, 17).foreach(i => assertEquals(cost(es(i)), Some(12100L), s"#$i"))
+    assert(inputBox(es(14)).startsWith(V + "1c0208d3"), "#14: the degraded v4 tree")
+    assert(reason(es(14)).contains("cannot be accepted as soft-fork"), reason(es(14)))
+    List(17, 18).foreach(i => assertEquals(
+      es(i).hcursor.downField("parameters").get[Long]("maxBlockCost").toOption, Some(12100L), s"#$i budget"))
     // #8, #9: v4 sigmaProp(TrueLeaf) / sigmaProp(FalseLeaf) expression roots, both accepted unverified
     List(8 -> "0c02d17f", 9 -> "0c02d180").foreach { case (i, tree) =>
       assert(inputBox(es(i)).startsWith(V + tree), s"#$i tree $tree")
